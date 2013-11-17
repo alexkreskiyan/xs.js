@@ -1,4 +1,4 @@
-(function() {
+(function () {
     var root = this, xs;
     // Require xs, if not present or return
     if (!(xs = root.xs) && (typeof require !== 'undefined' && !(xs = require('xs'))))
@@ -14,26 +14,26 @@
         // A hash of attributes whose current and previous value differ.
         _changed: {},
         // Return a copy of the model's `attributes` object.
-        toJSON: function(options) {
+        toJSON: function (options) {
             return _.clone(this._attributes);
         },
         // Get the value of an attribute.
-        get: function(attr) {
+        get: function (attr) {
             return this._attributes[attr];
         },
         // Get the HTML-escaped value of an attribute.
-        escape: function(attr) {
+        escape: function (attr) {
             return _.escape(this.get(attr));
         },
         // Returns `true` if the attribute contains a value that is not null
         // or undefined.
-        has: function(attr) {
+        has: function (attr) {
             return _.has(this._attributes, attr);
         },
         // Set a hash of model attributes on the object, firing `"change"`. This is
         // the core primitive operation of a model, updating the data and notifying
         // anyone who needs to know about the change in state. The heart of the beast.
-        set: function(key, val, options) {
+        set: function (key, val, options) {
             if (key === null)
                 return this;
             // Handle both `"key", value` and `{key: value}` -style arguments.
@@ -98,11 +98,11 @@
         },
         // Remove an attribute from the model, firing `"change"`. `unset` is a noop
         // if the attribute doesn't exist.
-        unset: function(attr, options) {
+        unset: function (attr, options) {
             return this.set(attr, void 0, _.extend({}, options, {unset: true}));
         },
         // Clear all attributes on the model, firing `"change"`.
-        clear: function(options) {
+        clear: function (options) {
             var attrs = {};
             for (var key in this._attributes)
                 attrs[key] = void 0;
@@ -110,7 +110,7 @@
         },
         // Determine if the model has changed since the last `"change"` event.
         // If you specify an attribute name, determine if that attribute has changed.
-        hasChanged: function(attr) {
+        hasChanged: function (attr) {
             if (attr === null)
                 return !_.isEmpty(this._changed);
             return _.has(this._changed, attr);
@@ -121,7 +121,7 @@
         // persisted to the server. Unset attributes will be set to undefined.
         // You can also pass an attributes object to diff against the model,
         // determining if there *would be* a change.
-        changedAttributes: function(diff) {
+        changedAttributes: function (diff) {
             if (!diff)
                 return this.hasChanged() ? _.clone(this._changed) : false;
             var val, changed = false;
@@ -135,29 +135,29 @@
         },
         // Get the previous value of an attribute, recorded at the time the last
         // `"change"` event was fired.
-        previous: function(attr) {
+        previous: function (attr) {
             if (attr === null || !this._previousAttributes)
                 return null;
             return this._previousAttributes[attr];
         },
         // Get all of the attributes of the model at the time of the previous
         // `"change"` event.
-        previousAttributes: function() {
+        previousAttributes: function () {
             return _.clone(this._previousAttributes);
         },
         // **parse** converts a response into the hash of attributes to be `set` on
         // the model. The default implementation is just to pass the response along.
-        parse: function(resp, options) {
+        parse: function (resp, options) {
             return resp;
         },
         // Create a new model with identical attributes to this one.
-        clone: function() {
+        clone: function () {
             return new this.constructor(this._attributes);
         }
     };
     // Mix in each Underscore method as a proxy to `attributes#_attributes`.
-    _.each(['keys', 'values', 'pairs', 'invert', 'pick', 'omit'], function(method) {
-        xs.attributes[method] = function() {
+    _.each(['keys', 'values', 'pairs', 'invert', 'pick', 'omit'], function (method) {
+        xs.attributes[method] = function () {
             var args = slice.call(arguments);
             args.unshift(this._attributes);
             return _[method].apply(_, args);
