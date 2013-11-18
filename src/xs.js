@@ -124,8 +124,16 @@
                 return getClass(name);
             // create class
             var cls = _classes[name] = this[name] = function Class() {
+                //define instance properties
+                for (name in _properties) {
+                    if (!_properties.hasOwnProperty(name)) continue;
+                    var property = _properties[name];
+                    _property.call(this, cls, name, property.descriptor, property.value);
+                }
                 cls._constructor.apply(this, defaults(_.values(arguments), cls._options));
             };
+            //define properties list
+            var _properties = {};
             //extend prototype with parent function
             cls.prototype.parent = parent;
             //add const function
@@ -156,22 +164,28 @@
             cls.constructor = constructor;
             //property declaration
             //add property function
-            cls.method = method;
+            cls.property = function property(name, descriptor, value, access) {
+                _properties[name] || (_properties[name] = {
+                    descriptor: _getDescriptor(this, descriptor, access),
+                    value: value
+                });
+                return this;
+            };
             //add public property function
-            cls.publicMethod = publicMethod;
+            cls.publicProperty = publicProperty;
             //add protected property function
-            cls.protectedMethod = protectedMethod;
+            cls.protectedProperty = protectedProperty;
             //add private property function
-            cls.privateMethod = privateMethod;
+            cls.privateProperty = privateProperty;
             //method declaration
             //add method function
-            cls.property = property;
+            cls.method = method;
             //add public method function
-            cls.publicProperty = publicProperty;
+            cls.publicMethod = publicMethod;
             //add protected method function
-            cls.protectedProperty = protectedProperty;
+            cls.protectedMethod = protectedMethod;
             //add private method function
-            cls.privateProperty = privateProperty;
+            cls.privateMethod = privateMethod;
             //add extend function
             cls.extend = extend;
             //add isParent function
@@ -232,10 +246,6 @@
             return this;
         }
 
-        function property(name, descriptor, value, access) {
-            return _property(this, this.prototype, name, descriptor, value, access);
-        }
-
         function publicProperty(name, descriptor, value) {
             return this.property(name, descriptor, value, 'public');
         }
@@ -287,27 +297,12 @@
             return this.method(name, fn, options, 'private');
         }
 
-        function _getDescriptor(descriptor) {
-            if (descriptor.get || descriptor.set) {
-                delete descriptor.value;
-                delete descriptor.writable;
+        function _getDescriptor(cls, descriptor, access) {
+            if (!descriptor.get && !descriptor.set) {
+                return descriptor;
             }
-            return descriptor;
-        }
-
-        function _property(cls, object, name, descriptor, value, access) {
-            //return if name is not applicable
-            if (!nameRe.test(name)) {
-                return cls;
-            }
-            //return if property defined
-            if (defined(object, name)) {
-                return cls;
-            }
-            access || (access = 'public');
-            //create local variable via eval
-            eval('var ' + name);
-            descriptor = _getDescriptor(descriptor);
+            delete descriptor.value;
+            delete descriptor.writable;
             var getter = descriptor.get;
             var setter = descriptor.set;
             !getter || (getter._class = cls);
@@ -339,10 +334,24 @@
                     });
                     break;
             }
+            return descriptor;
+        }
+
+        function _property(cls, name, descriptor, value) {
+            //return if name is not applicable
+            if (!nameRe.test(name)) {
+                return cls;
+            }
+            //return if property defined
+            if (defined(this, name)) {
+                return cls;
+            }
             //define property
-            define(object, name, descriptor);
+            define(this, name, descriptor);
+            //create local variable via eval if setter/getter defined
+            (!descriptor.get && descriptor.set) || eval('var ' + name);
             //set property default value
-            descriptor.set(value);
+            this[name] = value;
             return cls;
         }
 
