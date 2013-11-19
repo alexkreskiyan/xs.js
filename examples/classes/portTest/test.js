@@ -9,7 +9,7 @@ function create(suffix) {
         .protectedMethod('empty', function (text) {
             return;
         })
-        .protectedMethod('achieve', function (text) {
+        .publicMethod('achieve', function (text) {
             return this.alpha;
         })
         .privateProperty('alpha', {
@@ -65,8 +65,9 @@ function create(suffix) {
         }, 0);
     xs['b' + suffix].extend(xs['a' + suffix]);
     xs['c' + suffix].extend(xs['b' + suffix]);
-    d1 = new xs['c' + suffix](1, 2);
-    d2 = new xs['c' + suffix](5, 1, -7);
+    a1 = new xs['a' + suffix]();
+    c1 = new xs['c' + suffix](1, 2);
+    c2 = new xs['c' + suffix](5, 1, -7);
 }
 
 create('');

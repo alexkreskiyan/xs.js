@@ -64,8 +64,12 @@
         var F = new Function();
         F.prototype = parent.prototype;
         this.prototype = new F();
+        //some magic at inheritance of properties
+        var parentProperties = parent.properties(false);
+        var extendProperties = parent.properties(true);
         for (var property in oldPrototype) {
-            if (!oldPrototype.hasOwnProperty(property))
+            //pass if not own property or property in parent's properties list
+            if (!oldPrototype.hasOwnProperty(property) || property in parentProperties)
                 continue;
             var getter = oldPrototype.__lookupGetter__(property);
             var setter = oldPrototype.__lookupSetter__(property);
@@ -77,6 +81,7 @@
                 this.prototype[property] = oldPrototype[property];
             }
         }
+        this.properties(extendProperties);
         this.prototype.constructor = this;
         this.super = parent.prototype;
         return this;
@@ -111,6 +116,8 @@
         this.createClass = function (name) {
             //return class if already has
             if (_hasClass(name)) return _getClass(name);
+            //define private class storages
+            var _properties = {};
             // create class
             var cls = _classes[name] = this[name] = function Class() {
                 cls._constructor.apply(this, __defaults(_.values(arguments), cls._options));
@@ -123,32 +130,45 @@
                     return arguments.callee.caller._class === cls ? (__privates[name] = value) : undefined;
                 };
                 //define instance properties
-                var _properties = cls.properties();
+                var _properties = cls.properties(false);
                 for (name in _properties) {
                     if (!_properties.hasOwnProperty(name)) continue;
                     var _property = _properties[name];
-                    __property.call(this, cls, name, _property.descriptor, _property.access);
+                    __property.call(this, name, _property.descriptor);
                     this[name] = _property.value;
                 }
             };
             //define name const
             _const.call(cls, '_name', name);
             //extend prototype with parent function
-            cls.prototype.parent = __parent;
+            __define(cls.prototype, 'parent', {
+                value: __parent,
+                writable: false,
+                configurable: false,
+                enumerable: false
+            })
             //add const function
             cls.const = _const;
             //define constructor function
             cls.constructor = _constructor;
             //property declaration
-            //define properties schemes storage
-            var _properties = {};
             //define properties function
-            cls.properties = function properties() {
+            cls.properties = function properties(extend) {
                 var caller = arguments.callee.caller;
-                var allow = caller !== __extend && caller !== cls;
-                if (!arguments.length)
-                    return allow ? _properties : [];
-                !allow || (_properties = arguments[0]);
+                var allow = caller === __extend || caller === this || true;
+                if (_.isBoolean(extend))
+                    return allow ? (extend ? function () {
+                        var filtered = {};
+                        _.each(_properties, function (value, name) {
+                            value.access === 'private' || (filtered[name] = value);
+                        });
+                        return filtered;
+                    }() : _properties) : [];
+                !allow || function (candidates) {
+                    _.each(candidates, function (value, name) {
+                        _properties[name] || (_properties[name] = value);
+                    });
+                }(arguments[0]);
                 return this;
             };
             //add property function
@@ -341,9 +361,8 @@
             return descriptor;
         }
 
-        function __property(cls, name, descriptor, access) {
+        function __property(name, descriptor) {
             if (!nameRe.test(name) || __defined(this, name)) return this;
-//            descriptor = __getDescriptor(cls, name, descriptor, access);
             __define(this, name, descriptor);
             return this;
         }
