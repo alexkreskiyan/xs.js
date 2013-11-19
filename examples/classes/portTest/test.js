@@ -1,41 +1,75 @@
-xs.createClass('a')
-    .constructor(function (x) {
-        this.x = x;
-    }, [0])
-    .protectedMethod('print', function (text) {
-        console.log('print:', text, this);
-    })
-    .protectedMethod('empty', function (text) {
-        return;
-    });
-xs.createClass('b')
-    .constructor(function (x, y) {
-        this.parent().constructor.call(this, x);
-        this.y = y;
-    }, [0, 0])
-    .protectedMethod('print', function (text) {
-        this.parent().print.call(this, text);
-    });
-xs.createClass('c')
-    .constructor(function (x, y, z) {
-        this.parent().constructor.call(this, x, y);
-        this.z = z;
-    }, [0, 0, 0])
-    .publicMethod('print', function (text) {
-        this.parent().print.call(this, text);
-    })
-    .publicProperty('cc', {
-        get: function () {
-            return cc + 1;
-        },
-        set: function (value) {
-            cc = value * 2;
-        }
-    }, 0);
-xs.b.extend(xs.a);
-xs.c.extend(xs.b);
-d1 = new xs.c(1, 2);
-d2 = new xs.c(5, 1, -7);
+function create(suffix) {
+    xs.createClass('a' + suffix)
+        .constructor(function (x) {
+            this.x = x;
+        }, [0])
+        .protectedMethod('print', function (text) {
+            console.log('print:', text, this);
+        })
+        .protectedMethod('empty', function (text) {
+            return;
+        })
+        .protectedMethod('achieve', function (text) {
+            return this.alpha;
+        })
+        .privateProperty('alpha', {
+            get: function () {
+                return this.__get('alpha');
+            },
+            set: function (value) {
+                this.__set('alpha', value);
+            }
+        }, 0);
+    xs.createClass('b' + suffix)
+        .constructor(function (x, y) {
+            this.parent().constructor.call(this, x);
+            this.y = y;
+        }, [0, 0])
+        .protectedMethod('print', function (text) {
+            this.parent().print.call(this, text);
+        })
+        .protectedProperty('zz', {
+            get: function () {
+                return this.__get('zz') - 1;
+            },
+            set: function (value) {
+                this.__set('zz', value + 2);
+            }
+        }, 0);
+    xs.createClass('c' + suffix)
+        .constructor(function (x, y, z) {
+            this.parent().constructor.call(this, x, y);
+            this.z = z;
+        }, [0, 0, 0])
+        .publicMethod('print', function (text) {
+            this.parent().print.call(this, text);
+        })
+        .publicMethod('achieve', function (text) {
+            this.parent().achieve.call(this, text);
+        })
+        .publicProperty('cc', {
+            get: function () {
+                return this.__get('cc') + 1;
+            },
+            set: function (value) {
+                this.__set('cc', value * 2);
+            }
+        }, 0)
+        .protectedProperty('zz', {
+            get: function () {
+                return this.__get('zz') - 1;
+            },
+            set: function (value) {
+                this.__set('zz', value + 2);
+            }
+        }, 0);
+    xs['b' + suffix].extend(xs['a' + suffix]);
+    xs['c' + suffix].extend(xs['b' + suffix]);
+    d1 = new xs['c' + suffix](1, 2);
+    d2 = new xs['c' + suffix](5, 1, -7);
+}
+
+create('');
 
 function test(fn, n) {
     var start = Date.now();
