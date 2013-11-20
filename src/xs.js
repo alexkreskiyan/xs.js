@@ -116,7 +116,11 @@
             //return class if already has
             if (_hasClass(name)) return _getClass(name);
             //define private class storages
+            //class objects' properties list
             var _properties = {};
+            var _staticProperties = {};
+            //class static properties values
+            var __privates = {};
             // create class
             var cls = _classes[name] = this[name] = function Class() {
                 cls._constructor.apply(this, __defaults(_.values(arguments), cls._options));
@@ -137,7 +141,7 @@
                 for (name in _properties) {
                     if (!_properties.hasOwnProperty(name)) continue;
                     var _property = _properties[name];
-                    __property.call(this, name, _property.descriptor);
+                    __defined(this, name) || __define(this, name, _property.descriptor);
                     this[name] = _property.value;
                 }
             };
@@ -170,8 +174,7 @@
             //add property function
             cls.property = function property(name, descriptor, value, access) {
                 !nameRe.test(name) || (_properties[name] = {
-                    owner: cls,
-                    descriptor: __getDescriptor(cls, name, descriptor, access),
+                    descriptor: __descriptor(cls, name, descriptor, access),
                     value: value,
                     access: access
                 });
@@ -183,6 +186,31 @@
             cls.protectedProperty = _protectedProperty;
             //add private property function
             cls.privateProperty = _privateProperty;
+            //static getter/setter
+            cls.__get = function (name) {
+                return arguments.callee.caller.caller === _staticProperties[name].descriptor.get ? __privates[name] : undefined;
+            };
+            cls.__set = function (name, value) {
+                return arguments.callee.caller.caller === _staticProperties[name].descriptor.set ? (__privates[name] = value) : undefined;
+            };
+            //add property function
+            cls.staticProperty = function staticProperty(name, descriptor, value, access) {
+                if (!nameRe.test(name)) return this;
+                _staticProperties[name] = {
+                    descriptor: __descriptor(this, name, descriptor, access),
+                    value: value,
+                    access: access
+                };
+                __defined(this, name) || __define(this, name, _staticProperties[name].descriptor);
+                this[name] = value;
+                return this;
+            };
+            //add public static property function
+            cls.publicStaticProperty = _publicStaticProperty;
+            //add protected static property function
+            cls.protectedStaticProperty = _protectedStaticProperty;
+            //add private static property function
+            cls.privateStaticProperty = _privateStaticProperty;
             //method declaration
             //add method function
             cls.method = _method;
@@ -263,10 +291,6 @@
             return this.property(name, descriptor, value, 'private');
         }
 
-        function _staticProperty(name, descriptor, value, access) {
-            return _property.call(this, this, name, descriptor, value, access);
-        }
-
         function _publicStaticProperty(name, descriptor, value) {
             return this.staticProperty(name, descriptor, value, 'public');
         }
@@ -313,7 +337,7 @@
             return caller === cls || (_.isFunction(caller.isChild) && caller.isChild(cls)) || (caller._class === cls);
         }
 
-        function __getDescriptor(cls, name, descriptor, access) {
+        function __descriptor(cls, name, descriptor, access) {
             if (!descriptor.get && !descriptor.set) {
                 return descriptor;
             }
@@ -321,49 +345,44 @@
             delete descriptor.writable;
             var getter = descriptor.get;
             var setter = descriptor.set;
-            !getter || (getter._class = cls);
-            !setter || (setter._class = cls);
+            getter._class = cls;
+            setter._class = cls;
             //mutate getter and setter if given respectively to access level
             if (access === 'public') {
-                !getter || (descriptor.get = function () {
+                descriptor.get = function () {
                     return getter.apply(this, arguments);
-                });
-                !setter || (descriptor.set = function () {
+                };
+                descriptor.set = function () {
                     return setter.apply(this, arguments);
-                });
+                };
             } else if (access === 'protected') {
-                !getter || (descriptor.get = function () {
+                descriptor.get = function () {
                     if (__callerIsProptected(arguments.callee.caller, cls)) {
                         return getter.apply(this, arguments);
                     }
                     throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
-                });
-                !setter || (descriptor.set = function () {
+                };
+                descriptor.set = function () {
                     if (__callerIsProptected(arguments.callee.caller, cls)) {
                         return setter.apply(this, arguments);
                     }
                     throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
-                });
+                };
             } else if (access === 'private') {
-                !getter || (descriptor.get = function () {
+                descriptor.get = function () {
                     if (__callerIsPrivate(arguments.callee.caller, cls)) {
                         return getter.apply(this, arguments);
                     }
                     throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
-                });
-                !setter || (descriptor.set = function () {
+                };
+                descriptor.set = function () {
                     if (__callerIsPrivate(arguments.callee.caller, cls)) {
                         return setter.apply(this, arguments);
                     }
                     throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
-                });
+                };
             }
             return descriptor;
-        }
-
-        function __property(name, descriptor) {
-            __defined(this, name) || __define(this, name, descriptor);
-            return this;
         }
 
         function __method(object, name, fn, options, access) {

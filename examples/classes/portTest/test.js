@@ -6,14 +6,17 @@ function create(suffix) {
         .protectedMethod('print', function (text) {
             console.log('print:', text, this);
         })
-        .protectedMethod('empty', function (text) {
+        .protectedMethod('empty', function () {
             return;
         })
-        .privateMethod('denied', function (text) {
+        .privateMethod('denied', function (ext) {
             return;
         })
-        .publicMethod('achieve', function (text) {
+        .protectedMethod('getAlpha', function () {
             return this.alpha;
+        })
+        .protectedMethod('setAlpha', function (alpha) {
+            return this.alpha = alpha;
         })
         .privateProperty('alpha', {
             get: function () {
@@ -21,6 +24,14 @@ function create(suffix) {
             },
             set: function (value) {
                 this.__set('alpha', value);
+            }
+        }, 0)
+        .privateStaticProperty('priv', {
+            get: function () {
+                return this.__get('com') + '$';
+            },
+            set: function (value) {
+                this.__set('com', '$' + value);
             }
         }, 0);
     xs.createClass('b' + suffix)
@@ -38,6 +49,14 @@ function create(suffix) {
             set: function (value) {
                 this.__set('zz', value + 2);
             }
+        }, 0)
+        .protectedStaticProperty('prot', {
+            get: function () {
+                return this.__get('prot') + '?';
+            },
+            set: function (value) {
+                this.__set('prot', '?' + value);
+            }
         }, 0);
     xs.createClass('c' + suffix)
         .constructor(function (x, y, z) {
@@ -47,8 +66,11 @@ function create(suffix) {
         .publicMethod('print', function (text) {
             this.parent().print.call(this, text);
         })
-        .publicMethod('achieve', function (text) {
-            return this.parent().achieve.call(this, text);
+        .publicMethod('getAlpha', function () {
+            return this.parent().getAlpha.call(this);
+        })
+        .publicMethod('setAlpha', function (alpha) {
+            return this.parent().setAlpha.call(this, alpha);
         })
         .publicProperty('cc', {
             get: function () {
@@ -64,6 +86,14 @@ function create(suffix) {
             },
             set: function (value) {
                 this.__set('zz', value + 2);
+            }
+        }, 0)
+        .publicStaticProperty('pub', {
+            get: function () {
+                return this.__get('pub') + '!';
+            },
+            set: function (value) {
+                this.__set('pub', '!' + value);
             }
         }, 0);
     xs['b' + suffix].extend(xs['a' + suffix]);
