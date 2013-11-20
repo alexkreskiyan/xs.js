@@ -9,6 +9,9 @@ function create(suffix) {
         .protectedMethod('empty', function (text) {
             return;
         })
+        .privateMethod('denied', function (text) {
+            return;
+        })
         .publicMethod('achieve', function (text) {
             return this.alpha;
         })
@@ -45,7 +48,7 @@ function create(suffix) {
             this.parent().print.call(this, text);
         })
         .publicMethod('achieve', function (text) {
-            this.parent().achieve.call(this, text);
+            return this.parent().achieve.call(this, text);
         })
         .publicProperty('cc', {
             get: function () {

@@ -65,8 +65,7 @@
         F.prototype = parent.prototype;
         this.prototype = new F();
         //some magic at inheritance of properties
-        var parentProperties = parent.properties(false);
-        var extendProperties = parent.properties(true);
+        var parentProperties = parent.properties();
         for (var property in oldPrototype) {
             //pass if not own property or property in parent's properties list
             if (!oldPrototype.hasOwnProperty(property) || property in parentProperties)
@@ -81,7 +80,7 @@
                 this.prototype[property] = oldPrototype[property];
             }
         }
-        this.properties(extendProperties);
+        this.properties(parentProperties);
         this.prototype.constructor = this;
         this.super = parent.prototype;
         return this;
@@ -121,22 +120,29 @@
             // create class
             var cls = _classes[name] = this[name] = function Class() {
                 cls._constructor.apply(this, __defaults(_.values(arguments), cls._options));
+                var caller = arguments.callee.caller;
+                //return if nested construction
+                if (caller._class && _.isFunction(caller._class.isChild) && caller._class.isChild(cls)) {
+                    return;
+                }
                 //private storage
                 var __privates = {};
                 this.__get = function (name) {
-                    return arguments.callee.caller._class === cls ? __privates[name] : undefined;
+                    var caller = arguments.callee.caller;
+                    return (caller._class === cls || caller._class.isParent(cls)) ? __privates[name] : undefined;
                 };
                 this.__set = function (name, value) {
-                    return arguments.callee.caller._class === cls ? (__privates[name] = value) : undefined;
+                    var caller = arguments.callee.caller;
+                    return (caller._class === cls || caller._class.isParent(cls)) ? (__privates[name] = value) : undefined;
                 };
                 //define instance properties
-                var _properties = cls.properties(false);
                 for (name in _properties) {
                     if (!_properties.hasOwnProperty(name)) continue;
                     var _property = _properties[name];
                     __property.call(this, name, _property.descriptor);
                     this[name] = _property.value;
                 }
+                return;
             };
             //define name const
             _const.call(cls, '_name', name);
@@ -146,24 +152,18 @@
                 writable: false,
                 configurable: false,
                 enumerable: false
-            })
+            });
             //add const function
             cls.const = _const;
             //define constructor function
             cls.constructor = _constructor;
             //property declaration
             //define properties function
-            cls.properties = function properties(extend) {
+            cls.properties = function properties() {
                 var caller = arguments.callee.caller;
                 var allow = caller === __extend || caller === this || true;
-                if (_.isBoolean(extend))
-                    return allow ? (extend ? function () {
-                        var filtered = {};
-                        _.each(_properties, function (value, name) {
-                            value.access === 'private' || (filtered[name] = value);
-                        });
-                        return filtered;
-                    }() : _properties) : [];
+                if (!arguments.length)
+                    return allow ? _properties : [];
                 !allow || function (candidates) {
                     _.each(candidates, function (value, name) {
                         _properties[name] || (_properties[name] = value);
@@ -173,11 +173,12 @@
             };
             //add property function
             cls.property = function property(name, descriptor, value, access) {
-                _properties[name] = {
+                !nameRe.test(name) || (_properties[name] = {
+                    owner: cls,
                     descriptor: __getDescriptor(cls, name, descriptor, access),
                     value: value,
                     access: access
-                };
+                });
                 return this;
             };
             //add public property function
@@ -342,17 +343,17 @@
                 });
             } else if (access === 'private') {
                 !getter || (descriptor.get = function () {
-                    var caller = arguments.callee.caller._class || arguments.callee.caller;
-                    //call method if caller is method of this class
-                    if (caller === cls) {
+                    var caller = arguments.callee.caller;
+                    //call method if caller is class constructor, or child's class constructor or this class function
+                    if (caller === cls || (caller.isChild && caller.isChild(cls)) || (caller._class === cls)) {
                         return getter.apply(this, arguments);
                     }
                     throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
                 });
                 !setter || (descriptor.set = function () {
-                    var caller = arguments.callee.caller._class || arguments.callee.caller;
-                    //call method if caller is method of this class
-                    if (caller === cls) {
+                    var caller = arguments.callee.caller;
+                    //call method if caller is class constructor, or child's class constructor or this class function
+                    if (caller === cls || (caller.isChild && caller.isChild(cls)) || (caller._class === cls)) {
                         return setter.apply(this, arguments);
                     }
                     throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
@@ -362,8 +363,7 @@
         }
 
         function __property(name, descriptor) {
-            if (!nameRe.test(name) || __defined(this, name)) return this;
-            __define(this, name, descriptor);
+            __defined(this, name) || __define(this, name, descriptor);
             return this;
         }
 
@@ -387,9 +387,9 @@
                 };
             } else if (access === 'private') {
                 object[name] = function () {
-                    var caller = arguments.callee.caller._class || arguments.callee.caller;
-                    //call method if caller is method of this class
-                    if (caller === cls) {
+                    var caller = arguments.callee.caller;
+                    //call method if caller is class constructor, or child's class constructor or this class function
+                    if (caller === cls || (caller.isChild && caller.isChild(cls)) || (caller._class === cls)) {
                         return fn.apply(this, __defaults(arguments, options));
                     }
                     throw 'Call to ' + access + ' method "' + cls._name + '::' + name + '"';
