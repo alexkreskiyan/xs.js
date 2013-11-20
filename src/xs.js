@@ -128,12 +128,10 @@
                 //private storage
                 var __privates = {};
                 this.__get = function (name) {
-                    var caller = arguments.callee.caller;
-                    return (caller._class === cls || caller._class.isParent(cls)) ? __privates[name] : undefined;
+                    return arguments.callee.caller.caller === _properties[name].descriptor.get ? __privates[name] : undefined;
                 };
                 this.__set = function (name, value) {
-                    var caller = arguments.callee.caller;
-                    return (caller._class === cls || caller._class.isParent(cls)) ? (__privates[name] = value) : undefined;
+                    return arguments.callee.caller.caller === _properties[name].descriptor.set ? (__privates[name] = value) : undefined;
                 };
                 //define instance properties
                 for (name in _properties) {
@@ -142,7 +140,6 @@
                     __property.call(this, name, _property.descriptor);
                     this[name] = _property.value;
                 }
-                return;
             };
             //define name const
             _const.call(cls, '_name', name);
@@ -160,8 +157,7 @@
             //property declaration
             //define properties function
             cls.properties = function properties() {
-                var caller = arguments.callee.caller;
-                var allow = caller === __extend || caller === this || true;
+                var allow = arguments.callee.caller === __extend || arguments.callee.caller === this;
                 if (!arguments.length)
                     return allow ? _properties : [];
                 !allow || function (candidates) {
@@ -306,6 +302,17 @@
             return this.method(name, fn, options, 'private');
         }
 
+        function __callerIsProptected(caller, cls) {
+            caller = caller._class || caller;
+            //caller is protected if if caller is method of this class or child class
+            return caller === cls || (_.isFunction(caller.isChild) && caller.isChild(cls));
+        }
+
+        function __callerIsPrivate(caller, cls) {
+            //caller is private if it is cls or cls' nested class or cls' function
+            return caller === cls || (_.isFunction(caller.isChild) && caller.isChild(cls)) || (caller._class === cls);
+        }
+
         function __getDescriptor(cls, name, descriptor, access) {
             if (!descriptor.get && !descriptor.set) {
                 return descriptor;
@@ -326,34 +333,26 @@
                 });
             } else if (access === 'protected') {
                 !getter || (descriptor.get = function () {
-                    var caller = arguments.callee.caller._class || arguments.callee.caller;
-                    //call method if caller is method of child class or this class
-                    if (caller === cls || (caller.isChild && caller.isChild(cls))) {
+                    if (__callerIsProptected(arguments.callee.caller, cls)) {
                         return getter.apply(this, arguments);
                     }
                     throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
                 });
                 !setter || (descriptor.set = function () {
-                    var caller = arguments.callee.caller._class || arguments.callee.caller;
-                    //call method if caller is method of child class or this class
-                    if (caller === cls || (caller.isChild && caller.isChild(cls))) {
+                    if (__callerIsProptected(arguments.callee.caller, cls)) {
                         return setter.apply(this, arguments);
                     }
                     throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
                 });
             } else if (access === 'private') {
                 !getter || (descriptor.get = function () {
-                    var caller = arguments.callee.caller;
-                    //call method if caller is class constructor, or child's class constructor or this class function
-                    if (caller === cls || (caller.isChild && caller.isChild(cls)) || (caller._class === cls)) {
+                    if (__callerIsPrivate(arguments.callee.caller, cls)) {
                         return getter.apply(this, arguments);
                     }
                     throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
                 });
                 !setter || (descriptor.set = function () {
-                    var caller = arguments.callee.caller;
-                    //call method if caller is class constructor, or child's class constructor or this class function
-                    if (caller === cls || (caller.isChild && caller.isChild(cls)) || (caller._class === cls)) {
+                    if (__callerIsPrivate(arguments.callee.caller, cls)) {
                         return setter.apply(this, arguments);
                     }
                     throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
@@ -378,18 +377,14 @@
                 };
             } else if (access === 'protected') {
                 object[name] = function () {
-                    var caller = arguments.callee.caller._class || arguments.callee.caller;
-                    //call method if caller is method of child class or this class
-                    if (caller === cls || (caller.isChild && caller.isChild(cls))) {
+                    if (__callerIsProptected(arguments.callee.caller, cls)) {
                         return fn.apply(this, __defaults(arguments, options));
                     }
                     throw 'Call to ' + access + ' method "' + cls._name + '::' + name + '"';
                 };
             } else if (access === 'private') {
                 object[name] = function () {
-                    var caller = arguments.callee.caller;
-                    //call method if caller is class constructor, or child's class constructor or this class function
-                    if (caller === cls || (caller.isChild && caller.isChild(cls)) || (caller._class === cls)) {
+                    if (__callerIsPrivate(arguments.callee.caller, cls)) {
                         return fn.apply(this, __defaults(arguments, options));
                     }
                     throw 'Call to ' + access + ' method "' + cls._name + '::' + name + '"';
