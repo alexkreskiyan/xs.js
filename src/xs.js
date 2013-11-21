@@ -117,145 +117,93 @@
         this.createClass = function (name) {
             //return class if already has
             if (_hasClass(name)) return _getClass(name);
-            //define private class storages
-            //class objects' properties list
-            var _properties = {};
-            var _staticProperties = {};
+            //define private class storage
+            var _storage = {
+                property: {},
+                staticProperty: {},
+                method: {},
+                staticMethod: {}
+            };
             //class static properties values
             var __privates = {};
             // create class
             var cls = _classes[name] = this[name] = function Class() {
                 cls._constructor.apply(this, __defaults(_.values(arguments), cls._options));
-                var caller = arguments.callee.caller;
+                var caller = arguments.callee.caller._class;
                 //return if nested construction
-                if (caller._class && _.isFunction(caller._class.isChild) && caller._class.isChild(cls)) {
+                if (caller && _.isFunction(caller.isChild) && caller.isChild(cls)) {
                     return;
                 }
                 //private storage
                 var __privates = {};
                 this.__get = function (name) {
-                    return arguments.callee.caller.caller === _properties[name].descriptor.get ? __privates[name] : undefined;
+                    return arguments.callee.caller.caller === _storage.property[name].descriptor.get ? __privates[name] : undefined;
                 };
                 this.__set = function (name, value) {
-                    return arguments.callee.caller.caller === _properties[name].descriptor.set ? (__privates[name] = value) : undefined;
+                    return arguments.callee.caller.caller === _storage.property[name].descriptor.set ? (__privates[name] = value) : undefined;
                 };
                 //define instance properties
-                for (name in _properties) {
-                    if (!_properties.hasOwnProperty(name)) continue;
-                    var _property = _properties[name];
+                for (name in _storage.property) {
+                    if (!_storage.property.hasOwnProperty(name)) continue;
+                    var _property = _storage.properties[name];
                     __defined(this, name) || __define(this, name, _property.descriptor);
                     this[name] = _property.value;
                 }
             };
-            //define name const
-            _const.call(cls, '_name', name);
-            //extend prototype with parent function
-            __define(cls.prototype, 'self', {
-                value: __self,
-                writable: false,
-                configurable: false,
-                enumerable: false
-            });
-            //extend prototype with parent function
-            __define(cls.prototype, 'parent', {
-                value: __parent,
-                writable: false,
-                configurable: false,
-                enumerable: false
-            });
-            //add const function
-            cls.const = _const;
             //define constructor function
             cls.constructor = _constructor;
-            //property declaration
-            //define properties function
-            cls.properties = function properties() {
-                var allow = arguments.callee.caller === __extend;
-                if (!arguments.length)
-                    return allow ? _properties : [];
-                !allow || function (candidates) {
-                    _.each(candidates, function (value, name) {
-                        _properties[name] || (_properties[name] = value);
-                    });
-                }(arguments[0]);
-                return this;
-            };
-            //add property function
-            cls.property = function property(name, descriptor, value, access) {
-                if (!nameRe.test(name)) return this;
-                _properties[name] || (_properties[name] = {
-                    descriptor: __descriptor(cls, name, descriptor, access),
-                    value: value,
-                    access: access
-                });
-                return this;
-            };
-            //add public property function
-            cls.publicProperty = _publicProperty;
-            //add protected property function
-            cls.protectedProperty = _protectedProperty;
-            //add private property function
-            cls.privateProperty = _privateProperty;
+            //add const function
+            cls.const = _const;
             //static getter/setter
             cls.__get = function (name) {
-                return arguments.callee.caller.caller === _staticProperties[name].descriptor.get ? __privates[name] : undefined;
+                return arguments.callee.caller.caller === _storage.staticProperty[name].descriptor.get ? __privates[name] : undefined;
             };
             cls.__set = function (name, value) {
-                return arguments.callee.caller.caller === _staticProperties[name].descriptor.set ? (__privates[name] = value) : undefined;
+                return arguments.callee.caller.caller === _storage.staticProperty[name].descriptor.set ? (__privates[name] = value) : undefined;
             };
+            //property declaration
             //define properties function
-            cls.staticProperties = function staticProperties() {
+            cls.properties = function (type, dynamic, value) {
                 var allow = arguments.callee.caller === __extend;
-                if (!arguments.length)
-                    return allow ? _staticProperties : [];
+                if (value)
+                    return allow ? _storage[type] : [];
                 !allow || function (candidates) {
-                    //add static properties except existent and private
                     _.each(candidates, function (value, name) {
-                        _staticProperties[name] || value.access == 'private' || (_staticProperties[name] = value);
+                        _storage[type][name] || (_storage[type][name] = value);
                     });
                 }(arguments[0]);
-                _.each(_staticProperties, function (property, name) {
-                    this.staticProperty(name, property.descriptor, property.value, property.access);
+                dynamic || _.each(_storage[type], function (property, name) {
+                    this.property(type, dynamic, name, property.descriptor, property.value, property.access);
                 }, this);
                 return this;
             };
             //add property function
-            cls.staticProperty = function staticProperty(name, descriptor, value, access) {
+            cls.property = function (type, dynamic, name, descriptor, value, access) {
                 if (!nameRe.test(name)) return this;
-                _staticProperties[name] || (_staticProperties[name] = {
-                    descriptor: __descriptor(this, name, descriptor, access),
+                _storage[type][name] || (_storage[type][name] = {
+                    descriptor: __descriptor(cls, name, descriptor, access),
                     value: value,
                     access: access
                 });
-                __defined(this, name) || __define(this, name, _staticProperties[name].descriptor);
-                this[name] = value;
+                var object = dynamic ? this.prototype : this;
+                type !== 'method' || __defined(object, name) || __define(object, name, _storage[type][name].descriptor);
                 return this;
             };
             //needed to recognize function as private
-            cls.staticProperty._class = cls;
-            //add public static property function
+            cls.property._class = cls;
+            //properties declaration
+            cls.publicProperty = _publicProperty;
+            cls.protectedProperty = _protectedProperty;
+            cls.privateProperty = _privateProperty;
             cls.publicStaticProperty = _publicStaticProperty;
-            //add protected static property function
             cls.protectedStaticProperty = _protectedStaticProperty;
-            //add private static property function
             cls.privateStaticProperty = _privateStaticProperty;
-            //method declaration
-            //add method function
-            cls.method = _method;
-            //add public method function
+            //methods declaration
             cls.publicMethod = _publicMethod;
-            //add protected method function
             cls.protectedMethod = _protectedMethod;
-            //add private method function
             cls.privateMethod = _privateMethod;
-            //add method function
-            //add static method function
-            cls.staticMethod = _staticMethod;
-            //add public static method function
             cls.publicStaticMethod = _publicStaticMethod;
-            //add protected static method function
             cls.protectedStaticMethod = _protectedStaticMethod;
-            //add private static method function
             cls.privateStaticMethod = _privateStaticMethod;
             //add extend function
             cls.extend = __extend;
@@ -263,6 +211,18 @@
             cls.isParent = __isParent;
             //add isChild function
             cls.isChild = __isChild;
+            //define name const
+            cls.const('_name', name);
+            //define parent function
+            cls.publicStaticMethod('parent', function () {
+                return this.super ? this.super.constructor : this;
+            });
+            cls.publicMethod('parent', function () {
+                return arguments.callee.caller.caller._class ? arguments.callee.caller.caller._class.super : this.constructor.super;
+            });
+            cls.publicMethod('self', function () {
+                return arguments.callee.caller.caller._class ? arguments.callee.caller.caller._class : this;
+            });
             return cls;
         };
         function _hasNamespace(name) {
@@ -288,14 +248,6 @@
             return values;
         }
 
-        function __self() {
-            return arguments.callee.caller._class ? arguments.callee.caller._class : this;
-        }
-
-        function __parent() {
-            return arguments.callee.caller._class ? arguments.callee.caller._class.super : this.constructor.super;
-        }
-
         function __isParent(child) {
             return child.isChild(this);
         }
@@ -310,6 +262,13 @@
             }
         }
 
+        function _constructor(constructor, options) {
+            constructor._class = this;
+            this._constructor = constructor;
+            this._options = options || [];
+            return this;
+        }
+
         function _const(name, value) {
             __defined(this, name) || __define(this, name, {
                 value: value,
@@ -321,66 +280,51 @@
         }
 
         function _publicProperty(name, descriptor, value) {
-            return this.property(name, descriptor, value, 'public');
+            return this.property('property', true, name, descriptor, value, 'public');
         }
 
         function _protectedProperty(name, descriptor, value) {
-            return this.property(name, descriptor, value, 'protected');
+            return this.property('property', true, name, descriptor, value, 'protected');
         }
 
         function _privateProperty(name, descriptor, value) {
-            return this.property(name, descriptor, value, 'private');
+            return this.property('property', true, name, descriptor, value, 'private');
         }
 
         function _publicStaticProperty(name, descriptor, value) {
-            return this.staticProperty(name, descriptor, value, 'public');
+            return this.property('property', false, name, descriptor, value, 'public');
         }
 
         function _protectedStaticProperty(name, descriptor, value) {
-            return this.staticProperty(name, descriptor, value, 'protected');
+            return this.property('property', false, name, descriptor, value, 'protected');
         }
 
         function _privateStaticProperty(name, descriptor, value) {
-            return this.staticProperty(name, descriptor, value, 'private');
+            return this.property('property', false, name, descriptor, value, 'private');
         }
 
-        function _constructor(constructor, options) {
-            constructor._class = this;
-            this._constructor = constructor;
-            this._options = options || [];
-            return this;
+        function _publicMethod(name, method, defaults) {
+            return this.property('method', true, name, {value: method, defaults: defaults}, null, 'public');
         }
 
-        function _method(name, fn, options, access) {
-            return __method.call(this, this.prototype, name, fn, options, access);
+        function _protectedMethod(name, method, defaults) {
+            return this.property('method', true, name, {value: method, defaults: defaults}, null, 'protected');
         }
 
-        function _publicMethod(name, fn, options) {
-            return this.method(name, fn, options, 'public');
+        function _privateMethod(name, method, defaults) {
+            return this.property('method', true, name, {value: method, defaults: defaults}, null, 'private');
         }
 
-        function _protectedMethod(name, fn, options) {
-            return this.method(name, fn, options, 'protected');
+        function _publicStaticMethod(name, method, defaults) {
+            return this.property('method', false, name, {value: method, defaults: defaults}, null, 'public');
         }
 
-        function _privateMethod(name, fn, options) {
-            return this.method(name, fn, options, 'private');
+        function _protectedStaticMethod(name, method, defaults) {
+            return this.property('method', false, name, {value: method, defaults: defaults}, null, 'protected');
         }
 
-        function _staticMethod(name, fn, options, access) {
-            return __method.call(this, this, name, fn, options, access);
-        }
-
-        function _publicStaticMethod(name, fn, options) {
-            return this.staticMethod(name, fn, options, 'public');
-        }
-
-        function _protectedStaticMethod(name, fn, options) {
-            return this.staticMethod(name, fn, options, 'protected');
-        }
-
-        function _privateStaticMethod(name, fn, options) {
-            return this.staticMethod(name, fn, options, 'private');
+        function _privateStaticMethod(name, method, defaults) {
+            return this.property('method', false, name, {value: method, defaults: defaults}, null, 'private');
         }
 
         function __callerIsProptected(caller, cls) {
@@ -395,79 +339,75 @@
         }
 
         function __descriptor(cls, name, descriptor, access) {
-            if (!descriptor.get && !descriptor.set) {
-                return descriptor;
+            if (descriptor.get) {
+                delete descriptor.value;
+                delete descriptor.writable;
+                var getter = descriptor.get;
+                getter._class = cls;
+                //mutate getter and setter if given respectively to access level
+                if (access === 'protected') {
+                    descriptor.get = function () {
+                        if (__callerIsProptected(arguments.callee.caller, cls))
+                            return getter.apply(this, arguments);
+                        throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
+                    };
+                } else if (access === 'private') {
+                    descriptor.get = function () {
+                        if (__callerIsPrivate(arguments.callee.caller, cls))
+                            return getter.apply(this, arguments);
+                        throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
+                    };
+                }
             }
-            delete descriptor.value;
-            delete descriptor.writable;
-            var getter = descriptor.get;
-            var setter = descriptor.set;
-            getter._class = cls;
-            setter._class = cls;
-            //mutate getter and setter if given respectively to access level
-            if (access === 'public') {
-                descriptor.get = function () {
-                    return getter.apply(this, arguments);
-                };
-                descriptor.set = function () {
-                    return setter.apply(this, arguments);
-                };
-            } else if (access === 'protected') {
-                descriptor.get = function () {
-                    if (__callerIsProptected(arguments.callee.caller, cls)) {
-                        return getter.apply(this, arguments);
+            if (descriptor.set) {
+                delete descriptor.value;
+                delete descriptor.writable;
+                var setter = descriptor.set;
+                setter._class = cls;
+                //mutate getter and setter if given respectively to access level
+                if (access === 'protected') {
+                    descriptor.set = function () {
+                        if (__callerIsProptected(arguments.callee.caller, cls))
+                            return setter.apply(this, arguments);
+                        throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
+                    };
+                } else if (access === 'private') {
+                    descriptor.set = function () {
+                        if (__callerIsPrivate(arguments.callee.caller, cls))
+                            return getter.apply(this, arguments);
+                        throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
+                    };
+                }
+            }
+            if (descriptor.value) {
+                delete descriptor.get;
+                delete descriptor.set;
+                if (_.isFunction(descriptor.value)) {
+                    var value = descriptor.value;
+                    value._class = cls;
+                    var defaults = descriptor.defaults || [];
+                    if (access === 'public') {
+                        descriptor.value = function () {
+                            return value.apply(this, __defaults(_.values(arguments), defaults));
+                        };
+                    } else if (access === 'protected') {
+                        descriptor.value = function () {
+                            if (__callerIsProptected(arguments.callee.caller, cls))
+                                return value.apply(this, __defaults(_.values(arguments), defaults));
+                            throw 'Attempt to call ' + access + ' method "' + cls._name + '::' + name + '"';
+                        };
+                    } else if (access === 'private') {
+                        descriptor.value = function () {
+                            if (__callerIsPrivate(arguments.callee.caller, cls))
+                                return value.apply(this, __defaults(_.values(arguments), defaults));
+                            throw 'Attempt to set ' + access + ' method "' + cls._name + '::' + name + '"';
+                        };
                     }
-                    throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
-                };
-                descriptor.set = function () {
-                    if (__callerIsProptected(arguments.callee.caller, cls)) {
-                        return setter.apply(this, arguments);
-                    }
-                    throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
-                };
-            } else if (access === 'private') {
-                descriptor.get = function () {
-                    if (__callerIsPrivate(arguments.callee.caller, cls)) {
-                        return getter.apply(this, arguments);
-                    }
-                    throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
-                };
-                descriptor.set = function () {
-                    if (__callerIsPrivate(arguments.callee.caller, cls)) {
-                        return setter.apply(this, arguments);
-                    }
-                    throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
-                };
+                }
             }
             return descriptor;
         }
 
-        function __method(object, name, fn, options, access) {
-            var cls = this;
-            access || (access = 'public');
-            fn._class = cls;
-            options || (options = []);
-            if (access === 'public') {
-                object[name] = function () {
-                    return fn.apply(this, __defaults(_.values(arguments), options));
-                };
-            } else if (access === 'protected') {
-                object[name] = function () {
-                    if (__callerIsProptected(arguments.callee.caller, cls)) {
-                        return fn.apply(this, __defaults(_.values(arguments), options));
-                    }
-                    throw 'Call to ' + access + ' method "' + cls._name + '::' + name + '"';
-                };
-            } else if (access === 'private') {
-                object[name] = function () {
-                    if (__callerIsPrivate(arguments.callee.caller, cls)) {
-                        return fn.apply(this, __defaults(_.values(arguments), options));
-                    }
-                    throw 'Call to ' + access + ' method "' + cls._name + '::' + name + '"';
-                };
-            }
-            return this;
-        }
     }
 
 }).call(this, 'xs');
