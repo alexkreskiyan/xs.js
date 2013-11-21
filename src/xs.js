@@ -64,7 +64,9 @@
         var F = new Function();
         F.prototype = parent.prototype;
         this.prototype = new F();
-        //some magic at inheritance of properties
+        this.prototype.constructor = this;
+        this.super = parent.prototype;
+        //inherit properties
         var parentProperties = parent.properties();
         for (var property in oldPrototype) {
             //pass if not own property or property in parent's properties list
@@ -81,8 +83,8 @@
             }
         }
         this.properties(parentProperties);
-        this.prototype.constructor = this;
-        this.super = parent.prototype;
+        //inherit static properties
+        this.staticProperties(parent.staticProperties());
         return this;
     }
 
@@ -148,6 +150,13 @@
             //define name const
             _const.call(cls, '_name', name);
             //extend prototype with parent function
+            __define(cls.prototype, 'self', {
+                value: __self,
+                writable: false,
+                configurable: false,
+                enumerable: false
+            });
+            //extend prototype with parent function
             __define(cls.prototype, 'parent', {
                 value: __parent,
                 writable: false,
@@ -161,7 +170,7 @@
             //property declaration
             //define properties function
             cls.properties = function properties() {
-                var allow = arguments.callee.caller === __extend || arguments.callee.caller === this;
+                var allow = arguments.callee.caller === __extend;
                 if (!arguments.length)
                     return allow ? _properties : [];
                 !allow || function (candidates) {
@@ -173,7 +182,8 @@
             };
             //add property function
             cls.property = function property(name, descriptor, value, access) {
-                !nameRe.test(name) || (_properties[name] = {
+                if (!nameRe.test(name)) return this;
+                _properties[name] || (_properties[name] = {
                     descriptor: __descriptor(cls, name, descriptor, access),
                     value: value,
                     access: access
@@ -193,18 +203,36 @@
             cls.__set = function (name, value) {
                 return arguments.callee.caller.caller === _staticProperties[name].descriptor.set ? (__privates[name] = value) : undefined;
             };
+            //define properties function
+            cls.staticProperties = function staticProperties() {
+                var allow = arguments.callee.caller === __extend;
+                if (!arguments.length)
+                    return allow ? _staticProperties : [];
+                !allow || function (candidates) {
+                    //add static properties except existent and private
+                    _.each(candidates, function (value, name) {
+                        _staticProperties[name] || value.access == 'private' || (_staticProperties[name] = value);
+                    });
+                }(arguments[0]);
+                _.each(_staticProperties, function (property, name) {
+                    this.staticProperty(name, property.descriptor, property.value, property.access);
+                }, this);
+                return this;
+            };
             //add property function
             cls.staticProperty = function staticProperty(name, descriptor, value, access) {
                 if (!nameRe.test(name)) return this;
-                _staticProperties[name] = {
+                _staticProperties[name] || (_staticProperties[name] = {
                     descriptor: __descriptor(this, name, descriptor, access),
                     value: value,
                     access: access
-                };
+                });
                 __defined(this, name) || __define(this, name, _staticProperties[name].descriptor);
                 this[name] = value;
                 return this;
             };
+            //needed to recognize function as private
+            cls.staticProperty._class = cls;
             //add public static property function
             cls.publicStaticProperty = _publicStaticProperty;
             //add protected static property function
@@ -249,6 +277,10 @@
                 values[key] || (values[key] = value);
             });
             return values;
+        }
+
+        function __self() {
+            return arguments.callee.caller._class ? arguments.callee.caller._class : this;
         }
 
         function __parent() {

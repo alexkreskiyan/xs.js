@@ -18,6 +18,12 @@ function create(suffix) {
         .protectedMethod('setAlpha', function (alpha) {
             return this.alpha = alpha;
         })
+        .publicMethod('getPriv', function () {
+            return this.self().priv;
+        })
+        .publicMethod('setPriv', function (value) {
+            return this.self().priv = value;
+        })
         .privateProperty('alpha', {
             get: function () {
                 return this.__get('alpha');
@@ -28,10 +34,18 @@ function create(suffix) {
         }, 0)
         .privateStaticProperty('priv', {
             get: function () {
-                return this.__get('com') + '$';
+                return this.__get('priv') + '$';
             },
             set: function (value) {
-                this.__set('com', '$' + value);
+                this.__set('priv', '$' + value);
+            }
+        }, 0)
+        .publicStaticProperty('apub', {
+            get: function () {
+                return '<=' + this.__get('apub') + '=>';
+            },
+            set: function (value) {
+                this.__set('apub', value);
             }
         }, 0);
     xs.createClass('b' + suffix)
@@ -50,6 +64,12 @@ function create(suffix) {
                 this.__set('zz', value + 2);
             }
         }, 0)
+        .publicMethod('getProt', function () {
+            return this.self().prot;
+        })
+        .publicMethod('setProt', function (value) {
+            return this.self().prot = value;
+        })
         .protectedStaticProperty('prot', {
             get: function () {
                 return this.__get('prot') + '?';
@@ -88,6 +108,50 @@ function create(suffix) {
                 this.__set('zz', value + 2);
             }
         }, 0)
+        .protectedProperty('abc', {
+            get: function () {
+                return this.__get('abc') - 1;
+            },
+            set: function (value) {
+                this.__set('abc', value + 2);
+            }
+        }, 0)
+        .protectedProperty('anture', {
+            get: function () {
+                return this.__get('anture') - 1;
+            },
+            set: function (value) {
+                this.__set('anture', value + 2);
+            }
+        }, 0)
+        .protectedProperty('blabla', {
+            get: function () {
+                return this.__get('blabla') - 1;
+            },
+            set: function (value) {
+                this.__set('blabla', value + 2);
+            }
+        }, 0)
+        .protectedProperty('gammga', {
+            get: function () {
+                return this.__get('gammga') - 1;
+            },
+            set: function (value) {
+                this.__set('gammga', value + 2);
+            }
+        }, 0)
+        .publicMethod('getParentProt', function () {
+            return this.parent().getProt.call(this);
+        })
+        .publicMethod('setParentProt', function (value) {
+            return this.parent().setProt.call(this, value);
+        })
+        .publicMethod('getProt', function () {
+            return this.self().prot;
+        })
+        .publicMethod('setProt', function (value) {
+            return this.self().prot = value;
+        })
         .publicStaticProperty('pub', {
             get: function () {
                 return this.__get('pub') + '!';
@@ -99,6 +163,9 @@ function create(suffix) {
     xs['b' + suffix].extend(xs['a' + suffix]);
     xs['c' + suffix].extend(xs['b' + suffix]);
     a1 = new xs['a' + suffix]();
+    a2 = new xs['a' + suffix](4);
+    b1 = new xs['b' + suffix](3);
+    b2 = new xs['b' + suffix](6, 9);
     c1 = new xs['c' + suffix](1, 2);
     c2 = new xs['c' + suffix](5, 1, -7);
 }

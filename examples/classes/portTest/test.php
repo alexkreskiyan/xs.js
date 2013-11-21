@@ -3,6 +3,8 @@ class a {
 
     private $a = 3;
 
+    private static $z = 1;
+
     public function getA() {
         return $this->a;
     }
@@ -35,3 +37,4 @@ evar_dump($x->getA());
 $x->setA(5);
 evar_dump($x->get());
 evar_dump($x->getDenied());
+evar_dump($x::z);
