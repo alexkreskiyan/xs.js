@@ -248,6 +248,15 @@
             cls.protectedMethod = _protectedMethod;
             //add private method function
             cls.privateMethod = _privateMethod;
+            //add method function
+            //add static method function
+            cls.staticMethod = _staticMethod;
+            //add public static method function
+            cls.publicStaticMethod = _publicStaticMethod;
+            //add protected static method function
+            cls.protectedStaticMethod = _protectedStaticMethod;
+            //add private static method function
+            cls.privateStaticMethod = _privateStaticMethod;
             //add extend function
             cls.extend = __extend;
             //add isParent function
@@ -358,6 +367,22 @@
             return this.method(name, fn, options, 'private');
         }
 
+        function _staticMethod(name, fn, options, access) {
+            return __method.call(this, this, name, fn, options, access);
+        }
+
+        function _publicStaticMethod(name, fn, options) {
+            return this.staticMethod(name, fn, options, 'public');
+        }
+
+        function _protectedStaticMethod(name, fn, options) {
+            return this.staticMethod(name, fn, options, 'protected');
+        }
+
+        function _privateStaticMethod(name, fn, options) {
+            return this.staticMethod(name, fn, options, 'private');
+        }
+
         function __callerIsProptected(caller, cls) {
             caller = caller._class || caller;
             //caller is protected if if caller is method of this class or child class
@@ -424,19 +449,19 @@
             options || (options = []);
             if (access === 'public') {
                 object[name] = function () {
-                    return fn.apply(this, __defaults(arguments, options));
+                    return fn.apply(this, __defaults(_.values(arguments), options));
                 };
             } else if (access === 'protected') {
                 object[name] = function () {
                     if (__callerIsProptected(arguments.callee.caller, cls)) {
-                        return fn.apply(this, __defaults(arguments, options));
+                        return fn.apply(this, __defaults(_.values(arguments), options));
                     }
                     throw 'Call to ' + access + ' method "' + cls._name + '::' + name + '"';
                 };
             } else if (access === 'private') {
                 object[name] = function () {
                     if (__callerIsPrivate(arguments.callee.caller, cls)) {
-                        return fn.apply(this, __defaults(arguments, options));
+                        return fn.apply(this, __defaults(_.values(arguments), options));
                     }
                     throw 'Call to ' + access + ' method "' + cls._name + '::' + name + '"';
                 };
