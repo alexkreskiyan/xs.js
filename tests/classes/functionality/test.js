@@ -58,6 +58,8 @@ b2 = new xs.b(6, 9);
 c1 = new xs.c(1, 2);
 c2 = new xs.c(5, 1, -7);
 var xsFinish = Date.now();
+var storage = xs.a.storage();
+var privates = xs.a.privates();
 console.log('xs prepared in ' + (xsFinish - xsStart) + 'ms');
 module('Namespaces');
 test('Create namespace', function () {
@@ -134,9 +136,9 @@ test('protected static properties tests', function () {
 });
 test('public static properties tests', function () {
     equal(xs.a.pubspvv, 2, 'check default value assigned for public static property with value=value,getter=value,setter=value');
-    equal(xs.a.pubspvf, 2, 'check default value assigned for public static property with value=value,getter=value,setter=function');
-    equal(xs.a.pubspfv, 2, 'check default value assigned for public static property with value=value,getter=function,setter=value');
-    equal(xs.a.pubspff, 2, 'check default value assigned for public static property with value=value,getter=function,setter=function');
+    equal(xs.a.pubspvf, '2!', 'check default value assigned for public static property with value=value,getter=value,setter=function');
+    equal(xs.a.pubspfv, '?2', 'check default value assigned for public static property with value=value,getter=function,setter=value');
+    equal(xs.a.pubspff, '?2!', 'check default value assigned for public static property with value=value,getter=function,setter=function');
     //check assignment goes ok
 //    xs.a.pubspvv = 7;
 //    xs.a.pubspvf = 7;

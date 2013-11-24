@@ -152,12 +152,15 @@
                 }
                 //private storage
                 var __privates = {};
+                this.privates = function () {
+                    return __privates;
+                }
                 var data = _storage.dynamic.property;
                 this.__get = function (name) {
-                    return arguments.callee.caller.caller === data[name].descriptor.getter ? __privates[name] : undefined;
+                    return arguments.callee.caller.caller === data[name].realDescriptor.getter ? __privates[name] : undefined;
                 };
                 this.__set = function (name, value) {
-                    arguments.callee.caller.caller === data[name].descriptor.setter && (__privates[name] = value);
+                    arguments.callee.caller.caller === data[name].realDescriptor.setter && (__privates[name] = value);
                     return this;
                 };
                 //define instance properties
@@ -167,7 +170,7 @@
                     this[name] = data[name].value;
                 }
             };
-            //save namespace as const
+            //save class as const
             _const.call(this, name, _classes[name]);
             //define constructor function
             cls.constructor = _constructor;
@@ -175,10 +178,10 @@
             cls.const = _const;
             //static getter/setter
             cls.__get = function (name) {
-                return arguments.callee.caller.caller === _storage.static.property[name].descriptor.getter ? __privates[name] : undefined;
+                return arguments.callee.caller.caller === _storage.static.property[name].realDescriptor.getter ? __privates[name] : undefined;
             };
             cls.__set = function (name, value) {
-                arguments.callee.caller.caller === _storage.static.property[name].descriptor.setter && (__privates[name] = value);
+                arguments.callee.caller.caller === _storage.static.property[name].realDescriptor.setter && (__privates[name] = value);
                 return this;
             };
             //property declaration
@@ -213,6 +216,7 @@
                 }).call(this);
                 var object = usage == 'static' ? this : this.prototype;
                 __defined(object, name) || __define(object, name, data[name].realDescriptor);
+                usage == 'static' && type == 'property' && (object[name] = value);
                 return this;
             };
             //needed to recognize function as private
@@ -248,6 +252,12 @@
             });
             cls.publicMethod('self', function () {
                 return arguments.callee._class;
+            });
+            cls.publicStaticMethod('storage', function () {
+                return _storage;
+            });
+            cls.publicStaticMethod('privates', function () {
+                return __privates;
             });
             return cls;
         };
@@ -383,18 +393,22 @@
                 };
             }
             //remove uselesses
-            if (descriptor.value !== undefined) {
-                delete descriptor.get;
-                delete descriptor.set;
-            } else {
+            if (_.isFunction(descriptor.get) || _.isFunction(descriptor.set)) {
                 delete descriptor.value;
                 delete descriptor.writable;
                 if (!_.isFunction(descriptor.get)) {
-                    delete descriptor.get;
+                    descriptor.get = function () {
+                        return this.__get(name);
+                    };
                 }
                 if (!_.isFunction(descriptor.set)) {
-                    delete descriptor.set;
+                    descriptor.set = function (value) {
+                        return this.__set(name, value);
+                    };
                 }
+            } else {
+                delete descriptor.get;
+                delete descriptor.set;
             }
             if (descriptor.get) {
                 var getter = descriptor.get;
@@ -424,7 +438,7 @@
                 //mutate getter and setter if given respectively to access level
                 if (access === 'public') {
                     descriptor.setter = function () {
-                        return getter.apply(this, arguments);
+                        return setter.apply(this, arguments);
                     };
                 } else if (access === 'protected') {
                     descriptor.setter = function () {
