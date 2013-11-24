@@ -336,6 +336,9 @@
         }
 
         function _method(usage, access, name, method, defaults) {
+            if (!_.isFunction(method)) {
+                return this;
+            }
             return this.property(usage, access, 'method', name, {
                 value: method,
                 defaults: defaults,

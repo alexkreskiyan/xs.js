@@ -2,7 +2,7 @@ function value() {
     return '*' + value + '*';
 }
 function getter(name) {
-    return function getter() {
+    return function () {
         return '?' + this.__get(name);
     };
 }
@@ -11,15 +11,40 @@ function setter(name) {
         return this.__set(name, value + '!');
     };
 }
-function getStaticProperty(xsclass, name) {
+function getProperty(object, name) {
     return function () {
-        return xsclass[name];
+        return object[name];
     };
 }
-function setStaticProperty(xsclass, name, value) {
-    return function test() {
-        return xsclass[name] = value;
+function setProperty(object, name, value) {
+    return function () {
+        return object[name] = value;
     }
+}
+function caller(name, args) {
+    return function () {
+        return this[name].apply(this, args);
+    };
+}
+function getMethod(name) {
+    return function () {
+        return this[name];
+    };
+}
+function getMethodCall(method) {
+    return function () {
+        method();
+    };
+}
+function setMethod(name) {
+    return function (value) {
+        return this[name] = value;
+    };
+}
+function setMethodCall(method, value) {
+    return function () {
+        method(value);
+    };
 }
 var xsStart = Date.now();
 xs.createClass('simple');
@@ -27,18 +52,66 @@ xs.createClass('a');
 xs.a.constructor(function (x) {
     this.x = x;
 }, [0]);
-xs.a.privateStaticProperty('prispvv', 2, 3, 4);
-xs.a.privateStaticProperty('prispvf', 2, 3, setter('prispvf'));
-xs.a.privateStaticProperty('prispfv', 2, getter('prispfv'), 4);
-xs.a.privateStaticProperty('prispff', 2, getter('prispff'), setter('prispff'));
-xs.a.protectedStaticProperty('prospvv', 2, 3, 4);
-xs.a.protectedStaticProperty('prospvf', 2, 3, setter('prospvf'));
-xs.a.protectedStaticProperty('prospfv', 2, getter('prospfv'), 4);
-xs.a.protectedStaticProperty('prospff', 2, getter('prospff'), setter('prospff'));
-xs.a.publicStaticProperty('pubspvv', 2, 3, 4);
-xs.a.publicStaticProperty('pubspvf', 2, 3, setter('pubspvf'));
-xs.a.publicStaticProperty('pubspfv', 2, getter('pubspfv'), 4);
-xs.a.publicStaticProperty('pubspff', 2, getter('pubspff'), setter('pubspff'));
+//private properties variations
+xs.a.privateStaticProperty('aprispvv', 2, 3, 4);
+xs.a.privateStaticProperty('aprispvf', 2, 3, setter('aprispvf'));
+xs.a.privateStaticProperty('aprispfv', 2, getter('aprispfv'), 4);
+xs.a.privateStaticProperty('aprispff', 2, getter('aprispff'), setter('aprispff'));
+//protected properties variations
+xs.a.protectedStaticProperty('aprospvv', 2, 3, 4);
+xs.a.protectedStaticProperty('aprospvf', 2, 3, setter('aprospvf'));
+xs.a.protectedStaticProperty('aprospfv', 2, getter('aprospfv'), 4);
+xs.a.protectedStaticProperty('aprospff', 2, getter('aprospff'), setter('aprospff'));
+//public properties variations
+xs.a.publicStaticProperty('apubspvv', 2, 3, 4);
+xs.a.publicStaticProperty('apubspvf', 2, 3, setter('apubspvf'));
+xs.a.publicStaticProperty('apubspfv', 2, getter('apubspfv'), 4);
+xs.a.publicStaticProperty('apubspff', 2, getter('apubspff'), setter('apubspff'));
+//private static getters/setters for private properties
+xs.a.privateStaticMethod('aprismGETaprispvv', getMethod('aprispvv'));
+xs.a.privateStaticMethod('aprismSETaprispvv', setMethod('aprispvv'));
+xs.a.privateStaticMethod('aprismGETaprispvf', getMethod('aprispvf'));
+xs.a.privateStaticMethod('aprismSETaprispvf', setMethod('aprispvf'));
+xs.a.privateStaticMethod('aprismGETaprispfv', getMethod('aprispfv'));
+xs.a.privateStaticMethod('aprismSETaprispfv', setMethod('aprispfv'));
+xs.a.privateStaticMethod('aprismGETaprispff', getMethod('aprispff'));
+xs.a.privateStaticMethod('aprismSETaprispff', setMethod('aprispff'));
+//protected static getters/setters for protected properties
+xs.a.protectedStaticMethod('aprosmGETaprospvv', getMethod('aprospvv'));
+xs.a.protectedStaticMethod('aprosmSETaprospvv', setMethod('aprospvv'));
+xs.a.protectedStaticMethod('aprosmGETaprospvf', getMethod('aprospvf'));
+xs.a.protectedStaticMethod('aprosmSETaprospvf', setMethod('aprospvf'));
+xs.a.protectedStaticMethod('aprosmGETaprospfv', getMethod('aprospfv'));
+xs.a.protectedStaticMethod('aprosmSETaprospfv', setMethod('aprospfv'));
+xs.a.protectedStaticMethod('aprosmGETaprospff', getMethod('aprospff'));
+xs.a.protectedStaticMethod('aprosmSETaprospff', setMethod('aprospff'));
+//public static getters/setters for private properties
+xs.a.privateStaticMethod('apubsmGETaprispvv', getMethod('aprispvv'));
+xs.a.privateStaticMethod('apubsmSETaprispvv', setMethod('aprispvv'));
+xs.a.privateStaticMethod('apubsmGETaprispvf', getMethod('aprispvf'));
+xs.a.privateStaticMethod('apubsmSETaprispvf', setMethod('aprispvf'));
+xs.a.privateStaticMethod('apubsmGETaprispfv', getMethod('aprispfv'));
+xs.a.privateStaticMethod('apubsmSETaprispfv', setMethod('aprispfv'));
+xs.a.privateStaticMethod('apubsmGETaprispff', getMethod('aprispff'));
+xs.a.privateStaticMethod('apubsmSETaprispff', setMethod('aprispff'));
+//public static getters/setters for protected properties
+xs.a.protectedStaticMethod('apubsmGETaprospvv', getMethod('aprospvv'));
+xs.a.protectedStaticMethod('apubsmSETaprospvv', setMethod('aprospvv'));
+xs.a.protectedStaticMethod('apubsmGETaprospvf', getMethod('aprospvf'));
+xs.a.protectedStaticMethod('apubsmSETaprospvf', setMethod('aprospvf'));
+xs.a.protectedStaticMethod('apubsmGETaprospfv', getMethod('aprospfv'));
+xs.a.protectedStaticMethod('apubsmSETaprospfv', setMethod('aprospfv'));
+xs.a.protectedStaticMethod('apubsmGETaprospff', getMethod('aprospff'));
+xs.a.protectedStaticMethod('apubsmSETaprospff', setMethod('aprospff'));
+//public static getters/setters for public properties
+xs.a.protectedStaticMethod('apubsmGETapubspvv', getMethod('apubspvv'));
+xs.a.protectedStaticMethod('apubsmSETapubspvv', setMethod('apubspvv'));
+xs.a.protectedStaticMethod('apubsmGETapubspvf', getMethod('apubspvf'));
+xs.a.protectedStaticMethod('apubsmSETapubspvf', setMethod('apubspvf'));
+xs.a.protectedStaticMethod('apubsmGETapubspfv', getMethod('apubspfv'));
+xs.a.protectedStaticMethod('apubsmSETapubspfv', setMethod('apubspfv'));
+xs.a.protectedStaticMethod('apubsmGETapubspff', getMethod('apubspff'));
+xs.a.protectedStaticMethod('apubsmSETapubspff', setMethod('apubspff'));
 xs.createClass('b');
 xs.b.constructor(function (x, y) {
     this.parent().constructor.call(this, x);
@@ -115,49 +188,60 @@ test('Inheritance tests', function () {
     equal(c1.parent().parent(), xs.a, 'child level 2 class instance check: parent().parent() refers root class');
 });
 test('private static properties tests', function () {
-    throws(getStaticProperty(xs.a, 'prispvv'), /^Attempt to get private property "a::prispvv"$/, 'access to private static property with value=value,getter=value,setter=value is restricted');
-    throws(getStaticProperty(xs.a, 'prispvf'), /^Attempt to get private property "a::prispvf"$/, 'access to private static property with value=value,getter=value,setter=function is restricted');
-    throws(getStaticProperty(xs.a, 'prispfv'), /^Attempt to get private property "a::prispfv"$/, 'access to private static property with value=value,getter=function,setter=value is restricted');
-    throws(getStaticProperty(xs.a, 'prispff'), /^Attempt to get private property "a::prispff"$/, 'access to private static property with value=value,getter=function,setter=function is restricted');
-    throws(setStaticProperty(xs.a, 'prispvv', 5), /^Attempt to set private property "a::prispvv"$/, 'access to private static property with value=value,getter=value,setter=value is restricted');
-    throws(setStaticProperty(xs.a, 'prispvf', 5), /^Attempt to set private property "a::prispvf"$/, 'access to private static property with value=value,getter=value,setter=function is restricted');
-    throws(setStaticProperty(xs.a, 'prispfv', 5), /^Attempt to set private property "a::prispfv"$/, 'access to private static property with value=value,getter=function,setter=value is restricted');
-    throws(setStaticProperty(xs.a, 'prispff', 5), /^Attempt to set private property "a::prispff"$/, 'access to private static property with value=value,getter=function,setter=function is restricted');
+    throws(getProperty(xs.a, 'aprispvv'), /^Attempt to get private property "a::aprispvv"$/, 'access to private static property with value=value,getter=value,setter=value is restricted');
+    throws(getProperty(xs.a, 'aprispvf'), /^Attempt to get private property "a::aprispvf"$/, 'access to private static property with value=value,getter=value,setter=function is restricted');
+    throws(getProperty(xs.a, 'aprispfv'), /^Attempt to get private property "a::aprispfv"$/, 'access to private static property with value=value,getter=function,setter=value is restricted');
+    throws(getProperty(xs.a, 'aprispff'), /^Attempt to get private property "a::aprispff"$/, 'access to private static property with value=value,getter=function,setter=function is restricted');
+    throws(setProperty(xs.a, 'aprispvv', 5), /^Attempt to set private property "a::aprispvv"$/, 'access to private static property with value=value,getter=value,setter=value is restricted');
+    throws(setProperty(xs.a, 'aprispvf', 5), /^Attempt to set private property "a::aprispvf"$/, 'access to private static property with value=value,getter=value,setter=function is restricted');
+    throws(setProperty(xs.a, 'aprispfv', 5), /^Attempt to set private property "a::aprispfv"$/, 'access to private static property with value=value,getter=function,setter=value is restricted');
+    throws(setProperty(xs.a, 'aprispff', 5), /^Attempt to set private property "a::aprispff"$/, 'access to private static property with value=value,getter=function,setter=function is restricted');
 });
 test('protected static properties tests', function () {
-    throws(getStaticProperty(xs.a, 'prospvv'), /^Attempt to get protected property "a::prospvv"$/, 'access to protected static property with value=value,getter=value,setter=value is restricted');
-    throws(getStaticProperty(xs.a, 'prospvf'), /^Attempt to get protected property "a::prospvf"$/, 'access to protected static property with value=value,getter=value,setter=function is restricted');
-    throws(getStaticProperty(xs.a, 'prospfv'), /^Attempt to get protected property "a::prospfv"$/, 'access to protected static property with value=value,getter=function,setter=value is restricted');
-    throws(getStaticProperty(xs.a, 'prospff'), /^Attempt to get protected property "a::prospff"$/, 'access to protected static property with value=value,getter=function,setter=function is restricted');
-    throws(setStaticProperty(xs.a, 'prospvv', 5), /^Attempt to set protected property "a::prospvv"$/, 'access to protected static property with value=value,getter=value,setter=value is restricted');
-    throws(setStaticProperty(xs.a, 'prospvf', 5), /^Attempt to set protected property "a::prospvf"$/, 'access to protected static property with value=value,getter=value,setter=function is restricted');
-    throws(setStaticProperty(xs.a, 'prospfv', 5), /^Attempt to set protected property "a::prospfv"$/, 'access to protected static property with value=value,getter=function,setter=value is restricted');
-    throws(setStaticProperty(xs.a, 'prospff', 5), /^Attempt to set protected property "a::prospff"$/, 'access to protected static property with value=value,getter=function,setter=function is restricted');
+    throws(getProperty(xs.a, 'aprospvv'), /^Attempt to get protected property "a::aprospvv"$/, 'access to protected static property with value=value,getter=value,setter=value is restricted');
+    throws(getProperty(xs.a, 'aprospvf'), /^Attempt to get protected property "a::aprospvf"$/, 'access to protected static property with value=value,getter=value,setter=function is restricted');
+    throws(getProperty(xs.a, 'aprospfv'), /^Attempt to get protected property "a::aprospfv"$/, 'access to protected static property with value=value,getter=function,setter=value is restricted');
+    throws(getProperty(xs.a, 'aprospff'), /^Attempt to get protected property "a::aprospff"$/, 'access to protected static property with value=value,getter=function,setter=function is restricted');
+    throws(setProperty(xs.a, 'aprospvv', 5), /^Attempt to set protected property "a::aprospvv"$/, 'access to protected static property with value=value,getter=value,setter=value is restricted');
+    throws(setProperty(xs.a, 'aprospvf', 5), /^Attempt to set protected property "a::aprospvf"$/, 'access to protected static property with value=value,getter=value,setter=function is restricted');
+    throws(setProperty(xs.a, 'aprospfv', 5), /^Attempt to set protected property "a::aprospfv"$/, 'access to protected static property with value=value,getter=function,setter=value is restricted');
+    throws(setProperty(xs.a, 'aprospff', 5), /^Attempt to set protected property "a::aprospff"$/, 'access to protected static property with value=value,getter=function,setter=function is restricted');
 });
 test('public static properties tests', function () {
-    equal(xs.a.pubspvv, 2, 'check default value assigned for public static property with value=value,getter=value,setter=value');
-    equal(xs.a.pubspvf, '2!', 'check default value assigned for public static property with value=value,getter=value,setter=function');
-    equal(xs.a.pubspfv, '?2', 'check default value assigned for public static property with value=value,getter=function,setter=value');
-    equal(xs.a.pubspff, '?2!', 'check default value assigned for public static property with value=value,getter=function,setter=function');
+    equal(xs.a.apubspvv, 2, 'check default value assigned for public static property with value=value,getter=value,setter=value');
+    equal(xs.a.apubspvf, '2!', 'check default value assigned for public static property with value=value,getter=value,setter=function');
+    equal(xs.a.apubspfv, '?2', 'check default value assigned for public static property with value=value,getter=function,setter=value');
+    equal(xs.a.apubspff, '?2!', 'check default value assigned for public static property with value=value,getter=function,setter=function');
     //check assignment goes ok
-//    xs.a.pubspvv = 7;
-//    xs.a.pubspvf = 7;
-//    xs.a.pubspfv = 7;
-//    xs.a.pubspff = 7;
-//    xs.a.pubspfvv = 7;
-//    xs.a.pubspfvf = 7;
-//    xs.a.pubspffv = 7;
-//    xs.a.pubspfff = 7;
-//    equal(xs.a.pubspvv, 7, 'check new value assigned for public static property with value=value,getter=value,setter=value');
-//    equal(xs.a.pubspvf, 7, 'check new value assigned for public static property with value=value,getter=value,setter=function');
-//    equal(xs.a.pubspfv, 7, 'check new value assigned for public static property with value=value,getter=function,setter=value');
-//    equal(xs.a.pubspff, 7, 'check new value assigned for public static property with value=value,getter=function,setter=function');
-//    equal(xs.a.pubspfvv, 7, 'check new value assigned for public static property with value=function,getter=value,setter=value');
-//    equal(xs.a.pubspfvf, 7, 'check new value assigned for public static property with value=function,getter=value,setter=function');
-//    equal(xs.a.pubspffv, 7, 'check new value assigned for public static property with value=function,getter=function,setter=value');
-//    equal(xs.a.pubspfff, 7, 'check new value assigned for public static property with value=function,getter=function,setter=function');
+    xs.a.apubspvv = 7;
+    xs.a.apubspvf = 7;
+    xs.a.apubspfv = 7;
+    xs.a.apubspff = 7;
+    equal(xs.a.apubspvv, 7, 'check new value assigned for public static property with value=value,getter=value,setter=value');
+    equal(xs.a.apubspvf, '7!', 'check new value assigned for public static property with value=value,getter=value,setter=function');
+    equal(xs.a.apubspfv, '?7', 'check new value assigned for public static property with value=value,getter=function,setter=value');
+    equal(xs.a.apubspff, '?7!', 'check new value assigned for public static property with value=value,getter=function,setter=function');
 });
-
+test('private static methods tests', function () {
+    throws(getMethodCall(xs.a.aprismGETaprispvv), /^Attempt to call private method "a::aprismGETaprispvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
+    throws(setMethodCall(xs.a.aprismSETaprispvv, 9), /^Attempt to call private method "a::aprismSETaprispvv"$/, 'call private static setter method for property with value=value,getter=value,setter=value is restricted');
+    throws(getMethodCall(xs.a.aprismGETaprispvf), /^Attempt to call private method "a::aprismGETaprispvf"$/, 'call private static getter method for property with value=value,getter=value,setter=function is restricted');
+    throws(setMethodCall(xs.a.aprismSETaprispvf, 9), /^Attempt to call private method "a::aprismSETaprispvf"$/, 'call private static setter method for property with value=value,getter=value,setter=function is restricted');
+    throws(getMethodCall(xs.a.aprismGETaprispfv), /^Attempt to call private method "a::aprismGETaprispfv"$/, 'call private static getter method for property with value=value,getter=function,setter=value is restricted');
+    throws(setMethodCall(xs.a.aprismSETaprispfv, 9), /^Attempt to call private method "a::aprismSETaprispfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
+    throws(getMethodCall(xs.a.aprismGETaprispff), /^Attempt to call private method "a::aprismGETaprispff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
+    throws(setMethodCall(xs.a.aprismSETaprispff, 9), /^Attempt to call private method "a::aprismSETaprispff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
+});
+test('protected static methods tests', function () {
+    throws(getMethodCall(xs.a.aprosmGETaprospvv), /^Attempt to call protected method "a::aprosmGETaprospvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
+    throws(setMethodCall(xs.a.aprosmSETaprospvv, 9), /^Attempt to call protected method "a::aprosmSETaprospvv"$/, 'call private static setter method for property with value=value,getter=value,setter=value is restricted');
+    throws(getMethodCall(xs.a.aprosmGETaprospvf), /^Attempt to call protected method "a::aprosmGETaprospvf"$/, 'call private static getter method for property with value=value,getter=value,setter=function is restricted');
+    throws(setMethodCall(xs.a.aprosmSETaprospvf, 9), /^Attempt to call protected method "a::aprosmSETaprospvf"$/, 'call private static setter method for property with value=value,getter=value,setter=function is restricted');
+    throws(getMethodCall(xs.a.aprosmGETaprospfv), /^Attempt to call protected method "a::aprosmGETaprospfv"$/, 'call private static getter method for property with value=value,getter=function,setter=value is restricted');
+    throws(setMethodCall(xs.a.aprosmSETaprospfv, 9), /^Attempt to call protected method "a::aprosmSETaprospfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
+    throws(getMethodCall(xs.a.aprosmGETaprospff), /^Attempt to call protected method "a::aprosmGETaprospff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
+    throws(setMethodCall(xs.a.aprosmSETaprospff, 9), /^Attempt to call protected method "a::aprosmSETaprospff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
+});
 
 
 
