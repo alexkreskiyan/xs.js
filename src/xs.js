@@ -396,30 +396,6 @@
                     delete descriptor.set;
                 }
             }
-            if (descriptor.value !== undefined) {
-                if (!_.isFunction(descriptor.value)) return descriptor;
-                var value = descriptor.value;
-                value._class = cls;
-                var defaults = descriptor.defaults || [];
-                if (access === 'public' && type == 'method') {
-                    descriptor.method = function () {
-                        return value.apply(this, __defaults(_.values(arguments), defaults));
-                    };
-                } else if (access === 'protected') {
-                    descriptor.method = function () {
-                        if (__callerIsProptected(arguments.callee.caller, cls))
-                            return value.apply(this, __defaults(_.values(arguments), defaults));
-                        throw 'Attempt to call ' + access + ' method "' + cls._name + '::' + name + '"';
-                    };
-                } else if (access === 'private') {
-                    descriptor.method = function () {
-                        if (__callerIsPrivate(arguments.callee.caller, cls))
-                            return value.apply(this, __defaults(_.values(arguments), defaults));
-                        throw 'Attempt to call ' + access + ' method "' + cls._name + '::' + name + '"';
-                    };
-                }
-                return descriptor;
-            }
             if (descriptor.get) {
                 var getter = descriptor.get;
                 getter._class = cls;
@@ -461,6 +437,29 @@
                         if (__callerIsPrivate(arguments.callee.caller, cls))
                             return setter.apply(this, arguments);
                         throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
+                    };
+                }
+            }
+            if (descriptor.value !== undefined) {
+                if (!_.isFunction(descriptor.value)) return descriptor;
+                var value = descriptor.value;
+                value._class = cls;
+                var defaults = descriptor.defaults || [];
+                if (access === 'public' && type == 'method') {
+                    descriptor.method = function () {
+                        return value.apply(this, __defaults(_.values(arguments), defaults));
+                    };
+                } else if (access === 'protected') {
+                    descriptor.method = function () {
+                        if (__callerIsProptected(arguments.callee.caller, cls))
+                            return value.apply(this, __defaults(_.values(arguments), defaults));
+                        throw 'Attempt to call ' + access + ' method "' + cls._name + '::' + name + '"';
+                    };
+                } else if (access === 'private') {
+                    descriptor.method = function () {
+                        if (__callerIsPrivate(arguments.callee.caller, cls))
+                            return value.apply(this, __defaults(_.values(arguments), defaults));
+                        throw 'Attempt to call ' + access + ' method "' + cls._name + '::' + name + '"';
                     };
                 }
             }
