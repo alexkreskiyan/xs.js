@@ -166,8 +166,10 @@
                 //define instance properties
                 for (name in data) {
                     if (!data.hasOwnProperty(name)) continue;
-                    __defined(this, name) || __define(this, name, data[name].descriptor);
-                    this[name] = data[name].value;
+                    __defined(this, name) || __define(this, name, data[name].realDescriptor);
+                    (function () {
+                        this[name] = data[name].value;
+                    })();
                 }
             };
             //save class as const
@@ -215,7 +217,10 @@
                     data[name].realDescriptor = realDescriptor;
                 }).call(this);
                 var object = usage == 'static' ? this : this.prototype;
-                __defined(object, name) || __define(object, name, data[name].realDescriptor);
+                //do not declare dynamic properties
+                (usage == 'dynamic' && type == 'property') ||
+                    __defined(object, name) || __define(object, name, data[name].realDescriptor);
+                //assign value to static propeties
                 usage == 'static' && type == 'property' && (function () {
                     object[name] = value;
                 })();
