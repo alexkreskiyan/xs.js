@@ -86,32 +86,32 @@ xs.a.protectedStaticMethod('aprosmSETaprospfv', setMethod('aprospfv'));
 xs.a.protectedStaticMethod('aprosmGETaprospff', getMethod('aprospff'));
 xs.a.protectedStaticMethod('aprosmSETaprospff', setMethod('aprospff'));
 //public static getters/setters for private properties
-xs.a.privateStaticMethod('apubsmGETaprispvv', getMethod('aprispvv'));
-xs.a.privateStaticMethod('apubsmSETaprispvv', setMethod('aprispvv'));
-xs.a.privateStaticMethod('apubsmGETaprispvf', getMethod('aprispvf'));
-xs.a.privateStaticMethod('apubsmSETaprispvf', setMethod('aprispvf'));
-xs.a.privateStaticMethod('apubsmGETaprispfv', getMethod('aprispfv'));
-xs.a.privateStaticMethod('apubsmSETaprispfv', setMethod('aprispfv'));
-xs.a.privateStaticMethod('apubsmGETaprispff', getMethod('aprispff'));
-xs.a.privateStaticMethod('apubsmSETaprispff', setMethod('aprispff'));
+xs.a.publicStaticMethod('apubsmGETaprispvv', getMethod('aprispvv'));
+xs.a.publicStaticMethod('apubsmSETaprispvv', setMethod('aprispvv'));
+xs.a.publicStaticMethod('apubsmGETaprispvf', getMethod('aprispvf'));
+xs.a.publicStaticMethod('apubsmSETaprispvf', setMethod('aprispvf'));
+xs.a.publicStaticMethod('apubsmGETaprispfv', getMethod('aprispfv'));
+xs.a.publicStaticMethod('apubsmSETaprispfv', setMethod('aprispfv'));
+xs.a.publicStaticMethod('apubsmGETaprispff', getMethod('aprispff'));
+xs.a.publicStaticMethod('apubsmSETaprispff', setMethod('aprispff'));
 //public static getters/setters for protected properties
-xs.a.protectedStaticMethod('apubsmGETaprospvv', getMethod('aprospvv'));
-xs.a.protectedStaticMethod('apubsmSETaprospvv', setMethod('aprospvv'));
-xs.a.protectedStaticMethod('apubsmGETaprospvf', getMethod('aprospvf'));
-xs.a.protectedStaticMethod('apubsmSETaprospvf', setMethod('aprospvf'));
-xs.a.protectedStaticMethod('apubsmGETaprospfv', getMethod('aprospfv'));
-xs.a.protectedStaticMethod('apubsmSETaprospfv', setMethod('aprospfv'));
-xs.a.protectedStaticMethod('apubsmGETaprospff', getMethod('aprospff'));
-xs.a.protectedStaticMethod('apubsmSETaprospff', setMethod('aprospff'));
+xs.a.publicStaticMethod('apubsmGETaprospvv', getMethod('aprospvv'));
+xs.a.publicStaticMethod('apubsmSETaprospvv', setMethod('aprospvv'));
+xs.a.publicStaticMethod('apubsmGETaprospvf', getMethod('aprospvf'));
+xs.a.publicStaticMethod('apubsmSETaprospvf', setMethod('aprospvf'));
+xs.a.publicStaticMethod('apubsmGETaprospfv', getMethod('aprospfv'));
+xs.a.publicStaticMethod('apubsmSETaprospfv', setMethod('aprospfv'));
+xs.a.publicStaticMethod('apubsmGETaprospff', getMethod('aprospff'));
+xs.a.publicStaticMethod('apubsmSETaprospff', setMethod('aprospff'));
 //public static getters/setters for public properties
-xs.a.protectedStaticMethod('apubsmGETapubspvv', getMethod('apubspvv'));
-xs.a.protectedStaticMethod('apubsmSETapubspvv', setMethod('apubspvv'));
-xs.a.protectedStaticMethod('apubsmGETapubspvf', getMethod('apubspvf'));
-xs.a.protectedStaticMethod('apubsmSETapubspvf', setMethod('apubspvf'));
-xs.a.protectedStaticMethod('apubsmGETapubspfv', getMethod('apubspfv'));
-xs.a.protectedStaticMethod('apubsmSETapubspfv', setMethod('apubspfv'));
-xs.a.protectedStaticMethod('apubsmGETapubspff', getMethod('apubspff'));
-xs.a.protectedStaticMethod('apubsmSETapubspff', setMethod('apubspff'));
+xs.a.publicStaticMethod('apubsmGETapubspvv', getMethod('apubspvv'));
+xs.a.publicStaticMethod('apubsmSETapubspvv', setMethod('apubspvv'));
+xs.a.publicStaticMethod('apubsmGETapubspvf', getMethod('apubspvf'));
+xs.a.publicStaticMethod('apubsmSETapubspvf', setMethod('apubspvf'));
+xs.a.publicStaticMethod('apubsmGETapubspfv', getMethod('apubspfv'));
+xs.a.publicStaticMethod('apubsmSETapubspfv', setMethod('apubspfv'));
+xs.a.publicStaticMethod('apubsmGETapubspff', getMethod('apubspff'));
+xs.a.publicStaticMethod('apubsmSETapubspff', setMethod('apubspff'));
 xs.createClass('b');
 xs.b.constructor(function (x, y) {
     this.parent().constructor.call(this, x);
@@ -221,6 +221,10 @@ test('public static properties tests', function () {
     equal(xs.a.apubspvf, '7!', 'check new value assigned for public static property with value=value,getter=value,setter=function');
     equal(xs.a.apubspfv, '?7', 'check new value assigned for public static property with value=value,getter=function,setter=value');
     equal(xs.a.apubspff, '?7!', 'check new value assigned for public static property with value=value,getter=function,setter=function');
+    xs.a.apubspvv = 2;
+    xs.a.apubspvf = 2;
+    xs.a.apubspfv = 2;
+    xs.a.apubspff = 2;
 });
 test('private static methods tests', function () {
     throws(getMethodCall(xs.a.aprismGETaprispvv), /^Attempt to call private method "a::aprismGETaprispvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
@@ -241,6 +245,23 @@ test('protected static methods tests', function () {
     throws(setMethodCall(xs.a.aprosmSETaprospfv, 9), /^Attempt to call protected method "a::aprosmSETaprospfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
     throws(getMethodCall(xs.a.aprosmGETaprospff), /^Attempt to call protected method "a::aprosmGETaprospff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
     throws(setMethodCall(xs.a.aprosmSETaprospff, 9), /^Attempt to call protected method "a::aprosmSETaprospff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
+});
+test('public static methods tests', function () {
+    //get private variables values
+    equal(xs.a.apubsmGETaprispvv(), 2, 'check value fetched by public method from private static property with value=value,getter=value,setter=value');
+    equal(xs.a.apubsmGETaprispvf(), '2!', 'check value fetched by public method from private static property with value=value,getter=value,setter=function');
+    equal(xs.a.apubsmGETaprispfv(), '?2', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
+    equal(xs.a.apubsmGETaprispff(), '?2!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(xs.a.apubsmGETaprospvv(), 2, 'check value fetched by public method from private static property with value=value,getter=value,setter=value');
+    equal(xs.a.apubsmGETaprospvf(), '2!', 'check value fetched by public method from private static property with value=value,getter=value,setter=function');
+    equal(xs.a.apubsmGETaprospfv(), '?2', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
+    equal(xs.a.apubsmGETaprospff(), '?2!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(xs.a.apubsmGETapubspvv(), 2, 'check value fetched by public method from private static property with value=value,getter=value,setter=value');
+    equal(xs.a.apubsmGETapubspvf(), '2!', 'check value fetched by public method from private static property with value=value,getter=value,setter=function');
+    equal(xs.a.apubsmGETapubspfv(), '?2', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
+    equal(xs.a.apubsmGETapubspff(), '?2!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
 });
 
 
