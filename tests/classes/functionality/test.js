@@ -395,7 +395,7 @@ test('public static methods tests', function () {
     equal(xs.a.apubsmGETapubspfv(), '?26', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
     equal(xs.a.apubsmGETapubspff(), '?28!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
 });
-module('staticInheritance');
+module('static inheritance');
 test('inheritance basics', function () {
     //root class check
     equal(xs.a.parent(), xs.a, 'root class check: parent() refers class itself');
@@ -738,8 +738,8 @@ test('public static methods downcalls', function () {
     equal(xs.a.apubsmGETapubspfv(), '?26', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
     equal(xs.a.apubsmGETapubspff(), '?28!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
 });
-module('dynamic properties');
-test('private dynamic properties tests', function () {
+module('properties');
+test('private properties tests', function () {
     throws(getProperty(b1, 'apridpvv'), /^Attempt to get private property "b::apridpvv"$/, 'access to private property with value=value,getter=value,setter=value is restricted');
     throws(getProperty(b1, 'apridpvf'), /^Attempt to get private property "b::apridpvf"$/, 'access to private property with value=value,getter=value,setter=function is restricted');
     throws(getProperty(b1, 'apridpfv'), /^Attempt to get private property "b::apridpfv"$/, 'access to private property with value=value,getter=function,setter=value is restricted');
@@ -748,6 +748,570 @@ test('private dynamic properties tests', function () {
     throws(setProperty(b1, 'apridpvf', 104), /^Attempt to set private property "b::apridpvf"$/, 'access to private property with value=value,getter=value,setter=function is restricted');
     throws(setProperty(b1, 'apridpfv', 106), /^Attempt to set private property "b::apridpfv"$/, 'access to private property with value=value,getter=function,setter=value is restricted');
     throws(setProperty(b1, 'apridpff', 108), /^Attempt to set private property "b::apridpff"$/, 'access to private property with value=value,getter=function,setter=function is restricted');
+});
+test('protected properties tests', function () {
+    throws(getProperty(b2, 'aprodpvv'), /^Attempt to get protected property "b::aprodpvv"$/, 'access to protected property with value=value,getter=value,setter=value is restricted');
+    throws(getProperty(b2, 'aprodpvf'), /^Attempt to get protected property "b::aprodpvf"$/, 'access to protected property with value=value,getter=value,setter=function is restricted');
+    throws(getProperty(b2, 'aprodpfv'), /^Attempt to get protected property "b::aprodpfv"$/, 'access to protected property with value=value,getter=function,setter=value is restricted');
+    throws(getProperty(b2, 'aprodpff'), /^Attempt to get protected property "b::aprodpff"$/, 'access to protected property with value=value,getter=function,setter=function is restricted');
+    throws(setProperty(b2, 'aprodpvv', 101), /^Attempt to set protected property "b::aprodpvv"$/, 'access to protected property with value=value,getter=value,setter=value is restricted');
+    throws(setProperty(b2, 'aprodpvf', 104), /^Attempt to set protected property "b::aprodpvf"$/, 'access to protected property with value=value,getter=value,setter=function is restricted');
+    throws(setProperty(b2, 'aprodpfv', 106), /^Attempt to set protected property "b::aprodpfv"$/, 'access to protected property with value=value,getter=function,setter=value is restricted');
+    throws(setProperty(b2, 'aprodpff', 108), /^Attempt to set protected property "b::aprodpff"$/, 'access to protected property with value=value,getter=function,setter=function is restricted');
+});
+test('public properties tests', function () {
+    equal(a1.apubdpvv, 21, 'check default value assigned for public static property with value=value,getter=value,setter=value');
+    equal(a1.apubdpvf, '24!', 'check default value assigned for public static property with value=value,getter=value,setter=function');
+    equal(a1.apubdpfv, '?26', 'check default value assigned for public static property with value=value,getter=function,setter=value');
+    equal(a1.apubdpff, '?28!', 'check default value assigned for public static property with value=value,getter=function,setter=function');
+    //check assignment goes ok
+    a1.apubdpvv = 101;
+    a1.apubdpvf = 104;
+    a1.apubdpfv = 106;
+    a1.apubdpff = 108;
+    equal(a1.apubdpvv, 101, 'check new value assigned for public static property with value=value,getter=value,setter=value');
+    equal(a1.apubdpvf, '104!', 'check new value assigned for public static property with value=value,getter=value,setter=function');
+    equal(a1.apubdpfv, '?106', 'check new value assigned for public static property with value=value,getter=function,setter=value');
+    equal(a1.apubdpff, '?108!', 'check new value assigned for public static property with value=value,getter=function,setter=function');
+    a1.apubdpvv = 21;
+    a1.apubdpvf = 24;
+    a1.apubdpfv = 26;
+    a1.apubdpff = 28;
+    equal(a1.apubdpvv, 21, 'check default value assigned for public static property with value=value,getter=value,setter=value');
+    equal(a1.apubdpvf, '24!', 'check default value assigned for public static property with value=value,getter=value,setter=function');
+    equal(a1.apubdpfv, '?26', 'check default value assigned for public static property with value=value,getter=function,setter=value');
+    equal(a1.apubdpff, '?28!', 'check default value assigned for public static property with value=value,getter=function,setter=function');
+});
+module('methods');
+test('private methods tests', function () {
+    throws(getMethodCall(a1.apridmGETapridpvv), /^Attempt to call private method "a::apridmGETapridpvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
+    throws(setMethodCall(a1.apridmSETapridpvv, 101), /^Attempt to call private method "a::apridmSETapridpvv"$/, 'call private static setter method for property with value=value,getter=value,setter=value is restricted');
+    throws(getMethodCall(a1.apridmGETapridpvf), /^Attempt to call private method "a::apridmGETapridpvf"$/, 'call private static getter method for property with value=value,getter=value,setter=function is restricted');
+    throws(setMethodCall(a1.apridmSETapridpvf, 104), /^Attempt to call private method "a::apridmSETapridpvf"$/, 'call private static setter method for property with value=value,getter=value,setter=function is restricted');
+    throws(getMethodCall(a1.apridmGETapridpfv), /^Attempt to call private method "a::apridmGETapridpfv"$/, 'call private static getter method for property with value=value,getter=function,setter=value is restricted');
+    throws(setMethodCall(a1.apridmSETapridpfv, 106), /^Attempt to call private method "a::apridmSETapridpfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
+    throws(getMethodCall(a1.apridmGETapridpff), /^Attempt to call private method "a::apridmGETapridpff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
+    throws(setMethodCall(a1.apridmSETapridpff, 108), /^Attempt to call private method "a::apridmSETapridpff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
+});
+test('protected methods tests', function () {
+    throws(getMethodCall(a1.aprodmGETaprodpvv), /^Attempt to call protected method "a::aprodmGETaprodpvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
+    throws(setMethodCall(a1.aprodmSETaprodpvv, 101), /^Attempt to call protected method "a::aprodmSETaprodpvv"$/, 'call private static setter method for property with value=value,getter=value,setter=value is restricted');
+    throws(getMethodCall(a1.aprodmGETaprodpvf), /^Attempt to call protected method "a::aprodmGETaprodpvf"$/, 'call private static getter method for property with value=value,getter=value,setter=function is restricted');
+    throws(setMethodCall(a1.aprodmSETaprodpvf, 104), /^Attempt to call protected method "a::aprodmSETaprodpvf"$/, 'call private static setter method for property with value=value,getter=value,setter=function is restricted');
+    throws(getMethodCall(a1.aprodmGETaprodpfv), /^Attempt to call protected method "a::aprodmGETaprodpfv"$/, 'call private static getter method for property with value=value,getter=function,setter=value is restricted');
+    throws(setMethodCall(a1.aprodmSETaprodpfv, 106), /^Attempt to call protected method "a::aprodmSETaprodpfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
+    throws(getMethodCall(a1.aprodmGETaprodpff), /^Attempt to call protected method "a::aprodmGETaprodpff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
+    throws(setMethodCall(a1.aprodmSETaprodpff, 108), /^Attempt to call protected method "a::aprodmSETaprodpff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
+});
+test('public methods tests', function () {
+    //get private variables values
+    equal(a1.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(a1.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(a1.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
+    //assignments
+    //private variables
+    a1.apubdmSETapridpvv(101);
+    a1.apubdmSETapridpvf(104);
+    a1.apubdmSETapridpfv(106);
+    a1.apubdmSETapridpff(108);
+    //protected variables
+    a1.apubdmSETaprodpvv(111);
+    a1.apubdmSETaprodpvf(114);
+    a1.apubdmSETaprodpfv(116);
+    a1.apubdmSETaprodpff(118);
+    //public variables
+    a1.apubdmSETapubdpvv(121);
+    a1.apubdmSETapubdpvf(124);
+    a1.apubdmSETapubdpfv(126);
+    a1.apubdmSETapubdpff(128);
+    //get private variables values
+    equal(a1.apubdmGETapridpvv(), 101, 'check value fetched by public method from private static property with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETapridpvf(), '104!', 'check value fetched by public method from private static property with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapridpfv(), '?106', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETapridpff(), '?108!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(a1.apubdmGETaprodpvv(), 111, 'check value fetched by public method from private static property with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETaprodpvf(), '114!', 'check value fetched by public method from private static property with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETaprodpfv(), '?116', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETaprodpff(), '?118!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(a1.apubdmGETapubdpvv(), 121, 'check value fetched by public method from private static property with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETapubdpvf(), '124!', 'check value fetched by public method from private static property with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapubdpfv(), '?126', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETapubdpff(), '?128!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
+    //assign back
+    //private variables
+    a1.apubdmSETapridpvv(1);
+    a1.apubdmSETapridpvf(4);
+    a1.apubdmSETapridpfv(6);
+    a1.apubdmSETapridpff(8);
+    //protected variables
+    a1.apubdmSETaprodpvv(11);
+    a1.apubdmSETaprodpvf(14);
+    a1.apubdmSETaprodpfv(16);
+    a1.apubdmSETaprodpff(18);
+    //public variables
+    a1.apubdmSETapubdpvv(21);
+    a1.apubdmSETapubdpvf(24);
+    a1.apubdmSETapubdpfv(26);
+    a1.apubdmSETapubdpff(28);
+    //get private variables values
+    equal(a1.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(a1.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(a1.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property with value=value,getter=function,setter=function');
+});
+module('instances inheritance');
+test('properties independency', function () {
+    //Class a
+    //get private variables values
+    equal(a1.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a2.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a2.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a2.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    equal(a2.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(a1.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a2.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a2.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a2.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    equal(a2.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(a1.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a2.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a2.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a2.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    equal(a2.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    //Class b
+    //get private variables values
+    equal(b1.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b2.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b1.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b2.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b1.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b2.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b1.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    equal(b2.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(b1.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b2.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b1.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b2.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b1.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b2.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b1.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    equal(b2.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(b1.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b2.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b1.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b2.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b1.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b2.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b1.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    equal(b2.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    //Class c
+    //get private variables values
+    equal(c1.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c2.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c1.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c2.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c1.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c2.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c1.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    equal(c2.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(c1.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c2.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c1.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c2.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c1.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c2.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c1.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    equal(c2.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(c1.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c2.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c1.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c2.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c1.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c2.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c1.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    equal(c2.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+
+    //assignments
+    //Class a
+    //private variables
+    a1.apubdmSETapridpvv(101);
+    a2.apubdmSETapridpvv(1010);
+    a1.apubdmSETapridpvf(104);
+    a2.apubdmSETapridpvf(1040);
+    a1.apubdmSETapridpfv(106);
+    a2.apubdmSETapridpfv(1060);
+    a1.apubdmSETapridpff(108);
+    a2.apubdmSETapridpff(1080);
+    //protected variables
+    a1.apubdmSETaprodpvv(111);
+    a2.apubdmSETaprodpvv(1110);
+    a1.apubdmSETaprodpvf(114);
+    a2.apubdmSETaprodpvf(1140);
+    a1.apubdmSETaprodpfv(116);
+    a2.apubdmSETaprodpfv(1160);
+    a1.apubdmSETaprodpff(118);
+    a2.apubdmSETaprodpff(1180);
+    //public variables
+    a1.apubdmSETapubdpvv(121);
+    a2.apubdmSETapubdpvv(1210);
+    a1.apubdmSETapubdpvf(124);
+    a2.apubdmSETapubdpvf(1240);
+    a1.apubdmSETapubdpfv(126);
+    a2.apubdmSETapubdpfv(1260);
+    a1.apubdmSETapubdpff(128);
+    a2.apubdmSETapubdpff(1280);
+    //Class b
+    //private variables
+    b1.apubdmSETapridpvv(201);
+    b2.apubdmSETapridpvv(2010);
+    b1.apubdmSETapridpvf(204);
+    b2.apubdmSETapridpvf(2040);
+    b1.apubdmSETapridpfv(206);
+    b2.apubdmSETapridpfv(2060);
+    b1.apubdmSETapridpff(208);
+    b2.apubdmSETapridpff(2080);
+    //protected variables
+    b1.apubdmSETaprodpvv(211);
+    b2.apubdmSETaprodpvv(2110);
+    b1.apubdmSETaprodpvf(214);
+    b2.apubdmSETaprodpvf(2140);
+    b1.apubdmSETaprodpfv(216);
+    b2.apubdmSETaprodpfv(2160);
+    b1.apubdmSETaprodpff(218);
+    b2.apubdmSETaprodpff(2180);
+    //public variables
+    b1.apubdmSETapubdpvv(221);
+    b2.apubdmSETapubdpvv(2210);
+    b1.apubdmSETapubdpvf(224);
+    b2.apubdmSETapubdpvf(2240);
+    b1.apubdmSETapubdpfv(226);
+    b2.apubdmSETapubdpfv(2260);
+    b1.apubdmSETapubdpff(228);
+    b2.apubdmSETapubdpff(2280);
+    //Class c
+    //private variables
+    c1.apubdmSETapridpvv(301);
+    c2.apubdmSETapridpvv(3010);
+    c1.apubdmSETapridpvf(304);
+    c2.apubdmSETapridpvf(3040);
+    c1.apubdmSETapridpfv(306);
+    c2.apubdmSETapridpfv(3060);
+    c1.apubdmSETapridpff(308);
+    c2.apubdmSETapridpff(3080);
+    //protected variables
+    c1.apubdmSETaprodpvv(311);
+    c2.apubdmSETaprodpvv(3110);
+    c1.apubdmSETaprodpvf(314);
+    c2.apubdmSETaprodpvf(3140);
+    c1.apubdmSETaprodpfv(316);
+    c2.apubdmSETaprodpfv(3160);
+    c1.apubdmSETaprodpff(318);
+    c2.apubdmSETaprodpff(3180);
+    //public variables
+    c1.apubdmSETapubdpvv(321);
+    c2.apubdmSETapubdpvv(3210);
+    c1.apubdmSETapubdpvf(324);
+    c2.apubdmSETapubdpvf(3240);
+    c1.apubdmSETapubdpfv(326);
+    c2.apubdmSETapubdpfv(3260);
+    c1.apubdmSETapubdpff(328);
+    c2.apubdmSETapubdpff(3280);
+    //Checks
+    //Class a
+    //get private variables values
+    equal(a1.apubdmGETapridpvv(), 101, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a2.apubdmGETapridpvv(), 1010, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETapridpvf(), '104!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a2.apubdmGETapridpvf(), '1040!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapridpfv(), '?106', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a2.apubdmGETapridpfv(), '?1060', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETapridpff(), '?108!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    equal(a2.apubdmGETapridpff(), '?1080!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(a1.apubdmGETaprodpvv(), 111, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a2.apubdmGETaprodpvv(), 1110, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETaprodpvf(), '114!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a2.apubdmGETaprodpvf(), '1140!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETaprodpfv(), '?116', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a2.apubdmGETaprodpfv(), '?1160', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETaprodpff(), '?118!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    equal(a2.apubdmGETaprodpff(), '?1180!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(a1.apubdmGETapubdpvv(), 121, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a2.apubdmGETapubdpvv(), 1210, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETapubdpvf(), '124!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a2.apubdmGETapubdpvf(), '1240!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapubdpfv(), '?126', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a2.apubdmGETapubdpfv(), '?1260', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETapubdpff(), '?128!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    equal(a2.apubdmGETapubdpff(), '?1280!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    //Class b
+    //get private variables values
+    equal(b1.apubdmGETapridpvv(), 201, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b2.apubdmGETapridpvv(), 2010, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b1.apubdmGETapridpvf(), '204!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b2.apubdmGETapridpvf(), '2040!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b1.apubdmGETapridpfv(), '?206', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b2.apubdmGETapridpfv(), '?2060', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b1.apubdmGETapridpff(), '?208!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    equal(b2.apubdmGETapridpff(), '?2080!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(b1.apubdmGETaprodpvv(), 211, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b2.apubdmGETaprodpvv(), 2110, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b1.apubdmGETaprodpvf(), '214!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b2.apubdmGETaprodpvf(), '2140!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b1.apubdmGETaprodpfv(), '?216', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b2.apubdmGETaprodpfv(), '?2160', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b1.apubdmGETaprodpff(), '?218!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    equal(b2.apubdmGETaprodpff(), '?2180!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(b1.apubdmGETapubdpvv(), 221, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b2.apubdmGETapubdpvv(), 2210, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b1.apubdmGETapubdpvf(), '224!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b2.apubdmGETapubdpvf(), '2240!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b1.apubdmGETapubdpfv(), '?226', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b2.apubdmGETapubdpfv(), '?2260', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b1.apubdmGETapubdpff(), '?228!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    equal(b2.apubdmGETapubdpff(), '?2280!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    //Class c
+    //get private variables values
+    equal(c1.apubdmGETapridpvv(), 301, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c2.apubdmGETapridpvv(), 3010, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c1.apubdmGETapridpvf(), '304!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c2.apubdmGETapridpvf(), '3040!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c1.apubdmGETapridpfv(), '?306', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c2.apubdmGETapridpfv(), '?3060', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c1.apubdmGETapridpff(), '?308!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    equal(c2.apubdmGETapridpff(), '?3080!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(c1.apubdmGETaprodpvv(), 311, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c2.apubdmGETaprodpvv(), 3110, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c1.apubdmGETaprodpvf(), '314!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c2.apubdmGETaprodpvf(), '3140!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c1.apubdmGETaprodpfv(), '?316', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c2.apubdmGETaprodpfv(), '?3160', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c1.apubdmGETaprodpff(), '?318!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    equal(c2.apubdmGETaprodpff(), '?3180!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(c1.apubdmGETapubdpvv(), 321, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c2.apubdmGETapubdpvv(), 3210, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c1.apubdmGETapubdpvf(), '324!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c2.apubdmGETapubdpvf(), '3240!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c1.apubdmGETapubdpfv(), '?326', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c2.apubdmGETapubdpfv(), '?3260', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c1.apubdmGETapubdpff(), '?328!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    equal(c2.apubdmGETapubdpff(), '?3280!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    //assign back
+    //Class a
+    //private variables
+    a1.apubdmSETapridpvv(1);
+    a2.apubdmSETapridpvv(1);
+    a1.apubdmSETapridpvf(4);
+    a2.apubdmSETapridpvf(4);
+    a1.apubdmSETapridpfv(6);
+    a2.apubdmSETapridpfv(6);
+    a1.apubdmSETapridpff(8);
+    a2.apubdmSETapridpff(8);
+    //protected variables
+    a1.apubdmSETaprodpvv(11);
+    a2.apubdmSETaprodpvv(11);
+    a1.apubdmSETaprodpvf(14);
+    a2.apubdmSETaprodpvf(14);
+    a1.apubdmSETaprodpfv(16);
+    a2.apubdmSETaprodpfv(16);
+    a1.apubdmSETaprodpff(18);
+    a2.apubdmSETaprodpff(18);
+    //public variables
+    a1.apubdmSETapubdpvv(21);
+    a2.apubdmSETapubdpvv(21);
+    a1.apubdmSETapubdpvf(24);
+    a2.apubdmSETapubdpvf(24);
+    a1.apubdmSETapubdpfv(26);
+    a2.apubdmSETapubdpfv(26);
+    a1.apubdmSETapubdpff(28);
+    a2.apubdmSETapubdpff(28);
+    //Class b
+    //private variables
+    b1.apubdmSETapridpvv(1);
+    b2.apubdmSETapridpvv(1);
+    b1.apubdmSETapridpvf(4);
+    b2.apubdmSETapridpvf(4);
+    b1.apubdmSETapridpfv(6);
+    b2.apubdmSETapridpfv(6);
+    b1.apubdmSETapridpff(8);
+    b2.apubdmSETapridpff(8);
+    //protected variables
+    b1.apubdmSETaprodpvv(11);
+    b2.apubdmSETaprodpvv(11);
+    b1.apubdmSETaprodpvf(14);
+    b2.apubdmSETaprodpvf(14);
+    b1.apubdmSETaprodpfv(16);
+    b2.apubdmSETaprodpfv(16);
+    b1.apubdmSETaprodpff(18);
+    b2.apubdmSETaprodpff(18);
+    //public variables
+    b1.apubdmSETapubdpvv(21);
+    b2.apubdmSETapubdpvv(21);
+    b1.apubdmSETapubdpvf(24);
+    b2.apubdmSETapubdpvf(24);
+    b1.apubdmSETapubdpfv(26);
+    b2.apubdmSETapubdpfv(26);
+    b1.apubdmSETapubdpff(28);
+    b2.apubdmSETapubdpff(28);
+    //Class c
+    //private variables
+    c1.apubdmSETapridpvv(1);
+    c2.apubdmSETapridpvv(1);
+    c1.apubdmSETapridpvf(4);
+    c2.apubdmSETapridpvf(4);
+    c1.apubdmSETapridpfv(6);
+    c2.apubdmSETapridpfv(6);
+    c1.apubdmSETapridpff(8);
+    c2.apubdmSETapridpff(8);
+    //protected variables
+    c1.apubdmSETaprodpvv(11);
+    c2.apubdmSETaprodpvv(11);
+    c1.apubdmSETaprodpvf(14);
+    c2.apubdmSETaprodpvf(14);
+    c1.apubdmSETaprodpfv(16);
+    c2.apubdmSETaprodpfv(16);
+    c1.apubdmSETaprodpff(18);
+    c2.apubdmSETaprodpff(18);
+    //public variables
+    c1.apubdmSETapubdpvv(21);
+    c2.apubdmSETapubdpvv(21);
+    c1.apubdmSETapubdpvf(24);
+    c2.apubdmSETapubdpvf(24);
+    c1.apubdmSETapubdpfv(26);
+    c2.apubdmSETapubdpfv(26);
+    c1.apubdmSETapubdpff(28);
+    c2.apubdmSETapubdpff(28);
+    //Class a
+    //get private variables values
+    equal(a1.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a2.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a2.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    equal(a2.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(a1.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a2.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a2.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a2.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    equal(a2.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(a1.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a2.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property A with value=value,getter=value,setter=value');
+    equal(a1.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a2.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property A with value=value,getter=value,setter=function');
+    equal(a1.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a2.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property A with value=value,getter=function,setter=value');
+    equal(a1.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    equal(a2.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property A with value=value,getter=function,setter=function');
+    //Class b
+    //get private variables values
+    equal(b1.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b2.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b1.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b2.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b1.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b2.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b1.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    equal(b2.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(b1.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b2.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b1.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b2.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b1.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b2.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b1.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    equal(b2.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(b1.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b2.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property B with value=value,getter=value,setter=value');
+    equal(b1.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b2.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property B with value=value,getter=value,setter=function');
+    equal(b1.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b2.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property B with value=value,getter=function,setter=value');
+    equal(b1.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    equal(b2.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property B with value=value,getter=function,setter=function');
+    //Class c
+    //get private variables values
+    equal(c1.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c2.apubdmGETapridpvv(), 1, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c1.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c2.apubdmGETapridpvf(), '4!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c1.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c2.apubdmGETapridpfv(), '?6', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c1.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    equal(c2.apubdmGETapridpff(), '?8!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    //get protected variables values
+    equal(c1.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c2.apubdmGETaprodpvv(), 11, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c1.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c2.apubdmGETaprodpvf(), '14!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c1.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c2.apubdmGETaprodpfv(), '?16', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c1.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    equal(c2.apubdmGETaprodpff(), '?18!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    //get public variables values
+    equal(c1.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c2.apubdmGETapubdpvv(), 21, 'check value fetched by public method from private static property C with value=value,getter=value,setter=value');
+    equal(c1.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c2.apubdmGETapubdpvf(), '24!', 'check value fetched by public method from private static property C with value=value,getter=value,setter=function');
+    equal(c1.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c2.apubdmGETapubdpfv(), '?26', 'check value fetched by public method from private static property C with value=value,getter=function,setter=value');
+    equal(c1.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+    equal(c2.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
+});
+test('downcall', function () {
+    //Class a
+    ok(true);
 });
 
 

@@ -169,7 +169,7 @@
                     __defined(this, name) || __define(this, name, data[name].realDescriptor);
                     (function () {
                         this[name] = data[name].value;
-                    })();
+                    }).call(this);
                 }
             };
             //save class as const
