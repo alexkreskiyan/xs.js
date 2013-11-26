@@ -157,23 +157,29 @@
                 this.privates = function () {
                     return __privates;
                 }
-                var data = __storage.dynamic.property;
+                var properties = __storage.dynamic.property;
+                var methods = __storage.dynamic.method;
                 this.__get = function (name) {
                     var caller = arguments.callee.caller;
-                    var getter = data[name].realDescriptor.getter;
+                    var getter = properties[name].realDescriptor.getter;
                     return (caller == getter || caller.caller == getter) ? __privates[name] : undefined;
                 };
                 this.__set = function (name, value) {
                     var caller = arguments.callee.caller;
-                    var setter = data[name].realDescriptor.setter;
+                    var setter = properties[name].realDescriptor.setter;
                     (caller == setter || caller.caller == setter) && (__privates[name] = value);
                     return this;
                 };
                 //define instance properties
-                for (name in data) {
-                    if (!data.hasOwnProperty(name)) continue;
-                    __defined(this, name) || __define(this, name, data[name].realDescriptor);
-                    this[name] = data[name].realDescriptor.default;
+                for (name in properties) {
+                    if (!properties.hasOwnProperty(name)) continue;
+                    __defined(this, name) || __define(this, name, properties[name].realDescriptor);
+                    this[name] = properties[name].realDescriptor.default;
+                }
+                //and methods
+                for (name in methods) {
+                    if (!methods.hasOwnProperty(name)) continue;
+                    __defined(this, name) || __define(this, name, methods[name].realDescriptor);
                 }
             };
             //save class as const
@@ -194,6 +200,11 @@
                 (caller == setter || caller.caller == setter) && (__privates[name] = value);
                 return this;
             };
+            //prototype emulation
+            var __proto = {};
+            cls.proto = function () {
+                return __proto;
+            }
             //property declaration
             //define properties function
             cls.properties = function (usage, type, value) {
@@ -231,7 +242,9 @@
                 //object to assign property
                 var object = usage == 'static' ? this : this.prototype;
                 //do not declare dynamic properties
-                (usage == 'dynamic' && type == 'property') || __define(object, name, data[name].realDescriptor);
+                usage == 'static' && __define(object, name, data[name].realDescriptor);
+                //add dynamic methods to prototype
+                usage == 'dynamic' && type == 'method' && (__proto[name] = data[name].realDescriptor.method);
                 //assign value to static propeties
                 usage == 'static' && type == 'property' && (object[name] = descriptor.default);
                 return this;
@@ -265,7 +278,7 @@
                 return this.super ? this.super.constructor : this;
             };
             cls.publicMethod('parent', function () {
-                return this.constructor.parent().prototype;
+                return this.constructor.parent();
             });
             cls.publicMethod('self', function () {
                 return this.constructor;
@@ -402,7 +415,7 @@
         function __before(cls) {
             var self = this._self, parent = this._parent;
             this._self = cls;
-            this._parent = cls.parent().prototype;
+            this._parent = cls.parent().proto();
             return {self: self, parent: parent};
         }
 

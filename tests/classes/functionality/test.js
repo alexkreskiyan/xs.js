@@ -603,19 +603,19 @@ module('static inheritance');
 test('inheritance basics', function () {
     //root class check
     equal(xs.a.parent(), xs.a, 'root class check: parent() refers class itself');
-    equal(a1.parent(), xs.a.prototype, 'root class instance check: parent() refers class prototype');
+    equal(a1.parent(), xs.a, 'root class instance check: parent() refers class');
     equal(a1.self(), xs.a, 'root class instance check: self() refers class');
     //child level 1 check
     equal(xs.b.parent(), xs.a, 'child level 1 class check: parent() refers root class');
-    equal(b1.parent(), xs.a.prototype, 'child level 1 class instance check: parent() refers root class prototype');
+    equal(b1.parent(), xs.a, 'child level 1 class instance check: parent() refers root class prototype');
     equal(b1.self(), xs.b, 'child level 1 instance check: self() refers class');
     //child level 2 check
     equal(xs.c.parent(), xs.b, 'child level 2 class check: parent() refers child level 1');
-    equal(c1.parent(), xs.b.prototype, 'child level 2 class instance check: parent() refers child level 1 prototype');
+    equal(c1.parent(), xs.b, 'child level 2 class instance check: parent() refers child level 1 prototype');
     equal(c1.self(), xs.c, 'child level 2 instance check: self() refers class');
     //child level 2 check deep
     equal(xs.c.parent().parent(), xs.a, 'child level 2 class check: parent().parent() refers root class');
-    equal(c1.parent().parent(), xs.a.prototype, 'child level 2 class instance check: parent().parent() refers root class prototype');
+    equal(c1.parent().parent(), xs.a, 'child level 2 class instance check: parent().parent() refers root class prototype');
 });
 test('static properties independency', function () {
     //Class a
