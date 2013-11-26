@@ -84,20 +84,20 @@ function xsStart(suffix) {
         this.x = x;
     }, [0]);
     //private static properties variations
-    xs['a' + suffix].privateStaticProperty('aprispvv', 1, 2, 3);
-    xs['a' + suffix].privateStaticProperty('aprispvf', 4, 5, setter('aprispvf'));
-    xs['a' + suffix].privateStaticProperty('aprispfv', 6, getter('aprispfv'), 7);
-    xs['a' + suffix].privateStaticProperty('aprispff', 8, getter('aprispff'), setter('aprispff'));
+    xs['a' + suffix].privateStaticProperty('aprispvv', {value: 1, get: 2, set: 3});
+    xs['a' + suffix].privateStaticProperty('aprispvf', {value: 4, get: 5, set: setter('aprispvf')});
+    xs['a' + suffix].privateStaticProperty('aprispfv', {value: 6, get: getter('aprispfv'), set: 7});
+    xs['a' + suffix].privateStaticProperty('aprispff', {value: 8, get: getter('aprispff'), set: setter('aprispff')});
     //protected static properties variations
-    xs['a' + suffix].protectedStaticProperty('aprospvv', 11, 12, 13);
-    xs['a' + suffix].protectedStaticProperty('aprospvf', 14, 15, setter('aprospvf'));
-    xs['a' + suffix].protectedStaticProperty('aprospfv', 16, getter('aprospfv'), 17);
-    xs['a' + suffix].protectedStaticProperty('aprospff', 18, getter('aprospff'), setter('aprospff'));
+    xs['a' + suffix].protectedStaticProperty('aprospvv', {value: 11, get: 12, set: 13});
+    xs['a' + suffix].protectedStaticProperty('aprospvf', {value: 14, get: 15, set: setter('aprospvf')});
+    xs['a' + suffix].protectedStaticProperty('aprospfv', {value: 16, get: getter('aprospfv'), set: 17});
+    xs['a' + suffix].protectedStaticProperty('aprospff', {value: 18, get: getter('aprospff'), set: setter('aprospff')});
     //public static properties variations
-    xs['a' + suffix].publicStaticProperty('apubspvv', 21, 22, 23);
-    xs['a' + suffix].publicStaticProperty('apubspvf', 24, 25, setter('apubspvf'));
-    xs['a' + suffix].publicStaticProperty('apubspfv', 26, getter('apubspfv'), 27);
-    xs['a' + suffix].publicStaticProperty('apubspff', 28, getter('apubspff'), setter('apubspff'));
+    xs['a' + suffix].publicStaticProperty('apubspvv', {value: 21, get: 22, set: 23});
+    xs['a' + suffix].publicStaticProperty('apubspvf', {value: 24, get: 25, set: setter('apubspvf')});
+    xs['a' + suffix].publicStaticProperty('apubspfv', {value: 26, get: getter('apubspfv'), set: 27});
+    xs['a' + suffix].publicStaticProperty('apubspff', {value: 28, get: getter('apubspff'), set: setter('apubspff')});
     //private static getters/setters for private static properties
     xs['a' + suffix].privateStaticMethod('aprismGETaprispvv', getMethod('aprispvv'));
     xs['a' + suffix].privateStaticMethod('aprismSETaprispvv', setMethod('aprispvv'));
@@ -144,20 +144,20 @@ function xsStart(suffix) {
     xs['a' + suffix].publicStaticMethod('apubsmGETapubspff', getMethod('apubspff'));
     xs['a' + suffix].publicStaticMethod('apubsmSETapubspff', setMethod('apubspff'));
     //private properties variations
-    xs['a' + suffix].privateProperty('apridpvv', 1, 2, 3);
-    xs['a' + suffix].privateProperty('apridpvf', 4, 5, setter('apridpvf'));
-    xs['a' + suffix].privateProperty('apridpfv', 6, getter('apridpfv'), 7);
-    xs['a' + suffix].privateProperty('apridpff', 8, getter('apridpff'), setter('apridpff'));
+    xs['a' + suffix].privateProperty('apridpvv', {value: 1, get: 2, set: 3});
+    xs['a' + suffix].privateProperty('apridpvf', {value: 4, get: 5, set: setter('apridpvf')});
+    xs['a' + suffix].privateProperty('apridpfv', {value: 6, get: getter('apridpfv'), set: 7});
+    xs['a' + suffix].privateProperty('apridpff', {value: 8, get: getter('apridpff'), set: setter('apridpff')});
     //protected properties variations
-    xs['a' + suffix].protectedProperty('aprodpvv', 11, 12, 13);
-    xs['a' + suffix].protectedProperty('aprodpvf', 14, 15, setter('aprodpvf'));
-    xs['a' + suffix].protectedProperty('aprodpfv', 16, getter('aprodpfv'), 17);
-    xs['a' + suffix].protectedProperty('aprodpff', 18, getter('aprodpff'), setter('aprodpff'));
+    xs['a' + suffix].protectedProperty('aprodpvv', {value: 11, get: 12, set: 13});
+    xs['a' + suffix].protectedProperty('aprodpvf', {value: 14, get: 15, set: setter('aprodpvf')});
+    xs['a' + suffix].protectedProperty('aprodpfv', {value: 16, get: getter('aprodpfv'), set: 17});
+    xs['a' + suffix].protectedProperty('aprodpff', {value: 18, get: getter('aprodpff'), set: setter('aprodpff')});
     //public properties variations
-    xs['a' + suffix].publicProperty('apubdpvv', 21, 22, 23);
-    xs['a' + suffix].publicProperty('apubdpvf', 24, 25, setter('apubdpvf'));
-    xs['a' + suffix].publicProperty('apubdpfv', 26, getter('apubdpfv'), 27);
-    xs['a' + suffix].publicProperty('apubdpff', 28, getter('apubdpff'), setter('apubdpff'));
+    xs['a' + suffix].publicProperty('apubdpvv', {value: 21, get: 22, set: 23});
+    xs['a' + suffix].publicProperty('apubdpvf', {value: 24, get: 25, set: setter('apubdpvf')});
+    xs['a' + suffix].publicProperty('apubdpfv', {value: 26, get: getter('apubdpfv'), set: 27});
+    xs['a' + suffix].publicProperty('apubdpff', {value: 28, get: getter('apubdpff'), set: setter('apubdpff')});
     //private getters/setters for private properties
     xs['a' + suffix].privateMethod('apridmGETapridpvv', getMethod('apridpvv'));
     xs['a' + suffix].privateMethod('apridmSETapridpvv', setMethod('apridpvv'));
@@ -204,9 +204,9 @@ function xsStart(suffix) {
     xs['a' + suffix].publicMethod('apubdmGETapubdpff', getMethod('apubdpff'));
     xs['a' + suffix].publicMethod('apubdmSETapubdpff', setMethod('apubdpff'));
     //downcalls check methods and properties
-    xs['a' + suffix].privateProperty('apridpvvsc', 1);
-    xs['a' + suffix].protectedProperty('aprodpvvsc', 2);
-    xs['a' + suffix].publicProperty('apubdpvvsc', 3);
+    xs['a' + suffix].privateProperty('apridpvvsc', {value: 1});
+    xs['a' + suffix].protectedProperty('aprodpvvsc', {value: 2});
+    xs['a' + suffix].publicProperty('apubdpvvsc', {value: 3});
     xs['a' + suffix].privateMethod('apridmGETapridpvvsc', getMethod('apridpvvsc'));
     xs['a' + suffix].privateMethod('apridmSETapridpvvsc', setMethod('apridpvvsc'));
     xs['a' + suffix].protectedMethod('aprodmGETapridpvvsc', getMethod('apridpvvsc'));
@@ -227,13 +227,14 @@ function xsStart(suffix) {
     xs['a' + suffix].publicMethod('apubdmSETapubdpvvsc', setMethod('apubdpvvsc'));
     //class b
     xs.createClass('b' + suffix);
+    xs['b' + suffix].extend(xs['a' + suffix]);
     xs['b' + suffix].constructor(function (x, y) {
         this.parent().constructor.call(this, x);
         this.y = y;
     }, [0, 0]);
-    xs['b' + suffix].privateProperty('bpridpvvsc', 4);
-    xs['b' + suffix].protectedProperty('bprodpvvsc', 5);
-    xs['b' + suffix].publicProperty('bpubdpvvsc', 6);
+    xs['b' + suffix].privateProperty('bpridpvvsc', {value: 4});
+    xs['b' + suffix].protectedProperty('bprodpvvsc', {value: 5});
+    xs['b' + suffix].publicProperty('bpubdpvvsc', {value: 6});
     xs['b' + suffix].privateMethod('bpridmGETbpridpvvsc', getMethod('bpridpvvsc'));
     xs['b' + suffix].privateMethod('bpridmSETbpridpvvsc', setMethod('bpridpvvsc'));
     xs['b' + suffix].protectedMethod('bprodmGETbpridpvvsc', getMethod('bpridpvvsc'));
@@ -272,13 +273,14 @@ function xsStart(suffix) {
     xs['b' + suffix].publicMethod('bpubdmSETapubdpvvsc', setMethodParent('apubdpvvsc'));
     //class c
     xs.createClass('c' + suffix);
+    xs['c' + suffix].extend(xs['b' + suffix]);
     xs['c' + suffix].constructor(function (x, y, z) {
         this.parent().constructor.call(this, x, y);
         this.z = z;
     }, [0, 0, 0]);
-    xs['c' + suffix].privateProperty('cpridpvvsc', 7);
-    xs['c' + suffix].protectedProperty('cprodpvvsc', 8);
-    xs['c' + suffix].publicProperty('cpubdpvvsc', 9);
+    xs['c' + suffix].privateProperty('cpridpvvsc', {value: 7});
+    xs['c' + suffix].protectedProperty('cprodpvvsc', {value: 8});
+    xs['c' + suffix].publicProperty('cpubdpvvsc', {value: 9});
     xs['c' + suffix].privateMethod('cpridmGETbpridpvvsc', getMethod('cpridpvvsc'));
     xs['c' + suffix].privateMethod('cpridmSETbpridpvvsc', setMethod('cpridpvvsc'));
     xs['c' + suffix].protectedMethod('cprodmGETbpridpvvsc', getMethod('cpridpvvsc'));
@@ -315,26 +317,24 @@ function xsStart(suffix) {
     xs['c' + suffix].protectedMethod('cprodmSETapubdpvvsc', setMethodParent('apubdpvvsc'));
     xs['c' + suffix].publicMethod('cpubdmGETapubdpvvsc', getMethodParent('apubdpvvsc'));
     xs['c' + suffix].publicMethod('cpubdmSETapubdpvvsc', setMethodParent('apubdpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmGETbpridpvvsc', getMethodDown('bpridmGETapridpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmSETbpridpvvsc', setMethodDown('bpridmSETapridpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmGETbpridpvvsc', getMethodDown('bprodmGETapridpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmSETbpridpvvsc', setMethodDown('bprodmSETapridpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmGETbpridpvvsc', getMethodDown('bpubdmGETapridpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmSETbpridpvvsc', setMethodDown('bpubdmSETapridpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmGETbprodpvvsc', getMethodDown('bpridmGETaprodpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmSETbprodpvvsc', setMethodDown('bpridmSETaprodpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmGETbprodpvvsc', getMethodDown('bprodmGETaprodpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmSETbprodpvvsc', setMethodDown('bprodmSETaprodpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmGETbprodpvvsc', getMethodDown('bpubdmGETaprodpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmSETbprodpvvsc', setMethodDown('bpubdmSETaprodpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmGETbpubdpvvsc', getMethodDown('bpridmGETapubdpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmSETbpubdpvvsc', setMethodDown('bpridmSETapubdpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmGETbpubdpvvsc', getMethodDown('bprodmGETapubdpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmSETbpubdpvvsc', setMethodDown('bprodmSETapubdpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmGETbpubdpvvsc', getMethodDown('bpubdmGETapubdpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmSETbpubdpvvsc', setMethodDown('bpubdmSETapubdpvvsc'));
-    xs['b' + suffix].extend(xs['a' + suffix]);
-    xs['c' + suffix].extend(xs['b' + suffix]);
+    xs['c' + suffix].privateMethod('cpridmGETbpridpvvdc', getMethodDown('bpridmGETapridpvvsc'));
+    xs['c' + suffix].privateMethod('cpridmSETbpridpvvdc', setMethodDown('bpridmSETapridpvvsc'));
+    xs['c' + suffix].protectedMethod('cprodmGETbpridpvvdc', getMethodDown('bprodmGETapridpvvsc'));
+    xs['c' + suffix].protectedMethod('cprodmSETbpridpvvdc', setMethodDown('bprodmSETapridpvvsc'));
+    xs['c' + suffix].publicMethod('cpubdmGETbpridpvvdc', getMethodDown('bpubdmGETapridpvvsc'));
+    xs['c' + suffix].publicMethod('cpubdmSETbpridpvvdc', setMethodDown('bpubdmSETapridpvvsc'));
+    xs['c' + suffix].privateMethod('cpridmGETbprodpvvdc', getMethodDown('bpridmGETaprodpvvsc'));
+    xs['c' + suffix].privateMethod('cpridmSETbprodpvvdc', setMethodDown('bpridmSETaprodpvvsc'));
+    xs['c' + suffix].protectedMethod('cprodmGETbprodpvvdc', getMethodDown('bprodmGETaprodpvvsc'));
+    xs['c' + suffix].protectedMethod('cprodmSETbprodpvvdc', setMethodDown('bprodmSETaprodpvvsc'));
+    xs['c' + suffix].publicMethod('cpubdmGETbprodpvvdc', getMethodDown('bpubdmGETaprodpvvsc'));
+    xs['c' + suffix].publicMethod('cpubdmSETbprodpvvdc', setMethodDown('bpubdmSETaprodpvvsc'));
+    xs['c' + suffix].privateMethod('cpridmGETbpubdpvvdc', getMethodDown('bpridmGETapubdpvvsc'));
+    xs['c' + suffix].privateMethod('cpridmSETbpubdpvvdc', setMethodDown('bpridmSETapubdpvvsc'));
+    xs['c' + suffix].protectedMethod('cprodmGETbpubdpvvdc', getMethodDown('bprodmGETapubdpvvsc'));
+    xs['c' + suffix].protectedMethod('cprodmSETbpubdpvvdc', setMethodDown('bprodmSETapubdpvvsc'));
+    xs['c' + suffix].publicMethod('cpubdmGETbpubdpvvdc', getMethodDown('bpubdmGETapubdpvvsc'));
+    xs['c' + suffix].publicMethod('cpubdmSETbpubdpvvdc', setMethodDown('bpubdmSETapubdpvvsc'));
     a1 = new xs['a' + suffix]();
     a2 = new xs['a' + suffix](4);
     b1 = new xs['b' + suffix](3);
@@ -539,19 +539,19 @@ module('static inheritance');
 test('inheritance basics', function () {
     //root class check
     equal(xs.a.parent(), xs.a, 'root class check: parent() refers class itself');
-    equal(a1.parent(), xs.a, 'root class instance check: parent() refers class itself');
-    equal(a1.self(), xs.a, 'root class instance check: self() refers class itself');
+    equal(a1.parent(), xs.a.prototype, 'root class instance check: parent() refers class prototype');
+    equal(a1.self(), xs.a.prototype, 'root class instance check: self() refers class prototype');
     //child level 1 check
     equal(xs.b.parent(), xs.a, 'child level 1 class check: parent() refers root class');
-    equal(b1.parent(), xs.a, 'child level 1 class instance check: parent() refers root class');
-    equal(b1.self(), xs.b, 'child level 1 instance check: self() refers class itself');
+    equal(b1.parent(), xs.a.prototype, 'child level 1 class instance check: parent() refers root class prototype');
+    equal(b1.self(), xs.b.prototype, 'child level 1 instance check: self() refers class prototype');
     //child level 2 check
     equal(xs.c.parent(), xs.b, 'child level 2 class check: parent() refers child level 1');
-    equal(c1.parent(), xs.b, 'child level 2 class instance check: parent() refers child level 1');
-    equal(c1.self(), xs.c, 'child level 2 instance check: self() refers class itself');
+    equal(c1.parent(), xs.b.prototype, 'child level 2 class instance check: parent() refers child level 1 prototype');
+    equal(c1.self(), xs.c.prototype, 'child level 2 instance check: self() refers class prototype');
     //child level 2 check deep
     equal(xs.c.parent().parent(), xs.a, 'child level 2 class check: parent().parent() refers root class');
-    equal(c1.parent().parent(), xs.a, 'child level 2 class instance check: parent().parent() refers root class');
+    equal(c1.parent().parent(), xs.a.prototype, 'child level 2 class instance check: parent().parent() refers root class prototype');
 });
 test('static properties independency', function () {
     //Class a

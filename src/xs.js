@@ -129,8 +129,8 @@
             }
             //return class if already has
             if (this.hasClass(name)) return this.getClass(name);
-            //define private class storage
-            var _storage = {
+            //define private class declarations storage
+            var __storage = {
                 static: {
                     property: {},
                     method: {}
@@ -145,7 +145,7 @@
             // create class
             var cls = _classes[name] = function Class() {
                 !_.isFunction(cls._constructor) || cls._constructor.apply(this, __defaults(_.values(arguments), cls._options));
-                var caller = arguments.callee.caller && arguments.callee.caller._class;
+                var caller = arguments.callee.caller && arguments.callee.caller.__class;
                 //return if nested construction
                 if (caller && _.isFunction(caller.isChild) && caller.isChild(cls)) {
                     return;
@@ -155,21 +155,23 @@
                 this.privates = function () {
                     return __privates;
                 }
-                var data = _storage.dynamic.property;
+                var data = __storage.dynamic.property;
                 this.__get = function (name) {
-                    return arguments.callee.caller.caller === data[name].realDescriptor.getter ? __privates[name] : undefined;
+                    var caller = arguments.callee.caller;
+                    var getter = data[name].realDescriptor.getter;
+                    return (caller == getter || caller.caller == getter) ? __privates[name] : undefined;
                 };
                 this.__set = function (name, value) {
-                    arguments.callee.caller.caller === data[name].realDescriptor.setter && (__privates[name] = value);
+                    var caller = arguments.callee.caller;
+                    var setter = data[name].realDescriptor.setter;
+                    (caller == setter || caller.caller == setter) && (__privates[name] = value);
                     return this;
                 };
                 //define instance properties
                 for (name in data) {
                     if (!data.hasOwnProperty(name)) continue;
                     __defined(this, name) || __define(this, name, data[name].realDescriptor);
-                    (function () {
-                        this[name] = data[name].value;
-                    }).call(this);
+                    this[name] = data[name].realDescriptor.default;
                 }
             };
             //save class as const
@@ -180,33 +182,41 @@
             cls.const = _const;
             //static getter/setter
             cls.__get = function (name) {
-                return arguments.callee.caller.caller === _storage.static.property[name].realDescriptor.getter ? __privates[name] : undefined;
+                var caller = arguments.callee.caller;
+                var getter = __storage.static.property[name].realDescriptor.getter;
+                return (caller == getter || caller.caller == getter) ? __privates[name] : undefined;
             };
             cls.__set = function (name, value) {
-                arguments.callee.caller.caller === _storage.static.property[name].realDescriptor.setter && (__privates[name] = value);
+                var caller = arguments.callee.caller;
+                var setter = __storage.static.property[name].realDescriptor.setter;
+                (caller == setter || caller.caller == setter) && (__privates[name] = value);
                 return this;
             };
             //property declaration
             //define properties function
             cls.properties = function (usage, type, value) {
-                var allow = arguments.callee.caller === __extend;
+                var allow = arguments.callee.caller === __extend || true;
                 if (!allow)
                     return value ? [] : undefined;
-                if (!value)
-                    return _storage[usage][type];
+                if (!value) {
+                    var inheritedProperties = {};
+                    _.each(__storage[usage][type], function (property, name) {
+                        property.descriptor.inherit && (inheritedProperties[name] = property);
+                    }, this);
+                    return inheritedProperties;
+                }
                 _.each(value, function (property, name) {
-                    this.property(usage, property.access, type, name, property.descriptor, property.value);
+                    this.property(usage, property.access, type, name, property.descriptor);
                 }, this);
                 return this;
             };
             //add property function
-            cls.property = function (usage, access, type, name, descriptor, value) {
+            cls.property = function (usage, access, type, name, descriptor) {
                 if (!nameRe.test(name)) return this;
-                var data = _storage[usage][type];
-                data[name] || (function () {
+                var data = __storage[usage][type];
+                if (!data[name]) {
                     data[name] = {
                         descriptor: __descriptor(this, type, name, descriptor, access),
-                        value: value,
                         access: access
                     };
                     var realDescriptor = _.clone(data[name].descriptor);
@@ -215,19 +225,17 @@
                     realDescriptor.getter && (realDescriptor.get = realDescriptor.getter);
                     realDescriptor.setter && (realDescriptor.set = realDescriptor.setter);
                     data[name].realDescriptor = realDescriptor;
-                }).call(this);
+                }
+                //object to assign property
                 var object = usage == 'static' ? this : this.prototype;
                 //do not declare dynamic properties
-                (usage == 'dynamic' && type == 'property') ||
-                    __defined(object, name) || __define(object, name, data[name].realDescriptor);
+                (usage == 'dynamic' && type == 'property') || __define(object, name, data[name].realDescriptor);
                 //assign value to static propeties
-                usage == 'static' && type == 'property' && (function () {
-                    object[name] = value;
-                })();
+                usage == 'static' && type == 'property' && (object[name] = descriptor.default);
                 return this;
             };
             //needed to recognize function as private
-            cls.property._class = cls;
+            cls.property.__class = cls;
             //properties declaration
             cls.publicProperty = _publicProperty;
             cls.protectedProperty = _protectedProperty;
@@ -255,13 +263,21 @@
                 return this.super ? this.super.constructor : this;
             });
             cls.publicMethod('parent', function () {
-                return arguments.callee.caller._class.parent();
+                var caller = arguments.callee.caller;
+                //first check external call (console, code, or other classes)
+                if (caller.caller && caller.caller.__class) return caller.caller.__class.parent().prototype;
+                if (caller.__class) return caller.__class.parent().prototype;
+                return {};
             });
             cls.publicMethod('self', function () {
-                return arguments.callee.caller._class;
+                var caller = arguments.callee.caller;
+                //first check external call (console, code, or other classes)
+                if (caller.caller && caller.caller.__class) return caller.caller.__class.prototype;
+                if (caller.__class) return caller.__class.prototype;
+                return {};
             });
             cls.publicStaticMethod('storage', function () {
-                return _storage;
+                return __storage;
             });
             cls.publicStaticMethod('privates', function () {
                 return __privates;
@@ -291,7 +307,7 @@
         }
 
         function _constructor(constructor, options) {
-            constructor._class = this;
+            constructor.__class = this;
             this._constructor = constructor;
             this._options = options || [];
             return this;
@@ -307,87 +323,112 @@
             return this;
         }
 
-        function _property(usage, access, name, value, getter, setter) {
-            return this.property(usage, access, 'property', name, {
-                get: getter,
-                set: setter,
-                value: value,
+        function _property(usage, access, name, options) {
+            options || (options = {});
+            var descriptor = {
                 writable: true,
                 configurable: true,
                 enumerable: true
-            }, value);
+            };
+            options.value && (descriptor.value = options.value);
+            _.isFunction(options.get) && (descriptor.get = options.get);
+            _.isFunction(options.set) && (descriptor.set = options.set);
+            descriptor.default = descriptor.value;
+            descriptor.inherit = options.hasOwnProperty('inherit') ? !!options.inherit : true;
+            return this.property(usage, access, 'property', name, descriptor);
         }
 
-        function _publicProperty(name, value, getter, setter) {
-            return _property.call(this, 'dynamic', 'public', name, value, getter, setter);
+        function _publicProperty(name, options) {
+            return _property.call(this, 'dynamic', 'public', name, options);
         }
 
-        function _protectedProperty(name, value, getter, setter) {
-            return _property.call(this, 'dynamic', 'protected', name, value, getter, setter);
+        function _protectedProperty(name, options) {
+            return _property.call(this, 'dynamic', 'protected', name, options);
         }
 
-        function _privateProperty(name, value, getter, setter) {
-            return _property.call(this, 'dynamic', 'private', name, value, getter, setter);
+        function _privateProperty(name, options) {
+            return _property.call(this, 'dynamic', 'private', name, options);
         }
 
-        function _publicStaticProperty(name, value, getter, setter) {
-            return _property.call(this, 'static', 'public', name, value, getter, setter);
+        function _publicStaticProperty(name, options) {
+            return _property.call(this, 'static', 'public', name, options);
         }
 
-        function _protectedStaticProperty(name, value, getter, setter) {
-            return _property.call(this, 'static', 'protected', name, value, getter, setter);
+        function _protectedStaticProperty(name, options) {
+            return _property.call(this, 'static', 'protected', name, options);
         }
 
-        function _privateStaticProperty(name, value, getter, setter) {
-            return _property.call(this, 'static', 'private', name, value, getter, setter);
+        function _privateStaticProperty(name, options) {
+            return _property.call(this, 'static', 'private', name, options);
         }
 
-        function _method(usage, access, name, method, defaults) {
+        function _method(usage, access, name, method, options) {
             if (!_.isFunction(method)) {
                 return this;
             }
-            return this.property(usage, access, 'method', name, {
+            options || (options = {});
+            if (!options || !_.isArray(options.default)) {
+                options.default = [];
+            }
+            var descriptor = {
                 value: method,
-                defaults: defaults,
-                writable: false,
+                writable: true,
                 configurable: true,
                 enumerable: true
-            }, null);
+            };
+            descriptor.default = options.default;
+            descriptor.inherit = options.hasOwnProperty('inherit') ? !!options.inherit : true;
+            return this.property(usage, access, 'method', name, descriptor);
         }
 
-        function _publicMethod(name, method, defaults) {
-            return _method.call(this, 'dynamic', 'public', name, method, defaults);
+        function _publicMethod(name, method, options) {
+            return _method.call(this, 'dynamic', 'public', name, method, options);
         }
 
-        function _protectedMethod(name, method, defaults) {
-            return _method.call(this, 'dynamic', 'protected', name, method, defaults);
+        function _protectedMethod(name, method, options) {
+            return _method.call(this, 'dynamic', 'protected', name, method, options);
         }
 
-        function _privateMethod(name, method, defaults) {
-            return _method.call(this, 'dynamic', 'private', name, method, defaults);
+        function _privateMethod(name, method, options) {
+            return _method.call(this, 'dynamic', 'private', name, method, options);
         }
 
-        function _publicStaticMethod(name, method, defaults) {
-            return _method.call(this, 'static', 'public', name, method, defaults);
+        function _publicStaticMethod(name, method, options) {
+            return _method.call(this, 'static', 'public', name, method, options);
         }
 
-        function _protectedStaticMethod(name, method, defaults) {
-            return _method.call(this, 'static', 'protected', name, method, defaults);
+        function _protectedStaticMethod(name, method, options) {
+            return _method.call(this, 'static', 'protected', name, method, options);
         }
 
-        function _privateStaticMethod(name, method, defaults) {
-            return _method.call(this, 'static', 'private', name, method, defaults);
+        function _privateStaticMethod(name, method, options) {
+            return _method.call(this, 'static', 'private', name, method, options);
         }
 
         function __callerIsProptected(caller, cls) {
-            caller = caller._class || caller;
-            //caller is protected if if caller is method of this class or child class
-            return caller === cls || (_.isFunction(caller.isChild) && caller.isChild(cls));
+            if (caller == cls) return true;
+            if (_.isFunction(caller.isChild) && caller.isChild(cls)) return true;
+            if (caller.caller && caller.caller.__class) {
+                caller = caller.caller.__class;
+                if (caller == cls) return true;
+                if (_.isFunction(caller.isChild) && caller.isChild(cls)) return true;
+            }
+            if (caller.__class) {
+                caller = caller.__class;
+                if (caller == cls) return true;
+                if (_.isFunction(caller.isChild) && caller.isChild(cls)) return true;
+            }
+            return false;
         }
 
         function __callerIsPrivate(caller, cls) {
-            //caller is private if it is cls or cls' nested class or cls' function
-            return caller === cls || (_.isFunction(caller.isChild) && caller.isChild(cls)) || (caller._class === cls);
+            //true if caller is cls itself
+            if (caller == cls) return true;
+            //true if caller refers cls as __class
+            if (caller.__class == cls) return true;
+            //true if caller is invoked by descriptor's getter/setter/method, that refers cls as __class
+            if (caller.caller && caller.caller.__class == cls) return true;
+            return false;
         }
 
         function __descriptor(cls, type, name, descriptor, access) {
@@ -429,18 +470,18 @@
                     };
                 } else if (access === 'protected') {
                     descriptor.getter = function () {
-                        if (__callerIsProptected(arguments.callee.caller.caller, cls))
+                        if (__callerIsProptected(arguments.callee.caller, cls))
                             return getter.apply(this, arguments);
                         throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
                     };
                 } else if (access === 'private') {
                     descriptor.getter = function () {
-                        if (__callerIsPrivate(arguments.callee.caller.caller, cls))
+                        if (__callerIsPrivate(arguments.callee.caller, cls))
                             return getter.apply(this, arguments);
                         throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
                     };
                 }
-                descriptor.getter._class = cls;
+                descriptor.getter.__class = cls;
             }
             if (descriptor.set) {
                 var setter = descriptor.set;
@@ -451,41 +492,41 @@
                     };
                 } else if (access === 'protected') {
                     descriptor.setter = function () {
-                        if (__callerIsProptected(arguments.callee.caller.caller, cls))
+                        if (__callerIsProptected(arguments.callee.caller, cls))
                             return setter.apply(this, arguments);
                         throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
                     };
                 } else if (access === 'private') {
                     descriptor.setter = function () {
-                        if (__callerIsPrivate(arguments.callee.caller.caller, cls))
+                        if (__callerIsPrivate(arguments.callee.caller, cls))
                             return setter.apply(this, arguments);
                         throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
                     };
                 }
-                descriptor.setter._class = cls;
+                descriptor.setter.__class = cls;
             }
             if (descriptor.value !== undefined) {
                 if (!_.isFunction(descriptor.value)) return descriptor;
                 var value = descriptor.value;
-                var defaults = descriptor.defaults || [];
+                var defaults = descriptor.default || [];
                 if (access === 'public' && type == 'method') {
                     descriptor.method = function () {
-                        return value.apply(this, __defaults(_.values(arguments), defaults));
+                        return value.apply(this, __defaults(Array.prototype.slice.call(arguments, 0), defaults));
                     };
                 } else if (access === 'protected') {
                     descriptor.method = function () {
-                        if (__callerIsProptected(arguments.callee.caller.caller, cls))
-                            return value.apply(this, __defaults(_.values(arguments), defaults));
+                        if (__callerIsProptected(arguments.callee.caller, cls))
+                            return value.apply(this, __defaults(Array.prototype.slice.call(arguments, 0), defaults));
                         throw 'Attempt to call ' + access + ' method "' + cls._name + '::' + name + '"';
                     };
                 } else if (access === 'private') {
                     descriptor.method = function () {
-                        if (__callerIsPrivate(arguments.callee.caller.caller, cls))
-                            return value.apply(this, __defaults(_.values(arguments), defaults));
+                        if (__callerIsPrivate(arguments.callee.caller, cls))
+                            return value.apply(this, __defaults(Array.prototype.slice.call(arguments, 0), defaults));
                         throw 'Attempt to call ' + access + ' method "' + cls._name + '::' + name + '"';
                     };
                 }
-                descriptor.method._class = cls;
+                descriptor.method.__class = cls;
             }
             return descriptor;
         }
