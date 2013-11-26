@@ -144,7 +144,9 @@
             var __privates = {};
             // create class
             var cls = _classes[name] = function Class() {
+                var hash = __before.call(this, cls);
                 !_.isFunction(cls._constructor) || cls._constructor.apply(this, __defaults(_.values(arguments), cls._options));
+                __after.call(this, hash);
                 var caller = arguments.callee.caller && arguments.callee.caller.__class;
                 //return if nested construction
                 if (caller && _.isFunction(caller.isChild) && caller.isChild(cls)) {
@@ -259,22 +261,14 @@
             //define name const
             cls.const('_name', name);
             //define parent function
-            cls.publicStaticMethod('parent', function () {
+            cls.parent = function () {
                 return this.super ? this.super.constructor : this;
-            });
+            };
             cls.publicMethod('parent', function () {
-                var caller = arguments.callee.caller;
-                //first check external call (console, code, or other classes)
-                if (caller.caller && caller.caller.__class) return caller.caller.__class.parent().prototype;
-                if (caller.__class) return caller.__class.parent().prototype;
-                return {};
+                return this.constructor.parent().prototype;
             });
             cls.publicMethod('self', function () {
-                var caller = arguments.callee.caller;
-                //first check external call (console, code, or other classes)
-                if (caller.caller && caller.caller.__class) return caller.caller.__class.prototype;
-                if (caller.__class) return caller.__class.prototype;
-                return {};
+                return this.constructor;
             });
             cls.publicStaticMethod('storage', function () {
                 return __storage;
@@ -405,6 +399,18 @@
             return _method.call(this, 'static', 'private', name, method, options);
         }
 
+        function __before(cls) {
+            var self = this._self, parent = this._parent;
+            this._self = cls;
+            this._parent = cls.parent().prototype;
+            return {self: self, parent: parent};
+        }
+
+        function __after(hash) {
+            hash.self ? (this._self = hash.self) : (delete this._self);
+            hash.parent ? (this._parent = hash.parent) : (delete this._parent);
+        }
+
         function __callerIsProptected(caller, cls) {
             if (caller == cls) return true;
             if (_.isFunction(caller.isChild) && caller.isChild(cls)) return true;
@@ -466,18 +472,29 @@
                 //mutate getter and setter if given respectively to access level
                 if (access === 'public') {
                     descriptor.getter = function () {
-                        return getter.apply(this, arguments);
+                        var hash = __before.call(this, cls);
+                        var result = getter.apply(this, arguments);
+                        __after.call(this, hash);
+                        return result;
                     };
                 } else if (access === 'protected') {
                     descriptor.getter = function () {
-                        if (__callerIsProptected(arguments.callee.caller, cls))
-                            return getter.apply(this, arguments);
+                        if (__callerIsProptected(arguments.callee.caller, cls)) {
+                            var hash = __before.call(this, cls);
+                            var result = getter.apply(this, arguments);
+                            __after.call(this, hash);
+                            return result;
+                        }
                         throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
                     };
                 } else if (access === 'private') {
                     descriptor.getter = function () {
-                        if (__callerIsPrivate(arguments.callee.caller, cls))
-                            return getter.apply(this, arguments);
+                        if (__callerIsPrivate(arguments.callee.caller, cls)) {
+                            var hash = __before.call(this, cls);
+                            var result = getter.apply(this, arguments);
+                            __after.call(this, hash);
+                            return result;
+                        }
                         throw 'Attempt to get ' + access + ' property "' + cls._name + '::' + name + '"';
                     };
                 }
@@ -488,18 +505,29 @@
                 //mutate getter and setter if given respectively to access level
                 if (access === 'public') {
                     descriptor.setter = function () {
-                        return setter.apply(this, arguments);
+                        var hash = __before.call(this, cls);
+                        var result = setter.apply(this, arguments);
+                        __after.call(this, hash);
+                        return result;
                     };
                 } else if (access === 'protected') {
                     descriptor.setter = function () {
-                        if (__callerIsProptected(arguments.callee.caller, cls))
-                            return setter.apply(this, arguments);
+                        if (__callerIsProptected(arguments.callee.caller, cls)) {
+                            var hash = __before.call(this, cls);
+                            var result = setter.apply(this, arguments);
+                            __after.call(this, hash);
+                            return result;
+                        }
                         throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
                     };
                 } else if (access === 'private') {
                     descriptor.setter = function () {
-                        if (__callerIsPrivate(arguments.callee.caller, cls))
-                            return setter.apply(this, arguments);
+                        if (__callerIsPrivate(arguments.callee.caller, cls)) {
+                            var hash = __before.call(this, cls);
+                            var result = setter.apply(this, arguments);
+                            __after.call(this, hash);
+                            return result;
+                        }
                         throw 'Attempt to set ' + access + ' property "' + cls._name + '::' + name + '"';
                     };
                 }
@@ -511,18 +539,29 @@
                 var defaults = descriptor.default || [];
                 if (access === 'public' && type == 'method') {
                     descriptor.method = function () {
-                        return value.apply(this, __defaults(Array.prototype.slice.call(arguments, 0), defaults));
+                        var hash = __before.call(this, cls);
+                        var result = value.apply(this, __defaults(Array.prototype.slice.call(arguments, 0), defaults));
+                        __after.call(this, hash);
+                        return result;
                     };
                 } else if (access === 'protected') {
                     descriptor.method = function () {
-                        if (__callerIsProptected(arguments.callee.caller, cls))
-                            return value.apply(this, __defaults(Array.prototype.slice.call(arguments, 0), defaults));
+                        if (__callerIsProptected(arguments.callee.caller, cls)) {
+                            var hash = __before.call(this, cls);
+                            var result = value.apply(this, __defaults(Array.prototype.slice.call(arguments, 0), defaults));
+                            __after.call(this, hash);
+                            return result;
+                        }
                         throw 'Attempt to call ' + access + ' method "' + cls._name + '::' + name + '"';
                     };
                 } else if (access === 'private') {
                     descriptor.method = function () {
-                        if (__callerIsPrivate(arguments.callee.caller, cls))
-                            return value.apply(this, __defaults(Array.prototype.slice.call(arguments, 0), defaults));
+                        if (__callerIsPrivate(arguments.callee.caller, cls)) {
+                            var hash = __before.call(this, cls);
+                            var result = value.apply(this, __defaults(Array.prototype.slice.call(arguments, 0), defaults));
+                            __after.call(this, hash);
+                            return result;
+                        }
                         throw 'Attempt to call ' + access + ' method "' + cls._name + '::' + name + '"';
                     };
                 }
