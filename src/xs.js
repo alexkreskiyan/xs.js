@@ -60,11 +60,6 @@
 
     /* Class functions */
     function __extend(parent) {
-        var oldPrototype = this.prototype;
-        var F = new Function();
-        F.prototype = parent.prototype;
-        this.prototype = new F();
-        this.prototype.constructor = this;
         this.super = parent.prototype;
         //inherit static properties
         this.properties('static', 'property', parent.properties('static', 'property'));
@@ -158,7 +153,6 @@
                     return __privates;
                 }
                 var properties = __storage.dynamic.property;
-                var methods = __storage.dynamic.method;
                 this.__get = function (name) {
                     var caller = arguments.callee.caller;
                     var getter = properties[name].realDescriptor.getter;
@@ -175,11 +169,6 @@
                     if (!properties.hasOwnProperty(name)) continue;
                     __defined(this, name) || __define(this, name, properties[name].realDescriptor);
                     this[name] = properties[name].realDescriptor.default;
-                }
-                //and methods
-                for (name in methods) {
-                    if (!methods.hasOwnProperty(name)) continue;
-                    __defined(this, name) || __define(this, name, methods[name].realDescriptor);
                 }
             };
             //save class as const
@@ -242,9 +231,7 @@
                 //object to assign property
                 var object = usage == 'static' ? this : this.prototype;
                 //do not declare dynamic properties
-                usage == 'static' && __define(object, name, data[name].realDescriptor);
-                //add dynamic methods to prototype
-                usage == 'dynamic' && type == 'method' && (__proto[name] = data[name].realDescriptor.method);
+                (usage == 'static' || type == 'method') && __define(object, name, data[name].realDescriptor);
                 //assign value to static propeties
                 usage == 'static' && type == 'property' && (object[name] = descriptor.default);
                 return this;
@@ -337,7 +324,7 @@
                 configurable: true,
                 enumerable: true
             };
-            options.value && (descriptor.value = options.value);
+            options.value !== undefined && (descriptor.value = options.value);
             _.isFunction(options.get) && (descriptor.get = options.get);
             _.isFunction(options.set) && (descriptor.set = options.set);
             descriptor.default = descriptor.value;
@@ -374,16 +361,13 @@
                 return this;
             }
             options || (options = {});
-            if (!options || !_.isArray(options.default)) {
-                options.default = [];
-            }
             var descriptor = {
                 value: method,
                 writable: true,
                 configurable: true,
                 enumerable: true
             };
-            descriptor.default = options.default;
+            descriptor.default = _.isArray(options.default) ? options.default : [];
             descriptor.inherit = options.hasOwnProperty('inherit') ? !!options.inherit : true;
             return this.property(usage, access, 'method', name, descriptor);
         }
@@ -415,7 +399,7 @@
         function __before(cls) {
             var self = this._self, parent = this._parent;
             this._self = cls;
-            this._parent = cls.parent().proto();
+            this._parent = cls.parent().prototype;
             return {self: self, parent: parent};
         }
 

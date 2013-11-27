@@ -68,7 +68,6 @@ function setMethodParent(name) {
     };
 }
 function xsStart(suffix) {
-    xs.createClass('simple');
     xs.createClass('a' + suffix);
     xs['a' + suffix].constructor(function (x) {
         this.x = x;
@@ -399,6 +398,30 @@ function xsStart(suffix) {
         console.log('call cPrivate from cPublic');
         this.cPrivate();
     }, {inherit: false});
+    xs.createClass('simple');
+    var i, s = 'abcdefghij';
+    for (i = 0; i < 5; i++) {
+        xs.simple.privateProperty('sPrivateProperty' + s[i], {value: 1});
+    }
+    for (i = 0; i < 5; i++) {
+        xs.simple.protectedProperty('sProtectedProperty' + s[i], {value: 2});
+    }
+    for (i = 0; i < 5; i++) {
+        xs.simple.publicProperty('sPublicProperty' + s[i], {value: 3});
+    }
+    for (i = 0; i < 5; i++) {
+        xs.simple.privateMethod('sPrivateMethod' + s[i], function () {
+        });
+    }
+    for (i = 0; i < 5; i++) {
+        xs.simple.protectedMethod('sProtectedMethod' + s[i], function () {
+        });
+    }
+    for (i = 0; i < 5; i++) {
+        xs.simple.publicMethod('sPublicMethod' + s[i], function () {
+        });
+    }
+    s1 = new xs.simple;
     a1 = new xs['a' + suffix]();
     a2 = new xs['a' + suffix](4);
     b1 = new xs['b' + suffix](3);
