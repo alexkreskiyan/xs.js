@@ -42,19 +42,14 @@ function getMethod(name) {
         return this[name];
     };
 }
-function getMethodCall(method) {
+function getMethodCall(object, method) {
     return function () {
-        method();
+        return object[method]();
     };
 }
 function getMethodParent(name) {
     return function () {
-        return this.parent()[name];
-    };
-}
-function getMethodDown(name) {
-    return function () {
-        return this.parent()[name].call(this);
+        return this._parent[name].call(this);
     };
 }
 function setMethod(name) {
@@ -62,42 +57,36 @@ function setMethod(name) {
         return this[name] = value;
     };
 }
-function setMethodCall(method, value) {
+function setMethodCall(object, method, value) {
     return function () {
-        method(value);
+        return object[method](value);
     };
 }
 function setMethodParent(name) {
     return function (value) {
-        return this.parent()[name] = value;
-    };
-}
-function setMethodDown(name) {
-    return function (value) {
-        return this.parent()[name].call(this, value);
+        return this._parent[name].call(this, value);
     };
 }
 function xsStart(suffix) {
-    xs.createClass('simple');
     xs.createClass('a' + suffix);
     xs['a' + suffix].constructor(function (x) {
         this.x = x;
     }, [0]);
     //private static properties variations
-    xs['a' + suffix].privateStaticProperty('aprispvv', 1, 2, 3);
-    xs['a' + suffix].privateStaticProperty('aprispvf', 4, 5, setter('aprispvf'));
-    xs['a' + suffix].privateStaticProperty('aprispfv', 6, getter('aprispfv'), 7);
-    xs['a' + suffix].privateStaticProperty('aprispff', 8, getter('aprispff'), setter('aprispff'));
+    xs['a' + suffix].privateStaticProperty('aprispvv', {value: 1, get: 2, set: 3});
+    xs['a' + suffix].privateStaticProperty('aprispvf', {value: 4, get: 5, set: setter('aprispvf')});
+    xs['a' + suffix].privateStaticProperty('aprispfv', {value: 6, get: getter('aprispfv'), set: 7});
+    xs['a' + suffix].privateStaticProperty('aprispff', {value: 8, get: getter('aprispff'), set: setter('aprispff')});
     //protected static properties variations
-    xs['a' + suffix].protectedStaticProperty('aprospvv', 11, 12, 13);
-    xs['a' + suffix].protectedStaticProperty('aprospvf', 14, 15, setter('aprospvf'));
-    xs['a' + suffix].protectedStaticProperty('aprospfv', 16, getter('aprospfv'), 17);
-    xs['a' + suffix].protectedStaticProperty('aprospff', 18, getter('aprospff'), setter('aprospff'));
+    xs['a' + suffix].protectedStaticProperty('aprospvv', {value: 11, get: 12, set: 13});
+    xs['a' + suffix].protectedStaticProperty('aprospvf', {value: 14, get: 15, set: setter('aprospvf')});
+    xs['a' + suffix].protectedStaticProperty('aprospfv', {value: 16, get: getter('aprospfv'), set: 17});
+    xs['a' + suffix].protectedStaticProperty('aprospff', {value: 18, get: getter('aprospff'), set: setter('aprospff')});
     //public static properties variations
-    xs['a' + suffix].publicStaticProperty('apubspvv', 21, 22, 23);
-    xs['a' + suffix].publicStaticProperty('apubspvf', 24, 25, setter('apubspvf'));
-    xs['a' + suffix].publicStaticProperty('apubspfv', 26, getter('apubspfv'), 27);
-    xs['a' + suffix].publicStaticProperty('apubspff', 28, getter('apubspff'), setter('apubspff'));
+    xs['a' + suffix].publicStaticProperty('apubspvv', {value: 21, get: 22, set: 23});
+    xs['a' + suffix].publicStaticProperty('apubspvf', {value: 24, get: 25, set: setter('apubspvf')});
+    xs['a' + suffix].publicStaticProperty('apubspfv', {value: 26, get: getter('apubspfv'), set: 27});
+    xs['a' + suffix].publicStaticProperty('apubspff', {value: 28, get: getter('apubspff'), set: setter('apubspff')});
     //private static getters/setters for private static properties
     xs['a' + suffix].privateStaticMethod('aprismGETaprispvv', getMethod('aprispvv'));
     xs['a' + suffix].privateStaticMethod('aprismSETaprispvv', setMethod('aprispvv'));
@@ -144,20 +133,20 @@ function xsStart(suffix) {
     xs['a' + suffix].publicStaticMethod('apubsmGETapubspff', getMethod('apubspff'));
     xs['a' + suffix].publicStaticMethod('apubsmSETapubspff', setMethod('apubspff'));
     //private properties variations
-    xs['a' + suffix].privateProperty('apridpvv', 1, 2, 3);
-    xs['a' + suffix].privateProperty('apridpvf', 4, 5, setter('apridpvf'));
-    xs['a' + suffix].privateProperty('apridpfv', 6, getter('apridpfv'), 7);
-    xs['a' + suffix].privateProperty('apridpff', 8, getter('apridpff'), setter('apridpff'));
+    xs['a' + suffix].privateProperty('apridpvv', {value: 1, get: 2, set: 3});
+    xs['a' + suffix].privateProperty('apridpvf', {value: 4, get: 5, set: setter('apridpvf')});
+    xs['a' + suffix].privateProperty('apridpfv', {value: 6, get: getter('apridpfv'), set: 7});
+    xs['a' + suffix].privateProperty('apridpff', {value: 8, get: getter('apridpff'), set: setter('apridpff')});
     //protected properties variations
-    xs['a' + suffix].protectedProperty('aprodpvv', 11, 12, 13);
-    xs['a' + suffix].protectedProperty('aprodpvf', 14, 15, setter('aprodpvf'));
-    xs['a' + suffix].protectedProperty('aprodpfv', 16, getter('aprodpfv'), 17);
-    xs['a' + suffix].protectedProperty('aprodpff', 18, getter('aprodpff'), setter('aprodpff'));
+    xs['a' + suffix].protectedProperty('aprodpvv', {value: 11, get: 12, set: 13});
+    xs['a' + suffix].protectedProperty('aprodpvf', {value: 14, get: 15, set: setter('aprodpvf')});
+    xs['a' + suffix].protectedProperty('aprodpfv', {value: 16, get: getter('aprodpfv'), set: 17});
+    xs['a' + suffix].protectedProperty('aprodpff', {value: 18, get: getter('aprodpff'), set: setter('aprodpff')});
     //public properties variations
-    xs['a' + suffix].publicProperty('apubdpvv', 21, 22, 23);
-    xs['a' + suffix].publicProperty('apubdpvf', 24, 25, setter('apubdpvf'));
-    xs['a' + suffix].publicProperty('apubdpfv', 26, getter('apubdpfv'), 27);
-    xs['a' + suffix].publicProperty('apubdpff', 28, getter('apubdpff'), setter('apubdpff'));
+    xs['a' + suffix].publicProperty('apubdpvv', {value: 21, get: 22, set: 23});
+    xs['a' + suffix].publicProperty('apubdpvf', {value: 24, get: 25, set: setter('apubdpvf')});
+    xs['a' + suffix].publicProperty('apubdpfv', {value: 26, get: getter('apubdpfv'), set: 27});
+    xs['a' + suffix].publicProperty('apubdpff', {value: 28, get: getter('apubdpff'), set: setter('apubdpff')});
     //private getters/setters for private properties
     xs['a' + suffix].privateMethod('apridmGETapridpvv', getMethod('apridpvv'));
     xs['a' + suffix].privateMethod('apridmSETapridpvv', setMethod('apridpvv'));
@@ -204,9 +193,9 @@ function xsStart(suffix) {
     xs['a' + suffix].publicMethod('apubdmGETapubdpff', getMethod('apubdpff'));
     xs['a' + suffix].publicMethod('apubdmSETapubdpff', setMethod('apubdpff'));
     //downcalls check methods and properties
-    xs['a' + suffix].privateProperty('apridpvvsc', 1);
-    xs['a' + suffix].protectedProperty('aprodpvvsc', 2);
-    xs['a' + suffix].publicProperty('apubdpvvsc', 3);
+    xs['a' + suffix].privateProperty('apridpvvsc', {value: 1});
+    xs['a' + suffix].protectedProperty('aprodpvvsc', {value: 2});
+    xs['a' + suffix].publicProperty('apubdpvvsc', {value: 3});
     xs['a' + suffix].privateMethod('apridmGETapridpvvsc', getMethod('apridpvvsc'));
     xs['a' + suffix].privateMethod('apridmSETapridpvvsc', setMethod('apridpvvsc'));
     xs['a' + suffix].protectedMethod('aprodmGETapridpvvsc', getMethod('apridpvvsc'));
@@ -225,15 +214,30 @@ function xsStart(suffix) {
     xs['a' + suffix].protectedMethod('aprodmSETapubdpvvsc', setMethod('apubdpvvsc'));
     xs['a' + suffix].publicMethod('apubdmGETapubdpvvsc', getMethod('apubdpvvsc'));
     xs['a' + suffix].publicMethod('apubdmSETapubdpvvsc', setMethod('apubdpvvsc'));
+    //simple downcall
+    xs['a' + suffix].privateMethod('aPrivate', function () {
+        console.log(this, this._self._name, 'aPrivate');
+    }, {inherit: false});
+    xs['a' + suffix].protectedMethod('aProtected', function () {
+        console.log(this, this._self._name, 'aProtected');
+    }, {inherit: false});
+    xs['a' + suffix].publicMethod('aPublic', function () {
+        console.log(this, this._self._name, 'aPublic');
+        console.log('call aProtected from aPublic');
+        this.aProtected();
+        console.log('call aPrivate from aPublic');
+        this.aPrivate();
+    }, {inherit: false});
     //class b
     xs.createClass('b' + suffix);
+    xs['b' + suffix].extend(xs['a' + suffix]);
     xs['b' + suffix].constructor(function (x, y) {
-        this.parent().constructor.call(this, x);
+        this._parent.constructor.call(this, x);
         this.y = y;
     }, [0, 0]);
-    xs['b' + suffix].privateProperty('bpridpvvsc', 4);
-    xs['b' + suffix].protectedProperty('bprodpvvsc', 5);
-    xs['b' + suffix].publicProperty('bpubdpvvsc', 6);
+    xs['b' + suffix].privateProperty('bpridpvvsc', {value: 4});
+    xs['b' + suffix].protectedProperty('bprodpvvsc', {value: 5});
+    xs['b' + suffix].publicProperty('bpubdpvvsc', {value: 6});
     xs['b' + suffix].privateMethod('bpridmGETbpridpvvsc', getMethod('bpridpvvsc'));
     xs['b' + suffix].privateMethod('bpridmSETbpridpvvsc', setMethod('bpridpvvsc'));
     xs['b' + suffix].protectedMethod('bprodmGETbpridpvvsc', getMethod('bpridpvvsc'));
@@ -252,89 +256,172 @@ function xsStart(suffix) {
     xs['b' + suffix].protectedMethod('bprodmSETbpubdpvvsc', setMethod('bpubdpvvsc'));
     xs['b' + suffix].publicMethod('bpubdmGETbpubdpvvsc', getMethod('bpubdpvvsc'));
     xs['b' + suffix].publicMethod('bpubdmSETbpubdpvvsc', setMethod('bpubdpvvsc'));
-    xs['b' + suffix].privateMethod('bpridmGETapridpvvsc', getMethodParent('apridpvvsc'));
-    xs['b' + suffix].privateMethod('bpridmSETapridpvvsc', setMethodParent('apridpvvsc'));
-    xs['b' + suffix].protectedMethod('bprodmGETapridpvvsc', getMethodParent('apridpvvsc'));
-    xs['b' + suffix].protectedMethod('bprodmSETapridpvvsc', setMethodParent('apridpvvsc'));
-    xs['b' + suffix].publicMethod('bpubdmGETapridpvvsc', getMethodParent('apridpvvsc'));
-    xs['b' + suffix].publicMethod('bpubdmSETapridpvvsc', setMethodParent('apridpvvsc'));
-    xs['b' + suffix].privateMethod('bpridmGETaprodpvvsc', getMethodParent('aprodpvvsc'));
-    xs['b' + suffix].privateMethod('bpridmSETaprodpvvsc', setMethodParent('aprodpvvsc'));
-    xs['b' + suffix].protectedMethod('bprodmGETaprodpvvsc', getMethodParent('aprodpvvsc'));
-    xs['b' + suffix].protectedMethod('bprodmSETaprodpvvsc', setMethodParent('aprodpvvsc'));
-    xs['b' + suffix].publicMethod('bpubdmGETaprodpvvsc', getMethodParent('aprodpvvsc'));
-    xs['b' + suffix].publicMethod('bpubdmSETaprodpvvsc', setMethodParent('aprodpvvsc'));
-    xs['b' + suffix].privateMethod('bpridmGETapubdpvvsc', getMethodParent('apubdpvvsc'));
-    xs['b' + suffix].privateMethod('bpridmSETapubdpvvsc', setMethodParent('apubdpvvsc'));
-    xs['b' + suffix].protectedMethod('bprodmGETapubdpvvsc', getMethodParent('apubdpvvsc'));
-    xs['b' + suffix].protectedMethod('bprodmSETapubdpvvsc', setMethodParent('apubdpvvsc'));
-    xs['b' + suffix].publicMethod('bpubdmGETapubdpvvsc', getMethodParent('apubdpvvsc'));
-    xs['b' + suffix].publicMethod('bpubdmSETapubdpvvsc', setMethodParent('apubdpvvsc'));
+    xs['b' + suffix].privateMethod('bpridmGETapridmdc', getMethodParent('apridmGETapubdpvvsc'));
+    xs['b' + suffix].privateMethod('bpridmSETapridmdc', setMethodParent('apridmSETapubdpvvsc'));
+    xs['b' + suffix].protectedMethod('bprodmGETapridmdc', getMethodParent('apridmGETapubdpvvsc'));
+    xs['b' + suffix].protectedMethod('bprodmSETapridmdc', setMethodParent('apridmSETapubdpvvsc'));
+    xs['b' + suffix].publicMethod('bpubdmGETapridmdc', getMethodParent('apridmGETapubdpvvsc'));
+    xs['b' + suffix].publicMethod('bpubdmSETapridmdc', setMethodParent('apridmSETapubdpvvsc'));
+    xs['b' + suffix].privateMethod('bpridmGETaprodmdc', getMethodParent('aprodmGETapubdpvvsc'));
+    xs['b' + suffix].privateMethod('bpridmSETaprodmdc', setMethodParent('aprodmSETapubdpvvsc'));
+    xs['b' + suffix].protectedMethod('bprodmGETaprodmdc', getMethodParent('aprodmGETapubdpvvsc'));
+    xs['b' + suffix].protectedMethod('bprodmSETaprodmdc', setMethodParent('aprodmSETapubdpvvsc'));
+    xs['b' + suffix].publicMethod('bpubdmGETaprodmdc', getMethodParent('aprodmGETapubdpvvsc'));
+    xs['b' + suffix].publicMethod('bpubdmSETaprodmdc', setMethodParent('aprodmSETapubdpvvsc'));
+    xs['b' + suffix].privateMethod('bpridmGETapubdmdc', getMethodParent('apubdmGETapubdpvvsc'));
+    xs['b' + suffix].privateMethod('bpridmSETapubdmdc', setMethodParent('apubdmSETapubdpvvsc'));
+    xs['b' + suffix].protectedMethod('bprodmGETapubdmdc', getMethodParent('apubdmGETapubdpvvsc'));
+    xs['b' + suffix].protectedMethod('bprodmSETapubdmdc', setMethodParent('apubdmSETapubdpvvsc'));
+    xs['b' + suffix].publicMethod('bpubdmGETapubdmdc', getMethodParent('apubdmGETapubdpvvsc'));
+    xs['b' + suffix].publicMethod('bpubdmSETapubdmdc', setMethodParent('apubdmSETapubdpvvsc'));
+    //simple downcall
+    xs['b' + suffix].privateMethod('bPrivate', function () {
+        console.log(this, this._self._name, 'bPrivate');
+        try {
+            console.log('call aProtected from bPrivate');
+            this._parent.aProtected.call(this);
+        } catch (e) {
+            console.log('call aProtected failed:', e);
+        }
+        try {
+            console.log('call aPrivate from bPrivate');
+            this._parent.aPrivate.call(this);
+        } catch (e) {
+            console.log('call aPrivate failed:', e);
+        }
+    }, {inherit: false});
+    xs['b' + suffix].protectedMethod('bProtected', function () {
+        (function () {
+            console.log(this, this._self._name, 'bProtected')
+        }).call(this);
+        try {
+            console.log('call aProtected from bProtected');
+            this._parent.aProtected.call(this);
+        } catch (e) {
+            console.log('call aProtected failed:', e);
+        }
+        try {
+            console.log('call aPrivate from bProtected');
+            this._parent.aPrivate.call(this);
+        } catch (e) {
+            console.log('call aPrivate failed:', e);
+        }
+    }, {inherit: false});
+    xs['b' + suffix].publicMethod('bPublic', function () {
+        console.log(this, this._self._name, 'bPublic');
+        console.log('call bProtected from bPublic');
+        this.bProtected();
+        console.log('call bPrivate from bPublic');
+        this.bPrivate();
+    }, {inherit: false});
     //class c
     xs.createClass('c' + suffix);
+    xs['c' + suffix].extend(xs['b' + suffix]);
     xs['c' + suffix].constructor(function (x, y, z) {
-        this.parent().constructor.call(this, x, y);
+        this._parent.constructor.call(this, x, y);
         this.z = z;
     }, [0, 0, 0]);
-    xs['c' + suffix].privateProperty('cpridpvvsc', 7);
-    xs['c' + suffix].protectedProperty('cprodpvvsc', 8);
-    xs['c' + suffix].publicProperty('cpubdpvvsc', 9);
-    xs['c' + suffix].privateMethod('cpridmGETbpridpvvsc', getMethod('cpridpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmSETbpridpvvsc', setMethod('cpridpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmGETbpridpvvsc', getMethod('cpridpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmSETbpridpvvsc', setMethod('cpridpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmGETbpridpvvsc', getMethod('cpridpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmSETbpridpvvsc', setMethod('cpridpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmGETbprodpvvsc', getMethod('cprodpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmSETbprodpvvsc', setMethod('cprodpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmGETbprodpvvsc', getMethod('cprodpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmSETbprodpvvsc', setMethod('cprodpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmGETbprodpvvsc', getMethod('cprodpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmSETbprodpvvsc', setMethod('cprodpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmGETbpubdpvvsc', getMethod('cpubdpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmSETbpubdpvvsc', setMethod('cpubdpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmGETbpubdpvvsc', getMethod('cpubdpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmSETbpubdpvvsc', setMethod('cpubdpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmGETbpubdpvvsc', getMethod('cpubdpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmSETbpubdpvvsc', setMethod('cpubdpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmGETapridpvvsc', getMethodParent('apridpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmSETapridpvvsc', setMethodParent('apridpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmGETapridpvvsc', getMethodParent('apridpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmSETapridpvvsc', setMethodParent('apridpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmGETapridpvvsc', getMethodParent('apridpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmSETapridpvvsc', setMethodParent('apridpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmGETaprodpvvsc', getMethodParent('aprodpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmSETaprodpvvsc', setMethodParent('aprodpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmGETaprodpvvsc', getMethodParent('aprodpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmSETaprodpvvsc', setMethodParent('aprodpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmGETaprodpvvsc', getMethodParent('aprodpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmSETaprodpvvsc', setMethodParent('aprodpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmGETapubdpvvsc', getMethodParent('apubdpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmSETapubdpvvsc', setMethodParent('apubdpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmGETapubdpvvsc', getMethodParent('apubdpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmSETapubdpvvsc', setMethodParent('apubdpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmGETapubdpvvsc', getMethodParent('apubdpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmSETapubdpvvsc', setMethodParent('apubdpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmGETbpridpvvsc', getMethodDown('bpridmGETapridpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmSETbpridpvvsc', setMethodDown('bpridmSETapridpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmGETbpridpvvsc', getMethodDown('bprodmGETapridpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmSETbpridpvvsc', setMethodDown('bprodmSETapridpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmGETbpridpvvsc', getMethodDown('bpubdmGETapridpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmSETbpridpvvsc', setMethodDown('bpubdmSETapridpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmGETbprodpvvsc', getMethodDown('bpridmGETaprodpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmSETbprodpvvsc', setMethodDown('bpridmSETaprodpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmGETbprodpvvsc', getMethodDown('bprodmGETaprodpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmSETbprodpvvsc', setMethodDown('bprodmSETaprodpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmGETbprodpvvsc', getMethodDown('bpubdmGETaprodpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmSETbprodpvvsc', setMethodDown('bpubdmSETaprodpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmGETbpubdpvvsc', getMethodDown('bpridmGETapubdpvvsc'));
-    xs['c' + suffix].privateMethod('cpridmSETbpubdpvvsc', setMethodDown('bpridmSETapubdpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmGETbpubdpvvsc', getMethodDown('bprodmGETapubdpvvsc'));
-    xs['c' + suffix].protectedMethod('cprodmSETbpubdpvvsc', setMethodDown('bprodmSETapubdpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmGETbpubdpvvsc', getMethodDown('bpubdmGETapubdpvvsc'));
-    xs['c' + suffix].publicMethod('cpubdmSETbpubdpvvsc', setMethodDown('bpubdmSETapubdpvvsc'));
-    xs['b' + suffix].extend(xs['a' + suffix]);
-    xs['c' + suffix].extend(xs['b' + suffix]);
+    xs['c' + suffix].privateProperty('cpridpvvsc', {value: 7});
+    xs['c' + suffix].protectedProperty('cprodpvvsc', {value: 8});
+    xs['c' + suffix].publicProperty('cpubdpvvsc', {value: 9});
+    xs['c' + suffix].privateMethod('cpridmGETcpridpvvsc', getMethod('cpridpvvsc'));
+    xs['c' + suffix].privateMethod('cpridmSETcpridpvvsc', setMethod('cpridpvvsc'));
+    xs['c' + suffix].protectedMethod('cprodmGETcpridpvvsc', getMethod('cpridpvvsc'));
+    xs['c' + suffix].protectedMethod('cprodmSETcpridpvvsc', setMethod('cpridpvvsc'));
+    xs['c' + suffix].publicMethod('cpubdmGETcpridpvvsc', getMethod('cpridpvvsc'));
+    xs['c' + suffix].publicMethod('cpubdmSETcpridpvvsc', setMethod('cpridpvvsc'));
+    xs['c' + suffix].privateMethod('cpridmGETcprodpvvsc', getMethod('cprodpvvsc'));
+    xs['c' + suffix].privateMethod('cpridmSETcprodpvvsc', setMethod('cprodpvvsc'));
+    xs['c' + suffix].protectedMethod('cprodmGETcprodpvvsc', getMethod('cprodpvvsc'));
+    xs['c' + suffix].protectedMethod('cprodmSETcprodpvvsc', setMethod('cprodpvvsc'));
+    xs['c' + suffix].publicMethod('cpubdmGETcprodpvvsc', getMethod('cprodpvvsc'));
+    xs['c' + suffix].publicMethod('cpubdmSETcprodpvvsc', setMethod('cprodpvvsc'));
+    xs['c' + suffix].privateMethod('cpridmGETcpubdpvvsc', getMethod('cpubdpvvsc'));
+    xs['c' + suffix].privateMethod('cpridmSETcpubdpvvsc', setMethod('cpubdpvvsc'));
+    xs['c' + suffix].protectedMethod('cprodmGETcpubdpvvsc', getMethod('cpubdpvvsc'));
+    xs['c' + suffix].protectedMethod('cprodmSETcpubdpvvsc', setMethod('cpubdpvvsc'));
+    xs['c' + suffix].publicMethod('cpubdmGETcpubdpvvsc', getMethod('cpubdpvvsc'));
+    xs['c' + suffix].publicMethod('cpubdmSETcpubdpvvsc', setMethod('cpubdpvvsc'));
+    xs['c' + suffix].privateMethod('cpridmGETbpridmdc', getMethodParent('bpridmGETapridmdc'));
+    xs['c' + suffix].privateMethod('cpridmSETbpridmdc', setMethodParent('bpridmSETapridmdc'));
+    xs['c' + suffix].protectedMethod('cprodmGETbpridmdc', getMethodParent('bprodmGETapridmdc'));
+    xs['c' + suffix].protectedMethod('cprodmSETbpridmdc', setMethodParent('bprodmSETapridmdc'));
+    xs['c' + suffix].publicMethod('cpubdmGETbpridmdc', getMethodParent('bpubdmGETapridmdc'));
+    xs['c' + suffix].publicMethod('cpubdmSETbpridmdc', setMethodParent('bpubdmSETapridmdc'));
+    xs['c' + suffix].privateMethod('cpridmGETbprodmdc', getMethodParent('bpridmGETaprodmdc'));
+    xs['c' + suffix].privateMethod('cpridmSETbprodmdc', setMethodParent('bpridmSETaprodmdc'));
+    xs['c' + suffix].protectedMethod('cprodmGETbprodmdc', getMethodParent('bprodmGETaprodmdc'));
+    xs['c' + suffix].protectedMethod('cprodmSETbprodmdc', setMethodParent('bprodmSETaprodmdc'));
+    xs['c' + suffix].publicMethod('cpubdmGETbprodmdc', getMethodParent('bpubdmGETaprodmdc'));
+    xs['c' + suffix].publicMethod('cpubdmSETbprodmdc', setMethodParent('bpubdmSETaprodmdc'));
+    xs['c' + suffix].privateMethod('cpridmGETbpubdmdc', getMethodParent('bpridmGETapubdmdc'));
+    xs['c' + suffix].privateMethod('cpridmSETbpubdmdc', setMethodParent('bpridmSETapubdmdc'));
+    xs['c' + suffix].protectedMethod('cprodmGETbpubdmdc', getMethodParent('bprodmGETapubdmdc'));
+    xs['c' + suffix].protectedMethod('cprodmSETbpubdmdc', setMethodParent('bprodmSETapubdmdc'));
+    xs['c' + suffix].publicMethod('cpubdmGETbpubdmdc', getMethodParent('bpubdmGETapubdmdc'));
+    xs['c' + suffix].publicMethod('cpubdmSETbpubdmdc', setMethodParent('bpubdmSETapubdmdc'));
+    //simple downcall
+    xs['c' + suffix].privateMethod('cPrivate', function () {
+        console.log(this, this._self._name, 'cPrivate');
+        try {
+            console.log('call bProtected from cPrivate');
+            this._parent.bProtected.call(this);
+        } catch (e) {
+            console.log('call bProtected failed:', e);
+        }
+        try {
+            console.log('call bPrivate from cPrivate');
+            this._parent.bPrivate.call(this);
+        } catch (e) {
+            console.log('call bPrivate failed:', e);
+        }
+    }, {inherit: false});
+    xs['c' + suffix].protectedMethod('cProtected', function () {
+        console.log(this, this._self._name, 'cProtected');
+        try {
+            console.log('call bProtected from cProtected');
+            this._parent.bProtected.call(this);
+        } catch (e) {
+            console.log('call bProtected failed:', e);
+        }
+        try {
+            console.log('call bPrivate from cProtected');
+            this._parent.bPrivate.call(this);
+        } catch (e) {
+            console.log('call bPrivate failed:', e);
+        }
+    }, {inherit: false});
+    xs['c' + suffix].publicMethod('cPublic', function () {
+        console.log(this, this._self._name, 'cPublic');
+        console.log('call cProtected from cPublic');
+        this.cProtected();
+        console.log('call cPrivate from cPublic');
+        this.cPrivate();
+    }, {inherit: false});
+    xs.createClass('simple');
+    var i, s = 'abcdefghij';
+    for (i = 0; i < 5; i++) {
+        xs.simple.privateProperty('sPrivateProperty' + s[i], {value: 1});
+    }
+    for (i = 0; i < 5; i++) {
+        xs.simple.protectedProperty('sProtectedProperty' + s[i], {value: 2});
+    }
+    for (i = 0; i < 5; i++) {
+        xs.simple.publicProperty('sPublicProperty' + s[i], {value: 3});
+    }
+    for (i = 0; i < 5; i++) {
+        xs.simple.privateMethod('sPrivateMethod' + s[i], function () {
+        });
+    }
+    for (i = 0; i < 5; i++) {
+        xs.simple.protectedMethod('sProtectedMethod' + s[i], function () {
+        });
+    }
+    for (i = 0; i < 5; i++) {
+        xs.simple.publicMethod('sPublicMethod' + s[i], function () {
+        });
+    }
+    s1 = new xs.simple;
     a1 = new xs['a' + suffix]();
     a2 = new xs['a' + suffix](4);
     b1 = new xs['b' + suffix](3);
@@ -437,24 +524,24 @@ test('public static properties tests', function () {
 });
 module('static methods');
 test('private static methods tests', function () {
-    throws(getMethodCall(xs.a.aprismGETaprispvv), /^Attempt to call private method "a::aprismGETaprispvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
-    throws(setMethodCall(xs.a.aprismSETaprispvv, 101), /^Attempt to call private method "a::aprismSETaprispvv"$/, 'call private static setter method for property with value=value,getter=value,setter=value is restricted');
-    throws(getMethodCall(xs.a.aprismGETaprispvf), /^Attempt to call private method "a::aprismGETaprispvf"$/, 'call private static getter method for property with value=value,getter=value,setter=function is restricted');
-    throws(setMethodCall(xs.a.aprismSETaprispvf, 104), /^Attempt to call private method "a::aprismSETaprispvf"$/, 'call private static setter method for property with value=value,getter=value,setter=function is restricted');
-    throws(getMethodCall(xs.a.aprismGETaprispfv), /^Attempt to call private method "a::aprismGETaprispfv"$/, 'call private static getter method for property with value=value,getter=function,setter=value is restricted');
-    throws(setMethodCall(xs.a.aprismSETaprispfv, 106), /^Attempt to call private method "a::aprismSETaprispfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
-    throws(getMethodCall(xs.a.aprismGETaprispff), /^Attempt to call private method "a::aprismGETaprispff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
-    throws(setMethodCall(xs.a.aprismSETaprispff, 108), /^Attempt to call private method "a::aprismSETaprispff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
+    throws(getMethodCall(xs.a, 'aprismGETaprispvv'), /^Attempt to call private method "a::aprismGETaprispvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
+    throws(setMethodCall(xs.a, 'aprismSETaprispvv', 101), /^Attempt to call private method "a::aprismSETaprispvv"$/, 'call private static setter method for property with value=value,getter=value,setter=value is restricted');
+    throws(getMethodCall(xs.a, 'aprismGETaprispvf'), /^Attempt to call private method "a::aprismGETaprispvf"$/, 'call private static getter method for property with value=value,getter=value,setter=function is restricted');
+    throws(setMethodCall(xs.a, 'aprismSETaprispvf', 104), /^Attempt to call private method "a::aprismSETaprispvf"$/, 'call private static setter method for property with value=value,getter=value,setter=function is restricted');
+    throws(getMethodCall(xs.a, 'aprismGETaprispfv'), /^Attempt to call private method "a::aprismGETaprispfv"$/, 'call private static getter method for property with value=value,getter=function,setter=value is restricted');
+    throws(setMethodCall(xs.a, 'aprismSETaprispfv', 106), /^Attempt to call private method "a::aprismSETaprispfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
+    throws(getMethodCall(xs.a, 'aprismGETaprispff'), /^Attempt to call private method "a::aprismGETaprispff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
+    throws(setMethodCall(xs.a, 'aprismSETaprispff', 108), /^Attempt to call private method "a::aprismSETaprispff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
 });
 test('protected static methods tests', function () {
-    throws(getMethodCall(xs.a.aprosmGETaprospvv), /^Attempt to call protected method "a::aprosmGETaprospvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
-    throws(setMethodCall(xs.a.aprosmSETaprospvv, 101), /^Attempt to call protected method "a::aprosmSETaprospvv"$/, 'call private static setter method for property with value=value,getter=value,setter=value is restricted');
-    throws(getMethodCall(xs.a.aprosmGETaprospvf), /^Attempt to call protected method "a::aprosmGETaprospvf"$/, 'call private static getter method for property with value=value,getter=value,setter=function is restricted');
-    throws(setMethodCall(xs.a.aprosmSETaprospvf, 104), /^Attempt to call protected method "a::aprosmSETaprospvf"$/, 'call private static setter method for property with value=value,getter=value,setter=function is restricted');
-    throws(getMethodCall(xs.a.aprosmGETaprospfv), /^Attempt to call protected method "a::aprosmGETaprospfv"$/, 'call private static getter method for property with value=value,getter=function,setter=value is restricted');
-    throws(setMethodCall(xs.a.aprosmSETaprospfv, 106), /^Attempt to call protected method "a::aprosmSETaprospfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
-    throws(getMethodCall(xs.a.aprosmGETaprospff), /^Attempt to call protected method "a::aprosmGETaprospff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
-    throws(setMethodCall(xs.a.aprosmSETaprospff, 108), /^Attempt to call protected method "a::aprosmSETaprospff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
+    throws(getMethodCall(xs.a, 'aprosmGETaprospvv'), /^Attempt to call protected method "a::aprosmGETaprospvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
+    throws(setMethodCall(xs.a, 'aprosmSETaprospvv', 101), /^Attempt to call protected method "a::aprosmSETaprospvv"$/, 'call private static setter method for property with value=value,getter=value,setter=value is restricted');
+    throws(getMethodCall(xs.a, 'aprosmGETaprospvf'), /^Attempt to call protected method "a::aprosmGETaprospvf"$/, 'call private static getter method for property with value=value,getter=value,setter=function is restricted');
+    throws(setMethodCall(xs.a, 'aprosmSETaprospvf', 104), /^Attempt to call protected method "a::aprosmSETaprospvf"$/, 'call private static setter method for property with value=value,getter=value,setter=function is restricted');
+    throws(getMethodCall(xs.a, 'aprosmGETaprospfv'), /^Attempt to call protected method "a::aprosmGETaprospfv"$/, 'call private static getter method for property with value=value,getter=function,setter=value is restricted');
+    throws(setMethodCall(xs.a, 'aprosmSETaprospfv', 106), /^Attempt to call protected method "a::aprosmSETaprospfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
+    throws(getMethodCall(xs.a, 'aprosmGETaprospff'), /^Attempt to call protected method "a::aprosmGETaprospff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
+    throws(setMethodCall(xs.a, 'aprosmSETaprospff', 108), /^Attempt to call protected method "a::aprosmSETaprospff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
 });
 test('public static methods tests', function () {
     //get private variables values
@@ -539,19 +626,19 @@ module('static inheritance');
 test('inheritance basics', function () {
     //root class check
     equal(xs.a.parent(), xs.a, 'root class check: parent() refers class itself');
-    equal(a1.parent(), xs.a, 'root class instance check: parent() refers class itself');
-    equal(a1.self(), xs.a, 'root class instance check: self() refers class itself');
+    equal(a1.parent(), xs.a, 'root class instance check: parent() refers class');
+    equal(a1.self(), xs.a, 'root class instance check: self() refers class');
     //child level 1 check
     equal(xs.b.parent(), xs.a, 'child level 1 class check: parent() refers root class');
-    equal(b1.parent(), xs.a, 'child level 1 class instance check: parent() refers root class');
-    equal(b1.self(), xs.b, 'child level 1 instance check: self() refers class itself');
+    equal(b1.parent(), xs.a, 'child level 1 class instance check: parent() refers root class prototype');
+    equal(b1.self(), xs.b, 'child level 1 instance check: self() refers class');
     //child level 2 check
     equal(xs.c.parent(), xs.b, 'child level 2 class check: parent() refers child level 1');
-    equal(c1.parent(), xs.b, 'child level 2 class instance check: parent() refers child level 1');
-    equal(c1.self(), xs.c, 'child level 2 instance check: self() refers class itself');
+    equal(c1.parent(), xs.b, 'child level 2 class instance check: parent() refers child level 1 prototype');
+    equal(c1.self(), xs.c, 'child level 2 instance check: self() refers class');
     //child level 2 check deep
     equal(xs.c.parent().parent(), xs.a, 'child level 2 class check: parent().parent() refers root class');
-    equal(c1.parent().parent(), xs.a, 'child level 2 class instance check: parent().parent() refers root class');
+    equal(c1.parent().parent(), xs.a, 'child level 2 class instance check: parent().parent() refers root class prototype');
 });
 test('static properties independency', function () {
     //Class a
@@ -924,24 +1011,24 @@ test('public properties tests', function () {
 });
 module('methods');
 test('private methods tests', function () {
-    throws(getMethodCall(a1.apridmGETapridpvv), /^Attempt to call private method "a::apridmGETapridpvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
-    throws(setMethodCall(a1.apridmSETapridpvv, 101), /^Attempt to call private method "a::apridmSETapridpvv"$/, 'call private static setter method for property with value=value,getter=value,setter=value is restricted');
-    throws(getMethodCall(a1.apridmGETapridpvf), /^Attempt to call private method "a::apridmGETapridpvf"$/, 'call private static getter method for property with value=value,getter=value,setter=function is restricted');
-    throws(setMethodCall(a1.apridmSETapridpvf, 104), /^Attempt to call private method "a::apridmSETapridpvf"$/, 'call private static setter method for property with value=value,getter=value,setter=function is restricted');
-    throws(getMethodCall(a1.apridmGETapridpfv), /^Attempt to call private method "a::apridmGETapridpfv"$/, 'call private static getter method for property with value=value,getter=function,setter=value is restricted');
-    throws(setMethodCall(a1.apridmSETapridpfv, 106), /^Attempt to call private method "a::apridmSETapridpfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
-    throws(getMethodCall(a1.apridmGETapridpff), /^Attempt to call private method "a::apridmGETapridpff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
-    throws(setMethodCall(a1.apridmSETapridpff, 108), /^Attempt to call private method "a::apridmSETapridpff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
+    throws(getMethodCall(a1, 'apridmGETapridpvv'), /^Attempt to call private method "a::apridmGETapridpvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
+    throws(setMethodCall(a1, 'apridmSETapridpvv', 101), /^Attempt to call private method "a::apridmSETapridpvv"$/, 'call private static setter method for property with value=value,getter=value,setter=value is restricted');
+    throws(getMethodCall(a1, 'apridmGETapridpvf'), /^Attempt to call private method "a::apridmGETapridpvf"$/, 'call private static getter method for property with value=value,getter=value,setter=function is restricted');
+    throws(setMethodCall(a1, 'apridmSETapridpvf', 104), /^Attempt to call private method "a::apridmSETapridpvf"$/, 'call private static setter method for property with value=value,getter=value,setter=function is restricted');
+    throws(getMethodCall(a1, 'apridmGETapridpfv'), /^Attempt to call private method "a::apridmGETapridpfv"$/, 'call private static getter method for property with value=value,getter=function,setter=value is restricted');
+    throws(setMethodCall(a1, 'apridmSETapridpfv', 106), /^Attempt to call private method "a::apridmSETapridpfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
+    throws(getMethodCall(a1, 'apridmGETapridpff'), /^Attempt to call private method "a::apridmGETapridpff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
+    throws(setMethodCall(a1, 'apridmSETapridpff', 108), /^Attempt to call private method "a::apridmSETapridpff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
 });
 test('protected methods tests', function () {
-    throws(getMethodCall(a1.aprodmGETaprodpvv), /^Attempt to call protected method "a::aprodmGETaprodpvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
-    throws(setMethodCall(a1.aprodmSETaprodpvv, 101), /^Attempt to call protected method "a::aprodmSETaprodpvv"$/, 'call private static setter method for property with value=value,getter=value,setter=value is restricted');
-    throws(getMethodCall(a1.aprodmGETaprodpvf), /^Attempt to call protected method "a::aprodmGETaprodpvf"$/, 'call private static getter method for property with value=value,getter=value,setter=function is restricted');
-    throws(setMethodCall(a1.aprodmSETaprodpvf, 104), /^Attempt to call protected method "a::aprodmSETaprodpvf"$/, 'call private static setter method for property with value=value,getter=value,setter=function is restricted');
-    throws(getMethodCall(a1.aprodmGETaprodpfv), /^Attempt to call protected method "a::aprodmGETaprodpfv"$/, 'call private static getter method for property with value=value,getter=function,setter=value is restricted');
-    throws(setMethodCall(a1.aprodmSETaprodpfv, 106), /^Attempt to call protected method "a::aprodmSETaprodpfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
-    throws(getMethodCall(a1.aprodmGETaprodpff), /^Attempt to call protected method "a::aprodmGETaprodpff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
-    throws(setMethodCall(a1.aprodmSETaprodpff, 108), /^Attempt to call protected method "a::aprodmSETaprodpff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
+    throws(getMethodCall(a1, 'aprodmGETaprodpvv'), /^Attempt to call protected method "a::aprodmGETaprodpvv"$/, 'call private static getter method for property with value=value,getter=value,setter=value is restricted');
+    throws(setMethodCall(a1, 'aprodmSETaprodpvv', 101), /^Attempt to call protected method "a::aprodmSETaprodpvv"$/, 'call private static setter method for property with value=value,getter=value,setter=value is restricted');
+    throws(getMethodCall(a1, 'aprodmGETaprodpvf'), /^Attempt to call protected method "a::aprodmGETaprodpvf"$/, 'call private static getter method for property with value=value,getter=value,setter=function is restricted');
+    throws(setMethodCall(a1, 'aprodmSETaprodpvf', 104), /^Attempt to call protected method "a::aprodmSETaprodpvf"$/, 'call private static setter method for property with value=value,getter=value,setter=function is restricted');
+    throws(getMethodCall(a1, 'aprodmGETaprodpfv'), /^Attempt to call protected method "a::aprodmGETaprodpfv"$/, 'call private static getter method for property with value=value,getter=function,setter=value is restricted');
+    throws(setMethodCall(a1, 'aprodmSETaprodpfv', 106), /^Attempt to call protected method "a::aprodmSETaprodpfv"$/, 'call private static setter method for property with value=value,getter=function,setter=value is restricted');
+    throws(getMethodCall(a1, 'aprodmGETaprodpff'), /^Attempt to call protected method "a::aprodmGETaprodpff"$/, 'call private static getter method for property with value=value,getter=function,setter=function is restricted');
+    throws(setMethodCall(a1, 'aprodmSETaprodpff', 108), /^Attempt to call protected method "a::aprodmSETaprodpff"$/, 'call private static setter method for property with value=value,getter=function,setter=function is restricted');
 });
 test('public methods tests', function () {
     //get private variables values
@@ -1450,39 +1537,72 @@ test('properties independency', function () {
     equal(c2.apubdmGETapubdpff(), '?28!', 'check value fetched by public method from private static property C with value=value,getter=function,setter=function');
 });
 test('downcall', function () {
+    //check values
     //Class a
-    ok(true);
+    throws(getProperty(a1, 'apridpvvsc'), /^Attempt to get private property "a::apridpvvsc"$/, 'access to private property at a1');
+    throws(getProperty(a1, 'aprodpvvsc'), /^Attempt to get protected property "a::aprodpvvsc"$/, 'access to protected property at a1');
+    equal(a1.apubdpvvsc, 3, 'check public property at a1');
+    //Class b
+    throws(getProperty(b1, 'apridpvvsc'), /^Attempt to get private property "b::apridpvvsc"$/, 'access to inherited a private property at b1');
+    throws(getProperty(b1, 'aprodpvvsc'), /^Attempt to get protected property "b::aprodpvvsc"$/, 'access to inherited a protected property at b1');
+    equal(b1.apubdpvvsc, 3, 'check inherited a public property at b1');
+    throws(getProperty(b1, 'bpridpvvsc'), /^Attempt to get private property "b::bpridpvvsc"$/, 'access to private property at b1');
+    throws(getProperty(b1, 'bprodpvvsc'), /^Attempt to get protected property "b::bprodpvvsc"$/, 'access to protected property at b1');
+    equal(b1.bpubdpvvsc, 6, 'check public property at a1');
+    //Class c
+    throws(getProperty(c1, 'apridpvvsc'), /^Attempt to get private property "c::apridpvvsc"$/, 'access to inherited a private property at c1');
+    throws(getProperty(c1, 'aprodpvvsc'), /^Attempt to get protected property "c::aprodpvvsc"$/, 'access to inherited a protected property at c1');
+    equal(c1.apubdpvvsc, 3, 'check inherited a public property at c1');
+    throws(getProperty(c1, 'apridpvvsc'), /^Attempt to get private property "c::apridpvvsc"$/, 'access to inherited b private property at c1');
+    throws(getProperty(c1, 'aprodpvvsc'), /^Attempt to get protected property "c::aprodpvvsc"$/, 'access to inherited b protected property at c1');
+    equal(c1.bpubdpvvsc, 6, 'check inherited b public property at c1');
+    throws(getProperty(c1, 'bpridpvvsc'), /^Attempt to get private property "c::bpridpvvsc"$/, 'access to private property at c1');
+    throws(getProperty(c1, 'bprodpvvsc'), /^Attempt to get protected property "c::bprodpvvsc"$/, 'access to protected property at c1');
+    equal(c1.cpubdpvvsc, 9, 'check public property at c1');
+
+    //check initial values via respective getters
+    //a
+    equal(a1.apubdmGETapridpvvsc(), 1, 'check private property value at a1');
+    equal(a1.apubdmGETaprodpvvsc(), 2, 'check protected property value at a1');
+    equal(a1.apubdmGETapubdpvvsc(), 3, 'check public property value at a1');
+    //b
+    equal(b1.apubdmGETapridpvvsc(), 1, 'check private property value at b1 inherited from xs.a');
+    equal(b1.apubdmGETaprodpvvsc(), 2, 'check protected property value at b1 inherited from xs.a');
+    equal(b1.apubdmGETapubdpvvsc(), 3, 'check public property value at b1 inherited from xs.a');
+    equal(b1.bpubdmGETbpridpvvsc(), 4, 'check private property value at b1');
+    equal(b1.bpubdmGETbprodpvvsc(), 5, 'check protected property value at b1');
+    equal(b1.bpubdmGETbpubdpvvsc(), 6, 'check public property value at b1');
+    //c
+    equal(c1.apubdmGETapridpvvsc(), 1, 'check private property value at c1 inherited from xs.a');
+    equal(c1.apubdmGETaprodpvvsc(), 2, 'check protected property value at c1 inherited from xs.a');
+    equal(c1.apubdmGETapubdpvvsc(), 3, 'check public property value at c1 inherited from xs.a');
+    equal(c1.bpubdmGETbpridpvvsc(), 4, 'check private property value at c1 inherited from xs.b');
+    equal(c1.bpubdmGETbprodpvvsc(), 5, 'check protected property value at c1 inherited from xs.b');
+    equal(c1.bpubdmGETbpubdpvvsc(), 6, 'check public property value at c1 inherited from xs.b');
+    equal(c1.cpubdmGETcpridpvvsc(), 7, 'check private property value at c1');
+    equal(c1.cpubdmGETcprodpvvsc(), 8, 'check protected property value at c1');
+    equal(c1.cpubdmGETcpubdpvvsc(), 9, 'check public property value at c1');
+
+    //check downcall gets
+    //b
+    //get
+    throws(getMethodCall(b1, 'bpubdmGETapridmdc'), /^Attempt to call private method "a::apridmGETapubdpvvsc"$/, 'check refuse in downcalling to private method');
+    equal(b1.bpubdmGETaprodmdc(), 3, 'check protected property value at b1 inherited from xs.a');
+    equal(b1.bpubdmGETapubdmdc(), 3, 'check public property value at b1 inherited from xs.a');
+    //set
+    b1.bpubdmSETaprodmdc(5);
+    throws(getMethodCall(b1, 'bpubdmGETapridmdc'), /^Attempt to call private method "a::apridmGETapubdpvvsc"$/, 'check refuse in downcalling to private method');
+    equal(b1.bpubdmGETaprodmdc(), 5, 'check protected property value at b1 inherited from xs.a');
+    equal(b1.bpubdmGETapubdmdc(), 5, 'check public property value at b1 inherited from xs.a');
+
+    //c
+    //get
+    throws(getMethodCall(c1, 'cpubdmGETbpridmdc'), /^Attempt to call private method "a::apridmGETapubdpvvsc"$/, 'check refuse in downcalling to private method');
+    equal(c1.cpubdmGETbprodmdc(), 3, 'check protected property value at c1 inherited from xs.a');
+    equal(c1.cpubdmGETbpubdmdc(), 3, 'check public property value at c1 inherited from xs.a');
+    //set
+    c1.cpubdmSETbprodmdc(5);
+    throws(getMethodCall(c1, 'cpubdmGETbpridmdc'), /^Attempt to call private method "a::apridmGETapubdpvvsc"$/, 'check refuse in downcalling to private method');
+    equal(c1.cpubdmGETbprodmdc(), 5, 'check protected property value at c1 inherited from xs.a');
+    equal(c1.cpubdmGETbpubdmdc(), 5, 'check public property value at c1 inherited from xs.a');
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
