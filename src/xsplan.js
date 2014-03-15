@@ -1,6 +1,7 @@
 var fn = function () {
 };
 var root = this;
+'use strict';
 var xs = {
     //base prototypes
     ArrayPrototype: Array.prototype,
@@ -159,136 +160,225 @@ var xs = {
                 enumerable: true,
                 configurable: false
             }, descriptor))
+        }
+    },
+    descriptor: {
+        /**
+         * determines whether given value is property descriptor
+         * returns true when it is object and contains only some of 6 descriptor-relative properties
+         */
+        is: function (descriptor) {
+            //false if descriptor is not object
+            if (!xs.isObject(descriptor)) {
+                return false;
+            }
+            //only allowed descriptor keys
+            var allowed = ['get', 'set', 'value', 'writable', 'enumerable', 'configurable'];
+            //real descriptor keys
+            var keys = object.keys(descriptor);
+            //if any other fields - is not descriptor
+            if (array.difference(keys, allowed).length) {
+                return false;
+            }
+            //check allowed fields are filled correctly
+            if (descriptor.get && !xs.isFunction(descriptor.get)) {
+                return false;
+            }
+            if (descriptor.set && !xs.isFunction(descriptor.set)) {
+                return false;
+            }
+            if (descriptor.writable && !xs.isBoolean(descriptor.writable)) {
+                return false;
+            }
+            if (descriptor.enumerable && !xs.isBoolean(descriptor.enumerable)) {
+                return false;
+            }
+            if (descriptor.configurable && !xs.isBoolean(descriptor.configurable)) {
+                return false;
+            }
+            return true;
         },
-        descriptor: {
-            /**
-             * determines whether given value is property descriptor
-             * returns true when it is object and contains only some of 6 descriptor-relative properties
-             */
-            is: function (descriptor) {
-                //false if descriptor is not object
-                if (!xs.isObject(descriptor)) {
-                    return false;
-                }
-                //only allowed descriptor keys
-                var allowed = ['get', 'set', 'value', 'writable', 'enumerable', 'configurable'];
-                //real descriptor keys
-                var keys = object.keys(descriptor);
-                //if any other fields - is not descriptor
-                if (array.difference(keys, allowed).length) {
-                    return false;
-                }
-                //check allowed fields are filled correctly
-                if (descriptor.get && !xs.isFunction(descriptor.get)) {
-                    return false;
-                }
-                if (descriptor.set && !xs.isFunction(descriptor.set)) {
-                    return false;
-                }
-                if (descriptor.writable && !xs.isBoolean(descriptor.writable)) {
-                    return false;
-                }
-                if (descriptor.enumerable && !xs.isBoolean(descriptor.enumerable)) {
-                    return false;
-                }
-                if (descriptor.configurable && !xs.isBoolean(descriptor.configurable)) {
-                    return false;
-                }
-                return true;
-            },
-            property: function (descriptor) {
-                //process descriptor
-                var desc = this.is(descriptor) ? descriptor : {value: descriptor};
-                //if accessors given - remove value
-                if (desc.get || desc.set) {
-                    delete desc.value;
-                } else {
-                    desc.value = xs.isUndefined(desc.value) ? undefined : desc.value;
-                }
-                return desc;
-            },
-            method: function (descriptor) {
-                //process descriptor
-                var desc = {
-                    value: null,
-                    defaults: {}
-                };
-                //process given descriptor. if something wrong - returns false
-                //simple function allowed
-                if (xs.isFunction(descriptor)) {
-                    desc.value = descriptor;
-                    //allowed as object with fn property, containing method function
-                } else if (xs.isObject(descriptor) && xs.isFunction(descriptor.fn)) {
+        property: function (descriptor) {
+            //process descriptor
+            var desc = this.is(descriptor) ? descriptor : {value: descriptor};
+            //if accessors given - remove value
+            if (desc.get || desc.set) {
+                delete desc.value;
+            } else {
+                desc.value = xs.isUndefined(desc.value) ? undefined : desc.value;
+            }
+            return desc;
+        },
+        method: function (descriptor) {
+            //process descriptor
+            var desc = {
+                value: null,
+                defaults: {}
+            };
+            //process given descriptor. if something wrong - returns false
+            //simple function allowed
+            if (xs.isFunction(descriptor)) {
+                desc.value = descriptor;
+                //allowed as object with fn property, containing method function
+            } else if (xs.isObject(descriptor)) {
+                //function may be specified in fn or value propeties
+                if (xs.isFunction(descriptor.fn)) {
                     desc.value = descriptor.fn;
-                    xs.isObject(descriptor.defaults) && (desc.defaults = descriptor.defaults);
-                    //otherwise - return false
+                } else if (xs.isFunction(descriptor.value)) {
+                    desc.value = descriptor.value;
                 } else {
                     return false;
                 }
-                return desc;
-            },
-            apply: function (cls, descriptor) {
-                //correct descriptor
-                var correctDescriptor = {
-                    const: {},
-                    static: {
-                        properties: {},
-                        methods: {}
-                    },
+                xs.isObject(descriptor.defaults) && (desc.defaults = descriptor.defaults);
+                //else  - return false
+            } else {
+                return false;
+            }
+            return desc;
+        },
+        apply: function (cls, descriptor) {
+            //correct descriptor
+            var correctDescriptor = {
+                const: {},
+                static: {
                     properties: {},
                     methods: {}
-                };
-                // constants
-                collection.each(descriptor.const, function (value, name) {
-                    //save const to class descriptor
-                    correctDescriptor.const[name] = value;
-                    core.const(cls, name, value);
-                });
-                //public static properties
-                collection.each(descriptor.static.properties, function (value, name) {
-                    //parse value as property descriptor
-                    var propertyDescriptor = this.property(value);
-                    //store desc to class descriptor
-                    correctDescriptor.static.properties[name] = propertyDescriptor;
-                    //define class property
-                    core.property(cls, name, propertyDescriptor);
-                });
-                //public static methods
-                collection.each(descriptor.static.methods, function (value, name) {
-                    //parse value as method descriptor
-                    var propertyDescriptor = this.method(value);
-                    //if desc is wrong - return
-                    if (!propertyDescriptor) {
-                        return;
-                    }
-                    //store desc to class descriptor
-                    correctDescriptor.static.methods[name] = propertyDescriptor;
-                    //define class property
-                    core.method(cls, name, propertyDescriptor);
-                });
-                //public properties
-                collection.each(descriptor.properties, function (value, name) {
-                    //parse value as property descriptor
-                    var propertyDescriptor = core.descriptor.property(value);
-                    //store desc to class descriptor
-                    correctDescriptor.static.properties[name] = propertyDescriptor;
-                    //instance properties are defined in constructor
-                });
-                //public methods
-                collection.each(descriptor.methods, function (value, name) {
-                    //parse value as method descriptor
-                    var propertyDescriptor = this.method(value);
-                    //if desc is wrong - return
-                    if (!propertyDescriptor) {
-                        return;
-                    }
-                    //store desc to class descriptor
-                    correctDescriptor.methods[name] = propertyDescriptor;
-                    //define class property
-                    core.method(cls.prototype, name, propertyDescriptor);
-                });
-            }
+                },
+                properties: {},
+                methods: {}
+            };
+            // constants
+            collection.each(descriptor.const, function (value, name) {
+                //save const to class descriptor
+                correctDescriptor.const[name] = value;
+                core.const(cls, name, value);
+            });
+            //public static properties
+            collection.each(descriptor.static.properties, function (value, name) {
+                //parse value as property descriptor
+                var propertyDescriptor = this.property(value);
+                //store desc to class descriptor
+                correctDescriptor.static.properties[name] = propertyDescriptor;
+                //define class property
+                core.property(cls, name, propertyDescriptor);
+            });
+            //public static methods
+            collection.each(descriptor.static.methods, function (value, name) {
+                //parse value as method descriptor
+                var propertyDescriptor = this.method(value);
+                //if desc is wrong - return
+                if (!propertyDescriptor) {
+                    return;
+                }
+                //store desc to class descriptor
+                correctDescriptor.static.methods[name] = propertyDescriptor;
+                //define class property
+                core.method(cls, name, propertyDescriptor);
+            });
+            //public properties
+            collection.each(descriptor.properties, function (value, name) {
+                //parse value as property descriptor
+                var propertyDescriptor = core.descriptor.property(value);
+                //store desc to class descriptor
+                correctDescriptor.static.properties[name] = propertyDescriptor;
+                //instance properties are defined in constructor
+            });
+            //public methods
+            collection.each(descriptor.methods, function (value, name) {
+                //parse value as method descriptor
+                var propertyDescriptor = this.method(value);
+                //if desc is wrong - return
+                if (!propertyDescriptor) {
+                    return;
+                }
+                //store desc to class descriptor
+                correctDescriptor.methods[name] = propertyDescriptor;
+                //define class property
+                core.method(cls.prototype, name, propertyDescriptor);
+            });
         }
+    },
+    preprocessors: {
+        prepare: function (name, descriptor, createdFn) {
+            if (!xs.isString(name)) {
+                throw 'class name must be string';
+            }
+            //default namespace to null if not string
+            var namespace = xs.isString(descriptor.namespace) ? descriptor.namespace : null;
+            //evaluate class name according to given namespace
+            name = classes.getName.call({$namespace: namespace}, name);
+
+            //default descriptor to object
+            xs.isObject(descriptor) || (descriptor = {});
+
+            //default constructor to emptyFn if not function
+            xs.isFunction(descriptor.constructor) || (descriptor.constructor = emptyFn);
+
+            //default constructor default to empty array if not array
+            xs.isArray(descriptor.defaults) || (descriptor.defaults = []);
+
+            //return prepared data
+            return {
+                name: name,
+                class: classes.has(name) ? classes.get(name) : false,
+                namespace: namespace,
+                descriptor: descriptor,
+                createdFn: xs.isFunction(createdFn) ? createdFn : emptyFn
+            }
+        },
+        extend: function (cls, descriptor) {
+            var parent;
+            //determine parent class
+            if (xs.isString(descriptor.extend)) {
+                parent = classes.get(cls.getClassName(descriptor.extend));
+            } else {
+                parent = Base;
+            }
+            //cls from parent
+            core.extend(cls, parent);
+            return parent;
+        },
+        require: function (cls, descriptor) {
+
+        },
+        mixin: function (cls, descriptor) {
+
+        },
+        configure: function (cls, parent, descriptor) {
+            //combinate class descriptor
+            //inherited descriptor
+            var inherits = parent.getDescriptor();
+
+            //own descriptor
+            var owned = {};
+            //const
+            owned.const = this.isObject(descriptor.const) ? descriptor.const : {};
+            //static properties and methods
+            owned.static = {};
+            owned.static.properties = this.isObject(descriptor.static.properties) ? descriptor.static.properties : {};
+            owned.static.methods = this.isObject(descriptor.static.methods) ? descriptor.static.methods : {};
+            //public properties and methods
+            owned.properties = this.isObject(descriptor.properties) ? descriptor.properties : {};
+            owned.methods = this.isObject(descriptor.methods) ? descriptor.methods : {};
+
+            //real class descriptor applies owned properties defaulted to inherits
+            var real = {};
+            //const: defaulted from inherits
+            real.const = object.defaults(owned.const, inherits.const);
+            //static properties and methods
+            real.static = {};
+            real.static.properties = object.defaults(owned.static.properties, inherits.static.properties);
+            real.static.methods = object.defaults(owned.static.methods, inherits.static.methods);
+            //public properties and methods
+            real.properties = object.defaults(owned.properties, inherits.properties);
+            real.methods = object.defaults(owned.methods, inherits.methods);
+
+            //apply real descriptor and return it in processed variant
+            return core.descriptor.apply(cls, real);
+        }
+    },
+    postprocessors: {
+
     },
     //framework-related base implementations
     framework: {
@@ -301,24 +391,21 @@ var xs = {
         isUndefined: fn,
         isBoolean: fn,
         isEmpty: fn,
-        isObject: fn,
-        define: function (className, data, createdFn) {
+        define: function (name, description, createdFn) {
             var me = this;
-            if (!me.isString(className)) {
-                throw 'className must be string';
-            }
-            //default data ot object
-            me.isObject(data) || (data = {});
-
             //prepare class data
-            var constructor = data.constructor ? data.constructor : emptyFn,
-                defaults = me.isObject(data.defaults) ? data.defaults : {},
-                descriptor,
-                cls,
-                parent,
-                description;
+            var data = preprocessors.prepare(name, description, createdFn);
+            //return class if exists
+            if (data.class) {
+                return data.class;
+            }
+            var constructor = data.constructor,
+                defaults = data.defaults,
+            //class real descriptor
+                descriptor;
 
-            cls = function () {
+            //create class object
+            var cls = function () {
                 //apply properties to object
                 collection.each(descriptor.properties, function (property, name) {
                     core.define(this, name, property.descriptor);
@@ -329,135 +416,114 @@ var xs = {
             };
 
             //set class basic constants
-            core.const(cls, '$namespace', me.isString(namespace) ? namespace : null);
+            core.const(cls, '$namespace', data.namespace);
 
             //set basic methods
             core.method(cls, 'getClassName', {value: classes.getName});
+            core.method(cls, 'getDescriptor', {value: function () {
+                return descriptor;
+            }});
 
-            //evaluate className according to given namespace
-            className = cls.getClassName(className);
-            //if class already exists - return it, else - set it
-            if (classes.has(className)) {
-                return classes.get(className);
-            } else {
-                classes.set(root, className, cls);
-            }
+            //extend
+            var parent = preprocessors.extend(cls, data.descriptor);
+            //requires
+            preprocessors.require(cls, data);
+            //mixins
+            preprocessors.mixin(cls, data);
+            //properties configuration
+            descriptor = preprocessors.configure(cls, parent, data.descriptor);
 
-            //extend class from parent
-            //determine parent class
-            if (this.isString(data.extend)) {
-                parent = classes.get(cls.getClassName(data.extend));
-            } else {
-                parent = Base;
-            }
+            //save class in namespace
+            classes.set(root, data.name, cls);
 
-            //extend. completes only extend mechanism. all other definitions - later
-            core.extend(cls, parent);
-            //requires mechanism
-            //mixins mechanism
-            //properties
-
-            //apply descriptor
-            description = {};
-            //const
-            description.const = this.isObject(data.const) ? data.const : {};
-            //static properties and methods
-            description.static = {};
-            description.static.properties = this.isObject(data.static.properties) ? data.static.properties : {};
-            description.static.methods = this.isObject(data.static.methods) ? data.static.methods : {};
-            //public properties and methods
-            description.properties = this.isObject(data.properties) ? data.properties : {};
-            description.methods = this.isObject(data.methods) ? data.methods : {};
-            //apply description and save returned descriptor
-            descriptor = core.descriptor.apply(cls, description);
-
-
-            /**
-             * properties definition
-             * 1. scope, type
-             * 2. storage mechanism
-             * 3. value preparing
-             * 4. wrapping
-             * 5. accessors
-             * 6. inheritance mechanism
-             * 7. writable
-             * 8. enumerable
-             * 9. configurable
-             */
-            /**
-             * 1. constant
-             * 2. is saved as class property
-             * 3. no preparing, is saved as is
-             * 4. no wrapping
-             * 5. no accessors
-             * 6. class has __descriptor.constants hash, storing name:value pairs.
-             *    when extending is extracted from parent class and applied to child
-             * 7. false
-             * 8. true
-             * 9. false
-             */
-            /**
-             * 1. static property
-             * 2. is saved as class property
-             * 3. if identified as descriptor:
-             *       if has accessors - they will be applied,
-             *       if has value - value is applied, else - undefined
-             *       writable, configurable and enumerable are omitted
-             *    else
-             *       stored as is
-             * 4. no wrapping
-             * 5. no accessors
-             * 6. class has __descriptor.static.properties hash, storing name:value pairs.
-             *    when extending is extracted from parent class and applied to child
-             * 7. true
-             * 8. true
-             * 9. false
-             */
-            /**
-             * 1. static method
-             * 2. is saved as class property
-             * 3. is saved, if is method, otherwise is omitted
-             * 4. no wrapping
-             * 5. no accessors
-             * 6. class has __descrpiptor.static.methods hash, storing name:value pairs.
-             *    when extending is extracted from parent class and applied to child
-             * 7. false
-             * 8. true,
-             * 9. false
-             */
-            /**
-             * 1. property
-             * 2. is saved as instance property before constructor is called
-             * 3. if identified as descriptor:
-             *       if has accessors - they will be applied,
-             *       if has value - value is applied, else - undefined
-             *       writable, configurable and enumerable are omitted
-             *    else
-             *       stored as is
-             * 4. no wrapping
-             * 5. no accessors
-             * 6. class has __descriptor.properties hash, storing name:value pairs.
-             *    when extending is extracted from parent class and applied to child
-             * 7. true
-             * 8. true
-             * 9. false
-             */
-            /**
-             * 1. method
-             * 2. is saved as instance property before constructor is called
-             * 3. is saved, if is method, otherwise is omitted
-             * 4. no wrapping
-             * 5. no accessors
-             * 6. class has __descriptor.methods hash, storing name:value pairs.
-             *    when extending is extracted from parent class and applied to child
-             * 7. false
-             * 8. true
-             * 9. false
-             */
+            //call createdFn after class created
+            this.isFunction(createdFn) && createdFn.call(cls);
         }
     }
 }
 
+/**
+ * properties definition
+ * 1. scope, type
+ * 2. storage mechanism
+ * 3. value preparing
+ * 4. wrapping
+ * 5. accessors
+ * 6. inheritance mechanism
+ * 7. writable
+ * 8. enumerable
+ * 9. configurable
+ */
+/**
+ * 1. constant
+ * 2. is saved as class property
+ * 3. no preparing, is saved as is
+ * 4. no wrapping
+ * 5. no accessors
+ * 6. class has __descriptor.constants hash, storing name:value pairs.
+ *    when extending is extracted from parent class and applied to child
+ * 7. false
+ * 8. true
+ * 9. false
+ */
+/**
+ * 1. static property
+ * 2. is saved as class property
+ * 3. if identified as descriptor:
+ *       if has accessors - they will be applied,
+ *       if has value - value is applied, else - undefined
+ *       writable, configurable and enumerable are omitted
+ *    else
+ *       stored as is
+ * 4. no wrapping
+ * 5. no accessors
+ * 6. class has __descriptor.static.properties hash, storing name:value pairs.
+ *    when extending is extracted from parent class and applied to child
+ * 7. true
+ * 8. true
+ * 9. false
+ */
+/**
+ * 1. static method
+ * 2. is saved as class property
+ * 3. is saved, if is method, otherwise is omitted
+ * 4. no wrapping
+ * 5. no accessors
+ * 6. class has __descrpiptor.static.methods hash, storing name:value pairs.
+ *    when extending is extracted from parent class and applied to child
+ * 7. false
+ * 8. true,
+ * 9. false
+ */
+/**
+ * 1. property
+ * 2. is saved as instance property before constructor is called
+ * 3. if identified as descriptor:
+ *       if has accessors - they will be applied,
+ *       if has value - value is applied, else - undefined
+ *       writable, configurable and enumerable are omitted
+ *    else
+ *       stored as is
+ * 4. no wrapping
+ * 5. no accessors
+ * 6. class has __descriptor.properties hash, storing name:value pairs.
+ *    when extending is extracted from parent class and applied to child
+ * 7. true
+ * 8. true
+ * 9. false
+ */
+/**
+ * 1. method
+ * 2. is saved as instance property before constructor is called
+ * 3. is saved, if is method, otherwise is omitted
+ * 4. no wrapping
+ * 5. no accessors
+ * 6. class has __descriptor.methods hash, storing name:value pairs.
+ *    when extending is extracted from parent class and applied to child
+ * 7. false
+ * 8. true
+ * 9. false
+ */
 
 
 
