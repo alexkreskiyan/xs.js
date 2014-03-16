@@ -346,12 +346,12 @@
             return type.isFunction(child.isChild) ? child.isChild(this) : false;
         }
         this.isChild = function (parent) {
-            if (!type.isObject(this.super)) {
+            if (!type.isFunction(this.$parent)) {
                 return false;
-            } else if (this.super.constructor === parent) {
+            } else if (this.$parent === parent) {
                 return true;
             } else {
-                return this.super.constructor.isChild(parent);
+                return this.$parent.isChild(parent);
             }
         }
     });
@@ -369,8 +369,8 @@
             F.prototype = parent.prototype;
             child.prototype = new F();
             child.prototype.constructor = child;
-            //save reference to parent.prototype
-            child.super = parent.prototype;
+            //save reference to parent
+            this.const(child, '$parent', parent);
         },
         defined: function (obj, key) {
             return !!(obj.hasOwnProperty(key));
@@ -407,7 +407,7 @@
             description.value = function () {
                 var args = array.defaults(slice(arguments), description.defaults);
                 //pass super, needed for parent() calls
-                description.super && args.push(description.super);
+                description.$parent && args.push(description.$parent);
                 return fn.apply(this, args);
             };
             this.define(obj, name, description);
@@ -519,7 +519,7 @@
                 //store desc to class descriptor
                 correctDescriptor.static.methods[name] = propertyDescriptor;
                 //define class property
-                core.method(cls, name, propertyDescriptor);
+                core.method(cls, name, object.extend(propertyDescriptor, {super: cls.$parent}));
             }, this);
             //public properties
             collection.each(descriptor.properties, function (value, name) {
@@ -540,7 +540,7 @@
                 //store desc to class descriptor
                 correctDescriptor.methods[name] = propertyDescriptor;
                 //define class property
-                core.method(cls.prototype, name, object.extend(propertyDescriptor, {super: cls.super}));
+                core.method(cls.prototype, name, object.extend(propertyDescriptor, {super: cls.$parent.prototype}));
             }, this);
             return correctDescriptor;
         }
@@ -550,6 +550,8 @@
             if (!type.isString(name)) {
                 throw 'class name must be string';
             }
+            //default descriptor to empty object
+            type.isObject(descriptor) || (descriptor = {});
             //default namespace to null if not string
             var namespace = type.isString(descriptor.namespace) ? descriptor.namespace : null;
             //evaluate class name according to given namespace
@@ -758,6 +760,8 @@
                 core.method(this, '__set', function (name, value) {
                     privates[name] = value;
                 });
+                //class reference
+                core.const(this, '$class', cls);
                 //apply properties to object
                 collection.each(descriptor.properties, function (description, name) {
                     core.define(this, name, description);
@@ -816,7 +820,8 @@
             if (!classes.has(name)) {
                 throw 'class "' + name + '" doesn\'t exist';
             }
-            var instance = new classes.get(name);
+            var cls = classes.get(name);
+            var instance = new cls();
             type.isObject(properties) && object.each(properties, function (value, name) {
                 instance[name] = value;
             });
