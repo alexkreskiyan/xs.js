@@ -28,7 +28,8 @@ function xsStart(suffix) {
                     },
                     set: function (value) {
                         return this.__set('propA', '?' + value);
-                    }
+                    },
+                    value: 1
                 },
                 propB: 11
             },
@@ -51,7 +52,8 @@ function xsStart(suffix) {
                 },
                 set: function (value) {
                     return this.__set('propA', '??' + value);
-                }
+                },
+                value: 12
             },
             propB: 15
         },
@@ -85,7 +87,8 @@ function xsStart(suffix) {
                 propC: {
                     set: function (value) {
                         return this.__set('propC', '-' + value);
-                    }
+                    },
+                    value: 1
                 }
             },
             methods: {
@@ -143,12 +146,14 @@ function xsStart(suffix) {
                 propC: {
                     set: function (value) {
                         return this.__set('propC', '-+' + value);
-                    }
+                    },
+                    value: 5
                 },
                 propD: {
                     get: function () {
                         return this.__get('propD') + '-+';
-                    }
+                    },
+                    value: 6
                 }
             },
             methods: {
@@ -167,13 +172,15 @@ function xsStart(suffix) {
             propB: 155,
             propC: {
                 set: function (value) {
-                    return this.__set('propC', '--' + value);
-                }
+                    return this.__set('propC', '--++' + value);
+                },
+                value: 7
             },
             propD: {
                 get: function () {
                     return this.__get('propD') + '--++';
-                }
+                },
+                value: 8
             }
 
         },
@@ -234,21 +241,21 @@ module('1. Define basics');
 test('sample', function () {
     //check create, references and recreation prevention
     var cls = xs.define('demo.Basic');
-    equal(cls, demo.Basic, 'check that class was created');
-    equal(xs.define('demo.Basic'), cls, 'check class recreate prevented');
+    strictEqual(cls, demo.Basic, 'check that class was created');
+    strictEqual(xs.define('demo.Basic'), cls, 'check class recreate prevented');
     //check basic parameters assigned
-    equal(demo.Basic.$name, 'demo.Basic', 'check class name');
-    equal(demo.Basic.$namespace, null, 'check class namespace');
+    strictEqual(demo.Basic.$name, 'demo.Basic', 'check class name');
+    strictEqual(demo.Basic.$namespace, null, 'check class namespace');
 });
 module('2. Define in namespace');
 test('sample', function () {
     //check create, references and recreation prevention
     var cls = xs.define('ns.Basic', {namespace: 'demo.module'});
-    equal(cls, demo.module.Basic, 'check that class was created in specified namespace');
-    equal(xs.define('demo.module.Basic'), cls, 'check class recreate prevented');
+    strictEqual(cls, demo.module.Basic, 'check that class was created in specified namespace');
+    strictEqual(xs.define('demo.module.Basic'), cls, 'check class recreate prevented');
     //check basic parameters assigned
-    equal(demo.module.Basic.$name, 'demo.module.Basic', 'check class name');
-    equal(demo.module.Basic.$namespace, 'demo.module', 'check class namespace');
+    strictEqual(demo.module.Basic.$name, 'demo.module.Basic', 'check class name');
+    strictEqual(demo.module.Basic.$namespace, 'demo.module', 'check class namespace');
 });
 module('3. Define tree');
 test('sample', function () {
@@ -257,12 +264,12 @@ test('sample', function () {
     var parent = demo.Parent;
     var child = demo.Child;
     //check names
-    equal(base.$name, 'demo.Base', 'check base is class');
-    equal(parent.$name, 'demo.Parent', 'check parent is class');
-    equal(child.$name, 'demo.Child', 'check child is class');
+    strictEqual(base.$name, 'demo.Base', 'check base is class');
+    strictEqual(parent.$name, 'demo.Parent', 'check parent is class');
+    strictEqual(child.$name, 'demo.Child', 'check child is class');
     //check $parent
-    equal(parent.$parent, base, 'check that demo.Parent is child of demo.Base with $parent property');
-    equal(child.$parent, parent, 'check that child is demo.Child of demo.Parent with $parent property');
+    strictEqual(parent.$parent, base, 'check that demo.Parent is child of demo.Base with $parent property');
+    strictEqual(child.$parent, parent, 'check that child is demo.Child of demo.Parent with $parent property');
 });
 test('isChild', function () {
     //get class shortcuts
@@ -270,13 +277,13 @@ test('isChild', function () {
     var parent = demo.Parent;
     var child = demo.Child;
     //true values
-    equal(parent.isChild(base), true, 'check that demo.Parent is child of demo.Base with isChild call');
-    equal(child.isChild(parent), true, 'check that demo.Child is child of demo.Parent with isChild call');
+    strictEqual(parent.isChild(base), true, 'check that demo.Parent is child of demo.Base with isChild call');
+    strictEqual(child.isChild(parent), true, 'check that demo.Child is child of demo.Parent with isChild call');
     //false values
-    equal(base.isChild(parent), false, 'check that demo.Base is not child of demo.Parent with isChild call');
-    equal(base.isChild(base), false, 'check that demo.Base is not child of demo.Base with isChild call');
-    equal(base.isChild([]), false, 'check that demo.Base is not child of empty [] (incorrect value example) with isChild call');
-    equal(parent.isChild(child), false, 'check that demo.Parent is not child of demo.Child with isChild call');
+    strictEqual(base.isChild(parent), false, 'check that demo.Base is not child of demo.Parent with isChild call');
+    strictEqual(base.isChild(base), false, 'check that demo.Base is not child of demo.Base with isChild call');
+    strictEqual(base.isChild([]), false, 'check that demo.Base is not child of empty [] (incorrect value example) with isChild call');
+    strictEqual(parent.isChild(child), false, 'check that demo.Parent is not child of demo.Child with isChild call');
 });
 test('isParent', function () {
     //get class shortcuts
@@ -284,13 +291,13 @@ test('isParent', function () {
     var parent = demo.Parent;
     var child = demo.Child;
     //true values
-    equal(base.isParent(parent), true, 'check that demo.Base is parent of demo.Parent with isParent call');
-    equal(parent.isParent(child), true, 'check that demo.Parent is parent of demo.Child with isParent call');
+    strictEqual(base.isParent(parent), true, 'check that demo.Base is parent of demo.Parent with isParent call');
+    strictEqual(parent.isParent(child), true, 'check that demo.Parent is parent of demo.Child with isParent call');
     //false values
-    equal(parent.isParent(base), false, 'check that demo.Parent is not parent of demo.Base with isParent call');
-    equal(base.isParent(base), false, 'check that demo.Base is not parent of demo.Base with isParent call');
-    equal(base.isParent([]), false, 'check that demo.Base is not parent of empty [] (incorrect value example) with isParent call');
-    equal(child.isParent(parent), false, 'check that demo.Child is not parent of demo.Parent with isParent call');
+    strictEqual(parent.isParent(base), false, 'check that demo.Parent is not parent of demo.Base with isParent call');
+    strictEqual(base.isParent(base), false, 'check that demo.Base is not parent of demo.Base with isParent call');
+    strictEqual(base.isParent([]), false, 'check that demo.Base is not parent of empty [] (incorrect value example) with isParent call');
+    strictEqual(child.isParent(parent), false, 'check that demo.Child is not parent of demo.Parent with isParent call');
 });
 module('4. Creation simple');
 test('sample', function () {
@@ -308,97 +315,118 @@ test('base', function () {
     var base = demo.Base;
     //check class constant
     ok(base.hasOwnProperty('a'), 'class demo.Base has constant "a"');
-    equal(base.a(), 'a!', 'class demo.Base constant "a" value is valid');
-    equal(Object.getOwnPropertyDescriptor(base, 'a').writable, false, 'class demo.Base constant "a" is not writable');
-    equal(Object.getOwnPropertyDescriptor(base, 'a').enumerable, true, 'class demo.Base constant "a" is enumerable');
-    equal(Object.getOwnPropertyDescriptor(base, 'a').configurable, false, 'class demo.Base constant "a" is not configurable');
+    strictEqual(base.a(), 'a!', 'class demo.Base constant "a" value is valid');
+    strictEqual(Object.getOwnPropertyDescriptor(base, 'a').writable, false, 'class demo.Base constant "a" is not writable');
+    strictEqual(Object.getOwnPropertyDescriptor(base, 'a').enumerable, true, 'class demo.Base constant "a" is enumerable');
+    strictEqual(Object.getOwnPropertyDescriptor(base, 'a').configurable, false, 'class demo.Base constant "a" is not configurable');
     //check inherited constant
     ok(base.hasOwnProperty('$isClass'), 'class demo.Base has constant "$isClass", inherited from core class');
-    equal(base.$isClass, true, 'class demo.Base constant "$isClass" value is valid');
-    equal(Object.getOwnPropertyDescriptor(base, '$isClass').writable, false, 'class demo.Base constant "$isClass" is not writable');
-    equal(Object.getOwnPropertyDescriptor(base, '$isClass').enumerable, true, 'class demo.Base constant "$isClass" is enumerable');
-    equal(Object.getOwnPropertyDescriptor(base, '$isClass').configurable, false, 'class demo.Base constant "$isClass" is not configurable');
+    strictEqual(base.$isClass, true, 'class demo.Base constant "$isClass" value is valid');
+    strictEqual(Object.getOwnPropertyDescriptor(base, '$isClass').writable, false, 'class demo.Base constant "$isClass" is not writable');
+    strictEqual(Object.getOwnPropertyDescriptor(base, '$isClass').enumerable, true, 'class demo.Base constant "$isClass" is enumerable');
+    strictEqual(Object.getOwnPropertyDescriptor(base, '$isClass').configurable, false, 'class demo.Base constant "$isClass" is not configurable');
 });
 test('parent', function () {
     //get class shortcut
     var parent = demo.Parent;
     //check class constant
     ok(parent.hasOwnProperty('b'), 'class demo.Parent has constant "b"');
-    equal(parent.b(), 'bb!!', 'class demo.Parent constant "b" value is valid');
-    equal(Object.getOwnPropertyDescriptor(parent, 'b').writable, false, 'class demo.Parent constant "b" is not writable');
-    equal(Object.getOwnPropertyDescriptor(parent, 'b').enumerable, true, 'class demo.Parent constant "b" is enumerable');
-    equal(Object.getOwnPropertyDescriptor(parent, 'b').configurable, false, 'class demo.Parent constant "b" is not configurable');
+    strictEqual(parent.b(), 'bb!!', 'class demo.Parent constant "b" value is valid');
+    strictEqual(Object.getOwnPropertyDescriptor(parent, 'b').writable, false, 'class demo.Parent constant "b" is not writable');
+    strictEqual(Object.getOwnPropertyDescriptor(parent, 'b').enumerable, true, 'class demo.Parent constant "b" is enumerable');
+    strictEqual(Object.getOwnPropertyDescriptor(parent, 'b').configurable, false, 'class demo.Parent constant "b" is not configurable');
     //check inherited constant
     ok(parent.hasOwnProperty('a'), 'class demo.Parent has constant "a", inherited from core class');
-    equal(parent.a(), 'a!', 'class demo.Parent constant "a" value is valid');
-    equal(Object.getOwnPropertyDescriptor(parent, 'a').writable, false, 'class demo.Parent constant "a" is not writable');
-    equal(Object.getOwnPropertyDescriptor(parent, 'a').enumerable, true, 'class demo.Parent constant "a" is enumerable');
-    equal(Object.getOwnPropertyDescriptor(parent, 'a').configurable, false, 'class demo.Parent constant "a" is not configurable');
+    strictEqual(parent.a(), 'a!', 'class demo.Parent constant "a" value is valid');
+    strictEqual(Object.getOwnPropertyDescriptor(parent, 'a').writable, false, 'class demo.Parent constant "a" is not writable');
+    strictEqual(Object.getOwnPropertyDescriptor(parent, 'a').enumerable, true, 'class demo.Parent constant "a" is enumerable');
+    strictEqual(Object.getOwnPropertyDescriptor(parent, 'a').configurable, false, 'class demo.Parent constant "a" is not configurable');
 });
 test('child', function () {
     //get class shortcut
     var child = demo.Child;
     //check class constant
     ok(child.hasOwnProperty('c'), 'class demo.Child has constant "c"');
-    equal(child.c(), 'ccc!!!', 'class demo.Child constant "c" value is valid');
-    equal(Object.getOwnPropertyDescriptor(child, 'c').writable, false, 'class demo.Child constant "c" is not writable');
-    equal(Object.getOwnPropertyDescriptor(child, 'c').enumerable, true, 'class demo.Child constant "c" is enumerable');
-    equal(Object.getOwnPropertyDescriptor(child, 'c').configurable, false, 'class demo.Child constant "c" is not configurable');
+    strictEqual(child.c(), 'ccc!!!', 'class demo.Child constant "c" value is valid');
+    strictEqual(Object.getOwnPropertyDescriptor(child, 'c').writable, false, 'class demo.Child constant "c" is not writable');
+    strictEqual(Object.getOwnPropertyDescriptor(child, 'c').enumerable, true, 'class demo.Child constant "c" is enumerable');
+    strictEqual(Object.getOwnPropertyDescriptor(child, 'c').configurable, false, 'class demo.Child constant "c" is not configurable');
     //check inherited constant
     ok(child.hasOwnProperty('b'), 'class demo.Child has constant "b", inherited from core class');
-    equal(child.b(), 'bb!!', 'class demo.Child constant "b" value is valid');
-    equal(Object.getOwnPropertyDescriptor(child, 'b').writable, false, 'class demo.Child constant "b" is not writable');
-    equal(Object.getOwnPropertyDescriptor(child, 'b').enumerable, true, 'class demo.Child constant "b" is enumerable');
-    equal(Object.getOwnPropertyDescriptor(child, 'b').configurable, false, 'class demo.Child constant "b" is not configurable');
+    strictEqual(child.b(), 'bb!!', 'class demo.Child constant "b" value is valid');
+    strictEqual(Object.getOwnPropertyDescriptor(child, 'b').writable, false, 'class demo.Child constant "b" is not writable');
+    strictEqual(Object.getOwnPropertyDescriptor(child, 'b').enumerable, true, 'class demo.Child constant "b" is enumerable');
+    strictEqual(Object.getOwnPropertyDescriptor(child, 'b').configurable, false, 'class demo.Child constant "b" is not configurable');
 });
 module('6. Static properties');
 test('base', function () {
     //get class shortcut
     var base = demo.Base;
-    //check class constant
-    ok(base.hasOwnProperty('a'), 'class demo.Base has constant "a"');
-    equal(base.a(), 'a!', 'class demo.Base constant "a" value is valid');
-    equal(Object.getOwnPropertyDescriptor(base, 'a').writable, false, 'class demo.Base constant "a" is not writable');
-    equal(Object.getOwnPropertyDescriptor(base, 'a').enumerable, true, 'class demo.Base constant "a" is enumerable');
-    equal(Object.getOwnPropertyDescriptor(base, 'a').configurable, false, 'class demo.Base constant "a" is not configurable');
-    //check inherited constant
-    ok(base.hasOwnProperty('$isClass'), 'class demo.Base has constant "$isClass", inherited from core class');
-    equal(base.$isClass, true, 'class demo.Base constant "$isClass" value is valid');
-    equal(Object.getOwnPropertyDescriptor(base, '$isClass').writable, false, 'class demo.Base constant "$isClass" is not writable');
-    equal(Object.getOwnPropertyDescriptor(base, '$isClass').enumerable, true, 'class demo.Base constant "$isClass" is enumerable');
-    equal(Object.getOwnPropertyDescriptor(base, '$isClass').configurable, false, 'class demo.Base constant "$isClass" is not configurable');
+    //check class properties
+    ok(base.hasOwnProperty('propA'), 'class demo.Base has property "propA"');
+    strictEqual(Object.getOwnPropertyDescriptor(base, 'a').enumerable, true, 'class demo.Base property "propA" is enumerable');
+    strictEqual(Object.getOwnPropertyDescriptor(base, 'a').configurable, false, 'class demo.Base property "propA" is not configurable');
+    //get/set check
+    //accessored property
+    strictEqual(base.propA, '?1!', 'class demo.Base property "propA" default value is valid');
+    base.propA = 5;
+    strictEqual(base.propA, '?5!', 'class demo.Base property "propA" assigned value is valid');
+    base.propA = 1;
+    //simple property
+    strictEqual(base.propB, 11, 'class demo.Base property "propB" default value is valid');
+    base.propB = 5;
+    strictEqual(base.propB, 5, 'class demo.Base property "propB" assigned value is valid');
+    base.propB = 11;
 });
 test('parent', function () {
     //get class shortcut
     var parent = demo.Parent;
-    //check class constant
-    ok(parent.hasOwnProperty('b'), 'class demo.Parent has constant "b"');
-    equal(parent.b(), 'bb!!', 'class demo.Parent constant "b" value is valid');
-    equal(Object.getOwnPropertyDescriptor(parent, 'b').writable, false, 'class demo.Parent constant "b" is not writable');
-    equal(Object.getOwnPropertyDescriptor(parent, 'b').enumerable, true, 'class demo.Parent constant "b" is enumerable');
-    equal(Object.getOwnPropertyDescriptor(parent, 'b').configurable, false, 'class demo.Parent constant "b" is not configurable');
-    //check inherited constant
-    ok(parent.hasOwnProperty('a'), 'class demo.Parent has constant "a", inherited from core class');
-    equal(parent.a(), 'a!', 'class demo.Parent constant "a" value is valid');
-    equal(Object.getOwnPropertyDescriptor(parent, 'a').writable, false, 'class demo.Parent constant "a" is not writable');
-    equal(Object.getOwnPropertyDescriptor(parent, 'a').enumerable, true, 'class demo.Parent constant "a" is enumerable');
-    equal(Object.getOwnPropertyDescriptor(parent, 'a').configurable, false, 'class demo.Parent constant "a" is not configurable');
+    //check class properties
+    ok(parent.hasOwnProperty('propB'), 'class demo.Parent has property "propB"');
+    strictEqual(Object.getOwnPropertyDescriptor(parent, 'propB').writable, true, 'class demo.Parent property "propB" is writable');
+    strictEqual(Object.getOwnPropertyDescriptor(parent, 'propB').enumerable, true, 'class demo.Parent property "propB" is enumerable');
+    strictEqual(Object.getOwnPropertyDescriptor(parent, 'propB').configurable, false, 'class demo.Parent property "propB" is not configurable');
+    //get/set check
+    //accessored property
+    strictEqual(parent.propC, '-1', 'class demo.Parent property "propA" default value is valid');
+    parent.propC = 5;
+    strictEqual(parent.propC, '-5', 'class demo.Parent property "propA" assigned value is valid');
+    parent.propC = -1;
+    //simple property
+    strictEqual(parent.propB, 111, 'class demo.Parent property "propB" default value is valid');
+    parent.propB = 5;
+    strictEqual(parent.propB, 5, 'class demo.Parent property "propB" assigned value is valid');
+    parent.propB = 111;
+    //inherited property
+    strictEqual(parent.propA, '?1!', 'class demo.Parent property "propA" default value is valid');
+    parent.propA = 5;
+    strictEqual(parent.propA, '?5!', 'class demo.Parent property "propA" assigned value is valid');
+    parent.propA = 1;
 });
 test('child', function () {
     //get class shortcut
     var child = demo.Child;
-    //check class constant
-    ok(child.hasOwnProperty('c'), 'class demo.Child has constant "c"');
-    equal(child.c(), 'ccc!!!', 'class demo.Child constant "c" value is valid');
-    equal(Object.getOwnPropertyDescriptor(child, 'c').writable, false, 'class demo.Child constant "c" is not writable');
-    equal(Object.getOwnPropertyDescriptor(child, 'c').enumerable, true, 'class demo.Child constant "c" is enumerable');
-    equal(Object.getOwnPropertyDescriptor(child, 'c').configurable, false, 'class demo.Child constant "c" is not configurable');
-    //check inherited constant
-    ok(child.hasOwnProperty('b'), 'class demo.Child has constant "b", inherited from core class');
-    equal(child.b(), 'bb!!', 'class demo.Child constant "b" value is valid');
-    equal(Object.getOwnPropertyDescriptor(child, 'b').writable, false, 'class demo.Child constant "b" is not writable');
-    equal(Object.getOwnPropertyDescriptor(child, 'b').enumerable, true, 'class demo.Child constant "b" is enumerable');
-    equal(Object.getOwnPropertyDescriptor(child, 'b').configurable, false, 'class demo.Child constant "b" is not configurable');
+    //check class properties
+    ok(child.hasOwnProperty('propD'), 'class demo.Child has property "propD"');
+    strictEqual(Object.getOwnPropertyDescriptor(child, 'propD').writable, true, 'class demo.Child property "propD" is writable');
+    strictEqual(Object.getOwnPropertyDescriptor(child, 'propD').enumerable, true, 'class demo.Child property "propD" is enumerable');
+    strictEqual(Object.getOwnPropertyDescriptor(child, 'propD').configurable, false, 'class demo.Child property "propD" is not configurable');
+    //get/set check
+    //accessored property
+    strictEqual(child.propC, '-+5', 'class demo.Child property "propC" default value is valid');
+    child.propC = 50;
+    strictEqual(child.propC, '-+50', 'class demo.Child property "propC" assigned value is valid');
+    child.propC = 5;
+    //another accessored property
+    strictEqual(child.propD, '6-+', 'class demo.Child property "propD" default value is valid');
+    child.propD = 5;
+    strictEqual(child.propD, '5-+', 'class demo.Child property "propD" assigned value is valid');
+    child.propD = 6;
+    //inherited property
+    strictEqual(child.propB, 11, 'class demo.Child property "propA" default value is valid');
+    child.propB = 5;
+    strictEqual(child.propB, 5, 'class demo.Child property "propA" assigned value is valid');
+    child.propB = 1;
 });
 
 

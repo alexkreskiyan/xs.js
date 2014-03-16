@@ -155,7 +155,7 @@
          */
         this.pick = function (obj) {
             var copy = {};
-            var keys = concat(slice(arguments, 1));
+            var keys = concat(slice(arguments, 1).pop());
             keys.forEach(function (key) {
                 key in obj && (copy[key] = obj[key]);
             });
@@ -166,7 +166,7 @@
          */
         this.omit = function (obj) {
             var copy = {};
-            var keys = concat(slice(arguments, 1));
+            var keys = concat(slice(arguments, 1).pop());
             this.each(obj, function (value, name) {
                 array.has(keys, name) || (copy[name] = value);
             });
@@ -218,7 +218,7 @@
          * @type {Function}
          */
         this.difference = function (arr) {
-            var rest = concat(slice(arguments, 1));
+            var rest = concat(slice(arguments, 1).pop());
             return arr.filter(function (value) {
                 return !this.has(rest, value);
             }, this);
@@ -388,7 +388,6 @@
         },
         property: function (obj, name, descriptor) {
             this.defined(obj, name) || this.define(obj, name, object.defaults({
-                writable: true,
                 enumerable: true,
                 configurable: false
             }, descriptor))
@@ -403,13 +402,15 @@
                 configurable: false
             }, descriptor);
             description.defaults = type.isArray(description.defaults) ? description.defaults : []
-            var fn = description.value;
-            description.value = function () {
-                var args = array.defaults(slice(arguments), description.defaults);
-                //pass super, needed for parent() calls
-                description.$parent && args.push(description.$parent);
-                return fn.apply(this, args);
-            };
+            if (description.wrap) {
+                var fn = description.value;
+                description.value = function () {
+                    var args = array.defaults(slice(arguments), description.defaults);
+                    //pass super, needed for parent() calls
+                    description.$parent && args.push(description.$parent);
+                    return fn.apply(this, args);
+                };
+            }
             this.define(obj, name, description);
         }
     };
@@ -449,12 +450,28 @@
             }
             return true;
         },
-        property: function (descriptor) {
+        property: function (descriptor, name) {
             //process descriptor
             var desc = this.is(descriptor) ? descriptor : {value: descriptor};
             //if accessors given - remove value
-            //default value is undefined
-            desc.value = type.isUndefined(desc.value) ? undefined : desc.value;
+            if (desc.get || desc.set) {
+                //default getter setter to simple interpretation
+                desc.get || (desc.get = function () {
+                    return this.__get(name);
+                });
+                desc.set || (desc.set = function (value) {
+                    return this.__set(name, value);
+                });
+                if (object.has(desc, 'value')) {
+                    desc.default = desc.value;
+                }
+                delete desc.value;
+                delete desc.writable;
+            } else {
+                //get value
+                desc.value = type.isUndefined(desc.value) ? undefined : desc.value;
+                desc.writable = true;
+            }
             return desc;
         },
         method: function (descriptor) {
@@ -502,11 +519,13 @@
             //public static properties
             collection.each(descriptor.static.properties, function (value, name) {
                 //parse value as property descriptor
-                var propertyDescriptor = this.property(value);
+                var propertyDescriptor = this.property(value, name);
                 //store desc to class descriptor
                 correctDescriptor.static.properties[name] = propertyDescriptor;
                 //define class property
                 core.property(cls, name, propertyDescriptor);
+                //assign default if specified
+                object.has(propertyDescriptor, 'default') && (cls[name] = propertyDescriptor.default);
             }, this);
             //public static methods
             collection.each(descriptor.static.methods, function (value, name) {
@@ -519,12 +538,15 @@
                 //store desc to class descriptor
                 correctDescriptor.static.methods[name] = propertyDescriptor;
                 //define class property
-                core.method(cls, name, object.extend(propertyDescriptor, {super: cls.$parent}));
+                core.method(cls, name, object.extend(propertyDescriptor, {
+                    $parent: cls.$parent,
+                    wrap: true
+                }));
             }, this);
             //public properties
             collection.each(descriptor.properties, function (value, name) {
                 //parse value as property descriptor
-                var propertyDescriptor = this.property(value);
+                var propertyDescriptor = this.property(value, name);
                 //store desc to class descriptor
                 correctDescriptor.static.properties[name] = propertyDescriptor;
                 //instance properties are defined in constructor
@@ -540,7 +562,10 @@
                 //store desc to class descriptor
                 correctDescriptor.methods[name] = propertyDescriptor;
                 //define class property
-                core.method(cls.prototype, name, object.extend(propertyDescriptor, {super: cls.$parent.prototype}));
+                core.method(cls.prototype, name, object.extend(propertyDescriptor, {
+                    $parent: cls.$parent.prototype,
+                    wrap: true
+                }));
             }, this);
             return correctDescriptor;
         }
@@ -747,25 +772,25 @@
             //class descriptor
             var descriptor;
             //static privates
-            var privates;
+            var privates = {};
 
             //create class object
             var cls = function Class() {
                 //instance privates
-                var privates;
+                var privates = {};
                 //private setter/getter
-                core.method(this, '__get', function (name) {
+                core.method(this, '__get', {value: function (name) {
                     return privates[name]
-                });
-                core.method(this, '__set', function (name, value) {
+                }});
+                core.method(this, '__set', {value: function (name, value) {
                     privates[name] = value;
-                });
+                }});
                 //class reference
                 core.const(this, '$class', cls);
                 //apply properties to object
                 collection.each(descriptor.properties, function (description, name) {
-                    core.define(this, name, description);
-                    this[name] = description.value;
+                    core.property(this, name, description);
+                    object.has(description, 'default') && (this[name] = description.default);
                 }, this);
                 //apply constructor
                 constructor.apply(this, array.defaults(object.values(arguments), defaults));
@@ -784,12 +809,12 @@
             core.method(cls, 'isParent', {value: classes.isParent});
             core.method(cls, 'isChild', {value: classes.isChild});
             //static getter/setter
-            core.method(cls, '__get', function (name) {
+            core.method(cls, '__get', {value: function (name) {
                 return privates[name]
-            });
-            core.method(cls, '__set', function (name, value) {
+            }});
+            core.method(cls, '__set', {value: function (name, value) {
                 privates[name] = value;
-            });
+            }});
 
             //extend
             var parent = preprocessors.extend(cls, description);
