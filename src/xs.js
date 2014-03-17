@@ -401,11 +401,11 @@
                 enumerable: true,
                 configurable: false
             }, descriptor);
-            description.defaults = type.isArray(description.defaults) ? description.defaults : []
+            description.default = type.isArray(description.default) ? description.default : []
             if (description.wrap) {
                 var fn = description.value;
                 description.value = function () {
-                    var args = array.defaults(slice(arguments), description.defaults);
+                    var args = array.defaults(slice(arguments), description.default);
                     //pass super, needed for parent() calls
                     description.$parent && args.push(description.$parent);
                     return fn.apply(this, args);
@@ -424,31 +424,19 @@
             if (!type.isObject(descriptor)) {
                 return false;
             }
-            //only allowed descriptor keys
-            var allowed = ['get', 'set', 'value', 'writable', 'enumerable', 'configurable'];
-            //real descriptor keys
-            var keys = object.keys(descriptor);
-            //if any other fields - is not descriptor
-            if (array.difference(keys, allowed).length) {
-                return false;
+            //check descriptor fields are filled correctly
+            if (descriptor.value) {
+                return true;
+            } else if (descriptor.get || descriptor.set) {
+                if (descriptor.get && !type.isFunction(descriptor.get)) {
+                    return false;
+                }
+                if (descriptor.set && !type.isFunction(descriptor.set)) {
+                    return false;
+                }
+                return true;
             }
-            //check allowed fields are filled correctly
-            if (descriptor.get && !type.isFunction(descriptor.get)) {
-                return false;
-            }
-            if (descriptor.set && !type.isFunction(descriptor.set)) {
-                return false;
-            }
-            if (descriptor.writable && !type.isBoolean(descriptor.writable)) {
-                return false;
-            }
-            if (descriptor.enumerable && !type.isBoolean(descriptor.enumerable)) {
-                return false;
-            }
-            if (descriptor.configurable && !type.isBoolean(descriptor.configurable)) {
-                return false;
-            }
-            return true;
+            return false;
         },
         property: function (descriptor, name) {
             //process descriptor
@@ -462,9 +450,6 @@
                 desc.set || (desc.set = function (value) {
                     return this.__set(name, value);
                 });
-                if (object.has(desc, 'value')) {
-                    desc.default = desc.value;
-                }
                 delete desc.value;
                 delete desc.writable;
             } else {
@@ -496,7 +481,7 @@
                 return false;
             }
             //assign defaults
-            desc.defaults = type.isArray(descriptor.defaults) ? descriptor.defaults : [];
+            desc.default = type.isArray(descriptor.default) ? descriptor.default : [];
             return desc;
         },
         apply: function (cls, descriptor) {
@@ -548,7 +533,7 @@
                 //parse value as property descriptor
                 var propertyDescriptor = this.property(value, name);
                 //store desc to class descriptor
-                correctDescriptor.static.properties[name] = propertyDescriptor;
+                correctDescriptor.properties[name] = propertyDescriptor;
                 //instance properties are defined in constructor
             }, this);
             //public methods
@@ -589,7 +574,7 @@
             type.isFunction(descriptor.constructor) || (descriptor.constructor = emptyFn);
 
             //default constructor default to empty array if not array
-            type.isArray(descriptor.defaults) || (descriptor.defaults = []);
+            type.isArray(descriptor.default) || (descriptor.default = []);
 
             //return prepared data
             return {
@@ -768,7 +753,7 @@
                 return data.class;
             }
             var constructor = description.constructor;
-            var defaults = description.defaults;
+            var createDefaults = description.default;
             //class descriptor
             var descriptor;
             //static privates
@@ -793,7 +778,7 @@
                     object.has(description, 'default') && (this[name] = description.default);
                 }, this);
                 //apply constructor
-                constructor.apply(this, array.defaults(object.values(arguments), defaults));
+                constructor.apply(this, array.defaults(object.values(arguments), createDefaults));
             };
 
             //set class basics

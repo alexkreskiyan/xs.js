@@ -14,7 +14,7 @@ function xsStart(suffix) {
             this.propA = a;
             this.propB = b;
         },
-        defaults: [1, 2],
+        default: [1, 2],
         const: {
             a: function () {
                 return 'a!';
@@ -29,7 +29,7 @@ function xsStart(suffix) {
                     set: function (value) {
                         return this.__set('propA', '?' + value);
                     },
-                    value: 1
+                    default: 1
                 },
                 propB: 11
             },
@@ -41,7 +41,7 @@ function xsStart(suffix) {
                     fn: function (a, b) {
                         return a + b + 'base.static.b';
                     },
-                    defaults: [1, 2]
+                    default: [1, 2]
                 }
             }
         },
@@ -53,7 +53,7 @@ function xsStart(suffix) {
                 set: function (value) {
                     return this.__set('propA', '??' + value);
                 },
-                value: 12
+                default: 12
             },
             propB: 15
         },
@@ -65,7 +65,7 @@ function xsStart(suffix) {
                 fn: function (a, b) {
                     return a + b + 'base.b';
                 },
-                defaults: [2, 3]
+                default: [2, 3]
             }
         }
     });
@@ -75,7 +75,7 @@ function xsStart(suffix) {
             this.parent(arguments).constructor.call(this, a, b);
             this.propC = c;
         },
-        defaults: [2, 4],
+        default: [2, 4],
         const: {
             b: function () {
                 return 'bb!!';
@@ -88,7 +88,7 @@ function xsStart(suffix) {
                     set: function (value) {
                         return this.__set('propC', '-' + value);
                     },
-                    value: 1
+                    default: 1
                 }
             },
             methods: {
@@ -96,13 +96,13 @@ function xsStart(suffix) {
                     fn: function (a, b) {
                         return a + b + 'parent.static.b';
                     },
-                    defaults: [1, 2]
+                    default: [1, 2]
                 },
                 metC: {
                     fn: function (a, b) {
                         return this.parent(arguments).metB.call(this, a - 1, b + 1);
                     },
-                    defaults: [1, 2]
+                    default: [1, 2]
                 }
             }
         },
@@ -119,13 +119,13 @@ function xsStart(suffix) {
                 fn: function (a, b) {
                     return a + b + 'parent.a';
                 },
-                defaults: [1, 2]
+                default: [1, 2]
             },
             metC: {
                 fn: function (a, b) {
                     return this.parent(arguments).metB.call(this, a - 1, b + 1);
                 },
-                defaults: [1, 2]
+                default: [1, 2]
             }
         }
     });
@@ -135,7 +135,7 @@ function xsStart(suffix) {
             this.parent(arguments).constructor.call(this, a, b);
             this.propD = d;
         },
-        defaults: [4, 8, 12],
+        default: [4, 8, 12],
         const: {
             c: function () {
                 return 'ccc!!!';
@@ -147,13 +147,13 @@ function xsStart(suffix) {
                     set: function (value) {
                         return this.__set('propC', '-+' + value);
                     },
-                    value: 5
+                    default: 5
                 },
                 propD: {
                     get: function () {
                         return this.__get('propD') + '-+';
                     },
-                    value: 6
+                    default: 6
                 }
             },
             methods: {
@@ -164,7 +164,7 @@ function xsStart(suffix) {
                     fn: function (a, b) {
                         return this.parent(arguments).metС.call(this, a - 1, b + 1);
                     },
-                    defaults: [1, 2]
+                    default: [1, 2]
                 }
             }
         },
@@ -174,13 +174,13 @@ function xsStart(suffix) {
                 set: function (value) {
                     return this.__set('propC', '--++' + value);
                 },
-                value: 7
+                default: 7
             },
             propD: {
                 get: function () {
                     return this.__get('propD') + '--++';
                 },
-                value: 8
+                default: 8
             }
 
         },
@@ -195,7 +195,7 @@ function xsStart(suffix) {
                 fn: function (a, b) {
                     return a + b + 'child.d';
                 },
-                defaults: [1, 2]
+                default: [1, 2]
             }
         }
     });
@@ -388,9 +388,9 @@ test('parent', function () {
     strictEqual(Object.getOwnPropertyDescriptor(parent, 'propB').configurable, false, 'class demo.Parent property "propB" is not configurable');
     //get/set check
     //accessored property
-    strictEqual(parent.propC, '-1', 'class demo.Parent property "propA" default value is valid');
+    strictEqual(parent.propC, '-1', 'class demo.Parent property "propC" default value is valid');
     parent.propC = 5;
-    strictEqual(parent.propC, '-5', 'class demo.Parent property "propA" assigned value is valid');
+    strictEqual(parent.propC, '-5', 'class demo.Parent property "propC" assigned value is valid');
     parent.propC = -1;
     //simple property
     strictEqual(parent.propB, 111, 'class demo.Parent property "propB" default value is valid');
@@ -408,7 +408,6 @@ test('child', function () {
     var child = demo.Child;
     //check class properties
     ok(child.hasOwnProperty('propD'), 'class demo.Child has property "propD"');
-    strictEqual(Object.getOwnPropertyDescriptor(child, 'propD').writable, true, 'class demo.Child property "propD" is writable');
     strictEqual(Object.getOwnPropertyDescriptor(child, 'propD').enumerable, true, 'class demo.Child property "propD" is enumerable');
     strictEqual(Object.getOwnPropertyDescriptor(child, 'propD').configurable, false, 'class demo.Child property "propD" is not configurable');
     //get/set check
@@ -423,10 +422,10 @@ test('child', function () {
     strictEqual(child.propD, '5-+', 'class demo.Child property "propD" assigned value is valid');
     child.propD = 6;
     //inherited property
-    strictEqual(child.propB, 11, 'class demo.Child property "propA" default value is valid');
+    strictEqual(child.propB, 111, 'class demo.Child property "propB" default value is valid');
     child.propB = 5;
-    strictEqual(child.propB, 5, 'class demo.Child property "propA" assigned value is valid');
-    child.propB = 1;
+    strictEqual(child.propB, 5, 'class demo.Child property "propB" assigned value is valid');
+    child.propB = 111;
 });
 
 
