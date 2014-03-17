@@ -275,7 +275,7 @@
      * @type {RegExp}
      */
     var namespaceRe = /^ns/i;
-    var fnArgsRe = /^function\s\(([A-Za-z0-9\s,]*)\)/i;
+    var fnArgsRe = /^function\s(?:\w+)?\(([A-Za-z0-9\s,]*)\)/i;
     /**
      * Classes container
      * @type {{}}
@@ -454,12 +454,8 @@
             //if accessors given - remove value
             if (desc.get || desc.set) {
                 //default getter setter to simple interpretation
-                desc.get || (desc.get = function () {
-                    return this.__get(name);
-                });
-                desc.set || (desc.set = function (value) {
-                    return this.__set(name, value);
-                });
+                desc.get || eval('desc.get = function () {return this.__get(\'' + name + '\');}');
+                desc.set || eval('desc.set = function (value) {return this.__set(\'' + name + '\',value);}');
                 delete desc.value;
                 delete desc.writable;
             } else {
@@ -760,8 +756,8 @@
                 createdFn.call(data.class);
                 return data.class;
             }
-            var constructor = description.constructor;
-            var createDefaults = description.default;
+            //proto object, containing constructor
+            var proto = {};
             //class descriptor
             var descriptor;
             //static privates
@@ -788,7 +784,7 @@
                     object.has(description, 'default') && (this[name] = description.default);
                 }, this);
                 //apply constructor
-                constructor.apply(this, array.defaults(object.values(arguments), createDefaults));
+                proto.constructor.apply(this, arguments);
             };
 
             //set class basics
@@ -814,6 +810,16 @@
 
             //extend
             var parent = preprocessors.extend(cls, description);
+
+            //proto constructor
+            core.method(proto, 'constructor', {
+                value: description.constructor,
+                default: description.default,
+                $parent: cls.$parent.prototype,
+                wrap: true
+            });
+
+
             //requires
             preprocessors.require(cls, data);
             //mixins

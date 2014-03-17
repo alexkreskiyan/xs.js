@@ -136,7 +136,7 @@ function xsStart(suffix) {
     xs.define('demo.Child' + suffix, {
         extend: 'demo.Parent',
         constructor: function (a, b, c, d) {
-            this.parent(arguments).constructor.call(this, a, b);
+            this.parent(arguments).constructor.call(this, a, b, c);
             this.propFour = d;
         },
         default: [4, 8, 12],
@@ -175,13 +175,13 @@ function xsStart(suffix) {
             }
         },
         properties: {
-            propTwo: 155,
-            propThree: {
+            propTwo: {
                 set: function (value) {
-                    return this.__set('propThree', '--++' + value);
+                    return this.__set('propTwo', '--++' + value);
                 },
                 default: 7
             },
+            propThree: 155,
             propFour: {
                 get: function () {
                     return this.__get('propFour') + '--++';
@@ -240,9 +240,9 @@ speed(function () {
  *  - sample
  *  - inheritance
  * 10. Creation with attributes
- * 11.Requires
- * 12.Mixins
- * 13.Singleton
+ * 11.Singleton
+ * 12.Requires
+ * 13.Mixins
  *  -
  */
 module('1. Define basics');
@@ -483,7 +483,148 @@ test('child', function () {
     strictEqual(child.metThree(5), '13base.static.b', 'class demo.Child method "metThree" return correct value with some params');
     strictEqual(child.metThree(5, 6), '15base.static.b', 'class demo.Child method "metThree" return correct value with all params');
 });
+module('8. Properties');
+test('base', function () {
+    //get class shortcut
+    var inst1 = xs.create('demo.Base');
+    var inst2 = xs.create('demo.Base');
 
+    //check getter/setter property
+    //check access
+    strictEqual(inst1.propOne, '??1!!', 'property "propOne" of demo.Base instance has correct default value');
+    inst1.propOne = 1;
+    strictEqual(inst1.propOne, '??1!!', 'property "propOne" of demo.Base instance has correct changed value');
+    inst1.propOne = 12;
+    //check instance difference
+    inst1.propOne = 5;
+    inst2.propOne = 6;
+    strictEqual(inst1.propOne, '??5!!', 'property "propOne" of demo.Base one instance has own value');
+    strictEqual(inst2.propOne, '??6!!', 'property "propOne" of demo.Base another instance has own value');
+    inst1.propOne = 12;
+    inst2.propOne = 12;
+
+    //check simple property
+    //check access
+    strictEqual(inst1.propTwo, 2, 'property "propTwo" of demo.Base instance has correct default value');
+    inst1.propTwo = 1;
+    strictEqual(inst1.propTwo, 1, 'property "propTwo" of demo.Base instance has correct changed value');
+    inst1.propTwo = 15;
+    //check instance difference
+    inst1.propTwo = 5;
+    inst2.propTwo = 6;
+    strictEqual(inst1.propTwo, 5, 'property "propTwo" of demo.Base one instance has own value');
+    strictEqual(inst2.propTwo, 6, 'property "propTwo" of demo.Base another instance has own value');
+    inst1.propTwo = 15;
+    inst2.propTwo = 15;
+});
+test('parent', function () {
+    //get class shortcut
+    var inst1 = xs.create('demo.Parent');
+    var inst2 = xs.create('demo.Parent');
+
+    //check inherited property
+    //check access
+    strictEqual(inst1.propOne, '??2!!', 'property "propOne" of demo.Parent instance has correct default value');
+    inst1.propOne = 1;
+    strictEqual(inst1.propOne, '??1!!', 'property "propOne" of demo.Parent instance has correct changed value');
+    inst1.propOne = 2;
+    //check instance difference
+    inst1.propOne = 5;
+    inst2.propOne = 6;
+    strictEqual(inst1.propOne, '??5!!', 'property "propOne" of demo.Parent one instance has own value');
+    strictEqual(inst2.propOne, '??6!!', 'property "propOne" of demo.Parent another instance has own value');
+    inst1.propOne = 2;
+    inst2.propOne = 2;
+
+    //check simple property
+    //check access
+    strictEqual(inst1.propTwo, 4, 'property "propTwo" of demo.Parent instance has correct default value');
+    inst1.propTwo = 1;
+    strictEqual(inst1.propTwo, 1, 'property "propTwo" of demo.Parent instance has correct changed value');
+    inst1.propTwo = 4;
+    //check instance difference
+    inst1.propTwo = 5;
+    inst2.propTwo = 6;
+    strictEqual(inst1.propTwo, 5, 'property "propTwo" of demo.Parent one instance has own value');
+    strictEqual(inst2.propTwo, 6, 'property "propTwo" of demo.Parent another instance has own value');
+    inst1.propTwo = 4;
+    inst2.propTwo = 4;
+
+    //check getter/setter property
+    //check access
+    strictEqual(inst1.propThree, '--undefined', 'property "propThree" of demo.Parent instance has correct default value');
+    inst1.propThree = 1;
+    strictEqual(inst1.propThree, '--1', 'property "propThree" of demo.Parent instance has correct changed value');
+    inst1.propThree = undefined;
+    //check instance difference
+    inst1.propThree = 5;
+    inst2.propThree = 6;
+    strictEqual(inst1.propThree, '--5', 'property "propThree" of demo.Parent one instance has own value');
+    strictEqual(inst2.propThree, '--6', 'property "propThree" of demo.Parent another instance has own value');
+    inst1.propThree = undefined;
+    inst2.propThree = undefined;
+});
+test('child', function () {
+    //get class shortcut
+    var inst1 = xs.create('demo.Child');
+    var inst2 = xs.create('demo.Child');
+
+    //check inherited property
+    //check access
+    strictEqual(inst1.propOne, '??4!!', 'property "propOne" of demo.Child instance has correct default value');
+    inst1.propOne = 1;
+    strictEqual(inst1.propOne, '??1!!', 'property "propOne" of demo.Child instance has correct changed value');
+    inst1.propOne = 2;
+    //check instance difference
+    inst1.propOne = 5;
+    inst2.propOne = 6;
+    strictEqual(inst1.propOne, '??5!!', 'property "propOne" of demo.Child one instance has own value');
+    strictEqual(inst2.propOne, '??6!!', 'property "propOne" of demo.Child another instance has own value');
+    inst1.propOne = 4;
+    inst2.propOne = 4;
+
+    //check overriden property
+    //check access
+    strictEqual(inst1.propTwo, '--++8', 'property "propTwo" of demo.Child instance has correct default value');
+    inst1.propTwo = 1;
+    strictEqual(inst1.propTwo, '--++1', 'property "propTwo" of demo.Child instance has correct changed value');
+    inst1.propTwo = 8;
+    //check instance difference
+    inst1.propTwo = 5;
+    inst2.propTwo = 6;
+    strictEqual(inst1.propTwo, '--++5', 'property "propTwo" of demo.Child one instance has own value');
+    strictEqual(inst2.propTwo, '--++6', 'property "propTwo" of demo.Child another instance has own value');
+    inst1.propTwo = 4;
+    inst2.propTwo = 4;
+
+    //check overriden property
+    //check access
+    strictEqual(inst1.propThree, 12, 'property "propThree" of demo.Child instance has correct default value');
+    inst1.propThree = 1;
+    strictEqual(inst1.propThree, 1, 'property "propThree" of demo.Child instance has correct changed value');
+    inst1.propThree = 12;
+    //check instance difference
+    inst1.propThree = 5;
+    inst2.propThree = 6;
+    strictEqual(inst1.propThree, 5, 'property "propThree" of demo.Child one instance has own value');
+    strictEqual(inst2.propThree, 6, 'property "propThree" of demo.Child another instance has own value');
+    inst1.propThree = 12;
+    inst2.propThree = 12;
+
+    //check getter/setter property
+    //check access
+    strictEqual(inst1.propFour, 'undefined--++', 'property "propFour" of demo.Child instance has correct default value');
+    inst1.propFour = 1;
+    strictEqual(inst1.propFour, '1--++', 'property "propFour" of demo.Child instance has correct changed value');
+    inst1.propFour = 8;
+    //check instance difference
+    inst1.propFour = 5;
+    inst2.propFour = 6;
+    strictEqual(inst1.propFour, '5--++', 'property "propFour" of demo.Child one instance has own value');
+    strictEqual(inst2.propFour, '6--++', 'property "propFour" of demo.Child another instance has own value');
+    inst1.propFour = 8;
+    inst2.propFour = 8;
+});
 
 
 
