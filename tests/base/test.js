@@ -119,17 +119,17 @@ function xsStart(suffix) {
         methods: {
             metTwo: {
                 fn: function (a, b) {
-                    return a + b + 'parent.a';
+                    return a + b + 'parent.b';
                 },
-                default: [1, 2]
+                default: [3, 4]
             },
             metThree: {
                 fn: function (a, b) {
                     var parent = this.parent(arguments);
                     var fn = parent.metTwo;
-                    return fn.call(this, a - 1, b + 1);
+                    return fn.call(this, a - 10, b + 1);
                 },
-                default: [1, 2]
+                default: [5, 6]
             }
         }
     });
@@ -198,12 +198,6 @@ function xsStart(suffix) {
                 var parent = this.parent(arguments);
                 var fn = parent.metThree;
                 return fn.call(this, a + 3, b + 1);
-            },
-            metFour: {
-                fn: function (a, b) {
-                    return a + b + 'child.d';
-                },
-                default: [1, 2]
             }
         }
     });
@@ -239,7 +233,7 @@ speed(function () {
  * 9.Methods
  *  - sample
  *  - inheritance
- * 10. Creation with attributes
+ * 10.Creation with attributes
  * 11.Singleton
  * 12.Requires
  * 13.Mixins
@@ -625,13 +619,136 @@ test('child', function () {
     inst1.propFour = 8;
     inst2.propFour = 8;
 });
-
-
-
-
-
-
-
+module('9. Methods');
+test('base', function () {
+    //get class instance
+    var inst = xs.create('demo.Base');
+    //check class methods
+    //method without default
+    strictEqual(inst.metOne(), 'NaNbase.a', ' method "metOne" of demo.Base class instance returns correct value with no params');
+    strictEqual(inst.metOne(3), 'NaNbase.a', 'method "metOne" of demo.Base class instance returns correct value with some params');
+    strictEqual(inst.metOne(3, 4), '7base.a', 'method "metOne" of demo.Base class instance returns correct value with all params');
+    //method with default
+    strictEqual(inst.metTwo(), '5base.b', 'method "metTwo" of demo.Base class instance returns correct value with no params');
+    strictEqual(inst.metTwo(3), '6base.b', 'method "metTwo" of demo.Base class instance returns correct value with some params');
+    strictEqual(inst.metTwo(3, 4), '7base.b', 'method "metTwo" of demo.Base class instance returns correct value with all params');
+});
+test('parent', function () {
+    //get class instance
+    var inst = xs.create('demo.Parent');
+    //check class methods
+    //inherited method
+    strictEqual(inst.metOne(), 'NaNbase.a', ' method "metOne" of demo.Parent class instance returns correct value with no params');
+    strictEqual(inst.metOne(3), 'NaNbase.a', 'method "metOne" of demo.Parent class instance returns correct value with some params');
+    strictEqual(inst.metOne(3, 4), '7base.a', 'method "metOne" of demo.Parent class instance returns correct value with all params');
+    //overriden method
+    strictEqual(inst.metTwo(), '7parent.b', 'method "metTwo" of demo.Parent class instance returns correct value with no params');
+    strictEqual(inst.metTwo(5), '9parent.b', 'method "metTwo" of demo.Parent class instance returns correct value with some params');
+    strictEqual(inst.metTwo(5, 6), '11parent.b', 'method "metTwo" of demo.Parent class instance returns correct value with all params');
+    //downcalling method
+    strictEqual(inst.metThree(), '2base.b', 'method "metThree" of demo.Parent class instance returns correct value with no params');
+    strictEqual(inst.metThree(3), '0base.b', 'method "metThree" of demo.Parent class instance returns correct value with some params');
+    strictEqual(inst.metThree(3, 4), '-2base.b', 'method "metThree" of demo.Parent class instance returns correct value with all params');
+});
+test('child', function () {
+    //get class instance
+    var inst = xs.create('demo.Child');
+    //check class methods
+    //overriden method
+    strictEqual(inst.metOne(), 'NaNchild.a', ' method "metOne" of demo.Child class instance returns correct value with no params');
+    strictEqual(inst.metOne(3), 'NaNchild.a', 'method "metOne" of demo.Child class instance returns correct value with some params');
+    strictEqual(inst.metOne(3, 4), '7child.a', 'method "metOne" of demo.Child class instance returns correct value with all params');
+    //inherited method
+    strictEqual(inst.metTwo(), '7parent.b', 'method "metTwo" of demo.Child class instance returns correct value with no params');
+    strictEqual(inst.metTwo(5), '9parent.b', 'method "metTwo" of demo.Child class instance returns correct value with some params');
+    strictEqual(inst.metTwo(5, 6), '11parent.b', 'method "metTwo" of demo.Child class instance returns correct value with all params');
+    //downcalling method
+    strictEqual(inst.metThree(), 'NaNbase.b', 'method "metThree" of demo.Child class instance returns correct value with no params');
+    strictEqual(inst.metThree(3), 'NaNbase.b', 'method "metThree" of demo.Child class instance returns correct value with some params');
+    strictEqual(inst.metThree(3, 4), '2base.b', 'method "metThree" of demo.Child class instance returns correct value with all params');
+});
+module('10. Creation with attributes');
+test('base', function () {
+    //get class instance
+    var inst = xs.create('demo.Base', {
+        propTwo: 74
+    });
+    //check instance properties
+    strictEqual(inst.propOne, '??1!!', 'property "propOne" of class demo.Base instance assigned correctly');
+    strictEqual(inst.propTwo, 74, 'property "propTwo" of class demo.Base instance assigned correctly');
+});
+test('parent', function () {
+    //get class instance
+    var inst = xs.create('demo.Parent', {
+        propTwo: 74,
+        propThree: 89
+    });
+    //check instance properties
+    strictEqual(inst.propOne, '??2!!', 'property "propOne" of class demo.Parent instance assigned correctly');
+    strictEqual(inst.propTwo, 74, 'property "propTwo" of class demo.Parent instance assigned correctly');
+    strictEqual(inst.propThree, '--89', 'property "propThree" of class demo.Parent instance assigned correctly');
+});
+test('child', function () {
+    //get class instance
+    var inst = xs.create('demo.Child', {
+        propTwo: 74,
+        propThree: 89,
+        propFour: 32
+    });
+    //check instance properties
+    strictEqual(inst.propOne, '??4!!', 'property "propOne" of class demo.Child instance assigned correctly');
+    strictEqual(inst.propTwo, '--++74', 'property "propTwo" of class demo.Child instance assigned correctly');
+    strictEqual(inst.propThree, 89, 'property "propThree" of class demo.Child instance assigned correctly');
+    strictEqual(inst.propFour, '32--++', 'property "propFour" of class demo.Child instance assigned correctly');
+});
+module('11. Singleton');
+test('base', function () {
+    //get class instance
+    var single = xs.define('demo.Single', {
+        extend: 'demo.Base',
+        singleton: true,
+        const: {
+            a: 1
+        },
+        static: {
+            properties: {
+                b: 2
+            },
+            methods: {
+                c: {
+                    fn: function (value) {
+                        return value;
+                    },
+                    default: [3]
+                }
+            }
+        },
+        properties: {
+            d: 4
+        },
+        methods: {
+            e: {fn: function (value) {
+                return value;
+            },
+                default: [5]
+            }
+        }
+    });
+    //check basics
+    strictEqual(single.$isClass, true, 'is class');
+    strictEqual(single.$name, 'demo.Single', 'class name saved');
+    //check constants, methods and properties assigned
+    //const
+    strictEqual(single.a, 1, 'constant "a" saved');
+    //static.properties
+    strictEqual(single.b, undefined, 'static property "b" doesn\'t exist');
+    //static.methods
+    strictEqual(single.c, undefined, 'static method "c" doesn\'t exist');
+    //properties
+    strictEqual(single.d, 4, 'property "d" saved ok');
+    //methods
+    strictEqual(single.e(), 5, 'method "e" saved ok');
+});
 
 
 

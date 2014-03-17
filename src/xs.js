@@ -603,8 +603,24 @@
             core.extend(cls, parent);
             return parent;
         },
-        singleton: function (cls, descriptor) {
-            return object.has(descriptor, 'singleton') && descriptor.singleton ? new cls : cls;
+        singleton: function (cls, description) {
+            //return cls if not singleton
+            if (object.has(description, 'singleton') && description.singleton) {
+                //update description - move methods and properties to static
+                description.static = {};
+                if (description.properties) {
+                    description.static.properties = description.properties;
+                    delete description.properties;
+                }
+                if (description.methods) {
+                    description.static.methods = description.methods;
+                    delete description.methods;
+                }
+                return function () {
+                };
+            } else {
+                return cls;
+            }
         },
         require: function (cls, descriptor) {
 
@@ -765,27 +781,32 @@
 
             //create class object
             var cls = function Class() {
-                //instance privates
-                var privates = {};
-                //parent method
-                core.method(this, 'parent', {value: classes.parent});
-                //private setter/getter
-                core.method(this, '__get', {value: function (name) {
-                    return privates[name]
-                }});
-                core.method(this, '__set', {value: function (name, value) {
-                    privates[name] = value;
-                }});
-                //class reference
-                core.const(this, '$class', cls);
-                //apply properties to object
-                collection.each(descriptor.properties, function (description, name) {
-                    core.property(this, name, description);
-                    object.has(description, 'default') && (this[name] = description.default);
-                }, this);
+                //no all operations in native class constructor, preventing downcall usage
+                if (!this.$class || this.$class === cls) {
+                    //instance privates
+                    var privates = {};
+                    //parent method
+                    core.method(this, 'parent', {value: classes.parent});
+                    //private setter/getter
+                    core.method(this, '__get', {value: function (name) {
+                        return privates[name]
+                    }});
+                    core.method(this, '__set', {value: function (name, value) {
+                        privates[name] = value;
+                    }});
+                    //class reference
+                    core.const(this, '$class', cls);
+                    //apply properties to object
+                    collection.each(descriptor.properties, function (description, name) {
+                        core.property(this, name, description);
+                        object.has(description, 'default') && (this[name] = description.default);
+                    }, this);
+                }
                 //apply constructor
                 proto.constructor.apply(this, arguments);
             };
+            //singleton implementation
+            cls = preprocessors.singleton(cls, description);
 
             //set class basics
             //basic consts
@@ -826,8 +847,6 @@
             preprocessors.mixin(cls, data);
             //properties configuration
             descriptor = preprocessors.configure(cls, parent, description);
-            //singleton implementation
-            cls = preprocessors.singleton(cls, description);
 
             //save class in namespace
             classes.set(root, data.name, cls);
