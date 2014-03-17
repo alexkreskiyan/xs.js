@@ -274,7 +274,8 @@
      * base regular exceptions
      * @type {RegExp}
      */
-    var namespaceRe = /^ns/gi;
+    var namespaceRe = /^ns/i;
+    var fnArgsRe = /^function\s\(([A-Za-z0-9\s,]*)\)/i;
     /**
      * Classes container
      * @type {{}}
@@ -342,9 +343,12 @@
                 return name;
             }
         };
+        this.parent = function (args) {
+            return args[args.length - 1];
+        };
         this.isParent = function (child) {
             return type.isFunction(child.isChild) ? child.isChild(this) : false;
-        }
+        };
         this.isChild = function (parent) {
             if (!type.isFunction(this.$parent)) {
                 return false;
@@ -353,7 +357,7 @@
             } else {
                 return this.$parent.isChild(parent);
             }
-        }
+        };
     });
     /**
      * core functions: extend, define, const, etc
@@ -404,10 +408,16 @@
             description.default = type.isArray(description.default) ? description.default : []
             if (description.wrap) {
                 var fn = description.value;
+                //get count of arguments, defined by function;
+                var argsCount = fnArgsRe.exec(fn.toString()).pop().split(',').length;
                 description.value = function () {
                     var args = array.defaults(slice(arguments), description.default);
                     //pass super, needed for parent() calls
-                    description.$parent && args.push(description.$parent);
+                    if (args.length < argsCount) {
+                        args[argsCount] = description.$parent;
+                    } else {
+                        args.push(description.$parent);
+                    }
                     return fn.apply(this, args);
                 };
             }
@@ -722,13 +732,11 @@
             },
             static: {
                 properties: {},
-                methods: {}
+                methods: {
+                }
             },
             properties: {},
             methods: {
-                parent: function (args) {
-                    return args[args.length - 1];
-                }
             }
         };
     }});
@@ -763,6 +771,8 @@
             var cls = function Class() {
                 //instance privates
                 var privates = {};
+                //parent method
+                core.method(this, 'parent', {value: classes.parent});
                 //private setter/getter
                 core.method(this, '__get', {value: function (name) {
                     return privates[name]
@@ -791,6 +801,7 @@
                 return descriptor;
             }});
             //inheritance
+            core.method(cls, 'parent', {value: classes.parent});
             core.method(cls, 'isParent', {value: classes.isParent});
             core.method(cls, 'isChild', {value: classes.isChild});
             //static getter/setter

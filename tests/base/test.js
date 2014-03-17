@@ -11,8 +11,8 @@ function speed(fn, n) {
 function xsStart(suffix) {
     xs.define('demo.Base' + suffix, {
         constructor: function (a, b) {
-            this.propA = a;
-            this.propB = b;
+            this.propOne = a;
+            this.propTwo = b;
         },
         default: [1, 2],
         const: {
@@ -22,22 +22,22 @@ function xsStart(suffix) {
         },
         static: {
             properties: {
-                propA: {
+                propOne: {
                     get: function () {
-                        return this.__get('propA') + '!';
+                        return this.__get('propOne') + '!';
                     },
                     set: function (value) {
-                        return this.__set('propA', '?' + value);
+                        return this.__set('propOne', '?' + value);
                     },
                     default: 1
                 },
-                propB: 11
+                propTwo: 11
             },
             methods: {
-                metA: function (a, b) {
+                metOne: function (a, b) {
                     return a + b + 'base.static.a';
                 },
-                metB: {
+                metTwo: {
                     fn: function (a, b) {
                         return a + b + 'base.static.b';
                     },
@@ -46,22 +46,22 @@ function xsStart(suffix) {
             }
         },
         properties: {
-            propA: {
+            propOne: {
                 get: function () {
-                    return this.__get('propA') + '!!';
+                    return this.__get('propOne') + '!!';
                 },
                 set: function (value) {
-                    return this.__set('propA', '??' + value);
+                    return this.__set('propOne', '??' + value);
                 },
                 default: 12
             },
-            propB: 15
+            propTwo: 15
         },
         methods: {
-            metA: function (a, b) {
+            metOne: function (a, b) {
                 return a + b + 'base.a';
             },
-            metB: {
+            metTwo: {
                 fn: function (a, b) {
                     return a + b + 'base.b';
                 },
@@ -73,7 +73,7 @@ function xsStart(suffix) {
         extend: 'demo.Base',
         constructor: function (a, b, c) {
             this.parent(arguments).constructor.call(this, a, b);
-            this.propC = c;
+            this.propThree = c;
         },
         default: [2, 4],
         const: {
@@ -83,47 +83,51 @@ function xsStart(suffix) {
         },
         static: {
             properties: {
-                propB: 111,
-                propC: {
+                propTwo: 111,
+                propThree: {
                     set: function (value) {
-                        return this.__set('propC', '-' + value);
+                        return this.__set('propThree', '-' + value);
                     },
                     default: 1
                 }
             },
             methods: {
-                metB: {
+                metTwo: {
                     fn: function (a, b) {
                         return a + b + 'parent.static.b';
                     },
                     default: [1, 2]
                 },
-                metC: {
+                metThree: {
                     fn: function (a, b) {
-                        return this.parent(arguments).metB.call(this, a - 1, b + 1);
+                        var parent = this.parent(arguments);
+                        var fn = parent.metTwo;
+                        return fn.call(this, a - 1, b + 1);
                     },
-                    default: [1, 2]
+                    default: [3, 4]
                 }
             }
         },
         properties: {
-            propB: 155,
-            propC: {
+            propTwo: 155,
+            propThree: {
                 set: function (value) {
-                    return this.__set('propC', '--' + value);
+                    return this.__set('propThree', '--' + value);
                 }
             }
         },
         methods: {
-            metB: {
+            metTwo: {
                 fn: function (a, b) {
                     return a + b + 'parent.a';
                 },
                 default: [1, 2]
             },
-            metC: {
+            metThree: {
                 fn: function (a, b) {
-                    return this.parent(arguments).metB.call(this, a - 1, b + 1);
+                    var parent = this.parent(arguments);
+                    var fn = parent.metTwo;
+                    return fn.call(this, a - 1, b + 1);
                 },
                 default: [1, 2]
             }
@@ -133,7 +137,7 @@ function xsStart(suffix) {
         extend: 'demo.Parent',
         constructor: function (a, b, c, d) {
             this.parent(arguments).constructor.call(this, a, b);
-            this.propD = d;
+            this.propFour = d;
         },
         default: [4, 8, 12],
         const: {
@@ -143,55 +147,59 @@ function xsStart(suffix) {
         },
         static: {
             properties: {
-                propC: {
+                propThree: {
                     set: function (value) {
-                        return this.__set('propC', '-+' + value);
+                        return this.__set('propThree', '-+' + value);
                     },
                     default: 5
                 },
-                propD: {
+                propFour: {
                     get: function () {
-                        return this.__get('propD') + '-+';
+                        return this.__get('propFour') + '-+';
                     },
                     default: 6
                 }
             },
             methods: {
-                metA: function (a, b) {
+                metOne: function (a, b) {
                     return a + b + 'child.static.a';
                 },
-                metC: {
+                metThree: {
                     fn: function (a, b) {
-                        return this.parent(arguments).metС.call(this, a - 1, b + 1);
+                        var parent = this.parent(arguments);
+                        var fn = parent.metThree;
+                        return fn.call(this, a + 3, b + 1);
                     },
-                    default: [1, 2]
+                    default: [3, 4]
                 }
             }
         },
         properties: {
-            propB: 155,
-            propC: {
+            propTwo: 155,
+            propThree: {
                 set: function (value) {
-                    return this.__set('propC', '--++' + value);
+                    return this.__set('propThree', '--++' + value);
                 },
                 default: 7
             },
-            propD: {
+            propFour: {
                 get: function () {
-                    return this.__get('propD') + '--++';
+                    return this.__get('propFour') + '--++';
                 },
                 default: 8
             }
 
         },
         methods: {
-            metA: function (a, b) {
+            metOne: function (a, b) {
                 return a + b + 'child.a';
             },
-            metС: function (a, b) {
-                return this.parent(arguments).metС.call(this, a - 1, b + 1);
+            metThree: function (a, b) {
+                var parent = this.parent(arguments);
+                var fn = parent.metThree;
+                return fn.call(this, a + 3, b + 1);
             },
-            metD: {
+            metFour: {
                 fn: function (a, b) {
                     return a + b + 'child.d';
                 },
@@ -363,69 +371,117 @@ test('base', function () {
     //get class shortcut
     var base = demo.Base;
     //check class properties
-    ok(base.hasOwnProperty('propA'), 'class demo.Base has property "propA"');
-    strictEqual(Object.getOwnPropertyDescriptor(base, 'a').enumerable, true, 'class demo.Base property "propA" is enumerable');
-    strictEqual(Object.getOwnPropertyDescriptor(base, 'a').configurable, false, 'class demo.Base property "propA" is not configurable');
+    ok(base.hasOwnProperty('propOne'), 'class demo.Base has property "propOne"');
+    strictEqual(Object.getOwnPropertyDescriptor(base, 'a').enumerable, true, 'class demo.Base property "propOne" is enumerable');
+    strictEqual(Object.getOwnPropertyDescriptor(base, 'a').configurable, false, 'class demo.Base property "propOne" is not configurable');
     //get/set check
     //accessored property
-    strictEqual(base.propA, '?1!', 'class demo.Base property "propA" default value is valid');
-    base.propA = 5;
-    strictEqual(base.propA, '?5!', 'class demo.Base property "propA" assigned value is valid');
-    base.propA = 1;
+    strictEqual(base.propOne, '?1!', 'class demo.Base property "propOne" default value is valid');
+    base.propOne = 5;
+    strictEqual(base.propOne, '?5!', 'class demo.Base property "propOne" assigned value is valid');
+    base.propOne = 1;
     //simple property
-    strictEqual(base.propB, 11, 'class demo.Base property "propB" default value is valid');
-    base.propB = 5;
-    strictEqual(base.propB, 5, 'class demo.Base property "propB" assigned value is valid');
-    base.propB = 11;
+    strictEqual(base.propTwo, 11, 'class demo.Base property "propTwo" default value is valid');
+    base.propTwo = 5;
+    strictEqual(base.propTwo, 5, 'class demo.Base property "propTwo" assigned value is valid');
+    base.propTwo = 11;
 });
 test('parent', function () {
     //get class shortcut
     var parent = demo.Parent;
     //check class properties
-    ok(parent.hasOwnProperty('propB'), 'class demo.Parent has property "propB"');
-    strictEqual(Object.getOwnPropertyDescriptor(parent, 'propB').writable, true, 'class demo.Parent property "propB" is writable');
-    strictEqual(Object.getOwnPropertyDescriptor(parent, 'propB').enumerable, true, 'class demo.Parent property "propB" is enumerable');
-    strictEqual(Object.getOwnPropertyDescriptor(parent, 'propB').configurable, false, 'class demo.Parent property "propB" is not configurable');
+    ok(parent.hasOwnProperty('propTwo'), 'class demo.Parent has property "propTwo"');
+    strictEqual(Object.getOwnPropertyDescriptor(parent, 'propTwo').writable, true, 'class demo.Parent property "propTwo" is writable');
+    strictEqual(Object.getOwnPropertyDescriptor(parent, 'propTwo').enumerable, true, 'class demo.Parent property "propTwo" is enumerable');
+    strictEqual(Object.getOwnPropertyDescriptor(parent, 'propTwo').configurable, false, 'class demo.Parent property "propTwo" is not configurable');
     //get/set check
     //accessored property
-    strictEqual(parent.propC, '-1', 'class demo.Parent property "propC" default value is valid');
-    parent.propC = 5;
-    strictEqual(parent.propC, '-5', 'class demo.Parent property "propC" assigned value is valid');
-    parent.propC = -1;
+    strictEqual(parent.propThree, '-1', 'class demo.Parent property "propThree" default value is valid');
+    parent.propThree = 5;
+    strictEqual(parent.propThree, '-5', 'class demo.Parent property "propThree" assigned value is valid');
+    parent.propThree = -1;
     //simple property
-    strictEqual(parent.propB, 111, 'class demo.Parent property "propB" default value is valid');
-    parent.propB = 5;
-    strictEqual(parent.propB, 5, 'class demo.Parent property "propB" assigned value is valid');
-    parent.propB = 111;
+    strictEqual(parent.propTwo, 111, 'class demo.Parent property "propTwo" default value is valid');
+    parent.propTwo = 5;
+    strictEqual(parent.propTwo, 5, 'class demo.Parent property "propTwo" assigned value is valid');
+    parent.propTwo = 111;
     //inherited property
-    strictEqual(parent.propA, '?1!', 'class demo.Parent property "propA" default value is valid');
-    parent.propA = 5;
-    strictEqual(parent.propA, '?5!', 'class demo.Parent property "propA" assigned value is valid');
-    parent.propA = 1;
+    strictEqual(parent.propOne, '?1!', 'class demo.Parent property "propOne" default value is valid');
+    parent.propOne = 5;
+    strictEqual(parent.propOne, '?5!', 'class demo.Parent property "propOne" assigned value is valid');
+    parent.propOne = 1;
 });
 test('child', function () {
     //get class shortcut
     var child = demo.Child;
     //check class properties
-    ok(child.hasOwnProperty('propD'), 'class demo.Child has property "propD"');
-    strictEqual(Object.getOwnPropertyDescriptor(child, 'propD').enumerable, true, 'class demo.Child property "propD" is enumerable');
-    strictEqual(Object.getOwnPropertyDescriptor(child, 'propD').configurable, false, 'class demo.Child property "propD" is not configurable');
+    ok(child.hasOwnProperty('propFour'), 'class demo.Child has property "propFour"');
+    strictEqual(Object.getOwnPropertyDescriptor(child, 'propFour').enumerable, true, 'class demo.Child property "propFour" is enumerable');
+    strictEqual(Object.getOwnPropertyDescriptor(child, 'propFour').configurable, false, 'class demo.Child property "propFour" is not configurable');
     //get/set check
     //accessored property
-    strictEqual(child.propC, '-+5', 'class demo.Child property "propC" default value is valid');
-    child.propC = 50;
-    strictEqual(child.propC, '-+50', 'class demo.Child property "propC" assigned value is valid');
-    child.propC = 5;
+    strictEqual(child.propThree, '-+5', 'class demo.Child property "propThree" default value is valid');
+    child.propThree = 50;
+    strictEqual(child.propThree, '-+50', 'class demo.Child property "propThree" assigned value is valid');
+    child.propThree = 5;
     //another accessored property
-    strictEqual(child.propD, '6-+', 'class demo.Child property "propD" default value is valid');
-    child.propD = 5;
-    strictEqual(child.propD, '5-+', 'class demo.Child property "propD" assigned value is valid');
-    child.propD = 6;
+    strictEqual(child.propFour, '6-+', 'class demo.Child property "propFour" default value is valid');
+    child.propFour = 5;
+    strictEqual(child.propFour, '5-+', 'class demo.Child property "propFour" assigned value is valid');
+    child.propFour = 6;
     //inherited property
-    strictEqual(child.propB, 111, 'class demo.Child property "propB" default value is valid');
-    child.propB = 5;
-    strictEqual(child.propB, 5, 'class demo.Child property "propB" assigned value is valid');
-    child.propB = 111;
+    strictEqual(child.propTwo, 111, 'class demo.Child property "propTwo" default value is valid');
+    child.propTwo = 5;
+    strictEqual(child.propTwo, 5, 'class demo.Child property "propTwo" assigned value is valid');
+    child.propTwo = 111;
+});
+module('7. Static methods');
+test('base', function () {
+    //get class shortcut
+    var base = demo.Base;
+    //check class methods
+    //method without default
+    strictEqual(base.metOne(), 'NaNbase.static.a', 'class demo.Base method "metOne" return correct value with no params');
+    strictEqual(base.metOne(3), 'NaNbase.static.a', 'class demo.Base method "metOne" return correct value with some params');
+    strictEqual(base.metOne(3, 4), '7base.static.a', 'class demo.Base method "metOne" return correct value with all params');
+    //method with default
+    strictEqual(base.metTwo(), '3base.static.b', 'class demo.Base method "metTwo" return correct value with no params');
+    strictEqual(base.metTwo(3), '5base.static.b', 'class demo.Base method "metTwo" return correct value with some params');
+    strictEqual(base.metTwo(3, 4), '7base.static.b', 'class demo.Base method "metTwo" return correct value with all params');
+});
+test('parent', function () {
+    //get class shortcut
+    var parent = demo.Parent;
+    //check class methods
+    //inherited method
+    strictEqual(parent.metOne(), 'NaNbase.static.a', 'class demo.Parent method "metOne" return correct value with no params');
+    strictEqual(parent.metOne(3), 'NaNbase.static.a', 'class demo.Parent method "metOne" return correct value with some params');
+    strictEqual(parent.metOne(3, 4), '7base.static.a', 'class demo.Parent method "metOne" return correct value with all params');
+    //overriden method
+    strictEqual(parent.metTwo(), '3parent.static.b', 'class demo.Parent method "metTwo" return correct value with no params');
+    strictEqual(parent.metTwo(3), '5parent.static.b', 'class demo.Parent method "metTwo" return correct value with some params');
+    strictEqual(parent.metTwo(3, 4), '7parent.static.b', 'class demo.Parent method "metTwo" return correct value with all params');
+    //downcalling method
+    strictEqual(parent.metThree(), '7base.static.b', 'class demo.Parent method "metThree" return correct value with no params');
+    strictEqual(parent.metThree(5), '9base.static.b', 'class demo.Parent method "metThree" return correct value with some params');
+    strictEqual(parent.metThree(5, 6), '11base.static.b', 'class demo.Parent method "metThree" return correct value with all params');
+});
+test('child', function () {
+    //get class shortcut
+    var child = demo.Child;
+    //check class methods
+    //inherited method
+    strictEqual(child.metTwo(), '3parent.static.b', 'class demo.Child method "metTwo" return correct value with no params');
+    strictEqual(child.metTwo(3), '5parent.static.b', 'class demo.Child method "metTwo" return correct value with some params');
+    strictEqual(child.metTwo(3, 4), '7parent.static.b', 'class demo.Child method "metTwo" return correct value with all params');
+    //overriden method
+    strictEqual(child.metOne(), 'NaNchild.static.a', 'class demo.Child method "metOne" return correct value with no params');
+    strictEqual(child.metOne(3), 'NaNchild.static.a', 'class demo.Child method "metOne" return correct value with some params');
+    strictEqual(child.metOne(3, 4), '7child.static.a', 'class demo.Child method "metOne" return correct value with all params');
+    //downcalling method
+    strictEqual(child.metThree(), '11base.static.b', 'class demo.Child method "metThree" return correct value with no params');
+    strictEqual(child.metThree(5), '13base.static.b', 'class demo.Child method "metThree" return correct value with some params');
+    strictEqual(child.metThree(5, 6), '15base.static.b', 'class demo.Child method "metThree" return correct value with all params');
 });
 
 
