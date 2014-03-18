@@ -803,16 +803,40 @@
     var fn = new (function () {
         /**
          * prefills function's arguments
+         * @param fn
+         * @param defaults
+         * @param context
+         * @returns {Function}
          */
-        this.prefill = emptyFn;
+        this.prefill = function (fn, defaults, context) {
+            return function () {
+                var args = array.defaults(array.values(arguments), defaults);
+                return fn.apply(context, args);
+            }
+        };
         /**
          * creates function, being called once
+         * @param fn
+         * @returns {Function}
          */
-        this.once = emptyFn;
+        this.once = function (func) {
+            var ran = false, memo;
+            return function () {
+                if (ran) return memo;
+                ran = true;
+                memo = func.apply(this, arguments);
+                func = null;
+                return memo;
+            };
+        };
         /**
          * wraps function
          */
-        this.wrap = emptyFn;
+        this.wrap = function (fn, wrapper) {
+            return function () {
+                return wrapper.apply(undefined, arguments);
+            }
+        };
     });
     /**
      * string class pre-definition
