@@ -332,9 +332,11 @@
          * @returns {string|Number|undefined}
          */
         this.indexOf = function (obj, value) {
-            for (var index in this.keys(obj)) {
-                if (obj[index] === value) {
-                    return index;
+            var keys = this.keys(obj);
+            for (var index in keys) {
+                var name = keys[index];
+                if (obj[name] === value) {
+                    return name;
                 }
             }
         };
@@ -392,7 +394,7 @@
          */
         this.reduce = function (obj, iterator, context, memo) {
             var result;
-            if (memo) {
+            if (arguments.length > 3) {
                 result = memo;
             } else {
                 var key = object.keys(obj).shift();
@@ -434,9 +436,11 @@
          * @returns {*}
          */
         this.find = function (obj, finder, context) {
-            for (var index in this.keys(obj)) {
-                if (finder.call(context, obj[index], index, obj)) {
-                    return obj[index];
+            var keys = this.keys(obj);
+            for (var index in keys) {
+                var name = keys[index], value = obj[name];
+                if (finder.call(context, value, name, obj)) {
+                    return value;
                 }
             }
         };
@@ -455,8 +459,9 @@
             return this.pick(obj, keys);
         };
         this.filter = function (obj, where) {
-            for (var name in this.keys(obj)) {
-                var value = obj[name];
+            var keys = this.keys(obj);
+            for (var index in keys) {
+                var name = keys[index], value = obj[name];
                 var ok = this.every(where, function (param, name) {
                     value[name] === param;
                 });
@@ -466,19 +471,22 @@
             }
         };
         this.filterAll = function (obj, where) {
-            var keys = [];
-            for (var name in this.keys(obj)) {
-                var value = obj[name];
+            var props = [];
+            var keys = this.keys(obj);
+            for (var index in keys) {
+                var name = keys[index], value = obj[name];
                 var ok = this.every(where, function (param, name) {
                     value[name] === param;
                 });
-                ok && keys.push(name);
+                ok && props.push(name);
             }
-            return this.pick(obj, keys);
+            return this.pick(obj, props);
         };
         this.every = function (obj, tester, context) {
-            for (var index in this.keys(obj)) {
-                if (!tester.call(context, obj[index], index, obj)) {
+            var keys = this.keys(obj);
+            for (var index in keys) {
+                var name = keys[index], value = obj[name];
+                if (!tester.call(context, value, name, obj)) {
                     return false;
                 }
             }
@@ -487,11 +495,13 @@
         this.some = function (obj, tester, context, count) {
             type.isNumber(count) || (count = 1);
             var found = 0;
-            for (var index in this.keys(obj)) {
+            var keys = this.keys(obj);
+            for (var index in keys) {
+                var name = keys[index], value = obj[name];
                 if (found == count) {
                     return true;
                 }
-                if (tester.call(context, obj[index], index, obj)) {
+                if (tester.call(context, value, name, obj)) {
                     found++;
                 }
             }
@@ -645,8 +655,9 @@
             return arr.filter(finder, context);
         };
         this.filter = function (arr, where) {
-            for (var name in this.keys(obj)) {
-                var value = arr[name];
+            var keys = this.keys(obj);
+            for (var index in keys) {
+                var name = keys[index], value = obj[name];
                 var ok = this.every(where, function (param, name) {
                     value[name] === param;
                 });
@@ -656,15 +667,16 @@
             }
         };
         this.filterAll = function (arr, where) {
-            var keys = [];
-            for (var index in this.keys(obj)) {
-                var value = arr[index];
+            var props = [];
+            var keys = this.keys(obj);
+            for (var index in keys) {
+                var name = keys[index], value = obj[name];
                 var ok = this.every(where, function (param, name) {
                     value[name] === param;
                 });
-                ok && keys.push(name);
+                ok && props.push(name);
             }
-            return this.pick(arr, keys);
+            return this.pick(arr, props);
         };
         this.every = function (arr, tester, context) {
             return arr.every(tester, context);
