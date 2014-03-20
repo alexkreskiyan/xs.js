@@ -445,6 +445,22 @@
             }
         };
         /**
+         * Finds last element, matching given finder function
+         * @param obj
+         * @param finder
+         * @param context
+         * @returns {*}
+         */
+        this.findLast = function (obj, finder, context) {
+            var keys = this.keys(obj).reverse();
+            for (var index in keys) {
+                var name = keys[index], value = obj[name];
+                if (finder.call(context, value, name, obj)) {
+                    return value;
+                }
+            }
+        };
+        /**
          * finds all elements in array, that match given finder function
          * @param arr
          * @param finder
@@ -463,7 +479,19 @@
             for (var index in keys) {
                 var name = keys[index], value = obj[name];
                 var ok = this.every(where, function (param, name) {
-                    value[name] === param;
+                    return value[name] === param;
+                });
+                if (ok) {
+                    return value;
+                }
+            }
+        };
+        this.filterLast = function (obj, where) {
+            var keys = this.keys(obj).reverse();
+            for (var index in keys) {
+                var name = keys[index], value = obj[name];
+                var ok = this.every(where, function (param, name) {
+                    return value[name] === param;
                 });
                 if (ok) {
                     return value;
@@ -476,7 +504,7 @@
             for (var index in keys) {
                 var name = keys[index], value = obj[name];
                 var ok = this.every(where, function (param, name) {
-                    value[name] === param;
+                    return value[name] === param;
                 });
                 ok && props.push(name);
             }
@@ -498,11 +526,9 @@
             var keys = this.keys(obj);
             for (var index in keys) {
                 var name = keys[index], value = obj[name];
+                tester.call(context, value, name, obj) && found++;
                 if (found == count) {
                     return true;
-                }
-                if (tester.call(context, value, name, obj)) {
-                    found++;
                 }
             }
             return false;
@@ -517,13 +543,15 @@
         };
         this.shift = function (obj) {
             var key = object.keys(obj).shift();
-            obj = this.omit(obj, key);
-            return obj[key];
+            var value = obj[key];
+            obj = this.omit(obj, [key]);
+            return value;
         };
         this.pop = function (obj) {
             var key = object.keys(obj).pop();
+            var value = obj[key];
             obj = this.omit(obj, key);
-            return obj[key];
+            return value;
         };
         /**
          * return shallow-cloned object copy

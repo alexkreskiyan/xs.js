@@ -87,9 +87,191 @@ test('reduceRight', function () {
         return memo + 2 * value + name;
     }, undefined, 1), '7a4b2x', 'reduceRight method runs ok with memo');
 });
-
-
-
+test('find', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    strictEqual(xs.object.find(x, function (value) {
+        return value.y == 1;
+    }), x.c, 'find method runs ok when result exists');
+    strictEqual(xs.object.find(x, function (value) {
+        return value.y == 3;
+    }), undefined, 'find method runs ok when result doesn\'t exist');
+});
+test('findLast', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    strictEqual(xs.object.findLast(x, function (value) {
+        return value.y == 1;
+    }), x.d, 'findLast method runs ok when result exists');
+    strictEqual(xs.object.findLast(x, function (value) {
+        return value.y == 3;
+    }), undefined, 'findLast method runs ok when result doesn\'t exist');
+});
+test('findAll', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    var results;
+    results = xs.object.findAll(x, function (value) {
+        return value.y == 1;
+    });
+    strictEqual(JSON.stringify(results), JSON.stringify({c: x.c, d: x.d}), 'findAll method runs ok when result exists');
+    results = xs.object.findAll(x, function (value) {
+        return value.y == 3;
+    });
+    strictEqual(JSON.stringify(results), JSON.stringify({}), 'findAll method runs ok when result doesn\'t exist');
+});
+test('filter', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    var results;
+    results = xs.object.filter(x, {x: 1});
+    strictEqual(results, x.a, 'filter method runs ok when result exists');
+    results = xs.object.filter(x, {x: 3});
+    strictEqual(results, undefined, 'filter method runs ok when result doesn\'t exist');
+});
+test('filterLast', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    var results;
+    results = xs.object.filterLast(x, {x: 1});
+    strictEqual(results, x.d, 'filterLast method runs ok when result exists');
+    results = xs.object.filterLast(x, {x: 3});
+    strictEqual(results, undefined, 'filterLast method runs ok when result doesn\'t exist');
+});
+test('filterAll', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    var results;
+    results = xs.object.filterLast(x, {x: 1});
+    strictEqual(results, x.d, 'filterLast method runs ok when result exists');
+    results = xs.object.filterLast(x, {x: 3});
+    strictEqual(results, undefined, 'filterLast method runs ok when result doesn\'t exist');
+});
+test('every', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    strictEqual(xs.object.every(x, function (value) {
+        return xs.object.hasKey(value, 'y');
+    }), true, 'every method runs ok when result succeeds');
+    strictEqual(xs.object.every(x, function (value) {
+        return value.x === 1;
+    }), false, 'every method runs ok when result fails');
+});
+test('some', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    strictEqual(xs.object.some(x, function (value) {
+        return value.x == 1 && value.y == 1;
+    }), true, 'some method runs ok when result succeeds');
+    strictEqual(xs.object.some(x, function (value) {
+        return value.x == 1 && value.y == 3;
+    }), false, 'some method runs ok when result fails');
+});
+test('first', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    strictEqual(xs.object.first(x), x.a, 'first method runs ok when result succeeds');
+    strictEqual(xs.object.first({}), undefined, 'first method runs ok when result fails');
+});
+test('last', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    strictEqual(xs.object.last(x), x.d, 'last method runs ok when result succeeds');
+    strictEqual(xs.object.last({}), undefined, 'last method runs ok when result fails');
+});
+test('shift', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    strictEqual(xs.object.shift(x), x.a, 'shift method runs ok when result succeeds');
+    strictEqual(xs.object.keys(x).toString(), 'b,c,d', 'shift method runs ok when result succeeds');
+    strictEqual(xs.object.shift({}), undefined, 'shift method runs ok when result fails');
+});
+test('pop', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    strictEqual(xs.object.pop(x), x.d, 'pop method runs ok when result succeeds');
+    strictEqual(xs.object.keys(x).toString(), 'a,b,c', 'pop method runs ok when result succeeds');
+    strictEqual(xs.object.pop({}), undefined, 'pop method runs ok when result fails');
+});
+test('clone', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    var clone = xs.object.clone(x);
+    console.log(clone);
+    strictEqual(xs.object.every(clone, function (value, name) {
+        console.log(name, this[name], value);
+        return xs.object.hasKey(this, name) && this[name] == value;
+    }, x), true, 'clone direct comparison succeeds');
+    strictEqual(xs.object.every(x, function (value, name) {
+        return xs.object.hasKey(this, name) && this[name] == value;
+    }, clone), true, 'clone revers comparison succeeds');
+});
+test('extend', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    var clone = xs.object.clone(x);
+    xs.object.extend(clone, {d: 5}, {a: 3}, {a: 5}, {e: {x: 1, y: 5}});
+    var correct = '{"a":5,"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":5,"e":{"x":1,"y":5}}';
+    strictEqual(JSON.stringify(clone), correct, 'extends works ok with a set of args');
+    xs.object.extend(clone);
+    strictEqual(JSON.stringify(clone), correct, 'extends works ok with a set of args');
+});
 
 
 
