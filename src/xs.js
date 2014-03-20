@@ -544,13 +544,13 @@
         this.shift = function (obj) {
             var key = object.keys(obj).shift();
             var value = obj[key];
-            obj = this.omit(obj, [key]);
+            delete obj[key];
             return value;
         };
         this.pop = function (obj) {
             var key = object.keys(obj).pop();
             var value = obj[key];
-            obj = this.omit(obj, key);
+            delete obj[key];
             return value;
         };
         /**

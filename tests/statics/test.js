@@ -226,7 +226,8 @@ test('shift', function () {
         c: {x: 2, y: 1},
         d: {x: 1, y: 1}
     };
-    strictEqual(xs.object.shift(x), x.a, 'shift method runs ok when result succeeds');
+    var shifted = x.a;
+    strictEqual(xs.object.shift(x), shifted, 'shift method runs ok when result succeeds');
     strictEqual(xs.object.keys(x).toString(), 'b,c,d', 'shift method runs ok when result succeeds');
     strictEqual(xs.object.shift({}), undefined, 'shift method runs ok when result fails');
 });
@@ -237,7 +238,8 @@ test('pop', function () {
         c: {x: 2, y: 1},
         d: {x: 1, y: 1}
     };
-    strictEqual(xs.object.pop(x), x.d, 'pop method runs ok when result succeeds');
+    var popped = x.d;
+    strictEqual(xs.object.pop(x), popped, 'pop method runs ok when result succeeds');
     strictEqual(xs.object.keys(x).toString(), 'a,b,c', 'pop method runs ok when result succeeds');
     strictEqual(xs.object.pop({}), undefined, 'pop method runs ok when result fails');
 });
@@ -249,9 +251,7 @@ test('clone', function () {
         d: {x: 1, y: 1}
     };
     var clone = xs.object.clone(x);
-    console.log(clone);
     strictEqual(xs.object.every(clone, function (value, name) {
-        console.log(name, this[name], value);
         return xs.object.hasKey(this, name) && this[name] == value;
     }, x), true, 'clone direct comparison succeeds');
     strictEqual(xs.object.every(x, function (value, name) {
@@ -268,9 +268,66 @@ test('extend', function () {
     var clone = xs.object.clone(x);
     xs.object.extend(clone, {d: 5}, {a: 3}, {a: 5}, {e: {x: 1, y: 5}});
     var correct = '{"a":5,"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":5,"e":{"x":1,"y":5}}';
-    strictEqual(JSON.stringify(clone), correct, 'extends works ok with a set of args');
+    strictEqual(JSON.stringify(clone), correct, 'extend works ok with a set of args');
     xs.object.extend(clone);
-    strictEqual(JSON.stringify(clone), correct, 'extends works ok with a set of args');
+    strictEqual(JSON.stringify(clone), correct, 'extend works ok without args');
+});
+test('pick', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    var clone = xs.object.pick(x, 'a', 'b');
+    strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}', 'pick works ok with a set of args');
+    var clone = xs.object.pick(x, ['a'], ['b']);
+    strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}', 'pick works ok with a set of args');
+    var clone = xs.object.pick(x, ['a', 'b']);
+    strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}', 'pick works ok with a set of args');
+    var clone = xs.object.pick(x);
+    strictEqual(JSON.stringify(clone), '{}', 'pick works ok without args');
+});
+test('omit', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+    var correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}';
+
+    var clone = xs.object.omit(x, 'c', 'd');
+    strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
+    var clone = xs.object.omit(x, ['c'], ['d']);
+    strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
+    var clone = xs.object.omit(x, ['c', 'd']);
+    strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
+    var clone = xs.object.omit(x);
+    strictEqual(JSON.stringify(clone), JSON.stringify(x), 'omit works ok without args');
+});
+test('defaults', function () {
+    var x = {
+        a: {x: 1, y: 2},
+        b: {x: 2, y: 2},
+        c: {x: 2, y: 1},
+        d: {x: 1, y: 1}
+    };
+
+    var correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}';
+
+    var clone = xs.object.clone(x);
+    xs.object.defaults(clone, {e: 1}, {f: 1});
+    strictEqual(JSON.stringify(clone), correct, 'defaults works ok with a set of args');
+    var clone = xs.object.clone(x);
+    xs.object.defaults(clone, {e: 1}, {f: 1});
+    strictEqual(JSON.stringify(clone), correct, 'defaults works ok with a set of args');
+    var clone = xs.object.clone(x);
+    xs.object.defaults(clone, {a: 1});
+    strictEqual(JSON.stringify(clone), JSON.stringify(x), 'defaults works ok without defaulting');
+    var clone = xs.object.clone(x);
+    xs.object.defaults(clone);
+    strictEqual(JSON.stringify(clone), JSON.stringify(x), 'defaults works ok without args');
 });
 
 
