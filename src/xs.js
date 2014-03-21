@@ -28,26 +28,8 @@
 
     // Create quick reference variables for speed access to core prototypes.
     var
-        push = FunctionPrototype.call.bind(ArrayPrototype.push),
         slice = FunctionPrototype.call.bind(ArrayPrototype.slice),
-        concat = FunctionPrototype.apply.bind(ArrayPrototype.concat),
-        toString = FunctionPrototype.call.bind(ObjectPrototype.toString),
-        hasOwnProperty = FunctionPrototype.call.bind(ObjectPrototype.hasOwnProperty);
-
-    // All **ECMAScript 5** native function implementations that we hope to use
-    // are declared here.
-    var
-        nativeForEach = ArrayPrototype.forEach,
-        nativeMap = ArrayPrototype.map,
-        nativeReduce = ArrayPrototype.reduce,
-        nativeReduceRight = ArrayPrototype.reduceRight,
-        nativeFilter = ArrayPrototype.filter,
-        nativeEvery = ArrayPrototype.every,
-        nativeSome = ArrayPrototype.some,
-        nativeIndexOf = ArrayPrototype.indexOf,
-        nativeLastIndexOf = ArrayPrototype.lastIndexOf,
-        nativeIsArray = Array.isArray,
-        nativeKeys = Object.keys;
+        concat = FunctionPrototype.apply.bind(ArrayPrototype.concat);
     /**
      * set class pre-definition
      * @type {{}}
@@ -104,13 +86,39 @@
             }
         };
         /**
+         * whether element in list
+         * @param list to search within
+         * @param value to lookup for
+         * @returns {string|Number|undefined}
+         */
+        this.keyOf = function (list, value) {
+            if (type.isArray(list)) {
+                return array.keyOf(list, value);
+            } else {
+                return object.keyOf(list, value);
+            }
+        };
+        /**
+         * whether element in list
+         * @param list to search within
+         * @param value to lookup for
+         * @returns {string|Number|undefined}
+         */
+        this.lastKeyOf = function (list, value) {
+            if (type.isArray(list)) {
+                return array.lastKeyOf(list, value);
+            } else {
+                return object.lastKeyOf(list, value);
+            }
+        };
+        /**
          * evaluate size of list
          * @param list
          * @returns {Number}
          */
         this.size = function (list) {
             if (type.isArray(list)) {
-                return array.length;
+                return list.length;
             } else {
                 return object.size(list);
             }
@@ -126,6 +134,19 @@
                 list.forEach(iterator, context);
             } else {
                 object.each(list, iterator, context);
+            }
+        };
+        /**
+         * iterates over list items in reverse order
+         * @param list to iterate for
+         * @param iterator
+         * @param context
+         */
+        this.eachReverse = function (list, iterator, context) {
+            if (type.isArray(list)) {
+                list.reverse().forEach(iterator, context);
+            } else {
+                object.eachReverse(list, iterator, context);
             }
         };
         /**
@@ -153,9 +174,14 @@
          */
         this.reduce = function (list, iterator, context, memo) {
             if (type.isArray(list)) {
-                return list.reduce(context ? iterator.bind(context) : iterator, memo);
+                var iterator = context ? iterator.bind(context) : iterator;
+                if (arguments.length > 3) {
+                    return list.reduce(iterator, memo);
+                } else {
+                    return list.reduce(iterator);
+                }
             } else {
-                return object.reduce(list, iterator, context, memo);
+                return object.reduce.apply(object, arguments);
             }
         };
         /**
@@ -165,15 +191,20 @@
          * @param memo initial value
          * @param context
          */
-        this.reduceRight = function (list, iterator, memo, context) {
+        this.reduceRight = function (list, iterator, context, memo) {
             if (type.isArray(list)) {
-                return list.reduceRight(context ? iterator.bind(context) : iterator, memo);
+                var iterator = context ? iterator.bind(context) : iterator;
+                if (arguments.length > 3) {
+                    return list.reduceRight(iterator, memo);
+                } else {
+                    return list.reduceRight(iterator);
+                }
             } else {
-                return object.reduceRight(list, iterator, memo, context);
+                return object.reduceRight.apply(object, arguments);
             }
         };
         /**
-         * find one element, that passes given test function
+         * find first element, that passes given test function
          * @param list
          * @param finder function, returning true if item matches given conditions
          * @returns {*}
@@ -183,6 +214,19 @@
                 return array.find(list, finder, context);
             } else {
                 return object.find(list, finder, context);
+            }
+        };
+        /**
+         * find last element, that passes given test function
+         * @param list
+         * @param finder function, returning true if item matches given conditions
+         * @returns {*}
+         */
+        this.findLast = function (list, finder, context) {
+            if (type.isArray(list)) {
+                return array.findLast(list, finder, context);
+            } else {
+                return object.findLast(list, finder, context);
             }
         };
         /**
@@ -199,7 +243,7 @@
             }
         };
         /**
-         * return list item, that suites where clause
+         * return first list item, that suites where clause
          * @param list
          * @param where
          * @returns {*}
@@ -209,6 +253,19 @@
                 return array.filter(list, where);
             } else {
                 return object.filter(list, where);
+            }
+        };
+        /**
+         * return last list item, that suites where clause
+         * @param list
+         * @param where
+         * @returns {*}
+         */
+        this.filterLast = function (list, where) {
+            if (type.isArray(list)) {
+                return array.filterLast(list, where);
+            } else {
+                return object.filterLast(list, where);
             }
         };
         /**
@@ -238,20 +295,6 @@
                 return object.some(list, tester, context, count);
             }
         };
-        this.pick = function (list) {
-            if (type.isArray(list)) {
-                return array.pick.apply(array, arguments);
-            } else {
-                return object.pick.apply(object, arguments);
-            }
-        };
-        this.omit = function (list) {
-            if (type.isArray(list)) {
-                return array.omit.apply(array, arguments);
-            } else {
-                return object.omit.apply(object, arguments);
-            }
-        }
         this.first = function (list) {
             if (type.isArray(list)) {
                 return array.first(list);
@@ -277,7 +320,56 @@
             if (type.isArray(list)) {
                 return list.pop();
             } else {
-                return object.pop(list);
+                return object.pop(list, value);
+            }
+        };
+        this.remove = function (list, elem) {
+            if (type.isArray(list)) {
+                return array.remove(list, elem);
+            } else {
+                return object.remove(list, elem);
+            }
+        };
+        this.removeLast = function (list, elem) {
+            if (type.isArray(list)) {
+                return array.removeLast(list, elem);
+            } else {
+                return object.removeLast(list, elem);
+            }
+        };
+        this.removeAll = function (list) {
+            if (type.isArray(list)) {
+                return array.removeAll.apply(array, arguments);
+            } else {
+                return object.removeAll.apply(object, arguments);
+            }
+        };
+        this.clone = function (list, value) {
+            if (type.isArray(list)) {
+                return array.clone(list, value);
+            } else {
+                return object.clone(list, value);
+            }
+        };
+        this.pick = function (list) {
+            if (type.isArray(list)) {
+                return array.pick.apply(array, arguments);
+            } else {
+                return object.pick.apply(object, arguments);
+            }
+        };
+        this.omit = function (list) {
+            if (type.isArray(list)) {
+                return array.omit.apply(array, arguments);
+            } else {
+                return object.omit.apply(object, arguments);
+            }
+        };
+        this.defaults = function (list) {
+            if (type.isArray(list)) {
+                return array.defaults.apply(array, arguments);
+            } else {
+                return object.defaults.apply(object, arguments);
             }
         };
     });
@@ -331,8 +423,23 @@
          * @param value
          * @returns {string|Number|undefined}
          */
-        this.indexOf = function (obj, value) {
+        this.keyOf = function (obj, value) {
             var keys = this.keys(obj);
+            for (var index in keys) {
+                var name = keys[index];
+                if (obj[name] === value) {
+                    return name;
+                }
+            }
+        };
+        /**
+         * gets index of value in object
+         * @param obj
+         * @param value
+         * @returns {string|Number|undefined}
+         */
+        this.lastKeyOf = function (obj, value) {
+            var keys = this.keys(obj).reverse();
             for (var index in keys) {
                 var name = keys[index];
                 if (obj[name] === value) {
@@ -553,6 +660,26 @@
             delete obj[key];
             return value;
         };
+        this.remove = function (obj, elem) {
+            if ((type.isString(elem) || type.isNumber(elem)) && this.hasKey(obj, elem)) {
+                delete obj[elem];
+            } else if (this.has(obj, elem)) {
+                delete obj[this.keyOf(obj, elem)];
+            }
+        };
+        this.removeLast = function (obj, elem) {
+            if ((type.isString(elem) || type.isNumber(elem)) && this.hasKey(obj, elem)) {
+                delete obj[elem];
+            } else if (this.has(obj, elem)) {
+                delete obj[this.lastKeyOf(obj, elem)];
+            }
+        };
+        this.removeAll = function (obj, elem) {
+            var elems = array.union(slice(arguments, 1));
+            elems.forEach(function (elem) {
+                this.remove(obj, elem);
+            }, this);
+        };
         /**
          * return shallow-cloned object copy
          */
@@ -620,7 +747,7 @@
          * @returns {array}
          */
         this.keys = function (arr) {
-            return this.range(arr.length);
+            return this.range(arr.length - 1);
         };
         /**
          * fetch array values
@@ -654,8 +781,18 @@
          * @param value
          * @returns {string|Number|undefined}
          */
-        this.indexOf = function (arr, value) {
+        this.keyOf = function (arr, value) {
             var index = arr.indexOf(value);
+            return index > -1 ? index : undefined;
+        };
+        /**
+         * gets last index of value in array
+         * @param arr
+         * @param value
+         * @returns {string|Number|undefined}
+         */
+        this.lastKeyOf = function (arr, value) {
+            var index = arr.lastIndexOf(value);
             return index > -1 ? index : undefined;
         };
         /**
@@ -666,9 +803,27 @@
          * @returns {*}
          */
         this.find = function (arr, finder, context) {
-            for (var index in this.keys(arr)) {
-                if (finder.call(context, arr[index], index, arr)) {
-                    return arr[index];
+            var keys = this.keys(arr);
+            for (var index in keys) {
+                var name = keys[index], value = arr[name];
+                if (finder.call(context, value, name, arr)) {
+                    return value;
+                }
+            }
+        };
+        /**
+         * finds first element in array, that matches given finder function
+         * @param arr
+         * @param finder
+         * @param context
+         * @returns {*}
+         */
+        this.findLast = function (arr, finder, context) {
+            var keys = this.keys(arr).reverse();
+            for (var index in keys) {
+                var name = keys[index], value = arr[name];
+                if (finder.call(context, value, name, arr)) {
+                    return value;
                 }
             }
         };
@@ -683,11 +838,23 @@
             return arr.filter(finder, context);
         };
         this.filter = function (arr, where) {
-            var keys = this.keys(obj);
+            var keys = this.keys(arr);
             for (var index in keys) {
-                var name = keys[index], value = obj[name];
-                var ok = this.every(where, function (param, name) {
-                    value[name] === param;
+                var name = keys[index], value = arr[name];
+                var ok = object.every(where, function (param, name) {
+                    return value[name] === param;
+                });
+                if (ok) {
+                    return value;
+                }
+            }
+        };
+        this.filterLast = function (arr, where) {
+            var keys = this.keys(arr).reverse();
+            for (var index in keys) {
+                var name = keys[index], value = arr[name];
+                var ok = object.every(where, function (param, name) {
+                    return value[name] === param;
                 });
                 if (ok) {
                     return value;
@@ -699,8 +866,8 @@
             var keys = this.keys(obj);
             for (var index in keys) {
                 var name = keys[index], value = obj[name];
-                var ok = this.every(where, function (param, name) {
-                    value[name] === param;
+                var ok = object.every(where, function (param, name) {
+                    return value[name] === param;
                 });
                 ok && props.push(name);
             }
@@ -712,12 +879,12 @@
         this.some = function (arr, tester, context, count) {
             type.isNumber(count) || (count = 1);
             var found = 0;
-            for (var index in this.keys(arr)) {
+            var keys = this.keys(arr);
+            for (var index in keys) {
+                var name = keys[index], value = arr[name];
+                tester.call(context, value, name, arr) && found++;
                 if (found == count) {
                     return true;
-                }
-                if (tester.call(context, arr[index], index, arr)) {
-                    found++;
                 }
             }
             return false;
@@ -729,6 +896,26 @@
         this.last = function (arr) {
             var key = object.keys(arr).pop();
             return arr[key];
+        };
+        this.remove = function (arr, elem) {
+            if (type.isNumber(elem) && this.hasKey(arr, elem)) {
+                arr.splice(elem, 1);
+            } else if (this.has(arr, elem)) {
+                arr.splice(arr.indexOf(elem), 1);
+            }
+        };
+        this.removeLast = function (arr, elem) {
+            if (type.isNumber(elem) && this.hasKey(arr, elem)) {
+                arr.splice(elem, 1);
+            } else if (this.has(arr, elem)) {
+                arr.splice(arr.lastIndexOf(elem), 1);
+            }
+        };
+        this.removeAll = function (arr, elem) {
+            var elems = array.union(slice(arguments, 1));
+            elems.forEach(function (elem) {
+                this.remove(arr, elem);
+            }, this);
         };
         this.clone = function (arr) {
             return slice(arr);
@@ -803,17 +990,18 @@
          * return copy of array, filtered to have all but blacklisted keys
          */
         this.omit = function (arr) {
-            var copy = {};
+            var copy = [];
             var keys = array.union(slice(arguments, 1));
-            this.each(arr, function (value, name) {
+            arr.forEach(function (value, name) {
                 this.has(keys, name) || (copy[name] = value);
-            });
+            }, this);
             return copy;
         };
-        this.defaults = function (arr, source) {
-            source.forEach(function (value, index) {
-                index >= arr.length && (arr[index] = value);
-            }, this);
+        this.defaults = function (arr) {
+            var defaults = array.union(slice(arguments, 1));
+            for (var i = arr.length; i < defaults.length; i++) {
+                arr[i] = defaults[i];
+            }
             return arr;
         };
         this.range = function (start, stop, step) {
@@ -828,7 +1016,7 @@
             var idx = 0;
             var range = new Array(length);
             //fill range
-            while (idx < length) {
+            while (idx <= length) {
                 range[idx++] = start;
                 start += step;
             }
@@ -874,7 +1062,9 @@
          */
         this.wrap = function (fn, wrapper) {
             return function () {
-                return wrapper.apply(undefined, arguments);
+                var args = slice(arguments);
+                args.unshift(fn);
+                return wrapper.apply(undefined, args);
             }
         };
     });
