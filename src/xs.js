@@ -127,26 +127,26 @@
          * iterates over list items
          * @param list to iterate for
          * @param iterator
-         * @param context
+         * @param scope
          */
-        this.each = function (list, iterator, context) {
+        this.each = function (list, iterator, scope) {
             if (type.isArray(list)) {
-                list.forEach(iterator, context);
+                list.forEach(iterator, scope);
             } else {
-                object.each(list, iterator, context);
+                object.each(list, iterator, scope);
             }
         };
         /**
          * iterates over list items in reverse order
          * @param list to iterate for
          * @param iterator
-         * @param context
+         * @param scope
          */
-        this.eachReverse = function (list, iterator, context) {
+        this.eachReverse = function (list, iterator, scope) {
             if (type.isArray(list)) {
-                list.reverse().forEach(iterator, context);
+                list.reverse().forEach(iterator, scope);
             } else {
-                object.eachReverse(list, iterator, context);
+                object.eachReverse(list, iterator, scope);
             }
         };
         /**
@@ -155,14 +155,14 @@
          * if source was object - object is created
          * @param list
          * @param iterator
-         * @param context
+         * @param scope
          * @returns {Array|Object}
          */
-        this.map = function (list, iterator, context) {
+        this.map = function (list, iterator, scope) {
             if (type.isArray(list)) {
-                return list.map(iterator, context);
+                return list.map(iterator, scope);
             } else {
-                return object.map(list, iterator, context);
+                return object.map(list, iterator, scope);
             }
         };
         /**
@@ -170,11 +170,11 @@
          * @param list
          * @param iterator reducing function
          * @param memo initial value
-         * @param context
+         * @param scope
          */
-        this.reduce = function (list, iterator, context, memo) {
+        this.reduce = function (list, iterator, scope, memo) {
             if (type.isArray(list)) {
-                var iterator = context ? iterator.bind(context) : iterator;
+                var iterator = scope ? iterator.bind(scope) : iterator;
                 if (arguments.length > 3) {
                     return list.reduce(iterator, memo);
                 } else {
@@ -189,11 +189,11 @@
          * @param list
          * @param iterator reducing function
          * @param memo initial value
-         * @param context
+         * @param scope
          */
-        this.reduceRight = function (list, iterator, context, memo) {
+        this.reduceRight = function (list, iterator, scope, memo) {
             if (type.isArray(list)) {
-                var iterator = context ? iterator.bind(context) : iterator;
+                var iterator = scope ? iterator.bind(scope) : iterator;
                 if (arguments.length > 3) {
                     return list.reduceRight(iterator, memo);
                 } else {
@@ -209,11 +209,11 @@
          * @param finder function, returning true if item matches given conditions
          * @returns {*}
          */
-        this.find = function (list, finder, context) {
+        this.find = function (list, finder, scope) {
             if (type.isArray(list)) {
-                return array.find(list, finder, context);
+                return array.find(list, finder, scope);
             } else {
-                return object.find(list, finder, context);
+                return object.find(list, finder, scope);
             }
         };
         /**
@@ -222,11 +222,11 @@
          * @param finder function, returning true if item matches given conditions
          * @returns {*}
          */
-        this.findLast = function (list, finder, context) {
+        this.findLast = function (list, finder, scope) {
             if (type.isArray(list)) {
-                return array.findLast(list, finder, context);
+                return array.findLast(list, finder, scope);
             } else {
-                return object.findLast(list, finder, context);
+                return object.findLast(list, finder, scope);
             }
         };
         /**
@@ -235,11 +235,11 @@
          * @param finder function, returning true if item matches given conditions
          * @returns {*}
          */
-        this.findAll = function (list, finder, context) {
+        this.findAll = function (list, finder, scope) {
             if (type.isArray(list)) {
-                return array.findAll(list, finder, context);
+                return array.findAll(list, finder, scope);
             } else {
-                return object.findAll(list, finder, context);
+                return object.findAll(list, finder, scope);
             }
         };
         /**
@@ -285,29 +285,29 @@
          * returns whether all list items pass tester function
          * @param list
          * @param tester
-         * @param context
+         * @param scope
          * @returns {*}
          */
-        this.every = function (list, tester, context) {
+        this.every = function (list, tester, scope) {
             if (type.isArray(list)) {
-                return array.every(list, tester, context);
+                return array.every(list, tester, scope);
             } else {
-                return object.every(list, tester, context);
+                return object.every(list, tester, scope);
             }
         };
         /**
          * returns whether count of list items pass tester function
          * @param list
          * @param tester
-         * @param context
+         * @param scope
          * @param count
          * @returns {*}
          */
-        this.some = function (list, tester, context, count) {
+        this.some = function (list, tester, scope, count) {
             if (type.isArray(list)) {
-                return array.some(list, tester, context, count);
+                return array.some(list, tester, scope, count);
             } else {
-                return object.some(list, tester, context, count);
+                return object.some(list, tester, scope, count);
             }
         };
         /**
@@ -535,36 +535,36 @@
          * iterates over object own properties
          * @param obj
          * @param iterator
-         * @param context
+         * @param scope
          */
-        this.each = function (obj, iterator, context) {
+        this.each = function (obj, iterator, scope) {
             this.keys(obj).forEach(function (key) {
                 iterator.call(this, obj[key], key, obj);
-            }, context);
+            }, scope);
         };
         /**
          * iterates over object own properties in reverse order
          * @param obj
          * @param iterator
-         * @param context
+         * @param scope
          */
-        this.eachReverse = function (obj, iterator, context) {
+        this.eachReverse = function (obj, iterator, scope) {
             this.keys(obj).reverse().forEach(function (key) {
                 iterator.call(this, obj[key], key, obj);
-            }, context);
+            }, scope);
         };
         /**
          * produces a new object with properties, updated by iterator function
          * @param obj
          * @param iterator
-         * @param context
+         * @param scope
          * @returns {Object}
          */
-        this.map = function (obj, iterator, context) {
+        this.map = function (obj, iterator, scope) {
             var result = this.clone(obj);
             this.each(obj, function (value, key, object) {
                 result[key] = iterator.call(this, value, key, object);
-            }, context);
+            }, scope);
             return result;
         };
         /**
@@ -572,10 +572,10 @@
          * @param obj
          * @param iterator
          * @param memo
-         * @param context
+         * @param scope
          * @returns {*}
          */
-        this.reduce = function (obj, iterator, context, memo) {
+        this.reduce = function (obj, iterator, scope, memo) {
             var result;
             if (arguments.length > 3) {
                 result = memo;
@@ -586,7 +586,7 @@
             }
             this.each(obj, function (value, key, object) {
                 result = iterator.call(this, result, value, key, object);
-            }, context);
+            }, scope);
             return result;
         };
         /**
@@ -594,10 +594,10 @@
          * @param obj
          * @param iterator
          * @param memo
-         * @param context
+         * @param scope
          * @returns {*}
          */
-        this.reduceRight = function (obj, iterator, context, memo) {
+        this.reduceRight = function (obj, iterator, scope, memo) {
             var result;
             if (memo) {
                 result = memo;
@@ -608,21 +608,21 @@
             }
             this.eachReverse(obj, function (value, key, object) {
                 result = iterator.call(this, result, value, key, object);
-            }, context);
+            }, scope);
             return result;
         };
         /**
          * returns value of first property, matching given finder function
          * @param obj
          * @param finder
-         * @param context
+         * @param scope
          * @returns {*}
          */
-        this.find = function (obj, finder, context) {
+        this.find = function (obj, finder, scope) {
             var keys = this.keys(obj);
             for (var index in keys) {
                 var name = keys[index], value = obj[name];
-                if (finder.call(context, value, name, obj)) {
+                if (finder.call(scope, value, name, obj)) {
                     return value;
                 }
             }
@@ -631,14 +631,14 @@
          * returns value of last property, matching given finder function
          * @param obj
          * @param finder
-         * @param context
+         * @param scope
          * @returns {*}
          */
-        this.findLast = function (obj, finder, context) {
+        this.findLast = function (obj, finder, scope) {
             var keys = this.keys(obj).reverse();
             for (var index in keys) {
                 var name = keys[index], value = obj[name];
-                if (finder.call(context, value, name, obj)) {
+                if (finder.call(scope, value, name, obj)) {
                     return value;
                 }
             }
@@ -647,14 +647,14 @@
          * returns pick of object, where all properties match given finder function
          * @param arr
          * @param finder
-         * @param context
+         * @param scope
          * @returns {Array|*}
          */
-        this.findAll = function (obj, finder, context) {
+        this.findAll = function (obj, finder, scope) {
             var keys = [];
             this.each(obj, function (value, name, obj) {
                 finder.call(this, value, name, obj) && keys.push(name);
-            }, context);
+            }, scope);
             return this.pick(obj, keys);
         };
         /**
@@ -715,14 +715,14 @@
          * returns whether all object properties pass given tester function
          * @param obj
          * @param tester
-         * @param context
+         * @param scope
          * @returns {boolean}
          */
-        this.every = function (obj, tester, context) {
+        this.every = function (obj, tester, scope) {
             var keys = this.keys(obj);
             for (var index in keys) {
                 var name = keys[index], value = obj[name];
-                if (!tester.call(context, value, name, obj)) {
+                if (!tester.call(scope, value, name, obj)) {
                     return false;
                 }
             }
@@ -732,17 +732,17 @@
          * returns whether count of object properties pass given tester function
          * @param obj
          * @param tester
-         * @param context
+         * @param scope
          * @param count
          * @returns {boolean}
          */
-        this.some = function (obj, tester, context, count) {
+        this.some = function (obj, tester, scope, count) {
             type.isNumber(count) || (count = 1);
             var found = 0;
             var keys = this.keys(obj);
             for (var index in keys) {
                 var name = keys[index], value = obj[name];
-                tester.call(context, value, name, obj) && found++;
+                tester.call(scope, value, name, obj) && found++;
                 if (found == count) {
                     return true;
                 }
@@ -951,14 +951,14 @@
          * returns first element in array, that matches given finder function
          * @param arr
          * @param finder
-         * @param context
+         * @param scope
          * @returns {*}
          */
-        this.find = function (arr, finder, context) {
+        this.find = function (arr, finder, scope) {
             var keys = this.keys(arr);
             for (var index in keys) {
                 var name = keys[index], value = arr[name];
-                if (finder.call(context, value, name, arr)) {
+                if (finder.call(scope, value, name, arr)) {
                     return value;
                 }
             }
@@ -967,14 +967,14 @@
          * returns last element in array, that matches given finder function
          * @param arr
          * @param finder
-         * @param context
+         * @param scope
          * @returns {*}
          */
-        this.findLast = function (arr, finder, context) {
+        this.findLast = function (arr, finder, scope) {
             var keys = this.keys(arr).reverse();
             for (var index in keys) {
                 var name = keys[index], value = arr[name];
-                if (finder.call(context, value, name, arr)) {
+                if (finder.call(scope, value, name, arr)) {
                     return value;
                 }
             }
@@ -983,11 +983,11 @@
          * returns array of all elements in given array, that match given finder function
          * @param arr
          * @param finder
-         * @param context
+         * @param scope
          * @returns {Array|*}
          */
-        this.findAll = function (arr, finder, context) {
-            return arr.filter(finder, context);
+        this.findAll = function (arr, finder, scope) {
+            return arr.filter(finder, scope);
         };
         /**
          * returns first array item, that suites given where clause
@@ -1047,27 +1047,27 @@
          * returns whether all elements of given array pass given tester function
          * @param arr
          * @param tester
-         * @param context
+         * @param scope
          * @returns {*|boolean}
          */
-        this.every = function (arr, tester, context) {
-            return arr.every(tester, context);
+        this.every = function (arr, tester, scope) {
+            return arr.every(tester, scope);
         };
         /**
          * returns whether count elements of given array pass given tester function
          * @param arr
          * @param tester
-         * @param context
+         * @param scope
          * @param count
          * @returns {boolean}
          */
-        this.some = function (arr, tester, context, count) {
+        this.some = function (arr, tester, scope, count) {
             type.isNumber(count) || (count = 1);
             var found = 0;
             var keys = this.keys(arr);
             for (var index in keys) {
                 var name = keys[index], value = arr[name];
-                tester.call(context, value, name, arr) && found++;
+                tester.call(scope, value, name, arr) && found++;
                 if (found == count) {
                     return true;
                 }
@@ -1278,16 +1278,27 @@
      */
     var fn = new (function () {
         /**
+         * bind scope to function
+         * @param fn
+         * @param scope
+         * @returns {Function}
+         */
+        this.bind = function (fn, scope) {
+            return function () {
+                return fn.apply(scope, arguments);
+            }
+        }
+        /**
          * prefills function's arguments
          * @param fn
          * @param defaults
-         * @param context
+         * @param scope
          * @returns {Function}
          */
-        this.prefill = function (fn, defaults, context) {
+        this.prefill = function (fn, defaults, scope) {
             return function () {
                 var args = array.defaults(array.values(arguments), defaults);
-                return fn.apply(context, args);
+                return fn.apply(scope, args);
             }
         };
         /**
@@ -1306,7 +1317,10 @@
             };
         };
         /**
-         * wraps function
+         * wraps function within another function
+         * @param fn
+         * @param wrapper
+         * @returns {Function}
          */
         this.wrap = function (fn, wrapper) {
             return function () {
@@ -1315,6 +1329,10 @@
                 return wrapper.apply(undefined, args);
             }
         };
+        this.nextTick = function (fn, scope) {
+            scope && (fn = this.prefill(fn, [], scope));
+            setTimeout(fn, 0);
+        }
     });
     /**
      * string class pre-definition
@@ -1444,6 +1462,16 @@
             child.prototype.constructor = child;
             //save reference to parent
             this.const(child, '$parent', parent);
+        },
+        factory: function (constructor) {
+            function fn(args) {
+                return constructor.apply(this, args);
+            }
+
+            fn.prototype = constructor.prototype;
+            return function () {
+                return new fn(arguments);
+            };
         },
         defined: function (obj, key) {
             return !!(obj.hasOwnProperty(key));
@@ -1915,6 +1943,9 @@
                 $parent: cls.$parent.prototype,
                 wrap: true
             });
+            core.method(cls, '$factory', {
+                value: core.factory(cls)
+            });
 
             //requires
             preprocessors.require(cls, data);
@@ -1937,15 +1968,13 @@
          * @param name
          * @param properties
          */
-        create: function (name, properties) {
+        create: function (name) {
             if (!classes.has(name)) {
                 throw 'class "' + name + '" doesn\'t exist';
             }
             var cls = classes.get(name);
-            var instance = new cls();
-            type.isObject(properties) && object.each(properties, function (value, name) {
-                instance[name] = value;
-            });
+            //call factory without parent
+            var instance = cls.$factory.apply(null, slice(arguments, 1, -1));
             return instance;
         }
     };
@@ -1954,6 +1983,7 @@
     framework.define(ns, {
         singleton: true,
         properties: {
+            type: type,
             set: set,
             object: object,
             array: array,

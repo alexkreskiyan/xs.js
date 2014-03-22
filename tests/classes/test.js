@@ -670,19 +670,14 @@ test('child', function () {
 module('10. Creation with attributes');
 test('base', function () {
     //get class instance
-    var inst = xs.create('demo.Base', {
-        propTwo: 74
-    });
+    var inst = xs.create('demo.Base', 1, 74);
     //check instance properties
     strictEqual(inst.propOne, '??1!!', 'property "propOne" of class demo.Base instance assigned correctly');
     strictEqual(inst.propTwo, 74, 'property "propTwo" of class demo.Base instance assigned correctly');
 });
 test('parent', function () {
     //get class instance
-    var inst = xs.create('demo.Parent', {
-        propTwo: 74,
-        propThree: 89
-    });
+    var inst = xs.create('demo.Parent', 2, 74, 89);
     //check instance properties
     strictEqual(inst.propOne, '??2!!', 'property "propOne" of class demo.Parent instance assigned correctly');
     strictEqual(inst.propTwo, 74, 'property "propTwo" of class demo.Parent instance assigned correctly');
@@ -690,11 +685,7 @@ test('parent', function () {
 });
 test('child', function () {
     //get class instance
-    var inst = xs.create('demo.Child', {
-        propTwo: 74,
-        propThree: 89,
-        propFour: 32
-    });
+    var inst = xs.create('demo.Child', 4, 74, 89, 32);
     //check instance properties
     strictEqual(inst.propOne, '??4!!', 'property "propOne" of class demo.Child instance assigned correctly');
     strictEqual(inst.propTwo, '--++74', 'property "propTwo" of class demo.Child instance assigned correctly');
