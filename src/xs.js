@@ -1,9 +1,9 @@
 /**
  This file is core of xs.js 0.1
 
- Copyright (c) 2013-2014, Coos Inc
+ Copyright (c) 2013-2014, Annium Inc
 
- Contact:  http://coos.me/contact
+ Contact:  http://annium.com/contact
 
  GNU General Public License Usage
  This file may be used under the terms of the GNU General Public License version 3.0 as
@@ -14,7 +14,7 @@
  requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 
  If you are unsure which license is appropriate for your use, please contact the sales department
- at http://coos.me/contact.
+ at http://annium.com/contact.
 
  */
 'use strict';
@@ -48,7 +48,7 @@
             }
         };
         /**
-         * return all list values
+         * returns all list values
          * @param list
          * @returns {array}
          */
@@ -60,7 +60,7 @@
             }
         };
         /**
-         * whether list has given key
+         * returns whether list has given key
          * @param list to search within
          * @param key to lookup for
          * @returns {boolean}
@@ -73,7 +73,7 @@
             }
         };
         /**
-         * whether element in list
+         * returns whether list has element
          * @param list to search within
          * @param value to lookup for
          * @returns {boolean}
@@ -86,7 +86,7 @@
             }
         };
         /**
-         * whether element in list
+         * returns key of first list element, equal to given
          * @param list to search within
          * @param value to lookup for
          * @returns {string|Number|undefined}
@@ -99,7 +99,7 @@
             }
         };
         /**
-         * whether element in list
+         * returns key of last list element, equal to given
          * @param list to search within
          * @param value to lookup for
          * @returns {string|Number|undefined}
@@ -112,7 +112,7 @@
             }
         };
         /**
-         * evaluate size of list
+         * returns size of list
          * @param list
          * @returns {Number}
          */
@@ -204,7 +204,7 @@
             }
         };
         /**
-         * find first element, that passes given test function
+         * returns first list element, that passes given test function
          * @param list
          * @param finder function, returning true if item matches given conditions
          * @returns {*}
@@ -217,7 +217,7 @@
             }
         };
         /**
-         * find last element, that passes given test function
+         * returns last list element, that passes given test function
          * @param list
          * @param finder function, returning true if item matches given conditions
          * @returns {*}
@@ -230,7 +230,7 @@
             }
         };
         /**
-         * find all elements, that pass given test function
+         * returns all list elements, that pass given test function
          * @param list
          * @param finder function, returning true if item matches given conditions
          * @returns {*}
@@ -243,7 +243,7 @@
             }
         };
         /**
-         * return first list item, that suites where clause
+         * returns first list item, that suites where clause
          * @param list
          * @param where
          * @returns {*}
@@ -256,7 +256,7 @@
             }
         };
         /**
-         * return last list item, that suites where clause
+         * returns last list item, that suites where clause
          * @param list
          * @param where
          * @returns {*}
@@ -269,7 +269,7 @@
             }
         };
         /**
-         * return all list items, that suite where clause
+         * returns all list items, that suite where clause
          * @param list
          * @param where
          * @returns {*}
@@ -281,6 +281,13 @@
                 return object.filterAll(list, where);
             }
         };
+        /**
+         * returns whether all list items pass tester function
+         * @param list
+         * @param tester
+         * @param context
+         * @returns {*}
+         */
         this.every = function (list, tester, context) {
             if (type.isArray(list)) {
                 return array.every(list, tester, context);
@@ -288,6 +295,14 @@
                 return object.every(list, tester, context);
             }
         };
+        /**
+         * returns whether count of list items pass tester function
+         * @param list
+         * @param tester
+         * @param context
+         * @param count
+         * @returns {*}
+         */
         this.some = function (list, tester, context, count) {
             if (type.isArray(list)) {
                 return array.some(list, tester, context, count);
@@ -295,6 +310,11 @@
                 return object.some(list, tester, context, count);
             }
         };
+        /**
+         * returns first item of list
+         * @param list
+         * @returns {*}
+         */
         this.first = function (list) {
             if (type.isArray(list)) {
                 return array.first(list);
@@ -302,6 +322,11 @@
                 return object.first(list);
             }
         };
+        /**
+         * returns last item of list
+         * @param list
+         * @returns {*}
+         */
         this.last = function (list) {
             if (type.isArray(list)) {
                 return array.last(list);
@@ -309,6 +334,11 @@
                 return object.last(list);
             }
         };
+        /**
+         * shifts and returns first item from list
+         * @param list
+         * @returns {*}
+         */
         this.shift = function (list) {
             if (type.isArray(list)) {
                 return list.shift();
@@ -316,6 +346,12 @@
                 return object.shift(list);
             }
         };
+        /**
+         * pops and returns last item from list
+         * @param list
+         * @param value
+         * @returns {*}
+         */
         this.pop = function (list, value) {
             if (type.isArray(list)) {
                 return list.pop();
@@ -323,6 +359,12 @@
                 return object.pop(list, value);
             }
         };
+        /**
+         * removes first item from list, that matches elem as key or as value
+         * @param list
+         * @param elem
+         * @returns {*}
+         */
         this.remove = function (list, elem) {
             if (type.isArray(list)) {
                 return array.remove(list, elem);
@@ -330,6 +372,12 @@
                 return object.remove(list, elem);
             }
         };
+        /**
+         * removes last item from list, that matches elem as key or as value
+         * @param list
+         * @param elem
+         * @returns {*}
+         */
         this.removeLast = function (list, elem) {
             if (type.isArray(list)) {
                 return array.removeLast(list, elem);
@@ -337,6 +385,11 @@
                 return object.removeLast(list, elem);
             }
         };
+        /**
+         * removes all items from list, passed as array/plain arguments
+         * @param list
+         * @returns {*}
+         */
         this.removeAll = function (list) {
             if (type.isArray(list)) {
                 return array.removeAll.apply(array, arguments);
@@ -344,13 +397,24 @@
                 return object.removeAll.apply(object, arguments);
             }
         };
-        this.clone = function (list, value) {
+        /**
+         * returns clone of list (shallow copied)
+         * @param list
+         * @param value
+         * @returns {*}
+         */
+        this.clone = function (list) {
             if (type.isArray(list)) {
-                return array.clone(list, value);
+                return array.clone(list);
             } else {
-                return object.clone(list, value);
+                return object.clone(list);
             }
         };
+        /**
+         * returns copy of list with only whitelisted keys, passed in 2+ arguments
+         * @param list
+         * @returns {*}
+         */
         this.pick = function (list) {
             if (type.isArray(list)) {
                 return array.pick.apply(array, arguments);
@@ -358,6 +422,11 @@
                 return object.pick.apply(object, arguments);
             }
         };
+        /**
+         * returns copy of list without blacklisted keys, passed in 2+ arguments
+         * @param list
+         * @returns {*}
+         */
         this.omit = function (list) {
             if (type.isArray(list)) {
                 return array.omit.apply(array, arguments);
@@ -365,6 +434,11 @@
                 return object.omit.apply(object, arguments);
             }
         };
+        /**
+         * updates list with defaulted values, passed in 2+ arguments
+         * @param list
+         * @returns {*}
+         */
         this.defaults = function (list) {
             if (type.isArray(list)) {
                 return array.defaults.apply(array, arguments);
@@ -380,15 +454,17 @@
      */
     var object = new (function () {
         /**
-         * fetch object keys
-         * @param obj object, to fetch keys from
+         * returns object keys
+         * @param obj
+         * @returns {array|*}
          */
         this.keys = function (obj) {
             return Object.keys(obj);
         };
         /**
-         * fetch object values
-         * @param obj object, to fetch values from
+         * returns object values
+         * @param obj
+         * @returns {Array}
          */
         this.values = function (obj) {
             var values = [];
@@ -398,7 +474,7 @@
             return values;
         };
         /**
-         * Checks whether object has key
+         * returns whether object has key
          * @param obj
          * @param key
          * @returns {boolean}
@@ -407,7 +483,7 @@
             return obj.hasOwnProperty(key);
         };
         /**
-         * Check whether object contains given values as one of properties values
+         * returns whether object contains given values as one of properties values
          * @param obj
          * @param name
          * @returns {boolean}
@@ -418,7 +494,7 @@
             }));
         };
         /**
-         * gets index of value in object
+         * returns name of first property with value equal to given
          * @param obj
          * @param value
          * @returns {string|Number|undefined}
@@ -433,7 +509,7 @@
             }
         };
         /**
-         * gets index of value in object
+         * returns name of last property with value equal to given
          * @param obj
          * @param value
          * @returns {string|Number|undefined}
@@ -448,7 +524,7 @@
             }
         };
         /**
-         * Get object size
+         * returns number of object own properties
          * @param obj
          * @returns {Number}
          */
@@ -456,7 +532,7 @@
             return this.keys(obj).length;
         }
         /**
-         * iterates over object elements
+         * iterates over object own properties
          * @param obj
          * @param iterator
          * @param context
@@ -467,7 +543,7 @@
             }, context);
         };
         /**
-         * iterates over object elements in reverse order
+         * iterates over object own properties in reverse order
          * @param obj
          * @param iterator
          * @param context
@@ -536,7 +612,7 @@
             return result;
         };
         /**
-         * Finds first element, matching given finder function
+         * returns value of first property, matching given finder function
          * @param obj
          * @param finder
          * @param context
@@ -552,7 +628,7 @@
             }
         };
         /**
-         * Finds last element, matching given finder function
+         * returns value of last property, matching given finder function
          * @param obj
          * @param finder
          * @param context
@@ -568,7 +644,7 @@
             }
         };
         /**
-         * finds all elements in array, that match given finder function
+         * returns pick of object, where all properties match given finder function
          * @param arr
          * @param finder
          * @param context
@@ -581,6 +657,12 @@
             }, context);
             return this.pick(obj, keys);
         };
+        /**
+         * returns value of first property, matching given where clause
+         * @param obj
+         * @param where
+         * @returns {*}
+         */
         this.filter = function (obj, where) {
             var keys = this.keys(obj);
             for (var index in keys) {
@@ -593,6 +675,12 @@
                 }
             }
         };
+        /**
+         * returns value of last property, matching given where clause
+         * @param obj
+         * @param where
+         * @returns {*}
+         */
         this.filterLast = function (obj, where) {
             var keys = this.keys(obj).reverse();
             for (var index in keys) {
@@ -605,6 +693,12 @@
                 }
             }
         };
+        /**
+         * returns pick of object, where all properties match given where clause
+         * @param obj
+         * @param where
+         * @returns {*}
+         */
         this.filterAll = function (obj, where) {
             var props = [];
             var keys = this.keys(obj);
@@ -617,6 +711,13 @@
             }
             return this.pick(obj, props);
         };
+        /**
+         * returns whether all object properties pass given tester function
+         * @param obj
+         * @param tester
+         * @param context
+         * @returns {boolean}
+         */
         this.every = function (obj, tester, context) {
             var keys = this.keys(obj);
             for (var index in keys) {
@@ -627,6 +728,14 @@
             }
             return true;
         };
+        /**
+         * returns whether count of object properties pass given tester function
+         * @param obj
+         * @param tester
+         * @param context
+         * @param count
+         * @returns {boolean}
+         */
         this.some = function (obj, tester, context, count) {
             type.isNumber(count) || (count = 1);
             var found = 0;
@@ -640,26 +749,51 @@
             }
             return false;
         };
+        /**
+         * returns first object property
+         * @param obj
+         * @returns {*}
+         */
         this.first = function (obj) {
             var key = object.keys(obj).shift();
             return obj[key];
         };
+        /**
+         * returns last object property
+         * @param obj
+         * @returns {*}
+         */
         this.last = function (obj) {
             var key = object.keys(obj).pop();
             return obj[key];
         };
+        /**
+         * shifts and returns first object property
+         * @param obj
+         * @returns {*}
+         */
         this.shift = function (obj) {
             var key = object.keys(obj).shift();
             var value = obj[key];
             delete obj[key];
             return value;
         };
+        /**
+         * pops and returns last object property
+         * @param obj
+         * @returns {*}
+         */
         this.pop = function (obj) {
             var key = object.keys(obj).pop();
             var value = obj[key];
             delete obj[key];
             return value;
         };
+        /**
+         * removes first property from object, that matches given elem by name or value
+         * @param obj
+         * @param elem
+         */
         this.remove = function (obj, elem) {
             if ((type.isString(elem) || type.isNumber(elem)) && this.hasKey(obj, elem)) {
                 delete obj[elem];
@@ -667,6 +801,11 @@
                 delete obj[this.keyOf(obj, elem)];
             }
         };
+        /**
+         * removes last property from object, that matches given elem by name or value
+         * @param obj
+         * @param elem
+         */
         this.removeLast = function (obj, elem) {
             if ((type.isString(elem) || type.isNumber(elem)) && this.hasKey(obj, elem)) {
                 delete obj[elem];
@@ -674,6 +813,11 @@
                 delete obj[this.lastKeyOf(obj, elem)];
             }
         };
+        /**
+         * removes all items from list, passed as array/plain arguments
+         * @param obj
+         * @param elem
+         */
         this.removeAll = function (obj, elem) {
             var elems = array.union(slice(arguments, 1));
             elems.forEach(function (elem) {
@@ -682,12 +826,16 @@
         };
         /**
          * return shallow-cloned object copy
+         * @param obj
+         * @returns {*}
          */
         this.clone = function (obj) {
             return this.extend({}, obj);
         };
         /**
-         * copies all properties in source objects to destination object
+         * copies all properties from objects/arrays, passed as arguments to given obj
+         * @param obj
+         * @returns {*}
          */
         this.extend = function (obj) {
             this.each(slice(arguments, 1), function (source) {
@@ -698,7 +846,9 @@
             return obj;
         };
         /**
-         * return copy of object, filtered to only have whitelisted keys
+         * returns copy of object with only whitelisted keys, passed in 2+ arguments
+         * @param obj
+         * @returns {{}}
          */
         this.pick = function (obj) {
             var copy = {};
@@ -709,7 +859,9 @@
             return copy;
         };
         /**
-         * return copy of object, filtered to have all but blacklisted keys
+         * returns copy of object without blacklisted keys, passed in 2+ arguments
+         * @param obj
+         * @returns {{}}
          */
         this.omit = function (obj) {
             var copy = {};
@@ -742,15 +894,15 @@
      */
     var array = new (function () {
         /**
-         * fetch object keys
+         * returns array keys
          * @param arr to fetch keys from
-         * @returns {array}
+         * @returns {Array}
          */
         this.keys = function (arr) {
             return this.range(arr.length - 1);
         };
         /**
-         * fetch array values
+         * returns array values
          * @param arr to fetch values from
          * @returns {array}
          */
@@ -758,7 +910,7 @@
             return slice(arr);
         };
         /**
-         * Checks whether array has key
+         * returns whether array has key
          * @param obj
          * @param key
          * @returns {boolean}
@@ -767,7 +919,7 @@
             return key < arr.length;
         };
         /**
-         * Check whether array has given value
+         * returns whether array has given value
          * @param arr
          * @param value
          * @returns {boolean}
@@ -776,7 +928,7 @@
             return arr.indexOf(value) >= 0;
         };
         /**
-         * gets index of value in array
+         * returns index of first array item, that is equal to given value
          * @param arr
          * @param value
          * @returns {string|Number|undefined}
@@ -786,7 +938,7 @@
             return index > -1 ? index : undefined;
         };
         /**
-         * gets last index of value in array
+         * returns index of last array item, that is equal to given value
          * @param arr
          * @param value
          * @returns {string|Number|undefined}
@@ -796,7 +948,7 @@
             return index > -1 ? index : undefined;
         };
         /**
-         * finds first element in array, that matches given finder function
+         * returns first element in array, that matches given finder function
          * @param arr
          * @param finder
          * @param context
@@ -812,7 +964,7 @@
             }
         };
         /**
-         * finds first element in array, that matches given finder function
+         * returns last element in array, that matches given finder function
          * @param arr
          * @param finder
          * @param context
@@ -828,7 +980,7 @@
             }
         };
         /**
-         * finds all elements in array, that match given finder function
+         * returns array of all elements in given array, that match given finder function
          * @param arr
          * @param finder
          * @param context
@@ -837,6 +989,12 @@
         this.findAll = function (arr, finder, context) {
             return arr.filter(finder, context);
         };
+        /**
+         * returns first array item, that suites given where clause
+         * @param arr
+         * @param where
+         * @returns {*}
+         */
         this.filter = function (arr, where) {
             var keys = this.keys(arr);
             for (var index in keys) {
@@ -849,6 +1007,12 @@
                 }
             }
         };
+        /**
+         * returns last array item, that suites given where clause
+         * @param arr
+         * @param where
+         * @returns {*}
+         */
         this.filterLast = function (arr, where) {
             var keys = this.keys(arr).reverse();
             for (var index in keys) {
@@ -861,6 +1025,12 @@
                 }
             }
         };
+        /**
+         * returns array with all items of given array, that suite given where clause
+         * @param arr
+         * @param where
+         * @returns {*|{}}
+         */
         this.filterAll = function (arr, where) {
             var props = [];
             var keys = this.keys(obj);
@@ -873,9 +1043,24 @@
             }
             return this.pick(arr, props);
         };
+        /**
+         * returns whether all elements of given array pass given tester function
+         * @param arr
+         * @param tester
+         * @param context
+         * @returns {*|boolean}
+         */
         this.every = function (arr, tester, context) {
             return arr.every(tester, context);
         };
+        /**
+         * returns whether count elements of given array pass given tester function
+         * @param arr
+         * @param tester
+         * @param context
+         * @param count
+         * @returns {boolean}
+         */
         this.some = function (arr, tester, context, count) {
             type.isNumber(count) || (count = 1);
             var found = 0;
@@ -889,14 +1074,29 @@
             }
             return false;
         };
+        /**
+         * returns first element of given array
+         * @param arr
+         * @returns {*}
+         */
         this.first = function (arr) {
             var key = object.keys(arr).shift();
             return arr[key];
         };
+        /**
+         * returns last element of given array
+         * @param arr
+         * @returns {*}
+         */
         this.last = function (arr) {
             var key = object.keys(arr).pop();
             return arr[key];
         };
+        /**
+         * removes first element of given array, that suites elem as key or value
+         * @param arr
+         * @param elem
+         */
         this.remove = function (arr, elem) {
             if (type.isNumber(elem) && this.hasKey(arr, elem)) {
                 arr.splice(elem, 1);
@@ -904,6 +1104,11 @@
                 arr.splice(arr.indexOf(elem), 1);
             }
         };
+        /**
+         * removes last element of given array, that suites elem as key or value
+         * @param arr
+         * @param elem
+         */
         this.removeLast = function (arr, elem) {
             if (type.isNumber(elem) && this.hasKey(arr, elem)) {
                 arr.splice(elem, 1);
@@ -911,35 +1116,56 @@
                 arr.splice(arr.lastIndexOf(elem), 1);
             }
         };
+        /**
+         * removes all items from list, passed as array/plain arguments
+         * @param arr
+         * @param elem
+         */
         this.removeAll = function (arr, elem) {
             var elems = array.union(slice(arguments, 1));
             elems.forEach(function (elem) {
                 this.remove(arr, elem);
             }, this);
         };
+        /**
+         * returns shallow-copied clone of array
+         * @param arr
+         * @returns {*}
+         */
         this.clone = function (arr) {
             return slice(arr);
         };
         /**
-         * returns array, filtered not to have falsy values
+         * returns copy of given array, filtered not to have falsy values
+         * @param arr
+         * @returns {*}
          */
         this.compact = function (arr) {
             return arr.filter(function (value) {
                 return value;
             })
         };
+        /**
+         * shuffles array elements
+         * @param arr
+         */
         this.shuffle = function (arr) {
             arr.sort(function () {
                 return Math.random() - 0.5;
             })
         };
+        /**
+         * returns union of arrays, passed as arguments, or array of arrays as single argument
+         * @returns {*}
+         */
         this.union = function () {
-            if (arguments.length == 1) {
-                return concat([], slice(arguments).pop());
-            } else {
-                return concat([], slice(arguments));
-            }
+            var arrays = arguments.length == 1 ? slice(arguments).pop() : slice(arguments);
+            return concat([], arrays);
         };
+        /**
+         * returns intersection of given arrays (although intersection elements are unique)
+         * @returns {Array}
+         */
         this.intersection = function () {
             //get arrays list
             var arrays = arguments.length == 1 ? slice(arguments).pop() : slice(arguments);
@@ -968,6 +1194,11 @@
                 return !this.has(rest, value);
             }, this);
         };
+        /**
+         * returns array, filled by unique items of given array
+         * @param arr
+         * @returns {Array}
+         */
         this.uniques = function (arr) {
             var unique = [];
             arr.forEach(function (value) {
@@ -976,7 +1207,9 @@
             return unique;
         };
         /**
-         * return copy of array, filtered to only have whitelisted keys
+         * returns copy of array with only whitelisted keys, passed in 2+ arguments
+         * @param arr
+         * @returns {Array}
          */
         this.pick = function (arr) {
             var copy = [];
@@ -987,7 +1220,9 @@
             return copy;
         };
         /**
-         * return copy of array, filtered to have all but blacklisted keys
+         * returns copy of array without blacklisted keys, passed in 2+ arguments
+         * @param arr
+         * @returns {Array}
          */
         this.omit = function (arr) {
             var copy = [];
@@ -997,6 +1232,12 @@
             }, this);
             return copy;
         };
+        /**
+         * fills elements in given arr with elements of defaults, passed in 2+ arguments
+         * from the end of arr
+         * @param arr
+         * @returns {*}
+         */
         this.defaults = function (arr) {
             var defaults = array.union(slice(arguments, 1));
             for (var i = arr.length; i < defaults.length; i++) {
@@ -1004,6 +1245,13 @@
             }
             return arr;
         };
+        /**
+         * returns simple range array, produced according to given start, stop and step params
+         * @param start
+         * @param stop
+         * @param step
+         * @returns {Array}
+         */
         this.range = function (start, stop, step) {
             //prepare arguments
             if (arguments.length <= 1) {
@@ -1387,6 +1635,10 @@
             if (!type.isString(name)) {
                 throw 'class name must be string';
             }
+            //check descriptor
+            if (type.isFunction(descriptor)) {
+                descriptor = descriptor();
+            }
             //default descriptor to empty object
             type.isObject(descriptor) || (descriptor = {});
             //default namespace to null if not string
@@ -1582,6 +1834,9 @@
      * @type {}
      */
     var framework = {
+        defined: function (name) {
+            return classes.has(name);
+        },
         define: function (name, description, createdFn) {
             //prepare class data
             var data = preprocessors.prepare(name, description, createdFn);
@@ -1704,9 +1959,11 @@
             array: array,
             fn: fn,
             string: string,
-            number: number
+            number: number,
+            emptyFn: emptyFn
         },
         methods: {
+            defined: framework.defined,
             define: framework.define,
             create: framework.create
         }
