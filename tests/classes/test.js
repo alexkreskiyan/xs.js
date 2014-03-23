@@ -104,6 +104,7 @@ function xsStart(suffix) {
                         var fn = parent.metTwo;
                         return fn.call(this, a - 1, b + 1);
                     },
+                    wrap: true,
                     default: [3, 4]
                 }
             }
@@ -129,6 +130,7 @@ function xsStart(suffix) {
                     var fn = parent.metTwo;
                     return fn.call(this, a - 10, b + 1);
                 },
+                wrap: true,
                 default: [5, 6]
             }
         }
@@ -170,6 +172,7 @@ function xsStart(suffix) {
                         var fn = parent.metThree;
                         return fn.call(this, a + 3, b + 1);
                     },
+                    wrap: true,
                     default: [3, 4]
                 }
             }
@@ -194,10 +197,13 @@ function xsStart(suffix) {
             metOne: function (a, b) {
                 return a + b + 'child.a';
             },
-            metThree: function (a, b) {
-                var parent = this.parent(arguments);
-                var fn = parent.metThree;
-                return fn.call(this, a + 3, b + 1);
+            metThree: {
+                fn: function (a, b) {
+                    var parent = this.parent(arguments);
+                    var fn = parent.metThree;
+                    return fn.call(this, a + 3, b + 1);
+                },
+                wrap: true
             }
         }
     });

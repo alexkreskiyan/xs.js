@@ -1502,21 +1502,28 @@
                 enumerable: true,
                 configurable: false
             }, descriptor);
-            description.default = type.isArray(description.default) ? description.default : [];
-            if (description.wrap) {
+            if (description.default || description.wrap) {
+                description.default = type.isArray(description.default) ? description.default : [];
                 var fn = description.value;
-                //get count of arguments, defined by function;
-                var argsCount = fnArgsRe.exec(fn.toString()).pop().split(',').length;
-                description.value = function () {
-                    var args = array.defaults(array.values(arguments), description.default);
-                    //pass super, needed for parent() calls
-                    if (args.length < argsCount) {
-                        args[argsCount] = description.$parent;
-                    } else {
-                        args.push(description.$parent);
-                    }
-                    return fn.apply(this, args);
-                };
+                if (description.wrap) {
+                    //get count of arguments, defined by function;
+                    var argsCount = fnArgsRe.exec(fn.toString()).pop().split(',').length;
+                    description.value = function () {
+                        var args = array.defaults(array.values(arguments), description.default);
+                        //pass super, needed for parent() calls
+                        if (args.length < argsCount) {
+                            args[argsCount] = description.$parent;
+                        } else {
+                            args.push(description.$parent);
+                        }
+                        return fn.apply(this, args);
+                    };
+                } else {
+                    description.value = function () {
+                        var args = array.defaults(array.values(arguments), description.default);
+                        return fn.apply(this, args);
+                    };
+                }
             }
             this.define(obj, name, description);
         }
@@ -1584,7 +1591,9 @@
                 return false;
             }
             //assign defaults
-            desc.default = type.isArray(descriptor.default) ? descriptor.default : [];
+            type.isArray(descriptor.default) && (desc.default = descriptor.default);
+            //assign wrap
+            type.isBoolean(descriptor.wrap) && (desc.wrap = descriptor.wrap);
             return desc;
         },
         apply: function (cls, descriptor) {
@@ -1626,9 +1635,9 @@
                 //store desc to class descriptor
                 correctDescriptor.static.methods[name] = propertyDescriptor;
                 //define class property
-                core.method(cls, name, object.extend(propertyDescriptor, {
+                core.method(cls, name, object.defaults(propertyDescriptor, {
                     $parent: cls.$parent,
-                    wrap: true
+                    wrap: false
                 }));
             }, this);
             //public properties
@@ -1650,9 +1659,9 @@
                 //store desc to class descriptor
                 correctDescriptor.methods[name] = propertyDescriptor;
                 //define class property
-                core.method(cls.prototype, name, object.extend(propertyDescriptor, {
+                core.method(cls.prototype, name, object.defaults(propertyDescriptor, {
                     $parent: cls.$parent.prototype,
-                    wrap: true
+                    wrap: false
                 }));
             }, this);
             return correctDescriptor;
@@ -1973,8 +1982,8 @@
                 throw 'class "' + name + '" doesn\'t exist';
             }
             var cls = classes.get(name);
-            //call factory without parent
-            var instance = cls.$factory.apply(null, slice(arguments, 1, -1));
+            //call factory
+            var instance = cls.$factory.apply(null, slice(arguments, 1));
             return instance;
         }
     };
