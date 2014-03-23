@@ -77,13 +77,10 @@ asyncTest('cancel', function () {
         return deferred.promise;
     }
     fn().then(function (value) {
-        console.log('resolved', value, result);
         result += 2 * value;
     },function (reason) {
-        console.log('rejected', reason, result);
         result += 3 * reason;
     },function (progress) {
-        console.log('progress', progress, result);
         result *= progress;
     }).cancel(7);
     var result = 1;
