@@ -1408,7 +1408,7 @@
             //check whether namespace is leave or not
             if (names.length) {
                 //create if not created yet
-                typeof root[namespace] == 'object' || (root[namespace] = {});
+                type.isFunction(root[namespace]) || type.isObject(root[namespace]) || (root[namespace] = {});
                 //downcall
                 this.set(root[namespace], names.join('.'), cls);
             } else {
@@ -1797,7 +1797,7 @@
          * @returns {boolean}
          */
         isObject: function (value) {
-            return typeof value == 'object';
+            return type.get(value) == 'object';
         },
         isArray: function (value) {
             return Array.isArray(value);
