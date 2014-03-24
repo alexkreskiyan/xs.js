@@ -34,7 +34,7 @@
 
 xs.define('xs.promise.Deferred', {
     requires: ['xs.promise.Resolver'],
-    statics: {
+    static: {
         methods: {
             /**
              * Returns a new {@link xs.promise.Promise} that resolves immediately with the specified value.

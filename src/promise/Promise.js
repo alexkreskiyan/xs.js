@@ -78,30 +78,23 @@
 
 xs.define('xs.promise.Promise', {
     requires: ['xs.promise.Resolver'],
-    statics: {
-        /**
-         * Returns a new Promise that:
-         *
-         * * resolves immediately for the specified value, or
-         * * resolves or rejects when the specified {@link xs.promise.Promise Promise} (or third-party Promise or then()-able) is resolved or rejected.
-         *
-         * @param {*} promiseOrValue A Promise (or third-party Promise or then()-able) or value.
-         * @return {xs.promise.Promise} A Promise of the specified Promise or value.
-         */
-        when: function (promiseOrValue) {
-            var deferred;
-            deferred = xs.create('xs.promise.Deferred');
-            deferred.resolve(promiseOrValue);
-            return deferred.promise;
-        },
-        /**
-         * Determines whether the specified value is a Promise (including third-party untrusted Promises or then()-ables), based on the Promises/A specification feature test.
-         *
-         * @param {*[]/xs.promise.Promise[]/xs.promise.Promise} value A potential Promise.
-         * @return {Boolean} A Boolean indicating whether the specified value was a Promise.
-         */
-        isPromise: function (value) {
-            return (value && xs.isFunction(value.then)) === true;
+    static: {
+        methods: {
+            /**
+             * Returns a new Promise that:
+             *
+             * * resolves immediately for the specified value, or
+             * * resolves or rejects when the specified {@link xs.promise.Promise Promise} (or third-party Promise or then()-able) is resolved or rejected.
+             *
+             * @param {*} promiseOrValue A Promise (or third-party Promise or then()-able) or value.
+             * @return {xs.promise.Promise} A Promise of the specified Promise or value.
+             */
+            when: function (promiseOrValue) {
+                var deferred;
+                deferred = xs.create('xs.promise.Deferred');
+                deferred.resolve(promiseOrValue);
+                return deferred.promise;
+            }
         }
     },
     constructor: function (resolver) {
