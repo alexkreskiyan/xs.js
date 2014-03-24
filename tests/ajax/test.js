@@ -8,9 +8,64 @@ function speed(fn, n) {
     console.log('median: ', duration / n, 'ms per operation');
     console.log('mark: about', n / duration, 'operation per ms');
 }
-var send = function (method, data) {
+var urls = {
+    local: 'server.php',
+    cross: 'http://api.annium.com/1/test/demo/'
+}
+var native = {
+    local: {
+        get: function (data) {
+            send(urls.local, 'get', data);
+        },
+        post: function (data) {
+            send(urls.local, 'post', data);
+        }
+    },
+    cross: {
+        get: function (data) {
+            send(urls.cross, 'get', data);
+        },
+        post: function (data) {
+            send(urls.cross, 'post', data);
+        }
+    }
+};
+var ajax = {
+    local: {
+        get: function (data) {
+            xs.Ajax.request({
+                url: urls.local,
+                method: 'get',
+                params: data
+            }).promise.always(onAnything).then(onResolved, onRejected);
+        },
+        post: function (data) {
+            xs.Ajax.request({
+                url: urls.local,
+                method: 'post',
+                params: data
+            }).promise.always(onAnything).then(onResolved, onRejected);
+        }
+    },
+    cross: {
+        get: function (data) {
+            xs.Ajax.request({
+                url: urls.cross,
+                method: 'get',
+                params: data
+            }).promise.always(onAnything).then(onResolved, onRejected);
+        },
+        post: function (data) {
+            xs.Ajax.request({
+                url: urls.cross,
+                method: 'post',
+                params: data
+            }).promise.always(onAnything).then(onResolved, onRejected);
+        }
+    }
+};
+var send = function (url, method, data) {
     var xhr = new XMLHttpRequest();
-    var url = 'server.php';
     method = method.toUpperCase();
     if (method == 'GET') {
         url = urlAppend(url, data);
@@ -28,8 +83,18 @@ var send = function (method, data) {
     };
     xhr.send(data);
 }
+
 var onComplete = function (xhr) {
     console.log('complete', xhr.response);
+};
+var onResolved = function (value) {
+    console.log('resolved', value);
+};
+var onRejected = function (reason) {
+    console.log('rejected', reason);
+};
+var onAnything = function () {
+    console.log('completed', arguments);
 };
 var urlAppend = function (url, params) {
     var urlParts = url.split('?');

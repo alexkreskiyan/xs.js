@@ -26,16 +26,23 @@
  */
 xs.define('xs.data.Connection', {
     requires: ['xs.promise.Deferred'],
-    statics: {
-        /**
-         * @property requestId {Integer} counter
-         */
-        requestId: 0
+    static: {
+        properties: {
+            /**
+             * @property requestId {Integer} counter
+             */
+            requestId: 0,
+            /**
+             * @property requests {Object} pending requests
+             */
+            requests: {}
+        }
     },
     constructor: function (config) {
         config = config || {};
         xs.extend(this, config);
         this.requests = {};
+        this.defaultHeaders = {};
     },
     properties: {
         /**
@@ -217,9 +224,8 @@ xs.define('xs.data.Connection', {
                 return me.complete(request);
             }
 
-            //save deferred promise instead deferred
+            //save deferred promise
             request.promise = request.deferred.promise;
-            delete request.deferred;
 
             return request;
         },
@@ -619,9 +625,32 @@ xs.define('xs.data.Connection', {
             // If we don't explicitly tear down the xhr reference, IE6/IE7 will hold this in the closure of the
             // functions created with getResponseHeader/getAllResponseHeaders
             xhr = null;
+
+            //parse response text
+            response.response = me.parseResponseText(response);
+
             return response;
         },
-
+        /**
+         * parses response text according to
+         * @param response {Object}
+         * @returns {*}
+         */
+        parseResponseText: function (response) {
+            var result = response.responseText;
+            var contentType = response.getResponseHeader('content-type');
+            //return responseText if not content-type given
+            if (!contentType) {
+                return result;
+            }
+            if (contentType == 'application/json') {
+                try {
+                    result = JSON.parse(response.responseText);
+                } catch (e) {
+                }
+            }
+            return result;
+        },
         /**
          * Creates the exception object
          * @private

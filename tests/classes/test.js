@@ -738,9 +738,9 @@ test('base', function () {
     //const
     strictEqual(single.a, 1, 'constant "a" saved');
     //static.properties
-    strictEqual(single.b, undefined, 'static property "b" doesn\'t exist');
+    strictEqual(single.b, 2, 'static property "b" still exists');
     //static.methods
-    strictEqual(single.c, undefined, 'static method "c" doesn\'t exist');
+    strictEqual(single.c(), 3, 'static method "c" still exists');
     //properties
     strictEqual(single.d, 4, 'property "d" saved ok');
     //methods

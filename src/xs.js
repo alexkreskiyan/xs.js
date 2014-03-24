@@ -1601,9 +1601,9 @@
                 return false;
             }
             //check descriptor fields are filled correctly
-            if (descriptor.value) {
+            if (object.hasKey(descriptor, 'value')) {
                 return true;
-            } else if (descriptor.get || descriptor.set) {
+            } else if (object.hasKey(descriptor, 'get') || object.hasKey(descriptor, 'set')) {
                 if (descriptor.get && !type.isFunction(descriptor.get)) {
                     return false;
                 }
@@ -1670,13 +1670,13 @@
                 methods: {}
             };
             // constants
-            set.each(descriptor.const, function (value, name) {
+            object.each(descriptor.const, function (value, name) {
                 //save const to class descriptor
                 correctDescriptor.const[name] = value;
                 core.const(cls, name, value);
             });
             //public static properties
-            set.each(descriptor.static.properties, function (value, name) {
+            object.each(descriptor.static.properties, function (value, name) {
                 //parse value as property descriptor
                 var propertyDescriptor = this.property(value, name);
                 //store desc to class descriptor
@@ -1687,7 +1687,7 @@
                 object.hasKey(propertyDescriptor, 'default') && (cls[name] = propertyDescriptor.default);
             }, this);
             //public static methods
-            set.each(descriptor.static.methods, function (value, name) {
+            object.each(descriptor.static.methods, function (value, name) {
                 //parse value as method descriptor
                 var propertyDescriptor = this.method(value);
                 //if desc is wrong - return
@@ -1703,7 +1703,7 @@
                 }));
             }, this);
             //public properties
-            set.each(descriptor.properties, function (value, name) {
+            object.each(descriptor.properties, function (value, name) {
                 //parse value as property descriptor
                 var propertyDescriptor = this.property(value, name);
                 //store desc to class descriptor
@@ -1711,7 +1711,7 @@
                 //instance properties are defined in constructor
             }, this);
             //public methods
-            set.each(descriptor.methods, function (value, name) {
+            object.each(descriptor.methods, function (value, name) {
                 //parse value as method descriptor
                 var propertyDescriptor = this.method(value);
                 //if desc is wrong - return
@@ -1754,14 +1754,29 @@
             //default constructor default to empty array if not array
             type.isArray(descriptor.default) || (descriptor.default = []);
 
+            var cls = classes.get(name);
+            var parent;
+
+            if (type.isString(descriptor.extend)) {
+                var parentName = classes.getName.call({$namespace: namespace}, descriptor.extend);
+                parent = classes.get(parentName) || Base;
+            } else {
+                parent = Base;
+            }
+
             //return prepared data
             return {
                 name: name,
-                class: classes.has(name) ? classes.get(name) : false,
+                class: cls,
+                parent: parent,
                 namespace: namespace,
                 descriptor: descriptor,
                 createdFn: type.isFunction(createdFn) ? createdFn : emptyFn
             }
+        },
+        extend: function (cls, parent) {
+            //cls from parent
+            core.extend(cls, parent);
         },
         describe: function (parent, descriptor) {
             //combine class descriptor with inherited descriptor
@@ -1780,43 +1795,27 @@
             owned.properties = type.isObject(descriptor.properties) ? descriptor.properties : {};
             owned.methods = type.isObject(descriptor.methods) ? descriptor.methods : {};
 
-            //real class descriptor applies owned properties defaulted to inherits
-            var fullDescriptor = {};
             //const: defaulted from inherits
-            fullDescriptor.const = object.defaults(owned.const, inherits.const);
+            descriptor.const = object.defaults(owned.const, inherits.const);
             //static properties and methods
-            fullDescriptor.static = {};
-            fullDescriptor.static.properties = object.defaults(owned.static.properties, inherits.static.properties);
-            fullDescriptor.static.methods = object.defaults(owned.static.methods, inherits.static.methods);
+            descriptor.static = {};
+            descriptor.static.properties = object.defaults(owned.static.properties, inherits.static.properties);
+            descriptor.static.methods = object.defaults(owned.static.methods, inherits.static.methods);
             //public properties and methods
-            fullDescriptor.properties = object.defaults(owned.properties, inherits.properties);
-            fullDescriptor.methods = object.defaults(owned.methods, inherits.methods);
-            return fullDescriptor;
-        },
-        extend: function (cls, parent) {
-            var parentCls;
-            //determine parent class
-            if (type.isString(parent)) {
-                parentCls = classes.get(cls.getClassName(parent));
-            } else {
-                parentCls = Base;
-            }
-            //cls from parent
-            core.extend(cls, parentCls);
-            return parentCls;
+            descriptor.properties = object.defaults(owned.properties, inherits.properties);
+            descriptor.methods = object.defaults(owned.methods, inherits.methods);
         },
         singleton: function (cls, description) {
             //return cls if not singleton
             if (object.hasKey(description, 'singleton') && description.singleton) {
                 //update description - move methods and properties to static
-                description.static = {};
                 if (description.properties) {
-                    description.static.properties = description.properties;
-                    delete description.properties;
+                    description.static.properties = object.defaults(description.static.properties, description.properties);
+                    description.properties = {};
                 }
                 if (description.methods) {
-                    description.static.methods = description.methods;
-                    delete description.methods;
+                    description.static.methods = object.defaults(description.static.methods, description.methods);
+                    description.methods = {};
                 }
                 return function () {
                 };
@@ -1941,17 +1940,13 @@
             var data = preprocessors.prepare(name, description, createdFn);
             description = data.descriptor;
             createdFn = data.createdFn;
+            var parent = data.parent;
             //return class if exists
             if (data.class) {
                 //call createdFn
                 createdFn.call(data.class);
                 return data.class;
             }
-
-            //extend
-            var parent = preprocessors.extend(cls, description.extend);
-            //convert description to full description
-            description = preprocessors.describe(parent, description);
 
             //proto object, containing constructor
             var proto = {};
@@ -1978,37 +1973,25 @@
                     //class reference
                     core.const(this, '$class', cls);
                     //apply properties to object
-                    set.each(descriptor.properties, function (description, name) {
-                        core.property(this, name, description);
-                        object.hasKey(description, 'default') && (this[name] = description.default);
+                    object.each(descriptor.properties, function (propertyDescriptor, name) {
+                        core.property(this, name, propertyDescriptor);
+                        object.hasKey(propertyDescriptor, 'default') && (this[name] = propertyDescriptor.default);
                     }, this);
                 }
                 //apply constructor
                 proto.constructor.apply(this, arguments);
             };
+
+            //convert description to full description
+            preprocessors.describe(parent, description);
+
             //singleton implementation
             cls = preprocessors.singleton(cls, description);
 
-            //requires
-            preprocessors.require(cls, data);
-            //mixins
-            preprocessors.mixin(cls, data);
-            //properties configuration
-            descriptor = preprocessors.configure(parent, description);
 
-            //set class basics
-            //basic consts
-            core.const(cls, '$name', data.name);
-            core.const(cls, '$namespace', data.namespace);
-            //basic methods
-            core.method(cls, 'getClassName', {value: classes.getName});
             core.method(cls, 'getDescriptor', {value: function () {
                 return descriptor;
             }});
-            //inheritance
-            core.method(cls, 'parent', {value: classes.parent});
-            core.method(cls, 'isParent', {value: classes.isParent});
-            core.method(cls, 'isChild', {value: classes.isChild});
             //static getter/setter
             core.method(cls, '__get', {value: function (name) {
                 return privates[name]
@@ -2016,6 +1999,27 @@
             core.method(cls, '__set', {value: function (name, value) {
                 privates[name] = value;
             }});
+
+            //extend
+            preprocessors.extend(cls, parent);
+
+            //requires
+            preprocessors.require(cls, data);
+            //mixins
+            preprocessors.mixin(cls, data);
+            //properties configuration
+            descriptor = preprocessors.configure(cls, description);
+
+            //set class basics
+            //basic consts
+            core.const(cls, '$name', data.name);
+            core.const(cls, '$namespace', data.namespace);
+            //basic methods
+            core.method(cls, 'getClassName', {value: classes.getName});
+            //inheritance
+            core.method(cls, 'parent', {value: classes.parent});
+            core.method(cls, 'isParent', {value: classes.isParent});
+            core.method(cls, 'isChild', {value: classes.isChild});
 
             //proto constructor
             core.method(proto, 'constructor', {
