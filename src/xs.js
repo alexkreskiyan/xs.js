@@ -1283,11 +1283,9 @@
          * @param scope
          * @returns {Function}
          */
-        this.bind = function (fn, scope) {
-            return function () {
-                return fn.apply(scope, arguments);
-            }
-        }
+        this.bind = function (fn, scope, args) {
+            return Function.prototype.bind.apply(fn, concat(scope, args));
+        };
         /**
          * prefills function's arguments
          * @param fn
