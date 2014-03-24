@@ -489,7 +489,7 @@
          * @returns {boolean}
          */
         this.has = function (obj, value) {
-            return !type.isUndefined(this.find(obj, function (val) {
+            return type.isDefined(this.find(obj, function (val) {
                 return val === value;
             }));
         };
@@ -886,6 +886,58 @@
             }, this);
             return obj;
         };
+        /**
+         * processes object to query object
+         * @param name
+         * @param object
+         * @param recursive
+         * @returns {Array}
+         */
+        this.toQueryObjects = function (name, object, recursive) {
+            var self = toQueryObjects,
+                objects = [];
+
+            if (xs.isArray(object) || xs.isObject(object)) {
+                xs.each(object, function (value, param) {
+                    if (recursive) {
+                        objects = objects.concat(self(name + '[' + param + ']', value, true));
+                    } else {
+                        objects.push({
+                            name: name,
+                            value: value
+                        });
+                    }
+                });
+            } else {
+                objects.push({
+                    name: name,
+                    value: object
+                });
+            }
+
+            return objects;
+        };
+        /**
+         * process object to query string
+         * @param object
+         * @param recursive
+         * @returns {string}
+         */
+        this.toQueryString = function (object, recursive) {
+            var paramObjects = [],
+                params = [],
+                value;
+
+            xs.each(object, function (value, name) {
+                paramObjects = paramObjects.concat(toQueryObjects(name, value, recursive));
+            });
+
+            xs.each(paramObjects, function (paramObject) {
+                params.push(encodeURIComponent(paramObject.name) + '=' + encodeURIComponent(String(paramObject.value)));
+            });
+
+            return params.join('&');
+        }
     });
     /**
      * array class pre-definition
@@ -1338,6 +1390,18 @@
      * @private
      */
     var string = new (function () {
+        /**
+         * appends string to url
+         * @param url
+         * @param string
+         * @returns {*}
+         */
+        this.urlAppend = function (url, string) {
+            if (xs.isEmpty(string)) {
+                return url;
+            }
+            return url + (url.indexOf('?') === -1 ? '?' : '&') + string;
+        };
     });
     /**
      * number class pre-definition
@@ -1562,7 +1626,7 @@
                 delete desc.writable;
             } else {
                 //get value
-                desc.value = type.isUndefined(desc.value) ? undefined : desc.value;
+                desc.value = type.isDefined(desc.value) ? desc.value : undefined;
                 desc.writable = true;
             }
             return desc;
@@ -1699,17 +1763,47 @@
                 createdFn: type.isFunction(createdFn) ? createdFn : emptyFn
             }
         },
-        extend: function (cls, descriptor) {
-            var parent;
+        describe: function (parent, descriptor) {
+            //combine class descriptor with inherited descriptor
+            var inherits = parent.getDescriptor();
+
+            //own descriptor
+            var owned = {};
+            //const
+            owned.const = type.isObject(descriptor.const) ? descriptor.const : {};
+            //static properties and methods
+            owned.static = {};
+            type.isObject(descriptor.static) || (descriptor.static = {});
+            owned.static.properties = type.isObject(descriptor.static.properties) ? descriptor.static.properties : {};
+            owned.static.methods = type.isObject(descriptor.static.methods) ? descriptor.static.methods : {};
+            //public properties and methods
+            owned.properties = type.isObject(descriptor.properties) ? descriptor.properties : {};
+            owned.methods = type.isObject(descriptor.methods) ? descriptor.methods : {};
+
+            //real class descriptor applies owned properties defaulted to inherits
+            var fullDescriptor = {};
+            //const: defaulted from inherits
+            fullDescriptor.const = object.defaults(owned.const, inherits.const);
+            //static properties and methods
+            fullDescriptor.static = {};
+            fullDescriptor.static.properties = object.defaults(owned.static.properties, inherits.static.properties);
+            fullDescriptor.static.methods = object.defaults(owned.static.methods, inherits.static.methods);
+            //public properties and methods
+            fullDescriptor.properties = object.defaults(owned.properties, inherits.properties);
+            fullDescriptor.methods = object.defaults(owned.methods, inherits.methods);
+            return fullDescriptor;
+        },
+        extend: function (cls, parent) {
+            var parentCls;
             //determine parent class
-            if (type.isString(descriptor.extend)) {
-                parent = classes.get(cls.getClassName(descriptor.extend));
+            if (type.isString(parent)) {
+                parentCls = classes.get(cls.getClassName(parent));
             } else {
-                parent = Base;
+                parentCls = Base;
             }
             //cls from parent
-            core.extend(cls, parent);
-            return parent;
+            core.extend(cls, parentCls);
+            return parentCls;
         },
         singleton: function (cls, description) {
             //return cls if not singleton
@@ -1736,38 +1830,9 @@
         mixin: function (cls, descriptor) {
 
         },
-        configure: function (cls, parent, descriptor) {
-            //combinate class descriptor
-            //inherited descriptor
-            var inherits = parent.getDescriptor();
-
-            //own descriptor
-            var owned = {};
-            //const
-            owned.const = type.isObject(descriptor.const) ? descriptor.const : {};
-            //static properties and methods
-            owned.static = {};
-            type.isObject(descriptor.static) || (descriptor.static = {});
-            owned.static.properties = type.isObject(descriptor.static.properties) ? descriptor.static.properties : {};
-            owned.static.methods = type.isObject(descriptor.static.methods) ? descriptor.static.methods : {};
-            //public properties and methods
-            owned.properties = type.isObject(descriptor.properties) ? descriptor.properties : {};
-            owned.methods = type.isObject(descriptor.methods) ? descriptor.methods : {};
-
-            //real class descriptor applies owned properties defaulted to inherits
-            var real = {};
-            //const: defaulted from inherits
-            real.const = object.defaults(owned.const, inherits.const);
-            //static properties and methods
-            real.static = {};
-            real.static.properties = object.defaults(owned.static.properties, inherits.static.properties);
-            real.static.methods = object.defaults(owned.static.methods, inherits.static.methods);
-            //public properties and methods
-            real.properties = object.defaults(owned.properties, inherits.properties);
-            real.methods = object.defaults(owned.methods, inherits.methods);
-
+        configure: function (cls, description) {
             //apply real descriptor and return it in processed variant
-            return desc.apply(cls, real);
+            return desc.apply(cls, description);
         }
     };
     var postprocessors = {
@@ -1789,11 +1854,10 @@
             }
             return type;
         },
-        /**
-         *
-         * @param value
-         * @returns {boolean}
-         */
+        isPrimitive: function (value) {
+            var valueType = type.get(value);
+            return valueType !== 'object' && valueType !== 'array';
+        },
         isObject: function (value) {
             return type.get(value) == 'object';
         },
@@ -1812,8 +1876,8 @@
         isNull: function (value) {
             return value == null;
         },
-        isUndefined: function (value) {
-            return typeof value == 'undefined';
+        isDefined: function (value) {
+            return typeof value != 'undefined';
         },
         isBoolean: function (value) {
             return typeof value == 'boolean';
@@ -1883,6 +1947,12 @@
                 createdFn.call(data.class);
                 return data.class;
             }
+
+            //extend
+            var parent = preprocessors.extend(cls, description.extend);
+            //convert description to full description
+            description = preprocessors.describe(parent, description);
+
             //proto object, containing constructor
             var proto = {};
             //class descriptor
@@ -1919,6 +1989,13 @@
             //singleton implementation
             cls = preprocessors.singleton(cls, description);
 
+            //requires
+            preprocessors.require(cls, data);
+            //mixins
+            preprocessors.mixin(cls, data);
+            //properties configuration
+            descriptor = preprocessors.configure(parent, description);
+
             //set class basics
             //basic consts
             core.const(cls, '$name', data.name);
@@ -1940,9 +2017,6 @@
                 privates[name] = value;
             }});
 
-            //extend
-            var parent = preprocessors.extend(cls, description);
-
             //proto constructor
             core.method(proto, 'constructor', {
                 value: description.constructor,
@@ -1953,13 +2027,6 @@
             core.method(cls, '$factory', {
                 value: core.factory(cls)
             });
-
-            //requires
-            preprocessors.require(cls, data);
-            //mixins
-            preprocessors.mixin(cls, data);
-            //properties configuration
-            descriptor = preprocessors.configure(cls, parent, description);
 
             //save class in namespace
             classes.set(root, data.name, cls);
@@ -2000,10 +2067,11 @@
             isObject: type.isObject,
             isArray: type.isArray,
             isFunction: type.isFunction,
+            isPrimitive: type.isPrimitive,
             isString: type.isString,
             isNumber: type.isNumber,
             isNull: type.isNull,
-            isUndefined: type.isUndefined,
+            isDefined: type.isDefined,
             isBoolean: type.isBoolean,
             isEmpty: type.isEmpty,
             keys: set.keys,
@@ -2034,10 +2102,13 @@
             removeLast: set.removeLast,
             removeAll: set.removeAll,
             clone: set.clone,
-            extend: set.extend,
             pick: set.pick,
             omit: set.omit,
             defaults: set.defaults,
+            extend: object.extend,
+            toQueryObjects: object.toQueryObjects,
+            toQueryString: object.toQueryString,
+            urlAppend: string.urlAppend,
             compact: array.compact,
             union: array.union,
             intersection: array.intersection,
