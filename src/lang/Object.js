@@ -22,6 +22,7 @@
  * @type {{}}
  * @private
  */
+'use strict';
 (function (root, ns) {
 
     //framework shorthand
@@ -44,10 +45,13 @@
          * @returns {Array}
          */
         this.values = function (obj) {
-            var values = [];
-            this.each(obj, function (value) {
-                values.push(value);
-            });
+            var values = [],
+                idx,
+                keys = this.keys(obj),
+                len = keys.length;
+            for (idx = 0; idx < len; idx++) {
+                values.push(obj[keys[idx]]);
+            }
             return values;
         };
         /**
@@ -77,12 +81,12 @@
          * @returns {string|Number|undefined}
          */
         this.keyOf = function (obj, value) {
-            var keys = this.keys(obj);
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index];
+            var idx,
+                keys = this.keys(obj),
+                len = keys.length,
+                name;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
                 if (obj[name] === value) {
                     return name;
                 }
@@ -95,12 +99,12 @@
          * @returns {string|Number|undefined}
          */
         this.lastKeyOf = function (obj, value) {
-            var keys = this.keys(obj).reverse();
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index];
+            var idx,
+                keys = this.keys(obj),
+                len = keys.length,
+                name;
+            for (idx = len - 1; idx >= 0; idx--) {
+                name = keys[idx];
                 if (obj[name] === value) {
                     return name;
                 }
@@ -112,7 +116,7 @@
          * @returns {Number}
          */
         this.size = function (obj) {
-            return this.keys(obj).length;
+            return Object.keys(obj).length;
         };
         /**
          * iterates over object own properties
@@ -121,9 +125,14 @@
          * @param scope
          */
         this.each = function (obj, iterator, scope) {
-            this.keys(obj).forEach(function (key) {
-                iterator.call(this, obj[key], key, obj);
-            }, scope);
+            var idx,
+                keys = this.keys(obj),
+                len = keys.length,
+                name;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                iterator.call(scope, obj[name], name, obj);
+            }
         };
         /**
          * iterates over object own properties in reverse order
@@ -132,9 +141,14 @@
          * @param scope
          */
         this.eachReverse = function (obj, iterator, scope) {
-            this.keys(obj).reverse().forEach(function (key) {
-                iterator.call(this, obj[key], key, obj);
-            }, scope);
+            var idx,
+                keys = this.keys(obj),
+                len = keys.length,
+                name;
+            for (idx = len - 1; idx >= 0; idx--) {
+                name = keys[idx];
+                iterator.call(scope, obj[name], name, obj);
+            }
         };
         /**
          * produces a new object with properties, updated by iterator function
@@ -202,12 +216,14 @@
          * @returns {*}
          */
         this.find = function (obj, finder, scope) {
-            var keys = this.keys(obj);
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = obj[name];
+            var idx,
+                keys = this.keys(obj),
+                len = keys.length,
+                name,
+                value;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                value = obj[name];
                 if (finder.call(scope, value, name, obj)) {
                     return value;
                 }
@@ -221,12 +237,14 @@
          * @returns {*}
          */
         this.findLast = function (obj, finder, scope) {
-            var keys = this.keys(obj).reverse();
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = obj[name];
+            var idx,
+                keys = this.keys(obj),
+                len = keys.length,
+                name,
+                value;
+            for (idx = len - 1; idx >= 0; idx--) {
+                name = keys[idx];
+                value = obj[name];
                 if (finder.call(scope, value, name, obj)) {
                     return value;
                 }
@@ -253,13 +271,16 @@
          * @returns {*}
          */
         this.filter = function (obj, where) {
-            var keys = this.keys(obj);
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = obj[name];
-                var ok = this.every(where, function (param, name) {
+            var idx,
+                keys = this.keys(obj),
+                len = keys.length,
+                name,
+                value,
+                ok;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                value = obj[name];
+                ok = this.every(where, function (param, name) {
                     return value[name] === param;
                 });
                 if (ok) {
@@ -274,13 +295,16 @@
          * @returns {*}
          */
         this.filterLast = function (obj, where) {
-            var keys = this.keys(obj).reverse();
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = obj[name];
-                var ok = this.every(where, function (param, name) {
+            var idx,
+                keys = this.keys(obj),
+                len = keys.length,
+                name,
+                value,
+                ok;
+            for (idx = len - 1; idx >= 0; idx--) {
+                name = keys[idx];
+                value = obj[name];
+                ok = this.every(where, function (param, name) {
                     return value[name] === param;
                 });
                 if (ok) {
@@ -295,19 +319,13 @@
          * @returns {*}
          */
         this.filterAll = function (obj, where) {
-            var props = [];
-            var keys = this.keys(obj);
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = obj[name];
-                var ok = this.every(where, function (param, name) {
+            var keys = [];
+            this.each(obj, function (value, name) {
+                this.every(where, function (param, name) {
                     return value[name] === param;
-                });
-                ok && props.push(name);
-            }
-            return this.pick(obj, props);
+                }) && keys.push(name);
+            }, this);
+            return this.pick(obj, keys);
         };
         /**
          * returns whether all object properties pass given tester function
@@ -317,13 +335,13 @@
          * @returns {boolean}
          */
         this.every = function (obj, tester, scope) {
-            var keys = this.keys(obj);
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = obj[name];
-                if (!tester.call(scope, value, name, obj)) {
+            var idx,
+                keys = this.keys(obj),
+                len = keys.length,
+                name;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                if (!tester.call(scope, obj[name], name, obj)) {
                     return false;
                 }
             }
@@ -338,15 +356,15 @@
          * @returns {boolean}
          */
         this.some = function (obj, tester, scope, count) {
+            var idx,
+                keys = this.keys(obj),
+                len = keys.length,
+                name,
+                found = 0;
             count = count || 1;
-            var found = 0;
-            var keys = this.keys(obj);
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = obj[name];
-                tester.call(scope, value, name, obj) && found++;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                tester.call(scope, obj[name], name, obj) && found++;
                 if (found == count) {
                     return true;
                 }
@@ -424,7 +442,7 @@
          */
         this.removeAll = function (obj, element) {
             var elements = xs.Array.union(slice(arguments, 1));
-            elements.forEach(function (element) {
+            xs.Array.each(elements, function (element) {
                 this.remove(obj, element);
             }, this);
         };
@@ -443,7 +461,7 @@
          */
         this.extend = function (obj) {
             this.each(slice(arguments, 1), function (source) {
-                this.each(source, function (value, name) {
+                source !== null && typeof source == 'object' && this.each(source, function (value, name) {
                     obj[name] = value;
                 });
             }, this);
@@ -455,9 +473,9 @@
          * @returns {{}}
          */
         this.pick = function (obj) {
-            var copy = {};
-            var keys = xs.Array.union(slice(arguments, 1));
-            keys.forEach(function (key) {
+            var copy = {},
+                keys = xs.Array.union(slice(arguments, 1));
+            xs.Array.each(keys, function (key) {
                 key in obj && (copy[key] = obj[key]);
             });
             return copy;
@@ -468,8 +486,8 @@
          * @returns {{}}
          */
         this.omit = function (obj) {
-            var copy = {};
-            var keys = xs.Array.union(slice(arguments, 1));
+            var copy = {},
+                keys = xs.Array.union(slice(arguments, 1));
             this.each(obj, function (value, name) {
                 keys.indexOf(name) < 0 && (copy[name] = value);
             });
@@ -532,8 +550,8 @@
                 params = [];
 
             xs.each(object, function (value, name) {
-                paramObjects = paramObjects.concat(toQueryObjects(name, value, recursive));
-            });
+                paramObjects = paramObjects.concat(this, toQueryObjects(name, value, recursive));
+            }, this);
 
             xs.each(paramObjects, function (paramObject) {
                 params.push(encodeURIComponent(paramObject.name) + '=' + encodeURIComponent(String(paramObject.value)));

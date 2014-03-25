@@ -17,6 +17,11 @@
  at http://annium.com/contact.
 
  */
+/**
+ * array class pre-definition
+ * @type {}
+ * @private
+ */
 'use strict';
 (function (root, ns) {
 
@@ -33,7 +38,7 @@
          * @returns {Array}
          */
         this.keys = function (arr) {
-            return this.range(arr.length - 1);
+            return Object.keys(arr);
         };
         /**
          * returns array values
@@ -82,6 +87,32 @@
             return index > -1 ? index : undefined;
         };
         /**
+         * iterates over array in direct order
+         * @param arr
+         * @param iterator
+         * @param scope
+         */
+        this.each = function (arr, iterator, scope) {
+            var idx,
+                len = arr.length;
+            for (idx = 0; idx < len; idx++) {
+                iterator.call(scope, arr[idx], idx, arr);
+            }
+        };
+        /**
+         * iterates over array in reverse order
+         * @param arr
+         * @param iterator
+         * @param scope
+         */
+        this.eachReverse = function (arr, iterator, scope) {
+            var idx,
+                len = arr.length;
+            for (idx = len - 1; idx >= 0; idx--) {
+                iterator.call(scope, arr[idx], idx, arr);
+            }
+        };
+        /**
          * returns first element in array, that matches given finder function
          * @param arr
          * @param finder
@@ -89,14 +120,13 @@
          * @returns {*}
          */
         this.find = function (arr, finder, scope) {
-            var keys = this.keys(arr);
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = arr[name];
-                if (finder.call(scope, value, name, arr)) {
-                    return value;
+            var idx,
+                len = arr.length,
+                item;
+            for (idx = 0; idx < len; idx++) {
+                item = arr[idx];
+                if (finder.call(scope, item, idx, arr)) {
+                    return item;
                 }
             }
         };
@@ -108,14 +138,13 @@
          * @returns {*}
          */
         this.findLast = function (arr, finder, scope) {
-            var keys = this.keys(arr).reverse();
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = arr[name];
-                if (finder.call(scope, value, name, arr)) {
-                    return value;
+            var idx,
+                len = arr.length,
+                item;
+            for (idx = len - 1; idx >= 0; idx--) {
+                item = arr[idx];
+                if (finder.call(scope, item, idx, arr)) {
+                    return item;
                 }
             }
         };
@@ -136,17 +165,17 @@
          * @returns {*}
          */
         this.filter = function (arr, where) {
-            var keys = this.keys(arr);
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = arr[name];
-                var ok = xs.Object.every(where, function (param, name) {
-                    return value[name] === param;
+            var idx,
+                len = arr.length,
+                item,
+                ok;
+            for (idx = 0; idx < len; idx++) {
+                item = arr[idx];
+                ok = xs.Object.every(where, function (param, name) {
+                    return item[name] === param;
                 });
                 if (ok) {
-                    return value;
+                    return item;
                 }
             }
         };
@@ -157,17 +186,17 @@
          * @returns {*}
          */
         this.filterLast = function (arr, where) {
-            var keys = this.keys(arr).reverse();
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = arr[name];
-                var ok = xs.Object.every(where, function (param, name) {
-                    return value[name] === param;
+            var idx,
+                len = arr.length,
+                item,
+                ok;
+            for (idx = len - 1; idx >= 0; idx--) {
+                item = arr[idx];
+                ok = xs.Object.every(where, function (param, name) {
+                    return item[name] === param;
                 });
                 if (ok) {
-                    return value;
+                    return item;
                 }
             }
         };
@@ -178,19 +207,19 @@
          * @returns {*|{}}
          */
         this.filterAll = function (arr, where) {
-            var props = [];
-            var keys = this.keys(obj);
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = obj[name];
-                var ok = xs.Object.every(where, function (param, name) {
-                    return value[name] === param;
+            var idx,
+                len = arr.length,
+                item,
+                ok,
+                keys = [];
+            for (idx = 0; idx < len; idx++) {
+                item = arr[idx];
+                ok = xs.Object.every(where, function (param, name) {
+                    return item[name] === param;
                 });
-                ok && props.push(name);
+                ok && keys.push(idx);
             }
-            return this.pick(arr, props);
+            return this.pick(arr, keys);
         };
         /**
          * returns whether all elements of given array pass given tester function
@@ -211,15 +240,14 @@
          * @returns {boolean}
          */
         this.some = function (arr, tester, scope, count) {
+            var idx,
+                len = arr.length,
+                item,
+                found = 0;
             count = count || 1;
-            var found = 0;
-            var keys = this.keys(arr);
-            for (var index in keys) {
-                if (!keys.hasOwnProperty(index)) {
-                    continue;
-                }
-                var name = keys[index], value = arr[name];
-                tester.call(scope, value, name, arr) && found++;
+            for (idx = 0; idx < len; idx++) {
+                item = arr[idx];
+                tester.call(scope, item, idx, arr) && found++;
                 if (found == count) {
                     return true;
                 }
@@ -232,8 +260,7 @@
          * @returns {*}
          */
         this.first = function (arr) {
-            var key = this.keys(arr).shift();
-            return arr[key];
+            return arr[0];
         };
         /**
          * returns last element of given array
@@ -241,8 +268,7 @@
          * @returns {*}
          */
         this.last = function (arr) {
-            var key = this.keys(arr).pop();
-            return arr[key];
+            return arr[arr.length - 1];
         };
         /**
          * removes first element of given array, that suites element as key or value
@@ -250,10 +276,11 @@
          * @param element
          */
         this.remove = function (arr, element) {
-            if (typeof element == 'number' && element < arr.length) {
+            if (typeof element == 'number' && this.hasKey(arr, element)) {
                 arr.splice(element, 1);
-            } else if (arr.indexOf(element) >= 0) {
-                arr.splice(arr.indexOf(element), 1);
+            } else {
+                var key = this.keyOf(arr, element);
+                key !== undefined && arr.splice(key, 1);
             }
         };
         /**
@@ -262,10 +289,11 @@
          * @param element
          */
         this.removeLast = function (arr, element) {
-            if (typeof element == 'number' && element < arr.length) {
+            if (typeof element == 'number' && this.hasKey(arr, element)) {
                 arr.splice(element, 1);
-            } else if (arr.indexOf(element) >= 0) {
-                arr.splice(arr.lastIndexOf(element), 1);
+            } else {
+                var key = this.lastKeyOf(arr, element);
+                key !== undefined && arr.splice(key, 1);
             }
         };
         /**
@@ -275,7 +303,7 @@
          */
         this.removeAll = function (arr, element) {
             var elements = this.union(slice(arguments, 1));
-            elements.forEach(function (element) {
+            this.each(elements, function (element) {
                 this.remove(arr, element);
             }, this);
         };
@@ -319,20 +347,21 @@
          * @returns {Array}
          */
         this.intersection = function () {
-            //get arrays list
-            var arrays = arguments.length == 1 ? slice(arguments).pop() : slice(arguments);
-            //get all items list
-            var all = this.uniques(this.union(arrays));
-            //define intersection
-            var intersect = [];
+            var arrays = arguments.length == 1 ? slice(arguments).pop() : slice(arguments), //get arrays list
+                all = this.unique(this.union(arrays)), //get all items list
+                intersect = [], //define intersection
+                idx,
+                len = all.length,
+                item;
             //iterate over each element (they are unique)
-            all.forEach(function (value) {
+            for (idx = 0; idx < len; idx++) {
+                item = all[idx];
                 //check whether all array have this value
                 var ok = arrays.every(function (arr) {
-                    return arr.indexOf(value) > -1;
+                    return arr.indexOf(item) > -1;
                 });
-                ok && intersect.push(value);
-            });
+                ok && intersect.push(item);
+            }
             return intersect;
         };
         /**
@@ -352,10 +381,14 @@
          * @returns {Array}
          */
         this.unique = function (arr) {
-            var unique = [];
-            arr.forEach(function (value) {
-                unique.indexOf(value) < 0 && unique.push(value);
-            });
+            var unique = [],
+                idx,
+                len = arr.length,
+                item;
+            for (idx = 0; idx < len; idx++) {
+                item = arr[idx];
+                unique.indexOf(item) < 0 && unique.push(item);
+            }
             return unique;
         };
         /**
@@ -364,11 +397,16 @@
          * @returns {Array}
          */
         this.pick = function (arr) {
-            var copy = [];
-            var keys = this.union(slice(arguments, 1));
-            keys.forEach(function (key) {
-                key in arr && (copy[key] = arr[key]);
-            });
+            var copy = [],
+                keys = this.union(slice(arguments, 1)),
+                keysLen = keys.length,
+                len = arr.length,
+                idx,
+                item;
+            for (idx = 0; idx < keysLen; idx++) {
+                item = keys[idx];
+                item < len && (copy[item] = arr[item]);
+            }
             return copy;
         };
         /**
@@ -377,11 +415,15 @@
          * @returns {Array}
          */
         this.omit = function (arr) {
-            var copy = [];
-            var keys = this.union(slice(arguments, 1));
-            arr.forEach(function (value, name) {
-                keys.indexOf(name) < 0 && (copy[name] = value);
-            }, this);
+            var copy = [],
+                keys = this.union(slice(arguments, 1)),
+                len = arr.length,
+                idx,
+                item;
+            for (idx = 0; idx < len; idx++) {
+                item = arr[idx];
+                keys.indexOf(idx) < 0 && (copy[idx] = item);
+            }
             return copy;
         };
         /**
@@ -391,9 +433,11 @@
          * @returns {*}
          */
         this.defaults = function (arr) {
-            var defaults = this.union(slice(arguments, 1));
-            for (var i = arr.length; i < defaults.length; i++) {
-                arr[i] = defaults[i];
+            var defaults = this.union(slice(arguments, 1)),
+                len = defaults.length,
+                idx;
+            for (idx = arr.length; idx < len; idx++) {
+                arr[idx] = defaults[idx];
             }
             return arr;
         };
