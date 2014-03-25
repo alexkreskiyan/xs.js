@@ -1,0 +1,11 @@
+{
+    "root": ".",
+    "www_root": "/",
+    "modules": {
+        "xs": "xs.js",
+        "promises": {
+            "path":["promise/*.js"],
+            "depends":"xs"
+        }
+    }
+}
