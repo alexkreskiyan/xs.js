@@ -18,10 +18,9 @@
 
  */
 'use strict';
-(function (ns) {
+(function (root,ns) {
 
     // Establish the root object, `window` in the browser, or `exports` on the server.
-    var root = this;
 
     // Save bytes in the minified (but not gzipped) version:
     var ArrayPrototype = Array.prototype, ObjectPrototype = Object.prototype, FunctionPrototype = Function.prototype;
@@ -2127,12 +2126,6 @@
         }
     });
 
-    //shortcut framework
-    var xs = root[ns];
-
-    // Export the xs object for **Node.js**, if on server side.
-    if (typeof exports !== 'undefined') {
-        delete root[ns];
-        exports[ns] = xs;
-    }
-}).call(window, 'xs');
+    //return framework
+    return root[ns];
+})(window, 'xs');
