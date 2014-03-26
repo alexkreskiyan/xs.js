@@ -9,3 +9,11 @@ function speed(fn, n) {
     console.log('mark: about', n / duration, 'operation per ms');
 }
 module('xs.lang.String');
+test('urlAppend', function () {
+    var url,
+        string = 'x=1';
+    url = 'url';
+    strictEqual(xs.String.urlAppend(url, string), 'url?x=1', 'ok when no question sign');
+    url = 'url?s=2';
+    strictEqual(xs.String.urlAppend(url, string), 'url?s=2&x=1', 'ok with question sign');
+});
