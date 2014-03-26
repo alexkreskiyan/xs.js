@@ -28,13 +28,13 @@
     //framework shorthand
     var xs = root[ns];
 
-    xs.Object = new (function () {
+    var object = xs.Object = new (function () {
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice);
         /**
          * returns object keys
          * @param obj
-         * @returns {array|*}
+         * @returns {Array}
          */
         this.keys = function (obj) {
             return Object.keys(obj);
@@ -168,13 +168,13 @@
          * reduces a hash of elements, returned by iterator function from left
          * @param obj
          * @param iterator
-         * @param memo
          * @param scope
+         * @param memo
          * @returns {*}
          */
-        this.reduce = function (obj, iterator, scope, memo) {
+        this.reduce = function (obj, iterator, memo, scope) {
             var result;
-            if (arguments.length > 3) {
+            if (arguments.length > 2) {
                 result = memo;
             } else {
                 var key = this.keys(obj).shift();
@@ -190,13 +190,13 @@
          * reduces a hash of elements, returned by iterator function from right
          * @param obj
          * @param iterator
-         * @param memo
          * @param scope
+         * @param memo
          * @returns {*}
          */
-        this.reduceRight = function (obj, iterator, scope, memo) {
+        this.reduceRight = function (obj, iterator, memo, scope) {
             var result;
-            if (memo) {
+            if (arguments.length > 2) {
                 result = memo;
             } else {
                 var key = this.keys(obj).pop();
@@ -351,11 +351,11 @@
          * returns whether count of object properties pass given tester function
          * @param obj
          * @param tester
-         * @param scope
          * @param count
+         * @param scope
          * @returns {boolean}
          */
-        this.some = function (obj, tester, scope, count) {
+        this.some = function (obj, tester, count, scope) {
             var idx,
                 keys = this.keys(obj),
                 len = keys.length,
@@ -365,7 +365,7 @@
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
                 tester.call(scope, obj[name], name, obj) && found++;
-                if (found == count) {
+                if (found >= count) {
                     return true;
                 }
             }
@@ -460,12 +460,86 @@
          * @returns {*}
          */
         this.extend = function (obj) {
-            this.each(slice(arguments, 1), function (source) {
+            var adds = xs.Array.union(slice(arguments, 1));
+            this.each(adds, function (source) {
                 source !== null && typeof source == 'object' && this.each(source, function (value, name) {
                     obj[name] = value;
                 });
             }, this);
             return obj;
+        };
+        /**
+         * returns copy of given object, filtered not to have falsy values
+         * @param obj
+         * @returns {*}
+         */
+        this.compact = function (obj) {
+            return this.findAll(obj, function (value) {
+                return value;
+            })
+        };
+        /**
+         * returns union of objects, passed as arguments, or array of objects as single argument
+         * @returns {*}
+         */
+        this.union = function () {
+            var merge = xs.Array.union(arguments.length == 1 ? slice(arguments).pop() : slice(arguments)),
+                union = {},
+                key;
+            xs.Array.each(merge, function (value) {
+                key = this.keys(value).pop();
+                union[key] = value[key];
+            }, this);
+            return this.unique(union);
+        };
+        /**
+         * returns intersection of given objects (although intersection elements are unique)
+         * @returns {Object}
+         */
+        this.intersection = function () {
+            var objects = arguments.length == 1 && arguments[0] ? slice(arguments).pop() : slice(arguments); //get objects list
+            if (!objects.length) {
+                return {};
+            }
+            var first = objects.pop();
+            //iterate over each element in all (they are unique)
+            return this.findAll(first, function (item) {
+                //check whether all other objects have this value
+                return objects.every(function (obj) {
+                    return this.has(obj, item);
+                }, this);
+            }, this);
+        };
+        /**
+         * Take the difference between one object and a number of other objects.
+         * Only the elements present in just the first object will remain.
+         * @param obj
+         * @returns {Object}
+         */
+        this.difference = function (obj) {
+            var objects = slice(arguments, 1); //get objects list
+            if (!objects.length) {
+                return obj;
+            }
+            //iterate over each element in all (they are unique)
+            return this.findAll(obj, function (item) {
+                //check whether all other objects have this value
+                return objects.every(function (obj) {
+                    return !this.has(obj, item);
+                }, this);
+            }, this);
+        };
+        /**
+         * returns object, filled by unique items of given object
+         * @param obj
+         * @returns {Object}
+         */
+        this.unique = function (obj) {
+            var unique = {};
+            this.each(obj, function (value, name) {
+                this.has(unique, value) || (unique[name] = value);
+            }, this);
+            return unique;
         };
         /**
          * returns copy of object with only white-listed keys, passed in 2+ arguments
@@ -560,4 +634,7 @@
             return params.join('&');
         }
     });
+    xs.extend = object.extend;
+    xs.toQueryObjects = object.toQueryObjects;
+    xs.toQueryString = object.toQueryObjects;
 })(window, 'xs');

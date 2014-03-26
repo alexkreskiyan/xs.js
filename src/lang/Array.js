@@ -28,7 +28,7 @@
     //framework shorthand
     var xs = root[ns];
 
-    xs.Array = new (function () {
+    var array = xs.Array = new (function () {
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice),
             concat = Function.prototype.apply.bind(Array.prototype.concat);
@@ -159,7 +159,7 @@
             return arr.filter(finder, scope);
         };
         /**
-         * returns first array item, that suites given where clause
+         * returns first array item, that matches given where clause
          * @param arr
          * @param where
          * @returns {*}
@@ -180,7 +180,7 @@
             }
         };
         /**
-         * returns last array item, that suites given where clause
+         * returns last array item, that matches given where clause
          * @param arr
          * @param where
          * @returns {*}
@@ -235,11 +235,11 @@
          * returns whether count elements of given array pass given tester function
          * @param arr
          * @param tester
-         * @param scope
          * @param count
+         * @param scope
          * @returns {boolean}
          */
-        this.some = function (arr, tester, scope, count) {
+        this.some = function (arr, tester, count, scope) {
             var idx,
                 len = arr.length,
                 item,
@@ -248,7 +248,7 @@
             for (idx = 0; idx < len; idx++) {
                 item = arr[idx];
                 tester.call(scope, item, idx, arr) && found++;
-                if (found == count) {
+                if (found >= count) {
                     return true;
                 }
             }
@@ -367,12 +367,13 @@
         /**
          * Take the difference between one array and a number of other arrays.
          * Only the elements present in just the first array will remain.
-         * @type {Function}
+         * @param arr
+         * @returns {Array}
          */
         this.difference = function (arr) {
-            var rest = this.union(slice(arguments, 1));
+            var arrays = this.union(slice(arguments, 1));
             return arr.filter(function (value) {
-                return rest.indexOf(value) < 0;
+                return arrays.indexOf(value) < 0;
             }, this);
         };
         /**
@@ -466,5 +467,9 @@
             }
             return range;
         };
+    });
+    xs.Object.extend(xs, {
+        shuffle: array.shuffle,
+        range: array.range
     });
 })(window, 'xs');
