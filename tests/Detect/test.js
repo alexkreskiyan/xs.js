@@ -8,7 +8,7 @@ function speed(fn, n) {
     console.log('median: ', duration / n, 'ms per operation');
     console.log('mark: about', n / duration, 'operation per ms');
 }
-module('Detect');
+module('xs.Detect');
 
 test('isArray', function() {
     var tests = [{
@@ -673,6 +673,54 @@ test('isBoolean', function() {
         ok: false
     }];
     xs.Array.each(tests, function(test) {
-        strictEqual(xs.Detect.isDefined(test.data), test.ok, 'isDefined method ok '+ JSON.stringify(test));
+        strictEqual(xs.Detect.isBoolean(test.data), test.ok, 'isDefined method ok '+ JSON.stringify(test));
+    });
+});
+
+test('isEmpty', function() {
+    var tests = [{
+        data: null,
+        ok: true
+    }, {
+        data: undefined,
+        ok: true
+    }, {
+        data: true,
+        ok: false
+    }, {
+        data: function() {},
+        ok: false
+    }, {
+        data: {},
+        ok: true
+    }, {
+        data: {
+            a: 1
+        },
+        ok: false
+    }, {
+        data: [],
+        ok: true
+    }, {
+        data: [1],
+        ok: false
+    }, {
+        data: 1,
+        ok: false
+    }, {
+        data: 0,
+        ok: true
+    }, {
+        data: '1',
+        ok: false
+    }, {
+        data: 'a',
+        ok: false
+    }, {
+        data: '',
+        ok: true
+    }];
+    xs.Array.each(tests, function(test) {
+        strictEqual(xs.Detect.isEmpty(test.data), test.ok, 'isDefined method ok '+ JSON.stringify(test));
     });
 });
