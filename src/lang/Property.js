@@ -28,6 +28,6 @@
     //framework shorthand
     var xs = root[ns];
 
-    var descriptor = xs.Descriptor = new (function () {
+    var property = xs.Property = new (function () {
     });
 })(window, 'xs');

@@ -8,4 +8,4 @@ function speed(fn, n) {
     console.log('median: ', duration / n, 'ms per operation');
     console.log('mark: about', n / duration, 'operation per ms');
 }
-module('xs.lang.Descriptor');
+module('xs.lang.Property');
