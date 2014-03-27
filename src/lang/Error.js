@@ -35,18 +35,23 @@
          * @param {Function} type
          * @throws {Error|*}
          */
-        this.raise = function (message, type) {
+        var raise = function (message, type) {
             message = message || 'error';
             type = type || Error;
             throw new type(message);
         };
+        /**
+         * Handler for errors raising
+         * @type {raise}
+         */
+        this.raise = raise;
         /**
          * Raises reference error
          * @param message
          * @throws {ReferenceError}
          */
         this.raiseReference = function (message) {
-            this.raise(message, ReferenceError);
+            raise(message, ReferenceError);
         };
         /**
          * Raises reference error
@@ -54,7 +59,7 @@
          * @throws {ReferenceError}
          */
         this.raiseSyntax = function (message) {
-            this.raise(message, SyntaxError);
+            raise(message, SyntaxError);
         };
         /**
          * Raises reference error
@@ -62,11 +67,11 @@
          * @throws {ReferenceError}
          */
         this.raiseType = function (message) {
-            this.raise(message, TypeError);
+            raise(message, TypeError);
         };
     });
     xs.Object.extend(xs, {
-        raise: error.raise,
+        raiseError: error.raise,
         raiseReferenceError: error.raiseReference,
         raiseSyntaxError: error.raiseSyntax,
         raiseTypeError: error.raiseType
