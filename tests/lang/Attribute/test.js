@@ -377,16 +377,56 @@ test('property.define', function () {
     strictEqual(xs.Attribute.isEnumerable(obj, name), true, 'property value is enumerable');
 });
 test('method.prepare', function () {
+    var name = 'a';
     //check for descriptor given incorrectly
-    strictEqual(xs.Attribute.method.prepare('a', null), false, 'descriptor is incorrect');
+    strictEqual(xs.Attribute.method.prepare(name, null), false, 'descriptor is incorrect');
     //check for descriptor given as function
-    strictEqual(xs.Attribute.method.prepare('a', null), true, 'property value is accessed');
+    var desc = function () {
+    };
+    var result = xs.Attribute.method.prepare(name, desc);
+    strictEqual(Object.keys(result).sort().toString(), 'value', 'simple function is converted to value descriptor');
+    strictEqual(result.value, desc, 'value to desc link ok');
 
     //check for descriptor given as object
-    //object with fn - function and not function
-    //object with value - function and not function
-    //default is set only if is given as array
-    //downcall is converted to boolean if given
+    //object with both fn and value - functions
+    var fn = function () {
+    };
+    var value = function () {
+    };
+    var desc = {
+        fn: fn,
+        value: value
+    };
+    var result = xs.Attribute.method.prepare(name, desc);
+    strictEqual(Object.keys(result).sort().toString(), 'value', 'simple function is converted to value descriptor');
+    strictEqual(result.value, fn, 'value has link to fn');
+    //object with fn - function and value - not function
+    desc.value = 0;
+    var result = xs.Attribute.method.prepare(name, desc);
+    strictEqual(Object.keys(result).sort().toString(), 'value', 'simple function is converted to value descriptor');
+    strictEqual(result.value, fn, 'value has link to fn');
+    //object with value - function and fn - not function
+    desc.fn = 0;
+    desc.value = value;
+    var result = xs.Attribute.method.prepare(name, desc);
+    strictEqual(Object.keys(result).sort().toString(), 'value', 'simple function is converted to value descriptor');
+    strictEqual(result.value, value, 'value has link to fn');
+    //object with both fn and value - not functions
+    desc.value = 0;
+    var result = xs.Attribute.method.prepare(name, desc);
+    strictEqual(result, false, 'simple function is converted to value descriptor');
+    //default and downcall applied
+    var defaults = [1, 2];
+    desc = {
+        fn: fn,
+        default: defaults,
+        downcall: 1
+    };
+    var result = xs.Attribute.method.prepare(name, desc);
+    strictEqual(Object.keys(result).sort().toString(), 'default,downcall,value', 'additionals applied ok');
+    strictEqual(result.value, fn, 'value has link to fn');
+    strictEqual(result.default, defaults, 'defaults ok');
+    strictEqual(result.downcall, true, 'downcall applied ok');
 });
 test('method.define', function () {
     //check for defined and not configurable property
@@ -403,17 +443,15 @@ test('method.define', function () {
 
     xs.Attribute.const(obj, 'const', null);
     //test when false for created && !configurable property
-    strictEqual(xs.Attribute.method(obj, 'const', {value: value}), false, 'false for created && !configurable property');
-    //test false for descriptor without value
-    strictEqual(xs.Attribute.method(obj, 'simple', {}), false, 'false for descriptor without value');
+    strictEqual(xs.Attribute.method.define(obj, 'const', {value: value}), false, 'false for created && !configurable property');
     //rights assignments are not writable, enumerable and not configurable
-    strictEqual(xs.Attribute.method(obj, 'simple', {value: value}), true, 'simple method definition');
+    strictEqual(xs.Attribute.method.define(obj, 'simple', {value: value}), true, 'simple method definition');
     strictEqual(xs.Attribute.isWritable(obj, 'simple'), false, 'method is not writable');
     strictEqual(xs.Attribute.isConfigurable(obj, 'simple'), false, 'method is not configurable');
     strictEqual(xs.Attribute.isEnumerable(obj, 'simple'), true, 'method is enumerable');
 
     //method without defaults
-    strictEqual(xs.Attribute.method(obj, 'defaultsNo', {
+    strictEqual(xs.Attribute.method.define(obj, 'defaultsNo', {
         value: value,
         default: []
     }), true, 'created method with no defaults');
@@ -425,7 +463,7 @@ test('method.define', function () {
     strictEqual(obj.defaultsNo(3, 5), '35', 'defaultsNo method runs ok with enough arguments');
 
     //method with some defaults
-    strictEqual(xs.Attribute.method(obj, 'defaultsSome', {
+    strictEqual(xs.Attribute.method.define(obj, 'defaultsSome', {
         value: value,
         default: [4]
     }), true, 'created method with some defaults');
@@ -437,7 +475,7 @@ test('method.define', function () {
     strictEqual(obj.defaultsSome(3, 5), '35', 'defaultsSome method runs ok with enough arguments');
 
     //method with defaults
-    strictEqual(xs.Attribute.method(obj, 'defaultsAll', {
+    strictEqual(xs.Attribute.method.define(obj, 'defaultsAll', {
         value: value,
         default: [4, 7]
     }), true, 'created method with all defaults');
@@ -451,7 +489,7 @@ test('method.define', function () {
 
     //wrapped
     //method without defaults
-    strictEqual(xs.Attribute.method(obj, 'wrappedNo', {
+    strictEqual(xs.Attribute.method.define(obj, 'wrappedNo', {
         value: value,
         parent: 12,
         downcall: true
@@ -464,7 +502,7 @@ test('method.define', function () {
     strictEqual(obj.wrappedNo(3, 5), '3512', 'wrappedNo method runs ok with enough arguments');
 
     //method with some defaults
-    strictEqual(xs.Attribute.method(obj, 'wrappedSome', {
+    strictEqual(xs.Attribute.method.define(obj, 'wrappedSome', {
         value: value,
         default: [4],
         parent: 12,
@@ -478,7 +516,7 @@ test('method.define', function () {
     strictEqual(obj.wrappedSome(3, 5), '3512', 'wrappedSome method runs ok with enough arguments');
 
     //method with defaults
-    strictEqual(xs.Attribute.method(obj, 'wrappedAll', {
+    strictEqual(xs.Attribute.method.define(obj, 'wrappedAll', {
         value: value,
         default: [4, 7],
         parent: 12,
