@@ -294,9 +294,49 @@ test('const', function () {
     strictEqual(obj[name], value, 'const still has given value');
 });
 test('property.prepare', function () {
+    //checks for not descriptor given
+    var desc = function () {
+    };
+    var result = xs.Attribute.property.prepare('x', desc);
+    strictEqual(Object.keys(result).toString(), 'value,default', 'not descriptor is converted to descriptor');
+    strictEqual(result.value, desc, 'value is assigned as descriptor');
+    strictEqual(result.default, desc, 'default is assigned from value');
 
+    //check for accessored descriptor
+    var desc = {
+        get: function () {
+
+        },
+        value: 5,
+        default: 6,
+        writable: 7,
+        configurable: 0,
+        enumerable: false
+    };
+    var getter = desc.get;
+    var result = xs.Attribute.property.prepare('x', desc);
+
+    strictEqual(Object.keys(result).sort().toString(), 'configurable,default,enumerable,get,set', 'only valid fields left');
+    strictEqual(result.get, getter, 'getter link is ok');
+    strictEqual(result.set.toString(), 'function (value) {return this.__set(\'x\',value);}', 'setter created');
+    strictEqual(result.default, 6), 'default ok';
+    strictEqual(result.configurable, false, 'configurable converted correctly');
+    strictEqual(result.enumerable, false, 'enumerable converted correctly');
+
+    //check for assigned descriptor
+    var desc = {
+        value: 5
+    };
+    var result = xs.Attribute.property.prepare('x', desc);
+
+    strictEqual(Object.keys(result).toString(), 'value,default');
+    strictEqual(result.value, desc.value);
+    strictEqual(result.default, desc.default);
 });
 test('property.define', function () {
+    //check for defined and not configurable property
+    //check defaults mechanism
+
     var obj = {};
     var name = 'a';
     var getter = function () {
@@ -307,38 +347,53 @@ test('property.define', function () {
     };
     var value = {x: 1};
 
-    strictEqual(xs.Attribute.property(obj, name, value), false, 'property is not defined with incorrect descriptor');
+    strictEqual(xs.Attribute.property.define(obj, name, value), true, 'property is defined with descriptor is object');
+    strictEqual(xs.Attribute.property.define(obj, name, value), false, 'property is not re-defined');
     strictEqual(obj[name], undefined, 'property value is assumed to be undefined');
 
-    strictEqual(xs.Attribute.property(obj, name, {
+    name = 'b';
+    strictEqual(xs.Attribute.property.define(obj, name, {
         value: value,
         configurable: true,
+        enumerable: false,
+        writable: false,
+        default: 5,
         someProperty: null
     }), true, 'property is assigned with correct descriptor');
     strictEqual(xs.Attribute.isAssigned(obj, name), true, 'property value is assigned');
+    strictEqual(xs.Attribute.isConfigurable(obj, name), false, 'property value is assigned');
+    strictEqual(xs.Attribute.isWritable(obj, name), true, 'property value is assigned');
+    strictEqual(xs.Attribute.isEnumerable(obj, name), true, 'property value is assigned');
     strictEqual(obj[name], value, 'property value is assigned normally');
 
 
-    name = 'b';
-    throws(function () {
-        xs.Attribute.property(obj, name, {
-            value: value,
-            get: getter,
-            set: setter,
-            configurable: true
-        });
-    }, 'accessors and value both cause error');
-    strictEqual(xs.Attribute.property(obj, name, {
+    name = 'c';
+    strictEqual(xs.Attribute.property.define(obj, name, {
         get: getter,
         set: setter
-    }), true, 'property is assigned with correct descriptor');
+    }), true, 'property is assigned with accessors priority');
     strictEqual(xs.Attribute.isAccessed(obj, name), true, 'property value is accessed');
     strictEqual(xs.Attribute.isConfigurable(obj, name), false, 'property value is configurable');
     strictEqual(xs.Attribute.isEnumerable(obj, name), true, 'property value is enumerable');
 });
 test('method.prepare', function () {
+    //check for descriptor given incorrectly
+    strictEqual(xs.Attribute.method.prepare('a', null), false, 'descriptor is incorrect');
+    //check for descriptor given as function
+    strictEqual(xs.Attribute.method.prepare('a', null), true, 'property value is accessed');
+
+    //check for descriptor given as object
+    //object with fn - function and not function
+    //object with value - function and not function
+    //default is set only if is given as array
+    //downcall is converted to boolean if given
 });
 test('method.define', function () {
+    //check for defined and not configurable property
+    //check default mechanism
+    //check default is assigned and used properly
+    //check downcall is assigned and used properly
+
     var obj = {};
     var value = function (a, b) {
         return xs.reduce(xs.clone(arguments), function (memo, value) {

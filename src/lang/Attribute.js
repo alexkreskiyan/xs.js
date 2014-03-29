@@ -120,11 +120,13 @@
             if (desc.hasOwnProperty('set') && !xs.isFunction(desc.set)) {
                 delete desc.set;
             }
+
             //accessors are preferred to value: value and writable are removed
             if (desc.get || desc.set) {
                 delete desc.value;
                 delete desc.writable;
             }
+
             //writable,enumerable,configurable - are converted if presented
             desc.hasOwnProperty('writable') && (desc.writable = !!desc.writable);
             desc.hasOwnProperty('configurable') && (desc.configurable = !!desc.configurable);
@@ -134,33 +136,43 @@
         };
         var property = {
             prepare: function (name, desc) {
+                //if not descriptor - returns generated one
                 if (!isDescriptor(desc)) {
                     return {
-                        value: desc
+                        value: desc,
+                        default: desc
                     };
                 }
+                //default is fetched from value if not given
+                desc.hasOwnProperty('default') || (desc.default = desc.value);
+                //prepares descriptor
                 desc = prepareDescriptor(desc);
+
+                //accessors priority
                 if (desc.get || desc.set) {
                     desc.get || eval('desc.get = function () {return this.__get(\'' + name + '\');}');
                     desc.set || eval('desc.set = function (value) {return this.__set(\'' + name + '\',value);}');
                 } else {
                     desc.hasOwnProperty('value') || (desc.value = undefined);
-                    desc.writable = true;
                 }
-                desc.default = desc.value;
+
                 return desc;
-                //checks for incorrect descriptor
-                //check for
             },
             define: function (obj, name, desc) {
                 if (defined(obj, name) && !isConfigurable(obj, name)) {
                     return false;
                 }
-                var descriptor = xs.Object.defaults({
-                    writable: true,
+
+                //writable, enumerable and configurable are immutable defaults
+                var defaults = {
                     enumerable: true,
                     configurable: false
-                }, desc);
+                };
+                if (!desc.get && !desc.set) {
+                    defaults.writable = true;
+                }
+                var descriptor = xs.Object.defaults(defaults, desc);
+                //define property and return
                 define(obj, name, descriptor);
                 return true;
             }
@@ -188,7 +200,7 @@
                 //assign defaults
                 xs.isArray(desc.default) && (descriptor.default = desc.default);
                 //assign wrap
-                xs.isBoolean(desc.downcall) && (descriptor.wrap = desc.wrap);
+                desc.downcall && (descriptor.downcall = !!desc.downcall);
                 return descriptor;
             },
             define: function (obj, name, desc) {
