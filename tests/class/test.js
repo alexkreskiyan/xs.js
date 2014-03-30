@@ -14,5 +14,6 @@ var after = function (Class) {
     console.log('Class ', Class.label, 'ready!');
 };
 xs.define('gcapi.Map', {
-    extend: 'xs.Base'
+    extend: 'xs.Base',
+    singleton: true
 }, after);

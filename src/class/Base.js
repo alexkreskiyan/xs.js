@@ -25,21 +25,11 @@
 
     xs.Base = function () {
     };
-    var descriptor = {
+    var descriptor = xs.Class.applyDescriptor(xs.Base, {
         const: {
-            //class name
-            name: 'xs.class.Base',
-            //parent class
-            parent: null
         },
         static: {
             properties: {
-                //property, that contains class descriptor
-                descriptor: {
-                    get: function () {
-                        return descriptor;
-                    }
-                }
             },
             methods: {
                 /**
@@ -67,11 +57,15 @@
             }
         },
         properties: {
-            //reference to this class
-            self: xs.Base
         },
         methods: {
         }
-    };
+    });
+    //property, that contains xs.Base class descriptor
+    xs.property.define(xs.Base, 'descriptor', {
+        get: function () {
+            return descriptor;
+        }
+    });
     xs.ClassManager.set('xs.Base', xs.Base);
 })(window, 'xs');

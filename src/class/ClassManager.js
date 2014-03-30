@@ -34,8 +34,10 @@
                 return;
             }
             data.label = name;
-            var Class = xs.Class(data, createdFn);
-            set(name, Class);
+            xs.Class(data, function (Class, data, hooks) {
+                set(name, Class);
+                createdFn(Class, data, hooks);
+            });
         };
         var undefine = function (name) {
             if (!defined(name)) {
@@ -68,15 +70,6 @@
             } else {
                 return undefined;
             }
-        };
-        var rename = function (name, target) {
-            if (!defined(name)) {
-                return false;
-            }
-            var namespace = getNamespace(root, getNamespaceName(target));
-            set(target, namespace[name]);
-            delete namespace[name];
-            delete storage[name];
         };
         var getClassName = function (name) {
             return name.split('.').slice(-1).join('.');
@@ -147,7 +140,6 @@
             get: get,
             set: set,
             getName: getName,
-            rename: rename,
             getClassName: getClassName,
             getNamespaceName: getNamespaceName,
             getNamespace: function (namespace) {
