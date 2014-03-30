@@ -33,6 +33,11 @@
             if (defined(name)) {
                 return;
             }
+            if (xs.isFunction(data)) {
+                data = data();
+            } else if (!xs.isObject(data)) {
+                data = data || {};
+            }
             data.label = name;
             xs.Class(data, function (Class, data, hooks) {
                 set(name, Class);
