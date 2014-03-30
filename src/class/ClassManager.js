@@ -51,6 +51,13 @@
         var get = function (name) {
             return storage.hasOwnProperty(name) ? storage[name] : false;
         };
+        var set = function (name, Class) {
+            var label = getClassName(name);
+            //create namespace for class
+            var namespace = createNamespace(root, getNamespaceName(name));
+            storage[name] = namespace[label] = Class;
+            Class.label = label;
+        };
         var getName = function (object) {
             //if instance
             if (object.self) {
@@ -61,12 +68,6 @@
             } else {
                 return undefined;
             }
-        };
-        var set = function (name, Class) {
-            var label = getClassName(name);
-            //create namespace for class
-            var namespace = createNamespace(root, getNamespaceName(name));
-            storage[name] = namespace[label] = Class;
         };
         var rename = function (name, target) {
             if (!defined(name)) {
@@ -147,10 +148,17 @@
             set: set,
             getName: getName,
             rename: rename,
+            getClassName: getClassName,
             getNamespaceName: getNamespaceName,
-            getNamespace: getNamespace,
-            createNamespace: createNamespace,
-            deleteNamespace: deleteNamespace,
+            getNamespace: function (namespace) {
+                return getNamespace(root, namespace);
+            },
+            createNamespace: function (namespace) {
+                return createNamespace(root, namespace);
+            },
+            deleteNamespace: function (namespace) {
+                return deleteNamespace(root, namespace);
+            },
             createNamespaces: createNamespaces,
             create: create
         });
