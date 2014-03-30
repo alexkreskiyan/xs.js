@@ -173,32 +173,3 @@
         create: xs.ClassManager.create
     })
 })(window, 'xs');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
