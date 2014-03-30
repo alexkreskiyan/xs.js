@@ -30,17 +30,12 @@
 
     var property = xs.Attribute = new (function () {
         /**
-         * Fetches arguments names from function string representation
-         * @type {RegExp}
-         */
-        var fnArgsRe = /^function\s(?:\w+)?\(([A-Za-z0-9\s,]*)\)/i;
-        /**
          * Checks whether object has own property defined
          * @param obj
          * @param key
          * @returns {boolean}
          */
-        var defined = function (obj, key) {
+        var defined = this.defined = function (obj, key) {
             return !!(obj.hasOwnProperty(key));
         };
         /**
@@ -52,7 +47,7 @@
          * @param descriptor
          * @returns {Object}
          */
-        var define = function (obj, key, descriptor) {
+        var define = this.define = function (obj, key, descriptor) {
             return descriptor ? Object.defineProperty(obj, key, descriptor) : Object.defineProperties(obj, key);
         };
         /**
@@ -61,7 +56,7 @@
          * @param key
          * @returns {Object}
          */
-        var getDescriptor = function (obj, key) {
+        var getDescriptor = this.getDescriptor = function (obj, key) {
             return Object.getOwnPropertyDescriptor(obj, key);
         };
         /**
@@ -70,7 +65,7 @@
          * @param key
          * @returns {boolean}
          */
-        var isAssigned = function (obj, key) {
+        this.isAssigned = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && descriptor.hasOwnProperty('value');
         };
@@ -80,7 +75,7 @@
          * @param key
          * @returns {boolean}
          */
-        var isAccessed = function (obj, key) {
+        this.isAccessed = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && (descriptor.hasOwnProperty('get') || descriptor.hasOwnProperty('get'));
         };
@@ -90,7 +85,7 @@
          * @param key
          * @returns {boolean}
          */
-        var isWritable = function (obj, key) {
+        this.isWritable = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && !!descriptor.writable;
         };
@@ -100,7 +95,7 @@
          * @param key
          * @returns {boolean|*}
          */
-        var isConfigurable = function (obj, key) {
+        var isConfigurable = this.isConfigurable = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && descriptor.configurable;
         };
@@ -110,7 +105,7 @@
          * @param key
          * @returns {boolean|*}
          */
-        var isEnumerable = function (obj, key) {
+        this.isEnumerable = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && descriptor.enumerable;
         };
@@ -121,7 +116,7 @@
          * @param value
          * @returns {boolean}
          */
-        var defineConstant = function (obj, name, value) {
+        this.const = function (obj, name, value) {
             if (defined(obj, name) && !isConfigurable(obj, name)) {
                 return false;
             }
@@ -138,7 +133,7 @@
          * @param desc
          * @returns {boolean}
          */
-        var isDescriptor = function (desc) {
+        var isDescriptor = this.isDescriptor = function (desc) {
             //false if descriptor is not object
             if (!xs.isObject(desc)) {
                 return false;
@@ -159,7 +154,7 @@
          * @param desc
          * @returns {Object}
          */
-        var prepareDescriptor = function (desc) {
+        var prepareDescriptor = this.prepareDescriptor = function (desc) {
             //non-function accessors are removed
             if (desc.hasOwnProperty('get') && !xs.isFunction(desc.get)) {
                 delete desc.get;
@@ -185,7 +180,7 @@
          * Property object
          * @type {{prepare: prepare, define: define}}
          */
-        var property = {
+        this.property = {
             /**
              * Prepares property descriptor
              * @param name
@@ -245,7 +240,7 @@
          * Method object
          * @type {{prepare: prepare, define: define}}
          */
-        var method = {
+        this.method = {
             /**
              * Prepares method descriptor
              * @param name
@@ -273,8 +268,6 @@
                 }
                 //assign defaults
                 xs.isArray(desc.default) && (descriptor.default = desc.default);
-                //assign wrap
-                desc.downcall && (descriptor.downcall = !!desc.downcall);
                 return descriptor;
             },
             /**
@@ -293,98 +286,18 @@
                     enumerable: true,
                     configurable: false
                 }, desc);
-                if (descriptor.default || descriptor.downcall) {
+                if (descriptor.default) {
                     descriptor.default = xs.isArray(descriptor.default) ? descriptor.default : [];
                     var fn = descriptor.value;
-                    if (descriptor.downcall) {
-                        //get count of arguments, defined by function;
-                        var argsCount = fnArgsRe.exec(fn.toString()).pop().split(',').length;
-                        descriptor.value = function () {
-                            var args = xs.Array.defaults(xs.Array.values(arguments), descriptor.default);
-                            //pass super, needed for parent() calls
-                            if (args.length < argsCount) {
-                                args[argsCount] = descriptor.parent;
-                            } else {
-                                args.push(descriptor.parent);
-                            }
-                            return fn.apply(this, args);
-                        };
-                    } else {
-                        descriptor.value = function () {
-                            var args = xs.Array.defaults(xs.Array.values(arguments), descriptor.default);
-                            return fn.apply(this, args);
-                        };
-                    }
+                    descriptor.value = function () {
+                        var args = xs.Array.defaults(xs.Array.values(arguments), descriptor.default);
+                        return fn.apply(this, args);
+                    };
                 }
                 define(obj, name, descriptor);
                 return true;
             }
         };
-        /**
-         * Shorthand for {@link defined}
-         * @type {defined}
-         */
-        this.defined = defined;
-        /**
-         * Shorthand for {@link define}
-         * @type {define}
-         */
-        this.define = define;
-        /**
-         * Shorthand for {@link getDescriptor}
-         * @type {getDescriptor}
-         */
-        this.getDescriptor = getDescriptor;
-        /**
-         * Shorthand for {@link isDescriptor}
-         * @type {isDescriptor}
-         */
-        this.isDescriptor = isDescriptor;
-        /**
-         * Shorthand for {@link prepareDescriptor}
-         * @type {prepareDescriptor}
-         */
-        this.prepareDescriptor = prepareDescriptor;
-        /**
-         * Shorthand for {@link isAssigned}
-         * @type {isAssigned}
-         */
-        this.isAssigned = isAssigned;
-        /**
-         * Shorthand for {@link isAccessed}
-         * @type {isAccessed}
-         */
-        this.isAccessed = isAccessed;
-        /**
-         * Shorthand for {@link isWritable}
-         * @type {isWritable}
-         */
-        this.isWritable = isWritable;
-        /**
-         * Shorthand for {@link isConfigurable}
-         * @type {isConfigurable}
-         */
-        this.isConfigurable = isConfigurable;
-        /**
-         * Shorthand for {@link isEnumerable}
-         * @type {isEnumerable}
-         */
-        this.isEnumerable = isEnumerable;
-        /**
-         * Shorthand for {@link defineConstant}
-         * @type {defineConstant}
-         */
-        this.const = defineConstant;
-        /**
-         * Shorthand for {@link property}
-         * @type {{prepare: prepare, define: define}}
-         */
-        this.property = property;
-        /**
-         * Shorthand for {@link method}
-         * @type {{prepare: prepare, define: define}}
-         */
-        this.method = method;
     });
     xs.Object.extend(xs, {
         const: property.const,

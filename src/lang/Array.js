@@ -19,7 +19,7 @@
  */
 /**
  * array class pre-definition
- * @type {}
+ * @type {Object}
  * @private
  */
 'use strict';
@@ -54,7 +54,7 @@
          * @param key
          * @returns {boolean}
          */
-        this.hasKey = function (arr, key) {
+        var _hasKey = this.hasKey = function (arr, key) {
             return key < arr.length;
         };
         /**
@@ -72,7 +72,7 @@
          * @param value
          * @returns {string|Number|undefined}
          */
-        this.keyOf = function (arr, value) {
+        var _keyOf = this.keyOf = function (arr, value) {
             var index = arr.indexOf(value);
             return index > -1 ? index : undefined;
         };
@@ -82,7 +82,7 @@
          * @param value
          * @returns {string|Number|undefined}
          */
-        this.lastKeyOf = function (arr, value) {
+        var _lastKeyOf = this.lastKeyOf = function (arr, value) {
             var index = arr.lastIndexOf(value);
             return index > -1 ? index : undefined;
         };
@@ -92,7 +92,7 @@
          * @param iterator
          * @param scope
          */
-        this.each = function (arr, iterator, scope) {
+        var _each = this.each = function (arr, iterator, scope) {
             var idx,
                 len = arr.length;
             for (idx = 0; idx < len; idx++) {
@@ -219,7 +219,7 @@
                 });
                 ok && keys.push(idx);
             }
-            return this.pick(arr, keys);
+            return _pick(arr, keys);
         };
         /**
          * returns whether all elements of given array pass given tester function
@@ -275,11 +275,11 @@
          * @param arr
          * @param element
          */
-        this.remove = function (arr, element) {
-            if (typeof element == 'number' && this.hasKey(arr, element)) {
+        var _remove = this.remove = function (arr, element) {
+            if (typeof element == 'number' && _hasKey(arr, element)) {
                 arr.splice(element, 1);
             } else {
-                var key = this.keyOf(arr, element);
+                var key = _keyOf(arr, element);
                 key !== undefined && arr.splice(key, 1);
             }
         };
@@ -289,10 +289,10 @@
          * @param element
          */
         this.removeLast = function (arr, element) {
-            if (typeof element == 'number' && this.hasKey(arr, element)) {
+            if (typeof element == 'number' && _hasKey(arr, element)) {
                 arr.splice(element, 1);
             } else {
-                var key = this.lastKeyOf(arr, element);
+                var key = _lastKeyOf(arr, element);
                 key !== undefined && arr.splice(key, 1);
             }
         };
@@ -302,10 +302,10 @@
          * @param element
          */
         this.removeAll = function (arr, element) {
-            var elements = this.union(slice(arguments, 1));
-            this.each(elements, function (element) {
-                this.remove(arr, element);
-            }, this);
+            var elements = _union(slice(arguments, 1));
+            _each(elements, function (element) {
+                _remove(arr, element);
+            });
         };
         /**
          * returns shallow-copied clone of array
@@ -338,7 +338,7 @@
          * returns union of arrays, passed as arguments, or array of arrays as single argument
          * @returns {*}
          */
-        this.union = function () {
+        var _union = this.union = function () {
             var arrays = arguments.length == 1 ? slice(arguments).pop() : slice(arguments);
             return concat([], arrays);
         };
@@ -348,7 +348,7 @@
          */
         this.intersection = function () {
             var arrays = arguments.length == 1 ? slice(arguments).pop() : slice(arguments), //get arrays list
-                all = this.unique(this.union(arrays)), //get all items list
+                all = _unique(_union(arrays)), //get all items list
                 intersect = [], //define intersection
                 idx,
                 len = all.length,
@@ -371,17 +371,17 @@
          * @returns {Array}
          */
         this.difference = function (arr) {
-            var arrays = this.union(slice(arguments, 1));
+            var arrays = _union(slice(arguments, 1));
             return arr.filter(function (value) {
                 return arrays.indexOf(value) < 0;
-            }, this);
+            });
         };
         /**
          * returns array, filled by unique items of given array
          * @param arr
          * @returns {Array}
          */
-        this.unique = function (arr) {
+        var _unique = this.unique = function (arr) {
             var unique = [],
                 idx,
                 len = arr.length,
@@ -397,9 +397,9 @@
          * @param arr
          * @returns {Array}
          */
-        this.pick = function (arr) {
+        var _pick = this.pick = function (arr) {
             var copy = [],
-                keys = this.union(slice(arguments, 1)),
+                keys = _union(slice(arguments, 1)),
                 keysLen = keys.length,
                 len = arr.length,
                 idx,
@@ -417,7 +417,7 @@
          */
         this.omit = function (arr) {
             var copy = [],
-                keys = this.union(slice(arguments, 1)),
+                keys = _union(slice(arguments, 1)),
                 len = arr.length,
                 idx,
                 item;
@@ -434,7 +434,7 @@
          * @returns {*}
          */
         this.defaults = function (arr) {
-            var defaults = this.union(slice(arguments, 1)),
+            var defaults = _union(slice(arguments, 1)),
                 len = defaults.length,
                 idx;
             for (idx = arr.length; idx < len; idx++) {

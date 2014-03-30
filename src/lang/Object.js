@@ -36,7 +36,7 @@
          * @param obj
          * @returns {Array}
          */
-        this.keys = function (obj) {
+        var _keys = this.keys = function (obj) {
             return Object.keys(obj);
         };
         /**
@@ -47,7 +47,7 @@
         this.values = function (obj) {
             var values = [],
                 idx,
-                keys = this.keys(obj),
+                keys = _keys(obj),
                 len = keys.length;
             for (idx = 0; idx < len; idx++) {
                 values.push(obj[keys[idx]]);
@@ -69,8 +69,8 @@
          * @param value
          * @returns {boolean}
          */
-        this.has = function (obj, value) {
-            return this.find(obj, function (val) {
+        var _has = this.has = function (obj, value) {
+            return _find(obj, function (val) {
                 return val === value;
             }) !== undefined;
         };
@@ -80,9 +80,9 @@
          * @param value
          * @returns {string|Number|undefined}
          */
-        this.keyOf = function (obj, value) {
+        var _keyOf = this.keyOf = function (obj, value) {
             var idx,
-                keys = this.keys(obj),
+                keys = _keys(obj),
                 len = keys.length,
                 name;
             for (idx = 0; idx < len; idx++) {
@@ -98,9 +98,9 @@
          * @param value
          * @returns {string|Number|undefined}
          */
-        this.lastKeyOf = function (obj, value) {
+        var _lastKeyOf = this.lastKeyOf = function (obj, value) {
             var idx,
-                keys = this.keys(obj),
+                keys = _keys(obj),
                 len = keys.length,
                 name;
             for (idx = len - 1; idx >= 0; idx--) {
@@ -124,9 +124,9 @@
          * @param iterator
          * @param scope
          */
-        this.each = function (obj, iterator, scope) {
+        var _each = this.each = function (obj, iterator, scope) {
             var idx,
-                keys = this.keys(obj),
+                keys = _keys(obj),
                 len = keys.length,
                 name;
             for (idx = 0; idx < len; idx++) {
@@ -140,9 +140,9 @@
          * @param iterator
          * @param scope
          */
-        this.eachReverse = function (obj, iterator, scope) {
+        var _eachReverse = this.eachReverse = function (obj, iterator, scope) {
             var idx,
-                keys = this.keys(obj),
+                keys = _keys(obj),
                 len = keys.length,
                 name;
             for (idx = len - 1; idx >= 0; idx--) {
@@ -158,7 +158,7 @@
          * @returns {Object}
          */
         this.map = function (obj, iterator, scope) {
-            var result = this.clone(obj);
+            var result = _clone(obj);
             this.each(obj, function (value, key, object) {
                 result[key] = iterator.call(this, value, key, object);
             }, scope);
@@ -177,11 +177,11 @@
             if (arguments.length > 2) {
                 result = memo;
             } else {
-                var key = this.keys(obj).shift();
+                var key = _keys(obj).shift();
                 result = obj[key];
-                obj = this.omit(obj, key);
+                obj = _omit(obj, key);
             }
-            this.each(obj, function (value, key, object) {
+            _each(obj, function (value, key, object) {
                 result = iterator.call(this, result, value, key, object);
             }, scope);
             return result;
@@ -199,11 +199,11 @@
             if (arguments.length > 2) {
                 result = memo;
             } else {
-                var key = this.keys(obj).pop();
+                var key = _keys(obj).pop();
                 result = obj[key];
-                obj = this.omit(obj, key);
+                obj = _omit(obj, key);
             }
-            this.eachReverse(obj, function (value, key, object) {
+            _eachReverse(obj, function (value, key, object) {
                 result = iterator.call(this, result, value, key, object);
             }, scope);
             return result;
@@ -215,9 +215,9 @@
          * @param scope
          * @returns {*}
          */
-        this.find = function (obj, finder, scope) {
+        var _find = this.find = function (obj, finder, scope) {
             var idx,
-                keys = this.keys(obj),
+                keys = _keys(obj),
                 len = keys.length,
                 name,
                 value;
@@ -238,7 +238,7 @@
          */
         this.findLast = function (obj, finder, scope) {
             var idx,
-                keys = this.keys(obj),
+                keys = _keys(obj),
                 len = keys.length,
                 name,
                 value;
@@ -257,12 +257,12 @@
          * @param scope
          * @returns {Array|*}
          */
-        this.findAll = function (obj, finder, scope) {
+        var _findAll = this.findAll = function (obj, finder, scope) {
             var keys = [];
-            this.each(obj, function (value, name, obj) {
+            _each(obj, function (value, name, obj) {
                 finder.call(this, value, name, obj) && keys.push(name);
             }, scope);
-            return this.pick(obj, keys);
+            return _pick(obj, keys);
         };
         /**
          * returns value of first property, matching given where clause
@@ -272,7 +272,7 @@
          */
         this.filter = function (obj, where) {
             var idx,
-                keys = this.keys(obj),
+                keys = _keys(obj),
                 len = keys.length,
                 name,
                 value,
@@ -280,7 +280,7 @@
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
                 value = obj[name];
-                ok = this.every(where, function (param, name) {
+                ok = _every(where, function (param, name) {
                     return value[name] === param;
                 });
                 if (ok) {
@@ -296,7 +296,7 @@
          */
         this.filterLast = function (obj, where) {
             var idx,
-                keys = this.keys(obj),
+                keys = _keys(obj),
                 len = keys.length,
                 name,
                 value,
@@ -304,7 +304,7 @@
             for (idx = len - 1; idx >= 0; idx--) {
                 name = keys[idx];
                 value = obj[name];
-                ok = this.every(where, function (param, name) {
+                ok = _every(where, function (param, name) {
                     return value[name] === param;
                 });
                 if (ok) {
@@ -320,12 +320,12 @@
          */
         this.filterAll = function (obj, where) {
             var keys = [];
-            this.each(obj, function (value, name) {
-                this.every(where, function (param, name) {
+            _each(obj, function (value, name) {
+                _every(where, function (param, name) {
                     return value[name] === param;
                 }) && keys.push(name);
             }, this);
-            return this.pick(obj, keys);
+            return _pick(obj, keys);
         };
         /**
          * returns whether all object properties pass given tester function
@@ -334,9 +334,9 @@
          * @param scope
          * @returns {boolean}
          */
-        this.every = function (obj, tester, scope) {
+        var _every = this.every = function (obj, tester, scope) {
             var idx,
-                keys = this.keys(obj),
+                keys = _keys(obj),
                 len = keys.length,
                 name;
             for (idx = 0; idx < len; idx++) {
@@ -357,7 +357,7 @@
          */
         this.some = function (obj, tester, count, scope) {
             var idx,
-                keys = this.keys(obj),
+                keys = _keys(obj),
                 len = keys.length,
                 name,
                 found = 0;
@@ -377,7 +377,7 @@
          * @returns {*}
          */
         this.first = function (obj) {
-            var key = this.keys(obj).shift();
+            var key = _keys(obj).shift();
             return obj[key];
         };
         /**
@@ -386,7 +386,7 @@
          * @returns {*}
          */
         this.last = function (obj) {
-            var key = this.keys(obj).pop();
+            var key = _keys(obj).pop();
             return obj[key];
         };
         /**
@@ -395,7 +395,7 @@
          * @returns {*}
          */
         this.shift = function (obj) {
-            var key = this.keys(obj).shift();
+            var key = _keys(obj).shift();
             var value = obj[key];
             delete obj[key];
             return value;
@@ -406,7 +406,7 @@
          * @returns {*}
          */
         this.pop = function (obj) {
-            var key = this.keys(obj).pop();
+            var key = _keys(obj).pop();
             var value = obj[key];
             delete obj[key];
             return value;
@@ -416,11 +416,11 @@
          * @param obj
          * @param element
          */
-        this.remove = function (obj, element) {
+        var _remove = this.remove = function (obj, element) {
             if ((typeof element == 'string' || typeof element == 'number') && obj.hasOwnProperty(element)) {
                 delete obj[element];
-            } else if (this.has(obj, element)) {
-                delete obj[this.keyOf(obj, element)];
+            } else if (_has(obj, element)) {
+                delete obj[_keyOf(obj, element)];
             }
         };
         /**
@@ -431,8 +431,8 @@
         this.removeLast = function (obj, element) {
             if ((typeof element == 'number' || typeof element == 'string') && obj.hasOwnProperty(element)) {
                 delete obj[element];
-            } else if (this.has(obj, element)) {
-                delete obj[this.lastKeyOf(obj, element)];
+            } else if (_has(obj, element)) {
+                delete obj[_lastKeyOf(obj, element)];
             }
         };
         /**
@@ -443,7 +443,7 @@
         this.removeAll = function (obj, element) {
             var elements = xs.Array.union(slice(arguments, 1));
             xs.Array.each(elements, function (element) {
-                this.remove(obj, element);
+                _remove(obj, element);
             }, this);
         };
         /**
@@ -451,18 +451,18 @@
          * @param obj
          * @returns {*}
          */
-        this.clone = function (obj) {
-            return this.extend({}, obj);
+        var _clone = this.clone = function (obj) {
+            return _extend({}, obj);
         };
         /**
          * copies all properties from objects/arrays, passed as arguments to given obj
          * @param obj
          * @returns {*}
          */
-        this.extend = function (obj) {
+        var _extend = this.extend = function (obj) {
             var adds = xs.Array.union(slice(arguments, 1));
-            this.each(adds, function (source) {
-                source !== null && typeof source == 'object' && this.each(source, function (value, name) {
+            _each(adds, function (source) {
+                source !== null && typeof source == 'object' && _each(source, function (value, name) {
                     obj[name] = value;
                 });
             }, this);
@@ -474,7 +474,7 @@
          * @returns {*}
          */
         this.compact = function (obj) {
-            return this.findAll(obj, function (value) {
+            return _findAll(obj, function (value) {
                 return value;
             })
         };
@@ -487,10 +487,10 @@
                 union = {},
                 key;
             xs.Array.each(merge, function (value) {
-                key = this.keys(value).pop();
+                key = _keys(value).pop();
                 union[key] = value[key];
             }, this);
-            return this.unique(union);
+            return _unique(union);
         };
         /**
          * returns intersection of given objects (although intersection elements are unique)
@@ -503,10 +503,10 @@
             }
             var first = objects.pop();
             //iterate over each element in all (they are unique)
-            return this.findAll(first, function (item) {
+            return _findAll(first, function (item) {
                 //check whether all other objects have this value
                 return objects.every(function (obj) {
-                    return this.has(obj, item);
+                    return _has(obj, item);
                 }, this);
             }, this);
         };
@@ -522,10 +522,10 @@
                 return obj;
             }
             //iterate over each element in all (they are unique)
-            return this.findAll(obj, function (item) {
+            return _findAll(obj, function (item) {
                 //check whether all other objects have this value
                 return objects.every(function (obj) {
-                    return !this.has(obj, item);
+                    return !_has(obj, item);
                 }, this);
             }, this);
         };
@@ -534,10 +534,10 @@
          * @param obj
          * @returns {Object}
          */
-        this.unique = function (obj) {
+        var _unique = this.unique = function (obj) {
             var unique = {};
-            this.each(obj, function (value, name) {
-                this.has(unique, value) || (unique[name] = value);
+            _each(obj, function (value, name) {
+                _has(unique, value) || (unique[name] = value);
             }, this);
             return unique;
         };
@@ -546,7 +546,7 @@
          * @param obj
          * @returns {{}}
          */
-        this.pick = function (obj) {
+        var _pick = this.pick = function (obj) {
             var copy = {},
                 keys = xs.Array.union(slice(arguments, 1));
             xs.Array.each(keys, function (key) {
@@ -559,10 +559,10 @@
          * @param obj
          * @returns {{}}
          */
-        this.omit = function (obj) {
+        var _omit = this.omit = function (obj) {
             var copy = {},
                 keys = xs.Array.union(slice(arguments, 1));
-            this.each(obj, function (value, name) {
+            _each(obj, function (value, name) {
                 keys.indexOf(name) < 0 && (copy[name] = value);
             });
             return copy;
@@ -575,8 +575,8 @@
          * @returns {*}
          */
         this.defaults = function (obj) {
-            this.each(slice(arguments, 1), function (source) {
-                source !== null && typeof source == 'object' && this.each(source, function (value, name) {
+            _each(slice(arguments, 1), function (source) {
+                source !== null && typeof source == 'object' && _each(source, function (value, name) {
                     obj.hasOwnProperty(name) || (obj[name] = source[name]);
                 }, this);
             }, this);

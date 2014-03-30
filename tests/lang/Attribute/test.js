@@ -419,14 +419,12 @@ test('method.prepare', function () {
     var defaults = [1, 2];
     desc = {
         fn: fn,
-        default: defaults,
-        downcall: 1
+        default: defaults
     };
     var result = xs.Attribute.method.prepare(name, desc);
-    strictEqual(Object.keys(result).sort().toString(), 'default,downcall,value', 'additionals applied ok');
+    strictEqual(Object.keys(result).sort().toString(), 'default,value', 'additionals applied ok');
     strictEqual(result.value, fn, 'value has link to fn');
     strictEqual(result.default, defaults, 'defaults ok');
-    strictEqual(result.downcall, true, 'downcall applied ok');
 });
 test('method.define', function () {
     //check for defined and not configurable property
@@ -486,76 +484,4 @@ test('method.define', function () {
     //defaults test with enough arguments
     strictEqual(obj.defaultsAll(3, 5), '35', 'defaultsAll method runs ok with enough arguments');
 
-
-    //wrapped
-    //method without defaults
-    strictEqual(xs.Attribute.method.define(obj, 'wrappedNo', {
-        value: value,
-        parent: 12,
-        downcall: true
-    }), true, 'created wrapped method with no defaults');
-    //defaults test without arguments
-    strictEqual(obj.wrappedNo(), 'undefinedundefined12', 'wrappedNo method runs ok without arguments');
-    //defaults test with not enough arguments
-    strictEqual(obj.wrappedNo(3), '3undefined12', 'wrappedNo method runs ok with not enough arguments');
-    //defaults test with enough arguments
-    strictEqual(obj.wrappedNo(3, 5), '3512', 'wrappedNo method runs ok with enough arguments');
-
-    //method with some defaults
-    strictEqual(xs.Attribute.method.define(obj, 'wrappedSome', {
-        value: value,
-        default: [4],
-        parent: 12,
-        downcall: true
-    }), true, 'created wrapped method with some defaults');
-    //defaults test without arguments
-    strictEqual(obj.wrappedSome(), '4undefined12', 'wrappedSome method runs ok without arguments');
-    //defaults test with not enough arguments
-    strictEqual(obj.wrappedSome(3), '3undefined12', 'wrappedSome method runs ok with not enough arguments');
-    //defaults test with enough arguments
-    strictEqual(obj.wrappedSome(3, 5), '3512', 'wrappedSome method runs ok with enough arguments');
-
-    //method with defaults
-    strictEqual(xs.Attribute.method.define(obj, 'wrappedAll', {
-        value: value,
-        default: [4, 7],
-        parent: 12,
-        downcall: true
-    }), true, 'created wrapped method with all defaults');
-    //defaults test without arguments
-    strictEqual(obj.wrappedAll(), '4712', 'wrappedAll method runs ok without arguments');
-    //defaults test with not enough arguments
-    strictEqual(obj.wrappedAll(3), '3712', 'wrappedAll method runs ok with not enough arguments');
-    //defaults test with enough arguments
-    strictEqual(obj.wrappedAll(3, 5), '3512', 'wrappedAll method runs ok with enough arguments');
-
-    //call with more arguments, than expected
-    strictEqual(obj.wrappedNo(3, 5, 4, 8), '354812', 'wrappedAll method runs ok with enough arguments');
-    strictEqual(obj.wrappedSome(3, 5, 4, 8), '354812', 'wrappedAll method runs ok with enough arguments');
-    strictEqual(obj.wrappedAll(3, 5, 4, 8), '354812', 'wrappedAll method runs ok with enough arguments');
-
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

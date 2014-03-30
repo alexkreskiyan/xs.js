@@ -39,7 +39,7 @@
          * @param args
          * @returns {Function}
          */
-        this.bind = function (fn, scope, args) {
+        var _bind = this.bind = function (fn, scope, args) {
             return functionPrototype.bind.apply(fn, concat(scope, args));
         };
         /**
@@ -84,7 +84,7 @@
             }
         };
         this.nextTick = function (fn, scope) {
-            scope && (fn = this.bind(fn, scope));
+            scope && (fn = _bind(fn, scope));
             setTimeout(fn, 0);
         }
     });
