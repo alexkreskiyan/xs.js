@@ -22,7 +22,8 @@
 
     //create framework
     var xs = new (function () {
-
+        this.emptyFn = function () {
+        };
     });
     //save framework in root
     root[ns] = xs;
