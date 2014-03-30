@@ -54,17 +54,17 @@
             raise(message, ReferenceError);
         };
         /**
-         * Raises reference error
+         * Raises syntax error
          * @param message
-         * @throws {ReferenceError}
+         * @throws {SyntaxError}
          */
         this.raiseSyntax = function (message) {
             raise(message, SyntaxError);
         };
         /**
-         * Raises reference error
+         * Raises type error
          * @param message
-         * @throws {ReferenceError}
+         * @throws {TypeError}
          */
         this.raiseType = function (message) {
             raise(message, TypeError);
