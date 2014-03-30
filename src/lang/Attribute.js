@@ -19,7 +19,7 @@
  */
 /**
  * array class pre-definition
- * @type {}
+ * @type {Object}
  * @private
  */
 'use strict';
@@ -64,26 +64,63 @@
         var getDescriptor = function (obj, key) {
             return Object.getOwnPropertyDescriptor(obj, key);
         };
+        /**
+         * Checks whether property is assignable
+         * @param obj
+         * @param key
+         * @returns {boolean}
+         */
         var isAssigned = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && descriptor.hasOwnProperty('value');
         };
+        /**
+         * Checks whether property is accessed
+         * @param obj
+         * @param key
+         * @returns {boolean}
+         */
         var isAccessed = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && (descriptor.hasOwnProperty('get') || descriptor.hasOwnProperty('get'));
         };
+        /**
+         * Checks whether property is writable
+         * @param obj
+         * @param key
+         * @returns {boolean}
+         */
         var isWritable = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && !!descriptor.writable;
         };
+        /**
+         * Checks whether property is configurable
+         * @param obj
+         * @param key
+         * @returns {boolean|*}
+         */
         var isConfigurable = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && descriptor.configurable;
         };
+        /**
+         * Checks whether property is enumerable
+         * @param obj
+         * @param key
+         * @returns {boolean|*}
+         */
         var isEnumerable = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && descriptor.enumerable;
         };
+        /**
+         * Defines constant
+         * @param obj
+         * @param name
+         * @param value
+         * @returns {boolean}
+         */
         var defineConstant = function (obj, name, value) {
             if (defined(obj, name) && !isConfigurable(obj, name)) {
                 return false;
@@ -96,6 +133,11 @@
             });
             return true;
         };
+        /**
+         * Checks whether given desc is descriptor
+         * @param desc
+         * @returns {boolean}
+         */
         var isDescriptor = function (desc) {
             //false if descriptor is not object
             if (!xs.isObject(desc)) {
@@ -112,6 +154,11 @@
             }
             return false;
         };
+        /**
+         * prepares descriptor from given object
+         * @param desc
+         * @returns {Object}
+         */
         var prepareDescriptor = function (desc) {
             //non-function accessors are removed
             if (desc.hasOwnProperty('get') && !xs.isFunction(desc.get)) {
@@ -134,7 +181,17 @@
             //any additional fields allowed
             return desc;
         };
+        /**
+         * Property object
+         * @type {{prepare: prepare, define: define}}
+         */
         var property = {
+            /**
+             * Prepares property descriptor
+             * @param name
+             * @param desc
+             * @returns {Object}
+             */
             prepare: function (name, desc) {
                 //if not descriptor - returns generated one
                 if (!isDescriptor(desc)) {
@@ -158,6 +215,13 @@
 
                 return desc;
             },
+            /**
+             * Defines property for object
+             * @param obj
+             * @param name
+             * @param desc
+             * @returns {boolean}
+             */
             define: function (obj, name, desc) {
                 if (defined(obj, name) && !isConfigurable(obj, name)) {
                     return false;
@@ -177,7 +241,17 @@
                 return true;
             }
         };
+        /**
+         * Method object
+         * @type {{prepare: prepare, define: define}}
+         */
         var method = {
+            /**
+             * Prepares method descriptor
+             * @param name
+             * @param desc
+             * @returns {Object}
+             */
             prepare: function (name, desc) {
                 var descriptor = {};
                 if (xs.isFunction(desc)) {
@@ -203,6 +277,13 @@
                 desc.downcall && (descriptor.downcall = !!desc.downcall);
                 return descriptor;
             },
+            /**
+             * Define method for object
+             * @param obj
+             * @param name
+             * @param desc
+             * @returns {boolean}
+             */
             define: function (obj, name, desc) {
                 if (defined(obj, name) && !isConfigurable(obj, name)) {
                     return false;
@@ -254,15 +335,55 @@
          * @type {getDescriptor}
          */
         this.getDescriptor = getDescriptor;
+        /**
+         * Shorthand for {@link isDescriptor}
+         * @type {isDescriptor}
+         */
         this.isDescriptor = isDescriptor;
+        /**
+         * Shorthand for {@link prepareDescriptor}
+         * @type {prepareDescriptor}
+         */
         this.prepareDescriptor = prepareDescriptor;
+        /**
+         * Shorthand for {@link isAssigned}
+         * @type {isAssigned}
+         */
         this.isAssigned = isAssigned;
+        /**
+         * Shorthand for {@link isAccessed}
+         * @type {isAccessed}
+         */
         this.isAccessed = isAccessed;
+        /**
+         * Shorthand for {@link isWritable}
+         * @type {isWritable}
+         */
         this.isWritable = isWritable;
+        /**
+         * Shorthand for {@link isConfigurable}
+         * @type {isConfigurable}
+         */
         this.isConfigurable = isConfigurable;
+        /**
+         * Shorthand for {@link isEnumerable}
+         * @type {isEnumerable}
+         */
         this.isEnumerable = isEnumerable;
+        /**
+         * Shorthand for {@link defineConstant}
+         * @type {defineConstant}
+         */
         this.const = defineConstant;
+        /**
+         * Shorthand for {@link property}
+         * @type {{prepare: prepare, define: define}}
+         */
         this.property = property;
+        /**
+         * Shorthand for {@link method}
+         * @type {{prepare: prepare, define: define}}
+         */
         this.method = method;
     });
     xs.Object.extend(xs, {
