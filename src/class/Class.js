@@ -108,7 +108,7 @@
             //assign constructor
             xs.method.define(meta, 'constructor', desc);
             //create class
-            var Class = function xClass() {
+            var Class = function xClass(args) {
                 //no all operations in native class constructor, preventing downcall usage
                 if (!this.self || this.self === Class) {
                     //instance privates
@@ -133,7 +133,7 @@
                     }, this);
                 }
                 //apply constructor
-                meta.constructor.apply(this, arguments);
+                meta.constructor.apply(this, args);
             };
             //define factory
             xs.method.define(Class, 'factory', {value: factory(Class)});

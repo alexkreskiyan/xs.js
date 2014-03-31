@@ -139,9 +139,9 @@
                 throw 'class "' + name + '" doesn\'t exist';
             }
 
-            //create via factory
+            //create instance
             Class = get(name);
-            instance = Class.factory.apply(null, xs.Array.clone(arguments).slice(1));
+            instance = new Class(xs.Array.clone(arguments).slice(1));
 
             //return created instance
             return instance;

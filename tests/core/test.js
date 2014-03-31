@@ -20,7 +20,9 @@ function speedAsync(fn, n, duration) {
 module('xs.Base');
 var after = function (Class) {
     console.log('Class ', Class.label, 'ready!');
+    instance = xs.create('gcapi.BaseMap');
 };
+var instance;
 xs.define('gcapi.Map', {
     extend: 'xs.Base',
     const: {
