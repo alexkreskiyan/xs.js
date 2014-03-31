@@ -589,7 +589,7 @@
          * @param recursive
          * @returns {Array}
          */
-        this.toQueryObjects = function (name, object, recursive) {
+        var toQueryObjects = this.toQueryObjects = function (name, object, recursive) {
             var self = toQueryObjects,
                 objects = [];
 
@@ -624,7 +624,7 @@
                 params = [];
 
             xs.each(object, function (value, name) {
-                paramObjects = paramObjects.concat(this, toQueryObjects(name, value, recursive));
+                paramObjects = paramObjects.concat(toQueryObjects(name, value, recursive));
             }, this);
 
             xs.each(paramObjects, function (paramObject) {
@@ -636,5 +636,5 @@
     });
     xs.extend = object.extend;
     xs.toQueryObjects = object.toQueryObjects;
-    xs.toQueryString = object.toQueryObjects;
+    xs.toQueryString = object.toQueryString;
 })(window, 'xs');

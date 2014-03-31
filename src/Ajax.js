@@ -54,5 +54,15 @@
  */
 xs.define('xs.Ajax', {
     extend: 'xs.data.Connection',
-    singleton: true
+    singleton: true,
+    properties: {
+        /**
+         * @property requestId {Integer} counter
+         */
+        requestId: 0,
+        /**
+         * @property requests {Object} pending requests
+         */
+        requests: {}
+    }
 });
