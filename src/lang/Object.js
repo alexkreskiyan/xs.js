@@ -440,7 +440,7 @@
          * @param obj
          * @param element
          */
-        this.removeAll = function (obj, element) {
+        this.removeAll = function (obj) {
             var elements = xs.Array.union(slice(arguments, 1));
             xs.Array.each(elements, function (element) {
                 _remove(obj, element);

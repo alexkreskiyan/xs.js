@@ -301,7 +301,7 @@
          * @param arr
          * @param element
          */
-        this.removeAll = function (arr, element) {
+        this.removeAll = function (arr) {
             var elements = _union(slice(arguments, 1));
             _each(elements, function (element) {
                 _remove(arr, element);
