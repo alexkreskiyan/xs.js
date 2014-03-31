@@ -348,6 +348,53 @@
         data.properties = xs.Object.defaults(data.properties, inherits.properties);
         //methods are not defaulted from inherits - prototype usage covers that
     });
+    xs.Class.registerPreprocessor('mixins', function (Class, data) {
+        var mixins = {},
+            mixClass;
+        if (xs.isString(data.mixins)) {
+            data.mixins = [data.mixins];
+        }
+        if (xs.isArray(data.mixins)) {
+            xs.Array.each(data.mixins, function (mixin) {
+                mixClass = xs.ClassManager.get(mixin);
+                mixins[mixClass.label] = mixClass;
+            });
+        } else if (xs.isObject(data.mixins)) {
+            xs.Object.each(data.mixins, function (mixin, alias) {
+                mixins[alias] = xs.ClassManager.get(mixin);
+            });
+        } else {
+            return;
+        }
+
+        //overriden mixed storage, that will be defaulted to descriptor
+        var mixed = {
+            const: {},
+            static: {
+                properties: {},
+                methods: {}
+            },
+            properties: {},
+            methods: {}
+        };
+        //separated mixin storage, allowing direct access to any of mixin properties
+        data.properties.mixins = {};
+
+        //iterate mixins and prepare
+        var descriptor;
+        xs.Object.each(mixins, function (mixClass, name) {
+            descriptor = mixClass.descriptor;
+            xs.extend(mixed.const, descriptor.const);
+            xs.extend(mixed.static.properties, descriptor.static.properties);
+            xs.extend(mixed.static.methods, descriptor.static.methods);
+            xs.extend(mixed.properties, descriptor.properties);
+            xs.extend(mixed.methods, descriptor.methods);
+            
+        });
+
+        //default mixed with own descriptor
+
+    }, 'mixins');
     xs.Class.registerPreprocessor('inherit', function (Class, data) {
         //apply configured descriptor
         var descriptor = xs.Class.applyDescriptor(Class, data);
