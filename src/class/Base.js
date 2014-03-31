@@ -56,10 +56,9 @@
                 }
             }
         },
-        properties: {
-        },
-        methods: {
-        }
+        properties: {},
+        methods: {},
+        mixins: {}
     });
     //property, that contains xs.Base class descriptor
     xs.property.define(xs.Base, 'descriptor', {

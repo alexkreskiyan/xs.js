@@ -33,7 +33,7 @@
             if (defined(name)) {
                 return;
             }
-            
+
             if (xs.isFunction(data)) {
                 data = data();
             } else if (!xs.isObject(data)) {
@@ -66,7 +66,7 @@
             //create namespace for class
             var namespace = createNamespace(root, getNamespaceName(name));
             storage[name] = namespace[label] = Class;
-            Class.label = label;
+            Class.label = name;
         };
         var getName = function (object) {
             //if instance
@@ -133,12 +133,18 @@
             });
         };
         var create = function (name) {
+            var Class,
+                instance;
             if (!defined(name)) {
                 throw 'class "' + name + '" doesn\'t exist';
             }
-            var Class = get(name);
+
             //create via factory
-            return Class.factory.apply(null, xs.Array.clone(arguments).slice(1));
+            Class = get(name);
+            instance = Class.factory.apply(null, xs.Array.clone(arguments).slice(1));
+
+            //return created instance
+            return instance;
         };
 
         xs.extend(Manager, {

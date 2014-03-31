@@ -77,13 +77,15 @@
         var postprocessors = new ProcessorQueue();
 
         var factory = function (constructor) {
-            var xClass = function (args) {
+            var xClasse = function (args) {
                 return constructor.apply(this, args);
             };
 
-            xClass.prototype = constructor.prototype;
+            xClasse.prototype = constructor.prototype;
             return function () {
-                return new xClass(arguments);
+                var instance = new xClasse(arguments);
+                instance.constructor = constructor;
+                return instance;
             };
         };
 
@@ -124,6 +126,11 @@
                     });
                     //class reference
                     xs.const(this, 'self', Class);
+                    //apply properties to object
+                    xs.Object.each(Class.descriptor.properties, function (descriptor, name) {
+                        xs.property.define(this, name, descriptor);
+                        this[name] = descriptor.default;
+                    }, this);
                 }
                 //apply constructor
                 meta.constructor.apply(this, arguments);
@@ -197,7 +204,8 @@
                         methods: {}
                     },
                     properties: {},
-                    methods: {}
+                    methods: {},
+                    mixins: {}
                 },
                 each = xs.Object.each,
                 property = xs.property,
@@ -242,6 +250,21 @@
                 method.define(Class.prototype, name, descriptor);
             });
 
+            //mixins processing
+            //define mixins storage in class
+            if (xs.Object.size(data.mixins)) {
+                Class.mixins = {};
+                Class.prototype.mixins = {};
+            }
+            each(data.mixins, function (value, name) {
+                //leave mixin in descriptor
+                desc.mixins[name] = value;
+                //get mixClass
+                var mixClass = xs.ClassManager.get(value);
+                Class.mixins[name] = mixClass;
+                Class.prototype.mixins[name] = mixClass.prototype;
+            });
+
             return desc;
         };
 
@@ -277,15 +300,6 @@
         });
         return metaClass;
     });
-    /**
-     * Register singleton preprocessor
-     */
-    xs.Class.registerPreprocessor('singleton', function (Class, data, hooks, ready) {
-        if (data.singleton) {
-            ready.call(this, new Class, data, hooks);
-            return false;
-        }
-    }, 'singleton');
     /**
      * Register className preprocessor
      */
@@ -338,8 +352,23 @@
         //public properties and methods
         data.properties = xs.isObject(data.properties) ? data.properties : {};
         data.methods = xs.isObject(data.methods) ? data.methods : {};
+        //mixins
+        if (xs.isString(data.mixins)) {
+            data.mixins = [data.mixins];
+        }
+        if (xs.isArray(data.mixins)) {
+            var mixins = {}, mixClass;
+            xs.Array.each(data.mixins, function (mixin) {
+                mixClass = xs.ClassManager.get(mixin);
+                mixins[mixClass.label] = mixin;
+            });
+            //update mixins at descriptor
+            data.mixins = mixins;
+        } else if (!xs.isObject(data.mixins)) {
+            data.mixins = {};
+        }
 
-        //const: defaulted from inherits
+        //const
         data.const = xs.Object.defaults(data.const, inherits.const);
         //static properties and methods
         data.static.properties = xs.Object.defaults(data.static.properties, inherits.static.properties);
@@ -347,25 +376,19 @@
         //public properties and methods
         data.properties = xs.Object.defaults(data.properties, inherits.properties);
         //methods are not defaulted from inherits - prototype usage covers that
+        data.mixins = xs.Object.defaults(data.mixins, inherits.mixins);
     });
     xs.Class.registerPreprocessor('mixins', function (Class, data) {
-        var mixins = {},
-            mixClass;
-        if (xs.isString(data.mixins)) {
-            data.mixins = [data.mixins];
-        }
-        if (xs.isArray(data.mixins)) {
-            xs.Array.each(data.mixins, function (mixin) {
-                mixClass = xs.ClassManager.get(mixin);
-                mixins[mixClass.label] = mixClass;
-            });
-        } else if (xs.isObject(data.mixins)) {
-            xs.Object.each(data.mixins, function (mixin, alias) {
-                mixins[alias] = xs.ClassManager.get(mixin);
-            });
-        } else {
+        var mixClasses = {};
+
+        if (!xs.Object.size(data.mixins)) {
             return;
         }
+
+        //process mixins
+        xs.Object.each(data.mixins, function (mixin, alias) {
+            mixClasses[alias] = xs.ClassManager.get(mixin);
+        });
 
         //overriden mixed storage, that will be defaulted to descriptor
         var mixed = {
@@ -377,24 +400,27 @@
             properties: {},
             methods: {}
         };
-        //separated mixin storage, allowing direct access to any of mixin properties
-        data.properties.mixins = {};
 
         //iterate mixins and prepare
         var descriptor;
-        xs.Object.each(mixins, function (mixClass, name) {
+        xs.Object.each(mixClasses, function (mixClass) {
             descriptor = mixClass.descriptor;
             xs.extend(mixed.const, descriptor.const);
             xs.extend(mixed.static.properties, descriptor.static.properties);
             xs.extend(mixed.static.methods, descriptor.static.methods);
             xs.extend(mixed.properties, descriptor.properties);
             xs.extend(mixed.methods, descriptor.methods);
-            
         });
 
-        //default mixed with own descriptor
-
-    }, 'mixins');
+        //const
+        data.const = xs.Object.defaults(data.const, mixed.const);
+        //static properties and methods
+        data.static.properties = xs.Object.defaults(data.static.properties, mixed.static.properties);
+        data.static.methods = xs.Object.defaults(data.static.methods, mixed.static.methods);
+        //public properties and methods
+        data.properties = xs.Object.defaults(data.properties, mixed.properties);
+        data.methods = xs.Object.defaults(data.methods, mixed.methods);
+    });
     xs.Class.registerPreprocessor('inherit', function (Class, data) {
         //apply configured descriptor
         var descriptor = xs.Class.applyDescriptor(Class, data);
@@ -406,4 +432,13 @@
             }
         });
     });
+    /**
+     * Register singleton preprocessor
+     */
+    xs.Class.registerPreprocessor('singleton', function (Class, data, hooks, ready) {
+        if (data.singleton) {
+            ready.call(this, new Class, data, hooks);
+            return false;
+        }
+    }, 'singleton');
 })(window, 'xs');
