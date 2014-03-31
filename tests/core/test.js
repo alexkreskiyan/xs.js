@@ -49,6 +49,9 @@ xs.define('gcapi.Map', {
 }, function () {
     xs.define('gcapi.BaseMap', {
         extend: 'xs.Base',
-        mixins: 'gcapi.Map'
+        mixins: {
+            map: 'gcapi.Map',
+            observable: 'xs.util.Observable'
+        }
     }, after);
 });

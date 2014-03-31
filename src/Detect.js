@@ -19,22 +19,22 @@
  */
 /**
  * set class pre-definition
- * @type {{}}
+ * @type {Object}
  */
 'use strict';
-(function(root, ns) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
 
-    var detect = xs.Detect = new(function() {
+    var detect = xs.Detect = new (function () {
 
         /**
          * Return type passed arguments.
          * @param  {*} value
-         * @return {null|array|number}
+         * @return {string}
          */
-        var getType = function(value) {
+        var getType = function (value) {
             var type = typeof value;
             if (value == null) {
                 type = 'null';
@@ -49,7 +49,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isArray = function(value) {
+        this.isArray = function (value) {
             return Array.isArray(value);
         };
 
@@ -58,7 +58,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isObject = function(value) {
+        this.isObject = function (value) {
             return getType(value) == 'object';
         };
 
@@ -67,10 +67,10 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isIterable = function(value) {
+        this.isIterable = function (value) {
             var valueType = getType(value);
             return valueType == 'object' || valueType == 'array';
-        }
+        };
 
         /**
          * Returns true if the passed value is a JavaScript 'primitive', a string,
@@ -78,7 +78,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isPrimitive = function(value) {
+        this.isPrimitive = function (value) {
             var valueType = getType(value);
             return valueType !== 'object' && valueType !== 'array' && !this.isFunction(value);
         };
@@ -88,7 +88,7 @@
          * @param  {*}  value [description]
          * @return {Boolean}       [description]
          */
-        this.isFunction = function(value) {
+        this.isFunction = function (value) {
             return typeof value == 'function';
         };
 
@@ -97,16 +97,16 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isDate = function(value) {
+        this.isDate = function (value) {
             return this.isObject(value) && value instanceof Date;
-        }
+        };
 
         /**
          * Return true if the passed arguments is JavaScript String, false otherwise.
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isString = function(value) {
+        this.isString = function (value) {
             return typeof value == 'string';
         };
 
@@ -117,7 +117,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isNumeric = function(value) {
+        this.isNumeric = function (value) {
             return !isNaN(parseFloat(value)) && isFinite(value) && !this.isArray(value);
         };
 
@@ -126,16 +126,16 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isNumber = function(value) {
+        this.isNumber = function (value) {
             return typeof value == 'number';
-        }
+        };
 
         /**
          * Return true if the passed arguments is null, false otherwise.
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isNull = function(value) {
+        this.isNull = function (value) {
             return value == null;
         };
 
@@ -144,7 +144,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isDefined = function(value) {
+        this.isDefined = function (value) {
             return typeof value != 'undefined';
         };
 
@@ -153,7 +153,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isBoolean = function(value) {
+        this.isBoolean = function (value) {
             return typeof value == 'boolean';
         };
 
@@ -162,7 +162,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isEmpty = function(value) {
+        this.isEmpty = function (value) {
             var type = getType(value);
             if (type == 'object') {
                 return !Object.keys(value).length;
