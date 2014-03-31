@@ -1,7 +1,7 @@
 /**
  on/once: function(event[string], callback[function], context[object] = this)
  on/once: function(event[array], callback[function], context[object] = this)
- on/once: function(eventMap[object], context[object] = this)
+ on / once: function(eventMap[object], context[object] = this)
 
  listen/listenOnce: function(object,[on/once])
 
@@ -124,21 +124,35 @@ xs.define('xs.util.Observable', {
             if (arguments.length == 0) {
                 this.deleteAllEvents();
                 return;
-            } else if (arguments.length == 1) {
-                this.hasEvent(event) && this.deleteEvent(event);
-                return;
-            } else if (!xs.isFunction(callback)) {
-                this.deleteEvent(event);
+            }
+
+            if (arguments.length == 1) {
+                if (xs.isObject(event)) {
+                    xs.Object.each(event, function (callback, event) {
+                        this.unbind(event, callback);
+                    }, this);
+                } else {
+                    this.deleteEvent(event);
+                }
                 return;
             }
 
-            //find dispatcher by callback;
-            var dispatchers = xs.Array.findAll(this.events[event], function (dispatcher) {
+            if (xs.isArray(event)) {
+                xs.Array.each(event, function (event) {
+                    this.unbind(event, callback);
+                }, this);
+            } else {
+                this.unbind(event, callback);
+            }
+        },
+        unbind: function (event, callback) {
+            var stack = this.events[event];
+            //find removed dispatcher
+            var dispatchers = xs.Array.findAll(stack, function (dispatcher) {
                 return dispatcher.callback == callback;
             });
-
             //remove dispatchers from stack
-            xs.Array.removeAll(this.events[event], dispatchers);
+            xs.Array.removeAll(stack, dispatchers);
         },
         listen: function (target, event, callback, context) {
             target.on(event, callback, context || target);
