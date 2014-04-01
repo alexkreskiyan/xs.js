@@ -195,8 +195,6 @@
                         default: desc
                     };
                 }
-                //default is fetched from value if not given
-                desc.hasOwnProperty('default') || (desc.default = desc.value);
                 //prepares descriptor
                 desc = prepareDescriptor(desc);
 

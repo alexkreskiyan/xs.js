@@ -129,7 +129,7 @@
                     //apply properties to object
                     xs.Object.each(Class.descriptor.properties, function (descriptor, name) {
                         xs.property.define(this, name, descriptor);
-                        this[name] = descriptor.default;
+                        descriptor.hasOwnProperty('default') && (this[name] = descriptor.default);
                     }, this);
                 }
                 //apply constructor
