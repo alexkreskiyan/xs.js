@@ -40,9 +40,11 @@
 xs.define('xs.util.Observable', {
     constructor: function () {
         this.events = {};
+        this.suspendedEvents = [];
     },
     properties: {
-        events: {}
+        events: {},
+        suspendedEvents: []
     },
     methods: {
         trigger: function (event) {
@@ -50,7 +52,7 @@ xs.define('xs.util.Observable', {
                 return;
             }
             var args = xs.Array.clone(arguments).slice(1);
-            xs.Array.each(this.events[event], function (dispatcher) {
+            xs.Array.has(this.suspendedEvents, event) || xs.Array.each(this.events[event], function (dispatcher) {
                 dispatcher.handler.apply(null, args);
             });
         },
@@ -138,6 +140,15 @@ xs.define('xs.util.Observable', {
 
             //apply eventMap
             me.applyMap(eventMap);
+        },
+        suspend: function (event) {
+            this.suspendedEvents = xs.Array.unique(xs.Array.union(this.suspendedEvents, event));
+        },
+        resume: function (event) {
+            xs.isArray(event) || (event = [event]);
+            this.suspendedEvents = xs.Array.findAll(this.suspendedEvents, function (name) {
+                return !xs.Array.has(event, name);
+            });
         },
         off: function (event, callback) {
             if (arguments.length == 0) {
