@@ -1,4 +1,23 @@
 /**
+ This file is core of xs.js 0.1
+
+ Copyright (c) 2013-2014, Annium Inc
+
+ Contact:  http://annium.com/contact
+
+ GNU General Public License Usage
+ This file may be used under the terms of the GNU General Public License version 3.0 as
+ published by the Free Software Foundation and appearing in the file LICENSE included in the
+ packaging of this file.
+
+ Please review the following information to ensure the GNU General Public License version 3.0
+ requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+ If you are unsure which license is appropriate for your use, please contact the sales department
+ at http://annium.com/contact.
+
+ */
+/**
  on/once: function(event[string], callback[function], context[object] = this)
  on/once: function(event[array], callback[function], context[object] = this)
  on / once: function(eventMap[object], context[object] = this)
@@ -87,7 +106,7 @@ xs.define('xs.util.Observable', {
                 eventMap = xs.Object.map(event, function (handler, event) {
                     return {
                         handler: function () {
-                            me.off(event, handler);
+                            me.unbind(event, handler);
                             handler.apply(scope, arguments);
                         },
                         callback: handler
@@ -98,7 +117,7 @@ xs.define('xs.util.Observable', {
                 xs.Array.each(event, function (event) {
                     eventMap[event] = {
                         handler: function () {
-                            me.off(event, callback);
+                            me.unbind(event, callback);
                             callback.apply(scope, arguments);
                         },
                         callback: callback
@@ -108,7 +127,7 @@ xs.define('xs.util.Observable', {
                 scope = context || me;
                 eventMap[event] = {
                     handler: function () {
-                        me.off(event, callback);
+                        me.unbind(event, callback);
                         callback.apply(scope, arguments);
                     },
                     callback: callback
@@ -146,13 +165,9 @@ xs.define('xs.util.Observable', {
             }
         },
         unbind: function (event, callback) {
-            var stack = this.events[event];
-            //find removed dispatcher
-            var dispatchers = xs.Array.findAll(stack, function (dispatcher) {
-                return dispatcher.callback == callback;
+            this.events[event] = xs.Array.findAll(this.events[event], function (dispatcher) {
+                return dispatcher.callback != callback;
             });
-            //remove dispatchers from stack
-            xs.Array.removeAll(stack, dispatchers);
         },
         listen: function (target, event, callback, context) {
             target.on(event, callback, context || target);
