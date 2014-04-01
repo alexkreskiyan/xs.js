@@ -360,7 +360,7 @@
             var mixins = {}, mixClass;
             xs.Array.each(data.mixins, function (mixin) {
                 mixClass = xs.ClassManager.get(mixin);
-                mixins[mixClass.label] = mixin;
+                xs.Array.has(mixins,mixin) || (mixins[mixClass.label] = mixin);
             });
             //update mixins at descriptor
             data.mixins = mixins;
@@ -376,7 +376,7 @@
         //public properties and methods
         data.properties = xs.Object.defaults(data.properties, inherits.properties);
         //methods are not defaulted from inherits - prototype usage covers that
-        data.mixins = xs.Object.defaults(data.mixins, inherits.mixins);
+        data.mixins = xs.Object.unique(xs.Object.defaults(data.mixins, inherits.mixins));
     });
     xs.Class.registerPreprocessor('mixins', function (Class, data) {
         var mixClasses = {};
