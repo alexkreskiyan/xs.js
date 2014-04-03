@@ -643,7 +643,7 @@ xs.define('xs.data.Connection', {
             if (!contentType) {
                 return result;
             }
-            if (contentType == 'application/json') {
+            if (contentType.indexOf('application/json') >= 0) {
                 try {
                     result = JSON.parse(response.responseText);
                 } catch (e) {
