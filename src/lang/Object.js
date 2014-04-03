@@ -461,7 +461,7 @@
          */
         var _extend = this.extend = function (obj) {
             var adds = xs.Array.union(slice(arguments, 1));
-            _each(adds, function (source) {
+            xs.Array.each(adds, function (source) {
                 source !== null && typeof source == 'object' && _each(source, function (value, name) {
                     obj[name] = value;
                 });
