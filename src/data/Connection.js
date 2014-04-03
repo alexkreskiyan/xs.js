@@ -224,10 +224,8 @@ xs.define('xs.data.Connection', {
                 return me.complete(request);
             }
 
-            //save deferred promise
-            request.promise = request.deferred.promise;
-
-            return request;
+            //return promise
+            return request.deferred.promise;
         },
         /**
          * process XDR request
@@ -478,7 +476,7 @@ xs.define('xs.data.Connection', {
             if ((request.xhr && request.xhr.readyState == 4) || me.isXdr) {
                 me.clearTimeout(request);
                 var response = me.complete(request, xdrResult);
-                response.ok ? request.deferred.resolve(response) : request.deferred.reject(response.statusText);
+                response.ok ? request.deferred.resolve(response.response) : request.deferred.reject(response.statusText);
                 me.cleanup(request);
             }
         },
