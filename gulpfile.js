@@ -2,6 +2,7 @@ var gulp = require('gulp');
 
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
+var closureCompiler = require('gulp-closure-compiler');
 
 var paths = {
     scripts: [
@@ -40,6 +41,7 @@ gulp.task('build minified', function () {
     // Minify and copy all JavaScript (except vendor scripts)
     return gulp.src(paths.scripts)
         .pipe(uglify())
+//        .pipe(closureCompiler())
         .pipe(concat('xs.min.js'))
         .pipe(gulp.dest('build/minified'));
 });
