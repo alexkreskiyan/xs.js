@@ -26,6 +26,7 @@ var paths = {
         'src/promise/Promise.js',
         'src/promise/Resolver.js',
         'src/data/Connection.js',
+        'src/draw/Color.js',
         'src/Ajax.js'
     ]
 };
