@@ -33,7 +33,7 @@ gulp.task('build uncompressed', function () {
     // Minify and copy all JavaScript (except vendor scripts)
     return gulp.src(paths.scripts)
         .pipe(concat('xs.js'))
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest('build/uncompressed'));
 });
 
 gulp.task('build minified', function () {
@@ -41,7 +41,7 @@ gulp.task('build minified', function () {
     return gulp.src(paths.scripts)
         .pipe(uglify())
         .pipe(concat('xs.min.js'))
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest('build/minified'));
 });
 
 // The default task (called when you run `gulp` from cli)
