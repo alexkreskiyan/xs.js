@@ -114,21 +114,30 @@
                     //instance privates
                     var privates = {};
                     //private setter/getter
-                    xs.method.define(this, '__get', {
-                        value: function (name) {
-                            return privates[name];
-                        }
-                    });
-                    xs.method.define(this, '__set', {
-                        value: function (name, value) {
-                            privates[name] = value;
-                        }
-                    });
+//                    xs.method.define(this, '__get', {
+//                        value: function (name) {
+//                            return privates[name];
+//                        }
+//                    });
+//                    xs.method.define(this, '__set', {
+//                        value: function (name, value) {
+//                            privates[name] = value;
+//                        }
+//                    });
+                    this.__get = function (name) {
+                        return privates[name];
+                    };
+                    this.__set = function (name, value) {
+                        privates[name] = value;
+                    };
                     //class reference
-                    xs.const(this, 'self', Class);
+//                    xs.const(this, 'self', Class);
+                    this.self = Class;
                     //apply properties to object
                     xs.Object.each(Class.descriptor.properties, function (descriptor, name) {
-                        xs.property.define(this, name, descriptor);
+                        //accessed descriptor only
+                        descriptor.hasOwnProperty('get') && xs.property.define(this, name, descriptor);
+                        //set default if given
                         descriptor.hasOwnProperty('default') && (this[name] = descriptor.default);
                     }, this);
                 }
@@ -360,7 +369,7 @@
             var mixins = {}, mixClass;
             xs.Array.each(data.mixins, function (mixin) {
                 mixClass = xs.ClassManager.get(mixin);
-                xs.Array.has(mixins,mixin) || (mixins[mixClass.label] = mixin);
+                xs.Array.has(mixins, mixin) || (mixins[mixClass.label] = mixin);
             });
             //update mixins at descriptor
             data.mixins = mixins;

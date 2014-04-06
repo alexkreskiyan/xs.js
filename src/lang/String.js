@@ -29,6 +29,12 @@
     var xs = root[ns];
 
     var string = xs.String = new (function () {
+        this.translate = function (string, replaces) {
+            xs.Object.each(replaces, function (to, from) {
+                string = string.split(from).join(to);
+            });
+            return string;
+        };
         /**
          * appends string to url
          * @param url
@@ -43,6 +49,7 @@
         };
     });
     xs.Object.extend(xs, {
+        translate: string.translate,
         urlAppend: string.urlAppend
     });
 })(window, 'xs');
