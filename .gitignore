@@ -1,3 +1,4 @@
 /build/minified/*.js
 /build/uncompressed/*.js
 /.idea/
+/docs/
