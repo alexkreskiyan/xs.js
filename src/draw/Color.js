@@ -478,7 +478,7 @@
 
 
             var parse = function () {
-                var args = xs.Array.clone(arguments),
+                var args = arguments,
                     len = args.length,
                     info = args[0];
 

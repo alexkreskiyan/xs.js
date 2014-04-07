@@ -626,23 +626,3 @@ test('toCss formatting', function () {
         strictEqual(color.toCss(test.options), test.value, 'toCss format ok');
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
