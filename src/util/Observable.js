@@ -48,11 +48,12 @@ xs.define('xs.util.Observable', {
     },
     methods: {
         trigger: function (event) {
-            if (!this.hasEvent(event)) {
+            var me=this;
+            if (!me.hasEvent(event)) {
                 return;
             }
             var args = xs.Array.clone(arguments).slice(1);
-            xs.Array.has(this.suspendedEvents, event) || xs.Array.each(this.events[event], function (dispatcher) {
+            xs.Array.has(me.suspendedEvents, event) || xs.Array.each(me.events[event], function (dispatcher) {
                 dispatcher.handler.apply(null, args);
             });
         },
