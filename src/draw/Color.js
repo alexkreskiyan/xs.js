@@ -517,9 +517,13 @@
                 me.__set('hue', color.hue);
                 me.__set('saturation', color.saturation);
                 me.__set('lightness', color.lightness);
+                me.trigger('change');
             };
 
             return {
+                mixins: {
+                    observable: 'xs.util.Observable'
+                },
                 const: {
                     knownColors: knownColors
                 },
@@ -556,25 +560,27 @@
                  * list
                  */
                 constructor: function () {
-                    var color = arguments[0];
+                    var me = this,
+                        color = arguments[0];
                     //if given as color
-                    if ((color instanceof Color) || (color = parse.apply(this, arguments))) {
-                        this.__set('red', color.red);
-                        this.__set('green', color.green);
-                        this.__set('blue', color.blue);
-                        this.__set('hue', color.hue);
-                        this.__set('saturation', color.saturation);
-                        this.__set('lightness', color.lightness);
-                        this.__set('alpha', color.alpha);
+                    if ((color instanceof Color) || (color = parse.apply(me, arguments))) {
+                        me.__set('red', color.red);
+                        me.__set('green', color.green);
+                        me.__set('blue', color.blue);
+                        me.__set('hue', color.hue);
+                        me.__set('saturation', color.saturation);
+                        me.__set('lightness', color.lightness);
+                        me.__set('alpha', color.alpha);
                     } else {
-                        this.__set('red', 0);
-                        this.__set('green', 0);
-                        this.__set('blue', 0);
-                        this.__set('hue', 0);
-                        this.__set('saturation', 0);
-                        this.__set('lightness', 0);
-                        this.__set('alpha', 1);
+                        me.__set('red', 0);
+                        me.__set('green', 0);
+                        me.__set('blue', 0);
+                        me.__set('hue', 0);
+                        me.__set('saturation', 0);
+                        me.__set('lightness', 0);
+                        me.__set('alpha', 1);
                     }
+                    me.mixins.observable.constructor.call(me);
                 },
                 properties: {
                     red: {
