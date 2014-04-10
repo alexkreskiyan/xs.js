@@ -692,6 +692,8 @@
                             }
 
                             this.__set('alpha', value);
+
+                            me.trigger('change');
                         }
                     }
                 },
