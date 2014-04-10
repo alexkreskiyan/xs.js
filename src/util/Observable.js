@@ -197,13 +197,13 @@ xs.define('xs.util.Observable', function () {
                 }
             },
             listen: function (target, event, callback, context) {
-                target.on.apply(target, arguments);
+                target.on.apply(target, xs.Array.clone(arguments).slice(1));
             },
             listenOnce: function (target, event, callback, context) {
-                target.once.apply(target, arguments);
+                target.once.apply(target, xs.Array.clone(arguments).slice(1));
             },
             ignore: function (target, event, callback) {
-                target.off.apply(target, arguments);
+                target.off.apply(target, xs.Array.clone(arguments).slice(1));
             },
             hasEvent: function (name) {
                 return this.events.hasOwnProperty(name);
