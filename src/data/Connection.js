@@ -291,7 +291,7 @@ xs.define('xs.data.Connection', {
 
             // make sure params are a url encoded string and include any extraParams if specified
             if (xs.isObject(params)) {
-                params = xs.toQueryString(params);
+                params = xs.toQueryString(params, true);
             }
 
             // decide the proper method for this request
