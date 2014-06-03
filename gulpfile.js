@@ -2,7 +2,6 @@ var gulp = require('gulp');
 
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
-var closureCompiler = require('gulp-closure-compiler');
 
 var paths = {
     scripts: [
@@ -11,6 +10,7 @@ var paths = {
         'src/lang/Array.js',
         'src/lang/Set.js',
         'src/Detect.js',
+        'src/Environment.js',
         'src/lang/Attribute.js',
         'src/lang/Date.js',
         'src/lang/Error.js',
@@ -38,14 +38,16 @@ gulp.task('build uncompressed', function () {
         .pipe(gulp.dest('build/uncompressed'));
 });
 
-gulp.task('build minified', function () {
-    // Minify and copy all JavaScript (except vendor scripts)
-    return gulp.src(paths.scripts)
-        .pipe(uglify())
-//        .pipe(closureCompiler())
-        .pipe(concat('xs.min.js'))
-        .pipe(gulp.dest('build/minified'));
-});
+//gulp.task('build minified', function () {
+//    // Minify and copy all JavaScript (except vendor scripts)
+//    return gulp.src(paths.scripts)
+//        .pipe(uglify())
+//        .pipe(concat('xs.min.js'))
+//        .pipe(gulp.dest('build/minified'));
+//});
 
 // The default task (called when you run `gulp` from cli)
-gulp.task('default', ['build uncompressed', 'build minified']);
+gulp.task('default', [
+//    'build minified',
+    'build uncompressed'
+]);
