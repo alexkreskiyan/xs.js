@@ -20,23 +20,23 @@ var userAgents = [
             cpu: {architecture: 'amd64'}
         }
     ],
-//    [
-//        'Mozilla/5.0 (Linux; Android 4.2.1; Lenovo K900_ROW Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.138 Mobile Safari/537.36',
-//        {
-//            browser: {name: 'chrome', major: '35', minor: '0', version: '35.0.1916.138'},
-//            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-//            os: {name: 'android', version: '4.2.1'},
-//            device: {model: undefined, type: undefined, vendor: undefined},
-//            cpu: {architecture: undefined}
-//        }
-//    ],
+    [
+        'Mozilla/5.0 (Linux; Android 4.2.1; Lenovo K900_ROW Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.138 Mobile Safari/537.36',
+        {
+            browser: {name: 'chrome', major: '35', minor: '0', version: '35.0.1916.138'},
+            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            os: {name: 'android', version: '4.2.1'},
+            device: {model: 'k900', type: 'smartphone', vendor: 'lenovo'},
+            cpu: {architecture: undefined}
+        }
+    ],
 //    [
 //        'Mozilla/5.0 (Linux; U; Android 4.2.1;ru-ru; Lenovo_K900_ROW/JOP40D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.2.1 Mobile Safari/534.30',
 //        {
-//            browser: {name: 'chromium', major: '34', minor: '0', version: '34.0.1847.116'},
-//            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+//            browser: {name: 'safari', major: '4', minor: '2', version: '4.2.1'},
+//            engine: {name: 'webkit', major: '534', minor: '30', version: '534.30'},
 //            os: {name: 'android', version: '4.2.1'},
-//            device: {model: undefined, type: undefined, vendor: undefined},
+//            device: {model: 'k900', type: 'smartphone', vendor: 'lenovo'},
 //            cpu: {architecture: undefined}
 //        }
 //    ],
@@ -526,36 +526,36 @@ var userAgents = [
 //        }
 //    ]
 ];
-test('detection', function () {
-    xs.Array.each(userAgents, function (testCase) {
+xs.Array.each(userAgents, function (testCase) {
+    test('env detection for ' + testCase[0], function () {
         var userAgent = testCase[0];
         var std = testCase[1];
         var env = xs.env;
 
-        navigator.__defineGetter__('userAgent', function(){
+        navigator.__defineGetter__('userAgent', function () {
             return userAgent; // customized user agent
         });
 
         env.update();
 
         //browser detection test
-        strictEqual(env.browser.name, std.browser.name, 'browser name match. UA:' + userAgent);
-        strictEqual(env.browser.major, std.browser.major, 'browser major match. UA:' + userAgent);
-        strictEqual(env.browser.minor, std.browser.minor, 'browser minor match. UA:' + userAgent);
-        strictEqual(env.browser.version, std.browser.version, 'browser version match. UA:' + userAgent);
+        strictEqual(env.browser.name, std.browser.name, 'browser name: ' + std.browser.name);
+        strictEqual(env.browser.major, std.browser.major, 'browser major: ' + std.browser.major);
+        strictEqual(env.browser.minor, std.browser.minor, 'browser minor: ' + std.browser.minor);
+        strictEqual(env.browser.version, std.browser.version, 'browser version: ' + std.browser.version);
         //engine detection test
-        strictEqual(env.engine.name, std.engine.name, 'engine name match. UA:' + userAgent);
-        strictEqual(env.engine.major, std.engine.major, 'engine major match. UA:' + userAgent);
-        strictEqual(env.engine.minor, std.engine.minor, 'engine minor match. UA:' + userAgent);
-        strictEqual(env.engine.version, std.engine.version, 'engine version match. UA:' + userAgent);
+        strictEqual(env.engine.name, std.engine.name, 'engine name: ' + std.engine.name);
+        strictEqual(env.engine.major, std.engine.major, 'engine major: ' + std.engine.major);
+        strictEqual(env.engine.minor, std.engine.minor, 'engine minor: ' + std.engine.minor);
+        strictEqual(env.engine.version, std.engine.version, 'engine version: ' + std.engine.version);
         //os detection test
-        strictEqual(env.os.name, std.os.name, 'os name match. UA:' + userAgent);
-        strictEqual(env.os.version, std.os.version, 'os version match. UA:' + userAgent);
+        strictEqual(env.os.name, std.os.name, 'os name: ' + std.os.name);
+        strictEqual(env.os.version, std.os.version, 'os version: ' + std.os.version);
         //device detection test
-        strictEqual(env.device.model, std.device.model, 'device model match. UA:' + userAgent);
-        strictEqual(env.device.type, std.device.type, 'device type match. UA:' + userAgent);
-        strictEqual(env.device.vendor, std.device.vendor, 'device vendor match. UA:' + userAgent);
+        strictEqual(env.device.model, std.device.model, 'device model: ' + std.device.model);
+        strictEqual(env.device.type, std.device.type, 'device type: ' + std.device.type);
+        strictEqual(env.device.vendor, std.device.vendor, 'device vendor: ' + std.device.vendor);
         //engine detection test
-        strictEqual(env.cpu.architecture, std.cpu.architecture, 'cpu architecture match. UA:' + userAgent);
+        strictEqual(env.cpu.architecture, std.cpu.architecture, 'cpu architecture: ' + std.cpu.architecture);
     });
 });

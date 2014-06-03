@@ -27,7 +27,7 @@
     //framework shorthand
     var xs = root[ns];
 
-    var environment = new (function () {
+    var environment = xs.env = new (function () {
         var me = this;
 
         //'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36'
@@ -91,9 +91,19 @@
                     ['linux'],
                     [/android/],
                     [/linux\s([\d\w_]+)/]
+                ],
+                [
+                    ['android'],
+                    [],
+                    [/android\s([\d\.]+)/]
                 ]
             ],
             device: [
+                [
+                    ['k900', 'smartphone', 'lenovo'],
+                    [],
+                    [/k900/]
+                ],
             ],
             cpu: [
                 [
@@ -116,7 +126,7 @@
                 //check if userAgent doesn't match any one of negativeRegExps given in rule
                 match = xs.Array.some(negativeRegExps, function (regExp) {
                     //check if userAgent matches given regExp
-                    return regExp.exec(userAgent);
+                    return regExp.test(userAgent);
                 });
 
                 //return false if at least one of negativeRegExps matched
@@ -163,13 +173,6 @@
             return result;
         };
 
-        //init data params
-        me.browser = {};
-        me.engine = {};
-        me.os = {};
-        me.device = {};
-        me.cpu = {};
-
         /**
          * Simple update function, that consumes userAgent from navigator and updates stored values.
          * Is called automatically once on start
@@ -177,11 +180,11 @@
         me.update = function () {
             var userAgent = me.userAgent = navigator.userAgent.toLowerCase();
             //update session variables with correct values
-            xs.Object.extend(me.browser, parse(userAgent, rules.browser, ['name', 'major', 'minor', 'version']));
-            xs.Object.extend(me.engine, parse(userAgent, rules.engine, ['name', 'major', 'minor', 'version']));
-            xs.Object.extend(me.os, parse(userAgent, rules.os, ['name', 'version']));
-            xs.Object.extend(me.device, parse(userAgent, rules.device, ['model', 'type', 'vendor']));
-            xs.Object.extend(me.cpu, parse(userAgent, rules.cpu, ['architecture']));
+            me.browser = parse(userAgent, rules.browser, ['name', 'major', 'minor', 'version']);
+            me.engine = parse(userAgent, rules.engine, ['name', 'major', 'minor', 'version']);
+            me.os = parse(userAgent, rules.os, ['name', 'version']);
+            me.device = parse(userAgent, rules.device, ['model', 'type', 'vendor']);
+            me.cpu = parse(userAgent, rules.cpu, ['architecture']);
         };
         me.update();
         /**
@@ -206,15 +209,5 @@
          * * architecture
          */
 
-    });
-    xs.env = {};
-    xs.Object.extend(xs.env, {
-        userAgent: environment.userAgent,
-        browser: environment.browser,
-        engine: environment.engine,
-        os: environment.os,
-        device: environment.device,
-        cpu: environment.cpu,
-        update: environment.update
     });
 })(window, 'xs');
