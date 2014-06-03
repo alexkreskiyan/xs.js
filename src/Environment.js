@@ -29,22 +29,6 @@
 
     var environment = new (function () {
         var me = this;
-        var userAgent = me.userAgent = navigator.userAgent.toLowerCase();
-
-        var browserName = 'name',
-            browserMajor = 'major',
-            browserMinor = 'minor',
-            browserVersion = 'version',
-            engineName = 'name',
-            engineMajor = 'major',
-            engineMinor = 'minor',
-            engineVersion = 'version',
-            osName = 'name',
-            osVersion = 'version',
-            deviceModel = 'model',
-            deviceType = 'type',
-            deviceVendor = 'vendor',
-            cpuArchitecture = 'architecture';
 
         //'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36'
         /**
@@ -61,88 +45,51 @@
          *    data selection order should match variables list order
          * @type {Object}
          */
+
         var rules = {
             browser: [
                 [
-                    [
-                        [browserName, 'chrome'],
-                        browserMajor,
-                        browserMinor,
-                        browserVersion
-                    ],
+                    ['chrome'],
                     [/chromium/],
                     [/chrome\/([\d]+)\.([\d]+)/, /chrome\/([\d\.]+)/]
                 ],
                 [
-                    [
-                        [browserName, 'chromium'],
-                        browserMajor,
-                        browserMinor,
-                        browserVersion
-                    ],
+                    ['chromium'],
                     [],
                     [/chrome\/([\d]+)\.([\d]+)/, /chrome\/([\d\.]+)/]
                 ],
                 [
-                    [
-                        [browserName, 'firefox'],
-                        browserMajor,
-                        browserMinor,
-                        browserVersion
-                    ],
+                    ['firefox'],
                     [],
                     [/firefox\/([\d]+)\.([\d]+)/, /firefox\/([\d\.]+)/]
                 ],
                 [
-                    [
-                        [browserName, 'opera'],
-                        browserMajor,
-                        browserMinor,
-                        browserVersion
-                    ],
+                    ['opera'],
                     [],
                     [/opera/, /version\/([\d]+)\.([\d]+)/, /version\/([\d\.]+)/]
                 ]
             ],
             engine: [
                 [
-                    [
-                        [engineName, 'webkit'],
-                        engineMajor,
-                        engineMinor,
-                        engineVersion
-                    ],
+                    ['webkit'],
                     [],
                     [/applewebkit\/([\d]+)\.([\d]+)/, /applewebkit\/([\d\.]+)/]
                 ],
                 [
-                    [
-                        [engineName, 'gecko'],
-                        engineMajor,
-                        engineMinor,
-                        engineVersion
-                    ],
+                    ['gecko'],
                     [],
                     [/firefox\/([\d]+)\.([\d]+)/, /firefox\/([\d\.]+)/]
                 ],
                 [
-                    [
-                        [engineName, 'presto'],
-                        engineMajor,
-                        engineMinor,
-                        engineVersion
-                    ],
+                    ['presto'],
                     [],
                     [/presto\/([\d]+)\.([\d]+)/, /presto\/([\d\.]+)/]
                 ]
             ],
             os: [
                 [
-                    [
-                        [osName, 'linux'],
-                        osVersion
-                    ],
-                    [],
+                    ['linux'],
+                    [/android/],
                     [/linux\s([\d\w_]+)/]
                 ]
             ],
@@ -150,19 +97,17 @@
             ],
             cpu: [
                 [
-                    [
-                        [cpuArchitecture, 'amd64']
-                    ],
+                    ['amd64'],
                     [],
                     [/x86_64/]
                 ]
             ]
         };
 
-        var parse = function (userAgent, rules, defaults) {
-            var result = xs.extend({}, defaults);
+        var parse = function (userAgent, rules, params) {
+            var result = {};
             xs.Array.find(rules, function (rule) {
-                var params = rule[0],
+                var defaults = xs.Array.clone(rule[0]),
                     negativeRegExps = rule[1],
                     positiveRegExps = rule[2],
                     data = [],
@@ -204,15 +149,10 @@
                     return false;
                 }
 
-                //iterate params and fill result
+                //iterate result and fill it
                 xs.Array.each(params, function (param) {
-                    //if param is given as array, than it has it's fixed value and we use it
-                    if (xs.isArray(param)) {
-                        result[param[0]] = param[1];
-                        //else - use related data element, specified by index in data array
-                    } else {
-                        result[param] = data.shift();
-                    }
+                    //if default value given - use it, else - fetch value from data
+                    result[param] = defaults.length ? defaults.shift() : data.shift();
                 });
 
                 //return true stops search
@@ -222,30 +162,28 @@
             //return search result
             return result;
         };
-        me.browser = parse(userAgent, rules.browser, {
-            name: undefined,
-            major: undefined,
-            minor: undefined,
-            version: undefined
-        });
-        me.engine = parse(userAgent, rules.engine, {
-            name: undefined,
-            major: undefined,
-            minor: undefined,
-            version: undefined
-        });
-        me.os = parse(userAgent, rules.os, {
-            name: undefined,
-            version: undefined
-        });
-        me.device = parse(userAgent, rules.device, {
-            model: undefined,
-            type: undefined,
-            vendor: undefined
-        });
-        me.cpu = parse(userAgent, rules.cpu, {
-            architecture: undefined
-        });
+
+        //init data params
+        me.browser = {};
+        me.engine = {};
+        me.os = {};
+        me.device = {};
+        me.cpu = {};
+
+        /**
+         * Simple update function, that consumes userAgent from navigator and updates stored values.
+         * Is called automatically once on start
+         */
+        me.update = function () {
+            var userAgent = me.userAgent = navigator.userAgent.toLowerCase();
+            //update session variables with correct values
+            xs.Object.extend(me.browser, parse(userAgent, rules.browser, ['name', 'major', 'minor', 'version']));
+            xs.Object.extend(me.engine, parse(userAgent, rules.engine, ['name', 'major', 'minor', 'version']));
+            xs.Object.extend(me.os, parse(userAgent, rules.os, ['name', 'version']));
+            xs.Object.extend(me.device, parse(userAgent, rules.device, ['model', 'type', 'vendor']));
+            xs.Object.extend(me.cpu, parse(userAgent, rules.cpu, ['architecture']));
+        };
+        me.update();
         /**
          * browser
          * * name
@@ -276,6 +214,7 @@
         engine: environment.engine,
         os: environment.os,
         device: environment.device,
-        cpu: environment.cpu
+        cpu: environment.cpu,
+        update: environment.update
     });
 })(window, 'xs');
