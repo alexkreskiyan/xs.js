@@ -28,7 +28,7 @@
     var xs = root[ns];
 
     var detect = xs.Detect = new (function () {
-
+        var me = this;
         /**
          * Return type passed arguments.
          * @param  {*} value
@@ -49,7 +49,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isArray = function (value) {
+        me.isArray = function (value) {
             return Array.isArray(value);
         };
 
@@ -58,7 +58,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isObject = function (value) {
+        me.isObject = function (value) {
             return getType(value) == 'object';
         };
 
@@ -67,7 +67,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isIterable = function (value) {
+        me.isIterable = function (value) {
             var valueType = getType(value);
             return valueType == 'object' || valueType == 'array';
         };
@@ -78,7 +78,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isPrimitive = function (value) {
+        me.isPrimitive = function (value) {
             var valueType = getType(value);
             return valueType !== 'object' && valueType !== 'array' && !this.isFunction(value);
         };
@@ -88,7 +88,7 @@
          * @param  {*}  value [description]
          * @return {Boolean}       [description]
          */
-        this.isFunction = function (value) {
+        me.isFunction = function (value) {
             return typeof value == 'function';
         };
 
@@ -97,7 +97,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isDate = function (value) {
+        me.isDate = function (value) {
             return this.isObject(value) && value instanceof Date;
         };
 
@@ -106,7 +106,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isString = function (value) {
+        me.isString = function (value) {
             return typeof value == 'string';
         };
 
@@ -117,7 +117,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isNumeric = function (value) {
+        me.isNumeric = function (value) {
             return !isNaN(parseFloat(value)) && isFinite(value) && !this.isArray(value);
         };
 
@@ -126,7 +126,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isNumber = function (value) {
+        me.isNumber = function (value) {
             return typeof value == 'number';
         };
 
@@ -135,7 +135,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isNull = function (value) {
+        me.isNull = function (value) {
             return value == null;
         };
 
@@ -144,7 +144,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isDefined = function (value) {
+        me.isDefined = function (value) {
             return typeof value != 'undefined';
         };
 
@@ -153,7 +153,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isBoolean = function (value) {
+        me.isBoolean = function (value) {
             return typeof value == 'boolean';
         };
 
@@ -162,7 +162,7 @@
          * @param  {*}  value
          * @return {Boolean}
          */
-        this.isEmpty = function (value) {
+        me.isEmpty = function (value) {
             var type = getType(value);
             if (type == 'object') {
                 return !Object.keys(value).length;
