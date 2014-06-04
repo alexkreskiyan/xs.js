@@ -105,7 +105,7 @@ var userAgents = [
         {
             browser: {name: 'safari', major: '4', minor: '0', version: '4.0'},
             engine: {name: 'webkit', major: '534', minor: '30', version: '534.30'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.2.2'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -115,7 +115,7 @@ var userAgents = [
         {
             browser: {name: 'chrome', major: '34', minor: '0', version: '34.0.1847.116'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'linux', version: undefined},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -125,7 +125,7 @@ var userAgents = [
         {
             browser: {name: 'chrome', major: '35', minor: '0', version: '35.0.1916.114'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '8'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -135,7 +135,7 @@ var userAgents = [
         {
             browser: {name: 'ie', major: '10', minor: '0', version: '10.0'},
             engine: {name: 'trident', major: '6', minor: '0', version: '6.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '8'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -145,7 +145,7 @@ var userAgents = [
         {
             browser: {name: 'firefox', major: '29', minor: '0', version: '29.0'},
             engine: {name: 'gecko', major: '29', minor: '0', version: '29.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
         }
@@ -155,7 +155,7 @@ var userAgents = [
         {
             browser: {name: 'chrome mobile', major: '18', minor: '0', version: '18.0.1025.308'},
             engine: {name: 'webkit', major: '535', minor: '19', version: '535.19'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.2.2'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -165,7 +165,7 @@ var userAgents = [
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.38'},
             engine: {name: 'webkit', major: '537', minor: '51', version: '537.51.1'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'ios', version: '7.1.1'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -175,7 +175,7 @@ var userAgents = [
         {
             browser: {name: 'safari mobile', major: '7', minor: '0', version: '7.0'},
             engine: {name: 'webkit', major: '537', minor: '51', version: '537.51.2'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'ios', version: '7.1.1'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -185,7 +185,7 @@ var userAgents = [
         {
             browser: {name: 'firefox', major: '28', minor: '0', version: '28.0'},
             engine: {name: 'gecko', major: '28', minor: '0', version: '28.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -195,7 +195,7 @@ var userAgents = [
         {
             browser: {name: 'chrome mobile', major: '28', minor: '0', version: '28.0.1500.94'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.4.2'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -205,7 +205,7 @@ var userAgents = [
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.4.2'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -215,7 +215,7 @@ var userAgents = [
         {
             browser: {name: 'ie', major: '9', minor: '0', version: '9.0'},
             engine: {name: 'trident', major: '5', minor: '0', version: '5.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
         }
@@ -225,7 +225,7 @@ var userAgents = [
         {
             browser: {name: 'ie', major: '9', minor: '0', version: '9.0'},
             engine: {name: 'trident', major: '5', minor: '0', version: '5.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -235,7 +235,7 @@ var userAgents = [
         {
             browser: {name: 'chrome', major: '33', minor: '0', version: '33.0.1750.154'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: 'xp'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
         }
@@ -245,7 +245,7 @@ var userAgents = [
         {
             browser: {name: 'ie', major: '8', minor: '0', version: '8.0'},
             engine: {name: 'trident', major: '4', minor: '0', version: '4.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -255,7 +255,7 @@ var userAgents = [
         {
             browser: {name: 'ie', major: '7', minor: '0', version: '7.0'},
             engine: {name: 'trident', major: undefined, minor: undefined, version: undefined},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -265,7 +265,7 @@ var userAgents = [
         {
             browser: {name: 'ie', major: '9', minor: '0', version: '9.0'},
             engine: {name: 'trident', major: '5', minor: '0', version: '5.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -275,7 +275,7 @@ var userAgents = [
         {
             browser: {name: 'ie', major: '7', minor: '0', version: '7.0'},
             engine: {name: 'trident', major: '5', minor: '0', version: '5.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -285,7 +285,7 @@ var userAgents = [
         {
             browser: {name: 'chrome', major: '35', minor: '0', version: '35.0.1916.114'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: 'xp'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
         }
@@ -295,7 +295,7 @@ var userAgents = [
         {
             browser: {name: 'yabrowser', major: '14', minor: '2', version: '14.2.1700.12508'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
         }
@@ -305,8 +305,8 @@ var userAgents = [
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            os: {name: 'android', version: '4.2.2'},
+            device: {model: 'galaxy s4 mini', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
         }
     ],
@@ -315,7 +315,7 @@ var userAgents = [
         {
             browser: {name: 'ie', major: '7', minor: '0', version: '7.0'},
             engine: {name: 'trident', major: undefined, minor: undefined, version: undefined},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
         }
@@ -325,7 +325,7 @@ var userAgents = [
         {
             browser: {name: 'ie', major: '8', minor: '0', version: '8.0'},
             engine: {name: 'trident', major: '4', minor: '0', version: '4.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
         }
@@ -335,7 +335,7 @@ var userAgents = [
         {
             browser: {name: 'ie', major: '7', minor: '0', version: '7.0'},
             engine: {name: 'trident', major: '5', minor: '0', version: '5.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
         }
@@ -345,7 +345,7 @@ var userAgents = [
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.2.2'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -355,7 +355,7 @@ var userAgents = [
         {
             browser: {name: 'safari mobile', major: '4', minor: '0', version: '4.0'},
             engine: {name: 'webkit', major: '534', minor: '30', version: '534.30'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.2.2'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -365,7 +365,7 @@ var userAgents = [
         {
             browser: {name: 'chrome', major: '33', minor: '0', version: '33.0.1750.154'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -375,7 +375,7 @@ var userAgents = [
         {
             browser: {name: 'chrome', major: '35', minor: '0', version: '35.0.1916.114'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -385,7 +385,7 @@ var userAgents = [
         {
             browser: {name: 'firefox', major: '28', minor: '0', version: '28.0'},
             engine: {name: 'gecko', major: '28', minor: '0', version: '28.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'linux', version: undefined},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -395,7 +395,7 @@ var userAgents = [
         {
             browser: {name: 'ie', major: '11', minor: '0', version: '11.0'},
             engine: {name: 'trident', major: '7', minor: '0', version: '7.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -405,7 +405,7 @@ var userAgents = [
         {
             browser: {name: 'chrome mobile', major: '18', minor: '0', version: '18.0.1025.308'},
             engine: {name: 'webkit', major: '535', minor: '19', version: '535.19'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.2.2'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -415,7 +415,7 @@ var userAgents = [
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.122'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.2.2'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -425,7 +425,7 @@ var userAgents = [
         {
             browser: {name: 'yabrowser', major: '14', minor: '4', version: '14.4.1750.8705.10'},
             engine: {name: 'webkit', major: '537', minor: '51', version: '537.51.1'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'ios', version: '7.1.1'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -435,7 +435,7 @@ var userAgents = [
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.2.1'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -445,7 +445,7 @@ var userAgents = [
         {
             browser: {name: 'safari mobile', major: '4', minor: '0', version: '4.0'},
             engine: {name: 'webkit', major: '534', minor: '30', version: '534.30'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.2.1'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -455,7 +455,7 @@ var userAgents = [
         {
             browser: {name: 'chrome', major: '34', minor: '0', version: '34.0.1847.137'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
         }
@@ -465,7 +465,7 @@ var userAgents = [
         {
             browser: {name: 'ie', major: '10', minor: '0', version: '10.0'},
             engine: {name: 'trident', major: '6', minor: '0', version: '6.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'windows', version: '8'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
         }
@@ -475,7 +475,7 @@ var userAgents = [
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.2.2'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -484,7 +484,7 @@ var userAgents = [
         {
             browser: {name: 'chrome mobile', major: '18', minor: '0', version: '18.0.1025.308'},
             engine: {name: 'webkit', major: '535', minor: '19', version: '535.19'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.2.2'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -493,7 +493,7 @@ var userAgents = [
         {
             browser: {name: 'chrome mobile', major: '18', minor: '0', version: '18.0.1025.166'},
             engine: {name: 'webkit', major: '535', minor: '19', version: '535.19'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'android', version: '4.2.1'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -502,7 +502,7 @@ var userAgents = [
         {
             browser: {name: 'safari', major: '7', minor: '0', version: '7.0.4'},
             engine: {name: 'webkit', major: '537', minor: '76', version: '537.76.4'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'os x', version: '10.9.3'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -511,7 +511,7 @@ var userAgents = [
         {
             browser: {name: 'chrome', major: '35', minor: '0', version: '35.0.1916.114'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'os x', version: '10.9.3'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -520,7 +520,7 @@ var userAgents = [
         {
             browser: {name: 'firefox', major: '28', minor: '0', version: '28.0'},
             engine: {name: 'gecko', major: '28', minor: '0', version: '28.0'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'os x', version: '10.9'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -529,7 +529,16 @@ var userAgents = [
         {
             browser: {name: 'safari mobile', major: '7', minor: '0', version: '7.0'},
             engine: {name: 'webkit', major: '537', minor: '51', version: '537.51.1'},
-            os: {name: 'linux', version: 'x86_64'},
+            os: {name: 'ios', version: '7.0.2'},
+            device: {model: undefined, type: undefined, vendor: undefined},
+            cpu: {architecture: undefined}
+        }
+    ],
+    ['Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; Touch; rv:11.0; IEMobile/11.0; NOKIA; Lumia 625) like Gecko',
+        {
+            browser: {name: 'ie mobile', major: '11', minor: '0', version: '11.0'},
+            engine: {name: 'trident', major: '7', minor: '0', version: '7.0'},
+            os: {name: 'windows phone', version: '8.1'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}
         }
@@ -553,13 +562,13 @@ xs.Array.each(userAgents, function (testCase) {
 //        strictEqual(env.browser.minor, std.browser.minor, 'browser minor: ' + std.browser.minor);
 //        strictEqual(env.browser.version, std.browser.version, 'browser version: ' + std.browser.version);
         //engine detection test
-        strictEqual(env.engine.name, std.engine.name, 'engine name: ' + std.engine.name);
-        strictEqual(env.engine.major, std.engine.major, 'engine major: ' + std.engine.major);
-        strictEqual(env.engine.minor, std.engine.minor, 'engine minor: ' + std.engine.minor);
-        strictEqual(env.engine.version, std.engine.version, 'engine version: ' + std.engine.version);
+//        strictEqual(env.engine.name, std.engine.name, 'engine name: ' + std.engine.name);
+//        strictEqual(env.engine.major, std.engine.major, 'engine major: ' + std.engine.major);
+//        strictEqual(env.engine.minor, std.engine.minor, 'engine minor: ' + std.engine.minor);
+//        strictEqual(env.engine.version, std.engine.version, 'engine version: ' + std.engine.version);
 //        //os detection test
-//        strictEqual(env.os.name, std.os.name, 'os name: ' + std.os.name);
-//        strictEqual(env.os.version, std.os.version, 'os version: ' + std.os.version);
+        strictEqual(env.os.name, std.os.name, 'os name: ' + std.os.name);
+        strictEqual(env.os.version, std.os.version, 'os version: ' + std.os.version);
 //        //device detection test
 //        strictEqual(env.device.model, std.device.model, 'device model: ' + std.device.model);
 //        strictEqual(env.device.type, std.device.type, 'device type: ' + std.device.type);

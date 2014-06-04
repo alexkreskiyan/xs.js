@@ -59,7 +59,7 @@
                 operaMobile: 'opera mobile',
                 operaMini: 'opera mini',
                 ie: 'ie',
-                ieMobile: 'iemobile',
+                ieMobile: 'ie mobile',
                 yabrowser: 'yabrowser'
             },
             engine = {
@@ -69,10 +69,11 @@
                 trident: 'trident'
             },
             os = {
-                windows: 'windows',
                 linux: 'linux',
-                osx: 'os x',
+                windows: 'windows',
+                windowsPhone: 'windows phone',
                 android: 'android',
+                osx: 'os x',
                 ios: 'ios'
             },
             device = {
@@ -127,13 +128,18 @@
                 ],
                 [
                     [browser.ie],
-                    [],
+                    [/iemobile/],
                     [/msie\s([\d]+)\.([\d]+)/, /msie\s([\d\.]+)/]
                 ],
                 [
-                    [browser.ie,'11','0','11.0'],
-                    [],
+                    [browser.ie, '11', '0', '11.0'],
+                    [/iemobile/],
                     [/trident\/7/]
+                ],
+                [
+                    [browser.ieMobile],
+                    [],
+                    [/iemobile\/([\d]+)\.([\d]+)/, /iemobile\/([\d\.]+)/]
                 ],
                 [
                     [browser.yabrowser],
@@ -175,11 +181,6 @@
                     [/linux\s/]
                 ],
                 [
-                    [os.android],
-                    [],
-                    [/android\s([\d\.]+)/]
-                ],
-                [
                     [os.windows, 'xp'],
                     [],
                     [/windows\snt\s5\.(?:1|2)/]
@@ -203,6 +204,26 @@
                     [os.windows, '8.1'],
                     [],
                     [/windows\snt\s6\.3/]
+                ],
+                [
+                    [os.windowsPhone],
+                    [],
+                    [/windows\sphone(?:\sos)?\s([\d\.]+)/]
+                ],
+                [
+                    [os.android],
+                    [],
+                    [/android\s([\d\.]+)/]
+                ],
+                [
+                    [os.osx, [/([\d]+)(?:_|\.)([\d]+)(?:_|\.)([\d]+)/, '$1.$2.$3']],
+                    [],
+                    [/os\sx\s([\d_\.]+)/]
+                ],
+                [
+                    [os.ios, [/([\d]+)(?:_|\.)([\d]+)(?:_|\.)([\d]+)/, '$1.$2.$3']],
+                    [],
+                    [/iphone\sos\s([\d_\.]+)/]
                 ]
             ],
             device: [
@@ -299,8 +320,14 @@
                 //iterate result and fill it
                 xs.Array.each(params, function (param) {
                     //if default value given - use it, else - fetch value from data
-                    if (defaults[0]) {
+                    if (xs.isString(defaults[0])) {
                         result[param] = defaults.shift();
+                    } else if (xs.isArray(defaults[0])) {
+                        //defaults item contains parser rules for parsing obtained result
+                        var raw = data.shift();
+                        var parser = defaults.shift();
+                        //parse raw data and assign
+                        result[param] = raw.replace(parser[0], parser[1]);
                     } else {
                         result[param] = data.shift();
                         //shift empty default value
