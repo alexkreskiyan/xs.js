@@ -63,6 +63,10 @@ xs.define('xs.Ajax', {
         /**
          * @property requests {Object} pending requests
          */
-        requests: {}
+        requests: {},
+        /**
+         * @property cors {Boolean} means, that request is cross-domain by default
+         */
+        cors: true//TODO
     }
 });

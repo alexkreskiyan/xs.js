@@ -363,7 +363,7 @@ var userAgents = [
     [
         'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36 OPR/20.0.1387.91 (Edition Yx)',
         {
-            browser: {name: 'chrome', major: '33', minor: '0', version: '33.0.1750.154'},
+            browser: {name: 'opera', major: '20', minor: '0', version: '20.0.1387.91'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
             os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},

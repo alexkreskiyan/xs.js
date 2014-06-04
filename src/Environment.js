@@ -105,7 +105,10 @@
          * Is called automatically once on start
          */
         me.detect = function () {
+            //user agent string
             var userAgent = me.userAgent = navigator.userAgent.toLowerCase();
+            //location
+            me.location = location;
             //set session variables with correct values
             me.browser = parse(userAgent, rules.browser, ['name', 'major', 'minor', 'version']);
             me.engine = parse(userAgent, rules.engine, ['name', 'major', 'minor', 'version']);
@@ -119,8 +122,13 @@
             me.isMac = me.os.name == os.osx;
             //mobile os
             me.isAndroid = me.os.name == os.android;
-            me.isIOS = me.os.name == os.ios;
+            me.isiOS = me.os.name == os.ios;
             me.isWindowsPhone = me.os.name == os.windowsPhone;
+            //engines
+            me.isWebkit = me.engine.name == engine.webkit;
+            me.isGecko = me.engine.name == engine.gecko;
+            me.isPresto = me.engine.name == engine.presto;
+            me.isTrident = me.engine.name == engine.trident;
             //desktop browsers
             me.isChrome = xs.Array.has([browser.chrome, browser.chromium], me.browser.name);
             me.isFirefox = me.browser.name == browser.firefox;
@@ -130,9 +138,12 @@
             //mobile browsers
             me.isChromeMobile = me.browser.name == browser.chromeMobile;
             me.isFirefoxMobile = me.browser.name == browser.firefoxMobile;
-            me.isOperaMobile = (me.browser.name == browser.operaMobile || me.browser.name == browser.operaMini)
+            me.isOperaMobile = (me.browser.name == browser.operaMobile || me.browser.name == browser.operaMini);
             me.isSafariMobile = me.browser.name == browser.safariMobile;
             me.isIEMobile = me.browser.name == browser.ieMobile;
+            //arch
+            me.is32 = me.cpu.architecture == arch.x32;
+            me.is64 = me.cpu.architecture == arch.x64;
         };
 
         /**
@@ -191,7 +202,7 @@
             browser: [
                 [
                     [browser.chrome],
-                    [/chromium/, /mobile/, /yabrowser/],
+                    [/chromium/, /mobile/, /yabrowser/, /opr\//],
                     [/chrome\/([\d]+)\.([\d]+)/, /chrome\/([\d\.]+)/]
                 ],
                 [
@@ -230,6 +241,11 @@
                     [/opera/, /version\/([\d]+)\.([\d]+)/, /version\/([\d\.]+)/]
                 ],
                 [
+                    [browser.opera],
+                    [],
+                    [/opr\/([\d]+)\.([\d]+)/, /opr\/([\d\.]+)/]
+                ],
+                [
                     [browser.ie],
                     [/iemobile/],
                     [/msie\s([\d]+)\.([\d]+)/, /msie\s([\d\.]+)/]
@@ -259,7 +275,7 @@
                 [
                     [engine.gecko],
                     [],
-                    [/firefox\/([\d]+)\.([\d]+)/, /firefox\/([\d\.]+)/]
+                    [/gecko\//, /rv:([\d]+)\.([\d]+)/, /rv:([\d\.]+)/]
                 ],
                 [
                     [engine.presto],
@@ -421,4 +437,44 @@
         };
         me.detect();
     });
-})(window, 'xs');
+    xs.extend(xs, {
+        //commons
+        userAgent: xs.env.userAgent,
+        location: xs.env.location,
+        browser: xs.env.browser,
+        engine: xs.env.engine,
+        os: xs.env.os,
+        device: xs.env.device,
+        cpu: xs.env.cpu,
+        //shortcuts
+        //desktop os
+        isLinux: xs.env.isLinux,
+        isWindows: xs.env.isWindows,
+        isMac: xs.env.isMac,
+        //mobile os
+        isAndroid: xs.env.isAndroid,
+        isiOS: xs.env.isiOS,
+        isWindowsPhone: xs.env.isWindowsPhone,
+        //engines
+        isWebkit: xs.env.isWebkit,
+        isGecko: xs.env.isGecko,
+        isPresto: xs.env.isPresto,
+        isTrident: xs.env.isTrident,
+        //desktop browsers
+        isChrome: xs.env.isChrome,
+        isFirefox: xs.env.isFirefox,
+        isOpera: xs.env.isOpera,
+        isSafari: xs.env.isSafari,
+        isIE: xs.env.isIE,
+        //mobile browsers
+        isChromeMobile: xs.env.isChromeMobile,
+        isFirefoxMobile: xs.env.isFirefoxMobile,
+        isOperaMobile: xs.env.isOperaMobile,
+        isSafariMobile: xs.env.isSafariMobile,
+        isIEMobile: xs.env.isIEMobile,
+        //arch
+        is32: xs.env.is32,
+        is64: xs.env.is64
+    });
+})
+(window, 'xs');

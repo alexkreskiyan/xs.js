@@ -29,7 +29,8 @@
     var xs = root[ns];
 
     var string = xs.String = new (function () {
-        this.translate = function (string, replaces) {
+        var me = this;
+        me.translate = function (string, replaces) {
             xs.Object.each(replaces, function (to, from) {
                 string = string.split(from).join(to);
             });
@@ -41,7 +42,7 @@
          * @param string
          * @returns {*}
          */
-        this.urlAppend = function (url, string) {
+        me.urlAppend = function (url, string) {
             if (xs.isEmpty(string)) {
                 return url;
             }
