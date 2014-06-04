@@ -156,6 +156,16 @@
                     [engine.presto],
                     [],
                     [/presto\/([\d]+)\.([\d]+)/, /presto\/([\d\.]+)/]
+                ],
+                [
+                    [engine.trident],
+                    [],
+                    [/trident\/([\d]+)\.([\d]+)/, /trident\/([\d\.]+)/]
+                ],
+                [
+                    [engine.trident],
+                    [],
+                    [/msie/]
                 ]
             ],
             os: [
