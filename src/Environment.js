@@ -27,17 +27,101 @@
     //framework shorthand
     var xs = root[ns];
 
-    var environment = xs.env = new (function () {
+    xs.env = new (function () {
         var me = this;
+        var parse = function (userAgent, rules, params) {
+            var result = {};
+            xs.Array.find(rules, function (rule) {
+                var defaults = xs.Array.clone(rule[0]),
+                    negativeRegExps = rule[1],
+                    positiveRegExps = rule[2],
+                    data = [],
+                    match;
 
-        //'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36'
+                //check if userAgent doesn't match any one of negativeRegExps given in rule
+                match = xs.Array.some(negativeRegExps, function (regExp) {
+                    //check if userAgent matches given regExp
+                    return regExp.test(userAgent);
+                });
+
+                //return false if at least one of negativeRegExps matched
+                if (match) {
+                    return false;
+                }
+
+                //check if userAgent matches all positiveRegExps given in rule
+                match = xs.Array.every(positiveRegExps, function (regExp) {
+                    //check if userAgent matches given regExp
+                    var result = regExp.exec(userAgent);
+
+                    //if no match - return false, that will cause xs.Array.every loop break
+                    if (!result) {
+                        return false;
+                    }
+
+                    //shift first element - that means whole match data to gain only selected ones
+                    result.shift();
+                    //if data not empty - union data with result, saving order
+                    if (result.length) {
+                        data = xs.Array.union(data, result);
+                    }
+                    //sign, that userAgent matched this regExp
+                    return true;
+                });
+
+                //return false if no match established and search will be continues
+                if (!match) {
+                    return false;
+                }
+
+                //iterate result and fill it
+                xs.Array.each(params, function (param) {
+                    //if default value given - use it, else - fetch value from data
+                    if (xs.isString(defaults[0])) {
+                        result[param] = defaults.shift();
+                    } else if (xs.isArray(defaults[0])) {
+                        //defaults item contains parser rules for parsing obtained result
+                        var raw = data.shift();
+                        var parser = defaults.shift();
+                        //parse raw data and assign
+                        result[param] = raw.replace(parser[0], parser[1]);
+                    } else {
+                        result[param] = data.shift();
+                        //shift empty default value
+                        defaults.length && defaults.shift();
+                    }
+                });
+
+                //return true stops search
+                return true;
+            });
+
+            //return search result
+            return result;
+        };
+
+        /**
+         * Simple update function, that consumes userAgent from navigator and updates stored values.
+         * Is called automatically once on start
+         */
+        me.update = function () {
+            var userAgent = me.userAgent = navigator.userAgent.toLowerCase();
+            //update session variables with correct values
+            me.browser = parse(userAgent, rules.browser, ['name', 'major', 'minor', 'version']);
+            me.engine = parse(userAgent, rules.engine, ['name', 'major', 'minor', 'version']);
+            me.os = parse(userAgent, rules.os, ['name', 'version']);
+            me.device = parse(userAgent, rules.device, ['model', 'type', 'vendor']);
+            me.cpu = parse(userAgent, rules.cpu, ['architecture']);
+        };
+        xs.nextTick(me.update);
+
         /**
          * Rules hash for different aspects of environment detection
          * Each rule in array must have 3 items:
          *  - variables list
          *    contains variables, being fetched from rule, written is direct fetch order
-         *    variable can be given as string from list of variables above, or as array with 2 elements:
-         *    variable name and it's value, that will be set for this variable
+         *    variable can be given as default value for relative param, or empty value - then fetched data will be used,
+         *    or as array with 2 elements: variable parsing rule and it compunding string
          *  - negative regular expressions
          *    here are expressions, that have not to be executed for rule to be matched
          *  - positive and data containing regular expressions
@@ -45,7 +129,6 @@
          *    data selection order should match variables list order
          * @type {Object}
          */
-
         var browser = {
                 chrome: 'chrome',
                 chromeMobile: 'chrome mobile',
@@ -248,9 +331,54 @@
                     [/(nexus\s(?:7|8|9|10)+)/]
                 ],
                 [
-                    ['galaxy s4', 'mobile', 'samsung'],
+                    ['galaxy s4', device.mobile, 'samsung'],
                     [],
-                    [/gt-i9505/]
+                    [/gt-i950[\d]{1}/]
+                ],
+                [
+                    ['galaxy mega', device.mobile, 'samsung'],
+                    [],
+                    [/gt-i920[\d]{1}/]
+                ],
+                [
+                    ['iphone', device.mobile, 'apple'],
+                    [],
+                    [/iphone/]
+                ],
+                [
+                    ['galaxy note 3', device.mobile, 'samsung'],
+                    [],
+                    [/sm-n900/]
+                ],
+                [
+                    ['galaxy s4 mini', device.mobile, 'samsung'],
+                    [],
+                    [/gt-i9190/]
+                ],
+                [
+                    ['xenium w6610', device.mobile, 'philips'],
+                    [],
+                    [/philips\sw6610/]
+                ],
+                [
+                    ['galaxy s4 mini duos', device.mobile, 'samsung'],
+                    [],
+                    [/gt-i9192/]
+                ],
+                [
+                    ['zopo captain s', device.mobile, 'zopo'],
+                    [],
+                    [/zp990/]
+                ],
+                [
+                    ['galaxy ace 3', device.mobile, 'samsung'],
+                    [],
+                    [/gt-s7270/]
+                ],
+                [
+                    ['lumia 625', device.mobile, 'nokia'],
+                    [],
+                    [/lumia\s625/]
                 ]
             ],
             cpu: [
@@ -271,113 +399,5 @@
                 ]
             ]
         };
-
-        var parse = function (userAgent, rules, params) {
-            var result = {};
-            xs.Array.find(rules, function (rule) {
-                var defaults = xs.Array.clone(rule[0]),
-                    negativeRegExps = rule[1],
-                    positiveRegExps = rule[2],
-                    data = [],
-                    match;
-
-                //check if userAgent doesn't match any one of negativeRegExps given in rule
-                match = xs.Array.some(negativeRegExps, function (regExp) {
-                    //check if userAgent matches given regExp
-                    return regExp.test(userAgent);
-                });
-
-                //return false if at least one of negativeRegExps matched
-                if (match) {
-                    return false;
-                }
-
-                //check if userAgent matches all positiveRegExps given in rule
-                match = xs.Array.every(positiveRegExps, function (regExp) {
-                    //check if userAgent matches given regExp
-                    var result = regExp.exec(userAgent);
-
-                    //if no match - return false, that will cause xs.Array.every loop break
-                    if (!result) {
-                        return false;
-                    }
-
-                    //shift first element - that means whole match data to gain only selected ones
-                    result.shift();
-                    //if data not empty - union data with result, saving order
-                    if (result.length) {
-                        data = xs.Array.union(data, result);
-                    }
-                    //sign, that userAgent matched this regExp
-                    return true;
-                });
-
-                //return false if no match established and search will be continues
-                if (!match) {
-                    return false;
-                }
-
-                //iterate result and fill it
-                xs.Array.each(params, function (param) {
-                    //if default value given - use it, else - fetch value from data
-                    if (xs.isString(defaults[0])) {
-                        result[param] = defaults.shift();
-                    } else if (xs.isArray(defaults[0])) {
-                        //defaults item contains parser rules for parsing obtained result
-                        var raw = data.shift();
-                        var parser = defaults.shift();
-                        //parse raw data and assign
-                        result[param] = raw.replace(parser[0], parser[1]);
-                    } else {
-                        result[param] = data.shift();
-                        //shift empty default value
-                        defaults.length && defaults.shift();
-                    }
-                });
-
-                //return true stops search
-                return true;
-            });
-
-            //return search result
-            return result;
-        };
-
-        /**
-         * Simple update function, that consumes userAgent from navigator and updates stored values.
-         * Is called automatically once on start
-         */
-        me.update = function () {
-            var userAgent = me.userAgent = navigator.userAgent.toLowerCase();
-            //update session variables with correct values
-            me.browser = parse(userAgent, rules.browser, ['name', 'major', 'minor', 'version']);
-            me.engine = parse(userAgent, rules.engine, ['name', 'major', 'minor', 'version']);
-            me.os = parse(userAgent, rules.os, ['name', 'version']);
-            me.device = parse(userAgent, rules.device, ['model', 'type', 'vendor']);
-            me.cpu = parse(userAgent, rules.cpu, ['architecture']);
-        };
-        me.update();
-        /**
-         * browser
-         * * name
-         * * major
-         * * minor
-         * * version
-         * engine
-         * * name
-         * * major
-         * * minor
-         * * version
-         * os
-         * * name
-         * * version
-         * device
-         * * model
-         * * type
-         * * vendor
-         * cpu
-         * * architecture
-         */
-
     });
 })(window, 'xs');

@@ -106,7 +106,7 @@ var userAgents = [
             browser: {name: 'safari', major: '4', minor: '0', version: '4.0'},
             engine: {name: 'webkit', major: '534', minor: '30', version: '534.30'},
             os: {name: 'android', version: '4.2.2'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'galaxy mega', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
         }
     ],
@@ -156,7 +156,7 @@ var userAgents = [
             browser: {name: 'chrome mobile', major: '18', minor: '0', version: '18.0.1025.308'},
             engine: {name: 'webkit', major: '535', minor: '19', version: '535.19'},
             os: {name: 'android', version: '4.2.2'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'galaxy mega', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
         }
     ],
@@ -166,7 +166,7 @@ var userAgents = [
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.38'},
             engine: {name: 'webkit', major: '537', minor: '51', version: '537.51.1'},
             os: {name: 'ios', version: '7.1.1'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'iphone', type: 'mobile', vendor: 'apple'},
             cpu: {architecture: undefined}
         }
     ],
@@ -176,7 +176,7 @@ var userAgents = [
             browser: {name: 'safari mobile', major: '7', minor: '0', version: '7.0'},
             engine: {name: 'webkit', major: '537', minor: '51', version: '537.51.2'},
             os: {name: 'ios', version: '7.1.1'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'iphone', type: 'mobile', vendor: 'apple'},
             cpu: {architecture: undefined}
         }
     ],
@@ -196,7 +196,7 @@ var userAgents = [
             browser: {name: 'chrome mobile', major: '28', minor: '0', version: '28.0.1500.94'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.4.2'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'galaxy note 3', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
         }
     ],
@@ -206,7 +206,7 @@ var userAgents = [
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.4.2'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'galaxy note 3', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
         }
     ],
@@ -346,7 +346,7 @@ var userAgents = [
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.2.2'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'xenium w6610', type: 'mobile', vendor: 'philips'},
             cpu: {architecture: undefined}
         }
     ],
@@ -356,7 +356,7 @@ var userAgents = [
             browser: {name: 'safari mobile', major: '4', minor: '0', version: '4.0'},
             engine: {name: 'webkit', major: '534', minor: '30', version: '534.30'},
             os: {name: 'android', version: '4.2.2'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'xenium w6610', type: 'mobile', vendor: 'philips'},
             cpu: {architecture: undefined}
         }
     ],
@@ -406,7 +406,7 @@ var userAgents = [
             browser: {name: 'chrome mobile', major: '18', minor: '0', version: '18.0.1025.308'},
             engine: {name: 'webkit', major: '535', minor: '19', version: '535.19'},
             os: {name: 'android', version: '4.2.2'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'galaxy s4 mini duos', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
         }
     ],
@@ -416,7 +416,7 @@ var userAgents = [
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.122'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.2.2'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'galaxy s4 mini duos', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
         }
     ],
@@ -426,7 +426,7 @@ var userAgents = [
             browser: {name: 'yabrowser', major: '14', minor: '4', version: '14.4.1750.8705.10'},
             engine: {name: 'webkit', major: '537', minor: '51', version: '537.51.1'},
             os: {name: 'ios', version: '7.1.1'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'iphone', type: 'mobile', vendor: 'apple'},
             cpu: {architecture: undefined}
         }
     ],
@@ -436,7 +436,7 @@ var userAgents = [
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.2.1'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'zopo captain s', type: 'mobile', vendor: 'zopo'},
             cpu: {architecture: undefined}
         }
     ],
@@ -446,7 +446,7 @@ var userAgents = [
             browser: {name: 'safari mobile', major: '4', minor: '0', version: '4.0'},
             engine: {name: 'webkit', major: '534', minor: '30', version: '534.30'},
             os: {name: 'android', version: '4.2.1'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'zopo captain s', type: 'mobile', vendor: 'zopo'},
             cpu: {architecture: undefined}
         }
     ],
@@ -476,7 +476,7 @@ var userAgents = [
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
             engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.2.2'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'galaxy ace 3', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
         }
     ],
@@ -485,7 +485,7 @@ var userAgents = [
             browser: {name: 'chrome mobile', major: '18', minor: '0', version: '18.0.1025.308'},
             engine: {name: 'webkit', major: '535', minor: '19', version: '535.19'},
             os: {name: 'android', version: '4.2.2'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'galaxy ace 3', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
         }
     ],
@@ -494,7 +494,7 @@ var userAgents = [
             browser: {name: 'chrome mobile', major: '18', minor: '0', version: '18.0.1025.166'},
             engine: {name: 'webkit', major: '535', minor: '19', version: '535.19'},
             os: {name: 'android', version: '4.2.1'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'nexus 4', type: 'mobile', vendor: 'google'},
             cpu: {architecture: undefined}
         }
     ],
@@ -530,7 +530,7 @@ var userAgents = [
             browser: {name: 'safari mobile', major: '7', minor: '0', version: '7.0'},
             engine: {name: 'webkit', major: '537', minor: '51', version: '537.51.1'},
             os: {name: 'ios', version: '7.0.2'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'iphone', type: 'mobile', vendor: 'apple'},
             cpu: {architecture: undefined}
         }
     ],
@@ -539,7 +539,7 @@ var userAgents = [
             browser: {name: 'ie mobile', major: '11', minor: '0', version: '11.0'},
             engine: {name: 'trident', major: '7', minor: '0', version: '7.0'},
             os: {name: 'windows phone', version: '8.1'},
-            device: {model: undefined, type: undefined, vendor: undefined},
+            device: {model: 'lumia 625', type: 'mobile', vendor: 'nokia'},
             cpu: {architecture: undefined}
         }
     ]
@@ -567,13 +567,13 @@ xs.Array.each(userAgents, function (testCase) {
 //        strictEqual(env.engine.minor, std.engine.minor, 'engine minor: ' + std.engine.minor);
 //        strictEqual(env.engine.version, std.engine.version, 'engine version: ' + std.engine.version);
 //        //os detection test
-        strictEqual(env.os.name, std.os.name, 'os name: ' + std.os.name);
-        strictEqual(env.os.version, std.os.version, 'os version: ' + std.os.version);
+//        strictEqual(env.os.name, std.os.name, 'os name: ' + std.os.name);
+//        strictEqual(env.os.version, std.os.version, 'os version: ' + std.os.version);
 //        //device detection test
 //        strictEqual(env.device.model, std.device.model, 'device model: ' + std.device.model);
 //        strictEqual(env.device.type, std.device.type, 'device type: ' + std.device.type);
 //        strictEqual(env.device.vendor, std.device.vendor, 'device vendor: ' + std.device.vendor);
 //        //engine detection test
-//        strictEqual(env.cpu.architecture, std.cpu.architecture, 'cpu architecture: ' + std.cpu.architecture);
+        strictEqual(env.cpu.architecture, std.cpu.architecture, 'cpu architecture: ' + std.cpu.architecture);
     });
 });
