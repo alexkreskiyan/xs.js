@@ -101,19 +101,39 @@
         };
 
         /**
-         * Simple update function, that consumes userAgent from navigator and updates stored values.
+         * Detect function, that consumes userAgent from navigator and updates stored values.
          * Is called automatically once on start
          */
-        me.update = function () {
+        me.detect = function () {
             var userAgent = me.userAgent = navigator.userAgent.toLowerCase();
-            //update session variables with correct values
+            //set session variables with correct values
             me.browser = parse(userAgent, rules.browser, ['name', 'major', 'minor', 'version']);
             me.engine = parse(userAgent, rules.engine, ['name', 'major', 'minor', 'version']);
             me.os = parse(userAgent, rules.os, ['name', 'version']);
             me.device = parse(userAgent, rules.device, ['model', 'type', 'vendor']);
             me.cpu = parse(userAgent, rules.cpu, ['architecture']);
+            //set shortcuts
+            //for desktop os
+            me.isLinux = me.os.name == os.linux;
+            me.isWindows = me.os.name == os.windows;
+            me.isMac = me.os.name == os.osx;
+            //mobile os
+            me.isAndroid = me.os.name == os.android;
+            me.isIOS = me.os.name == os.ios;
+            me.isWindowsPhone = me.os.name == os.windowsPhone;
+            //desktop browsers
+            me.isChrome = xs.Array.has([browser.chrome, browser.chromium], me.browser.name);
+            me.isFirefox = me.browser.name == browser.firefox;
+            me.isOpera = me.browser.name == browser.opera;
+            me.isSafari = me.browser.name == browser.safari;
+            me.isIE = me.browser.name == browser.ie;
+            //mobile browsers
+            me.isChromeMobile = me.browser.name == browser.chromeMobile;
+            me.isFirefoxMobile = me.browser.name == browser.firefoxMobile;
+            me.isOperaMobile = (me.browser.name == browser.operaMobile || me.browser.name == browser.operaMini)
+            me.isSafariMobile = me.browser.name == browser.safariMobile;
+            me.isIEMobile = me.browser.name == browser.ieMobile;
         };
-        xs.nextTick(me.update);
 
         /**
          * Rules hash for different aspects of environment detection
@@ -394,10 +414,11 @@
                 ],
                 [
                     [arch.x32],
-                    [/(?:x|wow)64/,/phone/],
+                    [/(?:x|wow)64/, /phone/],
                     [/windows/]
                 ]
             ]
         };
+        me.detect();
     });
 })(window, 'xs');

@@ -554,26 +554,26 @@ xs.Array.each(userAgents, function (testCase) {
             return userAgent; // customized user agent
         });
 
-        env.update();
+        env.detect();
 
         //browser detection test
-//        strictEqual(env.browser.name, std.browser.name, 'browser name: ' + std.browser.name);
-//        strictEqual(env.browser.major, std.browser.major, 'browser major: ' + std.browser.major);
-//        strictEqual(env.browser.minor, std.browser.minor, 'browser minor: ' + std.browser.minor);
-//        strictEqual(env.browser.version, std.browser.version, 'browser version: ' + std.browser.version);
+        strictEqual(env.browser.name, std.browser.name, 'browser name: ' + std.browser.name);
+        strictEqual(env.browser.major, std.browser.major, 'browser major: ' + std.browser.major);
+        strictEqual(env.browser.minor, std.browser.minor, 'browser minor: ' + std.browser.minor);
+        strictEqual(env.browser.version, std.browser.version, 'browser version: ' + std.browser.version);
         //engine detection test
-//        strictEqual(env.engine.name, std.engine.name, 'engine name: ' + std.engine.name);
-//        strictEqual(env.engine.major, std.engine.major, 'engine major: ' + std.engine.major);
-//        strictEqual(env.engine.minor, std.engine.minor, 'engine minor: ' + std.engine.minor);
-//        strictEqual(env.engine.version, std.engine.version, 'engine version: ' + std.engine.version);
-//        //os detection test
-//        strictEqual(env.os.name, std.os.name, 'os name: ' + std.os.name);
-//        strictEqual(env.os.version, std.os.version, 'os version: ' + std.os.version);
-//        //device detection test
-//        strictEqual(env.device.model, std.device.model, 'device model: ' + std.device.model);
-//        strictEqual(env.device.type, std.device.type, 'device type: ' + std.device.type);
-//        strictEqual(env.device.vendor, std.device.vendor, 'device vendor: ' + std.device.vendor);
-//        //engine detection test
+        strictEqual(env.engine.name, std.engine.name, 'engine name: ' + std.engine.name);
+        strictEqual(env.engine.major, std.engine.major, 'engine major: ' + std.engine.major);
+        strictEqual(env.engine.minor, std.engine.minor, 'engine minor: ' + std.engine.minor);
+        strictEqual(env.engine.version, std.engine.version, 'engine version: ' + std.engine.version);
+        //os detection test
+        strictEqual(env.os.name, std.os.name, 'os name: ' + std.os.name);
+        strictEqual(env.os.version, std.os.version, 'os version: ' + std.os.version);
+        //device detection test
+        strictEqual(env.device.model, std.device.model, 'device model: ' + std.device.model);
+        strictEqual(env.device.type, std.device.type, 'device type: ' + std.device.type);
+        strictEqual(env.device.vendor, std.device.vendor, 'device vendor: ' + std.device.vendor);
+        //engine detection test
         strictEqual(env.cpu.architecture, std.cpu.architecture, 'cpu architecture: ' + std.cpu.architecture);
     });
 });
