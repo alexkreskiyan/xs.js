@@ -14,7 +14,7 @@ var userAgents = [
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/34.0.1847.116 Chrome/34.0.1847.116 Safari/537.36',
         {
             browser: {name: 'chromium', major: '34', minor: '0', version: '34.0.1847.116'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'linux', version: undefined},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
@@ -24,7 +24,7 @@ var userAgents = [
         'Mozilla/5.0 (Linux; Android 4.2.1; Lenovo K900_ROW Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.138 Mobile Safari/537.36',
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.2.1'},
             device: {model: 'k900', type: 'mobile', vendor: 'lenovo'},
             cpu: {architecture: undefined}
@@ -44,7 +44,7 @@ var userAgents = [
         'Mozilla/5.0 (Linux; Android 4.0.4; LT28h Build/6.1.E.3.7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36',
         {
             browser: {name: 'chrome mobile', major: '34', minor: '0', version: '34.0.1847.114'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.0.4'},
             device: {model: 'xperia ion', type: 'mobile', vendor: 'sony'},
             cpu: {architecture: undefined}
@@ -64,7 +64,7 @@ var userAgents = [
         'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36',
         {
             browser: {name: 'chrome', major: '35', minor: '0', version: '35.0.1916.114'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
@@ -74,7 +74,7 @@ var userAgents = [
         'Mozilla/5.0 (Linux; Android 4.4.2; Nexus 4 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.138 Mobile Safari/537.36',
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.4.2'},
             device: {model: 'nexus 4', type: 'mobile', vendor: 'google'},
             cpu: {architecture: undefined}
@@ -84,7 +84,7 @@ var userAgents = [
         'Mozilla/5.0 (Linux; Android 4.2.2; GT-I9505 Build/JDQ39) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.122 Mobile Safari/537.36',
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.122'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.2.2'},
             device: {model: 'galaxy s4', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
@@ -114,7 +114,7 @@ var userAgents = [
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.116 Safari/537.36',
         {
             browser: {name: 'chrome', major: '34', minor: '0', version: '34.0.1847.116'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'linux', version: undefined},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
@@ -124,7 +124,7 @@ var userAgents = [
         'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36',
         {
             browser: {name: 'chrome', major: '35', minor: '0', version: '35.0.1916.114'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'windows', version: '8'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
@@ -164,7 +164,7 @@ var userAgents = [
         'Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_1 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) CriOS/35.0.1916.38 Mobile/11D201 Safari/9537.53 (000154)',
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.38'},
-            engine: {name: 'webkit', major: '537', minor: '51', version: '537.51.1'},
+            engine: {name: 'blink', major: '537', minor: '51', version: '537.51.1'},
             os: {name: 'ios', version: '7.1.1'},
             device: {model: 'iphone', type: 'mobile', vendor: 'apple'},
             cpu: {architecture: undefined}
@@ -194,7 +194,7 @@ var userAgents = [
         'Mozilla/5.0 (Linux; Android 4.4.2; ru-ru; SAMSUNG SM-N900 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Version/1.5 Chrome/28.0.1500.94 Mobile Safari/537.36',
         {
             browser: {name: 'chrome mobile', major: '28', minor: '0', version: '28.0.1500.94'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.4.2'},
             device: {model: 'galaxy note 3', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
@@ -204,7 +204,7 @@ var userAgents = [
         'Mozilla/5.0 (Linux; Android 4.4.2; SM-N900 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.138 Mobile Safari/537.36',
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.4.2'},
             device: {model: 'galaxy note 3', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
@@ -234,7 +234,7 @@ var userAgents = [
         'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36',
         {
             browser: {name: 'chrome', major: '33', minor: '0', version: '33.0.1750.154'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'windows', version: 'xp'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
@@ -284,7 +284,7 @@ var userAgents = [
         'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36',
         {
             browser: {name: 'chrome', major: '35', minor: '0', version: '35.0.1916.114'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'windows', version: 'xp'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
@@ -294,7 +294,7 @@ var userAgents = [
         'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 YaBrowser/14.2.1700.12508 Safari/537.36',
         {
             browser: {name: 'yabrowser', major: '14', minor: '2', version: '14.2.1700.12508'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
@@ -304,7 +304,7 @@ var userAgents = [
         'Mozilla/5.0 (Linux; Android 4.2.2; GT-I9190 Build/JDQ39) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.138 Mobile Safari/537.36',
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.2.2'},
             device: {model: 'galaxy s4 mini', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
@@ -344,7 +344,7 @@ var userAgents = [
         'Mozilla/5.0 (Linux; Android 4.2.2; Philips W6610 Build/JDQ39) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.138 Mobile Safari/537.36',
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.2.2'},
             device: {model: 'xenium w6610', type: 'mobile', vendor: 'philips'},
             cpu: {architecture: undefined}
@@ -364,7 +364,7 @@ var userAgents = [
         'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36 OPR/20.0.1387.91 (Edition Yx)',
         {
             browser: {name: 'opera', major: '20', minor: '0', version: '20.0.1387.91'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
@@ -374,7 +374,7 @@ var userAgents = [
         'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36',
         {
             browser: {name: 'chrome', major: '35', minor: '0', version: '35.0.1916.114'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '64'}
@@ -414,7 +414,7 @@ var userAgents = [
         'Mozilla/5.0 (Linux; Android 4.2.2; GT-I9192 Build/JDQ39) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.122 Mobile Safari/537.36',
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.122'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.2.2'},
             device: {model: 'galaxy s4 mini duos', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
@@ -424,7 +424,7 @@ var userAgents = [
         'Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_1 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) YaBrowser/14.4.1750.8705.10 Mobile/11D201 Safari/9537.53',
         {
             browser: {name: 'yabrowser', major: '14', minor: '4', version: '14.4.1750.8705.10'},
-            engine: {name: 'webkit', major: '537', minor: '51', version: '537.51.1'},
+            engine: {name: 'blink', major: '537', minor: '51', version: '537.51.1'},
             os: {name: 'ios', version: '7.1.1'},
             device: {model: 'iphone', type: 'mobile', vendor: 'apple'},
             cpu: {architecture: undefined}
@@ -434,7 +434,7 @@ var userAgents = [
         'Mozilla/5.0 (Linux; Android 4.2.1; ZP990 Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.138 Mobile Safari/537.36',
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.2.1'},
             device: {model: 'zopo captain s', type: 'mobile', vendor: 'zopo'},
             cpu: {architecture: undefined}
@@ -454,7 +454,7 @@ var userAgents = [
         'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.137 Safari/537.36',
         {
             browser: {name: 'chrome', major: '34', minor: '0', version: '34.0.1847.137'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'windows', version: '7'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: '32'}
@@ -474,7 +474,7 @@ var userAgents = [
         'Mozilla/5.0 (Linux; Android 4.2.2; GT-S7270 Build/JDQ39) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.138 Mobile Safari/537.36',
         {
             browser: {name: 'chrome mobile', major: '35', minor: '0', version: '35.0.1916.138'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'android', version: '4.2.2'},
             device: {model: 'galaxy ace 3', type: 'mobile', vendor: 'samsung'},
             cpu: {architecture: undefined}
@@ -510,7 +510,7 @@ var userAgents = [
     ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36',
         {
             browser: {name: 'chrome', major: '35', minor: '0', version: '35.0.1916.114'},
-            engine: {name: 'webkit', major: '537', minor: '36', version: '537.36'},
+            engine: {name: 'blink', major: '537', minor: '36', version: '537.36'},
             os: {name: 'os x', version: '10.9.3'},
             device: {model: undefined, type: undefined, vendor: undefined},
             cpu: {architecture: undefined}

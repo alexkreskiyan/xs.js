@@ -126,6 +126,7 @@
             me.isWindowsPhone = me.os.name == os.windowsPhone;
             //engines
             me.isWebkit = me.engine.name == engine.webkit;
+            me.isBlink = me.engine.name == engine.blink;
             me.isGecko = me.engine.name == engine.gecko;
             me.isPresto = me.engine.name == engine.presto;
             me.isTrident = me.engine.name == engine.trident;
@@ -178,6 +179,7 @@
             },
             engine = {
                 webkit: 'webkit',
+                blink: 'blink',
                 gecko: 'gecko',
                 presto: 'presto',
                 trident: 'trident'
@@ -269,8 +271,13 @@
             engine: [
                 [
                     [engine.webkit],
-                    [],
+                    [/opr\//, /yabrowser\//, /(?:chrome|crios)\/(?:2[8-9]|[3-9][0-9])\./],
                     [/applewebkit\/([\d]+)\.([\d]+)/, /applewebkit\/([\d\.]+)/]
+                ],
+                [
+                    [engine.blink],
+                    [/chrome\/(?:[1-9]|1[0-9]|2[0-7])\./],
+                    [/(?:opr|crios|chrome|yabrowser)\//, /applewebkit\/([\d]+)\.([\d]+)/, /applewebkit\/([\d\.]+)/]
                 ],
                 [
                     [engine.gecko],
@@ -457,6 +464,7 @@
         isWindowsPhone: xs.env.isWindowsPhone,
         //engines
         isWebkit: xs.env.isWebkit,
+        isBlink: xs.env.isBlink,
         isGecko: xs.env.isGecko,
         isPresto: xs.env.isPresto,
         isTrident: xs.env.isTrident,
