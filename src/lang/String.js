@@ -29,27 +29,15 @@
     var xs = root[ns];
 
     var string = xs.String = new (function () {
-        this.translate = function (string, replaces) {
+        var me = this;
+        me.translate = function (string, replaces) {
             xs.Object.each(replaces, function (to, from) {
                 string = string.split(from).join(to);
             });
             return string;
         };
-        /**
-         * appends string to url
-         * @param url
-         * @param string
-         * @returns {*}
-         */
-        this.urlAppend = function (url, string) {
-            if (xs.isEmpty(string)) {
-                return url;
-            }
-            return url + (url.indexOf('?') === -1 ? '?' : '&') + string;
-        };
     });
     xs.Object.extend(xs, {
-        translate: string.translate,
-        urlAppend: string.urlAppend
+        translate: string.translate
     });
 })(window, 'xs');

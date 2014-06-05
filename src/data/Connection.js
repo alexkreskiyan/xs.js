@@ -77,7 +77,7 @@ xs.define('xs.data.Connection', {
          * @cfg {Boolean} withCredentials
          * True to set `withCredentials = true` on the XHR object
          */
-        withCredentials: false,
+        withCredentials: true, //TODO
         /**
          * @cfg {Boolean} cors
          * True to enable CORS support on the XHR object. Currently the only effect of this option
@@ -634,18 +634,14 @@ xs.define('xs.data.Connection', {
          * @param response {Object}
          * @returns {*}
          */
+        //TODO
         parseResponseText: function (response) {
-            var result = response.responseText;
-            var contentType = response.getResponseHeader('content-type');
+            var result;
             //return responseText if not content-type given
-            if (!contentType) {
-                return result;
-            }
-            if (contentType.indexOf('application/json') >= 0) {
-                try {
-                    result = JSON.parse(response.responseText);
-                } catch (e) {
-                }
+            try {
+                result = JSON.parse(response.responseText);
+            } catch (e) {
+                result = response.responseText;
             }
             return result;
         },
