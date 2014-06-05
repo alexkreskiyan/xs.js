@@ -36,21 +36,8 @@
             });
             return string;
         };
-        /**
-         * appends string to url
-         * @param url
-         * @param string
-         * @returns {*}
-         */
-        me.urlAppend = function (url, string) {
-            if (xs.isEmpty(string)) {
-                return url;
-            }
-            return url + (url.indexOf('?') === -1 ? '?' : '&') + string;
-        };
     });
     xs.Object.extend(xs, {
-        translate: string.translate,
-        urlAppend: string.urlAppend
+        translate: string.translate
     });
 })(window, 'xs');

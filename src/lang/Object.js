@@ -582,59 +582,6 @@
             }, this);
             return obj;
         };
-        /**
-         * processes object to query object
-         * @param name
-         * @param object
-         * @param recursive
-         * @returns {Array}
-         */
-        var toQueryObjects = this.toQueryObjects = function (name, object, recursive) {
-            var self = toQueryObjects,
-                objects = [];
-
-            if (xs.isArray(object) || xs.isObject(object)) {
-                xs.each(object, function (value, param) {
-                    if (recursive) {
-                        objects = objects.concat(self(name + '[' + param + ']', value, true));
-                    } else {
-                        objects.push({
-                            name: name,
-                            value: value
-                        });
-                    }
-                });
-            } else {
-                objects.push({
-                    name: name,
-                    value: object
-                });
-            }
-
-            return objects;
-        };
-        /**
-         * process object to query string
-         * @param object
-         * @param recursive
-         * @returns {string}
-         */
-        this.toQueryString = function (object, recursive) {
-            var paramObjects = [],
-                params = [];
-
-            xs.each(object, function (value, name) {
-                paramObjects = paramObjects.concat(toQueryObjects(name, value, recursive));
-            }, this);
-
-            xs.each(paramObjects, function (paramObject) {
-                params.push(encodeURIComponent(paramObject.name) + '=' + encodeURIComponent(String(paramObject.value)));
-            });
-
-            return params.join('&');
-        }
     });
     xs.extend = object.extend;
-    xs.toQueryObjects = object.toQueryObjects;
-    xs.toQueryString = object.toQueryString;
 })(window, 'xs');

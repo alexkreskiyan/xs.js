@@ -21,49 +21,48 @@
  * @class xs.data.Url represents url string
  */
 'use strict';
-xs.define('xs.data.Url', function () {
+xs.define('xs.uri.Url', function () {
+    /**
+     * Fetches all param indexes from param name
+     * @type {RegExp}
+     */
+    var queryParamRe = /([^\[\]]+)/g;
     /**
      * process object from query string
-     * @param object
-     * @returns {string}
+     * @param {String} str
+     * @returns {Object}
      */
     var fromQueryString = function (str) {
-        return str;
-        var paramObjects = [],
-            params = [];
+        var params = {},
+            rawParams = str.split('&');
 
-        xs.each(object, function (value, name) {
-            paramObjects = paramObjects.concat(toQueryObjects(name, value));
+        xs.each(rawParams, function (param) {
+            var pair = param.split('=');
+            var names = pair[0].match(queryParamRe);
+            if (names) {
+                fromQueryObjects(params, names[0], pair[1], names.slice(1));
+            }
         }, this);
 
-        xs.each(paramObjects, function (paramObject) {
-            params.push(paramObject.name + '=' + String(paramObject.value));
-        });
-
-        return encodeURI(params.join('&'));
+        return params;
     };
     /**
      * processes object to query object
+     * @param params
      * @param name
-     * @param object
+     * @param value
+     * @param indexes
      * @returns {Array}
      */
-    var fromQueryObjects = function (name, object) {
-        var self = toQueryObjects,
-            objects = [];
-
-        if (xs.isArray(object) || xs.isObject(object)) {
-            xs.each(object, function (value, param) {
-                objects = objects.concat(self(name + '[' + param + ']', value, true));
-            });
+    var fromQueryObjects = function (params, name, value, indexes) {
+        if (indexes.length) {
+            //if not this level value - go down
+            params[name] || (params[name] = {});
+            fromQueryObjects(params[name], indexes[0], value, indexes.slice(1));
         } else {
-            objects.push({
-                name: name,
-                value: object
-            });
+            //else - assign value
+            params[name] = decodeURIComponent(value);
         }
-
-        return objects;
     };
     /**
      * process object to query string
@@ -79,10 +78,10 @@ xs.define('xs.data.Url', function () {
         }, this);
 
         xs.each(paramObjects, function (paramObject) {
-            params.push(paramObject.name + '=' + String(paramObject.value));
+            params.push(encodeURIComponent(paramObject.name) + '=' + encodeURIComponent(String(paramObject.value)));
         });
 
-        return encodeURI(params.join('&'));
+        return params.join('&');
     };
     /**
      * processes object to query object
@@ -115,7 +114,8 @@ xs.define('xs.data.Url', function () {
     var protocolRe = new RegExp('^(' + protocols.join('|') + '):\\\/\\\/');
     var hostRe = new RegExp('^(?:(?:' + protocols.join('|') + '):\\\/\\\/)?([А-яЁё\\\w0-9\\\.-]+)');
     var portRe = new RegExp('^(?:(?:' + protocols.join('|') + '):\\\/\\\/)?(?:[А-яЁё\\\w0-9\\\.-]+)(?::(\\\d+))');
-    var pathRe = new RegExp('^(?:(?:(?:' + protocols.join('|') + '):\\\/\\\/)?(?:[А-яЁё\\\w\\\.-]+)(?::\\\d+)?)?\\\/([^?^#]+)');
+    var pathReFull = new RegExp('^(?:(?:(?:' + protocols.join('|') + '):\\\/\\\/)?(?:[А-яЁё\\\w\\\.-]+)(?::\\\d+)?)?\\\/([^?^#]+)');
+    var pathReRelative = new RegExp('^([^?^#]+)');
     var paramsRe = /\?([^#\?]+)/;
     var hashRe = /#(.+)/;
 
@@ -150,8 +150,12 @@ xs.define('xs.data.Url', function () {
         xs.isArray(port) && (data.port = port[1]);
 
         //detect path
-        var path = pathRe.exec(raw);
-        xs.isArray(path) && (data.path = path[1]);
+        var path;
+        if (xs.isArray(path = pathReFull.exec(raw))) {
+            data.path = path[1];
+        } else if (xs.isArray(path = pathReRelative.exec(raw))) {
+            data.path = path[1];
+        }
 
         //detect params
         var params = paramsRe.exec(raw);
@@ -160,6 +164,8 @@ xs.define('xs.data.Url', function () {
         //detect hash
         var hash = hashRe.exec(raw);
         xs.isArray(hash) && (data.hash = hash[1]);
+
+        return data;
     };
     return {
         constructor: function (raw) {
@@ -254,7 +260,7 @@ xs.define('xs.data.Url', function () {
                     str += '/';
                 }
                 me.path && (str += me.path);
-                me.params && (str += toQueryString(me.params));
+                me.params && (str += '?' + toQueryString(me.params));
                 me.hash && (str += '#' + me.hash);
                 return str;
             },
