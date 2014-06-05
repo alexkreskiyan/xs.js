@@ -18,7 +18,7 @@
 
  */
 /**
- * @class xs.data.Url represents url string
+ * @class xs.uri.Url represents url string
  */
 'use strict';
 xs.define('xs.uri.Url', function () {
@@ -168,9 +168,9 @@ xs.define('xs.uri.Url', function () {
         return data;
     };
     return {
-        constructor: function (raw) {
+        constructor: function (config) {
             var me = this,
-                data = parse(raw);
+                data = parse(config.url);
             me.protocol = data.protocol;
             me.host = data.host;
             me.port = data.port;
@@ -222,11 +222,8 @@ xs.define('xs.uri.Url', function () {
             },
             params: {
                 set: function (params) {
-                    if (!params) {
-                        this.__set('params', {});
-                    } else if (xs.isObject(params)) {
-                        this.__set('params', params);
-                    }
+                    xs.isObject(params) || (params = {});
+                    this.__set('params', params);
                 }
             },
             hash: {
@@ -269,5 +266,4 @@ xs.define('xs.uri.Url', function () {
             }
         }
     };
-})
-;
+});

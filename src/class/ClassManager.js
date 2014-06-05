@@ -146,6 +146,18 @@
             //return created instance
             return instance;
         };
+        var is = function (cls, object) {
+            if (cls === object) {
+                return true;
+            }
+            if (xs.isFunction(cls) && object instanceof cls) {
+                return true;
+            }
+            if (xs.isString(cls)) {
+                return is(get(cls), object);
+            }
+            return false;
+        };
 
         xs.extend(Manager, {
             define: define,
@@ -171,6 +183,7 @@
         return Manager;
     });
     xs.extend(xs, {
+        is: xs.ClassManager.is,
         define: xs.ClassManager.define,
         defined: xs.ClassManager.defined,
         undefine: xs.ClassManager.undefine,
