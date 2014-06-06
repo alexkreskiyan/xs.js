@@ -127,6 +127,8 @@ xs.define('xs.request.Request', function () {
             me.method = config.method;
             me.url = config.url;
             me.params = config.params;
+            me.user = config.user;
+            me.password = config.password;
         },
         properties: {
             method: {
@@ -155,6 +157,8 @@ xs.define('xs.request.Request', function () {
                         me.__set('url', xs.create('xs.uri.Url', {url: url}));
                     } else if (xs.is(xs.uri.Url, url)) {
                         me.__set('url', url);
+                    } else if (xs.isObject(url)) {
+                        me.__set('url', xs.create('xs.uri.Url', url));
                     }
 
                     me.method == 'get' && me.url && (me.url.params = me.params);
@@ -171,6 +175,16 @@ xs.define('xs.request.Request', function () {
                         return;
                     }
                     me.url.params = me.method == 'get' ? params : {};
+                }
+            },
+            user: {
+                set: function (user) {
+                    xs.isString(user) || (this.__set('user', user));
+                }
+            },
+            password: {
+                set: function (password) {
+                    xs.isString(password) || (this.__set('password', password));
                 }
             }
         }

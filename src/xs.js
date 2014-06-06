@@ -22,8 +22,12 @@
 
     //create framework
     var xs = new (function () {
-        this.emptyFn = function () {
+        var me = this;
+        me.emptyFn = function () {
         };
+        me.uid = function () {
+            return Math.round(Math.random() * 10 ^ 10);
+        }
     });
     //save framework in root
     root[ns] = xs;
