@@ -257,7 +257,7 @@ xs.define('xs.uri.Url', function () {
                     str += '/';
                 }
                 me.path && (str += me.path);
-                me.params && (str += '?' + toQueryString(me.params));
+                xs.Object.size(me.params) && (str += '?' + toQueryString(me.params));
                 me.hash && (str += '#' + me.hash);
                 return str;
             },
