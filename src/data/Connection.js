@@ -57,7 +57,76 @@ xs.define('xs.data.Connection', function () {
     };
 
     var createRequest = function (options) {
-
+        var XMLHttpRequest = {
+            //event handlers
+            onloadstart: xs.emptyFn,
+            onprogress: xs.emptyFn,
+            onabort: xs.emptyFn,
+            onerror: xs.emptyFn,
+            onload: xs.emptyFn,
+            ontimeout: xs.emptyFn,
+            onloadend: xs.emptyFn,
+            onreadystatechange: xs.emptyFn,
+            //responseType
+            '': '',
+            arraybuffer: '',
+            blob: '',
+            document: '',
+            json: '',
+            text: '',
+            //states
+            UNSENT: 0,
+            OPENED: 1,
+            HEADERS_RECEIVED: 2,
+            LOADING: 3,
+            DONE: 4,
+            readyState: 0,
+            //request
+            open: function () {
+                open(method, url);
+                open(method, url, async, username, password);
+            },
+            setRequestHeader: function (header, value) {
+            },
+            timeout: 30000,
+            withCredentials: true,
+            upload: new XMLHttpRequestUpload,
+            send: function (data) {
+            },
+            abort: function () {
+            },
+            //response
+            status: 0,
+            statusText: '',
+            getResponseHeader: function (header) {
+            },
+            getAllResponseHeaders: function () {
+            },
+            overrideMimeType: function (mime) {
+            },
+            responseType: '',
+            response: '',
+            responseText: '',
+            responseXML: ''
+        };
+        var XDomainRequest = {
+            //event handlers
+            onprogress: xs.emptyFn,
+            onerror: xs.emptyFn,
+            onload: xs.emptyFn,
+            ontimeout: xs.emptyFn,
+            //methods
+            open: function (method, url) {
+            }, //async?user?pass? anonymous!!
+            send: function (data) {
+            },
+            abort: function () {
+            },
+            //properties
+            contentType: '', //both for request and response???
+            responseText: '',
+            timeout: 10000,
+        };
     };
 
     var getRequestInstance = function () {

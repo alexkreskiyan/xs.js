@@ -111,7 +111,11 @@
             me.location = location;
             //set session variables with correct values
             me.browser = parse(userAgent, rules.browser, ['name', 'major', 'minor', 'version']);
+            me.browser.major = Number(me.browser.major);
+            me.browser.minor = Number(me.browser.minor);
             me.engine = parse(userAgent, rules.engine, ['name', 'major', 'minor', 'version']);
+            me.engine.major = Number(me.engine.major);
+            me.engine.minor = Number(me.engine.minor);
             me.os = parse(userAgent, rules.os, ['name', 'version']);
             me.device = parse(userAgent, rules.device, ['model', 'type', 'vendor']);
             me.cpu = parse(userAgent, rules.cpu, ['architecture']);

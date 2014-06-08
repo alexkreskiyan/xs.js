@@ -8,10 +8,34 @@ function speed(fn, n) {
     console.log('median: ', duration / n, 'ms per operation');
     console.log('mark: about', n / duration, 'operation per ms');
 }
+test('demo', function () {
+    var url = 'http://api.annium.com/1/test/demo/';
+    var method = 'get';
+    var data = 'x=1';
+    if (xs.isIE && xs.engine.major <= 9) {
+        var xhr = new XDomainRequest();
+        xhr.onprogress = function () {
+            console.log('progress', arguments);
+        };
+        xhr.onerror = function () {
+            console.log('error', arguments);
+        };
+        xhr.onload = function () {
+            console.log('contentType', xhr.contentType);
+            console.log('contentType', xhr.responseText);
+            console.log('load', arguments);
+        };
+        xhr.ontimeout = function () {
+            console.log('timeout', arguments);
+        };
+        xhr.open(method, url);
+        xhr.send(data);
+    }
+});
 var urls = {
     local: 'server.php',
     cross: 'http://api.annium.com/1/test/demo/'
-}
+};
 var native = {
     local: {
         get: function (data) {
@@ -82,7 +106,7 @@ var send = function (url, method, data) {
         xhr.readyState == 4 && onComplete(xhr);
     };
     xhr.send(data);
-}
+};
 
 var onComplete = function (xhr) {
     console.log('complete', xhr.response);
@@ -134,8 +158,7 @@ var toQueryObjects = function (name, object, recursive) {
 
 var toQueryString = function (object, recursive) {
     var paramObjects = [],
-        params = [],
-        value;
+        params = [];
 
     xs.each(object, function (value, name) {
         paramObjects = paramObjects.concat(toQueryObjects(name, value, recursive));
