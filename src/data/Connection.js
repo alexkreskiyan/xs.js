@@ -27,7 +27,7 @@
 xs.define('xs.data.Connection', function () {
 
     var prepareRequest = function (request) {
-        if (xs.is(xs.request.Request, request)) {
+        if (xs.is(request, xs.request.Request)) {
             return request;
         } else if (xs.isObject(request)) {
             return xs.create('xs.request.Request', request);
@@ -42,7 +42,7 @@ xs.define('xs.data.Connection', function () {
             options.request = request ? request : conn.request;
 
         } else {
-            options.request = me.request;
+            options.request = conn.request;
         }
         options.async = xs.isDefined(options.async) ? Boolean(options.async) : conn.async;
         options.cache = xs.isDefined(options.cache) ? Boolean(options.cache) : conn.cache;
@@ -50,179 +50,83 @@ xs.define('xs.data.Connection', function () {
         options.credentials = xs.isDefined(options.credentials) ? Boolean(options.credentials) : conn.credentials;
         options.timeout = xs.isDefined(options.timeout) && xs.isNumeric(options.timeout) ? Number(options.timeout) : conn.timeout;
         options.autoAbort = xs.isDefined(options.autoAbort) ? Boolean(options.autoAbort) : conn.autoAbort;
-        options.extraParams = conn.extraParams;
         options.headers = conn.headers;
         options.postContentType = conn.postContentType;
         return options;
     };
 
-    var getRequestInstance = function (options) {
-        var request = options.request,
-            crossDomain = request.url.host === xs.location.host,
-            method = request.method.toUpperCase(),
-            url = request.url.toString();
-
-        var xhr;
-        if (crossDomain && xs.isIE && xs.engine.major <= 9) {
-            xhr = new XDomainRequest();
-            xhr.open(method, url);
-        } else {
-            xhr = new XMLHttpRequest();
-            xhr.open(method, url, options.async, request.user, request.password);
-        }
-        return xhr;
-    };
-
-    var createRequest = function (options) {
-        var xhr = getRequestInstance(options);
-        return {
-            xhr: xhr,
-            isXhr: xhr instanceof XMLHttpRequest,
-            deferred: xs.create('xs.promise.Deferred'),
-            options: options,
-            timeout: setTimeout(function () {
-                abortRequest(request);
-            })
-        };
-    };
-
-    var setupHeaders = function (request) {
-        //no headers setup is available for XDomainRequest
-        if (!request.isXhr) {
-            return;
-        }
-
-        var options = request.options,
-            headers = options.headers,
-            xhr = request.xhr;
-
-        xs.each(headers, function (header, name) {
-            xhr.setRequestHeader(name, header);
-        });
-
-        //if no content type specified, method is not GET and some data is going to be sent - specify
-        if (!headers['Content-Type'] && options.request.method !== 'get' && xs.Object.size(options.request.params)) {
-            headers['Content-Type'] = options.postContentType;
-        }
-
-        //if default XHR header not specified - specify it
-        if (!headers['X-Requested-With']) {
-            headers['X-Requested-With'] = 'XMLHttpRequest';
-        }
-    };
-
-    var XMLHttpRequestProto = {
-        //event handlers
-        onloadstart: xs.emptyFn,
-        onprogress: xs.emptyFn,
-        onabort: xs.emptyFn,
-        onerror: xs.emptyFn,
-        onload: xs.emptyFn,
-        ontimeout: xs.emptyFn,
-        onloadend: xs.emptyFn,
-        onreadystatechange: xs.emptyFn,
-        //responseType
-        '': '',
-        arraybuffer: '',
-        blob: '',
-        document: '',
-        json: '',
-        text: '',
-        //states
-        UNSENT: 0,
-        OPENED: 1,
-        HEADERS_RECEIVED: 2,
-        LOADING: 3,
-        DONE: 4,
-        readyState: 0,
-        //request
-        open: function () {
-            open(method, url);
-            open(method, url, async, username, password);
-        },
-        setRequestHeader: function (header, value) {
-        },
-        timeout: 30000,
-        withCredentials: true,
-        upload: new XMLHttpRequestUpload,
-        send: function (data) {
-        },
-        abort: function () {
-        },
-        //response
-        status: 0,
-        statusText: '',
-        getResponseHeader: function (header) {
-        },
-        getAllResponseHeaders: function () {
-        },
-        overrideMimeType: function (mime) {
-        },
-        responseType: '',
-        response: '',
-        responseText: '',
-        responseXML: ''
-    };
-    var XDomainRequestProto = {
-        //event handlers
-        onprogress: xs.emptyFn,
-        onerror: xs.emptyFn,
-        onload: xs.emptyFn,
-        ontimeout: xs.emptyFn,
-        //methods
-        open: function (method, url) {
-        }, //async?user?pass? anonymous!!
-        send: function (data) {
-        },
-        abort: function () {
-        },
-        //properties
-        contentType: '', //both for request and response???
-        responseText: '',
-        timeout: 10000
-    };
-
-    var sendRequest = function (conn, request) {
-        var xhr = request.xhr,
-            options = request.options,
-            deferred = request.deferred;
-
-        conn.pending.push(request); //TODO
-
-        xhr.onprogress = handleProgress;
-        xhr.onerror = handleError;
-        xhr.onload = handleLoad;
-        xhr.ontimeout = handleTimeout;
-        xhr.send(options.request.params.toString());
-        return deferred.promise;
-    };
-
-    var handleProgress = function () {
-
-    };
-    var handleError = function () {
-
-    };
-    var handleLoad = function () {
-
-    };
-    var handleTimeout = function () {
-
-    };
-
-    var abortRequest = function () {
-
-    };
+//    var XMLHttpRequestProto = {
+//        //event handlers
+//        onloadstart: xs.emptyFn,
+//        onprogress: xs.emptyFn,
+//        onabort: xs.emptyFn,
+//        onerror: xs.emptyFn,
+//        onload: xs.emptyFn,
+//        ontimeout: xs.emptyFn,
+//        onloadend: xs.emptyFn,
+//        onreadystatechange: xs.emptyFn,
+//        //responseType
+//        '': '',
+//        arraybuffer: '',
+//        blob: '',
+//        document: '',
+//        json: '',
+//        text: '',
+//        //states
+//        UNSENT: 0,
+//        OPENED: 1,
+//        HEADERS_RECEIVED: 2,
+//        LOADING: 3,
+//        DONE: 4,
+//        readyState: 0,
+//        //request
+//        open: function () {
+//            open(method, url);
+//            open(method, url, async, username, password);
+//        },
+//        setRequestHeader: function (header, value) {
+//        },
+//        timeout: 30000,
+//        withCredentials: true,
+//        upload: new XMLHttpRequestUpload,
+//        send: function (data) {
+//        },
+//        abort: function () {
+//        },
+//        //response
+//        status: 0,
+//        statusText: '',
+//        getResponseHeader: function (header) {
+//        },
+//        getAllResponseHeaders: function () {
+//        },
+//        overrideMimeType: function (mime) {
+//        },
+//        responseType: '',
+//        response: '',
+//        responseText: '',
+//        responseXML: ''
+//    };
+//    var XDomainRequestProto = {
+//        //event handlers
+//        onprogress: xs.emptyFn,
+//        onerror: xs.emptyFn,
+//        onload: xs.emptyFn,
+//        ontimeout: xs.emptyFn,
+//        //methods
+//        open: function (method, url) {
+//        }, //async?user?pass? anonymous!!
+//        send: function (data) {
+//        },
+//        abort: function () {
+//        },
+//        //properties
+//        contentType: '', //both for request and response???
+//        responseText: '',
+//        timeout: 10000
+//    };
 
     var cleanUp = function () {
-
-    };
-
-    var completeRequest = function () {
-
-    };
-
-    var createResponse = function () {
 
     };
 
@@ -270,7 +174,6 @@ xs.define('xs.data.Connection', function () {
             me.credentials = config.credentials;
             me.timeout = config.timeout;
             me.autoAbort = config.autoAbort;
-            me.extraParams = config.extraParams;
             me.headers = config.headers;
             me.postContentType = config.postContentType;
         },
@@ -326,12 +229,6 @@ xs.define('xs.data.Connection', function () {
                 },
                 default: false
             },
-            extraParams: {
-                set: function (extraParams) {
-                    xs.isObject(extraParams) || (extraParams = {});
-                    this.__set('extraParams', extraParams);
-                }
-            },
             headers: {
                 set: function (headers) {
                     xs.isObject(headers) || (headers = {});
@@ -340,7 +237,7 @@ xs.define('xs.data.Connection', function () {
             },
             postContentType: {
                 set: function (postContentType) {
-                    this.__set('postContentType', String(postContentType));
+                    xs.isString(postContentType) && this.__set('postContentType', postContentType);
                 },
                 default: 'application/x-www-form-urlencoded; charset=UTF-8'
             }
@@ -357,7 +254,9 @@ xs.define('xs.data.Connection', function () {
                 //create request object
                 var request = createRequest(options);
                 setupHeaders(request);
-
+                setRequestParams(request);
+                setRequestEventHandlers(request);
+                openRequest(request);
                 //return request sending result
                 return sendRequest(me, request);
             },

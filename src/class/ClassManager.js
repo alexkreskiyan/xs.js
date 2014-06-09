@@ -146,7 +146,7 @@
             //return created instance
             return instance;
         };
-        var is = function (cls, object) {
+        var is = function (object, cls) {
             if (cls === object) {
                 return true;
             }
@@ -178,7 +178,8 @@
                 return deleteNamespace(root, namespace);
             },
             createNamespaces: createNamespaces,
-            create: create
+            create: create,
+            is: is
         });
         return Manager;
     });

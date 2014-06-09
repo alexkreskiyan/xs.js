@@ -12,25 +12,32 @@ test('demo', function () {
     var url = 'http://api.annium.com/1/test/demo/';
     var method = 'get';
     var data = 'x=1';
-    if (xs.isIE && xs.engine.major <= 9) {
-        var xhr = new XDomainRequest();
-        xhr.onprogress = function () {
-            console.log('progress', arguments);
-        };
-        xhr.onerror = function () {
-            console.log('error', arguments);
-        };
-        xhr.onload = function () {
-            console.log('contentType', xhr.contentType);
-            console.log('contentType', xhr.responseText);
-            console.log('load', arguments);
-        };
-        xhr.ontimeout = function () {
-            console.log('timeout', arguments);
-        };
-        xhr.open(method, url);
-        xhr.send(data);
-    }
+    var conn = xs.create('xs.data.Connection');
+    conn.request = xs.create('xs.request.Request');
+    conn.request.url = url;
+    conn.request.params = {x: 1};
+    conn.async = true;
+    conn.timeout = 500;
+    conn.send();
+//    if (xs.isIE && xs.engine.major <= 9) {
+//        var xhr = new XDomainRequest();
+//        xhr.onprogress = function () {
+//            console.log('progress', arguments);
+//        };
+//        xhr.onerror = function () {
+//            console.log('error', arguments);
+//        };
+//        xhr.onload = function () {
+//            console.log('contentType', xhr.contentType);
+//            console.log('contentType', xhr.responseText);
+//            console.log('load', arguments);
+//        };
+//        xhr.ontimeout = function () {
+//            console.log('timeout', arguments);
+//        };
+//        xhr.open(method, url);
+//        xhr.send(data);
+//    }
 });
 var urls = {
     local: 'server.php',

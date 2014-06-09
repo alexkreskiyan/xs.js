@@ -112,7 +112,80 @@ xs.define('xs.request.Request', function () {
      */
     var methods = ['get', 'post', 'put', 'delete'];
 
+    var setHeaders = function (me) {
+        //no headers setup is available for XDomainRequest
+        if (!me.isXhr) {
+            return;
+        }
+
+        var headers = me.headers,
+            xhr = me.xhr;
+
+        //if no content type specified, method is not GET and some data is going to be sent - specify
+        if (!headers['Content-Type'] && me.method !== 'get' && xs.Object.size(me.params)) {
+            headers['Content-Type'] = me.postContentType;
+        }
+
+        //if default XHR header not specified - specify it
+        if (!headers['X-Requested-With']) {
+            headers['X-Requested-With'] = 'XMLHttpRequest';
+        }
+
+        xs.each(headers, function (header, name) {
+            xhr.setRequestHeader(name, header);
+        });
+    };
+
+    var handleProgress = function (request, event) {
+        console.log('PROGRESS', 'request', request, 'event', event);
+        if (request.isXhr && event.lengthComputable) {
+            request.deferred.progress(event.loaded / event.total);
+        }
+    };
+
+    var handleError = function (request, event) {
+        console.log('ERROR', 'request', request, 'event', event);
+    };
+
+    var handleLoad = function (request, event) {
+        console.log('LOAD', 'request', request, 'event', event);
+    };
+
+    var handleTimeout = function (request, event) {
+        console.log('TIMEOUT', 'request', request, 'event', event);
+    };
+    var setEventHandlers = function (me) {
+        var xhr = me.xhr;
+        xhr.onprogress = function (event) {
+            handleProgress(me, event);
+        };
+        xhr.onerror = function (event) {
+            handleError(me, event);
+        };
+        xhr.onload = function (event) {
+            handleLoad(me, event);
+        };
+        xhr.ontimeout = function (event) {
+            handleTimeout(me, event);
+        };
+    };
+
+    var complete = function () {
+
+    };
+
+    var createResponse = function () {
+
+    };
+
     return {
+        requires: [
+            'xs.promise.Deferred',
+            'xs.promise.Promise'
+        ],
+        extends: {
+            observable: 'xs.util.Observable'
+        },
         static: {
             methods: {
                 fromQueryString: fromQueryString,
@@ -124,11 +197,37 @@ xs.define('xs.request.Request', function () {
 
             xs.isObject(config) || (config = {});
 
+            //basics
             me.method = config.method;
             me.url = config.url;
             me.params = config.params;
             me.user = config.user;
             me.password = config.password;
+            me.async = config.async;
+            me.credentials = config.credentials;
+            me.headers = config.headers;
+
+            //request object
+            me.isCrossDomain = me.url.host !== xs.location.host;
+            if (me.isCrossDomain && xs.isIE && xs.browser.major <= 9) {
+                me.xhr = new XDomainRequest();
+                me.isXhr = false;
+            } else {
+                me.xhr = new XMLHttpRequest();
+                me.isXhr = true;
+            }
+
+            //deferred request handler
+            me.deferred = xs.create('xs.promise.Deferred');
+
+            //request timeout
+            me.timeout = config.timeout;
+            me.timeoutId = setTimeout(function () {
+                me.abort();
+            }, me.timeout);
+
+            //Non-GET requests default content type
+            me.postContentType = config.postContentType;
         },
         properties: {
             method: {
@@ -155,7 +254,7 @@ xs.define('xs.request.Request', function () {
 
                     if (xs.isString(url)) {
                         me.__set('url', xs.create('xs.uri.Url', {url: url}));
-                    } else if (xs.is(xs.uri.Url, url)) {
+                    } else if (xs.is(url, xs.uri.Url)) {
                         me.__set('url', url);
                     } else if (xs.isObject(url)) {
                         me.__set('url', xs.create('xs.uri.Url', url));
@@ -186,11 +285,88 @@ xs.define('xs.request.Request', function () {
                 set: function (password) {
                     xs.isString(password) || (this.__set('password', password));
                 }
+            },
+            async: {
+                set: function (async) {
+                    this.__set('async', Boolean(async));
+                },
+                default: true
+            },
+            credentials: {
+                set: function (credentials) {
+                    this.__set('credentials', Boolean(credentials));
+                },
+                default: false
+            },
+            headers: {
+                set: function (headers) {
+                    xs.isObject(headers) || (headers = {});
+                    this.__set('headers', headers);
+                }
+            },
+            timeout: {
+                set: function (timeout) {
+                    var me = this;
+                    if (xs.isNumeric(timeout)) {
+                        timeout = Number(timeout);
+                        me.__set('timeout', timeout);
+                        me.xhr && (me.xhr.timeout = timeout);
+                    }
+                },
+                default: 30000
+            },
+            timeoutId: 0,
+            isCrossDomain: {
+                set: function (isCrossDomain) {
+                    this.__set('isCrossDomain', Boolean(isCrossDomain));
+                },
+                default: false
+            },
+            isXHr: {
+                set: function (isXHr) {
+                    this.__set('isXHr', Boolean(isXHr));
+                },
+                default: true
+            },
+            deferred: {
+                set: function (deferred) {
+                    xs.is(deferred, xs.promise.Deferred) && this.__set('deferred', deferred);
+                },
+                default: true
+            },
+            postContentType: {
+                set: function (postContentType) {
+                    xs.isString(postContentType) && this.__set('postContentType', postContentType);
+                },
+                default: 'application/x-www-form-urlencoded; charset=UTF-8'
             }
         },
         methods: {
-            getParamsString: function () {
-                return toQueryObjects(this.params);
+            open: function () {
+                var me = this,
+                    xhr = me.xhr,
+                    method = me.method.toUpperCase(),
+                    url = me.url.toURI();
+
+                if (me.isXhr) {
+                    xhr.open(method, url, me.async, me.user, me.password);
+                } else {
+                    xhr.open(method, url);
+                }
+            },
+            send: function () {
+                var me = this,
+                    data = me.method == 'get' ? '' : toQueryString(me.params);
+
+                setHeaders(me);
+                setEventHandlers(me);
+
+                me.xhr.send(data);
+
+                return me.deferred.promise;
+            },
+            abort: function () {
+
             }
         }
     };
