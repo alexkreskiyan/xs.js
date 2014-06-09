@@ -187,6 +187,11 @@ xs.define('xs.request.Request', function () {
                     xs.isString(password) || (this.__set('password', password));
                 }
             }
+        },
+        methods: {
+            getParamsString: function () {
+                return toQueryObjects(this.params);
+            }
         }
     };
 });

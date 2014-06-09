@@ -55,15 +55,27 @@ xs.define('xs.uri.Url', function () {
 
         //detect protocol
         var protocol = protocolRe.exec(raw);
-        xs.isArray(protocol) && (data.protocol = protocol[1]);
+        if (xs.isArray(protocol)) {
+            data.protocol = protocol[1];
+        } else {
+            data.protocol = xs.location.protocol.substr(0, xs.location.protocol.length - 1);
+        }
 
         //detect host
         var host = hostRe.exec(raw);
-        xs.isArray(host) && (data.host = host[1]);
+        if (xs.isArray(host)) {
+            data.host = host[1];
+        } else {
+            data.host = xs.location.host;
+        }
 
         //detect port
         var port = portRe.exec(raw);
-        xs.isArray(port) && (data.port = port[1]);
+        if (xs.isArray(port)) {
+            data.port = port[1];
+        } else {
+            data.port = xs.location.port;
+        }
 
         //detect path
         var path;

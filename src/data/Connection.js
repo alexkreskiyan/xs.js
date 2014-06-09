@@ -26,10 +26,6 @@
  */
 xs.define('xs.data.Connection', function () {
 
-    var self = function () {
-        return xs.data.Connection;
-    };
-
     var prepareRequest = function (request) {
         if (xs.is(xs.request.Request, request)) {
             return request;
@@ -38,115 +34,183 @@ xs.define('xs.data.Connection', function () {
         }
     };
 
-    var setOptions = function (options) {
+    var setOptions = function (conn, options) {
         options = options || {};
         //set temporary connection params
         if (xs.isDefined(options.request)) {
             var request = prepareRequest(options.request);
-            options.request = request ? request : me.request;
+            options.request = request ? request : conn.request;
 
         } else {
             options.request = me.request;
         }
-        options.async = xs.isDefined(options.async) ? Boolean(options.async) : me.async;
-        options.cache = xs.isDefined(options.cache) ? Boolean(options.cache) : me.cache;
-        options.credentials = xs.isDefined(options.credentials) ? Boolean(options.credentials) : me.credentials;
-        options.timeout = xs.isDefined(options.timeout) && xs.isNumeric(options.timeout) ? Number(options.timeout) : me.timeout;
-        options.autoAbort = xs.isDefined(options.autoAbort) ? Boolean(options.autoAbort) : me.autoAbort;
+        options.async = xs.isDefined(options.async) ? Boolean(options.async) : conn.async;
+        options.cache = xs.isDefined(options.cache) ? Boolean(options.cache) : conn.cache;
+        options.cacheParam = conn.cacheParam;
+        options.credentials = xs.isDefined(options.credentials) ? Boolean(options.credentials) : conn.credentials;
+        options.timeout = xs.isDefined(options.timeout) && xs.isNumeric(options.timeout) ? Number(options.timeout) : conn.timeout;
+        options.autoAbort = xs.isDefined(options.autoAbort) ? Boolean(options.autoAbort) : conn.autoAbort;
+        options.extraParams = conn.extraParams;
+        options.headers = conn.headers;
+        options.postContentType = conn.postContentType;
         return options;
     };
 
+    var getRequestInstance = function (options) {
+        var request = options.request,
+            crossDomain = request.url.host === xs.location.host,
+            method = request.method.toUpperCase(),
+            url = request.url.toString();
+
+        var xhr;
+        if (crossDomain && xs.isIE && xs.engine.major <= 9) {
+            xhr = new XDomainRequest();
+            xhr.open(method, url);
+        } else {
+            xhr = new XMLHttpRequest();
+            xhr.open(method, url, options.async, request.user, request.password);
+        }
+        return xhr;
+    };
+
     var createRequest = function (options) {
-        var XMLHttpRequest = {
-            //event handlers
-            onloadstart: xs.emptyFn,
-            onprogress: xs.emptyFn,
-            onabort: xs.emptyFn,
-            onerror: xs.emptyFn,
-            onload: xs.emptyFn,
-            ontimeout: xs.emptyFn,
-            onloadend: xs.emptyFn,
-            onreadystatechange: xs.emptyFn,
-            //responseType
-            '': '',
-            arraybuffer: '',
-            blob: '',
-            document: '',
-            json: '',
-            text: '',
-            //states
-            UNSENT: 0,
-            OPENED: 1,
-            HEADERS_RECEIVED: 2,
-            LOADING: 3,
-            DONE: 4,
-            readyState: 0,
-            //request
-            open: function () {
-                open(method, url);
-                open(method, url, async, username, password);
-            },
-            setRequestHeader: function (header, value) {
-            },
-            timeout: 30000,
-            withCredentials: true,
-            upload: new XMLHttpRequestUpload,
-            send: function (data) {
-            },
-            abort: function () {
-            },
-            //response
-            status: 0,
-            statusText: '',
-            getResponseHeader: function (header) {
-            },
-            getAllResponseHeaders: function () {
-            },
-            overrideMimeType: function (mime) {
-            },
-            responseType: '',
-            response: '',
-            responseText: '',
-            responseXML: ''
-        };
-        var XDomainRequest = {
-            //event handlers
-            onprogress: xs.emptyFn,
-            onerror: xs.emptyFn,
-            onload: xs.emptyFn,
-            ontimeout: xs.emptyFn,
-            //methods
-            open: function (method, url) {
-            }, //async?user?pass? anonymous!!
-            send: function (data) {
-            },
-            abort: function () {
-            },
-            //properties
-            contentType: '', //both for request and response???
-            responseText: '',
-            timeout: 10000,
+        var xhr = getRequestInstance(options);
+        return {
+            xhr: xhr,
+            isXhr: xhr instanceof XMLHttpRequest,
+            deferred: xs.create('xs.promise.Deferred'),
+            options: options,
+            timeout: setTimeout(function () {
+                abortRequest(request);
+            })
         };
     };
 
-    var getRequestInstance = function () {
+    var setupHeaders = function (request) {
+        //no headers setup is available for XDomainRequest
+        if (!request.isXhr) {
+            return;
+        }
+
+        var options = request.options,
+            headers = options.headers,
+            xhr = request.xhr;
+
+        xs.each(headers, function (header, name) {
+            xhr.setRequestHeader(name, header);
+        });
+
+        //if no content type specified, method is not GET and some data is going to be sent - specify
+        if (!headers['Content-Type'] && options.request.method !== 'get' && xs.Object.size(options.request.params)) {
+            headers['Content-Type'] = options.postContentType;
+        }
+
+        //if default XHR header not specified - specify it
+        if (!headers['X-Requested-With']) {
+            headers['X-Requested-With'] = 'XMLHttpRequest';
+        }
     };
 
-    var setupHeaders = function () {
+    var XMLHttpRequestProto = {
+        //event handlers
+        onloadstart: xs.emptyFn,
+        onprogress: xs.emptyFn,
+        onabort: xs.emptyFn,
+        onerror: xs.emptyFn,
+        onload: xs.emptyFn,
+        ontimeout: xs.emptyFn,
+        onloadend: xs.emptyFn,
+        onreadystatechange: xs.emptyFn,
+        //responseType
+        '': '',
+        arraybuffer: '',
+        blob: '',
+        document: '',
+        json: '',
+        text: '',
+        //states
+        UNSENT: 0,
+        OPENED: 1,
+        HEADERS_RECEIVED: 2,
+        LOADING: 3,
+        DONE: 4,
+        readyState: 0,
+        //request
+        open: function () {
+            open(method, url);
+            open(method, url, async, username, password);
+        },
+        setRequestHeader: function (header, value) {
+        },
+        timeout: 30000,
+        withCredentials: true,
+        upload: new XMLHttpRequestUpload,
+        send: function (data) {
+        },
+        abort: function () {
+        },
+        //response
+        status: 0,
+        statusText: '',
+        getResponseHeader: function (header) {
+        },
+        getAllResponseHeaders: function () {
+        },
+        overrideMimeType: function (mime) {
+        },
+        responseType: '',
+        response: '',
+        responseText: '',
+        responseXML: ''
+    };
+    var XDomainRequestProto = {
+        //event handlers
+        onprogress: xs.emptyFn,
+        onerror: xs.emptyFn,
+        onload: xs.emptyFn,
+        ontimeout: xs.emptyFn,
+        //methods
+        open: function (method, url) {
+        }, //async?user?pass? anonymous!!
+        send: function (data) {
+        },
+        abort: function () {
+        },
+        //properties
+        contentType: '', //both for request and response???
+        responseText: '',
+        timeout: 10000
     };
 
-    var sendRequest = function (request) {
+    var sendRequest = function (conn, request) {
+        var xhr = request.xhr,
+            options = request.options,
+            deferred = request.deferred;
+
+        conn.pending.push(request); //TODO
+
+        xhr.onprogress = handleProgress;
+        xhr.onerror = handleError;
+        xhr.onload = handleLoad;
+        xhr.ontimeout = handleTimeout;
+        xhr.send(options.request.params.toString());
+        return deferred.promise;
+    };
+
+    var handleProgress = function () {
+
+    };
+    var handleError = function () {
+
+    };
+    var handleLoad = function () {
+
+    };
+    var handleTimeout = function () {
+
     };
 
     var abortRequest = function () {
-
-    };
-
-    var handleStatechange = function () {
-
-    };
-
-    var clearRequestTimeout = function () {
 
     };
 
@@ -167,6 +231,9 @@ xs.define('xs.data.Connection', function () {
             'xs.promise.Deferred',
             'xs.promise.Promise'
         ],
+        mixins: {
+            observable: 'xs.util.Observable'
+        },
         /**
          * Creates connection object, that can be used many times
          * @param {Object} config configuration of connection:
@@ -194,7 +261,7 @@ xs.define('xs.data.Connection', function () {
             var me = this;
             config = config || {};
             //set pending requests
-            me.__set('pending', {});
+            me.__set('pending', []);
             //set connection params
             me.request = config.request;
             me.async = config.async;
@@ -286,12 +353,13 @@ xs.define('xs.data.Connection', function () {
                 var me = this;
 
                 //set request options
-                options = setOptions.call(me, options);
+                options = setOptions(me, options);
                 //create request object
                 var request = createRequest(options);
+                setupHeaders(request);
 
                 //return request sending result
-                return sendRequest(request);
+                return sendRequest(me, request);
             },
             request: function (options) {
                 options = options || {};
