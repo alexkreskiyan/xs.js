@@ -81,7 +81,7 @@ xs.define('xs.uri.Url', function () {
         var path;
         if (xs.isArray(path = pathReFull.exec(raw))) {
             data.path = path[1];
-        } else if (xs.isArray(path = pathReRelative.exec(raw))) {
+        } else if (!protocol && !host && xs.isArray(path = pathReRelative.exec(raw))) {
             data.path = path[1];
         }
 
@@ -155,8 +155,11 @@ xs.define('xs.uri.Url', function () {
             },
             params: {
                 set: function (params) {
-                    xs.isObject(params) || (params = {});
-                    this.__set('params', params);
+                    if (!params) {
+                        this.__set('params', {});
+                    } else if (xs.isObject(params)) {
+                        this.__set('params', params);
+                    }
                 }
             },
             hash: {
@@ -171,8 +174,11 @@ xs.define('xs.uri.Url', function () {
         },
         methods: {
             fromString: function (raw) {
+                xs.isString(raw) || (raw = '');
+
                 var me = this,
                     data = parse(raw);
+
                 me.protocol = data.protocol;
                 me.host = data.host;
                 me.port = data.port;
@@ -194,7 +200,7 @@ xs.define('xs.uri.Url', function () {
                 me.hash && (str += '#' + me.hash);
                 return str;
             },
-            toURI: function () {
+            toUri: function () {
                 return encodeURI(this.toString());
             }
         }

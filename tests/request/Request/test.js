@@ -72,11 +72,11 @@ test('toQueryString', function () {
         4
     ]}, true), 'x[0][0]=1&x[0][1]=%D1%82%D0%B5%D1%81%D1%82&x[1]=3&x[2]=4', 'from complex string without value 2');
 });
-//test('constructor', function () {
-//    //test constructor without any params
-//    //test constructor with all params
-//    equal(true, true, '');
-//});
+test('constructor', function () {
+    //test constructor without any params
+    //test constructor with all params
+    equal(true, true, '');
+});
 //test('method', function () {
 //
 //    equal(true, true, '');

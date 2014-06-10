@@ -420,7 +420,7 @@ xs.define('xs.request.Request', function () {
 
                 var xhr = me.xhr,
                     method = me.method.toUpperCase(),
-                    url = me.url.toURI();
+                    url = me.url.toUri();
 
                 if (me.isXhr) {
                     xhr.open(method, url, me.async, me.user, me.password);
