@@ -194,15 +194,59 @@ xs.define('xs.request.Request', function () {
      */
     var methods = ['get', 'post', 'put', 'delete'];
 
+    /**
+     * synchronizes method, url params and request params, when method/url/params changed
+     * @param {xs.request.Request} me
+     * @param {String} from
+     */
+    var syncParams = function (me, from) {
+        //switch change source
+        switch (from) {
+            case 'method':
+                if (me.method == 'get') {
+                    //fetch url.params from me.params
+                    me.url.params = me.params;
+                } else {
+                    //empty url
+                    me.url.params = {};
+                }
+                break;
+            case 'url':
+                if (me.method == 'get') {
+                    if (xs.Object.size(me.url.params)) {
+                        //if any params in url - assign them to request
+                        me.params = me.url.params; //because of Object bylink passing - we achieve direct sync
+                    } else {
+                        //else - url.params are assigned from me.params
+                        me.url.params = me.params; //because of Object bylink passing - we achieve direct sync
+                    }
+                } else {
+                    if (xs.Object.size(me.url.params)) {
+                        //if any params in url - assign them to request
+                        me.params = me.url.params; //because of Object bylink passing - we achieve direct sync
+                    }
+                    //empty url.params
+                    me.url.params = {};
+                }
+                break;
+            case 'params':
+                if (me.method == 'get') {
+                    //url.params are assigned from me.params
+                    me.url.params = me.params; //because of Object bylink passing - we achieve direct sync
+                }
+                break;
+        }
+    };
+
     var setRequest = function (me) {
         //request object
-        me.isCrossDomain = me.url.host !== xs.location.host;
+        me.__set('isCrossDomain', me.url.host !== xs.location.host);
         if (me.isCrossDomain && xs.isIE && xs.browser.major <= 9) {
-            me.xhr = new XDomainRequest();
-            me.isXhr = false;
+            me.__set('xhr', new XDomainRequest());
+            me.__set('isXhr', false);
         } else {
-            me.xhr = new XMLHttpRequest();
-            me.isXhr = true;
+            me.__set('xhr', new XMLHttpRequest());
+            me.__set('isXhr', true);
         }
     };
 
@@ -280,17 +324,17 @@ xs.define('xs.request.Request', function () {
             xs.isObject(config) || (config = {});
 
             //basics
-            me.method = config.method;
             me.url = config.url;
-            me.params = config.params;
+            me.method = config.method;
+            me.params = xs.isObject(config.params) ? config.params : {};
             me.user = config.user;
             me.password = config.password;
             me.async = config.async;
             me.credentials = config.credentials;
-            me.headers = config.headers;
+            me.headers = xs.isObject(config.headers) ? config.headers : {};
 
             //deferred request handler
-            me.deferred = xs.create('xs.promise.Deferred');
+            me.__set('deferred', xs.create('xs.promise.Deferred'));
 
             //request timeout
             me.timeout = config.timeout;
@@ -303,105 +347,104 @@ xs.define('xs.request.Request', function () {
                 set: function (method) {
                     var me = this;
 
-                    if (xs.isString(method)) {
-                        method = method.toLowerCase();
-                        xs.Array.has(methods, method) || (method = 'get');
-                    } else {
-                        method = 'get';
-                    }
-                    me.__set('method', method);
-
-                    if (!me.url) {
+                    if (!xs.isString(method)) {
                         return;
                     }
-                    me.url.params = method == 'get' ? me.params : {};
-                }
+
+                    method = method.toLowerCase();
+                    xs.Array.has(methods, method) && me.__set('method', method);
+
+                    me.url && syncParams(me, 'method');
+                },
+                default: 'get'
             },
             url: {
                 set: function (url) {
                     var me = this;
 
                     if (xs.isString(url)) {
-                        me.__set('url', xs.create('xs.uri.Url', {url: url}));
-                    } else if (xs.is(url, xs.uri.Url)) {
-                        me.__set('url', url);
+                        url = xs.create('xs.uri.Url', {url: url});
                     } else if (xs.isObject(url)) {
-                        me.__set('url', xs.create('xs.uri.Url', url));
+                        url = xs.create('xs.uri.Url', url);
+                    } else if (!xs.is(url, xs.uri.Url)) {
+                        var loc = xs.location;
+                        url = xs.create('xs.uri.Url', {
+                            url: loc.protocol + '//' + loc.host + (loc.port ? ':' + loc.port : '') + loc.pathname + loc.search + loc.hash
+                        });
                     }
-                    me.url && setRequest(me);
-                    me.method == 'get' && me.url && (me.url.params = me.params);
+                    me.__set('url', url);
+
+                    syncParams(me, 'url');
+
+                    setRequest(me);
                 }
             },
             params: {
                 set: function (params) {
                     var me = this;
 
-                    xs.isObject(params) || (params = {});
-                    me.__set('params', params);
-
-                    if (!me.url) {
+                    if (!xs.isObject(params)) {
                         return;
                     }
-                    me.url.params = me.method == 'get' ? params : {};
+
+                    me.__set('params', params);
+                    syncParams(me, 'params');
                 }
             },
             user: {
                 set: function (user) {
-                    xs.isString(user) || (this.__set('user', user));
+                    var me = this;
+                    if (xs.isString(user)) {
+                        me.__set('user', user);
+                    } else if (!user) {
+                        me.__set('user', null);
+                    }
                 }
             },
             password: {
                 set: function (password) {
-                    xs.isString(password) || (this.__set('password', password));
+                    var me = this;
+                    if (xs.isString(password)) {
+                        me.__set('password', password);
+                    } else if (!password) {
+                        me.__set('password', null);
+                    }
                 }
             },
             async: {
                 set: function (async) {
-                    this.__set('async', Boolean(async));
+                    xs.isDefined(async) && this.__set('async', Boolean(async));
                 },
                 default: true
             },
             credentials: {
                 set: function (credentials) {
-                    this.__set('credentials', Boolean(credentials));
+                    xs.isDefined(credentials) && this.__set('credentials', Boolean(credentials));
                 },
                 default: false
             },
             headers: {
                 set: function (headers) {
-                    xs.isObject(headers) || (headers = {});
-                    this.__set('headers', headers);
+                    xs.isObject(headers) && this.__set('headers', headers);
                 }
             },
             timeout: {
                 set: function (timeout) {
                     var me = this;
-                    if (xs.isNumeric(timeout)) {
-                        timeout = Number(timeout);
-                        me.__set('timeout', timeout);
-                        me.xhr && (me.xhr.timeout = timeout);
-                    }
+                    xs.isNumeric(timeout) && me.__set('timeout', Number(timeout));
+                    me.xhr && (me.xhr.timeout = me.__get('timeout'));
                 },
                 default: 30000
             },
             timeoutId: 0,
             isCrossDomain: {
-                set: function (isCrossDomain) {
-                    this.__set('isCrossDomain', Boolean(isCrossDomain));
-                },
-                default: false
+                set: xs.emptyFn
             },
-            isXHr: {
-                set: function (isXHr) {
-                    this.__set('isXHr', Boolean(isXHr));
-                },
-                default: true
+            isXhr: {
+                set: xs.emptyFn
             },
             deferred: {
-                set: function (deferred) {
-                    xs.is(deferred, xs.promise.Deferred) && this.__set('deferred', deferred);
-                },
-                default: true
+                set: xs.emptyFn
             },
             postContentType: {
                 set: function (postContentType) {
