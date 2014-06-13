@@ -154,7 +154,7 @@
          */
         this.map = function (list, iterator, scope) {
             if (xs.isArray(list)) {
-                return list.map(iterator, scope);
+                return xs.Array.map(list, iterator, scope);
             } else {
                 return xs.Object.map(list, iterator, scope);
             }
@@ -169,12 +169,7 @@
          */
         this.reduce = function (list, iterator, memo, scope) {
             if (xs.isArray(list)) {
-                iterator = scope ? iterator.bind(scope) : iterator;
-                if (arguments.length > 2) {
-                    return list.reduce(iterator, memo);
-                } else {
-                    return list.reduce(iterator);
-                }
+                return xs.Array.reduce.apply(xs.Object, arguments);
             } else {
                 return xs.Object.reduce.apply(xs.Object, arguments);
             }
@@ -189,12 +184,7 @@
          */
         this.reduceRight = function (list, iterator, memo, scope) {
             if (xs.isArray(list)) {
-                iterator = scope ? iterator.bind(scope) : iterator;
-                if (arguments.length > 2) {
-                    return list.reduceRight(iterator, memo);
-                } else {
-                    return list.reduceRight(iterator);
-                }
+                return xs.Array.reduceRight.apply(xs.Object, arguments);
             } else {
                 return xs.Object.reduceRight.apply(xs.Object, arguments);
             }

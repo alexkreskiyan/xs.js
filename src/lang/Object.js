@@ -159,7 +159,7 @@
          */
         this.map = function (obj, iterator, scope) {
             var result = _clone(obj);
-            this.each(obj, function (value, key, object) {
+            _each(obj, function (value, key, object) {
                 result[key] = iterator.call(this, value, key, object);
             }, scope);
             return result;
@@ -438,7 +438,6 @@
         /**
          * removes all items from list, passed as array/plain arguments
          * @param obj
-         * @param element
          */
         this.removeAll = function (obj) {
             var elements = xs.Array.union(slice(arguments, 1));

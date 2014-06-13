@@ -29,7 +29,7 @@
     var xs = root[ns];
 
     var array = xs.Array = new (function () {
-        var me=this;
+        var me = this;
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice),
             concat = Function.prototype.apply.bind(Array.prototype.concat);
@@ -106,12 +106,66 @@
          * @param iterator
          * @param scope
          */
-        me.eachReverse = function (arr, iterator, scope) {
+        var _eachReverse = me.eachReverse = function (arr, iterator, scope) {
             var idx,
                 len = arr.length;
             for (idx = len - 1; idx >= 0; idx--) {
                 iterator.call(scope, arr[idx], idx, arr);
             }
+        };
+        /**
+         * produces a new array with elements, updated by iterator function
+         * @param {Array} arr
+         * @param {Function} iterator
+         * @param {Object|undefined} scope
+         * @returns {Array}
+         */
+        this.map = function (arr, iterator, scope) {
+            var result = _clone(arr);
+            _each(arr, function (value, key, array) {
+                result[key] = iterator.call(this, value, key, array);
+            }, scope);
+            return result;
+        };
+        /**
+         * reduces an array of elements, returned by iterator function from left
+         * @param {Array} arr reduced array
+         * @param {Function} iterator
+         * @param {Object|undefined} scope
+         * @param {*} memo initial reduce value
+         * @returns {*}
+         */
+        this.reduce = function (arr, iterator, memo, scope) {
+            var result;
+            if (arguments.length > 2) {
+                result = memo;
+            } else {
+                result = arr.shift();
+            }
+            _each(arr, function (value, key, object) {
+                result = iterator.call(this, result, value, key, object);
+            }, scope);
+            return result;
+        };
+        /**
+         * reduces an array of elements, returned by iterator function from right
+         * @param {Array} arr reduced array
+         * @param {Function} iterator
+         * @param {Object|undefined} scope
+         * @param {*} memo initial reduce value
+         * @returns {*}
+         */
+        this.reduceRight = function (arr, iterator, memo, scope) {
+            var result;
+            if (arguments.length > 2) {
+                result = memo;
+            } else {
+                result = arr.pop();
+            }
+            _eachReverse(obj, function (value, key, object) {
+                result = iterator.call(this, result, value, key, object);
+            }, scope);
+            return result;
         };
         /**
          * returns first element in array, that matches given finder function
@@ -300,7 +354,6 @@
         /**
          * removes all items from list, passed as array/plain arguments
          * @param arr
-         * @param element
          */
         me.removeAll = function (arr) {
             var elements = _union(slice(arguments, 1));
@@ -313,7 +366,7 @@
          * @param arr
          * @returns {*}
          */
-        me.clone = function (arr) {
+        var _clone = me.clone = function (arr) {
             return slice(arr);
         };
         /**
@@ -468,7 +521,7 @@
             }
             return range;
         };
-        me.toObject = function(arr){
+        me.toObject = function (arr) {
             var object = {};
             _each(arr, function (index, value) {
                 object[index] = value;
