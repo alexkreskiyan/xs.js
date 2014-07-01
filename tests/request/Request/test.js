@@ -250,3 +250,9 @@ test('timeout', function () {
 //
 //    strictEqual(true, true, '');
 //});
+var sendReq = function () {
+    var req = xs.create('xs.request.Request', {
+        url: 'http://localhost:3001/data?x=1&y=2#123'
+    });
+    req.send();
+};

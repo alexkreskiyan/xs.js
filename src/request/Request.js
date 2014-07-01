@@ -250,6 +250,18 @@ xs.define('xs.request.Request', function () {
         }
     };
 
+    var open = function (me) {
+        var xhr = me.xhr,
+            method = me.method.toUpperCase(),
+            url = me.url.toUri();
+
+        if (me.isXhr) {
+            xhr.open(method, url, me.async, me.user, me.password);
+        } else {
+            xhr.open(method, url);
+        }
+    };
+
     var setHeaders = function (me) {
         //no headers setup is available for XDomainRequest
         if (!me.isXhr) {
@@ -324,9 +336,15 @@ xs.define('xs.request.Request', function () {
             xs.isObject(config) || (config = {});
 
             //basics
-            me.url = config.url;
             me.method = config.method;
-            me.params = xs.isObject(config.params) ? config.params : {};
+            me.url = config.url;
+            //set params if given
+            if (xs.isObject(config.params)) {
+                me.params = config.params;
+                //or default to empty ones, if not defined yet via url
+            } else if (!me.params) {
+                me.params = {};
+            }
             me.user = config.user;
             me.password = config.password;
             me.async = config.async;
@@ -437,6 +455,9 @@ xs.define('xs.request.Request', function () {
                 default: 30000
             },
             timeoutId: 0,
+            xhr: {
+                set: xs.emptyFn
+            },
             isCrossDomain: {
                 set: xs.emptyFn
             },
@@ -454,31 +475,11 @@ xs.define('xs.request.Request', function () {
             }
         },
         methods: {
-            open: function () {
-                var me = this;
-
-                if (!me.xhr) {
-                    return false;
-                }
-
-                var xhr = me.xhr,
-                    method = me.method.toUpperCase(),
-                    url = me.url.toUri();
-
-                if (me.isXhr) {
-                    xhr.open(method, url, me.async, me.user, me.password);
-                } else {
-                    xhr.open(method, url);
-                }
-                return true;
-            },
             send: function () {
                 var me = this,
-                    data = me.method == 'get' ? '' : toQueryString(me.params);
+                    data = me.method == 'get' ? '' : toQueryString(me.params, false);
 
-                if (!me.xhr) {
-                    return false;
-                }
+                open(me);
 
                 me.isCrossDomain && me.isXhr && (me.xhr.withCredentials = me.credentials);
 
