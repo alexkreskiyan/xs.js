@@ -296,7 +296,7 @@ xs.define('xs.request.Request', function () {
         };
         xhr.onerror = function () {
             console.log('ERROR', 'request', me);
-            me.abort();
+            me.abort(false);
         };
         xhr.onload = function () {
             console.log('LOAD', 'request', me);
@@ -496,7 +496,7 @@ xs.define('xs.request.Request', function () {
             },
             abort: function (timedOut) {
                 var me = this;
-                me.deferred.reject(timedOut);
+                me.deferred.reject(Boolean(timedOut));
             }
         }
     };
