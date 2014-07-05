@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="function" version="3">
+  <DEPS>
+    <ID name="function" mc="DataType" uid="1719a0d8-9df8-47f4-8567-99ab9264a203"/>
+  </DEPS>
+  <OBJECT>
+    <ID name="function" mc="DataType" uid="1719a0d8-9df8-47f4-8567-99ab9264a203"/>
+    <PID name="xs.js" mc="Package" uid="ad878ac0-e3f7-456b-8972-4949073562a2"/>
+    <ATTRIBUTES>
+      <ATT name="IsElementary">true</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[function]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES></DEPENDENCIES>
+  </OBJECT>
+</EXT>

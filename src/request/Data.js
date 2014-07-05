@@ -22,150 +22,85 @@
  */
 'use strict';
 xs.define('xs.request.Data', function () {
-
     return {
         constructor: function () {
             var me = this;
-            me.__set('items', {});
+            //raw data is always simple object
+            me.__set('raw', {});
+            //Check if browser supports FormData API and set data
+            var version = xs.browser.major;
+            if ((xs.isChrome && version >= 7) ||
+                (xs.isFirefox && version >= 4) ||
+                (xs.isIE && version >= 10) ||
+                (xs.isOpera && version >= 12) ||
+                (xs.isSafari && version >= 5)) {
+                me.__set('data', new FormData);
+            }
         },
         properties: {
-            method: {
-                set: function (method) {
-                    var me = this;
-
-                    if (!xs.isString(method)) {
-                        return;
-                    }
-
-                    method = method.toLowerCase();
-                    xs.Array.has(methods, method) && me.__set('method', method);
-
-                    me.url && syncParams(me, 'method');
+            isFormData: {
+                get: function () {
+                    return this.__get('data') instanceof FormData;
                 },
-                default: 'get'
-            },
-            url: {
-                set: function (url) {
-                    var me = this;
-
-                    if (xs.isString(url)) {
-                        url = xs.create('xs.uri.Url', {url: url});
-                    } else if (xs.isObject(url)) {
-                        url = xs.create('xs.uri.Url', url);
-                    } else if (!xs.is(url, xs.uri.Url)) {
-                        var loc = xs.location;
-                        url = xs.create('xs.uri.Url', {
-                            url: loc.protocol + '//' + loc.host + (loc.port ? ':' + loc.port : '') + loc.pathname + loc.search + loc.hash
-                        });
-                    }
-                    me.__set('url', url);
-
-                    syncParams(me, 'url');
-
-                    setRequest(me);
-                }
-            },
-            params: {
-                set: function (params) {
-                    var me = this;
-
-                    if (!xs.isObject(params)) {
-                        return;
-                    }
-
-                    me.__set('params', params);
-                    syncParams(me, 'params');
-                }
-            },
-            user: {
-                set: function (user) {
-                    var me = this;
-                    if (xs.isString(user)) {
-                        me.__set('user', user);
-                    } else if (!user) {
-                        me.__set('user', null);
-                    }
-                }
-            },
-            password: {
-                set: function (password) {
-                    var me = this;
-                    if (xs.isString(password)) {
-                        me.__set('password', password);
-                    } else if (!password) {
-                        me.__set('password', null);
-                    }
-                }
-            },
-            async: {
-                set: function (async) {
-                    xs.isDefined(async) && this.__set('async', Boolean(async));
-                },
-                default: true
-            },
-            credentials: {
-                set: function (credentials) {
-                    xs.isDefined(credentials) && this.__set('credentials', Boolean(credentials));
-                },
-                default: false
-            },
-            headers: {
-                set: function (headers) {
-                    xs.isObject(headers) && this.__set('headers', headers);
-                }
-            },
-            timeout: {
-                set: function (timeout) {
-                    var me = this;
-                    xs.isNumeric(timeout) && me.__set('timeout', Number(timeout));
-                    me.xhr && (me.xhr.timeout = me.__get('timeout'));
-                },
-                default: 30000
-            },
-            timeoutId: 0,
-            xhr: {
                 set: xs.emptyFn
             },
-            isCrossDomain: {
-                set: xs.emptyFn
-            },
-            isXhr: {
-                set: xs.emptyFn
-            },
-            deferred: {
-                set: xs.emptyFn
-            },
-            postContentType: {
-                set: function (postContentType) {
-                    xs.isString(postContentType) && this.__set('postContentType', postContentType);
+            raw: {
+                get: function () {
+                    return this.__get('raw');
                 },
-                default: 'application/x-www-form-urlencoded; charset=UTF-8'
+                set: xs.emptyFn
+            },
+            data: {
+                get: function () {
+                    var me = this;
+                    var data = me.__get('data');
+                    return data ? data : me.__get('raw');
+                },
+                set: xs.emptyFn
             }
         },
         methods: {
-            send: function () {
-                var me = this,
-                    data = me.method == 'get' ? '' : toQueryString(me.params, false);
-
-                open(me);
-
-                me.isCrossDomain && me.isXhr && (me.xhr.withCredentials = me.credentials);
-
-                setHeaders(me);
-                setEventHandlers(me);
-
-                me.timeoutId = setTimeout(function () {
-                    me.abort(true);
-                }, me.timeout);
-
-                me.xhr.send(data);
-
-                return me.deferred.promise;
-            },
-            abort: function (timedOut) {
+            add: function (name, value) {
                 var me = this;
-                me.deferred.reject(Boolean(timedOut));
+                me.__get('raw')[name] = value;
+                if (me.isFormData) {
+                    me.__get('data').append[name] = value;
+                }
+                console.log(params);
+            },
+            get: function (name) {
+                var me = this;
+                console.log('get', name);
+            },
+            delete: function () {
+                var me = this,
+                    params = xs.Array.unique(xs.Array.union(xs.Array.clone(arguments)));
+                console.log(params);
             }
         }
     };
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
