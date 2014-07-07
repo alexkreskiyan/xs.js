@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ram-component manifest-version="2.0"
+               name="PatternDesigner" version="0" release="0" clevel="0" metamodel="9020">
+    <description>
+        <![CDATA[]]>
+    </description>
+    <dependencies>
+    </dependencies>
+    <contributors>
+    </contributors>
+    <roots>
+      <root metaclass="ModuleComponent" name="PatternDesigner" uuid="d7e7f29e-8913-11df-8dda-0014224f9977"></root>
+    </roots>
+</ram-component>

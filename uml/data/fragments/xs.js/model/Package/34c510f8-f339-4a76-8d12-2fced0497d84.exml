@@ -2,6 +2,8 @@
 <!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="xs.class" version="3">
   <DEPS>
     <ID name="xs.class" mc="Package" uid="34c510f8-f339-4a76-8d12-2fced0497d84"/>
+    <COMPID name="ProcessorQueue" mc="Class" uid="432aa6d6-a072-4dbb-8001-e1d8685d8913"/>
+    <COMPID name="xs.Class" mc="Class" uid="12e992ab-6792-415b-aa98-66ed268adabb"/>
     <COMPID name="xs.class.Base" mc="Class" uid="1b6db218-f2e9-4283-82ed-6629a255877f"/>
   </DEPS>
   <OBJECT>
@@ -19,6 +21,8 @@
     <DEPENDENCIES>
       <COMP relation="OwnedElement">
         <COMPID name="xs.class.Base" mc="Class" uid="1b6db218-f2e9-4283-82ed-6629a255877f"/>
+        <COMPID name="xs.Class" mc="Class" uid="12e992ab-6792-415b-aa98-66ed268adabb"/>
+        <COMPID name="ProcessorQueue" mc="Class" uid="432aa6d6-a072-4dbb-8001-e1d8685d8913"/>
       </COMP>
     </DEPENDENCIES>
   </OBJECT>

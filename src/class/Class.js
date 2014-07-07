@@ -26,10 +26,9 @@
     xs.Class = new (function () {
 
         var ProcessorQueue = function () {
+            var me=this;
             var items = {};
             var stack = [];
-            this.items = items;
-            this.stack = stack;
             var setPosition = function (name, position, relativeTo) {
                 //if old preprocessor in stack - remove it
                 var currentIndex = stack.indexOf(name);
@@ -49,7 +48,7 @@
                     }
                 }
             };
-            this.register = function (name, fn, properties, position, relativeTo) {
+            me.register = function (name, fn, properties, position, relativeTo) {
                 //default properties to array if string and to true (all properties) - if none
                 if (xs.isString(properties)) {
                     properties = [properties];
@@ -65,10 +64,10 @@
                 };
                 setPosition(name, position, relativeTo);
             };
-            this.get = function (name) {
+            me.get = function (name) {
                 return name ? items[name] : items;
             };
-            this.getStack = function () {
+            me.getStack = function () {
                 return stack;
             }
         };
@@ -77,13 +76,13 @@
         var postprocessors = new ProcessorQueue();
 
         var factory = function (constructor) {
-            var xClasse = function (args) {
+            var xClass = function (args) {
                 return constructor.apply(this, args);
             };
 
-            xClasse.prototype = constructor.prototype;
+            xClass.prototype = constructor.prototype;
             return function () {
-                var instance = new xClasse(arguments);
+                var instance = new xClass(arguments);
                 instance.constructor = constructor;
                 return instance;
             };

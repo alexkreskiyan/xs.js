@@ -4,10 +4,10 @@
     <ID name="xs.js" mc="Package" uid="ad878ac0-e3f7-456b-8972-4949073562a2"/>
     <COMPID name="Class" mc="Class" uid="bdc8e112-12b2-4c55-bd92-9e106d7c70f5"/>
     <COMPID name="Package" mc="Package" uid="0a1f12b2-b481-49d4-819b-5614843f853d"/>
+    <COMPID name="SystemProjectData" mc="Package" uid="1c831106-596f-49db-8dc2-d4fbb9df3ac8"/>
     <COMPID name="array" mc="DataType" uid="0b18a4f4-fb45-4c37-8927-453c4d10dd63"/>
     <COMPID name="function" mc="DataType" uid="1719a0d8-9df8-47f4-8567-99ab9264a203"/>
     <COMPID name="object" mc="DataType" uid="8390ce2c-25c9-4cbd-8e01-debbe0ff5166"/>
-    <COMPID name="overview diagram" mc="ClassDiagram" uid="f533ad1a-e320-4203-afb9-5c16110bfaf6"/>
     <COMPID name="xs.class" mc="Package" uid="34c510f8-f339-4a76-8d12-2fced0497d84"/>
     <COMPID name="xs.js Class diagram" mc="ClassDiagram" uid="8387a1fe-b8b3-46f2-9ce4-c6e8c5881a64"/>
     <COMPID name="xs.util.Observable" mc="Class" uid="af966715-b8b3-44df-ae0e-1fa7e49973d3"/>
@@ -33,9 +33,9 @@
         <COMPID name="Class" mc="Class" uid="bdc8e112-12b2-4c55-bd92-9e106d7c70f5"/>
         <COMPID name="Package" mc="Package" uid="0a1f12b2-b481-49d4-819b-5614843f853d"/>
         <COMPID name="xs.class" mc="Package" uid="34c510f8-f339-4a76-8d12-2fced0497d84"/>
+        <COMPID name="SystemProjectData" mc="Package" uid="1c831106-596f-49db-8dc2-d4fbb9df3ac8"/>
       </COMP>
       <COMP relation="Product">
-        <COMPID name="overview diagram" mc="ClassDiagram" uid="f533ad1a-e320-4203-afb9-5c16110bfaf6"/>
         <COMPID name="xs.js Class diagram" mc="ClassDiagram" uid="8387a1fe-b8b3-46f2-9ce4-c6e8c5881a64"/>
       </COMP>
     </DEPENDENCIES>

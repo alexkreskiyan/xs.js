@@ -2,6 +2,7 @@
 <!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="xs.class.Base" version="3">
   <DEPS>
     <ID name="xs.class.Base" mc="Class" uid="1b6db218-f2e9-4283-82ed-6629a255877f"/>
+    <EXTID name="object" mc="DataType" uid="8390ce2c-25c9-4cbd-8e01-debbe0ff5166"/>
   </DEPS>
   <OBJECT>
     <ID name="xs.class.Base" mc="Class" uid="1b6db218-f2e9-4283-82ed-6629a255877f"/>
@@ -48,6 +49,33 @@
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES></DEPENDENCIES>
+        </OBJECT>
+      </COMP>
+      <COMP relation="OwnedAttribute">
+        <OBJECT>
+          <ID name="descriptor" mc="Attribute" uid="a2a14b54-692a-4594-b768-08d8fd9259fb"/>
+          <PID name="xs.class.Base" mc="Class" uid="1b6db218-f2e9-4283-82ed-6629a255877f"/>
+          <ATTRIBUTES>
+            <ATT name="TypeConstraint"></ATT>
+            <ATT name="Value"></ATT>
+            <ATT name="TargetIsClass">false</ATT>
+            <ATT name="Changeable">Read</ATT>
+            <ATT name="IsDerived">false</ATT>
+            <ATT name="IsOrdered">false</ATT>
+            <ATT name="IsUnique">false</ATT>
+            <ATT name="MultiplicityMin"><![CDATA[1]]></ATT>
+            <ATT name="MultiplicityMax"><![CDATA[1]]></ATT>
+            <ATT name="Visibility">Public</ATT>
+            <ATT name="IsClass">true</ATT>
+            <ATT name="IsAbstract">false</ATT>
+            <ATT name="Name"><![CDATA[descriptor]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="Type">
+              <ID name="object" mc="DataType" uid="8390ce2c-25c9-4cbd-8e01-debbe0ff5166"/>
+            </LINK>
+          </DEPENDENCIES>
         </OBJECT>
       </COMP>
     </DEPENDENCIES>
