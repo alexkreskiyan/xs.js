@@ -4,6 +4,8 @@
     <ID name="xs.class" mc="Package" uid="34c510f8-f339-4a76-8d12-2fced0497d84"/>
     <COMPID name="ProcessorQueue" mc="Class" uid="432aa6d6-a072-4dbb-8001-e1d8685d8913"/>
     <COMPID name="xs.Class" mc="Class" uid="12e992ab-6792-415b-aa98-66ed268adabb"/>
+    <COMPID name="xs.ClassManager" mc="Class" uid="761e4307-197c-488a-9537-1e106488888a"/>
+    <COMPID name="xs.Loader" mc="Class" uid="4c378a17-425f-4629-830a-cd9be3455e6d"/>
     <COMPID name="xs.class.Base" mc="Class" uid="1b6db218-f2e9-4283-82ed-6629a255877f"/>
   </DEPS>
   <OBJECT>
@@ -23,6 +25,8 @@
         <COMPID name="xs.class.Base" mc="Class" uid="1b6db218-f2e9-4283-82ed-6629a255877f"/>
         <COMPID name="xs.Class" mc="Class" uid="12e992ab-6792-415b-aa98-66ed268adabb"/>
         <COMPID name="ProcessorQueue" mc="Class" uid="432aa6d6-a072-4dbb-8001-e1d8685d8913"/>
+        <COMPID name="xs.ClassManager" mc="Class" uid="761e4307-197c-488a-9537-1e106488888a"/>
+        <COMPID name="xs.Loader" mc="Class" uid="4c378a17-425f-4629-830a-cd9be3455e6d"/>
       </COMP>
     </DEPENDENCIES>
   </OBJECT>

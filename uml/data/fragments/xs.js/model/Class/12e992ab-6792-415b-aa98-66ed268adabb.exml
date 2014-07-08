@@ -27,7 +27,7 @@
             <ATT name="Concurrency">false</ATT>
             <ATT name="Final">false</ATT>
             <ATT name="Passing">MethodOut</ATT>
-            <ATT name="Visibility">Public</ATT>
+            <ATT name="Visibility">Private</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
             <ATT name="Name"><![CDATA[factory(]]></ATT>
@@ -36,52 +36,52 @@
           <DEPENDENCIES></DEPENDENCIES>
         </OBJECT>
         <OBJECT>
-          <ID name="Operation1" mc="Operation" uid="776499e6-7bc5-4871-b8c7-7804aecefd16"/>
+          <ID name="create(data)" mc="Operation" uid="776499e6-7bc5-4871-b8c7-7804aecefd16"/>
           <PID name="xs.Class" mc="Class" uid="12e992ab-6792-415b-aa98-66ed268adabb"/>
           <ATTRIBUTES>
             <ATT name="Concurrency">false</ATT>
             <ATT name="Final">false</ATT>
             <ATT name="Passing">MethodOut</ATT>
-            <ATT name="Visibility">Public</ATT>
+            <ATT name="Visibility">Private</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[Operation1]]></ATT>
+            <ATT name="Name"><![CDATA[create(data)]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES></DEPENDENCIES>
         </OBJECT>
         <OBJECT>
-          <ID name="Operation2" mc="Operation" uid="e684d54b-a0f3-4ae8-9860-87f47967e30a"/>
+          <ID name="prepare(Class,data,queue)" mc="Operation" uid="e684d54b-a0f3-4ae8-9860-87f47967e30a"/>
           <PID name="xs.Class" mc="Class" uid="12e992ab-6792-415b-aa98-66ed268adabb"/>
           <ATTRIBUTES>
             <ATT name="Concurrency">false</ATT>
             <ATT name="Final">false</ATT>
             <ATT name="Passing">MethodOut</ATT>
-            <ATT name="Visibility">Public</ATT>
+            <ATT name="Visibility">Private</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[Operation2]]></ATT>
+            <ATT name="Name"><![CDATA[prepare(Class,data,queue)]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES></DEPENDENCIES>
         </OBJECT>
         <OBJECT>
-          <ID name="Operation3" mc="Operation" uid="b3997568-96fe-40ca-8e32-d0506ceeda78"/>
+          <ID name="process(Class,data,hooks)" mc="Operation" uid="b3997568-96fe-40ca-8e32-d0506ceeda78"/>
           <PID name="xs.Class" mc="Class" uid="12e992ab-6792-415b-aa98-66ed268adabb"/>
           <ATTRIBUTES>
             <ATT name="Concurrency">false</ATT>
             <ATT name="Final">false</ATT>
             <ATT name="Passing">MethodOut</ATT>
-            <ATT name="Visibility">Public</ATT>
+            <ATT name="Visibility">Private</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[Operation3]]></ATT>
+            <ATT name="Name"><![CDATA[process(Class,data,hooks)]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES></DEPENDENCIES>
         </OBJECT>
         <OBJECT>
-          <ID name="Operation4" mc="Operation" uid="5d4cacc9-2d34-4e3b-9bea-8c0164590cca"/>
+          <ID name="extend(child,parent)" mc="Operation" uid="5d4cacc9-2d34-4e3b-9bea-8c0164590cca"/>
           <PID name="xs.Class" mc="Class" uid="12e992ab-6792-415b-aa98-66ed268adabb"/>
           <ATTRIBUTES>
             <ATT name="Concurrency">false</ATT>
@@ -90,13 +90,13 @@
             <ATT name="Visibility">Public</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[Operation4]]></ATT>
+            <ATT name="Name"><![CDATA[extend(child,parent)]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES></DEPENDENCIES>
         </OBJECT>
         <OBJECT>
-          <ID name="Operation5" mc="Operation" uid="fe868312-8d50-46a8-b618-ef6e13faf77c"/>
+          <ID name="apply(Class,data)" mc="Operation" uid="fe868312-8d50-46a8-b618-ef6e13faf77c"/>
           <PID name="xs.Class" mc="Class" uid="12e992ab-6792-415b-aa98-66ed268adabb"/>
           <ATTRIBUTES>
             <ATT name="Concurrency">false</ATT>
@@ -105,22 +105,7 @@
             <ATT name="Visibility">Public</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[Operation5]]></ATT>
-            <ATT name="status">1970354901745664</ATT>
-          </ATTRIBUTES>
-          <DEPENDENCIES></DEPENDENCIES>
-        </OBJECT>
-        <OBJECT>
-          <ID name="Operation6" mc="Operation" uid="37e9b300-658b-416b-992e-253af6bfc046"/>
-          <PID name="xs.Class" mc="Class" uid="12e992ab-6792-415b-aa98-66ed268adabb"/>
-          <ATTRIBUTES>
-            <ATT name="Concurrency">false</ATT>
-            <ATT name="Final">false</ATT>
-            <ATT name="Passing">MethodOut</ATT>
-            <ATT name="Visibility">Public</ATT>
-            <ATT name="IsClass">false</ATT>
-            <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[Operation6]]></ATT>
+            <ATT name="Name"><![CDATA[apply(Class,data)]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES></DEPENDENCIES>

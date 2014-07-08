@@ -26,7 +26,7 @@
     xs.Class = new (function () {
 
         var ProcessorQueue = function () {
-            var me=this;
+            var me = this;
             var items = {};
             var stack = [];
             var setPosition = function (name, position, relativeTo) {
@@ -108,8 +108,9 @@
             xs.method.define(meta, 'constructor', desc);
             //create class
             var Class = function xClass(args) {
+                var me = this;
                 //no all operations in native class constructor, preventing downcall usage
-                if (!this.self || this.self === Class) {
+                if (!me.self || me.self === Class) {
                     //instance privates
                     var privates = {};
                     //private setter/getter
@@ -123,25 +124,25 @@
 //                            privates[name] = value;
 //                        }
 //                    });
-                    this.__get = function (name) {
+                    me.__get = function (name) {
                         return privates[name];
                     };
-                    this.__set = function (name, value) {
+                    me.__set = function (name, value) {
                         privates[name] = value;
                     };
                     //class reference
 //                    xs.const(this, 'self', Class);
-                    this.self = Class;
+                    me.self = Class;
                     //apply properties to object
                     xs.Object.each(Class.descriptor.properties, function (descriptor, name) {
                         //accessed descriptor only
-                        descriptor.hasOwnProperty('get') && xs.property.define(this, name, descriptor);
+                        descriptor.hasOwnProperty('get') && xs.property.define(me, name, descriptor);
                         //set default if given
-                        descriptor.hasOwnProperty('default') && (this[name] = descriptor.default);
-                    }, this);
+                        descriptor.hasOwnProperty('default') && (me[name] = descriptor.default);
+                    }, me);
                 }
                 //apply constructor
-                meta.constructor.apply(this, args);
+                meta.constructor.apply(me, args);
             };
             //define factory
             xs.method.define(Class, 'factory', {value: factory(Class)});

@@ -27,8 +27,6 @@
 
         var storage = {};
 
-        var Manager = {};
-
         var define = function (name, data, createdFn) {
             if (defined(name)) {
                 return;
@@ -126,12 +124,6 @@
             //create namespace if doesn't exist
             delete root[name];
         };
-        var createNamespaces = function () {
-            var namespaces = xs.Array.union(xs.Array.clone(arguments));
-            xs.Array.each(namespaces, function (namespace) {
-                createNamespace(root, namespace);
-            });
-        };
         var create = function (name) {
             var Class,
                 instance;
@@ -146,20 +138,20 @@
             //return created instance
             return instance;
         };
-        var is = function (object, cls) {
-            if (cls === object) {
+        var is = function (object, compared) {
+            if (object === compared) {
                 return true;
             }
-            if (xs.isFunction(cls) && object instanceof cls) {
+            if (xs.isFunction(compared) && object instanceof compared) {
                 return true;
             }
-            if (xs.isString(cls)) {
-                return is(get(cls), object);
+            if (xs.isString(compared)) {
+                return is(object, get(compared));
             }
             return false;
         };
 
-        xs.extend(Manager, {
+        return {
             define: define,
             defined: defined,
             undefine: undefine,
@@ -177,11 +169,9 @@
             deleteNamespace: function (namespace) {
                 return deleteNamespace(root, namespace);
             },
-            createNamespaces: createNamespaces,
             create: create,
             is: is
-        });
-        return Manager;
+        }
     });
     xs.extend(xs, {
         is: xs.ClassManager.is,
