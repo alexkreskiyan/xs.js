@@ -45,6 +45,9 @@
                 createdFn(Class, data, hooks);
             });
         };
+        var defined = function (name) {
+            return storage.hasOwnProperty(name);
+        };
         var undefine = function (name) {
             if (!defined(name)) {
                 return;
@@ -52,9 +55,6 @@
             var namespace = getNamespace(root, getNamespaceName(name));
             delete namespace[name];
             delete storage[name];
-        };
-        var defined = function (name) {
-            return storage.hasOwnProperty(name);
         };
         var get = function (name) {
             return storage.hasOwnProperty(name) ? storage[name] : false;

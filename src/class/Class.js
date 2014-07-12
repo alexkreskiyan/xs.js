@@ -204,79 +204,6 @@
             xs.const(child, 'parent', parent);
         };
 
-        var apply = function (Class, data) {
-            //processed descriptor
-            var desc = {
-                    const: {},
-                    static: {
-                        properties: {},
-                        methods: {}
-                    },
-                    properties: {},
-                    methods: {},
-                    mixins: {}
-                },
-                each = xs.Object.each,
-                property = xs.property,
-                method = xs.method;
-
-            // constants
-            each(data.const, function (value, name) {
-                desc.const[name] = value;
-                xs.const(Class, name, value);
-            });
-
-            //public static properties
-            each(data.static.properties, function (value, name) {
-                var descriptor = property.prepare(name, value);
-                desc.static.properties[name] = descriptor;
-                property.define(Class, name, descriptor);
-                descriptor.hasOwnProperty('default') && (Class[name] = descriptor.default);
-            });
-
-            //public static methods
-            each(data.static.methods, function (value, name) {
-                var descriptor = method.prepare(name, value);
-                if (!descriptor) {
-                    return;
-                }
-                desc.static.methods[name] = descriptor;
-                method.define(Class, name, descriptor);
-            });
-
-            //public properties
-            each(data.properties, function (value, name) {
-                desc.properties[name] = property.prepare(name, value);
-            });
-
-            //public methods
-            each(data.methods, function (value, name) {
-                var descriptor = method.prepare(name, value);
-                if (!descriptor) {
-                    return;
-                }
-                desc.methods[name] = descriptor;
-                method.define(Class.prototype, name, descriptor);
-            });
-
-            //mixins processing
-            //define mixins storage in class
-            if (xs.Object.size(data.mixins)) {
-                Class.mixins = {};
-                Class.prototype.mixins = {};
-            }
-            each(data.mixins, function (value, name) {
-                //leave mixin in descriptor
-                desc.mixins[name] = value;
-                //get mixClass
-                var mixClass = xs.ClassManager.get(value);
-                Class.mixins[name] = mixClass;
-                Class.prototype.mixins[name] = mixClass.prototype;
-            });
-
-            return desc;
-        };
-
         var metaClass = function (data, createdFn) {
             var Class;
             if (xs.isFunction(data)) {
@@ -303,12 +230,85 @@
 
         xs.extend(metaClass, {
             extend: extend,
-            applyDescriptor: apply,
             registerPreprocessor: preprocessors.register,
             registerPostprocessor: postprocessors.register
         });
         return metaClass;
     });
+
+    var applyDescriptor = function (Class, data) {
+        //processed descriptor
+        var desc = {
+                const: {},
+                static: {
+                    properties: {},
+                    methods: {}
+                },
+                properties: {},
+                methods: {},
+                mixins: {}
+            },
+            each = xs.Object.each,
+            property = xs.property,
+            method = xs.method;
+
+        // constants
+        each(data.const, function (value, name) {
+            desc.const[name] = value;
+            xs.const(Class, name, value);
+        });
+
+        //public static properties
+        each(data.static.properties, function (value, name) {
+            var descriptor = property.prepare(name, value);
+            desc.static.properties[name] = descriptor;
+            property.define(Class, name, descriptor);
+            descriptor.hasOwnProperty('default') && (Class[name] = descriptor.default);
+        });
+
+        //public static methods
+        each(data.static.methods, function (value, name) {
+            var descriptor = method.prepare(name, value);
+            if (!descriptor) {
+                return;
+            }
+            desc.static.methods[name] = descriptor;
+            method.define(Class, name, descriptor);
+        });
+
+        //public properties
+        each(data.properties, function (value, name) {
+            desc.properties[name] = property.prepare(name, value);
+        });
+
+        //public methods
+        each(data.methods, function (value, name) {
+            var descriptor = method.prepare(name, value);
+            if (!descriptor) {
+                return;
+            }
+            desc.methods[name] = descriptor;
+            method.define(Class.prototype, name, descriptor);
+        });
+
+        //mixins processing
+        //define mixins storage in class
+        if (xs.Object.size(data.mixins)) {
+            Class.mixins = {};
+            Class.prototype.mixins = {};
+        }
+        each(data.mixins, function (value, name) {
+            //leave mixin in descriptor
+            desc.mixins[name] = value;
+            //get mixClass
+            var mixClass = xs.ClassManager.get(value);
+            Class.mixins[name] = mixClass;
+            Class.prototype.mixins[name] = mixClass.prototype;
+        });
+
+        return desc;
+    };
+
     /**
      * Register className preprocessor
      */
@@ -432,7 +432,7 @@
     });
     xs.Class.registerPreprocessor('inherit', function (Class, data) {
         //apply configured descriptor
-        var descriptor = xs.Class.applyDescriptor(Class, data);
+        var descriptor = applyDescriptor(Class, data);
 
         //define descriptor static property
         xs.property.define(Class, 'descriptor', {
@@ -450,4 +450,26 @@
             return false;
         }
     }, 'singleton');
+    /**
+     * Register pre-base class
+     */
+    xs.Base = new Function;
+    //apply empty descriptor
+    var descriptor = applyDescriptor(xs.Base, {
+        const: {},
+        mixins: {},
+        static: {
+            properties: {},
+            methods: {}
+        },
+        properties: {},
+        methods: {}
+    });
+
+    //define descriptor static property
+    xs.property.define(xs.Base, 'descriptor', {
+        get: function () {
+            return descriptor;
+        }
+    });
 })(window, 'xs');

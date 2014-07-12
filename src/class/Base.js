@@ -23,11 +23,10 @@
     //framework shorthand
     var xs = root[ns];
 
-    xs.Base = function () {
-    };
-    var descriptor = xs.Class.applyDescriptor(xs.Base, {
-        const: {
-        },
+    /**
+     * Define xs.Base class
+     */
+    xs.define('xs.Base', {
         static: {
             properties: {
             },
@@ -38,12 +37,13 @@
                  * @returns {Boolean}
                  */
                 isChild: function (parent) {
-                    if (!xs.isFunction(this.parent)) {
-                        return false;
-                    } else if (this.parent == parent) {
+                    var me = this;
+                    if (me.parent == parent) {
                         return true;
+                    } else if (me.parent.isChild) {
+                        return me.parent.isChild(parent);
                     } else {
-                        return this.parent.isChild(parent);
+                        return false;
                     }
                 },
                 /**
@@ -56,15 +56,31 @@
                 }
             }
         },
-        properties: {},
-        methods: {},
-        mixins: {}
-    });
-    //property, that contains xs.Base class descriptor
-    xs.property.define(xs.Base, 'descriptor', {
-        get: function () {
-            return descriptor;
+        methods: {
+            /**
+             * returns clone of this object
+             * @return {xs.Base} clone object
+             */
+            clone: function () {
+                var me = this;
+                return xs.create(me.self.label, me.toJSON());
+            },
+            /**
+             * common method for complete destructing of object
+             */
+            destroy: xs.emptyFn,
+            /**
+             * returns json data of this object
+             * @returns {Object} data hash
+             */
+            toJSON: function () {
+                var me = this,
+                    json = {};
+                xs.Object.each(me.self.descriptor.properties, function (descriptor, name) {
+                    json[name] = me[name];
+                });
+                return json;
+            }
         }
     });
-    xs.ClassManager.set('xs.Base', xs.Base);
 })(window, 'xs');
