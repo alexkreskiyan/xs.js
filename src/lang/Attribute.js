@@ -29,13 +29,14 @@
     var xs = root[ns];
 
     var property = xs.Attribute = new (function () {
+        var me = this;
         /**
          * Checks whether object has own property defined
          * @param obj
          * @param key
          * @returns {boolean}
          */
-        var defined = this.defined = function (obj, key) {
+        var defined = me.defined = function (obj, key) {
             return !!(obj.hasOwnProperty(key));
         };
         /**
@@ -47,7 +48,7 @@
          * @param descriptor
          * @returns {Object}
          */
-        var define = this.define = function (obj, key, descriptor) {
+        var define = me.define = function (obj, key, descriptor) {
             return descriptor ? Object.defineProperty(obj, key, descriptor) : Object.defineProperties(obj, key);
         };
         /**
@@ -56,7 +57,7 @@
          * @param key
          * @returns {Object}
          */
-        var getDescriptor = this.getDescriptor = function (obj, key) {
+        var getDescriptor = me.getDescriptor = function (obj, key) {
             return Object.getOwnPropertyDescriptor(obj, key);
         };
         /**
@@ -65,7 +66,7 @@
          * @param key
          * @returns {boolean}
          */
-        this.isAssigned = function (obj, key) {
+        me.isAssigned = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && descriptor.hasOwnProperty('value');
         };
@@ -75,7 +76,7 @@
          * @param key
          * @returns {boolean}
          */
-        this.isAccessed = function (obj, key) {
+        me.isAccessed = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && (descriptor.hasOwnProperty('get') || descriptor.hasOwnProperty('get'));
         };
@@ -85,7 +86,7 @@
          * @param key
          * @returns {boolean}
          */
-        this.isWritable = function (obj, key) {
+        me.isWritable = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && !!descriptor.writable;
         };
@@ -95,7 +96,7 @@
          * @param key
          * @returns {boolean|*}
          */
-        var isConfigurable = this.isConfigurable = function (obj, key) {
+        var isConfigurable = me.isConfigurable = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && descriptor.configurable;
         };
@@ -105,7 +106,7 @@
          * @param key
          * @returns {boolean|*}
          */
-        this.isEnumerable = function (obj, key) {
+        me.isEnumerable = function (obj, key) {
             var descriptor = getDescriptor(obj, key);
             return !!descriptor && descriptor.enumerable;
         };
@@ -116,7 +117,7 @@
          * @param value
          * @returns {boolean}
          */
-        this.const = function (obj, name, value) {
+        me.const = function (obj, name, value) {
             if (defined(obj, name) && !isConfigurable(obj, name)) {
                 return false;
             }
@@ -133,7 +134,7 @@
          * @param desc
          * @returns {boolean}
          */
-        var isDescriptor = this.isDescriptor = function (desc) {
+        var isDescriptor = me.isDescriptor = function (desc) {
             //false if descriptor is not object
             if (!xs.isObject(desc)) {
                 return false;
@@ -154,7 +155,7 @@
          * @param desc
          * @returns {Object}
          */
-        var prepareDescriptor = this.prepareDescriptor = function (desc) {
+        var prepareDescriptor = me.prepareDescriptor = function (desc) {
             //non-function accessors are removed
             if (desc.hasOwnProperty('get') && !xs.isFunction(desc.get)) {
                 delete desc.get;
@@ -170,9 +171,9 @@
             }
 
             //writable,enumerable,configurable - are converted if presented
-            desc.hasOwnProperty('writable') && (desc.writable = !!desc.writable);
-            desc.hasOwnProperty('configurable') && (desc.configurable = !!desc.configurable);
-            desc.hasOwnProperty('enumerable') && (desc.enumerable = !!desc.enumerable);
+            desc.hasOwnProperty('writable') && (desc.writable = Boolean(desc.writable));
+            desc.hasOwnProperty('configurable') && (desc.configurable = Boolean(desc.configurable));
+            desc.hasOwnProperty('enumerable') && (desc.enumerable = Boolean(desc.enumerable));
             //any additional fields allowed
             return desc;
         };
@@ -180,7 +181,7 @@
          * Property object
          * @type {{prepare: prepare, define: define}}
          */
-        this.property = {
+        me.property = {
             /**
              * Prepares property descriptor
              * @param name
@@ -192,7 +193,9 @@
                 if (!isDescriptor(desc)) {
                     return {
                         value: desc,
-                        default: desc
+                        writable: true,
+                        enumerable: true,
+                        configurable: false
                     };
                 }
                 //prepares descriptor
@@ -204,7 +207,10 @@
                     desc.set || eval('desc.set = function (value) {return this.__set(\'' + name + '\',value);}');
                 } else {
                     desc.hasOwnProperty('value') || (desc.value = undefined);
+                    desc.writable = true;
                 }
+                desc.enumerable = true;
+                desc.configurable = false;
 
                 return desc;
             },
@@ -238,7 +244,7 @@
          * Method object
          * @type {{prepare: prepare, define: define}}
          */
-        this.method = {
+        me.method = {
             /**
              * Prepares method descriptor
              * @param name
@@ -253,9 +259,7 @@
                 } else if (xs.isObject(desc)) {
                     desc = prepareDescriptor(desc);
                     //function may be specified in fn or value properties
-                    if (xs.isFunction(desc.fn)) {
-                        descriptor.value = desc.fn;
-                    } else if (xs.isFunction(desc.value)) {
+                    if (xs.isFunction(desc.value)) {
                         descriptor.value = desc.value;
                     } else {
                         return false;
@@ -264,8 +268,6 @@
                 } else {
                     return false;
                 }
-                //assign defaults
-                xs.isArray(desc.default) && (descriptor.default = desc.default);
                 return descriptor;
             },
             /**
@@ -284,14 +286,6 @@
                     enumerable: true,
                     configurable: false
                 }, desc);
-                if (descriptor.default) {
-                    descriptor.default = xs.isArray(descriptor.default) ? descriptor.default : [];
-                    var fn = descriptor.value;
-                    descriptor.value = function () {
-                        var args = xs.Array.defaults(xs.Array.values(arguments), descriptor.default);
-                        return fn.apply(this, args);
-                    };
-                }
                 define(obj, name, descriptor);
                 return true;
             }

@@ -89,72 +89,62 @@
         };
 
         var create = function (data) {
-            //create proto object, which will be constructing class instances
-            var meta = {};
-            //if no constructor given - default to emptyfn
-            if (data.constructor == Object) {
-                data.constructor = function () {
-                };
-            }
-            //prepare constructor descriptor
-            var desc = xs.method.prepare('constructor', data.constructor);
-            if (!desc) {
-                desc = {
-                    value: function () {
-                    }
-                };
-            }
-            //assign constructor
-            xs.method.define(meta, 'constructor', desc);
+            var _each = xs.Object.each;
+            var _define = xs.Attribute.define;
             //create class
-            var Class = function xClass(args) {
+            var Class = function xClass(desc) {
                 var me = this;
-                //no all operations in native class constructor, preventing downcall usage
-                if (!me.self || me.self === Class) {
-                    //instance privates
-                    var privates = {};
-                    //private setter/getter
-//                    xs.method.define(this, '__get', {
-//                        value: function (name) {
-//                            return privates[name];
-//                        }
-//                    });
-//                    xs.method.define(this, '__set', {
-//                        value: function (name, value) {
-//                            privates[name] = value;
-//                        }
-//                    });
-                    me.__get = function (name) {
-                        return privates[name];
-                    };
-                    me.__set = function (name, value) {
-                        privates[name] = value;
-                    };
-                    //class reference
-//                    xs.const(this, 'self', Class);
-                    me.self = Class;
-                    //apply properties to object
+                //if parent constructor - just call it
+                if (me.self && me.self !== Class) {
+                    constructor.call(me, desc);
+                    return;
+                }
+                //class reference
+                me.self = Class;
+                //instance privates
+                var privates = {};
+                //private setter/getter
+                me.__get = function (name) {
+                    return privates[name];
+                };
+                me.__set = function (name, value) {
+                    privates[name] = value;
+                };
+                //apply properties to object
+                _each(Class.descriptor.properties, function (descriptor, name) {
+                    //accessed descriptor only
+                    if (descriptor.get) {
+                        _define(me, name, descriptor);
+                    } else {
+                        me[name] = descriptor.value;
+                    }
+                }, me);
+                //apply constructor
+                constructor.call(me, desc);
+            };
+            if (xs.isFunction(data.constructor)) {
+                var constructor = data.constructor;
+            } else {
+                var constructor = function (config) {
+                    var me = this;
+                    config || (config = {});
                     xs.Object.each(Class.descriptor.properties, function (descriptor, name) {
                         //accessed descriptor only
-                        descriptor.hasOwnProperty('get') && xs.property.define(me, name, descriptor);
-                        //set default if given
-                        descriptor.hasOwnProperty('default') && (me[name] = descriptor.default);
+                        config.hasOwnProperty(name) && (me[name] = config[name]);
                     }, me);
                 }
-                //apply constructor
-                meta.constructor.apply(me, args);
-            };
+            }
             //define factory
-            xs.method.define(Class, 'factory', {value: factory(Class)});
+            Class.factory = factory(Class);
             //static privates
             var privates = {};
             //static getter/setter
-            xs.method.define(Class, '__get', {value: function (name) {
+            Class.__get = function (name) {
                 return privates[name];
-            }});
-            xs.method.define(Class, '__set', {value: function (name, value) {
+            };
+            Class.__set = function (name, value) {
                 privates[name] = value;
-            }});
+            };
             return Class;
         };
 

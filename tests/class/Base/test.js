@@ -16,21 +16,17 @@ xs.define('demo.Base', {
             },
             set: function (value) {
                 return this.__set('propOne', '??' + value);
-            },
-            default: 12
+            }
         },
         propTwo: 15
     }
 });
 xs.define('demo.Parent', {
     extend: 'demo.Base',
-    constructor: {
-        fn: function (a, b, c) {
-            var parent = demo.Parent.parent;
-            parent.call(this, [a, b]);
-            this.propThree = c;
-        },
-        default: [2, 4]
+    constructor: function (config) {
+        var parent = demo.Parent.parent;
+        parent.call(this, config);
+        this.propThree = config.c;
     },
     properties: {
         propTwo: 155,
@@ -43,27 +39,22 @@ xs.define('demo.Parent', {
 });
 xs.define('demo.Child', {
     extend: 'demo.Parent',
-    constructor: {
-        fn: function (a, b, c, d) {
-            var parent = demo.Child.parent;
-            parent.call(this, [a, b, c]);
-            this.propFour = d;
-        },
-        default: [4, 8, 12]
+    constructor: function (config) {
+        var parent = demo.Child.parent;
+        parent.call(this, config);
+        this.propFour = config.d;
     },
     properties: {
         propTwo: {
             set: function (value) {
                 return this.__set('propTwo', '--++' + value);
-            },
-            default: 7
+            }
         },
         propThree: 155,
         propFour: {
             get: function () {
                 return this.__get('propFour') + '--++';
-            },
-            default: 8
+            }
         }
     }
 });
@@ -105,7 +96,7 @@ test('isParent', function () {
     strictEqual(base.isParent([]), false, 'check that demo.Base is not parent of empty [] (incorrect value example) with isParent call');
     strictEqual(child.isParent(parent), false, 'check that demo.Child is not parent of demo.Parent with isParent call');
 });
-module('1. Member base methods');
+module('2. Member base methods');
 test('clone', function () {
     //get instances
     var base = xs.create('demo.Base');
@@ -135,9 +126,9 @@ test('toJSON', function () {
     var parent = xs.create('demo.Parent');
     var child = xs.create('demo.Child');
     //check JSON representation
-    strictEqual(JSON.stringify(base.toJSON()), '{"propOne":"??12!!","propTwo":15}', 'check that demo.Base instance JSON representation is correct');
-    strictEqual(JSON.stringify(parent.toJSON()), '{"propTwo":155,"propThree":"--undefined","propOne":"??12!!"}', 'check that demo.Base instance JSON representation is correct');
-    strictEqual(JSON.stringify(child.toJSON()), '{"propTwo":"--++7","propThree":12,"propFour":"undefined--++","propOne":"??12!!"}', 'check that demo.Base instance JSON representation is correct');
+    strictEqual(JSON.stringify(base.toJSON()), '{"propOne":"undefined!!","propTwo":15}', 'check that demo.Base instance JSON representation is correct');
+    strictEqual(JSON.stringify(parent.toJSON()), '{"propTwo":155,"propThree":"--undefined","propOne":"undefined!!"}', 'check that demo.Parent instance JSON representation is correct');
+    strictEqual(JSON.stringify(child.toJSON()), '{"propFour":"undefined--++","propOne":"undefined!!"}', 'check that demo.Child instance JSON representation is correct');
 });
 
 
