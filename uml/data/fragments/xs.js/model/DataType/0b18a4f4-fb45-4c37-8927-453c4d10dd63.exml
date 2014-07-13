@@ -1,18 +1,18 @@
 <?xml version="1.0" ?>
-<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="array" version="3">
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="null" version="3">
   <DEPS>
-    <ID name="array" mc="DataType" uid="0b18a4f4-fb45-4c37-8927-453c4d10dd63"/>
+    <ID name="null" mc="DataType" uid="0b18a4f4-fb45-4c37-8927-453c4d10dd63"/>
   </DEPS>
   <OBJECT>
-    <ID name="array" mc="DataType" uid="0b18a4f4-fb45-4c37-8927-453c4d10dd63"/>
-    <PID name="xs.js" mc="Package" uid="ad878ac0-e3f7-456b-8972-4949073562a2"/>
+    <ID name="null" mc="DataType" uid="0b18a4f4-fb45-4c37-8927-453c4d10dd63"/>
+    <PID name="base types" mc="Package" uid="5bab0f4c-e0df-4941-a540-2a8a348ba545"/>
     <ATTRIBUTES>
       <ATT name="IsElementary">true</ATT>
       <ATT name="IsAbstract">false</ATT>
       <ATT name="IsLeaf">false</ATT>
       <ATT name="IsRoot">false</ATT>
       <ATT name="Visibility">Public</ATT>
-      <ATT name="Name"><![CDATA[array]]></ATT>
+      <ATT name="Name"><![CDATA[null]]></ATT>
       <ATT name="status">1970354901745664</ATT>
     </ATTRIBUTES>
     <DEPENDENCIES></DEPENDENCIES>

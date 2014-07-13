@@ -3,12 +3,10 @@
   <DEPS>
     <ID name="xs.js" mc="Package" uid="ad878ac0-e3f7-456b-8972-4949073562a2"/>
     <COMPID name="SystemProjectData" mc="Package" uid="1c831106-596f-49db-8dc2-d4fbb9df3ac8"/>
-    <COMPID name="array" mc="DataType" uid="0b18a4f4-fb45-4c37-8927-453c4d10dd63"/>
-    <COMPID name="function" mc="DataType" uid="1719a0d8-9df8-47f4-8567-99ab9264a203"/>
-    <COMPID name="object" mc="DataType" uid="8390ce2c-25c9-4cbd-8e01-debbe0ff5166"/>
+    <COMPID name="base types" mc="Package" uid="5bab0f4c-e0df-4941-a540-2a8a348ba545"/>
     <COMPID name="xs.class" mc="Package" uid="34c510f8-f339-4a76-8d12-2fced0497d84"/>
     <COMPID name="xs.js Class diagram" mc="ClassDiagram" uid="8387a1fe-b8b3-46f2-9ce4-c6e8c5881a64"/>
-    <COMPID name="xs.util.Observable" mc="Class" uid="af966715-b8b3-44df-ae0e-1fa7e49973d3"/>
+    <COMPID name="xs.util" mc="Package" uid="68ffc18b-f894-4f4d-8f06-0845e365c344"/>
   </DEPS>
   <OBJECT>
     <ID name="xs.js" mc="Package" uid="ad878ac0-e3f7-456b-8972-4949073562a2"/>
@@ -24,12 +22,10 @@
     </ATTRIBUTES>
     <DEPENDENCIES>
       <COMP relation="OwnedElement">
-        <COMPID name="xs.util.Observable" mc="Class" uid="af966715-b8b3-44df-ae0e-1fa7e49973d3"/>
-        <COMPID name="function" mc="DataType" uid="1719a0d8-9df8-47f4-8567-99ab9264a203"/>
-        <COMPID name="array" mc="DataType" uid="0b18a4f4-fb45-4c37-8927-453c4d10dd63"/>
-        <COMPID name="object" mc="DataType" uid="8390ce2c-25c9-4cbd-8e01-debbe0ff5166"/>
         <COMPID name="xs.class" mc="Package" uid="34c510f8-f339-4a76-8d12-2fced0497d84"/>
         <COMPID name="SystemProjectData" mc="Package" uid="1c831106-596f-49db-8dc2-d4fbb9df3ac8"/>
+        <COMPID name="base types" mc="Package" uid="5bab0f4c-e0df-4941-a540-2a8a348ba545"/>
+        <COMPID name="xs.util" mc="Package" uid="68ffc18b-f894-4f4d-8f06-0845e365c344"/>
       </COMP>
       <COMP relation="Product">
         <COMPID name="xs.js Class diagram" mc="ClassDiagram" uid="8387a1fe-b8b3-46f2-9ce4-c6e8c5881a64"/>

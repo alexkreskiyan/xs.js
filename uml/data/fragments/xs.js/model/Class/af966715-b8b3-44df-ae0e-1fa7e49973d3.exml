@@ -2,13 +2,13 @@
 <!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="xs.util.Observable" version="3">
   <DEPS>
     <ID name="xs.util.Observable" mc="Class" uid="af966715-b8b3-44df-ae0e-1fa7e49973d3"/>
-    <EXTID name="array" mc="DataType" uid="0b18a4f4-fb45-4c37-8927-453c4d10dd63"/>
-    <EXTID name="object" mc="DataType" uid="8390ce2c-25c9-4cbd-8e01-debbe0ff5166"/>
-    <EXTID name="xs.class.Base" mc="Class" uid="1b6db218-f2e9-4283-82ed-6629a255877f"/>
+    <EXTID name="Number" mc="DataType" uid="8390ce2c-25c9-4cbd-8e01-debbe0ff5166"/>
+    <EXTID name="null" mc="DataType" uid="0b18a4f4-fb45-4c37-8927-453c4d10dd63"/>
+    <EXTID name="xs.Base" mc="Class" uid="1b6db218-f2e9-4283-82ed-6629a255877f"/>
   </DEPS>
   <OBJECT>
     <ID name="xs.util.Observable" mc="Class" uid="af966715-b8b3-44df-ae0e-1fa7e49973d3"/>
-    <PID name="xs.js" mc="Package" uid="ad878ac0-e3f7-456b-8972-4949073562a2"/>
+    <PID name="xs.util" mc="Package" uid="68ffc18b-f894-4f4d-8f06-0845e365c344"/>
     <ATTRIBUTES>
       <ATT name="IsActive">false</ATT>
       <ATT name="IsMain">false</ATT>
@@ -285,7 +285,7 @@
           </ATTRIBUTES>
           <DEPENDENCIES>
             <LINK relation="Type">
-              <ID name="object" mc="DataType" uid="8390ce2c-25c9-4cbd-8e01-debbe0ff5166"/>
+              <ID name="Number" mc="DataType" uid="8390ce2c-25c9-4cbd-8e01-debbe0ff5166"/>
             </LINK>
           </DEPENDENCIES>
         </OBJECT>
@@ -310,7 +310,7 @@
           </ATTRIBUTES>
           <DEPENDENCIES>
             <LINK relation="Type">
-              <ID name="array" mc="DataType" uid="0b18a4f4-fb45-4c37-8927-453c4d10dd63"/>
+              <ID name="null" mc="DataType" uid="0b18a4f4-fb45-4c37-8927-453c4d10dd63"/>
             </LINK>
           </DEPENDENCIES>
         </OBJECT>
@@ -326,7 +326,7 @@
           </ATTRIBUTES>
           <DEPENDENCIES>
             <LINK relation="SuperType">
-              <ID name="xs.class.Base" mc="Class" uid="1b6db218-f2e9-4283-82ed-6629a255877f"/>
+              <ID name="xs.Base" mc="Class" uid="1b6db218-f2e9-4283-82ed-6629a255877f"/>
             </LINK>
           </DEPENDENCIES>
         </OBJECT>
