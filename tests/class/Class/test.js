@@ -14,11 +14,6 @@ module('xs.Base');
 function xsStart(suffix) {
     xs.define('demo.Base' + suffix, function (self) {
         return {
-            constructor: function (config) {
-                var me = this;
-                me.propOne = config.a;
-                me.propTwo = config.b;
-            },
             const: {
                 a: function () {
                     return 'a!';
@@ -361,7 +356,7 @@ test('parent', function () {
     strictEqual(Object.getOwnPropertyDescriptor(parent, 'propTwo').configurable, false, 'class demo.Parent property "propTwo" is not configurable');
     //get/set check
     //accessored property
-    strictEqual(parent.propThree, '-1', 'class demo.Parent property "propThree" default value is valid');
+    strictEqual(parent.propThree, undefined, 'class demo.Parent property "propThree" default value is valid');
     parent.propThree = 5;
     strictEqual(parent.propThree, '-5', 'class demo.Parent property "propThree" assigned value is valid');
     parent.propThree = -1;
@@ -371,7 +366,7 @@ test('parent', function () {
     strictEqual(parent.propTwo, 5, 'class demo.Parent property "propTwo" assigned value is valid');
     parent.propTwo = 111;
     //inherited property
-    strictEqual(parent.propOne, '?1!', 'class demo.Parent property "propOne" default value is valid');
+    strictEqual(parent.propOne, 'undefined!', 'class demo.Parent property "propOne" default value is valid');
     parent.propOne = 5;
     strictEqual(parent.propOne, '?5!', 'class demo.Parent property "propOne" assigned value is valid');
     parent.propOne = 1;
@@ -410,8 +405,8 @@ test('base', function () {
     strictEqual(base.metOne(3), 'NaNbase.static.a', 'class demo.Base method "metOne" return correct value with some params');
     strictEqual(base.metOne(3, 4), '7base.static.a', 'class demo.Base method "metOne" return correct value with all params');
     //method with default
-    strictEqual(base.metTwo(), '3base.static.b', 'class demo.Base method "metTwo" return correct value with no params');
-    strictEqual(base.metTwo(3), '5base.static.b', 'class demo.Base method "metTwo" return correct value with some params');
+    strictEqual(base.metTwo(), 'NaNbase.static.b', 'class demo.Base method "metTwo" return correct value with no params');
+    strictEqual(base.metTwo(3), 'NaNbase.static.b', 'class demo.Base method "metTwo" return correct value with some params');
     strictEqual(base.metTwo(3, 4), '7base.static.b', 'class demo.Base method "metTwo" return correct value with all params');
 });
 test('parent', function () {
@@ -423,12 +418,12 @@ test('parent', function () {
     strictEqual(parent.metOne(3), 'NaNbase.static.a', 'class demo.Parent method "metOne" return correct value with some params');
     strictEqual(parent.metOne(3, 4), '7base.static.a', 'class demo.Parent method "metOne" return correct value with all params');
     //overriden method
-    strictEqual(parent.metTwo(), '3parent.static.b', 'class demo.Parent method "metTwo" return correct value with no params');
-    strictEqual(parent.metTwo(3), '5parent.static.b', 'class demo.Parent method "metTwo" return correct value with some params');
+    strictEqual(parent.metTwo(), 'NaNparent.static.b', 'class demo.Parent method "metTwo" return correct value with no params');
+    strictEqual(parent.metTwo(3), 'NaNparent.static.b', 'class demo.Parent method "metTwo" return correct value with some params');
     strictEqual(parent.metTwo(3, 4), '7parent.static.b', 'class demo.Parent method "metTwo" return correct value with all params');
     //downcalling method
-    strictEqual(parent.metThree(), '7base.static.b', 'class demo.Parent method "metThree" return correct value with no params');
-    strictEqual(parent.metThree(5), '9base.static.b', 'class demo.Parent method "metThree" return correct value with some params');
+    strictEqual(parent.metThree(), 'NaNbase.static.b', 'class demo.Parent method "metThree" return correct value with no params');
+    strictEqual(parent.metThree(5), 'NaNbase.static.b', 'class demo.Parent method "metThree" return correct value with some params');
     strictEqual(parent.metThree(5, 6), '11base.static.b', 'class demo.Parent method "metThree" return correct value with all params');
 });
 test('child', function () {
@@ -436,16 +431,16 @@ test('child', function () {
     var child = demo.Child;
     //check class methods
     //inherited method
-    strictEqual(child.metTwo(), '3parent.static.b', 'class demo.Child method "metTwo" return correct value with no params');
-    strictEqual(child.metTwo(3), '5parent.static.b', 'class demo.Child method "metTwo" return correct value with some params');
+    strictEqual(child.metTwo(), 'NaNparent.static.b', 'class demo.Child method "metTwo" return correct value with no params');
+    strictEqual(child.metTwo(3), 'NaNparent.static.b', 'class demo.Child method "metTwo" return correct value with some params');
     strictEqual(child.metTwo(3, 4), '7parent.static.b', 'class demo.Child method "metTwo" return correct value with all params');
     //overriden method
     strictEqual(child.metOne(), 'NaNchild.static.a', 'class demo.Child method "metOne" return correct value with no params');
     strictEqual(child.metOne(3), 'NaNchild.static.a', 'class demo.Child method "metOne" return correct value with some params');
     strictEqual(child.metOne(3, 4), '7child.static.a', 'class demo.Child method "metOne" return correct value with all params');
     //downcalling method
-    strictEqual(child.metThree(), '11base.static.b', 'class demo.Child method "metThree" return correct value with no params');
-    strictEqual(child.metThree(5), '13base.static.b', 'class demo.Child method "metThree" return correct value with some params');
+    strictEqual(child.metThree(), 'NaNbase.static.b', 'class demo.Child method "metThree" return correct value with no params');
+    strictEqual(child.metThree(5), 'NaNbase.static.b', 'class demo.Child method "metThree" return correct value with some params');
     strictEqual(child.metThree(5, 6), '15base.static.b', 'class demo.Child method "metThree" return correct value with all params');
 });
 module('8. Properties');
@@ -456,7 +451,7 @@ test('base', function () {
 
     //check getter/setter property
     //check access
-    strictEqual(inst1.propOne, '??1!!', 'property "propOne" of demo.Base instance has correct default value');
+    strictEqual(inst1.propOne, '??undefined!!', 'property "propOne" of demo.Base instance has correct default value');
     inst1.propOne = 1;
     strictEqual(inst1.propOne, '??1!!', 'property "propOne" of demo.Base instance has correct changed value');
     inst1.propOne = 12;
@@ -470,7 +465,7 @@ test('base', function () {
 
     //check simple property
     //check access
-    strictEqual(inst1.propTwo, 2, 'property "propTwo" of demo.Base instance has correct default value');
+    strictEqual(inst1.propTwo, undefined, 'property "propTwo" of demo.Base instance has correct default value');
     inst1.propTwo = 1;
     strictEqual(inst1.propTwo, 1, 'property "propTwo" of demo.Base instance has correct changed value');
     inst1.propTwo = 15;
@@ -489,7 +484,7 @@ test('parent', function () {
 
     //check inherited property
     //check access
-    strictEqual(inst1.propOne, '??2!!', 'property "propOne" of demo.Parent instance has correct default value');
+    strictEqual(inst1.propOne, '??undefined!!', 'property "propOne" of demo.Parent instance has correct default value');
     inst1.propOne = 1;
     strictEqual(inst1.propOne, '??1!!', 'property "propOne" of demo.Parent instance has correct changed value');
     inst1.propOne = 2;
@@ -503,7 +498,7 @@ test('parent', function () {
 
     //check simple property
     //check access
-    strictEqual(inst1.propTwo, 4, 'property "propTwo" of demo.Parent instance has correct default value');
+    strictEqual(inst1.propTwo, undefined, 'property "propTwo" of demo.Parent instance has correct default value');
     inst1.propTwo = 1;
     strictEqual(inst1.propTwo, 1, 'property "propTwo" of demo.Parent instance has correct changed value');
     inst1.propTwo = 4;
@@ -536,7 +531,7 @@ test('child', function () {
 
     //check inherited property
     //check access
-    strictEqual(inst1.propOne, '??4!!', 'property "propOne" of demo.Child instance has correct default value');
+    strictEqual(inst1.propOne, '??undefined!!', 'property "propOne" of demo.Child instance has correct default value');
     inst1.propOne = 1;
     strictEqual(inst1.propOne, '??1!!', 'property "propOne" of demo.Child instance has correct changed value');
     inst1.propOne = 2;
@@ -550,7 +545,7 @@ test('child', function () {
 
     //check overriden property
     //check access
-    strictEqual(inst1.propTwo, '--++8', 'property "propTwo" of demo.Child instance has correct default value');
+    strictEqual(inst1.propTwo, '--++undefined', 'property "propTwo" of demo.Child instance has correct default value');
     inst1.propTwo = 1;
     strictEqual(inst1.propTwo, '--++1', 'property "propTwo" of demo.Child instance has correct changed value');
     inst1.propTwo = 8;
@@ -564,7 +559,7 @@ test('child', function () {
 
     //check overriden property
     //check access
-    strictEqual(inst1.propThree, 12, 'property "propThree" of demo.Child instance has correct default value');
+    strictEqual(inst1.propThree, undefined, 'property "propThree" of demo.Child instance has correct default value');
     inst1.propThree = 1;
     strictEqual(inst1.propThree, 1, 'property "propThree" of demo.Child instance has correct changed value');
     inst1.propThree = 12;
@@ -600,8 +595,8 @@ test('base', function () {
     strictEqual(inst.metOne(3), 'NaNbase.a', 'method "metOne" of demo.Base class instance returns correct value with some params');
     strictEqual(inst.metOne(3, 4), '7base.a', 'method "metOne" of demo.Base class instance returns correct value with all params');
     //method with default
-    strictEqual(inst.metTwo(), '5base.b', 'method "metTwo" of demo.Base class instance returns correct value with no params');
-    strictEqual(inst.metTwo(3), '6base.b', 'method "metTwo" of demo.Base class instance returns correct value with some params');
+    strictEqual(inst.metTwo(), 'NaNbase.b', 'method "metTwo" of demo.Base class instance returns correct value with no params');
+    strictEqual(inst.metTwo(3), 'NaNbase.b', 'method "metTwo" of demo.Base class instance returns correct value with some params');
     strictEqual(inst.metTwo(3, 4), '7base.b', 'method "metTwo" of demo.Base class instance returns correct value with all params');
 });
 test('parent', function () {
@@ -613,12 +608,12 @@ test('parent', function () {
     strictEqual(inst.metOne(3), 'NaNbase.a', 'method "metOne" of demo.Parent class instance returns correct value with some params');
     strictEqual(inst.metOne(3, 4), '7base.a', 'method "metOne" of demo.Parent class instance returns correct value with all params');
     //overriden method
-    strictEqual(inst.metTwo(), '7parent.b', 'method "metTwo" of demo.Parent class instance returns correct value with no params');
-    strictEqual(inst.metTwo(5), '9parent.b', 'method "metTwo" of demo.Parent class instance returns correct value with some params');
+    strictEqual(inst.metTwo(), 'NaNparent.b', 'method "metTwo" of demo.Parent class instance returns correct value with no params');
+    strictEqual(inst.metTwo(5), 'NaNparent.b', 'method "metTwo" of demo.Parent class instance returns correct value with some params');
     strictEqual(inst.metTwo(5, 6), '11parent.b', 'method "metTwo" of demo.Parent class instance returns correct value with all params');
     //downcalling method
-    strictEqual(inst.metThree(), '2base.b', 'method "metThree" of demo.Parent class instance returns correct value with no params');
-    strictEqual(inst.metThree(3), '0base.b', 'method "metThree" of demo.Parent class instance returns correct value with some params');
+    strictEqual(inst.metThree(), 'NaNbase.b', 'method "metThree" of demo.Parent class instance returns correct value with no params');
+    strictEqual(inst.metThree(3), 'NaNbase.b', 'method "metThree" of demo.Parent class instance returns correct value with some params');
     strictEqual(inst.metThree(3, 4), '-2base.b', 'method "metThree" of demo.Parent class instance returns correct value with all params');
 });
 test('child', function () {
@@ -630,8 +625,8 @@ test('child', function () {
     strictEqual(inst.metOne(3), 'NaNchild.a', 'method "metOne" of demo.Child class instance returns correct value with some params');
     strictEqual(inst.metOne(3, 4), '7child.a', 'method "metOne" of demo.Child class instance returns correct value with all params');
     //inherited method
-    strictEqual(inst.metTwo(), '7parent.b', 'method "metTwo" of demo.Child class instance returns correct value with no params');
-    strictEqual(inst.metTwo(5), '9parent.b', 'method "metTwo" of demo.Child class instance returns correct value with some params');
+    strictEqual(inst.metTwo(), 'NaNparent.b', 'method "metTwo" of demo.Child class instance returns correct value with no params');
+    strictEqual(inst.metTwo(5), 'NaNparent.b', 'method "metTwo" of demo.Child class instance returns correct value with some params');
     strictEqual(inst.metTwo(5, 6), '11parent.b', 'method "metTwo" of demo.Child class instance returns correct value with all params');
     //downcalling method
     strictEqual(inst.metThree(), 'NaNbase.b', 'method "metThree" of demo.Child class instance returns correct value with no params');
@@ -643,7 +638,7 @@ test('base', function () {
     //get class instance
     var inst = xs.create('demo.Base', 1, 74);
     //check instance properties
-    strictEqual(inst.propOne, '??1!!', 'property "propOne" of class demo.Base instance assigned correctly');
+    strictEqual(inst.propOne, '??undefined!!', 'property "propOne" of class demo.Base instance assigned correctly');
     strictEqual(inst.propTwo, 74, 'property "propTwo" of class demo.Base instance assigned correctly');
 });
 test('parent', function () {

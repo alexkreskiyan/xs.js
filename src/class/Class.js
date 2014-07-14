@@ -91,12 +91,15 @@
         var create = function (data) {
             var _each = xs.Object.each;
             var _define = xs.Attribute.define;
+            //define class constructor
+            var constructor = xs.isFunction(data.constructor) ? data.constructor : undefined;
+
             //create class
             var Class = function xClass(desc) {
                 var me = this;
                 //if parent constructor - just call it
                 if (me.self && me.self !== Class) {
-                    constructor.call(me, desc);
+                    constructor && constructor.call(me, desc);
                     return;
                 }
                 //class reference
@@ -120,20 +123,9 @@
                     }
                 }, me);
                 //apply constructor
-                constructor.call(me, desc);
+                constructor && constructor.call(me, desc);
             };
-            if (xs.isFunction(data.constructor)) {
-                var constructor = data.constructor;
-            } else {
-                var constructor = function (config) {
-                    var me = this;
-                    config || (config = {});
-                    xs.Object.each(Class.descriptor.properties, function (descriptor, name) {
-                        //accessed descriptor only
-                        config.hasOwnProperty(name) && (me[name] = config[name]);
-                    }, me);
-                }
-            }
+
             //define factory
             Class.factory = factory(Class);
             //static privates
