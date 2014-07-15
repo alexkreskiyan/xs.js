@@ -63,10 +63,10 @@ function xsStart(suffix) {
     });
     xs.define('demo.Parent' + suffix, {
         extend: 'demo.Base',
-        constructor: function (a, b, c) {
+        constructor: function (config) {
             var parent = demo.Parent.parent;
-            parent.call(this, [a, b]);
-            this.propThree = c;
+            parent.call(this, config);
+            this.propThree = config.propThree;
         },
         const: {
             b: function () {
@@ -112,10 +112,10 @@ function xsStart(suffix) {
     });
     xs.define('demo.Child' + suffix, {
         extend: 'demo.Parent',
-        constructor: function (a, b, c, d) {
+        constructor: function (config) {
             var parent = demo.Child.parent;
-            parent.call(this, [a, b, c]);
-            this.propFour = d;
+            parent.call(this, config);
+            this.propFour = config.propFour;
         },
         const: {
             c: function () {
@@ -451,7 +451,7 @@ test('base', function () {
 
     //check getter/setter property
     //check access
-    strictEqual(inst1.propOne, '??undefined!!', 'property "propOne" of demo.Base instance has correct default value');
+    strictEqual(inst1.propOne, 'undefined!!', 'property "propOne" of demo.Base instance has correct default value');
     inst1.propOne = 1;
     strictEqual(inst1.propOne, '??1!!', 'property "propOne" of demo.Base instance has correct changed value');
     inst1.propOne = 12;
@@ -465,7 +465,7 @@ test('base', function () {
 
     //check simple property
     //check access
-    strictEqual(inst1.propTwo, undefined, 'property "propTwo" of demo.Base instance has correct default value');
+    strictEqual(inst1.propTwo, 15, 'property "propTwo" of demo.Base instance has correct default value');
     inst1.propTwo = 1;
     strictEqual(inst1.propTwo, 1, 'property "propTwo" of demo.Base instance has correct changed value');
     inst1.propTwo = 15;
@@ -484,7 +484,7 @@ test('parent', function () {
 
     //check inherited property
     //check access
-    strictEqual(inst1.propOne, '??undefined!!', 'property "propOne" of demo.Parent instance has correct default value');
+    strictEqual(inst1.propOne, 'undefined!!', 'property "propOne" of demo.Parent instance has correct default value');
     inst1.propOne = 1;
     strictEqual(inst1.propOne, '??1!!', 'property "propOne" of demo.Parent instance has correct changed value');
     inst1.propOne = 2;
@@ -498,7 +498,7 @@ test('parent', function () {
 
     //check simple property
     //check access
-    strictEqual(inst1.propTwo, undefined, 'property "propTwo" of demo.Parent instance has correct default value');
+    strictEqual(inst1.propTwo, 155, 'property "propTwo" of demo.Parent instance has correct default value');
     inst1.propTwo = 1;
     strictEqual(inst1.propTwo, 1, 'property "propTwo" of demo.Parent instance has correct changed value');
     inst1.propTwo = 4;
@@ -531,7 +531,7 @@ test('child', function () {
 
     //check inherited property
     //check access
-    strictEqual(inst1.propOne, '??undefined!!', 'property "propOne" of demo.Child instance has correct default value');
+    strictEqual(inst1.propOne, 'undefined!!', 'property "propOne" of demo.Child instance has correct default value');
     inst1.propOne = 1;
     strictEqual(inst1.propOne, '??1!!', 'property "propOne" of demo.Child instance has correct changed value');
     inst1.propOne = 2;
@@ -545,7 +545,7 @@ test('child', function () {
 
     //check overriden property
     //check access
-    strictEqual(inst1.propTwo, '--++undefined', 'property "propTwo" of demo.Child instance has correct default value');
+    strictEqual(inst1.propTwo, undefined, 'property "propTwo" of demo.Child instance has correct default value');
     inst1.propTwo = 1;
     strictEqual(inst1.propTwo, '--++1', 'property "propTwo" of demo.Child instance has correct changed value');
     inst1.propTwo = 8;
@@ -636,25 +636,37 @@ test('child', function () {
 module('10. Creation with attributes');
 test('base', function () {
     //get class instance
-    var inst = xs.create('demo.Base', 1, 74);
+    var inst = xs.create('demo.Base', {
+        propOne: 1,
+        propTwo: 74
+    });
     //check instance properties
-    strictEqual(inst.propOne, '??undefined!!', 'property "propOne" of class demo.Base instance assigned correctly');
-    strictEqual(inst.propTwo, 74, 'property "propTwo" of class demo.Base instance assigned correctly');
+    strictEqual(inst.propOne, 'undefined!!', 'property "propOne" of class demo.Base instance assigned correctly');
+    strictEqual(inst.propTwo, 15, 'property "propTwo" of class demo.Base instance assigned correctly');
 });
 test('parent', function () {
     //get class instance
-    var inst = xs.create('demo.Parent', 2, 74, 89);
+    var inst = xs.create('demo.Parent', {
+        propOne: 2,
+        propTwo: 74,
+        propThree: 89
+    });
     //check instance properties
-    strictEqual(inst.propOne, '??2!!', 'property "propOne" of class demo.Parent instance assigned correctly');
-    strictEqual(inst.propTwo, 74, 'property "propTwo" of class demo.Parent instance assigned correctly');
+    strictEqual(inst.propOne, 'undefined!!', 'property "propOne" of class demo.Parent instance assigned correctly');
+    strictEqual(inst.propTwo, 155, 'property "propTwo" of class demo.Parent instance assigned correctly');
     strictEqual(inst.propThree, '--89', 'property "propThree" of class demo.Parent instance assigned correctly');
 });
 test('child', function () {
     //get class instance
-    var inst = xs.create('demo.Child', 4, 74, 89, 32);
+    var inst = xs.create('demo.Child', {
+        propOne: 4,
+        propTwo: 74,
+        propThree: 89,
+        propFour: 32
+    });
     //check instance properties
-    strictEqual(inst.propOne, '??4!!', 'property "propOne" of class demo.Child instance assigned correctly');
-    strictEqual(inst.propTwo, '--++74', 'property "propTwo" of class demo.Child instance assigned correctly');
+    strictEqual(inst.propOne, 'undefined!!', 'property "propOne" of class demo.Child instance assigned correctly');
+    strictEqual(inst.propTwo, undefined, 'property "propTwo" of class demo.Child instance assigned correctly');
     strictEqual(inst.propThree, 89, 'property "propThree" of class demo.Child instance assigned correctly');
     strictEqual(inst.propFour, '32--++', 'property "propFour" of class demo.Child instance assigned correctly');
 });
@@ -684,11 +696,8 @@ test('base', function () {
             d: 4
         },
         methods: {
-            e: {
-                fn: function (value) {
-                    return value;
-                },
-                default: [5]
+            e: function (value) {
+                return value;
             }
         }
     });
@@ -703,7 +712,7 @@ test('base', function () {
     //properties
     strictEqual(single.d, 4, 'property "d" saved ok');
     //methods
-    strictEqual(single.e(), 5, 'method "e" saved ok');
+    strictEqual(single.e(), undefined, 'method "e" saved ok');
 });
 module('12. Requires');
 module('13. Mixins');

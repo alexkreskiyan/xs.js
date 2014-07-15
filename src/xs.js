@@ -18,13 +18,27 @@
 
  */
 'use strict';
+/**
+ * @class xs
+ * @singleton
+ */
 (function (root, ns) {
 
     //create framework
     var xs = new (function () {
         var me = this;
+        /**
+         * @method
+         * @private
+         * Represents empty function. is used internally
+         */
         me.emptyFn = function () {
         };
+        /**
+         * @method
+         * Returns unique id
+         * @returns {Number} unique id
+         */
         me.uid = function () {
             return Math.round(Math.random() * 10 ^ 10);
         }

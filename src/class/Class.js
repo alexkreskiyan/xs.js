@@ -18,6 +18,15 @@
 
  */
 'use strict';
+/**
+ * @class xs.Class
+ * @singleton
+ * xs.Class is core class, that is used internally for class generation.
+ *
+ * xs.Class defines 2 static methods:
+ * {@link xs.Class#registerPreprocessor registerPreprocessor}
+ * {@link xs.Class#registerPostprocessor registerPostprocessor}
+ */
 (function (root, ns) {
 
     //framework shorthand
@@ -25,7 +34,7 @@
 
     xs.Class = new (function () {
 
-        var ProcessorQueue = function () {
+        var ProcessingQueue = function () {
             var me = this;
             var items = {};
             var stack = [];
@@ -72,21 +81,8 @@
             }
         };
 
-        var preprocessors = new ProcessorQueue();
-        var postprocessors = new ProcessorQueue();
-
-        var factory = function (constructor) {
-            var xClass = function (args) {
-                return constructor.apply(this, args);
-            };
-
-            xClass.prototype = constructor.prototype;
-            return function () {
-                var instance = new xClass(arguments);
-                instance.constructor = constructor;
-                return instance;
-            };
-        };
+        var preprocessors = new ProcessingQueue();
+        var postprocessors = new ProcessingQueue();
 
         var create = function (data) {
             var _each = xs.Object.each;
@@ -97,6 +93,7 @@
             //create class
             var Class = function xClass(desc) {
                 var me = this;
+                desc || (desc = {});
                 //if parent constructor - just call it
                 if (me.self && me.self !== Class) {
                     constructor && constructor.call(me, desc);
@@ -126,8 +123,6 @@
                 constructor && constructor.call(me, desc);
             };
 
-            //define factory
-            Class.factory = factory(Class);
             //static privates
             var privates = {};
             //static getter/setter
@@ -176,16 +171,6 @@
             });
         };
 
-        var extend = function (child, parent) {
-            var fn = function () {
-            };
-            fn.prototype = parent.prototype;
-            child.prototype = new fn();
-            child.prototype.constructor = child;
-            //save reference to parent
-            xs.const(child, 'parent', parent);
-        };
-
         var metaClass = function (data, createdFn) {
             var Class;
             if (xs.isFunction(data)) {
@@ -211,12 +196,21 @@
         };
 
         xs.extend(metaClass, {
-            extend: extend,
             registerPreprocessor: preprocessors.register,
             registerPostprocessor: postprocessors.register
         });
         return metaClass;
     });
+
+    var extend = function (child, parent) {
+        var fn = function () {
+        };
+        fn.prototype = parent.prototype;
+        child.prototype = new fn();
+        child.prototype.constructor = child;
+        //save reference to parent
+        xs.const(child, 'parent', parent);
+    };
 
     var applyDescriptor = function (Class, data) {
         //processed descriptor
@@ -304,14 +298,14 @@
     xs.Class.registerPreprocessor('extend', function (Class, data, hooks, ready) {
         //if incorrect parent given - extend from Base
         if (!xs.isString(data.extend)) {
-            xs.Class.extend(Class, xs.Base);
+            extend(Class, xs.Base);
             return;
         }
 
         //if parent class exists - extend from it
         var Parent = xs.ClassManager.get(data.extend);
         if (Parent) {
-            xs.Class.extend(Class, Parent);
+            extend(Class, Parent);
             return;
         }
 
@@ -323,7 +317,7 @@
         var me = this;
         //require async
         xs.require(data.extend, function () {
-            xs.Class.extend(Class, xs.ClassManager.get(data.extend));
+            extend(Class, xs.ClassManager.get(data.extend));
             ready.call(me, Class, data, hooks);
         });
 

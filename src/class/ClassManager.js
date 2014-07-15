@@ -127,13 +127,15 @@
         var create = function (name) {
             var Class,
                 instance;
+            //replace with Loader usage
             if (!defined(name)) {
                 throw 'class "' + name + '" doesn\'t exist';
             }
 
             //create instance
             Class = get(name);
-            instance = new Class(xs.Array.clone(arguments).slice(1));
+            //all data is passed in the second argument
+            instance = new Class(arguments[1]);
 
             //return created instance
             return instance;

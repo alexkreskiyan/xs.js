@@ -20,7 +20,7 @@
 'use strict';
 /**
  * @class xs.Base
- * xs.Base is base class for all classes, defined by xs.define. All classes, defined that way, inherit xs.Base.
+ * xs.Base is base class for all classes, defined by {@link xs#define xs.define}. All classes, defined that way, inherit {@link xs.Base xs.Base}.
  */
 xs.define('xs.Base', {
     static: {
