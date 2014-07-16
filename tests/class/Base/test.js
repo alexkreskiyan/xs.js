@@ -8,55 +8,59 @@ function speed(fn, n) {
     console.log('median: ', duration / n, 'ms per operation');
     console.log('mark: about', n / duration, 'operation per ms');
 }
-xs.define('demo.Base', {
-    properties: {
-        propOne: {
-            get: function () {
-                return this.__get('propOne') + '!!';
+xs.define('demo.Base', function (self) {
+    return {
+        properties: {
+            propOne: {
+                get: function () {
+                    return this.__get('propOne') + '!!';
+                },
+                set: function (value) {
+                    return this.__set('propOne', '??' + value);
+                }
             },
-            set: function (value) {
-                return this.__set('propOne', '??' + value);
-            }
-        },
-        propTwo: 15
-    }
+            propTwo: 15
+        }
+    };
 });
-xs.define('demo.Parent', {
-    extend: 'demo.Base',
-    constructor: function (config) {
-        var parent = demo.Parent.parent;
-        parent.call(this, config);
-        this.propThree = config.c;
-    },
-    properties: {
-        propTwo: 155,
-        propThree: {
-            set: function (value) {
-                return this.__set('propThree', '--' + value);
+xs.define('demo.Parent', function (self) {
+    return {
+        extend: 'demo.Base',
+        constructor: function (config) {
+            self().parent.call(this, config);
+            this.propThree = config.c;
+        },
+        properties: {
+            propTwo: 155,
+            propThree: {
+                set: function (value) {
+                    return this.__set('propThree', '--' + value);
+                }
             }
         }
-    }
+    };
 });
-xs.define('demo.Child', {
-    extend: 'demo.Parent',
-    constructor: function (config) {
-        var parent = demo.Child.parent;
-        parent.call(this, config);
-        this.propFour = config.d;
-    },
-    properties: {
-        propTwo: {
-            set: function (value) {
-                return this.__set('propTwo', '--++' + value);
-            }
+xs.define('demo.Child', function (self) {
+    return {
+        extend: 'demo.Parent',
+        constructor: function (config) {
+            self().parent.call(this, config);
+            this.propFour = config.d;
         },
-        propThree: 155,
-        propFour: {
-            get: function () {
-                return this.__get('propFour') + '--++';
+        properties: {
+            propTwo: {
+                set: function (value) {
+                    return this.__set('propTwo', '--++' + value);
+                }
+            },
+            propThree: 155,
+            propFour: {
+                get: function () {
+                    return this.__get('propFour') + '--++';
+                }
             }
         }
-    }
+    };
 });
 
 'use strict';

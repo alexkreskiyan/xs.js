@@ -61,115 +61,119 @@ function xsStart(suffix) {
             }
         };
     });
-    xs.define('demo.Parent' + suffix, {
-        extend: 'demo.Base',
-        constructor: function (config) {
-            var parent = demo.Parent.parent;
-            parent.call(this, config);
-            this.propThree = config.propThree;
-        },
-        const: {
-            b: function () {
-                return 'bb!!';
-            }
-        },
-        static: {
+    xs.define('demo.Parent' + suffix, function (self) {
+        return {
+            extend: 'demo.Base',
+            constructor: function (config) {
+                var parent = demo.Parent.parent;
+                parent.call(this, config);
+                this.propThree = config.propThree;
+            },
+            const: {
+                b: function () {
+                    return 'bb!!';
+                }
+            },
+            static: {
+                properties: {
+                    propTwo: 111,
+                    propThree: {
+                        set: function (value) {
+                            return this.__set('propThree', '-' + value);
+                        }
+                    }
+                },
+                methods: {
+                    metTwo: function (a, b) {
+                        return a + b + 'parent.static.b';
+                    },
+                    metThree: function (a, b) {
+                        var parent = demo.Parent.parent;
+                        return parent.metTwo.call(this, a - 1, b + 1);
+                    }
+                }
+            },
             properties: {
-                propTwo: 111,
+                propTwo: 155,
                 propThree: {
                     set: function (value) {
-                        return this.__set('propThree', '-' + value);
+                        return this.__set('propThree', '--' + value);
                     }
                 }
             },
             methods: {
                 metTwo: function (a, b) {
-                    return a + b + 'parent.static.b';
+                    return a + b + 'parent.b';
                 },
                 metThree: function (a, b) {
-                    var parent = demo.Parent.parent;
-                    return parent.metTwo.call(this, a - 1, b + 1);
+                    var parent = demo.Parent.parent.prototype;
+                    return parent.metTwo.call(this, a - 10, b + 1);
                 }
             }
-        },
-        properties: {
-            propTwo: 155,
-            propThree: {
-                set: function (value) {
-                    return this.__set('propThree', '--' + value);
-                }
-            }
-        },
-        methods: {
-            metTwo: function (a, b) {
-                return a + b + 'parent.b';
-            },
-            metThree: function (a, b) {
-                var parent = demo.Parent.parent.prototype;
-                return parent.metTwo.call(this, a - 10, b + 1);
-            }
-        }
+        };
     });
-    xs.define('demo.Child' + suffix, {
-        extend: 'demo.Parent',
-        constructor: function (config) {
-            var parent = demo.Child.parent;
-            parent.call(this, config);
-            this.propFour = config.propFour;
-        },
-        const: {
-            c: function () {
-                return 'ccc!!!';
-            }
-        },
-        static: {
-            properties: {
-                propThree: {
-                    set: function (value) {
-                        return this.__set('propThree', '-+' + value);
+    xs.define('demo.Child' + suffix, function (self) {
+        return {
+            extend: 'demo.Parent',
+            constructor: function (config) {
+                var parent = demo.Child.parent;
+                parent.call(this, config);
+                this.propFour = config.propFour;
+            },
+            const: {
+                c: function () {
+                    return 'ccc!!!';
+                }
+            },
+            static: {
+                properties: {
+                    propThree: {
+                        set: function (value) {
+                            return this.__set('propThree', '-+' + value);
+                        },
+                        default: 5
                     },
-                    default: 5
+                    propFour: {
+                        get: function () {
+                            return this.__get('propFour') + '-+';
+                        },
+                        default: 6
+                    }
                 },
+                methods: {
+                    metOne: function (a, b) {
+                        return a + b + 'child.static.a';
+                    },
+                    metThree: function (a, b) {
+                        var parent = demo.Child.parent;
+                        return parent.metThree.call(this, a + 3, b + 1);
+                    }
+                }
+            },
+            properties: {
+                propTwo: {
+                    set: function (value) {
+                        return this.__set('propTwo', '--++' + value);
+                    }
+                },
+                propThree: 155,
                 propFour: {
                     get: function () {
-                        return this.__get('propFour') + '-+';
-                    },
-                    default: 6
+                        return this.__get('propFour') + '--++';
+                    }
                 }
+
             },
             methods: {
                 metOne: function (a, b) {
-                    return a + b + 'child.static.a';
+                    return a + b + 'child.a';
                 },
                 metThree: function (a, b) {
-                    var parent = demo.Child.parent;
+                    var parent = demo.Child.parent.prototype;
                     return parent.metThree.call(this, a + 3, b + 1);
                 }
             }
-        },
-        properties: {
-            propTwo: {
-                set: function (value) {
-                    return this.__set('propTwo', '--++' + value);
-                }
-            },
-            propThree: 155,
-            propFour: {
-                get: function () {
-                    return this.__get('propFour') + '--++';
-                }
-            }
-
-        },
-        methods: {
-            metOne: function (a, b) {
-                return a + b + 'child.a';
-            },
-            metThree: function (a, b) {
-                var parent = demo.Child.parent.prototype;
-                return parent.metThree.call(this, a + 3, b + 1);
-            }
-        }
+        };
     });
 }
 
@@ -211,7 +215,9 @@ speed(function () {
 module('1. Define basics');
 asyncTest('sample', function () {
     //check create, references and recreation prevention
-    xs.define('demo.Basic', {}, function () {
+    xs.define('demo.Basic', function (self) {
+        return {};
+    }, function () {
         start();
         strictEqual(xs.ClassManager.get('demo.Basic'), demo.Basic, 'check that class was created');
         var cls = demo.Basic;
@@ -673,33 +679,35 @@ test('child', function () {
 module('11. Singleton');
 test('base', function () {
     //get class instance
-    xs.define('demo.Single', {
-        extend: 'demo.Base',
-        singleton: true,
-        const: {
-            a: 1
-        },
-        static: {
+    xs.define('demo.Single', function (self) {
+        return {
+            extend: 'demo.Base',
+            singleton: true,
+            const: {
+                a: 1
+            },
+            static: {
+                properties: {
+                    b: 2
+                },
+                methods: {
+                    c: {
+                        fn: function (value) {
+                            return value;
+                        },
+                        default: [3]
+                    }
+                }
+            },
             properties: {
-                b: 2
+                d: 4
             },
             methods: {
-                c: {
-                    fn: function (value) {
-                        return value;
-                    },
-                    default: [3]
+                e: function (value) {
+                    return value;
                 }
             }
-        },
-        properties: {
-            d: 4
-        },
-        methods: {
-            e: function (value) {
-                return value;
-            }
-        }
+        };
     });
     var single = demo.Single;
     //check constants, methods and properties assigned

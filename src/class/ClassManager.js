@@ -27,22 +27,16 @@
 
         var storage = {};
 
-        var define = function (name, data, createdFn) {
+        var define = function (name, descFn, createdFn) {
             if (defined(name)) {
                 return;
             }
-
-            if (xs.isFunction(data)) {
-                data = data();
-            } else if (!xs.isObject(data)) {
-                data = data || {};
-            }
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
 
-            data.label = name;
-            xs.Class(data, function (Class, data, hooks) {
+            xs.Class(descFn, function (Class, desc, hooks) {
+                Class.label = name;
                 set(name, Class);
-                createdFn(Class, data, hooks);
+                createdFn(Class, desc, hooks);
             });
         };
         var defined = function (name) {
