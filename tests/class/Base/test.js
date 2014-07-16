@@ -27,7 +27,7 @@ xs.define('demo.Parent', function (self) {
     return {
         extend: 'demo.Base',
         constructor: function (config) {
-            self().parent.call(this, config);
+            self.parent.call(this, config);
             this.propThree = config.c;
         },
         properties: {
@@ -44,7 +44,7 @@ xs.define('demo.Child', function (self) {
     return {
         extend: 'demo.Parent',
         constructor: function (config) {
-            self().parent.call(this, config);
+            self.parent.call(this, config);
             this.propFour = config.d;
         },
         properties: {

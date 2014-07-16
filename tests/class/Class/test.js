@@ -289,6 +289,37 @@ test('sample', function () {
     ok(instParent instanceof demo.Parent, 'check instance of demo.Parent is correct referred');
     ok(instChild instanceof demo.Child, 'check instance of demo.Child is correct referred');
 });
+test('inheritance', function () {
+    xs.define('inherited.Parent', function (self) {
+        return {
+            constructor: function (config) {
+                this.a = config.a;
+            },
+            properties: {
+                a: 1
+            }
+        };
+    });
+    xs.define('inherited.Child', function (self) {
+        return {
+            extend:'inherited.Parent',
+            properties: {
+                b: 2
+            }
+        }
+    });
+    strictEqual(inherited.Child.descriptor.constructor === inherited.Parent.descriptor.constructor, true, 'constructor is inherited correctly');
+    var parent = xs.create('inherited.Parent', {
+        a: 2,
+        b: 3
+    });
+    var child = xs.create('inherited.Child', {
+        a: 2,
+        b: 3
+    });
+    strictEqual(parent.a, 2, 'constructor of inherited.Parent worked correctly');
+    strictEqual(child.a, 2, 'constructor of inherited.Child worked correctly');
+});
 module('5. Constants');
 test('base', function () {
     //get class shortcut

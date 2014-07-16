@@ -30,7 +30,7 @@ xs.define('xs.Base', function (self) {
                  * Returns whether this is child of given parent
                  * @static
                  * @method
-                 * @param {xs.Base} parent
+                 * @param {xs.Base} parent Class, being checked to be parent of this Class
                  * @return {Boolean}
                  */
                 isChild: function (parent) {
@@ -47,7 +47,7 @@ xs.define('xs.Base', function (self) {
                  * Returns whether this is parent of given child
                  * @static
                  * @method
-                 * @param {xs.Base} child
+                 * @param {xs.Base} child Class, being checked to be child of this Class
                  * @return {Boolean}
                  */
                 isParent: function (child) {
@@ -57,7 +57,7 @@ xs.define('xs.Base', function (self) {
         },
         methods: {
             /**
-             * Returns clone of this object. Basically clone is made by instantiating Class with this object {@link #toJSON JSON representation}
+             * Returns clone of this object. Basically clone is made by instantiating Class with this object's {@link #toJSON JSON representation}
              * @member
              * @method
              * @return {xs.Base} clone object
@@ -73,7 +73,7 @@ xs.define('xs.Base', function (self) {
              */
             destroy: xs.emptyFn,
             /**
-             * Returns object JSON representation. Basically is returned hash with object's values for all declared properties
+             * Returns object's JSON representation. Basically is returned hash with object's values for all declared properties
              * @member
              * @method
              * @return {Object} object JSON representation

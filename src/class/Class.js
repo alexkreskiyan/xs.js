@@ -92,6 +92,9 @@
             var Class = function xClass(desc) {
                 var me = this;
                 desc || (desc = {});
+                //define class constructor
+                var descriptor = Class.descriptor;
+                var constructor = descriptor.hasOwnProperty('constructor') && xs.isFunction(descriptor.constructor) ? descriptor.constructor : undefined;
                 //if parent constructor - just call it
                 if (me.self && me.self !== Class) {
                     constructor && constructor.call(me, desc);
@@ -122,8 +125,6 @@
             };
 
             var desc = descFn(Class);
-            //define class constructor
-            var constructor = desc.hasOwnProperty('constructor') && xs.isFunction(desc.constructor) ? desc.constructor : undefined;
 
             //static privates
             var privates = {};
@@ -219,6 +220,7 @@
     var applyDescriptor = function (Class, desc) {
         //processed descriptor
         var realDesc = {
+                constructor: undefined,
                 const: {},
                 static: {
                     properties: {},
@@ -231,6 +233,9 @@
             each = xs.Object.each,
             property = xs.property,
             method = xs.method;
+
+        //constructor
+        realDesc.constructor = desc.constructor;
 
         // constants
         each(desc.const, function (value, name) {
@@ -325,6 +330,8 @@
         //combine class descriptor with inherited descriptor
         var inherits = Class.parent.descriptor;
 
+        //constructor
+        desc.constructor = desc.hasOwnProperty('constructor') && xs.isFunction(desc.constructor) ? desc.constructor : undefined;
         //const
         desc.const = xs.isObject(desc.const) ? desc.const : {};
         //static properties and methods
@@ -350,7 +357,9 @@
             desc.mixins = {};
         }
 
-        //const
+        //constructor
+        desc.constructor = desc.constructor ? desc.constructor : inherits.constructor;
+        //constructor
         desc.const = xs.Object.defaults(desc.const, inherits.const);
         //static properties and methods
         desc.static.properties = xs.Object.defaults(desc.static.properties, inherits.static.properties);
@@ -358,6 +367,7 @@
         //public properties and methods
         desc.properties = xs.Object.defaults(desc.properties, inherits.properties);
         //methods are not defaulted from inherits - prototype usage covers that
+        //mixins
         desc.mixins = xs.Object.unique(xs.Object.defaults(desc.mixins, inherits.mixins));
     });
     xs.Class.registerPreprocessor('mixins', function (Class, desc) {
