@@ -302,7 +302,7 @@ test('inheritance', function () {
     });
     xs.define('inherited.Child', function (self) {
         return {
-            extend:'inherited.Parent',
+            extend: 'inherited.Parent',
             properties: {
                 b: 2
             }
