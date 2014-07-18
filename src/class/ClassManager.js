@@ -119,15 +119,20 @@
             delete root[name];
         };
         var create = function (name) {
-            var Class,
-                instance;
-            //replace with Loader usage
-            if (!defined(name)) {
-                throw 'class "' + name + '" doesn\'t exist';
+            var Class, instance;
+
+            //if class is given
+            if (xs.isFunction(name)) {
+                Class = name;
+            } else {
+                //replace with Loader usage
+                if (!defined(name)) {
+                    throw 'class "' + name + '" doesn\'t exist';
+                }
+                //create instance
+                Class = get(name);
             }
 
-            //create instance
-            Class = get(name);
             //all data is passed in the second argument
             instance = new Class(arguments[1]);
 
