@@ -51,7 +51,7 @@
             delete storage[name];
         };
         var get = function (name) {
-            return storage.hasOwnProperty(name) ? storage[name] : false;
+            return storage.hasOwnProperty(name) ? storage[name] : undefined;
         };
         var set = function (name, Class) {
             var label = getClassName(name);
@@ -157,19 +157,9 @@
             defined: defined,
             undefine: undefine,
             get: get,
-            set: set,
             getName: getName,
             getClassName: getClassName,
             getNamespaceName: getNamespaceName,
-            getNamespace: function (namespace) {
-                return getNamespace(root, namespace);
-            },
-            createNamespace: function (namespace) {
-                return createNamespace(root, namespace);
-            },
-            deleteNamespace: function (namespace) {
-                return deleteNamespace(root, namespace);
-            },
             create: create,
             is: is
         }
