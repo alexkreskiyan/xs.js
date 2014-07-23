@@ -1,4 +1,4 @@
-/**
+/*!
  This file is core of xs.js 0.1
 
  Copyright (c) 2013-2014, Annium Inc
@@ -17,7 +17,6 @@
  at http://annium.com/contact.
 
  */
-'use strict';
 /**
  * @class xs.Class
  * @singleton
@@ -294,7 +293,7 @@
         return realDesc;
     };
 
-    /**
+    /*!
      * Register extend preprocessor
      */
     xs.Class.registerPreprocessor('extend', function (Class, desc, hooks, ready) {
@@ -424,7 +423,7 @@
             }
         });
     });
-    /**
+    /*!
      * Register singleton preprocessor
      */
     xs.Class.registerPreprocessor('singleton', function (Class, desc, hooks, ready) {

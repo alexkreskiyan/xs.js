@@ -1,4 +1,4 @@
-/**
+/*!
  This file is core of xs.js 0.1
 
  Copyright (c) 2013-2014, Annium Inc
@@ -17,9 +17,9 @@
  at http://annium.com/contact.
 
  */
-'use strict';
 /**
  * @class xs.Base
+ * @author Alex Kreskiyan
  * xs.Base is base class for all classes, defined by {@link xs#define xs.define}. All classes, defined that way, inherit {@link xs.Base xs.Base}.
  */
 xs.define('xs.Base', function (self) {

@@ -1,4 +1,4 @@
-/**
+/*!
  This file is core of xs.js 0.1
 
  Copyright (c) 2013-2014, Annium Inc
@@ -17,7 +17,6 @@
  at http://annium.com/contact.
 
  */
-'use strict';
 (function (root, ns) {
 
     //framework shorthand

@@ -2,7 +2,8 @@
     "--title": "xs.js framework docs",
     "--output": "docs",
     "--": [
-        "src"
+        "src/xs.js",
+        "src/class"
     ],
     "--builtin-classes": true
 }
