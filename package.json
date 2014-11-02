@@ -1,0 +1,14 @@
+{
+    "name":            "xs.js",
+    "version":         "0.0.1",
+    "devDependencies": {
+        "gulp":             "latest",
+        "gulp-watch":       "latest",
+        "gulp-uglify":      "latest",
+        "gulp-minify-css":  "latest",
+        "gulp-compass":     "latest",
+        "gulp.spritesmith": "latest",
+        "gulp-concat":      "latest",
+        "del":              "latest"
+    }
+}

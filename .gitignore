@@ -1,5 +1,10 @@
-/build/minified/*.js
-/build/uncompressed/*.js
-/.idea/
-/*.iml
-/docs/
+/.idea
+*.iml
+.sass-cache
+.DS*
+.htaccess
+/build/**/*.js
+/build/**/*.css
+/docs
+/node_modules
+/resources/css/
