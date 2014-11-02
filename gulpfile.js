@@ -1,7 +1,12 @@
 var gulp = require('gulp');
 
 var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
+var uglifyJS = require('gulp-uglify');
+var minifyCSS = require('gulp-minify-css');
+var watch = require('gulp-watch');
+var compass = require('gulp-compass');
+var spritesmith = require('gulp.spritesmith');
+var del = require('del');
 
 var paths = {
     scripts: [
@@ -31,23 +36,40 @@ var paths = {
     ]
 };
 
-gulp.task('build uncompressed', function () {
-    // Minify and copy all JavaScript (except vendor scripts)
-    return gulp.src(paths.scripts)
-        .pipe(concat('xs.js'))
-        .pipe(gulp.dest('build/uncompressed'));
+gulp.task('debug', function () {
+    //scripts processing
+    var buildScripts = function () {
+        del(['build/debug/*.js']);
+        gulp.src(paths.scripts).pipe(concat('xs.js')).pipe(gulp.dest('build/debug'));
+    };
+
+    //initial scripts build
+    buildScripts();
+
+    //watch scripts change
+    watch(paths.scripts, {
+        name: 'JS debug compiler'
+    }, buildScripts);
 });
 
-//gulp.task('build minified', function () {
-//    // Minify and copy all JavaScript (except vendor scripts)
-//    return gulp.src(paths.scripts)
-//        .pipe(uglify())
-//        .pipe(concat('xs.min.js'))
-//        .pipe(gulp.dest('build/minified'));
-//});
+gulp.task('release', function () {
+    //scripts processing
+    var buildScripts = function () {
+        del(['build/release/*.js']);
+        gulp.src(paths.scripts).pipe(concat('xs.js')).pipe(uglifyJS()).pipe(gulp.dest('build/release'));
+    };
+
+    //initial scripts build
+    buildScripts();
+
+    //watch scripts change
+    watch(paths.scripts, {
+        name: 'JS debug compiler'
+    }, buildScripts);
+});
 
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', [
-//    'build minified',
-    'build uncompressed'
+    'debug',
+    'release'
 ]);
