@@ -139,14 +139,18 @@
         };
         /**
          * returns size of list
-         * @param list
-         * @returns {Number}
+         *
+         * @method size
+         *
+         * @param {Array|Object} list list, to get size of
+         *
+         * @returns {number} size of list
          */
-        this.size = function (list) {
+        me.size = function (list) {
             if (xs.isArray(list)) {
                 return list.length;
             } else {
-                return xs.Object.size(list);
+                return Object.keys(list).length;
             }
         };
         /**
