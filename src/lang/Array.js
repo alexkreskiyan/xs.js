@@ -35,18 +35,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
-         * iterates over array in direct order
-         * @param arr
-         * @param iterator
-         * @param scope
-         */
-        var _each = me.each = function (arr, iterator, scope) {
-            var idx, len = arr.length;
-            for (idx = 0; idx < len; idx++) {
-                iterator.call(scope, arr[idx], idx, arr);
-            }
-        };
-        /**
          * iterates over array in reverse order
          * @param arr
          * @param iterator

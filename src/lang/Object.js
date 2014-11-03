@@ -34,19 +34,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice);
         /**
-         * iterates over object own properties
-         * @param obj
-         * @param iterator
-         * @param scope
-         */
-        var _each = this.each = function (obj, iterator, scope) {
-            var idx, keys = _keys(obj), len = keys.length, name;
-            for (idx = 0; idx < len; idx++) {
-                name = keys[idx];
-                iterator.call(scope, obj[name], name, obj);
-            }
-        };
-        /**
          * iterates over object own properties in reverse order
          * @param obj
          * @param iterator

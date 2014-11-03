@@ -155,15 +155,16 @@
         };
         /**
          * iterates over list items
-         * @param list to iterate for
-         * @param iterator
-         * @param scope
+         *
+         * @param {Array|Object} list list to iterate in
+         * @param {Function} iterator list iterator
+         * @param {Object} scope optional scope
          */
-        this.each = function (list, iterator, scope) {
-            if (xs.isArray(list)) {
-                xs.Array.each(list, iterator, scope);
-            } else {
-                xs.Object.each(list, iterator, scope);
+        me.each = function (list, iterator, scope) {
+            var idx, keys = _keys(list), len = keys.length, name;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                iterator.call(scope, obj[name], name, obj);
             }
         };
         /**
