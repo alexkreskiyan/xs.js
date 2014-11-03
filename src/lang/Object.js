@@ -34,15 +34,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice);
         /**
-         * returns whether object has key
-         * @param obj
-         * @param key
-         * @returns {boolean}
-         */
-        this.hasKey = function (obj, key) {
-            return obj.hasOwnProperty(key);
-        };
-        /**
          * returns whether object contains given values as one of properties values
          * @param obj
          * @param value

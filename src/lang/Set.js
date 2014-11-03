@@ -67,15 +67,20 @@
         };
         /**
          * returns whether list has given key
-         * @param list to search within
-         * @param key to lookup for
-         * @returns {Boolean}
+         *
+         * @method hasKey
+         *
+         * @param {Array|Object} list to search within
+         *
+         * @param {String|Number} key to lookup for
+         *
+         * @returns {Boolean} whether list has key
          */
-        this.hasKey = function (list, key) {
+        var _hasKey = me.hasKey = function (list, key) {
             if (xs.isArray(list)) {
-                return xs.Array.hasKey(list, key);
+                return key < list.length;
             } else {
-                return xs.Object.hasKey(list, key);
+                return list.hasOwnProperty(key);
             }
         };
         /**

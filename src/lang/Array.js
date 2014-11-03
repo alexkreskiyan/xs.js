@@ -35,15 +35,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
-         * returns whether array has key
-         * @param arr
-         * @param key
-         * @returns {boolean}
-         */
-        var _hasKey = me.hasKey = function (arr, key) {
-            return key < arr.length;
-        };
-        /**
          * returns whether array has given value
          * @param arr
          * @param value
