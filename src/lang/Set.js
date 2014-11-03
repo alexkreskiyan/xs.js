@@ -365,16 +365,22 @@
         };
         /**
          * returns all list items, that suite where clause
-         * @param list
-         * @param where
-         * @returns {Array}
+         *
+         * @method filterAll
+         *
+         * @param {Array|Object} list filtered object
+         * @param {Object} where clause object
+         *
+         * @returns {Array|Object} List elements, filtered from original
          */
         this.filterAll = function (list, where) {
-            if (xs.isArray(list)) {
-                return xs.Array.filterAll(list, where);
-            } else {
-                return xs.Object.filterAll(list, where);
-            }
+            var keys = [];
+            _each(list, function (value, name) {
+                _every(where, function (param, name) {
+                    return value[name] === param;
+                }) && keys.push(name);
+            }, this);
+            return _pick(list, keys);
         };
         /**
          * returns whether all list items pass tester function

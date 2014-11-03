@@ -35,23 +35,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
-         * returns array with all items of given array, that suite given where clause
-         * @param arr
-         * @param where
-         * @returns {*|{}}
-         */
-        me.filterAll = function (arr, where) {
-            var idx, len = arr.length, item, ok, keys = [];
-            for (idx = 0; idx < len; idx++) {
-                item = arr[idx];
-                ok = xs.Object.every(where, function (param, name) {
-                    return item[name] === param;
-                });
-                ok && keys.push(idx);
-            }
-            return _pick(arr, keys);
-        };
-        /**
          * returns whether all elements of given array pass given tester function
          * @param arr
          * @param tester
