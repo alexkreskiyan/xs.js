@@ -35,14 +35,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
-         * returns array values
-         * @param arr to fetch values from
-         * @returns {array}
-         */
-        me.values = function (arr) {
-            return slice(arr);
-        };
-        /**
          * returns whether array has key
          * @param arr
          * @param key

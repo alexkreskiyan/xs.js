@@ -36,23 +36,34 @@
         var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
          * returns all list keys
-         * @param list
-         * @returns {Array}
+         *
+         * @method keys
+         *
+         * @param {Array|Object} list
+         *
+         * @returns {Array} list keys
          */
-        this.keys = function (list) {
+        var _keys = me.keys = function (list) {
             return Object.keys(list);
         };
         /**
          * returns all list values
-         * @param list
-         * @returns {Array}
+         *
+         * @method values
+         *
+         * @param {Array|Object} list
+         *
+         * @returns {Array} list values
          */
-        this.values = function (list) {
+        me.values = function (list) {
             if (xs.isArray(list)) {
-                return xs.Array.values(list);
-            } else {
-                return xs.Object.values(list);
+                return slice(list);
             }
+            var values = [], idx, keys = _keys(list), len = keys.length;
+            for (idx = 0; idx < len; idx++) {
+                values.push(list[keys[idx]]);
+            }
+            return values;
         };
         /**
          * returns whether list has given key
