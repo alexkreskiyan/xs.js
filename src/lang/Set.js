@@ -301,17 +301,21 @@
         };
         /**
          * returns all list elements, that pass given test function
-         * @param list
-         * @param finder function, returning true if item matches given conditions
-         * @param scope
-         * @returns {Array}
+         *
+         * @method findAll
+         *
+         * @param {Array|Object} list
+         * @param {Function} finder function, returning true if item matches given conditions
+         * @param {Object} scope optional scope
+         *
+         * @returns {Array|Object} found values
          */
         this.findAll = function (list, finder, scope) {
-            if (xs.isArray(list)) {
-                return xs.Array.findAll(list, finder, scope);
-            } else {
-                return xs.Object.findAll(list, finder, scope);
-            }
+            var keys = [];
+            _each(list, function (value, name, obj) {
+                finder.call(this, value, name, obj) && keys.push(name);
+            }, scope);
+            return _pick(list, keys);
         };
         /**
          * returns first list item, that suites where clause
