@@ -71,7 +71,6 @@
          * @method hasKey
          *
          * @param {Array|Object} list to search within
-         *
          * @param {String|Number} key to lookup for
          *
          * @returns {Boolean} whether list has key
@@ -85,15 +84,21 @@
         };
         /**
          * returns whether list has element
-         * @param list to search within
-         * @param value to lookup for
-         * @returns {Boolean}
+         *
+         * @method has
+         *
+         * @param {Array|Object} list to search within
+         * @param {*} value to lookup for
+         *
+         * @returns {Boolean} whether list has value
          */
-        this.has = function (list, value) {
+        me.has = function (list, value) {
             if (xs.isArray(list)) {
-                return xs.Array.has(list, value);
+                return list.indexOf(value) >= 0;
             } else {
-                return xs.Object.has(list, value);
+                return _find(list, function (val) {
+                    return val === value;
+                }) !== undefined;
             }
         };
         /**
@@ -213,7 +218,7 @@
          * @param scope
          * @returns {*}
          */
-        this.find = function (list, finder, scope) {
+        var _find = this.find = function (list, finder, scope) {
             if (xs.isArray(list)) {
                 return xs.Array.find(list, finder, scope);
             } else {
