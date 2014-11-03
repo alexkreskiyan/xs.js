@@ -34,21 +34,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice);
         /**
-         * returns name of last property with value equal to given
-         * @param obj
-         * @param value
-         * @returns {string|Number|undefined}
-         */
-        var _lastKeyOf = this.lastKeyOf = function (obj, value) {
-            var idx, keys = _keys(obj), len = keys.length, name;
-            for (idx = len - 1; idx >= 0; idx--) {
-                name = keys[idx];
-                if (obj[name] === value) {
-                    return name;
-                }
-            }
-        };
-        /**
          * returns number of object own properties
          * @param obj
          * @returns {Number}

@@ -39,7 +39,7 @@
          *
          * @method keys
          *
-         * @param {Array|Object} list
+         * @param {Array|Object} list list, keys are fetched from
          *
          * @returns {Array} list keys
          */
@@ -51,7 +51,7 @@
          *
          * @method values
          *
-         * @param {Array|Object} list
+         * @param {Array|Object} list list, values are fetched from
          *
          * @returns {Array} list values
          */
@@ -70,12 +70,12 @@
          *
          * @method hasKey
          *
-         * @param {Array|Object} list to search within
-         * @param {string|number} key to lookup for
+         * @param {Array|Object} list list to search within
+         * @param {string|number} key key to lookup for
          *
          * @returns {boolean} whether list has key
          */
-        var _hasKey = me.hasKey = function (list, key) {
+        me.hasKey = function (list, key) {
             if (xs.isArray(list)) {
                 return key < list.length;
             } else {
@@ -87,57 +87,55 @@
          *
          * @method has
          *
-         * @param {Array|Object} list to search within
-         * @param {*} value to lookup for
+         * @param {Array|Object} list list to search within
+         * @param {*} value value to lookup for
          *
          * @returns {boolean} whether list has value
          */
         me.has = function (list, value) {
-            if (xs.isArray(list)) {
-                return list.indexOf(value) >= 0;
-            } else {
-                return _find(list, function (val) {
-                    return val === value;
-                }) !== undefined;
-            }
+            return _find(list, function (val) {
+                return val === value;
+            }) !== undefined;
         };
         /**
          * returns key of first list element, equal to given
          *
          * @method keyOf
          *
-         * @param list to search within
-         * @param value to lookup for
+         * @param {Array|Object} list list to search within
+         * @param {*} value value to lookup for
          *
          * @returns {string|number|undefined} found key, or undefined if nothing found
          */
-        var _keyOf = me.keyOf = function (list, value) {
-            if (xs.isArray(list)) {
-                var index = list.indexOf(value);
-                return index > -1 ? index : undefined;
-            } else {
-                var idx, keys = _keys(list), len = keys.length, name;
-                for (idx = 0; idx < len; idx++) {
-                    name = keys[idx];
-                    if (list[name] === value) {
-                        return name;
-                    }
+        me.keyOf = function (list, value) {
+            var idx, keys = _keys(list), len = keys.length, name;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                if (list[name] === value) {
+                    return name;
                 }
-                return undefined;
             }
+            return undefined;
         };
         /**
          * returns key of last list element, equal to given
-         * @param list to search within
-         * @param value to lookup for
-         * @returns {String|Number|undefined}
+         *
+         * @method lastKeyOf
+         *
+         * @param {Array|Object} list list to search within
+         * @param {*} value value to lookup for
+         *
+         * @returns {string|number|undefined} found key, or undefined if nothing found
          */
-        this.lastKeyOf = function (list, value) {
-            if (xs.isArray(list)) {
-                return xs.Array.lastKeyOf(list, value);
-            } else {
-                return xs.Object.lastKeyOf(list, value);
+        me.lastKeyOf = function (list, value) {
+            var idx, keys = _keys(list), len = keys.length, name;
+            for (idx = len - 1; idx >= 0; idx--) {
+                name = keys[idx];
+                if (list[name] === value) {
+                    return name;
+                }
             }
+            return undefined;
         };
         /**
          * returns size of list
