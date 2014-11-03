@@ -324,10 +324,16 @@
          * @returns {*}
          */
         this.filter = function (list, where) {
-            if (xs.isArray(list)) {
-                return xs.Array.filter(list, where);
-            } else {
-                return xs.Object.filter(list, where);
+            var idx, keys = _keys(list), len = keys.length, name, value, ok;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                value = list[name];
+                ok = _every(where, function (param, name) {
+                    return value[name] === param;
+                });
+                if (ok) {
+                    return value;
+                }
             }
         };
         /**

@@ -34,25 +34,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice);
         /**
-         * returns value of first property, matching given where clause
-         * @param obj
-         * @param where
-         * @returns {*}
-         */
-        this.filter = function (obj, where) {
-            var idx, keys = _keys(obj), len = keys.length, name, value, ok;
-            for (idx = 0; idx < len; idx++) {
-                name = keys[idx];
-                value = obj[name];
-                ok = _every(where, function (param, name) {
-                    return value[name] === param;
-                });
-                if (ok) {
-                    return value;
-                }
-            }
-        };
-        /**
          * returns value of last property, matching given where clause
          * @param obj
          * @param where

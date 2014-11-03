@@ -35,24 +35,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
-         * returns first array item, that matches given where clause
-         * @param arr
-         * @param where
-         * @returns {*}
-         */
-        me.filter = function (arr, where) {
-            var idx, len = arr.length, item, ok;
-            for (idx = 0; idx < len; idx++) {
-                item = arr[idx];
-                ok = xs.Object.every(where, function (param, name) {
-                    return item[name] === param;
-                });
-                if (ok) {
-                    return item;
-                }
-            }
-        };
-        /**
          * returns last array item, that matches given where clause
          * @param arr
          * @param where
