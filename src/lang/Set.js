@@ -71,9 +71,9 @@
          * @method hasKey
          *
          * @param {Array|Object} list to search within
-         * @param {String|Number} key to lookup for
+         * @param {string|number} key to lookup for
          *
-         * @returns {Boolean} whether list has key
+         * @returns {boolean} whether list has key
          */
         var _hasKey = me.hasKey = function (list, key) {
             if (xs.isArray(list)) {
@@ -90,7 +90,7 @@
          * @param {Array|Object} list to search within
          * @param {*} value to lookup for
          *
-         * @returns {Boolean} whether list has value
+         * @returns {boolean} whether list has value
          */
         me.has = function (list, value) {
             if (xs.isArray(list)) {
@@ -103,15 +103,27 @@
         };
         /**
          * returns key of first list element, equal to given
+         *
+         * @method keyOf
+         *
          * @param list to search within
          * @param value to lookup for
-         * @returns {String|Number|undefined}
+         *
+         * @returns {string|number|undefined} found key, or undefined if nothing found
          */
-        this.keyOf = function (list, value) {
+        var _keyOf = me.keyOf = function (list, value) {
             if (xs.isArray(list)) {
-                return xs.Array.keyOf(list, value);
+                var index = list.indexOf(value);
+                return index > -1 ? index : undefined;
             } else {
-                return xs.Object.keyOf(list, value);
+                var idx, keys = _keys(list), len = keys.length, name;
+                for (idx = 0; idx < len; idx++) {
+                    name = keys[idx];
+                    if (list[name] === value) {
+                        return name;
+                    }
+                }
+                return undefined;
             }
         };
         /**

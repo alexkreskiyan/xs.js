@@ -35,16 +35,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
-         * returns index of first array item, that is equal to given value
-         * @param arr
-         * @param value
-         * @returns {string|Number|undefined}
-         */
-        var _keyOf = me.keyOf = function (arr, value) {
-            var index = arr.indexOf(value);
-            return index > -1 ? index : undefined;
-        };
-        /**
          * returns index of last array item, that is equal to given value
          * @param arr
          * @param value
