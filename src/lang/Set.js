@@ -304,7 +304,7 @@
          *
          * @method findAll
          *
-         * @param {Array|Object} list
+         * @param {Array|Object} list list, search is made over
          * @param {Function} finder function, returning true if item matches given conditions
          * @param {Object} scope optional scope
          *
@@ -319,9 +319,13 @@
         };
         /**
          * returns first list item, that suites where clause
-         * @param list
-         * @param where
-         * @returns {*}
+         *
+         * @method filter
+         *
+         * @param {Array|Object} list filtered object
+         * @param {Object} where clause object
+         *
+         * @returns {*} first object, that suites clause, or undefined, if nothing suites
          */
         this.filter = function (list, where) {
             var idx, keys = _keys(list), len = keys.length, name, value, ok;
@@ -338,15 +342,25 @@
         };
         /**
          * returns last list item, that suites where clause
-         * @param list
-         * @param where
-         * @returns {*}
+         *
+         * @method filterLast
+         *
+         * @param {Array|Object} list filtered object
+         * @param {Object} where clause object
+         *
+         * @returns {*} first object, that suites clause, or undefined, if nothing suites
          */
         this.filterLast = function (list, where) {
-            if (xs.isArray(list)) {
-                return xs.Array.filterLast(list, where);
-            } else {
-                return xs.Object.filterLast(list, where);
+            var idx, keys = _keys(list), len = keys.length, name, value, ok;
+            for (idx = len - 1; idx >= 0; idx--) {
+                name = keys[idx];
+                value = list[name];
+                ok = _every(where, function (param, name) {
+                    return value[name] === param;
+                });
+                if (ok) {
+                    return value;
+                }
             }
         };
         /**
