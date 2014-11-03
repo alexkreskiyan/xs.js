@@ -1,4 +1,4 @@
-/**
+/*!
  This file is core of xs.js 0.1
 
  Copyright (c) 2013-2014, Annium Inc
@@ -18,12 +18,14 @@
 
  */
 /**
- * array class pre-definition
- * @type {Object}
+ * @class xs.Set
+ * @singleton
  * @private
+ * xs.Set is private singleton, defining basic set operations, for both Array and Object
  */
-'use strict';
 (function (root, ns) {
+
+    'use strict';
 
     //framework shorthand
     var xs = root[ns];
@@ -31,16 +33,7 @@
     var array = xs.Array = new (function () {
         var me = this;
         // Create quick reference variables for speed access to core prototypes.
-        var slice = Function.prototype.call.bind(Array.prototype.slice),
-            concat = Function.prototype.apply.bind(Array.prototype.concat);
-        /**
-         * returns array keys
-         * @param arr to fetch keys from
-         * @returns {Array}
-         */
-        me.keys = function (arr) {
-            return Object.keys(arr);
-        };
+        var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
          * returns array values
          * @param arr to fetch values from
@@ -94,8 +87,7 @@
          * @param scope
          */
         var _each = me.each = function (arr, iterator, scope) {
-            var idx,
-                len = arr.length;
+            var idx, len = arr.length;
             for (idx = 0; idx < len; idx++) {
                 iterator.call(scope, arr[idx], idx, arr);
             }
@@ -107,8 +99,7 @@
          * @param scope
          */
         var _eachReverse = me.eachReverse = function (arr, iterator, scope) {
-            var idx,
-                len = arr.length;
+            var idx, len = arr.length;
             for (idx = len - 1; idx >= 0; idx--) {
                 iterator.call(scope, arr[idx], idx, arr);
             }
@@ -175,9 +166,7 @@
          * @returns {*}
          */
         me.find = function (arr, finder, scope) {
-            var idx,
-                len = arr.length,
-                item;
+            var idx, len = arr.length, item;
             for (idx = 0; idx < len; idx++) {
                 item = arr[idx];
                 if (finder.call(scope, item, idx, arr)) {
@@ -193,9 +182,7 @@
          * @returns {*}
          */
         me.findLast = function (arr, finder, scope) {
-            var idx,
-                len = arr.length,
-                item;
+            var idx, len = arr.length, item;
             for (idx = len - 1; idx >= 0; idx--) {
                 item = arr[idx];
                 if (finder.call(scope, item, idx, arr)) {
@@ -220,10 +207,7 @@
          * @returns {*}
          */
         me.filter = function (arr, where) {
-            var idx,
-                len = arr.length,
-                item,
-                ok;
+            var idx, len = arr.length, item, ok;
             for (idx = 0; idx < len; idx++) {
                 item = arr[idx];
                 ok = xs.Object.every(where, function (param, name) {
@@ -241,10 +225,7 @@
          * @returns {*}
          */
         me.filterLast = function (arr, where) {
-            var idx,
-                len = arr.length,
-                item,
-                ok;
+            var idx, len = arr.length, item, ok;
             for (idx = len - 1; idx >= 0; idx--) {
                 item = arr[idx];
                 ok = xs.Object.every(where, function (param, name) {
@@ -262,11 +243,7 @@
          * @returns {*|{}}
          */
         me.filterAll = function (arr, where) {
-            var idx,
-                len = arr.length,
-                item,
-                ok,
-                keys = [];
+            var idx, len = arr.length, item, ok, keys = [];
             for (idx = 0; idx < len; idx++) {
                 item = arr[idx];
                 ok = xs.Object.every(where, function (param, name) {
@@ -295,10 +272,7 @@
          * @returns {boolean}
          */
         me.some = function (arr, tester, count, scope) {
-            var idx,
-                len = arr.length,
-                item,
-                found = 0;
+            var idx, len = arr.length, item, found = 0;
             count = count || 1;
             for (idx = 0; idx < len; idx++) {
                 item = arr[idx];
@@ -404,9 +378,7 @@
             var arrays = arguments.length == 1 ? slice(arguments).pop() : slice(arguments), //get arrays list
                 all = _unique(_union(arrays)), //get all items list
                 intersect = [], //define intersection
-                idx,
-                len = all.length,
-                item;
+                idx, len = all.length, item;
             //iterate over each element (they are unique)
             for (idx = 0; idx < len; idx++) {
                 item = all[idx];
@@ -436,10 +408,7 @@
          * @returns {Array}
          */
         var _unique = me.unique = function (arr) {
-            var unique = [],
-                idx,
-                len = arr.length,
-                item;
+            var unique = [], idx, len = arr.length, item;
             for (idx = 0; idx < len; idx++) {
                 item = arr[idx];
                 unique.indexOf(item) < 0 && unique.push(item);
@@ -452,12 +421,7 @@
          * @returns {Array}
          */
         var _pick = me.pick = function (arr) {
-            var copy = [],
-                keys = _union(slice(arguments, 1)),
-                keysLen = keys.length,
-                len = arr.length,
-                idx,
-                item;
+            var copy = [], keys = _union(slice(arguments, 1)), keysLen = keys.length, len = arr.length, idx, item;
             for (idx = 0; idx < keysLen; idx++) {
                 item = keys[idx];
                 item < len && (copy[item] = arr[item]);
@@ -470,11 +434,7 @@
          * @returns {Array}
          */
         me.omit = function (arr) {
-            var copy = [],
-                keys = _union(slice(arguments, 1)),
-                len = arr.length,
-                idx,
-                item;
+            var copy = [], keys = _union(slice(arguments, 1)), len = arr.length, idx, item;
             for (idx = 0; idx < len; idx++) {
                 item = arr[idx];
                 keys.indexOf(idx) < 0 && (copy[idx] = item);
@@ -488,9 +448,7 @@
          * @returns {*}
          */
         me.defaults = function (arr) {
-            var defaults = _union(slice(arguments, 1)),
-                len = defaults.length,
-                idx;
+            var defaults = _union(slice(arguments, 1)), len = defaults.length, idx;
             for (idx = arr.length; idx < len; idx++) {
                 arr[idx] = defaults[idx];
             }
@@ -531,6 +489,6 @@
     });
     xs.Object.extend(xs, {
         shuffle: array.shuffle,
-        range: array.range
+        range:   array.range
     });
 })(window, 'xs');

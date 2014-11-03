@@ -1,4 +1,4 @@
-/**
+/*!
  This file is core of xs.js 0.1
 
  Copyright (c) 2013-2014, Annium Inc
@@ -18,28 +18,29 @@
 
  */
 /**
- * set class pre-definition
- * @type {{}}
+ * @class xs.Set
+ * @singleton
+ * @private
+ * xs.Set is private singleton, defining basic set operations, for both Array and Object
  */
-'use strict';
 (function (root, ns) {
+
+    'use strict';
 
     //framework shorthand
     var xs = root[ns];
 
-    var set = xs.Set = new (function () {
-        var slice = Function.prototype.call.bind(Array.prototype.slice);
+    var set = new (function () {
+        var me = this;
+        // Create quick reference variables for speed access to core prototypes.
+        var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
          * returns all list keys
          * @param list
          * @returns {Array}
          */
         this.keys = function (list) {
-            if (xs.isArray(list)) {
-                return xs.Array.keys(list);
-            } else {
-                return xs.Object.keys(list);
-            }
+            return Object.keys(list);
         };
         /**
          * returns all list values
@@ -407,6 +408,9 @@
                 return xs.Object.compact(list);
             }
         };
+        this.shuffle = function (list) {
+
+        };
         /**
          * returns union of lists, passed as arguments, or array of lists as single argument
          * @returns {Array|Object}
@@ -501,42 +505,5 @@
             }
         };
     });
-    xs.Object.extend(xs, {
-        keys: set.keys,
-        values: set.values,
-        hasKey: set.hasKey,
-        has: set.has,
-        keyOf: set.keyOf,
-        lastKeyOf: set.lastKeyOf,
-        size: set.size,
-        each: set.each,
-        eachReverse: set.eachReverse,
-        map: set.map,
-        reduce: set.reduce,
-        reduceRight: set.reduceRight,
-        find: set.find,
-        findLast: set.findLast,
-        findAll: set.findAll,
-        filter: set.filter,
-        filterLast: set.filterLast,
-        filterAll: set.filterAll,
-        every: set.every,
-        some: set.some,
-        first: set.first,
-        last: set.last,
-        shift: set.shift,
-        pop: set.pop,
-        remove: set.remove,
-        removeLast: set.removeLast,
-        removeAll: set.removeAll,
-        clone: set.clone,
-        compact: set.compact,
-        union: set.union,
-        intersection: set.intersection,
-        difference: set.difference,
-        unique: set.unique,
-        pick: set.pick,
-        omit: set.omit,
-        defaults: set.defaults
-    });
+    xs.Object.extend(xs, set);
 })(window, 'xs');

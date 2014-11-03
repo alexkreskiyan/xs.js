@@ -53,10 +53,6 @@ gulp.task('debug', function (done) {
     watch(paths.scripts, {
         name: 'JS debug compiler'
     }, buildScripts);
-
-    karma.start({
-        configFile: __dirname + '/karma.js'
-    }, done);
 });
 
 gulp.task('test', function (done) {
@@ -80,10 +76,6 @@ gulp.task('release', function () {
     watch(paths.scripts, {
         name: 'JS debug compiler'
     }, buildScripts);
-
-    karma.start({
-        configFile: __dirname + '/karma.js'
-    }, done);
 });
 
 // The default task (called when you run `gulp` from cli)

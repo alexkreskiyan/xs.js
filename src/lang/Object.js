@@ -1,4 +1,4 @@
-/**
+/*!
  This file is core of xs.js 0.1
 
  Copyright (c) 2013-2014, Annium Inc
@@ -18,12 +18,14 @@
 
  */
 /**
- * object class pre-definition
- * @type {{}}
+ * @class xs.Set
+ * @singleton
  * @private
+ * xs.Set is private singleton, defining basic set operations, for both Array and Object
  */
-'use strict';
 (function (root, ns) {
+
+    'use strict';
 
     //framework shorthand
     var xs = root[ns];
@@ -32,23 +34,12 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice);
         /**
-         * returns object keys
-         * @param obj
-         * @returns {Array}
-         */
-        var _keys = this.keys = function (obj) {
-            return Object.keys(obj);
-        };
-        /**
          * returns object values
          * @param obj
          * @returns {Array}
          */
         this.values = function (obj) {
-            var values = [],
-                idx,
-                keys = _keys(obj),
-                len = keys.length;
+            var values = [], idx, keys = _keys(obj), len = keys.length;
             for (idx = 0; idx < len; idx++) {
                 values.push(obj[keys[idx]]);
             }
@@ -81,10 +72,7 @@
          * @returns {string|Number|undefined}
          */
         var _keyOf = this.keyOf = function (obj, value) {
-            var idx,
-                keys = _keys(obj),
-                len = keys.length,
-                name;
+            var idx, keys = _keys(obj), len = keys.length, name;
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
                 if (obj[name] === value) {
@@ -99,10 +87,7 @@
          * @returns {string|Number|undefined}
          */
         var _lastKeyOf = this.lastKeyOf = function (obj, value) {
-            var idx,
-                keys = _keys(obj),
-                len = keys.length,
-                name;
+            var idx, keys = _keys(obj), len = keys.length, name;
             for (idx = len - 1; idx >= 0; idx--) {
                 name = keys[idx];
                 if (obj[name] === value) {
@@ -125,10 +110,7 @@
          * @param scope
          */
         var _each = this.each = function (obj, iterator, scope) {
-            var idx,
-                keys = _keys(obj),
-                len = keys.length,
-                name;
+            var idx, keys = _keys(obj), len = keys.length, name;
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
                 iterator.call(scope, obj[name], name, obj);
@@ -141,10 +123,7 @@
          * @param scope
          */
         var _eachReverse = this.eachReverse = function (obj, iterator, scope) {
-            var idx,
-                keys = _keys(obj),
-                len = keys.length,
-                name;
+            var idx, keys = _keys(obj), len = keys.length, name;
             for (idx = len - 1; idx >= 0; idx--) {
                 name = keys[idx];
                 iterator.call(scope, obj[name], name, obj);
@@ -216,11 +195,7 @@
          * @returns {*}
          */
         var _find = this.find = function (obj, finder, scope) {
-            var idx,
-                keys = _keys(obj),
-                len = keys.length,
-                name,
-                value;
+            var idx, keys = _keys(obj), len = keys.length, name, value;
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
                 value = obj[name];
@@ -237,11 +212,7 @@
          * @returns {*}
          */
         this.findLast = function (obj, finder, scope) {
-            var idx,
-                keys = _keys(obj),
-                len = keys.length,
-                name,
-                value;
+            var idx, keys = _keys(obj), len = keys.length, name, value;
             for (idx = len - 1; idx >= 0; idx--) {
                 name = keys[idx];
                 value = obj[name];
@@ -271,12 +242,7 @@
          * @returns {*}
          */
         this.filter = function (obj, where) {
-            var idx,
-                keys = _keys(obj),
-                len = keys.length,
-                name,
-                value,
-                ok;
+            var idx, keys = _keys(obj), len = keys.length, name, value, ok;
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
                 value = obj[name];
@@ -295,12 +261,7 @@
          * @returns {*}
          */
         this.filterLast = function (obj, where) {
-            var idx,
-                keys = _keys(obj),
-                len = keys.length,
-                name,
-                value,
-                ok;
+            var idx, keys = _keys(obj), len = keys.length, name, value, ok;
             for (idx = len - 1; idx >= 0; idx--) {
                 name = keys[idx];
                 value = obj[name];
@@ -335,10 +296,7 @@
          * @returns {boolean}
          */
         var _every = this.every = function (obj, tester, scope) {
-            var idx,
-                keys = _keys(obj),
-                len = keys.length,
-                name;
+            var idx, keys = _keys(obj), len = keys.length, name;
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
                 if (!tester.call(scope, obj[name], name, obj)) {
@@ -356,11 +314,7 @@
          * @returns {boolean}
          */
         this.some = function (obj, tester, count, scope) {
-            var idx,
-                keys = _keys(obj),
-                len = keys.length,
-                name,
-                found = 0;
+            var idx, keys = _keys(obj), len = keys.length, name, found = 0;
             count = count || 1;
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
@@ -482,9 +436,7 @@
          * @returns {*}
          */
         this.union = function () {
-            var merge = xs.Array.union(arguments.length == 1 ? slice(arguments).pop() : slice(arguments)),
-                union = {},
-                key;
+            var merge = xs.Array.union(arguments.length == 1 ? slice(arguments).pop() : slice(arguments)), union = {}, key;
             xs.Array.each(merge, function (value) {
                 key = _keys(value).pop();
                 union[key] = value[key];
@@ -546,8 +498,7 @@
          * @returns {{}}
          */
         var _pick = this.pick = function (obj) {
-            var copy = {},
-                keys = xs.Array.union(slice(arguments, 1));
+            var copy = {}, keys = xs.Array.union(slice(arguments, 1));
             xs.Array.each(keys, function (key) {
                 key in obj && (copy[key] = obj[key]);
             });
@@ -559,8 +510,7 @@
          * @returns {{}}
          */
         var _omit = this.omit = function (obj) {
-            var copy = {},
-                keys = xs.Array.union(slice(arguments, 1));
+            var copy = {}, keys = xs.Array.union(slice(arguments, 1));
             _each(obj, function (value, name) {
                 keys.indexOf(name) < 0 && (copy[name] = value);
             });
