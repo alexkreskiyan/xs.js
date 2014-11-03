@@ -34,50 +34,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice);
         /**
-         * reduces a hash of elements, returned by iterator function from left
-         * @param obj
-         * @param iterator
-         * @param scope
-         * @param memo
-         * @returns {*}
-         */
-        this.reduce = function (obj, iterator, memo, scope) {
-            var result;
-            if (arguments.length > 2) {
-                result = memo;
-            } else {
-                var key = _keys(obj).shift();
-                result = obj[key];
-                obj = _omit(obj, key);
-            }
-            _each(obj, function (value, key, object) {
-                result = iterator.call(this, result, value, key, object);
-            }, scope);
-            return result;
-        };
-        /**
-         * reduces a hash of elements, returned by iterator function from right
-         * @param obj
-         * @param iterator
-         * @param scope
-         * @param memo
-         * @returns {*}
-         */
-        this.reduceRight = function (obj, iterator, memo, scope) {
-            var result;
-            if (arguments.length > 2) {
-                result = memo;
-            } else {
-                var key = _keys(obj).pop();
-                result = obj[key];
-                obj = _omit(obj, key);
-            }
-            _eachReverse(obj, function (value, key, object) {
-                result = iterator.call(this, result, value, key, object);
-            }, scope);
-            return result;
-        };
-        /**
          * returns value of first property, matching given finder function
          * @param obj
          * @param finder

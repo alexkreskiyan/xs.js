@@ -35,46 +35,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
-         * reduces an array of elements, returned by iterator function from left
-         * @param {Array} arr reduced array
-         * @param {Function} iterator
-         * @param {Object|undefined} scope
-         * @param {*} memo initial reduce value
-         * @returns {*}
-         */
-        this.reduce = function (arr, iterator, memo, scope) {
-            var result;
-            if (arguments.length > 2) {
-                result = memo;
-            } else {
-                result = arr.shift();
-            }
-            _each(arr, function (value, key, object) {
-                result = iterator.call(this, result, value, key, object);
-            }, scope);
-            return result;
-        };
-        /**
-         * reduces an array of elements, returned by iterator function from right
-         * @param {Array} arr reduced array
-         * @param {Function} iterator
-         * @param {Object|undefined} scope
-         * @param {*} memo initial reduce value
-         * @returns {*}
-         */
-        this.reduceRight = function (arr, iterator, memo, scope) {
-            var result;
-            if (arguments.length > 2) {
-                result = memo;
-            } else {
-                result = arr.pop();
-            }
-            _eachReverse(obj, function (value, key, object) {
-                result = iterator.call(this, result, value, key, object);
-            }, scope);
-            return result;
-        };
-        /**
          * returns first element in array, that matches given finder function
          * @param arr
          * @param finder

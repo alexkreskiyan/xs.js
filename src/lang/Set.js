@@ -178,7 +178,7 @@
          * @param {Function} iterator list iterator
          * @param {Object} scope optional scope
          */
-        me.eachReverse = function (list, iterator, scope) {
+        var _eachReverse = me.eachReverse = function (list, iterator, scope) {
             var idx, keys = _keys(list), len = keys.length, name;
             for (idx = len - 1; idx >= 0; idx--) {
                 name = keys[idx];
@@ -195,6 +195,7 @@
          * @param {Array|Object} list list to map
          * @param {Function} iterator mapping function
          * @param {Object} scope optional scope
+         *
          * @returns {Array|Object} Mapping result
          */
         me.map = function (list, iterator, scope) {
@@ -206,33 +207,55 @@
         };
         /**
          * reduces a list of elements, returned by iterator function from left
-         * @param list
-         * @param iterator reducing function
-         * @param memo initial value
-         * @param scope
-         * @return {*}
+         *
+         * @method reduce
+         *
+         * @param {Array|Object} list reduced list
+         * @param {Function} iterator reducing function
+         * @param {*} memo initial value
+         * @param {Object} scope optional scope
+         *
+         * @return {*} Reducing result
          */
-        this.reduce = function (list, iterator, memo, scope) {
-            if (xs.isArray(list)) {
-                return xs.Array.reduce.apply(xs.Object, arguments);
+        me.reduce = function (list, iterator, memo, scope) {
+            var result;
+            if (arguments.length > 2) {
+                result = memo;
             } else {
-                return xs.Object.reduce.apply(xs.Object, arguments);
+                var key = _keys(list).shift();
+                result = list[key];
+                list = _omit(list, key);
             }
+            _each(list, function (value, key, object) {
+                result = iterator.call(this, result, value, key, object);
+            }, scope);
+            return result;
         };
         /**
          * reduces a list of elements, returned by iterator function from right
-         * @param list
-         * @param iterator reducing function
-         * @param memo initial value
-         * @param scope
-         * @return {*}
+         *
+         * @method reduceRight
+         *
+         * @param {Array|Object} list reduced list
+         * @param {Function} iterator reducing function
+         * @param {*} memo initial value
+         * @param {Object} scope optional scope
+         *
+         * @return {*} Reducing result
          */
-        this.reduceRight = function (list, iterator, memo, scope) {
-            if (xs.isArray(list)) {
-                return xs.Array.reduceRight.apply(xs.Object, arguments);
+        me.reduceRight = function (list, iterator, memo, scope) {
+            var result;
+            if (arguments.length > 2) {
+                result = memo;
             } else {
-                return xs.Object.reduceRight.apply(xs.Object, arguments);
+                var key = _keys(list).pop();
+                result = list[key];
+                list = _omit(list, key);
             }
+            _eachReverse(obj, function (value, key, object) {
+                result = iterator.call(this, result, value, key, object);
+            }, scope);
+            return result;
         };
         /**
          * returns first list element, that passes given test function
