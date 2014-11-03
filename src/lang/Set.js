@@ -259,16 +259,23 @@
         };
         /**
          * returns first list element, that passes given test function
-         * @param list
-         * @param finder function, returning true if item matches given conditions
-         * @param scope
-         * @returns {*}
+         *
+         * @method find
+         *
+         * @param {Array|Object} list list, search is made over
+         * @param {Function} finder function, returning true if item matches given conditions
+         * @param {Object} scope optional scope
+         *
+         * @returns {*} found value, undefined if nothing found
          */
         var _find = this.find = function (list, finder, scope) {
-            if (xs.isArray(list)) {
-                return xs.Array.find(list, finder, scope);
-            } else {
-                return xs.Object.find(list, finder, scope);
+            var idx, keys = _keys(list), len = keys.length, name, value;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                value = list[name];
+                if (finder.call(scope, value, name, list)) {
+                    return value;
+                }
             }
         };
         /**
