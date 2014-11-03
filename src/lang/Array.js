@@ -35,36 +35,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
-         * returns whether all elements of given array pass given tester function
-         * @param arr
-         * @param tester
-         * @param scope
-         * @returns {*|boolean}
-         */
-        me.every = function (arr, tester, scope) {
-            return arr.every(tester, scope);
-        };
-        /**
-         * returns whether count elements of given array pass given tester function
-         * @param arr
-         * @param tester
-         * @param count
-         * @param scope
-         * @returns {boolean}
-         */
-        me.some = function (arr, tester, count, scope) {
-            var idx, len = arr.length, item, found = 0;
-            count = count || 1;
-            for (idx = 0; idx < len; idx++) {
-                item = arr[idx];
-                tester.call(scope, item, idx, arr) && found++;
-                if (found >= count) {
-                    return true;
-                }
-            }
-            return false;
-        };
-        /**
          * returns first element of given array
          * @param arr
          * @returns {*}

@@ -34,43 +34,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice);
         /**
-         * returns whether all object properties pass given tester function
-         * @param obj
-         * @param tester
-         * @param scope
-         * @returns {boolean}
-         */
-        var _every = this.every = function (obj, tester, scope) {
-            var idx, keys = _keys(obj), len = keys.length, name;
-            for (idx = 0; idx < len; idx++) {
-                name = keys[idx];
-                if (!tester.call(scope, obj[name], name, obj)) {
-                    return false;
-                }
-            }
-            return true;
-        };
-        /**
-         * returns whether count of object properties pass given tester function
-         * @param obj
-         * @param tester
-         * @param count
-         * @param scope
-         * @returns {boolean}
-         */
-        this.some = function (obj, tester, count, scope) {
-            var idx, keys = _keys(obj), len = keys.length, name, found = 0;
-            count = count || 1;
-            for (idx = 0; idx < len; idx++) {
-                name = keys[idx];
-                tester.call(scope, obj[name], name, obj) && found++;
-                if (found >= count) {
-                    return true;
-                }
-            }
-            return false;
-        };
-        /**
          * returns first object property
          * @param obj
          * @returns {*}

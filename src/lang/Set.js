@@ -268,7 +268,7 @@
          *
          * @returns {*} found value, undefined if nothing found
          */
-        var _find = this.find = function (list, finder, scope) {
+        var _find = me.find = function (list, finder, scope) {
             var idx, keys = _keys(list), len = keys.length, name, value;
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
@@ -289,7 +289,7 @@
          *
          * @returns {*} found value, undefined if nothing found
          */
-        this.findLast = function (list, finder, scope) {
+        me.findLast = function (list, finder, scope) {
             var idx, keys = _keys(list), len = keys.length, name, value;
             for (idx = len - 1; idx >= 0; idx--) {
                 name = keys[idx];
@@ -310,7 +310,7 @@
          *
          * @returns {Array|Object} found values
          */
-        this.findAll = function (list, finder, scope) {
+        me.findAll = function (list, finder, scope) {
             var keys = [];
             _each(list, function (value, name, obj) {
                 finder.call(this, value, name, obj) && keys.push(name);
@@ -322,12 +322,12 @@
          *
          * @method filter
          *
-         * @param {Array|Object} list filtered object
+         * @param {Array|Object} list filtered list
          * @param {Object} where clause object
          *
          * @returns {*} first object, that suites clause, or undefined, if nothing suites
          */
-        this.filter = function (list, where) {
+        me.filter = function (list, where) {
             var idx, keys = _keys(list), len = keys.length, name, value, ok;
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
@@ -345,12 +345,12 @@
          *
          * @method filterLast
          *
-         * @param {Array|Object} list filtered object
+         * @param {Array|Object} list filtered list
          * @param {Object} where clause object
          *
          * @returns {*} first object, that suites clause, or undefined, if nothing suites
          */
-        this.filterLast = function (list, where) {
+        me.filterLast = function (list, where) {
             var idx, keys = _keys(list), len = keys.length, name, value, ok;
             for (idx = len - 1; idx >= 0; idx--) {
                 name = keys[idx];
@@ -368,12 +368,12 @@
          *
          * @method filterAll
          *
-         * @param {Array|Object} list filtered object
+         * @param {Array|Object} list filtered list
          * @param {Object} where clause object
          *
          * @returns {Array|Object} List elements, filtered from original
          */
-        this.filterAll = function (list, where) {
+        me.filterAll = function (list, where) {
             var keys = [];
             _each(list, function (value, name) {
                 _every(where, function (param, name) {
@@ -384,32 +384,67 @@
         };
         /**
          * returns whether all list items pass tester function
-         * @param list
-         * @param tester
-         * @param scope
-         * @returns {Boolean}
+         *
+         * @method every
+         *
+         * @param {Array|Object} list tested list
+         * @param {Function} tester tester function
+         * @param {Object} scope optional scope
+         * @returns {boolean} whether all elements pass tester function
          */
-        this.every = function (list, tester, scope) {
-            if (xs.isArray(list)) {
-                return xs.Array.every(list, tester, scope);
-            } else {
-                return xs.Object.every(list, tester, scope);
+        var _every = me.every = function (list, tester, scope) {
+            var idx, keys = _keys(list), len = keys.length, name;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                if (!tester.call(scope, list[name], name, list)) {
+                    return false;
+                }
             }
+            return true;
         };
         /**
          * returns whether count of list items pass tester function
-         * @param list
-         * @param tester
-         * @param scope
-         * @param count
-         * @returns {Boolean}
+         *
+         * @method some
+         *
+         * @param {Array|Object} list tested list
+         * @param {Function} tester tester function
+         * @param {Object} scope optional scope
+         * @param {number} count count of items needed to resolve as true
+         *
+         * @returns {boolean}
          */
-        this.some = function (list, tester, scope, count) {
-            if (xs.isArray(list)) {
-                return xs.Array.some(list, tester, scope, count);
-            } else {
-                return xs.Object.some(list, tester, scope, count);
+        me.some = function (list, tester, scope, count) {
+            var idx, keys = _keys(list), len = keys.length, name, found = 0;
+            count = count || 1;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                tester.call(scope, list[name], name, list) && found++;
+                if (found >= count) {
+                    return true;
+                }
             }
+            return false;
+        };
+        /**
+         * returns whether none of list items pass tester function
+         *
+         * @method none
+         *
+         * @param {Array|Object} list tested list
+         * @param {Function} tester tester function
+         * @param {Object} scope optional scope
+         * @returns {boolean} whether no one of elements pass tester function
+         */
+        me.none = function (list, tester, scope) {
+            var idx, keys = _keys(list), len = keys.length, name;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                if (tester.call(scope, list[name], name, list)) {
+                    return false;
+                }
+            }
+            return true;
         };
         /**
          * returns first item of list
