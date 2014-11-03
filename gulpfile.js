@@ -6,7 +6,10 @@ var minifyCSS = require('gulp-minify-css');
 var watch = require('gulp-watch');
 var compass = require('gulp-compass');
 var spritesmith = require('gulp.spritesmith');
+
 var del = require('del');
+
+var karma = require('karma').server;
 
 var paths = {
     scripts: [
@@ -36,7 +39,7 @@ var paths = {
     ]
 };
 
-gulp.task('debug', function () {
+gulp.task('debug', function (done) {
     //scripts processing
     var buildScripts = function () {
         del(['build/debug/*.js']);
@@ -50,6 +53,17 @@ gulp.task('debug', function () {
     watch(paths.scripts, {
         name: 'JS debug compiler'
     }, buildScripts);
+
+    karma.start({
+        configFile: __dirname + '/karma.js'
+    }, done);
+});
+
+gulp.task('test', function (done) {
+    karma.start({
+        configFile: __dirname + '/karma.js',
+        singleRun:  true
+    }, done);
 });
 
 gulp.task('release', function () {
@@ -66,6 +80,10 @@ gulp.task('release', function () {
     watch(paths.scripts, {
         name: 'JS debug compiler'
     }, buildScripts);
+
+    karma.start({
+        configFile: __dirname + '/karma.js'
+    }, done);
 });
 
 // The default task (called when you run `gulp` from cli)

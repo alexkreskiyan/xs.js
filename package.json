@@ -2,13 +2,24 @@
     "name":            "xs.js",
     "version":         "0.0.1",
     "devDependencies": {
-        "del":              "latest",
-        "gulp":             "latest",
-        "gulp-compass":     "latest",
-        "gulp-concat":      "latest",
-        "gulp-minify-css":  "latest",
-        "gulp.spritesmith": "latest",
-        "gulp-uglify":      "latest",
-        "gulp-watch":       "latest"
+        "del":                      "latest",
+        "gulp":                     "latest",
+        "gulp-compass":             "latest",
+        "gulp-concat":              "latest",
+        "gulp-karma":               "latest",
+        "gulp-minify-css":          "latest",
+        "gulp-uglify":              "latest",
+        "gulp-watch":               "latest",
+        "gulp.spritesmith":         "latest",
+        "karma":                    "latest",
+        "karma-coverage":           "latest",
+        "karma-chrome-launcher":    "latest",
+        "karma-firefox-launcher":   "latest",
+        "karma-ie-launcher":        "latest",
+        "karma-htmlfile-reporter":  "latest",
+        "karma-opera-launcher":     "latest",
+        "karma-phantomjs-launcher": "latest",
+        "karma-qunit":              "latest",
+        "karma-safari-launcher":    "latest"
     }
 }

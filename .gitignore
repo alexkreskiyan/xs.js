@@ -5,6 +5,8 @@
 .htaccess
 /build/**/*.js
 /build/**/*.css
+/coverage
 /docs
 /node_modules
+/reports
 /resources/css/
