@@ -14,9 +14,9 @@ var karma = require('karma').server;
 var paths = {
     scripts: [
         'src/xs.js',
+        'src/lang/Set.js',
         'src/lang/Object.js',
         'src/lang/Array.js',
-        'src/lang/Set.js',
         'src/Detect.js',
         'src/Environment.js',
         'src/lang/Attribute.js',

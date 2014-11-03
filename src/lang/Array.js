@@ -35,32 +35,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
-         * iterates over array in reverse order
-         * @param arr
-         * @param iterator
-         * @param scope
-         */
-        var _eachReverse = me.eachReverse = function (arr, iterator, scope) {
-            var idx, len = arr.length;
-            for (idx = len - 1; idx >= 0; idx--) {
-                iterator.call(scope, arr[idx], idx, arr);
-            }
-        };
-        /**
-         * produces a new array with elements, updated by iterator function
-         * @param {Array} arr
-         * @param {Function} iterator
-         * @param {Object|undefined} scope
-         * @returns {Array}
-         */
-        this.map = function (arr, iterator, scope) {
-            var result = _clone(arr);
-            _each(arr, function (value, key, array) {
-                result[key] = iterator.call(this, value, key, array);
-            }, scope);
-            return result;
-        };
-        /**
          * reduces an array of elements, returned by iterator function from left
          * @param {Array} arr reduced array
          * @param {Function} iterator

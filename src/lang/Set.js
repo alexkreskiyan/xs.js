@@ -156,45 +156,53 @@
         /**
          * iterates over list items
          *
-         * @param {Array|Object} list list to iterate in
+         * @method each
+         *
+         * @param {Array|Object} list list to iterate over
          * @param {Function} iterator list iterator
          * @param {Object} scope optional scope
          */
-        me.each = function (list, iterator, scope) {
+        var _each = me.each = function (list, iterator, scope) {
             var idx, keys = _keys(list), len = keys.length, name;
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
-                iterator.call(scope, obj[name], name, obj);
+                iterator.call(scope, list[name], name, list);
             }
         };
         /**
          * iterates over list items in reverse order
-         * @param list to iterate for
-         * @param iterator
-         * @param scope
+         *
+         * @method eachReverse
+         *
+         * @param {Array|Object} list list to iterate over
+         * @param {Function} iterator list iterator
+         * @param {Object} scope optional scope
          */
-        this.eachReverse = function (list, iterator, scope) {
-            if (xs.isArray(list)) {
-                xs.Array.eachReverse(list, iterator, scope);
-            } else {
-                xs.Object.eachReverse(list, iterator, scope);
+        me.eachReverse = function (list, iterator, scope) {
+            var idx, keys = _keys(list), len = keys.length, name;
+            for (idx = len - 1; idx >= 0; idx--) {
+                name = keys[idx];
+                iterator.call(scope, list[name], name, list);
             }
         };
         /**
          * produces a new list with elements, returned by iterator function
          * if source was array - array is created
          * if source was object - object is created
-         * @param list
-         * @param iterator
-         * @param scope
-         * @returns {Array|Object}
+         *
+         * @method map
+         *
+         * @param {Array|Object} list list to map
+         * @param {Function} iterator mapping function
+         * @param {Object} scope optional scope
+         * @returns {Array|Object} Mapping result
          */
-        this.map = function (list, iterator, scope) {
-            if (xs.isArray(list)) {
-                return xs.Array.map(list, iterator, scope);
-            } else {
-                return xs.Object.map(list, iterator, scope);
-            }
+        me.map = function (list, iterator, scope) {
+            var result = xs.isArray(list) ? [] : {};
+            _each(list, function (value, key, array) {
+                result[key] = iterator.call(this, value, key, array);
+            }, scope);
+            return result;
         };
         /**
          * reduces a list of elements, returned by iterator function from left
@@ -431,6 +439,20 @@
             } else {
                 return xs.Object.clone(list);
             }
+        };
+        /**
+         * copies all properties from objects/arrays, passed as arguments to given obj
+         * @param obj
+         * @returns {*}
+         */
+        var _extend = this.extend = function (obj) {
+            var adds = xs.Array.union(slice(arguments, 1));
+            xs.each(adds, function (source) {
+                source !== null && typeof source == 'object' && _each(source, function (value, name) {
+                    obj[name] = value;
+                });
+            }, this);
+            return obj;
         };
         /**
          * returns clone of list (shallow copied)

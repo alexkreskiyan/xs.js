@@ -34,33 +34,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice);
         /**
-         * iterates over object own properties in reverse order
-         * @param obj
-         * @param iterator
-         * @param scope
-         */
-        var _eachReverse = this.eachReverse = function (obj, iterator, scope) {
-            var idx, keys = _keys(obj), len = keys.length, name;
-            for (idx = len - 1; idx >= 0; idx--) {
-                name = keys[idx];
-                iterator.call(scope, obj[name], name, obj);
-            }
-        };
-        /**
-         * produces a new object with properties, updated by iterator function
-         * @param obj
-         * @param iterator
-         * @param scope
-         * @returns {Object}
-         */
-        this.map = function (obj, iterator, scope) {
-            var result = _clone(obj);
-            _each(obj, function (value, key, object) {
-                result[key] = iterator.call(this, value, key, object);
-            }, scope);
-            return result;
-        };
-        /**
          * reduces a hash of elements, returned by iterator function from left
          * @param obj
          * @param iterator
@@ -331,7 +304,7 @@
          */
         var _extend = this.extend = function (obj) {
             var adds = xs.Array.union(slice(arguments, 1));
-            xs.Array.each(adds, function (source) {
+            xs.each(adds, function (source) {
                 source !== null && typeof source == 'object' && _each(source, function (value, name) {
                     obj[name] = value;
                 });
