@@ -280,16 +280,23 @@
         };
         /**
          * returns last list element, that passes given test function
-         * @param list
-         * @param finder function, returning true if item matches given conditions
-         * @param scope
-         * @returns {*}
+         *
+         * @method findLast
+         *
+         * @param {Array|Object} list list, search is made over
+         * @param {Function} finder function, returning true if item matches given conditions
+         * @param {Object} scope optional scope
+         *
+         * @returns {*} found value, undefined if nothing found
          */
         this.findLast = function (list, finder, scope) {
-            if (xs.isArray(list)) {
-                return xs.Array.findLast(list, finder, scope);
-            } else {
-                return xs.Object.findLast(list, finder, scope);
+            var idx, keys = _keys(list), len = keys.length, name, value;
+            for (idx = len - 1; idx >= 0; idx--) {
+                name = keys[idx];
+                value = list[name];
+                if (finder.call(scope, value, name, list)) {
+                    return value;
+                }
             }
         };
         /**

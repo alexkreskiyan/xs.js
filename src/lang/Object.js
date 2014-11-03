@@ -34,23 +34,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice);
         /**
-         * returns value of last property, matching given finder function
-         * @param obj
-         * @param finder
-         * @param scope
-         * @returns {*}
-         */
-        this.findLast = function (obj, finder, scope) {
-            var idx, keys = _keys(obj), len = keys.length, name, value;
-            for (idx = len - 1; idx >= 0; idx--) {
-                name = keys[idx];
-                value = obj[name];
-                if (finder.call(scope, value, name, obj)) {
-                    return value;
-                }
-            }
-        };
-        /**
          * returns pick of object, where all properties match given finder function
          * @param obj
          * @param finder

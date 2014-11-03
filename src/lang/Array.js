@@ -35,22 +35,6 @@
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
         /**
-         * returns last element in array, that matches given finder function
-         * @param arr
-         * @param finder
-         * @param scope
-         * @returns {*}
-         */
-        me.findLast = function (arr, finder, scope) {
-            var idx, len = arr.length, item;
-            for (idx = len - 1; idx >= 0; idx--) {
-                item = arr[idx];
-                if (finder.call(scope, item, idx, arr)) {
-                    return item;
-                }
-            }
-        };
-        /**
          * returns array of all elements in given array, that match given finder function
          * @param arr
          * @param finder
