@@ -340,7 +340,7 @@
          */
         me.filter = function (list, where) {
             return _find(list, function (item) {
-                _every(where, function (param, name) {
+                return _every(where, function (param, name) {
                     return item[name] === param;
                 });
             });
@@ -357,7 +357,7 @@
          */
         me.filterLast = function (list, where) {
             return _findLast(list, function (item) {
-                _every(where, function (param, name) {
+                return _every(where, function (param, name) {
                     return item[name] === param;
                 });
             });
@@ -378,7 +378,7 @@
                 _every(where, function (param, name) {
                     return item[name] === param;
                 }) && keys.push(name);
-            }, this);
+            });
             return _pick(list, keys);
         };
         /**
