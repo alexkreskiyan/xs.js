@@ -88,7 +88,7 @@
             setTimeout(fn, 0);
         }
     });
-    xs.Object.extend(xs, {
+    xs.extend(xs, {
         bind: fn.bind,
         prefill: fn.prefill,
         once: fn.once,

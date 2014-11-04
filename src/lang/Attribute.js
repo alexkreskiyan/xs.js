@@ -291,7 +291,7 @@
             }
         };
     });
-    xs.Object.extend(xs, {
+    xs.extend(xs, {
         const: property.const,
         property: property.property,
         method: property.method

@@ -30,6 +30,6 @@
 
     var number = xs.Number = new (function () {
     });
-    xs.Object.extend(xs, {
+    xs.extend(xs, {
     });
 })(window, 'xs');

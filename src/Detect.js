@@ -110,7 +110,6 @@
             return typeof value == 'string';
         };
 
-
         /**
          * Return true if the passed arguments is JavaScript String which contain number
          * or JavaScript Number, false otherwise.
@@ -177,19 +176,17 @@
             }
         };
     });
-    xs.Object.extend(xs, {
-        isArray: detect.isArray,
-        isObject: detect.isObject,
-        isIterable: detect.isIterable,
-        isPrimitive: detect.isPrimitive,
-        isFunction: detect.isFunction,
-        isDate: detect.isDate,
-        isString: detect.isString,
-        isNumeric: detect.isNumeric,
-        isNumber: detect.isNumber,
-        isNull: detect.isNull,
-        isDefined: detect.isDefined,
-        isBoolean: detect.isBoolean,
-        isEmpty: detect.isEmpty
-    });
+    xs.isArray = detect.isArray;
+    xs.isObject = detect.isObject;
+    xs.isIterable = detect.isIterable;
+    xs.isPrimitive = detect.isPrimitive;
+    xs.isFunction = detect.isFunction;
+    xs.isDate = detect.isDate;
+    xs.isString = detect.isString;
+    xs.isNumeric = detect.isNumeric;
+    xs.isNumber = detect.isNumber;
+    xs.isNull = detect.isNull;
+    xs.isDefined = detect.isDefined;
+    xs.isBoolean = detect.isBoolean;
+    xs.isEmpty = detect.isEmpty;
 })(window, 'xs');

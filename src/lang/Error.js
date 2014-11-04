@@ -70,7 +70,7 @@
             raise(message, TypeError);
         };
     });
-    xs.Object.extend(xs, {
+    xs.extend(xs, {
         raiseError: error.raise,
         raiseReferenceError: error.raiseReference,
         raiseSyntaxError: error.raiseSyntax,

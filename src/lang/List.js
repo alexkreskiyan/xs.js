@@ -33,7 +33,7 @@
     var set = new (function () {
         var me = this;
         // Create quick reference variables for speed access to core prototypes.
-        var slice = Function.prototype.call.bind(Array.prototype.slice), concat = Function.prototype.apply.bind(Array.prototype.concat);
+        var slice = Function.prototype.call.bind(Array.prototype.slice), concatenate = Function.prototype.apply.bind(Array.prototype.concat);
         /**
          * returns all list keys
          *
@@ -75,7 +75,7 @@
          *
          * @returns {boolean} whether list has key
          */
-        me.hasKey = function (list, key) {
+        var _hasKey = me.hasKey = function (list, key) {
             if (xs.isArray(list)) {
                 return key < list.length;
             } else {
@@ -92,7 +92,7 @@
          *
          * @returns {boolean} whether list has value
          */
-        me.has = function (list, value) {
+        var _has = me.has = function (list, value) {
             return _find(list, function (val) {
                 return val === value;
             }) !== undefined;
@@ -107,7 +107,7 @@
          *
          * @returns {string|number|undefined} found key, or undefined if nothing found
          */
-        me.keyOf = function (list, value) {
+        var _keyOf = me.keyOf = function (list, value) {
             var idx, keys = _keys(list), len = keys.length, name;
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
@@ -127,7 +127,7 @@
          *
          * @returns {string|number|undefined} found key, or undefined if nothing found
          */
-        me.lastKeyOf = function (list, value) {
+        var _lastKeyOf = me.lastKeyOf = function (list, value) {
             var idx, keys = _keys(list), len = keys.length, name;
             for (idx = len - 1; idx >= 0; idx--) {
                 name = keys[idx];
@@ -146,7 +146,7 @@
          *
          * @returns {number} size of list
          */
-        me.size = function (list) {
+        var _size = me.size = function (list) {
             if (xs.isArray(list)) {
                 return list.length;
             } else {
@@ -252,7 +252,7 @@
                 result = list[key];
                 list = _omit(list, key);
             }
-            _eachReverse(obj, function (value, key, object) {
+            _eachReverse(list, function (value, key, object) {
                 result = iterator.call(this, result, value, key, object);
             }, scope);
             return result;
@@ -289,7 +289,7 @@
          *
          * @returns {*} found value, undefined if nothing found
          */
-        me.findLast = function (list, finder, scope) {
+        var _findLast = me.findLast = function (list, finder, scope) {
             var idx, keys = _keys(list), len = keys.length, name, value;
             for (idx = len - 1; idx >= 0; idx--) {
                 name = keys[idx];
@@ -310,7 +310,7 @@
          *
          * @returns {Array|Object} found values
          */
-        me.findAll = function (list, finder, scope) {
+        var _findAll = me.findAll = function (list, finder, scope) {
             var keys = [];
             _each(list, function (value, name, obj) {
                 finder.call(this, value, name, obj) && keys.push(name);
@@ -328,17 +328,11 @@
          * @returns {*} first object, that suites clause, or undefined, if nothing suites
          */
         me.filter = function (list, where) {
-            var idx, keys = _keys(list), len = keys.length, name, value, ok;
-            for (idx = 0; idx < len; idx++) {
-                name = keys[idx];
-                value = list[name];
-                ok = _every(where, function (param, name) {
-                    return value[name] === param;
+            return _find(list, function (item) {
+                _every(where, function (param, name) {
+                    return item[name] === param;
                 });
-                if (ok) {
-                    return value;
-                }
-            }
+            });
         };
         /**
          * returns last list item, that suites where clause
@@ -351,17 +345,11 @@
          * @returns {*} first object, that suites clause, or undefined, if nothing suites
          */
         me.filterLast = function (list, where) {
-            var idx, keys = _keys(list), len = keys.length, name, value, ok;
-            for (idx = len - 1; idx >= 0; idx--) {
-                name = keys[idx];
-                value = list[name];
-                ok = _every(where, function (param, name) {
-                    return value[name] === param;
+            return _findLast(list, function (item) {
+                _every(where, function (param, name) {
+                    return item[name] === param;
                 });
-                if (ok) {
-                    return value;
-                }
-            }
+            });
         };
         /**
          * returns all list items, that suite where clause
@@ -375,9 +363,9 @@
          */
         me.filterAll = function (list, where) {
             var keys = [];
-            _each(list, function (value, name) {
+            _each(list, function (item, name) {
                 _every(where, function (param, name) {
-                    return value[name] === param;
+                    return item[name] === param;
                 }) && keys.push(name);
             }, this);
             return _pick(list, keys);
@@ -436,7 +424,7 @@
          * @param {Object} scope optional scope
          * @returns {boolean} whether no one of elements pass tester function
          */
-        me.none = function (list, tester, scope) {
+        var _none = me.none = function (list, tester, scope) {
             var idx, keys = _keys(list), len = keys.length, name;
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
@@ -448,222 +436,349 @@
         };
         /**
          * returns first item of list
-         * @param list
-         * @returns {*}
+         *
+         * @method first
+         *
+         * @param {Array|List} list
+         *
+         * @returns {*} first element, undefined if list is empty
          */
-        this.first = function (list) {
-            if (xs.isArray(list)) {
-                return xs.Array.first(list);
-            } else {
-                return xs.Object.first(list);
-            }
+        me.first = function (list) {
+            var key = _keys(list).shift();
+            return list[key];
         };
         /**
          * returns last item of list
-         * @param list
-         * @returns {*}
+         *
+         * @method last
+         *
+         * @param {Array|List} list
+         *
+         * @returns {*} last element, undefined if list is empty
          */
-        this.last = function (list) {
-            if (xs.isArray(list)) {
-                return xs.Array.last(list);
-            } else {
-                return xs.Object.last(list);
-            }
+        me.last = function (list) {
+            var key = _keys(list).pop();
+            return list[key];
         };
         /**
          * shifts and returns first item from list
-         * @param list
-         * @returns {*}
+         *
+         * @method shift
+         *
+         * @param {Array|List} list
+         *
+         * @returns {*} First element of list
          */
-        this.shift = function (list) {
-            if (xs.isArray(list)) {
-                return list.shift();
-            } else {
-                return xs.Object.shift(list);
-            }
+        me.shift = function (list) {
+            var key = _keys(list).shift();
+            var value = list[key];
+            delete list[key];
+            return value;
         };
         /**
          * pops and returns last item from list
-         * @param list
-         * @param value
-         * @returns {*}
+         *
+         * @method pop
+         *
+         * @param {Array|List} list
+         *
+         * @returns {*} Last element of list
          */
-        this.pop = function (list, value) {
-            if (xs.isArray(list)) {
-                return list.pop();
+        var _pop = me.pop = function (list) {
+            var key = _keys(list).pop();
+            var value = list[key];
+            delete list[key];
+            return value;
+        };
+        //noinspection ReservedWordAsName
+        /**
+         * Deletes first item from list, that matches elem as key or as value
+         *
+         * @method delete
+         *
+         * @param {Array|Object} list list, element is deleted from
+         * @param {*} element key or element
+         *
+         * @returns {boolean} whether something was removed
+         */
+        var _delete = me.delete = function (list, element) {
+            if (_hasKey(list, element)) {
+                xs.isArray(list) ? list.splice(element, 1) : delete list[element];
+                return true;
             } else {
-                return xs.Object.pop(list, value);
+                var key = _keyOf(list, element);
+                if (key !== undefined) {
+                    xs.isArray(list) ? list.splice(key, 1) : delete list[key];
+                    return true;
+                }
             }
+            return false;
         };
         /**
-         * removes first item from list, that matches elem as key or as value
-         * @param list
-         * @param elem
+         * Deletes last item from list, that matches elem as key or as value
+         *
+         * @method deleteLast
+         *
+         * @param {Array|Object} list list, element is deleted from
+         * @param {*} element key or element
+         *
+         * @returns {boolean} whether something was removed
          */
-        this.remove = function (list, elem) {
-            if (xs.isArray(list)) {
-                return xs.Array.remove(list, elem);
+        me.deleteLast = function (list, element) {
+            if (_hasKey(list, element)) {
+                xs.isArray(list) ? list.splice(element, 1) : delete list[element];
+                return true;
             } else {
-                return xs.Object.remove(list, elem);
+                var key = _lastKeyOf(list, element);
+                if (key !== undefined) {
+                    xs.isArray(list) ? list.splice(key, 1) : delete list[key];
+                    return true;
+                }
             }
+            return false;
         };
         /**
-         * removes last item from list, that matches elem as key or as value
-         * @param list
-         * @param elem
+         * Deletes all elements from list, passed as array/plain arguments
+         *
+         * @method deleteAll
+         *
+         * @param {Array|Object} list list, elements are deleted from
+         *
+         * @returns {boolean} whether something was removed
          */
-        this.removeLast = function (list, elem) {
-            if (xs.isArray(list)) {
-                return xs.Array.removeLast(list, elem);
-            } else {
-                return xs.Object.removeLast(list, elem);
-            }
-        };
-        /**
-         * removes all items from list, passed as array/plain arguments
-         * @param list
-         */
-        this.removeAll = function (list) {
-            if (xs.isArray(list)) {
-                return xs.Array.removeAll.apply(xs.Array, arguments);
-            } else {
-                return xs.Object.removeAll.apply(xs.Object, arguments);
-            }
-        };
-        /**
-         * returns clone of list (shallow copied)
-         * @param list
-         * @returns {Array|Object}
-         */
-        this.clone = function (list) {
-            if (xs.isArray(list)) {
-                return xs.Array.clone(list);
-            } else {
-                return xs.Object.clone(list);
-            }
-        };
-        /**
-         * copies all properties from objects/arrays, passed as arguments to given obj
-         * @param obj
-         * @returns {*}
-         */
-        var _extend = this.extend = function (obj) {
-            var adds = xs.Array.union(slice(arguments, 1));
-            xs.each(adds, function (source) {
-                source !== null && typeof source == 'object' && _each(source, function (value, name) {
-                    obj[name] = value;
+        var _deleteAll = me.deleteAll = function (list) {
+            var elements = _union(slice(arguments, 1));
+            var deleted = false;
+            //if elements specified - delete them
+            if (elements.length) {
+                _each(elements, function (element) {
+                    _delete(list, element) && (deleted = true);
                 });
-            }, this);
-            return obj;
-        };
-        /**
-         * returns clone of list (shallow copied)
-         * @param list
-         * @returns {Array|Object}
-         */
-        this.compact = function (list) {
+                return deleted;
+            }
+            var size = _size(list);
+            deleted = size > 0;
             if (xs.isArray(list)) {
-                return xs.Array.compact(list);
-            } else {
-                return xs.Object.compact(list);
+                list.splice(0, size);
+                return deleted;
             }
-        };
-        this.shuffle = function (list) {
-
+            var idx, keys = _keys(list), len = keys.length, name;
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                delete list[name];
+            }
+            return deleted;
         };
         /**
-         * returns union of lists, passed as arguments, or array of lists as single argument
-         * @returns {Array|Object}
+         * Returns shallow copy of list
+         *
+         * @method clone
+         *
+         * @param {Array|Object} list copied list
+         *
+         * @returns {Array|Object} list shallow copy
          */
-        this.union = function () {
-            if (!arguments.length) {
-                return {};
-            }
-            var merge = xs.Array.union(arguments.length == 1 ? slice(arguments).pop() : slice(arguments));
-            var byObject = merge.every(function (arg) {
-                return xs.isIterable(arg);
+        var _clone = me.clone = function (list) {
+            return xs.isArray(list) ? slice(list) : _extend({}, list);
+        };
+        /**
+         * Copies all properties from objects/arrays, passed as arguments to given obj
+         *
+         * @method extend
+         *
+         * @param {Object} object extended object
+         */
+        var _extend = me.extend = function (object) {
+            var adds = _union(slice(arguments, 1));
+            _each(adds, function (value, name) {
+                object[name] = value;
             });
-            if (byObject) {
-                return xs.Object.union.apply(xs.Object, arguments);
-            } else {
-                return xs.Array.union.apply(xs.Array, arguments);
+        };
+        /**
+         * Returns copy of given list, filtered not to have false-like values
+         *
+         * @method compact
+         *
+         * @param {Array|Object} list compacted list
+         *
+         * @returns {Array|Object}
+         */
+        me.compact = function (list) {
+            return _findAll(list, function (value) {
+                return value;
+            });
+        };
+        /**
+         * Shuffles list elements
+         *
+         * @method shuffle
+         *
+         * @param {Array|Object} list shuffled list
+         */
+        var _shuffle = me.shuffle = function (list) {
+            if (xs.isArray(list)) {
+                list.sort(function () {
+                    return Math.random() - 0.5;
+                });
+                return;
+            }
+            var idx, keys = _keys(list), len = keys.length, name, clone = _clone(list);
+            _shuffle(keys);
+            _deleteAll(list);
+            for (idx = 0; idx < len; idx++) {
+                name = keys[idx];
+                list[name] = clone[name];
             }
         };
         /**
-         * returns intersection of given lists (although intersection elements are unique)
-         * @returns {Array|Object}
+         * Returns union of lists, passed as arguments
+         *
+         * @method union
+         *
+         * @returns {Array|Object} lists union
          */
-        this.intersection = function (list) {
-            if (!arguments.length) {
-                return {};
+        var _union = me.union = function () {
+            var merge = concatenate([], slice(arguments));
+            var byObject = _every(merge, function (arg) {
+                return xs.isObject(arg);
+            });
+            if (!byObject) {
+                return merge;
             }
-            if (xs.isArray(arguments[0])) {
-                return xs.Array.intersection.apply(xs.Array, arguments);
+            var union = {}, key;
+            _each(merge, function (item) {
+                _each(item, function (value, key) {
+                    _hasKey(union, key) || (union[key] = value);
+                });
+            });
+            return union;
+        };
+        /**
+         * Returns intersection of given lists (although intersection elements are unique)
+         *
+         * @method intersection
+         *
+         * @returns {Array|Object} lists intersection
+         */
+        me.intersection = function () {
+            var others = slice(arguments), merge = concatenate([], others);
+            var byObject = _every(merge, function (arg) {
+                return xs.isObject(arg);
+            });
+            var all = _unique(_union(others)), //get all items list
+                intersect;
+            if (byObject) {
+                intersect = []; //define intersection
+                //iterate over each element (they are unique)
+                _each(all, function (item) {
+                    //if each array has this value, it belongs to intersection
+                    _every(merge, function (arr) {
+                        return _has(arr, item);
+                    }) && intersect.push(item);
+                });
             } else {
-                return xs.Object.intersection.apply(xs.Object, arguments);
+                intersect = {};
+                //iterate over each element (they are unique)
+                _each(all, function (item) {
+                    //if each array has this value, it belongs to intersection
+                    _every(merge, function (arr) {
+                        return _has(arr, item);
+                    }) && (intersect[idx] = item);
+                });
             }
+            return intersect;
         };
         /**
          * Take the difference between one list and a number of other lists.
          * Only the elements present in just the first array will remain.
-         * @param list
+         *
+         * @method difference
+         *
+         * @param {Array|Object} list differed list
          * @returns {Array|Object}
          */
-        this.difference = function (list) {
-            if (xs.isArray(list)) {
-                return xs.Array.difference.apply(xs.Array, arguments);
-            } else {
-                return xs.Object.difference.apply(xs.Object, arguments);
+        me.difference = function (list) {
+            var others = slice(arguments, 1); //get objects list
+            if (!others.length) {
+                return _clone(list);
             }
+            //iterate over each element in items (they are unique)
+            return _findAll(list, function (item) {
+                //check whether all other objects have this value
+                return _none(others, function (other) {
+                    return _has(other, item);
+                });
+            });
         };
         /**
-         * returns list, filled by unique items of given list
-         * @param list
-         * @returns {Array|Object}
+         * Returns list, filled by unique items of given list
+         *
+         * @method unique
+         *
+         * @param {Array|Object} list given list
+         *
+         * @returns {Array|Object} copy with unique values
          */
-        this.unique = function (list) {
-            if (xs.isArray(list)) {
-                return xs.Array.unique(list);
-            } else {
-                return xs.Object.unique(list);
-            }
+        var _unique = me.unique = function (list) {
+            var unique = xs.isArray(list) ? [] : {};
+            _each(list, function (value, name) {
+                _has(unique, value) || (unique[name] = value);
+            });
+            return unique;
         };
         /**
-         * returns copy of list with only white-listed keys, passed in 2+ arguments
-         * @param list
-         * @returns {Array|Object}
+         * Returns copy of list with only white-listed keys, passed in 2+ arguments
+         *
+         * @method pick
+         *
+         * @param {Array|Object} list source list
+         *
+         * @returns {Array|Object} picked list
          */
-        this.pick = function (list) {
-            if (xs.isArray(list)) {
-                return xs.Array.pick.apply(xs.Array, arguments);
-            } else {
-                return xs.Object.pick.apply(xs.Object, arguments);
-            }
+        var _pick = me.pick = function (list) {
+            var copy = xs.isArray(list) ? [] : {}, keys = _union(slice(arguments, 1));
+            _each(keys, function (key) {
+                key in list && (copy[key] = list[key]);
+            });
+            return copy;
         };
         /**
-         * returns copy of list without blacklisted keys, passed in 2+ arguments
-         * @param list
+         * Returns copy of list without blacklisted keys, passed in 2+ arguments
+         *
+         * @method omit
+         *
+         * @param {Array|Object} list source list
          * @returns {Array|Object}
          */
-        this.omit = function (list) {
-            if (xs.isArray(list)) {
-                return xs.Array.omit.apply(xs.Array, arguments);
-            } else {
-                return xs.Object.omit.apply(xs.Object, arguments);
-            }
+        var _omit = me.omit = function (list) {
+            var copy = xs.isArray(list) ? [] : {}, keys = _union(slice(arguments, 1));
+            _each(list, function (value, name) {
+                _has(keys, name) || (copy[name] = value);
+            });
+            return copy;
         };
         /**
-         * updates list with defaulted values, passed in 2+ arguments
-         * @param list
-         * @returns {Array|Object}
+         * Updates list with defaulted values, passed in 2+ arguments
+         *
+         * @method defaults
+         *
+         * @param {Array|Object} list operated list
          */
-        this.defaults = function (list) {
+        me.defaults = function (list) {
+            var defaults = _union(slice(arguments, 1));
             if (xs.isArray(list)) {
-                return xs.Array.defaults.apply(xs.Array, arguments);
-            } else {
-                return xs.Object.defaults.apply(xs.Object, arguments);
+                var len = defaults.length, idx;
+                for (idx = list.length; idx < len; idx++) {
+                    list[idx] = defaults[idx];
+                }
+                return;
             }
+            _each(defaults, function (source) {
+                xs.isObject(source) && _each(source, function (value, name) {
+                    _hasKey(list, name) || (list[name] = source[name]);
+                });
+            });
         };
     });
-    xs.Object.extend(xs, set);
+    set.extend(xs, set);
 })(window, 'xs');

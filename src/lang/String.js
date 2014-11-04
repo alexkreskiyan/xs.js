@@ -37,7 +37,7 @@
             return string;
         };
     });
-    xs.Object.extend(xs, {
+    xs.extend(xs, {
         translate: string.translate
     });
 })(window, 'xs');

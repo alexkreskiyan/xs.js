@@ -277,7 +277,7 @@
 
             var tryName = function (name) {
                 var color = knownColors[name];
-                return color ? xs.Object.extend(new Color(), color) : false;
+                return color ? xs.extend(new Color(), color) : false;
             };
 
             /**
