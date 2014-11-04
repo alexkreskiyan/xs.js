@@ -917,6 +917,73 @@ test('some', function () {
     }), false, 'some method runs ok when source is empty');
 });
 
+test('none', function () {
+
+    var x = [
+        {
+            x: 1,
+            y: 2
+        },
+        {
+            x: 2,
+            y: 2
+        },
+        {
+            x: 2,
+            y: 1
+        },
+        {
+            x: 1,
+            y: 1
+        }
+    ];
+
+    strictEqual(xs.none(x, function (value) {
+        return value.hasOwnProperty('y');
+    }), false, 'none method runs ok when result succeeds');
+
+    strictEqual(xs.none(x, function (value) {
+        return value.x === 3;
+    }), true, 'none method runs ok when result fails');
+
+    x = [];
+
+    strictEqual(xs.none(x, function (value) {
+        return !value.hasOwnProperty('y');
+    }), true, 'none method runs ok when x is empty');
+
+    x = {
+        a: {
+            x: 1,
+            y: 2
+        },
+        b: {
+            x: 2,
+            y: 2
+        },
+        c: {
+            x: 2,
+            y: 1
+        },
+        d: {
+            x: 1,
+            y: 1
+        }
+    };
+
+    strictEqual(xs.none(x, function (value) {
+        return xs.hasKey(value, 'y');
+    }), false, 'none method runs ok when result succeeds');
+
+    strictEqual(xs.none(x, function (value) {
+        return value.x === 3;
+    }), true, 'none method runs ok when result fails');
+
+    strictEqual(xs.none({}, function (value) {
+        return value.x === 1;
+    }), true, 'none method runs ok when source hash is empty');
+});
+
 test('first', function () {
     var x = [
         {

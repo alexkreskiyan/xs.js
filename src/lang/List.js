@@ -408,14 +408,14 @@
          *
          * @param {Array|Object} list tested list
          * @param {Function} tester tester function
-         * @param {Object} scope optional scope
          * @param {number} count count of items needed to resolve as true
+         * @param {Object} scope optional scope
          *
          * @returns {boolean}
          */
-        me.some = function (list, tester, scope, count) {
+        me.some = function (list, tester, count, scope) {
             var idx, keys = _keys(list), len = keys.length, name, found = 0;
-            count = count || 1;
+            xs.isNumber(count) || (count = 1);
             for (idx = 0; idx < len; idx++) {
                 name = keys[idx];
                 tester.call(scope, list[name], name, list) && found++;
