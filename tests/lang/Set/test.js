@@ -1096,7 +1096,7 @@ test('shift', function () {
     ];
     var shifted = x[0];
     strictEqual(xs.shift(x), shifted, 'shift method runs ok when result succeeds');
-    strictEqual(JSON.stringify(xs.keys(x)), '0,1,2', 'shift method runs ok when result succeeds');
+    strictEqual(JSON.stringify(xs.keys(x)), '[0,1,2]', 'shift method runs ok when result succeeds');
     strictEqual(xs.shift({}), undefined, 'shift method runs ok when result fails');
 
     x = {
@@ -1119,7 +1119,7 @@ test('shift', function () {
     };
     shifted = x.a;
     strictEqual(xs.shift(x), shifted, 'shift method runs ok when result succeeds');
-    strictEqual(JSON.stringify(xs.keys(x)), 'b,c,d', 'shift method runs ok when result succeeds');
+    strictEqual(JSON.stringify(xs.keys(x)), '["b","c","d"]', 'shift method runs ok when result succeeds');
     strictEqual(xs.shift({}), undefined, 'shift method runs ok when result fails');
 });
 
@@ -1144,7 +1144,7 @@ test('pop', function () {
     ];
     var popped = x[x.length - 1];
     strictEqual(xs.pop(x), popped, 'pop method runs ok when result succeeds');
-    strictEqual(JSON.stringify(xs.keys(x)), '0,1,2', 'pop method runs ok when result succeeds');
+    strictEqual(JSON.stringify(xs.keys(x)), '[0,1,2]', 'pop method runs ok when result succeeds');
     strictEqual(xs.pop({}), undefined, 'pop method runs ok when result fails');
 
     x = {
@@ -1167,7 +1167,7 @@ test('pop', function () {
     };
     popped = x.d;
     strictEqual(xs.pop(x), popped, 'pop method runs ok when result succeeds');
-    strictEqual(JSON.stringify(xs.keys(x)), 'a,b,c', 'pop method runs ok when result succeeds');
+    strictEqual(JSON.stringify(xs.keys(x)), '["a","b","c"]', 'pop method runs ok when result succeeds');
     strictEqual(xs.pop({}), undefined, 'pop method runs ok when result fails');
 });
 
