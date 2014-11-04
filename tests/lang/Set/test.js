@@ -1171,7 +1171,7 @@ test('pop', function () {
     strictEqual(xs.pop({}), undefined, 'pop method runs ok when result fails');
 });
 
-test('remove', function () {
+test('delete', function () {
     var x = [
         {
             x: 1,
@@ -1193,27 +1193,27 @@ test('remove', function () {
         1
     ];
 
-    xs.remove(x, x[0]);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1},1,1]', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.delete(x, x[0]), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1},1,1]', 'delete method runs ok when result succeeds');
 
-    xs.remove(x, 0);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":1},{"x":1,"y":1},1,1]', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.delete(x, 0), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":1},{"x":1,"y":1},1,1]', 'delete method runs ok when result succeeds');
 
-    xs.remove(x, 1);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":1},1,1]', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.delete(x, 1), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":1},1,1]', 'delete method runs ok when result succeeds');
 
-    xs.remove(x, x[1]);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":1},1]', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.delete(x, x[1]), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":1},1]', 'delete method runs ok when result succeeds');
 
-    xs.remove(x, 1);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":1}]', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.delete(x, 1), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":1}]', 'delete method runs ok when result succeeds');
 
-    xs.remove(x, 1);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":1}]', 'remove method runs ok when result succeeds');
+    strictEqual(false, xs.delete(x, 1), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":1}]', 'delete method runs ok when result succeeds');
 
     x = [];
-    xs.remove(x, 1);
-    strictEqual(JSON.stringify(x), '[]', 'remove method runs ok when result succeeds');
+    strictEqual(false, xs.delete(x, 1), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[]', 'delete method runs ok when result succeeds');
 
     x = {
         a: {
@@ -1235,33 +1235,33 @@ test('remove', function () {
         e: 1,
         f: 1
     };
-    xs.remove(x, x.a);
-    strictEqual(JSON.stringify(x), '{"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.delete(x, x.a), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'delete method runs ok when result succeeds');
 
-    xs.remove(x, 'a');
-    strictEqual(JSON.stringify(x), '{"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'remove method runs ok when result succeeds');
+    strictEqual(false, xs.delete(x, 'a'), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'delete method runs ok when result succeeds');
 
-    xs.remove(x, 'b');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.delete(x, 'b'), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'delete method runs ok when result succeeds');
 
-    xs.remove(x, 'b');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'remove method runs ok when result succeeds');
+    strictEqual(false, xs.delete(x, 'b'), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'delete method runs ok when result succeeds');
 
-    xs.remove(x, 1);
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"f":1}', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.delete(x, 1), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"f":1}', 'delete method runs ok when result succeeds');
 
-    xs.remove(x, 1);
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1}}', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.delete(x, 1), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1}}', 'delete method runs ok when result succeeds');
 
-    xs.remove(x, 1);
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1}}', 'remove method runs ok when result succeeds');
+    strictEqual(false, xs.delete(x, 1), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1}}', 'delete method runs ok when result succeeds');
 
     x = {};
-    xs.remove(x, 1);
-    strictEqual(JSON.stringify(x), '{}', 'remove method runs ok with empty source');
+    strictEqual(false, xs.delete(x, 1), 'delete method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{}', 'delete method runs ok with empty source');
 });
 
-test('removeLast', function () {
+test('deleteLast', function () {
     var x = [
         {
             x: 1,
@@ -1283,27 +1283,27 @@ test('removeLast', function () {
         9
     ];
 
-    xs.removeLast(x, x[0]);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},{"x":2,"y":1},9,{"x":1,"y":1},9]', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.deleteLast(x, x[0]), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},{"x":2,"y":1},9,{"x":1,"y":1},9]', 'deleteLast method runs ok when result succeeds');
 
-    xs.removeLast(x, 9);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},{"x":2,"y":1},9,{"x":1,"y":1}]', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.deleteLast(x, 9), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},{"x":2,"y":1},9,{"x":1,"y":1}]', 'deleteLast method runs ok when result succeeds');
 
-    xs.removeLast(x, 1);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},9,{"x":1,"y":1}]', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},9,{"x":1,"y":1}]', 'deleteLast method runs ok when result succeeds');
 
-    xs.removeLast(x, x[1]);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},{"x":1,"y":1}]', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.deleteLast(x, x[1]), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},{"x":1,"y":1}]', 'deleteLast method runs ok when result succeeds');
 
-    xs.removeLast(x, 1);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2}]', 'remove method runs ok when result succeeds');
+    strictEqual(true, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":2}]', 'deleteLast method runs ok when result succeeds');
 
-    xs.removeLast(x, 1);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2}]', 'remove method runs ok when result succeeds');
+    strictEqual(false, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":2}]', 'deleteLast method runs ok when result succeeds');
 
     x = [];
-    xs.removeLast(x, 1);
-    strictEqual(JSON.stringify(x), '[]', 'remove method runs ok when result succeeds');
+    strictEqual(false, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[]', 'deleteLast method runs ok when result succeeds');
 
     x = {
         a: {
@@ -1326,33 +1326,33 @@ test('removeLast', function () {
         f: 1
     };
 
-    xs.removeLast(x, x.a);
-    strictEqual(JSON.stringify(x), '{"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'removeLast method runs ok when result succeeds');
+    strictEqual(true, xs.deleteLast(x, x.a), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'deleteLast method runs ok when result succeeds');
 
-    xs.removeLast(x, 'a');
-    strictEqual(JSON.stringify(x), '{"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'removeLast method runs ok when result succeeds');
+    strictEqual(false, xs.deleteLast(x, 'a'), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'deleteLast method runs ok when result succeeds');
 
-    xs.removeLast(x, 'b');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'removeLast method runs ok when result succeeds');
+    strictEqual(true, xs.deleteLast(x, 'b'), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'deleteLast method runs ok when result succeeds');
 
-    xs.removeLast(x, 'b');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'removeLast method runs ok when result succeeds');
+    strictEqual(false, xs.deleteLast(x, 'b'), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'deleteLast method runs ok when result succeeds');
 
-    xs.removeLast(x, 1);
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1}', 'removeLast method runs ok when result succeeds');
+    strictEqual(true, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1}', 'deleteLast method runs ok when result succeeds');
 
-    xs.removeLast(x, 1);
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1}}', 'removeLast method runs ok when result succeeds');
+    strictEqual(true, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1}}', 'deleteLast method runs ok when result succeeds');
 
-    xs.removeLast(x, 1);
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1}}', 'removeLast method runs ok when result succeeds');
+    strictEqual(false, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1}}', 'deleteLast method runs ok when result succeeds');
 
     x = {};
-    xs.removeLast(x, 1);
-    strictEqual(JSON.stringify(x), '{}', 'remove method runs ok with empty source');
+    strictEqual(false, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{}', 'deleteLast method runs ok with empty source');
 });
 
-test('removeAll', function () {
+test('deleteAll', function () {
     var x = [
         {
             x: 1,
@@ -1374,22 +1374,21 @@ test('removeAll', function () {
         9
     ];
 
-    xs.removeAll(x, x[1], [
+    strictEqual(true, xs.deleteAll(x, x[1], [
         x[0],
         x[1]
     ], [
         9,
         9
-    ], 1);
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":1}]', 'removeAll method runs ok when result succeeds');
+    ], 1), 'deleteAll method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[{"x":2,"y":1}]', 'deleteAll method runs ok when result succeeds');
 
-    xs.removeAll(x, 0);
-    strictEqual(JSON.stringify(x), '[]', 'removeAll method runs ok when result succeeds');
+    strictEqual(true, xs.deleteAll(x, 0), 'deleteAll method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[]', 'deleteAll method runs ok when result succeeds');
 
     x = [];
-
-    xs.removeAll(x, 1);
-    strictEqual(JSON.stringify(x), '[]', 'removeAll method runs ok when result succeeds');
+    strictEqual(false, xs.deleteAll(x, 1), 'deleteAll method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '[]', 'deleteAll method runs ok when result succeeds');
 
     x = {
         a: {
@@ -1411,21 +1410,23 @@ test('removeAll', function () {
         e: 1,
         f: 1
     };
-    xs.removeAll(x, x.a, x.b, [
+    strictEqual(false, xs.deleteAll(x, 1), 'deleteAll method returns ok when result succeeds');
+
+    strictEqual(false, xs.deleteAll(x, x.a, x.b, [
         'c',
         'd'
     ], [
         1,
         1
-    ]);
-    strictEqual(JSON.stringify(x), '{}', 'removeAll method runs ok when result succeeds');
+    ]), 'deleteAll method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{}', 'deleteAll method runs ok when result succeeds');
 
-    xs.removeAll(x, 1);
-    strictEqual(JSON.stringify(x), '{}', 'removeAll method runs ok when result succeeds');
+    strictEqual(false, xs.deleteAll(x, 1), 'deleteAll method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{}', 'deleteAll method runs ok when result succeeds');
 
     x = {};
-    xs.removeAll(x, 1);
-    strictEqual(JSON.stringify(x), '{}', 'removeAll method runs ok with empty source');
+    strictEqual(false, xs.deleteAll(x, 1), 'deleteAll method returns ok when result succeeds');
+    strictEqual(JSON.stringify(x), '{}', 'deleteAll method runs ok with empty source');
 });
 
 test('compact', function () {

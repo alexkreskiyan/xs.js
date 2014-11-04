@@ -658,15 +658,26 @@
             var byObject = _every(merge, function (arg) {
                 return xs.isObject(arg);
             });
-            if (!byObject) {
-                return merge;
-            }
-            var union = {}, key;
-            _each(merge, function (item) {
-                _each(item, function (value, key) {
-                    _hasKey(union, key) || (union[key] = value);
+            var union;
+            if (byObject) {
+                union = {};
+                _each(merge, function (item) {
+                    _each(item, function (value, key) {
+                        _hasKey(union, key) || (union[key] = value);
+                    });
                 });
-            });
+            } else {
+                union = [];
+                _each(merge, function (item) {
+                    if (xs.isArray(item)) {
+                        _each(item, function (value) {
+                            union.push(value);
+                        });
+                    } else {
+                        union.push(item);
+                    }
+                });
+            }
             return union;
         };
         /**
@@ -766,7 +777,7 @@
          * @param {Array|Object} list source list
          * @returns {Array|Object}
          */
-        var _omit = me.omit = function (list) {
+        me.omit = function (list) {
             var copy = xs.isArray(list) ? [] : {}, keys = _union(slice(arguments, 1));
             _each(list, function (value, name) {
                 _has(keys, name) || (copy[name] = value);
