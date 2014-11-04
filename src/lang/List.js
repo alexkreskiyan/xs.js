@@ -315,11 +315,18 @@
          * @returns {Array|Object} found values
          */
         var _findAll = me.findAll = function (list, finder, scope) {
-            var keys = [];
-            _each(list, function (value, name, obj) {
-                finder.call(this, value, name, obj) && keys.push(name);
-            }, scope);
-            return _pick(list, keys);
+            var isArray = xs.isArray(list);
+            var copy = isArray ? [] : {};
+            if (isArray) {
+                _each(list, function (value, name, obj) {
+                    finder.call(this, value, name, obj) && copy.push(value);
+                }, scope);
+            } else {
+                _each(list, function (value, name, obj) {
+                    finder.call(this, value, name, obj) && (copy[name] = value);
+                }, scope);
+            }
+            return copy;
         };
         /**
          * returns first list item, that suites where clause
