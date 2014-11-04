@@ -226,15 +226,13 @@
          * @return {*} Reducing result
          */
         me.reduce = function (list, iterator, memo, scope) {
-            var result;
+            var result, copy = _clone(list);
             if (arguments.length > 2) {
                 result = memo;
             } else {
-                var key = _keys(list).shift();
-                result = list[key];
-                list = _omit(list, key);
+                result = _shift(copy);
             }
-            _each(list, function (value, key, object) {
+            _each(copy, function (value, key, object) {
                 result = iterator.call(this, result, value, key, object);
             }, scope);
             return result;
@@ -252,15 +250,13 @@
          * @return {*} Reducing result
          */
         me.reduceRight = function (list, iterator, memo, scope) {
-            var result;
+            var result, copy = _clone(list);
             if (arguments.length > 2) {
                 result = memo;
             } else {
-                var key = _keys(list).pop();
-                result = list[key];
-                list = _omit(list, key);
+                result = _pop(copy);
             }
-            _eachReverse(list, function (value, key, object) {
+            _eachReverse(copy, function (value, key, object) {
                 result = iterator.call(this, result, value, key, object);
             }, scope);
             return result;
@@ -452,7 +448,7 @@
          * @returns {*} first element, undefined if list is empty
          */
         me.first = function (list) {
-            var key = _keys(list).shift();
+            var key = _shift(_keys(list));
             return list[key];
         };
         /**
@@ -465,7 +461,7 @@
          * @returns {*} last element, undefined if list is empty
          */
         me.last = function (list) {
-            var key = _keys(list).pop();
+            var key = _pop(_keys(list));
             return list[key];
         };
         /**
@@ -477,10 +473,10 @@
          *
          * @returns {*} First element of list
          */
-        me.shift = function (list) {
+        var _shift = me.shift = function (list) {
             var key = _keys(list).shift();
             var value = list[key];
-            delete list[key];
+            xs.isArray(list) ? list.splice(0, 1) : delete list[key];
             return value;
         };
         /**
@@ -495,7 +491,7 @@
         var _pop = me.pop = function (list) {
             var key = _keys(list).pop();
             var value = list[key];
-            delete list[key];
+            xs.isArray(list) ? list.splice(-1, 1) : delete list[key];
             return value;
         };
         //noinspection ReservedWordAsName
@@ -587,7 +583,12 @@
          * @returns {Array|Object} list shallow copy
          */
         var _clone = me.clone = function (list) {
-            return xs.isArray(list) ? slice(list) : _extend({}, list);
+            if (xs.isArray(list)) {
+                return slice(list);
+            }
+            var copy = {};
+            _extend(copy, list);
+            return copy;
         };
         /**
          * Copies all properties from objects/arrays, passed as arguments to given obj
