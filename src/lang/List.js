@@ -44,7 +44,15 @@
          * @returns {Array} list keys
          */
         var _keys = me.keys = function (list) {
-            return Object.keys(list);
+            if (xs.isArray(list)) {
+                var keys = [], length = list.length;
+                for (var i = 0; i < length; i++) {
+                    keys.push(i);
+                }
+                return keys;
+            } else {
+                return Object.keys(list);
+            }
         };
         /**
          * returns all list values

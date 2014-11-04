@@ -20,13 +20,11 @@ module.exports = function (config) {
             //            'src/**/*.js',
             //            'tests/**/*.js'
             'src/xs.js',
+            'src/Detect.js',
+            'src/lang/List.js',
             'src/lang/Object.js',
             'src/lang/Array.js',
-            'src/lang/Set.js',
-            'src/Detect.js',
-            'src/lang/Attribute.js',
-            //            'resources/test/qunit-1.12.0.js',
-            'tests/lang/Attribute/test.js'
+            'tests/lang/List/test.js'
         ],
 
         // list of files to exclude

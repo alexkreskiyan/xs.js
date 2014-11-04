@@ -8,40 +8,52 @@ function speed(fn, n) {
     console.log('median: ', duration / n, 'ms per operation');
     console.log('mark: about', n / duration, 'operation per ms');
 }
-module('xs.lang.Set');
+module('xs.lang.List');
 
 test('keys', function () {
-    var x = [1, 3];
-    strictEqual(xs.keys(x).toString(), '0,1', 'keys method ok');
+    var x;
+    x = [
+        1,
+        3
+    ];
+    strictEqual(JSON.stringify(xs.keys(x)), '[0,1]', 'keys method ok');
     x = [];
-    strictEqual(xs.keys(x).toString(), '', 'keys method ok');
+    strictEqual(JSON.stringify(xs.keys(x)), '[]', 'keys method ok');
 
-    var x = {};
-    strictEqual(xs.keys(x).toString(), '', 'keys method ok');
-    var x = {
+    x = {};
+    strictEqual(JSON.stringify(xs.keys(x)), '[]', 'keys method ok');
+    x = {
         x: 1,
         b: 2
     };
-    strictEqual(xs.keys(x).toString(), 'x,b', 'keys method ok');
+    strictEqual(JSON.stringify(xs.keys(x)), '["x","b"]', 'keys method ok');
 });
 
 test('values', function () {
-    var x = [1, 3];
-    strictEqual(xs.values(x).toString(), '1,3', 'values method ok');
+    var x;
+    x = [
+        1,
+        3
+    ];
+    strictEqual(JSON.stringify(xs.values(x)), '[1,3]', 'values method ok');
     x = [];
-    strictEqual(xs.values(x).toString(), '', 'values method ok');
+    strictEqual(JSON.stringify(xs.values(x)), '[]', 'values method ok');
 
-    var x = {};
-    strictEqual(xs.values(x).toString(), '', 'values method ok');
-    var x = {
+    x = {};
+    strictEqual(JSON.stringify(xs.values(x)), '[]', 'values method ok');
+    x = {
         x: 1,
-        b: 2
+        b: '2'
     };
-    strictEqual(xs.values(x).toString(), '1,2', 'values method ok');
+    strictEqual(JSON.stringify(xs.values(x)), '[1,"2"]', 'values method ok');
 });
 
 test('hasKey', function () {
-    var x = [1, 3];
+    var x;
+    x = [
+        1,
+        3
+    ];
     strictEqual(xs.hasKey(x, 0), true, 'hasKey method finds ok');
     strictEqual(xs.hasKey(x, 1), true, 'hasKey method finds ok');
     strictEqual(xs.hasKey(x, 2), false, 'hasKey method doesn\'t find ok');
@@ -51,11 +63,11 @@ test('hasKey', function () {
     strictEqual(xs.hasKey(x, 1), false, 'hasKey method doesn\'t find ok');
     strictEqual(xs.hasKey(x, 2), false, 'hasKey method doesn\'t find ok');
 
-    var x = {};
+    x = {};
     strictEqual(xs.hasKey(x, 'x'), false, 'hasKey method works ok in empty');
     strictEqual(xs.hasKey(x, 'y'), false, 'hasKey method works ok in empty');
 
-    var x = {
+    x = {
         x: 1,
         b: 2
     };
@@ -65,7 +77,10 @@ test('hasKey', function () {
 
 test('has', function () {
     //simple number array
-    var x = [1, 3];
+    var x = [
+        1,
+        3
+    ];
     strictEqual(xs.has(x, 1), true, 'has method finds ok');
     strictEqual(xs.has(x, 'A'), false, 'has method doesn\'t find ok');
     //empty array
@@ -74,8 +89,14 @@ test('has', function () {
     strictEqual(xs.has(x, 'A'), false, 'has method doesn\'t find ok');
     //array of array of integer
     x = [
-        [0, 1],
-        [1, 0]
+        [
+            0,
+            1
+        ],
+        [
+            1,
+            0
+        ]
     ];
     strictEqual(xs.has(x, x[0]), true, 'has method finds ok');
     strictEqual(xs.has(x, 1), false, 'has method doesn\'t find ok');
@@ -94,7 +115,10 @@ test('has', function () {
 
 test('keyOf', function () {
     //simples aray
-    var x = [1, 3];
+    var x = [
+        1,
+        3
+    ];
     strictEqual(xs.keyOf(x, 3), 1, 'keyOf method finds ok');
     strictEqual(xs.keyOf(x, '1'), undefined, 'keyOf method doesn\'t find ok');
     //empty array
@@ -103,11 +127,20 @@ test('keyOf', function () {
     strictEqual(xs.keyOf(x, '0'), undefined, 'keyOf method doesn\'t find ok');
     //array of array
     x = [
-        [0, 1],
-        ['a', 'b']
+        [
+            0,
+            1
+        ],
+        [
+            'a',
+            'b'
+        ]
     ];
     var z = x[0];
-    strictEqual(xs.keyOf(x, [0, 1]), undefined, 'keyOf method doesn\'t find ok');
+    strictEqual(xs.keyOf(x, [
+        0,
+        1
+    ]), undefined, 'keyOf method doesn\'t find ok');
     strictEqual(xs.keyOf(x, z), 0, 'keyOf method finds ok');
     strictEqual(xs.keyOf(x, '0'), undefined, 'keyOf method doesn\'t find ok');
 
@@ -124,7 +157,11 @@ test('keyOf', function () {
 });
 
 test('lastKeyOf', function () {
-    var x = [1, 3, 3];
+    var x = [
+        1,
+        3,
+        3
+    ];
     strictEqual(xs.lastKeyOf(x, 3), 2, 'lastKeyOf method finds ok');
     strictEqual(xs.lastKeyOf(x, '1'), undefined, 'lastKeyOf method doesn\'t find ok');
     x = [];
@@ -144,7 +181,10 @@ test('lastKeyOf', function () {
 });
 
 test('size', function () {
-    var x = [2, 3];
+    var x = [
+        2,
+        3
+    ];
     strictEqual(xs.size(x), 2, 'size method evals non-empty ok');
     strictEqual(xs.size([]), 0, 'size method evals empty ok');
 
@@ -158,7 +198,10 @@ test('size', function () {
 
 test('each', function () {
     //simple array of integer
-    var x = [1, 2];
+    var x = [
+        1,
+        2
+    ];
     var sum = '';
     xs.each(x, function (value) {
         sum += value;
@@ -192,7 +235,10 @@ test('each', function () {
 
 test('eachReverse', function () {
     //array of integer
-    var x = [1, 2];
+    var x = [
+        1,
+        2
+    ];
     var sum = '';
     xs.eachReverse(x, function (value) {
         sum += value;
@@ -231,12 +277,14 @@ test('map', function () {
     });
     strictEqual(xs.values(x).toString(), '', 'map method runs ok');
 
-    var x = [4, 3];
+    var x = [
+        4,
+        3
+    ];
     x = xs.map(x, function (value, name) {
         return value * 2 + name;
     });
     strictEqual(xs.values(x).toString(), '8,7', 'map method runs ok');
-
 
     var x = {};
     x = xs.map(x, function (value, name) {
@@ -260,14 +308,17 @@ test('reduce', function () {
         return memo + 2 * value + name;
     }, -3), -3, 'reduce method runs ok with memo with empty source');
 
-    var x = [6, 5, 4];
+    var x = [
+        6,
+        5,
+        4
+    ];
     strictEqual(xs.reduce(x, function (memo, value, name) {
         return memo + 2 * value + name;
     }), 27, 'reduce method runs ok without memo');
     strictEqual(xs.reduce(x, function (memo, value, name) {
         return memo + 2 * value + name;
     }, -3), 30, 'reduce method runs ok with memo');
-
 
     var x = {};
     strictEqual(xs.reduce(x, function (memo, value, name) {
@@ -296,14 +347,17 @@ test('reduceRight', function () {
         return memo + 2 * value + name;
     }, -3), -3, 'reduceRight method runs ok with memo');
 
-    var x = [6, 5, 4];
+    var x = [
+        6,
+        5,
+        4
+    ];
     strictEqual(xs.reduceRight(x, function (memo, value, name) {
         return memo + 2 * value + name;
     }), 27, 'reduceRight method runs ok without memo');
     strictEqual(xs.reduceRight(x, function (memo, value, name) {
         return memo + 2 * value + name;
     }, -3), 30, 'reduceRight method runs ok with memo');
-
 
     var x = {};
     strictEqual(xs.reduce(x, function (memo, value, name) {
@@ -355,7 +409,6 @@ test('find', function () {
     strictEqual(xs.find(x, function (value) {
         return value.y == 1;
     }), undefined, 'find method runs ok when result not exists');
-
 
     var x = {
         a: {
@@ -419,7 +472,6 @@ test('findLast', function () {
         return value.y == 3;
     }), undefined, 'findLast method runs ok when result doesn\'t exist');
 
-
     var x = {
         a: {
             x: 1,
@@ -474,7 +526,10 @@ test('findAll', function () {
     results = xs.findAll(x, function (value) {
         return value.y == 1;
     });
-    strictEqual(JSON.stringify(results), JSON.stringify([x[2], x[3]]), 'findAll method runs ok when result exists');
+    strictEqual(JSON.stringify(results), JSON.stringify([
+        x[2],
+        x[3]
+    ]), 'findAll method runs ok when result exists');
 
     results = xs.findAll(x, function (value) {
         return value.y == 3;
@@ -486,7 +541,6 @@ test('findAll', function () {
         return value.a = 'trololo';
     });
     strictEqual(JSON.stringify(results), JSON.stringify([]), 'findAll method runs ok when array is empty');
-
 
     var x = {
         a: {
@@ -674,7 +728,6 @@ test('filterAll', function () {
     });
     strictEqual(JSON.stringify(results), JSON.stringify([]), 'filter method runs ok when result doesn\'t exist');
 
-
     var x = {
         a: {
             x: 1,
@@ -704,7 +757,6 @@ test('filterAll', function () {
         x: 3
     });
     strictEqual(results, undefined, 'filterLast method runs ok when result doesn\'t exist');
-
 
     results = xs.filterLast({}, {
         x: 3
@@ -815,7 +867,6 @@ test('some', function () {
         return value.x == 1 && value.y == 1;
     }, 2), false, 'some method runs ok when result succeeds with given count greater then 0');
 
-
     strictEqual(xs.some(x, function (value) {
         return value.x == 1 && value.y == 3;
     }), false, 'some method runs ok when result fails');
@@ -823,7 +874,6 @@ test('some', function () {
     strictEqual(xs.some({}, function (value) {
         return value.x == 1 && value.y == 1;
     }), false, 'some method runs ok when source is empty');
-
 
     var x = {
         a: {
@@ -860,7 +910,6 @@ test('some', function () {
         return value.x == 1 && value.y == 1;
     }, 2), false, 'some method runs ok when result succeeds with given count greater then 0');
 
-
     strictEqual(xs.some(x, function (value) {
         return value.x == 1 && value.y == 3;
     }), false, 'some method runs ok when result fails');
@@ -892,7 +941,6 @@ test('first', function () {
 
     strictEqual(xs.first(x), x[0], 'first method runs ok when result succeeds');
     strictEqual(xs.first([]), undefined, 'first method runs ok when result fails');
-
 
     var x = {
         a: {
@@ -1102,7 +1150,6 @@ test('remove', function () {
     xs.remove(x, 1);
     strictEqual(JSON.stringify(x), '[]', 'remove method runs ok when result succeeds');
 
-
     var x = {
         a: {
             x: 1,
@@ -1193,7 +1240,6 @@ test('removeLast', function () {
     xs.removeLast(x, 1);
     strictEqual(JSON.stringify(x), '[]', 'remove method runs ok when result succeeds');
 
-
     var x = {
         a: {
             x: 1,
@@ -1263,7 +1309,13 @@ test('removeAll', function () {
         9
     ];
 
-    xs.removeAll(x, x[1], [x[0], x[1]], [9, 9], 1);
+    xs.removeAll(x, x[1], [
+        x[0],
+        x[1]
+    ], [
+        9,
+        9
+    ], 1);
     strictEqual(JSON.stringify(x), '[{"x":2,"y":1}]', 'removeAll method runs ok when result succeeds');
 
     xs.removeAll(x, 0);
@@ -1273,7 +1325,6 @@ test('removeAll', function () {
 
     xs.removeAll(x, 1);
     strictEqual(JSON.stringify(x), '[]', 'removeAll method runs ok when result succeeds');
-
 
     var x = {
         a: {
@@ -1295,7 +1346,13 @@ test('removeAll', function () {
         e: 1,
         f: 1
     };
-    xs.removeAll(x, x.a, x.b, ['c', 'd'], [1, 1]);
+    xs.removeAll(x, x.a, x.b, [
+        'c',
+        'd'
+    ], [
+        1,
+        1
+    ]);
     strictEqual(JSON.stringify(x), '{}', 'removeAll method runs ok when result succeeds');
 
     xs.removeAll(x, 1);
@@ -1307,15 +1364,25 @@ test('removeAll', function () {
 });
 
 test('compact', function () {
-    var x = [0, 1, 2, undefined, false, null, true, {},
-        [], '', '0', '1'
+    var x = [
+        0,
+        1,
+        2,
+        undefined,
+        false,
+        null,
+        true,
+        {},
+        [],
+        '',
+        '0',
+        '1'
     ];
 
     strictEqual(JSON.stringify(xs.compact(x)), '[1,2,true,{},[],"0","1"]', 'compact method works ok');
 
     x = [];
     strictEqual(JSON.stringify(xs.compact(x)), '[]', 'compact method works ok');
-
 
     var x = {
         a: 0,
@@ -1339,14 +1406,26 @@ test('compact', function () {
 });
 
 test('union', function () {
-    strictEqual(JSON.stringify(xs.union(null, undefined, 1, 2, [3], [4, 5])), '[null,null,1,2,3,4,5]', 'union method works ok');
+    strictEqual(JSON.stringify(xs.union(null, undefined, 1, 2, [3], [
+        4,
+        5
+    ])), '[null,null,1,2,3,4,5]', 'union method works ok');
 
-    strictEqual(JSON.stringify(xs.union([null, undefined, 1, 2, [3], [4, 5]])), '[null,null,1,2,3,4,5]', 'union method works ok');
+    strictEqual(JSON.stringify(xs.union([
+        null,
+        undefined,
+        1,
+        2,
+        [3],
+        [
+            4,
+            5
+        ]
+    ])), '[null,null,1,2,3,4,5]', 'union method works ok');
 
     strictEqual(JSON.stringify(xs.union([], [], [])), '{}', 'union method works ok');
 
     strictEqual(JSON.stringify(xs.union()), '{}', 'union method works ok');
-
 
     var x = [
         {a: 1},
@@ -1378,10 +1457,53 @@ test('intersection', function () {
     var arr = [];
     var obj = {};
     var x = [
-        [1, 2, 3, 4, 5, null, true, false, '', obj, arr],
-        [2, 3, 4, 5, null, false, '', obj, arr],
-        [1, 7, 3, 4, null, 5, false, obj, arr],
-        [7, 2, 3, 4, 5, false, true, obj, arr, null]
+        [
+            1,
+            2,
+            3,
+            4,
+            5,
+            null,
+            true,
+            false,
+            '',
+            obj,
+            arr
+        ],
+        [
+            2,
+            3,
+            4,
+            5,
+            null,
+            false,
+            '',
+            obj,
+            arr
+        ],
+        [
+            1,
+            7,
+            3,
+            4,
+            null,
+            5,
+            false,
+            obj,
+            arr
+        ],
+        [
+            7,
+            2,
+            3,
+            4,
+            5,
+            false,
+            true,
+            obj,
+            arr,
+            null
+        ]
     ];
     var intersection = xs.intersection(x[0], x[1], x[2], x[3]);
     strictEqual(JSON.stringify(intersection), '[3,4,5,null,false,{},[]]', 'intersection method works ok');
@@ -1391,12 +1513,14 @@ test('intersection', function () {
     var intersection = xs.intersection([], obj, arr);
     strictEqual(JSON.stringify(intersection), '[]', 'intersection method works ok');
 
-    var intersection = xs.intersection([arr], [obj, arr]);
+    var intersection = xs.intersection([arr], [
+        obj,
+        arr
+    ]);
     strictEqual(xs.has(intersection, arr), true, 'intersection method works ok');
 
     var intersection = xs.intersection();
     strictEqual(JSON.stringify(intersection), '{}', 'intersection method works ok');
-
 
     var arr = [];
     var obj = {};
@@ -1439,10 +1563,54 @@ test('difference', function () {
     var obj = {};
 
     var x = [
-        [1, 2, 3, 4, 5, 8, null, true, false, '', obj, arr],
-        [2, 3, 4, 5, null, false, '', obj, arr],
-        [1, 7, 3, 4, null, 5, false, obj, arr],
-        [7, 2, 3, 4, 5, false, true, obj, arr, null]
+        [
+            1,
+            2,
+            3,
+            4,
+            5,
+            8,
+            null,
+            true,
+            false,
+            '',
+            obj,
+            arr
+        ],
+        [
+            2,
+            3,
+            4,
+            5,
+            null,
+            false,
+            '',
+            obj,
+            arr
+        ],
+        [
+            1,
+            7,
+            3,
+            4,
+            null,
+            5,
+            false,
+            obj,
+            arr
+        ],
+        [
+            7,
+            2,
+            3,
+            4,
+            5,
+            false,
+            true,
+            obj,
+            arr,
+            null
+        ]
     ];
 
     var diff = xs.difference(x[0], x[1], x[2], x[3]);
@@ -1456,7 +1624,6 @@ test('difference', function () {
 
     var diff = xs.difference([]);
     strictEqual(JSON.stringify(diff), JSON.stringify([]), 'difference method works ok');
-
 
     var arr = [];
     var obj = {};
@@ -1495,13 +1662,24 @@ test('difference', function () {
 test('unique', function () {
     var arr = [];
     var obj = {};
-    var x = [1, 1, 2, 2, obj, null, true, false, '', obj, arr];
+    var x = [
+        1,
+        1,
+        2,
+        2,
+        obj,
+        null,
+        true,
+        false,
+        '',
+        obj,
+        arr
+    ];
     var unique = xs.unique(x);
     strictEqual(JSON.stringify(unique), '[1,2,{},null,true,false,"",[]]', 'uniques method works ok');
 
     var unique = xs.unique([]);
     strictEqual(JSON.stringify(unique), '[]', 'uniques method works ok');
-
 
     var arr = [];
     var obj = {};
@@ -1550,7 +1728,10 @@ test('pick', function () {
     var clone = xs.pick(x, [0], [1]);
     strictEqual(JSON.stringify(clone), correct, 'pick works ok with a set of args');
 
-    var clone = xs.pick(x, [0, 1]);
+    var clone = xs.pick(x, [
+        0,
+        1
+    ]);
     strictEqual(JSON.stringify(clone), correct, 'pick works ok with a set of args');
 
     var clone = xs.pick(x, 99);
@@ -1566,7 +1747,6 @@ test('pick', function () {
 
     var clone = xs.pick(x, 'a');
     strictEqual(JSON.stringify(clone), '[]', 'pick works ok without args');
-
 
     var x = {
         a: {
@@ -1593,7 +1773,10 @@ test('pick', function () {
     var clone = xs.pick(x, ['a'], ['b']);
     strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}', 'pick works ok with a set of args');
 
-    var clone = xs.pick(x, ['a', 'b']);
+    var clone = xs.pick(x, [
+        'a',
+        'b'
+    ]);
     strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}', 'pick works ok with a set of args');
 
     var clone = xs.pick(x);
@@ -1633,7 +1816,10 @@ test('omit', function () {
     var clone = xs.omit(x, [2], [3]);
     strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
 
-    var clone = xs.omit(x, [2, 3]);
+    var clone = xs.omit(x, [
+        2,
+        3
+    ]);
     strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
 
     var clone = xs.omit(x);
@@ -1652,7 +1838,6 @@ test('omit', function () {
 
     var clone = xs.omit(x, 'a');
     strictEqual(JSON.stringify(clone), JSON.stringify([]), 'omit works ok with wrong args');
-
 
     var x = {
         a: {
@@ -1680,7 +1865,10 @@ test('omit', function () {
     var clone = xs.omit(x, ['c'], ['d']);
     strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
 
-    var clone = xs.omit(x, ['c', 'd']);
+    var clone = xs.omit(x, [
+        'c',
+        'd'
+    ]);
     strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
 
     var clone = xs.omit(x);

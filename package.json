@@ -2,6 +2,7 @@
     "name":            "xs.js",
     "version":         "0.0.1",
     "devDependencies": {
+        "blanket":                  "latest",
         "del":                      "latest",
         "gulp":                     "latest",
         "gulp-compass":             "latest",
@@ -20,6 +21,7 @@
         "karma-opera-launcher":     "latest",
         "karma-phantomjs-launcher": "latest",
         "karma-qunit":              "latest",
-        "karma-safari-launcher":    "latest"
+        "karma-safari-launcher":    "latest",
+        "qunitjs":                  "latest"
     }
 }
