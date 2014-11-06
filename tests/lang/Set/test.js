@@ -16,17 +16,17 @@ test('keys', function () {
         1,
         3
     ];
-    strictEqual(JSON.stringify(xs.keys(x)), '[0,1]', 'keys method ok');
+    strictEqual(JSON.stringify(xs.keys(x)), '[0,1]');
     x = [];
-    strictEqual(JSON.stringify(xs.keys(x)), '[]', 'keys method ok');
+    strictEqual(JSON.stringify(xs.keys(x)), '[]');
 
     x = {};
-    strictEqual(JSON.stringify(xs.keys(x)), '[]', 'keys method ok');
+    strictEqual(JSON.stringify(xs.keys(x)), '[]');
     x = {
         x: 1,
         b: 2
     };
-    strictEqual(JSON.stringify(xs.keys(x)), '["x","b"]', 'keys method ok');
+    strictEqual(JSON.stringify(xs.keys(x)), '["x","b"]');
 });
 
 test('values', function () {
@@ -35,17 +35,17 @@ test('values', function () {
         1,
         3
     ];
-    strictEqual(JSON.stringify(xs.values(x)), '[1,3]', 'values method ok');
+    strictEqual(JSON.stringify(xs.values(x)), '[1,3]');
     x = [];
-    strictEqual(JSON.stringify(xs.values(x)), '[]', 'values method ok');
+    strictEqual(JSON.stringify(xs.values(x)), '[]');
 
     x = {};
-    strictEqual(JSON.stringify(xs.values(x)), '[]', 'values method ok');
+    strictEqual(JSON.stringify(xs.values(x)), '[]');
     x = {
         x: 1,
         b: '2'
     };
-    strictEqual(JSON.stringify(xs.values(x)), '[1,"2"]', 'values method ok');
+    strictEqual(JSON.stringify(xs.values(x)), '[1,"2"]');
 });
 
 test('hasKey', function () {
@@ -54,25 +54,25 @@ test('hasKey', function () {
         1,
         3
     ];
-    strictEqual(xs.hasKey(x, 0), true, 'hasKey method finds ok');
-    strictEqual(xs.hasKey(x, 1), true, 'hasKey method finds ok');
-    strictEqual(xs.hasKey(x, 2), false, 'hasKey method does not find ok');
+    strictEqual(xs.hasKey(x, 0), true);
+    strictEqual(xs.hasKey(x, 1), true);
+    strictEqual(xs.hasKey(x, 2), false);
 
     x = [];
-    strictEqual(xs.hasKey(x, 0), false, 'hasKey method does not find ok');
-    strictEqual(xs.hasKey(x, 1), false, 'hasKey method does not find ok');
-    strictEqual(xs.hasKey(x, 2), false, 'hasKey method does not find ok');
+    strictEqual(xs.hasKey(x, 0), false);
+    strictEqual(xs.hasKey(x, 1), false);
+    strictEqual(xs.hasKey(x, 2), false);
 
     x = {};
-    strictEqual(xs.hasKey(x, 'x'), false, 'hasKey method works ok in empty');
-    strictEqual(xs.hasKey(x, 'y'), false, 'hasKey method works ok in empty');
+    strictEqual(xs.hasKey(x, 'x'), false);
+    strictEqual(xs.hasKey(x, 'y'), false);
 
     x = {
         x: 1,
         b: 2
     };
-    strictEqual(xs.hasKey(x, 'x'), true, 'hasKey method finds ok');
-    strictEqual(xs.hasKey(x, 'y'), false, 'hasKey method does not find ok');
+    strictEqual(xs.hasKey(x, 'x'), true);
+    strictEqual(xs.hasKey(x, 'y'), false);
 });
 
 test('has', function () {
@@ -82,12 +82,12 @@ test('has', function () {
         1,
         3
     ];
-    strictEqual(xs.has(x, 1), true, 'has method finds ok');
-    strictEqual(xs.has(x, 'A'), false, 'has method does not find ok');
+    strictEqual(xs.has(x, 1), true);
+    strictEqual(xs.has(x, 'A'), false);
     //empty array
     x = [];
-    strictEqual(xs.has(x, 1), false, 'has method does not find ok');
-    strictEqual(xs.has(x, 'A'), false, 'has method does not find ok');
+    strictEqual(xs.has(x, 1), false);
+    strictEqual(xs.has(x, 'A'), false);
     //array of array of integer
     x = [
         [
@@ -99,19 +99,19 @@ test('has', function () {
             0
         ]
     ];
-    strictEqual(xs.has(x, x[0]), true, 'has method finds ok');
-    strictEqual(xs.has(x, 1), false, 'has method does not find ok');
+    strictEqual(xs.has(x, x[0]), true);
+    strictEqual(xs.has(x, 1), false);
 
     x = {};
-    strictEqual(xs.has(x, 1), false, 'has method works ok in empty');
-    strictEqual(xs.has(x, '1'), false, 'has method works ok in empty');
+    strictEqual(xs.has(x, 1), false);
+    strictEqual(xs.has(x, '1'), false);
 
     x = {
         x: 1,
         b: 2
     };
-    strictEqual(xs.has(x, 1), true, 'has method finds ok');
-    strictEqual(xs.has(x, '1'), false, 'has method does not find ok');
+    strictEqual(xs.has(x, 1), true);
+    strictEqual(xs.has(x, '1'), false);
 });
 
 test('keyOf', function () {
@@ -120,12 +120,12 @@ test('keyOf', function () {
         1,
         3
     ];
-    strictEqual(xs.keyOf(x, 3), 1, 'keyOf method finds ok');
-    strictEqual(xs.keyOf(x, '1'), undefined, 'keyOf method does not find ok');
+    strictEqual(xs.keyOf(x, 3), 1);
+    strictEqual(xs.keyOf(x, '1'), undefined);
     //empty array
     x = [];
-    strictEqual(xs.keyOf(x, 0), undefined, 'keyOf method does not find ok');
-    strictEqual(xs.keyOf(x, '0'), undefined, 'keyOf method does not find ok');
+    strictEqual(xs.keyOf(x, 0), undefined);
+    strictEqual(xs.keyOf(x, '0'), undefined);
     //array of array
     x = [
         [
@@ -141,20 +141,20 @@ test('keyOf', function () {
     strictEqual(xs.keyOf(x, [
         0,
         1
-    ]), undefined, 'keyOf method does not find ok');
-    strictEqual(xs.keyOf(x, z), 0, 'keyOf method finds ok');
-    strictEqual(xs.keyOf(x, '0'), undefined, 'keyOf method does not find ok');
+    ]), undefined);
+    strictEqual(xs.keyOf(x, z), 0);
+    strictEqual(xs.keyOf(x, '0'), undefined);
 
     x = {};
-    strictEqual(xs.keyOf(x, 1), undefined, 'keyOf method works ok in empty');
-    strictEqual(xs.keyOf(x, '1'), undefined, 'keyOf method works ok in empty');
+    strictEqual(xs.keyOf(x, 1), undefined);
+    strictEqual(xs.keyOf(x, '1'), undefined);
 
     x = {
         x: 1,
         b: 2
     };
-    strictEqual(xs.keyOf(x, 1), 'x', 'keyOf method finds ok');
-    strictEqual(xs.keyOf(x, '1'), undefined, 'keyOf method does not find ok');
+    strictEqual(xs.keyOf(x, 1), 'x');
+    strictEqual(xs.keyOf(x, '1'), undefined);
 });
 
 test('lastKeyOf', function () {
@@ -163,22 +163,22 @@ test('lastKeyOf', function () {
         3,
         3
     ];
-    strictEqual(xs.lastKeyOf(x, 3), 2, 'lastKeyOf method finds ok');
-    strictEqual(xs.lastKeyOf(x, '1'), undefined, 'lastKeyOf method does not find ok');
+    strictEqual(xs.lastKeyOf(x, 3), 2);
+    strictEqual(xs.lastKeyOf(x, '1'), undefined);
     x = [];
-    strictEqual(xs.lastKeyOf(x, 3), undefined, 'lastKeyOf method does not find ok');
+    strictEqual(xs.lastKeyOf(x, 3), undefined);
 
     x = {};
-    strictEqual(xs.lastKeyOf(x, 1), undefined, 'keyOf method works ok in empty');
-    strictEqual(xs.lastKeyOf(x, '1'), undefined, 'keyOf method works ok in empty');
+    strictEqual(xs.lastKeyOf(x, 1), undefined);
+    strictEqual(xs.lastKeyOf(x, '1'), undefined);
 
     x = {
         x: 1,
         b: 2,
         c: 2
     };
-    strictEqual(xs.lastKeyOf(x, 2), 'c', 'lastKeyOf method finds ok');
-    strictEqual(xs.lastKeyOf(x, '1'), undefined, 'lastKeyOf method does not find ok');
+    strictEqual(xs.lastKeyOf(x, 2), 'c');
+    strictEqual(xs.lastKeyOf(x, '1'), undefined);
 });
 
 test('size', function () {
@@ -186,15 +186,15 @@ test('size', function () {
         2,
         3
     ];
-    strictEqual(xs.size(x), 2, 'size method evaluates non-empty ok');
-    strictEqual(xs.size([]), 0, 'size method evaluates empty ok');
+    strictEqual(xs.size(x), 2);
+    strictEqual(xs.size([]), 0);
 
     x = {
         x: 1,
         b: 2
     };
-    strictEqual(xs.size(x), 2, 'size method evaluates non-empty ok');
-    strictEqual(xs.size({}), 0, 'size method evaluates empty ok');
+    strictEqual(xs.size(x), 2);
+    strictEqual(xs.size({}), 0);
 });
 
 test('each', function () {
@@ -207,21 +207,21 @@ test('each', function () {
     xs.each(x, function (value) {
         sum += value;
     });
-    strictEqual(sum, '12', 'each method runs ok');
+    strictEqual(sum, '12');
     //empty array
     x = [];
     sum = '';
     xs.each(x, function (value) {
         sum += value;
     });
-    strictEqual(sum, '', 'each method runs ok');
+    strictEqual(sum, '');
 
     x = {};
     sum = '';
     xs.each(x, function (value) {
         sum += value;
     });
-    strictEqual(sum, '', 'each method runs ok with empty');
+    strictEqual(sum, '');
 
     x = {
         x: 1,
@@ -231,7 +231,7 @@ test('each', function () {
     xs.each(x, function (value) {
         sum += value;
     });
-    strictEqual(sum, '12', 'each method runs ok');
+    strictEqual(sum, '12');
 });
 
 test('eachReverse', function () {
@@ -244,21 +244,21 @@ test('eachReverse', function () {
     xs.eachReverse(x, function (value) {
         sum += value;
     });
-    strictEqual(sum, '21', 'eachReverse method runs ok');
+    strictEqual(sum, '21');
     //empty array
     x = [];
     sum = '';
     xs.eachReverse(x, function (value) {
         sum += value;
     });
-    strictEqual(sum, '', 'eachReverse method runs ok');
+    strictEqual(sum, '');
 
     x = {};
     sum = '';
     xs.eachReverse(x, function (value) {
         sum += value;
     });
-    strictEqual(sum, '', 'eachReverse method runs ok with empty');
+    strictEqual(sum, '');
 
     x = {
         x: 1,
@@ -268,7 +268,7 @@ test('eachReverse', function () {
     xs.eachReverse(x, function (value) {
         sum += value;
     });
-    strictEqual(sum, '21', 'eachReverse method runs ok');
+    strictEqual(sum, '21');
 });
 
 test('map', function () {
@@ -276,7 +276,7 @@ test('map', function () {
     x = xs.map(x, function (value, name) {
         return value * 2 + name;
     });
-    strictEqual(JSON.stringify(x), '[]', 'map method runs ok');
+    strictEqual(JSON.stringify(x), '[]');
 
     x = [
         4,
@@ -285,13 +285,13 @@ test('map', function () {
     x = xs.map(x, function (value, name) {
         return value * 2 + name;
     });
-    strictEqual(JSON.stringify(x), '[8,7]', 'map method runs ok');
+    strictEqual(JSON.stringify(x), '[8,7]');
 
     x = {};
     x = xs.map(x, function (value, name) {
         return value * 2 + name;
     });
-    strictEqual(JSON.stringify(x), '{}', 'map method runs ok');
+    strictEqual(JSON.stringify(x), '{}');
 
     x = {
         x: 1,
@@ -300,14 +300,14 @@ test('map', function () {
     x = xs.map(x, function (value, name) {
         return value * 2 + name;
     });
-    strictEqual(JSON.stringify(x), '{"x":"2x","b":"4b"}', 'map method runs ok');
+    strictEqual(JSON.stringify(x), '{"x":"2x","b":"4b"}');
 });
 
 test('reduce', function () {
     var x = [];
     strictEqual(xs.reduce(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }, -3), -3, 'reduce method runs ok with memo with empty source');
+    }, -3), -3);
 
     x = [
         6,
@@ -316,18 +316,18 @@ test('reduce', function () {
     ];
     strictEqual(xs.reduce(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }), 25, 'reduce method runs ok without memo');
+    }), 25);
     strictEqual(xs.reduce(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }, -3), 30, 'reduce method runs ok with memo');
+    }, -3), 30);
 
     x = {};
     strictEqual(xs.reduce(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }), undefined, 'reduce method runs ok without memo');
+    }), undefined);
     strictEqual(xs.reduce(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }, -3), -3, 'reduce method runs ok with memo');
+    }, -3), -3);
 
     x = {
         x: 1,
@@ -336,17 +336,17 @@ test('reduce', function () {
     };
     strictEqual(xs.reduce(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }), '5b6a', 'reduce method runs ok without memo');
+    }), '5b6a');
     strictEqual(xs.reduce(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }, -3), '-1x4b6a', 'reduce method runs ok with memo');
+    }, -3), '-1x4b6a');
 });
 
 test('reduceRight', function () {
     var x = [];
     strictEqual(xs.reduce(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }, -3), -3, 'reduceRight method runs ok with memo');
+    }, -3), -3);
 
     x = [
         6,
@@ -355,18 +355,18 @@ test('reduceRight', function () {
     ];
     strictEqual(xs.reduceRight(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }), 27, 'reduceRight method runs ok without memo');
+    }), 27);
     strictEqual(xs.reduceRight(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }, -3), 30, 'reduceRight method runs ok with memo');
+    }, -3), 30);
 
     x = {};
     strictEqual(xs.reduce(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }), undefined, 'reduceRight method runs ok without memo');
+    }), undefined);
     strictEqual(xs.reduce(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }, -3), -3, 'reduceRight method runs ok with memo');
+    }, -3), -3);
 
     x = {
         x: 1,
@@ -375,10 +375,10 @@ test('reduceRight', function () {
     };
     strictEqual(xs.reduceRight(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }), '7b2x', 'reduceRight method runs ok without memo');
+    }), '7b2x');
     strictEqual(xs.reduceRight(x, function (memo, value, name) {
         return memo + 2 * value + name;
-    }, -3), '3a4b2x', 'reduceRight method runs ok with memo');
+    }, -3), '3a4b2x');
 });
 
 test('find', function () {
@@ -403,13 +403,13 @@ test('find', function () {
 
     strictEqual(xs.find(x, function (value) {
         return value.y == 1;
-    }), x[2], 'find method runs ok when result exists');
+    }), x[2]);
 
     x = [];
 
     strictEqual(xs.find(x, function (value) {
         return value.y == 1;
-    }), undefined, 'find method runs ok when result not exists');
+    }), undefined);
 
     x = {
         a: {
@@ -431,15 +431,15 @@ test('find', function () {
     };
     strictEqual(xs.find(x, function (value) {
         return value.y == 1;
-    }), x.c, 'find method runs ok when result exists');
+    }), x.c);
 
     strictEqual(xs.find({}, function (value) {
         return value.y == 3;
-    }), undefined, 'find method runs ok when result does not exist');
+    }), undefined);
 
     strictEqual(xs.find(x, function (value) {
         return value.y == 3;
-    }), undefined, 'find method runs ok when result does not exist');
+    }), undefined);
 });
 
 test('findLast', function () {
@@ -463,15 +463,15 @@ test('findLast', function () {
     ];
     strictEqual(xs.findLast(x, function (value) {
         return value.y == 1;
-    }), x[3], 'findLast method runs ok when result exists');
+    }), x[3]);
     strictEqual(xs.findLast(x, function (value) {
         return value.y == 3;
-    }), undefined, 'findLast method runs ok when result does not exist');
+    }), undefined);
 
     x = [];
     strictEqual(xs.findLast(x, function (value) {
         return value.y == 3;
-    }), undefined, 'findLast method runs ok when result does not exist');
+    }), undefined);
 
     x = {
         a: {
@@ -493,15 +493,15 @@ test('findLast', function () {
     };
     strictEqual(xs.findLast(x, function (value) {
         return value.y == 1;
-    }), x.d, 'findLast method runs ok when result exists');
+    }), x.d);
 
     strictEqual(xs.findLast({}, function (value) {
         return value.y == 3;
-    }), undefined, 'findLast method runs ok when result does not exist');
+    }), undefined);
 
     strictEqual(xs.findLast(x, function (value) {
         return value.y == 3;
-    }), undefined, 'findLast method runs ok when result does not exist');
+    }), undefined);
 });
 
 test('findAll', function () {
@@ -530,18 +530,18 @@ test('findAll', function () {
     strictEqual(JSON.stringify(results), JSON.stringify([
         x[2],
         x[3]
-    ]), 'findAll method runs ok when result exists');
+    ]));
 
     results = xs.findAll(x, function (value) {
         return value.y == 3;
     });
-    strictEqual(JSON.stringify(results), JSON.stringify([]), 'findAll method runs ok when result does not exist');
+    strictEqual(JSON.stringify(results), JSON.stringify([]));
 
     x = [];
     results = xs.findAll(x, function (value) {
         return value.a = 'aa';
     });
-    strictEqual(JSON.stringify(results), JSON.stringify([]), 'findAll method runs ok when array is empty');
+    strictEqual(JSON.stringify(results), JSON.stringify([]));
 
     x = {
         a: {
@@ -568,17 +568,17 @@ test('findAll', function () {
     strictEqual(JSON.stringify(results), JSON.stringify({
         c: x.c,
         d: x.d
-    }), 'findAll method runs ok when result exists');
+    }));
 
     results = xs.findAll(x, function (value) {
         return value.y == 3;
     });
-    strictEqual(JSON.stringify(results), JSON.stringify({}), 'findAll method runs ok when result does not exist');
+    strictEqual(JSON.stringify(results), JSON.stringify({}));
 
     results = xs.findAll({}, function (value) {
         return value.y == 3;
     });
-    strictEqual(JSON.stringify(results), JSON.stringify({}), 'findAll method runs ok when source hash is empty');
+    strictEqual(JSON.stringify(results), JSON.stringify({}));
 });
 
 test('filter', function () {
@@ -605,19 +605,52 @@ test('filter', function () {
     results = xs.filter(x, {
         x: 1
     });
-    strictEqual(results, x[0], 'filter method runs ok when result exists');
+    strictEqual(results, x[0]);
 
     results = xs.filter(x, {
         x: 3
     });
-    strictEqual(results, undefined, 'filter method runs ok when result does not exist');
+    strictEqual(results, undefined);
 
     x = [];
     results = xs.filter(x, {
         x: 'A'
     });
-    strictEqual(results, undefined, 'filter method runs ok when result does not exist');
+    strictEqual(results, undefined);
 
+    x = {
+        a: {
+            x: 1,
+            y: 2
+        },
+        b: {
+            x: 2,
+            y: 2
+        },
+        c: {
+            x: 2,
+            y: 1
+        },
+        d: {
+            x: 1,
+            y: 1
+        }
+    };
+
+    results = xs.filter(x, {
+        x: 1
+    });
+    strictEqual(results, x.a);
+
+    results = xs.filter(x, {
+        x: 3
+    });
+    strictEqual(results, undefined);
+
+    results = xs.filter({}, {
+        x: 3
+    });
+    strictEqual(results, undefined);
 });
 
 test('filterLast', function () {
@@ -644,18 +677,18 @@ test('filterLast', function () {
     results = xs.filterLast(x, {
         x: 1
     });
-    strictEqual(results, x[3], 'filterLast method runs ok when result exists');
+    strictEqual(results, x[3]);
 
     results = xs.filterLast(x, {
         x: 3
     });
-    strictEqual(results, undefined, 'filterLast method runs ok when result does not exist');
+    strictEqual(results, undefined);
 
     x = [];
     results = xs.filterLast(x, {
         x: 'A'
     });
-    strictEqual(results, undefined, 'filter method runs ok when result does not exist');
+    strictEqual(results, undefined);
 
     x = {
         a: {
@@ -679,17 +712,17 @@ test('filterLast', function () {
     results = xs.filterLast(x, {
         x: 1
     });
-    strictEqual(results, x.d, 'filterLast method runs ok when result exists');
+    strictEqual(results, x.d);
 
     results = xs.filterLast(x, {
         x: 3
     });
-    strictEqual(results, undefined, 'filterLast method runs ok when result does not exist');
+    strictEqual(results, undefined);
 
     results = xs.filterLast({}, {
         x: 3
     });
-    strictEqual(results, undefined, 'filterLast method runs ok when source hash is empty');
+    strictEqual(results, undefined);
 });
 
 test('filterAll', function () {
@@ -712,20 +745,23 @@ test('filterAll', function () {
         }
     ];
     var results;
-    results = xs.filterLast(x, {
+    results = xs.filterAll(x, {
         x: 1
     });
-    strictEqual(results, x[3], 'filterLast method runs ok when result exists');
-    results = xs.filterLast(x, {
+    strictEqual(results.length, 2);
+    strictEqual(results[0], x[0]);
+    strictEqual(results[1], x[3]);
+
+    results = xs.filterAll(x, {
         x: 3
     });
-    strictEqual(results, undefined, 'filterLast method runs ok when result does not exist');
+    strictEqual(results.length, 0);
 
     x = [];
     results = xs.filterAll(x, {
         x: 'A'
     });
-    strictEqual(JSON.stringify(results), JSON.stringify([]), 'filter method runs ok when result does not exist');
+    strictEqual(results.length, 0);
 
     x = {
         a: {
@@ -746,20 +782,22 @@ test('filterAll', function () {
         }
     };
 
-    results = xs.filterLast(x, {
+    results = xs.filterAll(x, {
         x: 1
     });
-    strictEqual(results, x.d, 'filterLast method runs ok when result exists');
+    strictEqual(xs.size(results), 2);
+    strictEqual(results.a, x.a);
+    strictEqual(results.d, x.d);
 
-    results = xs.filterLast(x, {
+    results = xs.filterAll(x, {
         x: 3
     });
-    strictEqual(results, undefined, 'filterLast method runs ok when result does not exist');
+    strictEqual(xs.size(results), 0);
 
-    results = xs.filterLast({}, {
+    results = xs.filterAll({}, {
         x: 3
     });
-    strictEqual(results, undefined, 'filterLast method runs ok when source hash is empty');
+    strictEqual(xs.size(results), 0);
 });
 
 test('every', function () {
@@ -785,17 +823,17 @@ test('every', function () {
 
     strictEqual(xs.every(x, function (value) {
         return value.hasOwnProperty('y');
-    }), true, 'every method runs ok when result succeeds');
+    }), true);
 
     strictEqual(xs.every(x, function (value) {
         return value.x === 1;
-    }), false, 'every method runs ok when result fails');
+    }), false);
 
     x = [];
 
     strictEqual(xs.every(x, function (value) {
         return !value.hasOwnProperty('y');
-    }), true, 'every method runs ok when x is empty');
+    }), true);
 
     x = {
         a: {
@@ -818,15 +856,15 @@ test('every', function () {
 
     strictEqual(xs.every(x, function (value) {
         return xs.hasKey(value, 'y');
-    }), true, 'every method runs ok when result succeeds');
+    }), true);
 
     strictEqual(xs.every(x, function (value) {
         return value.x === 1;
-    }), false, 'every method runs ok when result fails');
+    }), false);
 
     strictEqual(xs.every({}, function (value) {
         return value.x === 1;
-    }), true, 'every method runs ok when source hash is empty');
+    }), true);
 });
 
 test('some', function () {
@@ -859,7 +897,7 @@ test('some', function () {
 
     strictEqual(xs.some(x, function (value) {
         return value.x == 1 && value.y == 1;
-    }), true, 'some method runs ok when result succeeds with default count');
+    }), true);
 
     strictEqual(xs.some(x, function (value) {
         return value.x == 1 && value.y == 1;
@@ -867,11 +905,11 @@ test('some', function () {
 
     strictEqual(xs.some(x, function (value) {
         return value.x == 1 && value.y == 3;
-    }), false, 'some method runs ok when result fails');
+    }), false);
 
     strictEqual(xs.some({}, function (value) {
         return value.x == 1 && value.y == 1;
-    }), false, 'some method runs ok when source is empty');
+    }), false);
 
     x = {
         a: {
@@ -902,7 +940,7 @@ test('some', function () {
 
     strictEqual(xs.some(x, function (value) {
         return value.x == 1 && value.y == 1;
-    }), true, 'some method runs ok when result succeeds with default count');
+    }), true);
 
     strictEqual(xs.some(x, function (value) {
         return value.x == 1 && value.y == 1;
@@ -910,11 +948,11 @@ test('some', function () {
 
     strictEqual(xs.some(x, function (value) {
         return value.x == 1 && value.y == 3;
-    }), false, 'some method runs ok when result fails');
+    }), false);
 
     strictEqual(xs.some({}, function (value) {
         return value.x == 1 && value.y == 1;
-    }), false, 'some method runs ok when source is empty');
+    }), false);
 });
 
 test('none', function () {
@@ -940,17 +978,17 @@ test('none', function () {
 
     strictEqual(xs.none(x, function (value) {
         return value.hasOwnProperty('y');
-    }), false, 'none method runs ok when result succeeds');
+    }), false);
 
     strictEqual(xs.none(x, function (value) {
         return value.x === 3;
-    }), true, 'none method runs ok when result fails');
+    }), true);
 
     x = [];
 
     strictEqual(xs.none(x, function (value) {
         return !value.hasOwnProperty('y');
-    }), true, 'none method runs ok when x is empty');
+    }), true);
 
     x = {
         a: {
@@ -973,15 +1011,15 @@ test('none', function () {
 
     strictEqual(xs.none(x, function (value) {
         return xs.hasKey(value, 'y');
-    }), false, 'none method runs ok when result succeeds');
+    }), false);
 
     strictEqual(xs.none(x, function (value) {
         return value.x === 3;
-    }), true, 'none method runs ok when result fails');
+    }), true);
 
     strictEqual(xs.none({}, function (value) {
         return value.x === 1;
-    }), true, 'none method runs ok when source hash is empty');
+    }), true);
 });
 
 test('first', function () {
@@ -1004,8 +1042,8 @@ test('first', function () {
         }
     ];
 
-    strictEqual(xs.first(x), x[0], 'first method runs ok when result succeeds');
-    strictEqual(xs.first([]), undefined, 'first method runs ok when result fails');
+    strictEqual(xs.first(x), x[0]);
+    strictEqual(xs.first([]), undefined);
 
     x = {
         a: {
@@ -1025,8 +1063,8 @@ test('first', function () {
             y: 1
         }
     };
-    strictEqual(xs.first(x), x.a, 'first method runs ok when result succeeds');
-    strictEqual(xs.first({}), undefined, 'first method runs ok when result fails');
+    strictEqual(xs.first(x), x.a);
+    strictEqual(xs.first({}), undefined);
 
 });
 
@@ -1050,8 +1088,8 @@ test('last', function () {
         }
     ];
 
-    strictEqual(xs.last(x), x[3], 'last method runs ok when result succeeds');
-    strictEqual(xs.last([]), undefined, 'last method runs ok when result fails');
+    strictEqual(xs.last(x), x[3]);
+    strictEqual(xs.last([]), undefined);
 
     x = {
         a: {
@@ -1071,8 +1109,8 @@ test('last', function () {
             y: 1
         }
     };
-    strictEqual(xs.last(x), x.d, 'last method runs ok when result succeeds');
-    strictEqual(xs.last({}), undefined, 'last method runs ok when result fails');
+    strictEqual(xs.last(x), x.d);
+    strictEqual(xs.last({}), undefined);
 });
 
 test('shift', function () {
@@ -1095,9 +1133,9 @@ test('shift', function () {
         }
     ];
     var shifted = x[0];
-    strictEqual(xs.shift(x), shifted, 'shift method runs ok when result succeeds');
-    strictEqual(JSON.stringify(xs.keys(x)), '[0,1,2]', 'shift method runs ok when result succeeds');
-    strictEqual(xs.shift({}), undefined, 'shift method runs ok when result fails');
+    strictEqual(xs.shift(x), shifted);
+    strictEqual(JSON.stringify(xs.keys(x)), '[0,1,2]');
+    strictEqual(xs.shift({}), undefined);
 
     x = {
         a: {
@@ -1118,9 +1156,9 @@ test('shift', function () {
         }
     };
     shifted = x.a;
-    strictEqual(xs.shift(x), shifted, 'shift method runs ok when result succeeds');
-    strictEqual(JSON.stringify(xs.keys(x)), '["b","c","d"]', 'shift method runs ok when result succeeds');
-    strictEqual(xs.shift({}), undefined, 'shift method runs ok when result fails');
+    strictEqual(xs.shift(x), shifted);
+    strictEqual(JSON.stringify(xs.keys(x)), '["b","c","d"]');
+    strictEqual(xs.shift({}), undefined);
 });
 
 test('pop', function () {
@@ -1143,9 +1181,9 @@ test('pop', function () {
         }
     ];
     var popped = x[x.length - 1];
-    strictEqual(xs.pop(x), popped, 'pop method runs ok when result succeeds');
-    strictEqual(JSON.stringify(xs.keys(x)), '[0,1,2]', 'pop method runs ok when result succeeds');
-    strictEqual(xs.pop({}), undefined, 'pop method runs ok when result fails');
+    strictEqual(xs.pop(x), popped);
+    strictEqual(JSON.stringify(xs.keys(x)), '[0,1,2]');
+    strictEqual(xs.pop({}), undefined);
 
     x = {
         a: {
@@ -1166,267 +1204,209 @@ test('pop', function () {
         }
     };
     popped = x.d;
-    strictEqual(xs.pop(x), popped, 'pop method runs ok when result succeeds');
-    strictEqual(JSON.stringify(xs.keys(x)), '["a","b","c"]', 'pop method runs ok when result succeeds');
-    strictEqual(xs.pop({}), undefined, 'pop method runs ok when result fails');
+    strictEqual(xs.pop(x), popped);
+    strictEqual(JSON.stringify(xs.keys(x)), '["a","b","c"]');
+    strictEqual(xs.pop({}), undefined);
+});
+
+test('deleteAt', function () {
+    var x = [
+        1,
+        3,
+        2
+    ];
+
+    strictEqual(xs.deleteAt(x, 1), true);
+    strictEqual(JSON.stringify(x), '[1,2]');
+
+    strictEqual(xs.deleteAt(x, 2), false);
+    strictEqual(JSON.stringify(x), '[1,2]');
+
+    x = {
+        a: 1,
+        b: 2,
+        c: 3
+    };
+
+    strictEqual(xs.deleteAt(x, 'b'), true);
+    strictEqual(JSON.stringify(x), '{"a":1,"c":3}');
+
+    strictEqual(xs.deleteAt(x, 'd'), false);
+    strictEqual(JSON.stringify(x), '{"a":1,"c":3}');
 });
 
 test('delete', function () {
+    var item = {x: 1};
+    var itemString = JSON.stringify(item);
     var x = [
-        {
-            x: 1,
-            y: 2
-        },
-        {
-            x: 2,
-            y: 2
-        },
-        {
-            x: 2,
-            y: 1
-        },
-        {
-            x: 1,
-            y: 1
-        },
-        1,
-        1
+        3,
+        item,
+        2,
+        item
     ];
 
-    strictEqual(true, xs.delete(x, x[0]), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1},1,1]', 'delete method runs ok when result succeeds');
+    strictEqual(xs.delete(x, item), true);
+    strictEqual(JSON.stringify(x), '[3,2,' + itemString + ']');
 
-    strictEqual(true, xs.delete(x, 0), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":1},{"x":1,"y":1},1,1]', 'delete method runs ok when result succeeds');
-
-    strictEqual(true, xs.delete(x, 1), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":1},1,1]', 'delete method runs ok when result succeeds');
-
-    strictEqual(true, xs.delete(x, x[1]), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":1},1]', 'delete method runs ok when result succeeds');
-
-    strictEqual(true, xs.delete(x, 1), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":1}]', 'delete method runs ok when result succeeds');
-
-    strictEqual(false, xs.delete(x, 1), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":1}]', 'delete method runs ok when result succeeds');
-
-    x = [];
-    strictEqual(false, xs.delete(x, 1), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[]', 'delete method runs ok when result succeeds');
+    strictEqual(xs.delete(x, 1), false);
+    strictEqual(JSON.stringify(x), '[3,2,' + itemString + ']');
 
     x = {
-        a: {
-            x: 1,
-            y: 2
-        },
-        b: {
-            x: 2,
-            y: 2
-        },
-        c: {
-            x: 2,
-            y: 1
-        },
-        d: {
-            x: 1,
-            y: 1
-        },
-        e: 1,
-        f: 1
+        a: 1,
+        b: item,
+        d: item,
+        c: 3
     };
-    strictEqual(true, xs.delete(x, x.a), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'delete method runs ok when result succeeds');
 
-    strictEqual(false, xs.delete(x, 'a'), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'delete method runs ok when result succeeds');
+    strictEqual(xs.delete(x, item), true);
+    strictEqual(JSON.stringify(x), '{"a":1,"d":' + itemString + ',"c":3}');
 
-    strictEqual(true, xs.delete(x, 'b'), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'delete method runs ok when result succeeds');
-
-    strictEqual(false, xs.delete(x, 'b'), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'delete method runs ok when result succeeds');
-
-    strictEqual(true, xs.delete(x, 1), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"f":1}', 'delete method runs ok when result succeeds');
-
-    strictEqual(true, xs.delete(x, 1), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1}}', 'delete method runs ok when result succeeds');
-
-    strictEqual(false, xs.delete(x, 1), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1}}', 'delete method runs ok when result succeeds');
-
-    x = {};
-    strictEqual(false, xs.delete(x, 1), 'delete method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{}', 'delete method runs ok with empty source');
+    strictEqual(xs.delete(x, 2), false);
+    strictEqual(JSON.stringify(x), '{"a":1,"d":' + itemString + ',"c":3}');
 });
 
 test('deleteLast', function () {
+    var item = {x: 1};
+    var itemString = JSON.stringify(item);
     var x = [
-        {
-            x: 1,
-            y: 2
-        },
-        {
-            x: 2,
-            y: 2
-        },
-        {
-            x: 2,
-            y: 1
-        },
-        9,
-        {
-            x: 1,
-            y: 1
-        },
-        9
+        3,
+        item,
+        2,
+        item
     ];
 
-    strictEqual(true, xs.deleteLast(x, x[0]), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},{"x":2,"y":1},9,{"x":1,"y":1},9]', 'deleteLast method runs ok when result succeeds');
+    strictEqual(xs.deleteLast(x, item), true);
+    strictEqual(JSON.stringify(x), '[3,' + itemString + ',2]');
 
-    strictEqual(true, xs.deleteLast(x, 9), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},{"x":2,"y":1},9,{"x":1,"y":1}]', 'deleteLast method runs ok when result succeeds');
-
-    strictEqual(true, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},9,{"x":1,"y":1}]', 'deleteLast method runs ok when result succeeds');
-
-    strictEqual(true, xs.deleteLast(x, x[1]), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2},{"x":1,"y":1}]', 'deleteLast method runs ok when result succeeds');
-
-    strictEqual(true, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2}]', 'deleteLast method runs ok when result succeeds');
-
-    strictEqual(false, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":2}]', 'deleteLast method runs ok when result succeeds');
-
-    x = [];
-    strictEqual(false, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[]', 'deleteLast method runs ok when result succeeds');
+    strictEqual(xs.deleteLast(x, 1), false);
+    strictEqual(JSON.stringify(x), '[3,' + itemString + ',2]');
 
     x = {
-        a: {
-            x: 1,
-            y: 2
-        },
-        b: {
-            x: 2,
-            y: 2
-        },
-        c: {
-            x: 2,
-            y: 1
-        },
-        d: {
-            x: 1,
-            y: 1
-        },
-        e: 1,
-        f: 1
+        a: 1,
+        b: item,
+        d: item,
+        c: 3
     };
 
-    strictEqual(true, xs.deleteLast(x, x.a), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'deleteLast method runs ok when result succeeds');
+    strictEqual(xs.deleteLast(x, item), true);
+    strictEqual(JSON.stringify(x), '{"a":1,"b":' + itemString + ',"c":3}');
 
-    strictEqual(false, xs.deleteLast(x, 'a'), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'deleteLast method runs ok when result succeeds');
-
-    strictEqual(true, xs.deleteLast(x, 'b'), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'deleteLast method runs ok when result succeeds');
-
-    strictEqual(false, xs.deleteLast(x, 'b'), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}', 'deleteLast method runs ok when result succeeds');
-
-    strictEqual(true, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1}', 'deleteLast method runs ok when result succeeds');
-
-    strictEqual(true, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1}}', 'deleteLast method runs ok when result succeeds');
-
-    strictEqual(false, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{"c":{"x":2,"y":1},"d":{"x":1,"y":1}}', 'deleteLast method runs ok when result succeeds');
-
-    x = {};
-    strictEqual(false, xs.deleteLast(x, 1), 'deleteLast method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{}', 'deleteLast method runs ok with empty source');
+    strictEqual(xs.deleteLast(x, 2), false);
+    strictEqual(JSON.stringify(x), '{"a":1,"b":' + itemString + ',"c":3}');
 });
 
 test('deleteAll', function () {
+    var item = {x: 1};
+    var itemString = JSON.stringify(item);
     var x = [
-        {
-            x: 1,
-            y: 2
-        },
-        {
-            x: 2,
-            y: 2
-        },
-        {
-            x: 2,
-            y: 1
-        },
-        9,
-        {
-            x: 1,
-            y: 1
-        },
-        9
+        1,
+        2,
+        item,
+        item,
+        2,
+        item,
+        1
     ];
 
-    strictEqual(true, xs.deleteAll(x, x[1], [
-        x[0],
-        x[1]
-    ], [
-        9,
-        9
-    ], 1), 'deleteAll method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[{"x":2,"y":1}]', 'deleteAll method runs ok when result succeeds');
+    strictEqual(xs.deleteAll(x, 2), 2);
+    strictEqual(JSON.stringify(x), '[1,' + itemString + ',' + itemString + ',' + itemString + ',1]');
 
-    strictEqual(true, xs.deleteAll(x, 0), 'deleteAll method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[]', 'deleteAll method runs ok when result succeeds');
+    strictEqual(xs.deleteAll(x, 3), 0);
+    strictEqual(JSON.stringify(x), '[1,' + itemString + ',' + itemString + ',' + itemString + ',1]');
 
-    x = [];
-    strictEqual(false, xs.deleteAll(x, 1), 'deleteAll method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '[]', 'deleteAll method runs ok when result succeeds');
+    strictEqual(xs.deleteAll(x, item), 3);
+    strictEqual(JSON.stringify(x), '[1,1]');
+
+    strictEqual(xs.deleteAll(x), 2);
+    strictEqual(JSON.stringify(x), '[]');
+
+    strictEqual(xs.deleteAll(x), 0);
+    strictEqual(JSON.stringify(x), '[]');
 
     x = {
-        a: {
-            x: 1,
-            y: 2
-        },
-        b: {
-            x: 2,
-            y: 2
-        },
-        c: {
-            x: 2,
-            y: 1
-        },
-        d: {
-            x: 1,
-            y: 1
-        },
-        e: 1,
-        f: 1
+        a: 1,
+        b: 2,
+        c: item,
+        d: item,
+        e: 2,
+        f: item,
+        g: 1
     };
-    strictEqual(false, xs.deleteAll(x, 1), 'deleteAll method returns ok when result succeeds');
 
-    strictEqual(false, xs.deleteAll(x, x.a, x.b, [
-        'c',
-        'd'
-    ], [
+    strictEqual(xs.deleteAll(x, 2), 2);
+    strictEqual(JSON.stringify(x), '{"a":1,"c":' + itemString + ',"d":' + itemString + ',"f":' + itemString + ',"g":1}');
+
+    strictEqual(xs.deleteAll(x, 3), 0);
+    strictEqual(JSON.stringify(x), '{"a":1,"c":' + itemString + ',"d":' + itemString + ',"f":' + itemString + ',"g":1}');
+
+    strictEqual(xs.deleteAll(x, item), 3);
+    strictEqual(JSON.stringify(x), '{"a":1,"g":1}');
+
+    strictEqual(xs.deleteAll(x), 2);
+    strictEqual(JSON.stringify(x), '{}');
+
+    strictEqual(xs.deleteAll(x), 0);
+    strictEqual(JSON.stringify(x), '{}');
+});
+
+test('clone', function () {
+    var item = {x: 1};
+    var x, clone;
+    x = [
         1,
-        1
-    ]), 'deleteAll method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{}', 'deleteAll method runs ok when result succeeds');
+        2,
+        item
+    ];
+    clone = xs.clone(x);
+    //keys are equal
+    strictEqual(JSON.stringify(xs.keys(clone)), JSON.stringify(xs.keys(x)));
+    //values are equal
+    strictEqual(xs.every(x, function (value, key) {
+        return clone[key] === x[key];
+    }), true);
+    //links are saved
+    strictEqual(x[2] === clone[2], true);
+    x = {
+        a: 1,
+        c: 2,
+        b: item
+    };
+    clone = xs.clone(x);
+    //keys are equal
+    strictEqual(JSON.stringify(xs.keys(clone)), JSON.stringify(xs.keys(x)));
+    //values are equal
+    strictEqual(xs.every(x, function (value, key) {
+        return clone[key] === x[key];
+    }), true);
+    //links are saved
+    strictEqual(x.b === clone.b, true);
+});
 
-    strictEqual(false, xs.deleteAll(x, 1), 'deleteAll method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{}', 'deleteAll method runs ok when result succeeds');
+test('deepClone', function () {
 
-    x = {};
-    strictEqual(false, xs.deleteAll(x, 1), 'deleteAll method returns ok when result succeeds');
-    strictEqual(JSON.stringify(x), '{}', 'deleteAll method runs ok with empty source');
+});
+
+test('extend', function () {
+    var a = {a: 1};
+    var b = {b: 1};
+    var c = {c: 1};
+    var x = {
+        a: a,
+        b: b,
+        c: c,
+        d: 1,
+        e: xs.clone(a)
+    };
+    xs.extend(x, {a: b}, 3, [
+        4,
+        5
+    ], {b: 1}, {e: a});
+    //check replacements
+    strictEqual(x.a, b);
+    strictEqual(x.b, 1);
+    strictEqual(x.c, c);
+    strictEqual(x.d, 1);
+    strictEqual(x.e, a);
 });
 
 test('compact', function () {
@@ -1445,10 +1425,10 @@ test('compact', function () {
         '1'
     ];
 
-    strictEqual(JSON.stringify(xs.compact(x)), '[1,2,true,{},[],"0","1"]', 'compact method works ok');
+    strictEqual(JSON.stringify(xs.compact(x)), '[1,2,true,{},[],"0","1"]');
 
     x = [];
-    strictEqual(JSON.stringify(xs.compact(x)), '[]', 'compact method works ok');
+    strictEqual(JSON.stringify(xs.compact(x)), '[]');
 
     x = {
         a: 0,
@@ -1465,33 +1445,95 @@ test('compact', function () {
         l: '1'
     };
 
-    strictEqual(JSON.stringify(xs.compact(x)), '{"b":1,"c":2,"g":true,"h":{},"i":[],"k":"0","l":"1"}', 'compact method works ok');
+    strictEqual(JSON.stringify(xs.compact(x)), '{"b":1,"c":2,"g":true,"h":{},"i":[],"k":"0","l":"1"}');
 
     x = {};
-    strictEqual(JSON.stringify(xs.compact(x)), '{}', 'compact method works ok');
+    strictEqual(JSON.stringify(xs.compact(x)), '{}');
+});
+
+test('shuffle', function () {
+    var item = {x: 1};
+    var x, clone;
+    x = [
+        0,
+        1,
+        2,
+        item,
+        item,
+        item,
+        item,
+        item,
+        item,
+        item,
+        item,
+        item,
+        item,
+        item,
+        item,
+        item,
+        item
+    ];
+
+    clone = xs.clone(x);
+    xs.shuffle(x);
+    //check items all saved
+    strictEqual(true, xs.every(clone, function (value) {
+        return xs.has(x, value);
+    }));
+    //check all keys exist
+    strictEqual(true, xs.every(clone, function (value, key) {
+        return xs.hasKey(x, key);
+    }));
+    //check order is changed
+    strictEqual(false, xs.every(clone, function (value) {
+        return xs.keyOf(x, value) === xs.keyOf(clone, value);
+    }));
+
+    x = {
+        a: 0,
+        b: 1,
+        c: 2,
+        d: item,
+        e: item,
+        f: item,
+        g: item,
+        h: item,
+        k: item,
+        l: item,
+        m: item,
+        n: item,
+        o: item,
+        p: item
+    };
+
+    clone = xs.clone(x);
+    xs.shuffle(x);
+    //check items all saved
+    strictEqual(true, xs.every(clone, function (value) {
+        return xs.has(x, value);
+    }));
+    //check all keys exist
+    strictEqual(true, xs.every(clone, function (value, key) {
+        return xs.hasKey(x, key);
+    }));
+    //check order is changed
+    strictEqual(false, JSON.stringify(xs.keys(x)) == JSON.stringify(xs.keys(clone)));
 });
 
 test('union', function () {
     strictEqual(JSON.stringify(xs.union(null, undefined, 1, 2, [3], [
         4,
         5
-    ])), '[null,null,1,2,3,4,5]', 'union method works ok');
+    ])), '[null,null,1,2,3,4,5]');
 
-    strictEqual(JSON.stringify(xs.union([
-        null,
-        undefined,
-        1,
-        2,
-        [3],
-        [
-            4,
-            5
-        ]
-    ])), '[null,null,1,2,3,4,5]', 'union method works ok');
+    strictEqual(JSON.stringify(xs.union(null, undefined, 1, 2, [3], [
+        4,
+        5
+    ])), '[null,null,1,2,3,4,5]');
 
-    strictEqual(JSON.stringify(xs.union([], [], [])), '{}', 'union method works ok');
+    strictEqual(JSON.stringify(xs.union([], [], [])), '{}');
 
-    strictEqual(JSON.stringify(xs.union()), '{}', 'union method works ok');
+    strictEqual(JSON.stringify(xs.union()), '{}');
 
     var x = [
         {a: 1},
@@ -1507,16 +1549,16 @@ test('union', function () {
             {f: 6}
         ]
     ];
-    strictEqual(JSON.stringify(xs.union.apply(xs, x)), '{"a":1,"b":2,"c":3,"d":4,"e":5,"f":6}', 'union method works ok');
+    strictEqual(JSON.stringify(xs.union.apply(xs, x)), '{"a":1,"b":2,"c":3,"d":4,"e":5,"f":6}');
 
-    strictEqual(JSON.stringify(xs.union.apply(xs, [x])), '{"a":1,"b":2,"c":3,"d":4,"e":5,"f":6}', 'union method works ok');
+    strictEqual(JSON.stringify(xs.union.apply(xs, [x])), '[{"a":1},{"b":2},{"c":3},{"d":4},{"e":5},{"f":6}]');
 
     strictEqual(JSON.stringify(xs.union({}, {}, [
         {},
         {}
-    ])), '{}', 'union method works ok');
+    ])), '{}');
 
-    strictEqual(JSON.stringify(xs.union()), '{}', 'union method works ok');
+    strictEqual(JSON.stringify(xs.union()), '{}');
 });
 
 test('intersection', function () {
@@ -1572,21 +1614,21 @@ test('intersection', function () {
         ]
     ];
     var intersection = xs.intersection(x[0], x[1], x[2], x[3]);
-    strictEqual(JSON.stringify(intersection), '[3,4,5,null,false,{},[]]', 'intersection method works ok');
-    strictEqual(xs.has(intersection, arr), true, 'intersection method works ok');
-    strictEqual(xs.has(intersection, obj), true, 'intersection method works ok');
+    strictEqual(JSON.stringify(intersection), '[3,4,5,null,false,{},[]]');
+    strictEqual(xs.has(intersection, arr), true);
+    strictEqual(xs.has(intersection, obj), true);
 
     intersection = xs.intersection([], obj, arr);
-    strictEqual(JSON.stringify(intersection), '[]', 'intersection method works ok');
+    strictEqual(JSON.stringify(intersection), '{}');
 
     intersection = xs.intersection([arr], [
         obj,
         arr
     ]);
-    strictEqual(xs.has(intersection, arr), true, 'intersection method works ok');
+    strictEqual(xs.has(intersection, arr), true);
 
     intersection = xs.intersection();
-    strictEqual(JSON.stringify(intersection), '{}', 'intersection method works ok');
+    strictEqual(JSON.stringify(intersection), '{}');
 
     arr = [];
     obj = {};
@@ -1610,18 +1652,18 @@ test('intersection', function () {
     ];
     intersection = xs.intersection(x[0], x[1], x[2]);
     var correct = '{"c":[{"c":3}],"d":[{"d":4}],"e":[{"e":5},{"f":6}],"f":null,"h":false,"j":{},"k":[]}';
-    strictEqual(JSON.stringify(intersection), correct, 'intersection method works ok');
-    strictEqual(xs.has(intersection, arr), true, 'intersection method works ok');
-    strictEqual(xs.has(intersection, obj), true, 'intersection method works ok');
-    strictEqual(xs.has(intersection, c), true, 'intersection method works ok');
-    strictEqual(xs.has(intersection, d), true, 'intersection method works ok');
-    strictEqual(xs.has(intersection, e), true, 'intersection method works ok');
+    strictEqual(JSON.stringify(intersection), correct);
+    strictEqual(xs.has(intersection, arr), true);
+    strictEqual(xs.has(intersection, obj), true);
+    strictEqual(xs.has(intersection, c), true);
+    strictEqual(xs.has(intersection, d), true);
+    strictEqual(xs.has(intersection, e), true);
 
     intersection = xs.intersection({a: a}, {a: a});
-    strictEqual(JSON.stringify(intersection), '{"a":{"a":1}}', 'intersection method works ok');
+    strictEqual(JSON.stringify(intersection), '{"a":{"a":1}}');
 
     intersection = xs.intersection();
-    strictEqual(JSON.stringify(intersection), '{}', 'intersection method works ok');
+    strictEqual(JSON.stringify(intersection), '{}');
 });
 
 test('difference', function () {
@@ -1680,16 +1722,16 @@ test('difference', function () {
     ];
 
     var diff = xs.difference(x[0], x[1], x[2], x[3]);
-    strictEqual(JSON.stringify(diff), '[8]', 'difference method works ok');
+    strictEqual(JSON.stringify(diff), '[8]');
 
     diff = xs.difference(x[0], []);
-    strictEqual(JSON.stringify(diff), JSON.stringify(x[0]), 'difference method works ok');
+    strictEqual(JSON.stringify(diff), JSON.stringify(x[0]));
 
     diff = xs.difference([], x[0]);
-    strictEqual(JSON.stringify(diff), JSON.stringify([]), 'difference method works ok');
+    strictEqual(JSON.stringify(diff), JSON.stringify([]));
 
     diff = xs.difference([]);
-    strictEqual(JSON.stringify(diff), JSON.stringify([]), 'difference method works ok');
+    strictEqual(JSON.stringify(diff), JSON.stringify([]));
 
     arr = [];
     obj = {};
@@ -1713,16 +1755,16 @@ test('difference', function () {
     ];
 
     diff = xs.difference(x[0], x[1], x[2]);
-    strictEqual(JSON.stringify(diff), '{"a":{"a":1},"e":[{"e":5},{"f":6}],"h":false,"i":""}', 'difference method works ok');
+    strictEqual(JSON.stringify(diff), '{"a":{"a":1},"e":[{"e":5},{"f":6}],"h":false,"i":""}');
 
     diff = xs.difference(x[0], {});
-    strictEqual(JSON.stringify(diff), JSON.stringify(x[0]), 'difference method works ok');
+    strictEqual(JSON.stringify(diff), JSON.stringify(x[0]));
 
     diff = xs.difference({}, x[0]);
-    strictEqual(JSON.stringify(diff), JSON.stringify({}), 'difference method works ok');
+    strictEqual(JSON.stringify(diff), JSON.stringify({}));
 
     diff = xs.difference({});
-    strictEqual(JSON.stringify(diff), JSON.stringify({}), 'difference method works ok');
+    strictEqual(JSON.stringify(diff), JSON.stringify({}));
 });
 
 test('unique', function () {
@@ -1742,10 +1784,10 @@ test('unique', function () {
         arr
     ];
     var unique = xs.unique(x);
-    strictEqual(JSON.stringify(unique), '[1,2,{},null,true,false,"",[]]', 'unique method works ok');
+    strictEqual(JSON.stringify(unique), '[1,2,{},null,true,false,"",[]]');
 
     unique = xs.unique([]);
-    strictEqual(JSON.stringify(unique), '[]', 'unique method works ok');
+    strictEqual(JSON.stringify(unique), '[]');
 
     arr = [];
     obj = {};
@@ -1759,12 +1801,12 @@ test('unique', function () {
         g: obj
     };
     unique = xs.unique(x);
-    strictEqual(JSON.stringify(unique), '{"a":1,"c":true,"d":[],"f":{}}', 'unique method works ok');
-    strictEqual(xs.has(unique, arr), true, 'links to objects saved');
-    strictEqual(xs.has(unique, obj), true, 'links to objects saved');
+    strictEqual(JSON.stringify(unique), '{"a":1,"c":true,"d":[],"f":{}}');
+    strictEqual(xs.has(unique, arr), true);
+    strictEqual(xs.has(unique, obj), true);
 
     unique = xs.unique({});
-    strictEqual(JSON.stringify(unique), '{}', 'unique method works ok');
+    strictEqual(JSON.stringify(unique), '{}');
 });
 
 test('pick', function () {
@@ -1789,30 +1831,30 @@ test('pick', function () {
     var correct = '[{"x":1,"y":2},{"x":2,"y":2}]';
 
     var clone = xs.pick(x, 0, 1);
-    strictEqual(JSON.stringify(clone), correct, 'pick works ok with a set of args');
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.pick(x, [0], [1]);
-    strictEqual(JSON.stringify(clone), correct, 'pick works ok with a set of args');
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.pick(x, [
         0,
         1
     ]);
-    strictEqual(JSON.stringify(clone), correct, 'pick works ok with a set of args');
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.pick(x, 99);
-    strictEqual(JSON.stringify(clone), '[]', 'pick works ok without args');
+    strictEqual(JSON.stringify(clone), '[]');
 
     clone = xs.pick(x, 'a');
-    strictEqual(JSON.stringify(clone), '[]', 'pick works ok without args');
+    strictEqual(JSON.stringify(clone), '[]');
 
     x = [];
 
     clone = xs.pick(x, 99);
-    strictEqual(JSON.stringify(clone), '[]', 'pick works ok without args');
+    strictEqual(JSON.stringify(clone), '[]');
 
     clone = xs.pick(x, 'a');
-    strictEqual(JSON.stringify(clone), '[]', 'pick works ok without args');
+    strictEqual(JSON.stringify(clone), '[]');
 
     x = {
         a: {
@@ -1834,25 +1876,25 @@ test('pick', function () {
     };
 
     clone = xs.pick(x, 'a', 'b', 'e');
-    strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}', 'pick works ok with a set of args');
+    strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}');
 
     clone = xs.pick(x, ['a'], ['b']);
-    strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}', 'pick works ok with a set of args');
+    strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}');
 
     clone = xs.pick(x, [
         'a',
         'b'
     ]);
-    strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}', 'pick works ok with a set of args');
+    strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}');
 
     clone = xs.pick(x);
-    strictEqual(JSON.stringify(clone), '{}', 'pick works ok without args');
+    strictEqual(JSON.stringify(clone), '{}');
 
     clone = xs.pick({}, 'a');
-    strictEqual(JSON.stringify(clone), '{}', 'pick works ok with empty source');
+    strictEqual(JSON.stringify(clone), '{}');
 
     clone = xs.pick({});
-    strictEqual(JSON.stringify(clone), '{}', 'pick works ok with empty source');
+    strictEqual(JSON.stringify(clone), '{}');
 });
 
 test('omit', function () {
@@ -1877,33 +1919,33 @@ test('omit', function () {
     var correct = '[{"x":1,"y":2},{"x":2,"y":2}]';
 
     var clone = xs.omit(x, 2, 3);
-    strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.omit(x, [2], [3]);
-    strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.omit(x, [
         2,
         3
     ]);
-    strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.omit(x);
-    strictEqual(JSON.stringify(clone), JSON.stringify(x), 'omit works ok without args');
+    strictEqual(JSON.stringify(clone), JSON.stringify(x));
 
     clone = xs.omit(x, 99);
-    strictEqual(JSON.stringify(clone), JSON.stringify(x), 'omit works ok without args');
+    strictEqual(JSON.stringify(clone), JSON.stringify(x));
 
     clone = xs.omit(x, 'a');
-    strictEqual(JSON.stringify(clone), JSON.stringify(x), 'omit works ok with wrong args');
+    strictEqual(JSON.stringify(clone), JSON.stringify(x));
 
     x = [];
 
     clone = xs.omit(x, 99);
-    strictEqual(JSON.stringify(clone), JSON.stringify([]), 'omit works ok with wrong args');
+    strictEqual(JSON.stringify(clone), JSON.stringify([]));
 
     clone = xs.omit(x, 'a');
-    strictEqual(JSON.stringify(clone), JSON.stringify([]), 'omit works ok with wrong args');
+    strictEqual(JSON.stringify(clone), JSON.stringify([]));
 
     x = {
         a: {
@@ -1926,25 +1968,25 @@ test('omit', function () {
     correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}';
 
     clone = xs.omit(x, 'c', 'd', 'e');
-    strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.omit(x, ['c'], ['d']);
-    strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.omit(x, [
         'c',
         'd'
     ]);
-    strictEqual(JSON.stringify(clone), correct, 'omit works ok with a set of args');
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.omit(x);
-    strictEqual(JSON.stringify(clone), JSON.stringify(x), 'omit works ok without args');
+    strictEqual(JSON.stringify(clone), JSON.stringify(x));
 
     clone = xs.omit({}, 'a');
-    strictEqual(JSON.stringify(clone), '{}', 'omit works ok with empty source');
+    strictEqual(JSON.stringify(clone), '{}');
 
     clone = xs.omit({});
-    strictEqual(JSON.stringify(clone), '{}', 'omit works ok with empty source');
+    strictEqual(JSON.stringify(clone), '{}');
 });
 
 test('defaults', function () {
@@ -1969,15 +2011,15 @@ test('defaults', function () {
 
     var clone = xs.clone(x);
     xs.defaults(clone, 1, 2, 3);
-    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1}]', 'defaults works ok with a set of args');
+    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1}]');
 
     clone = xs.clone(x);
     xs.defaults(clone, 1, 2, 3, 4, 5);
-    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1},5]', 'defaults works ok with a set of args');
+    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1},5]');
 
     clone = xs.clone(x);
     xs.defaults(clone);
-    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1}]', 'defaults works ok without args');
+    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1}]');
 
     x = {
         a: {
@@ -2006,7 +2048,7 @@ test('defaults', function () {
     }, {
         f: 1
     });
-    strictEqual(JSON.stringify(clone), '{"e":1,"f":1}', 'defaults works ok with empty object');
+    strictEqual(JSON.stringify(clone), '{"e":1,"f":1}');
 
     clone = xs.clone(x);
     xs.defaults(clone, {
@@ -2014,15 +2056,15 @@ test('defaults', function () {
     }, {
         f: 1
     });
-    strictEqual(JSON.stringify(clone), correct, 'defaults works ok with a set of args');
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.clone(x);
     xs.defaults(clone, {
         a: 1
     });
-    strictEqual(JSON.stringify(clone), JSON.stringify(x), 'defaults works ok without defaulting');
+    strictEqual(JSON.stringify(clone), JSON.stringify(x));
 
     clone = xs.clone(x);
     xs.defaults(clone);
-    strictEqual(JSON.stringify(clone), JSON.stringify(x), 'defaults works ok without args');
+    strictEqual(JSON.stringify(clone), JSON.stringify(x));
 });
