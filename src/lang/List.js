@@ -30,7 +30,7 @@
     //framework shorthand
     var xs = root[ns];
 
-    var set = new (function () {
+    var list = new (function () {
         var me = this;
 
         // Create quick reference variables for speed access to core prototypes.
@@ -875,5 +875,5 @@
             });
         };
     });
-    set.extend(xs, set);
+    list.extend(xs, list);
 })(window, 'xs');
