@@ -1,5 +1,5 @@
 /*!
- This file is core of xs.js 0.1
+ This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
@@ -18,10 +18,10 @@
 
  */
 /**
- * @class xs.Set
+ * @class xs.lang.List
  * @singleton
  * @private
- * xs.Set is private singleton, defining basic set operations, for both Array and Object
+ * xs.lang.List is private singleton, defining basic list operations, for both Array and Object
  */
 (function (root, ns) {
 
@@ -32,11 +32,13 @@
 
     var set = new (function () {
         var me = this;
+
         // Create quick reference variables for speed access to core prototypes.
         var slice = Function.prototype.call.bind(Array.prototype.slice);
         var concatenate = Function.prototype.apply.bind(Array.prototype.concat);
+
         /**
-         * returns all list keys
+         * Returns all list keys
          *
          * @method keys
          *
@@ -51,14 +53,14 @@
                     keys.push(i);
                 }
                 return keys;
-            } else {
-                return Object.keys(list);
             }
+            return Object.keys(list);
         };
+
         /**
-         * returns all list items
+         * Returns all list items
          *
-         * @method items
+         * @method values
          *
          * @param {Array|Object} list list, items are fetched from
          *
@@ -74,8 +76,9 @@
             }
             return items;
         };
+
         /**
-         * returns whether list has given key
+         * Returns whether list has given key
          *
          * @method hasKey
          *
@@ -87,12 +90,12 @@
         var _hasKey = me.hasKey = function (list, key) {
             if (xs.isArray(list)) {
                 return key < list.length;
-            } else {
-                return list.hasOwnProperty(key);
             }
+            return list.hasOwnProperty(key);
         };
+
         /**
-         * returns whether list has item
+         * Returns whether list has item
          *
          * @method has
          *
@@ -106,8 +109,9 @@
                 return val === item;
             }) !== undefined;
         };
+
         /**
-         * returns key of first list item, equal to given
+         * Returns key of first list item, equal to given
          *
          * @method keyOf
          *
@@ -126,8 +130,9 @@
             }
             return undefined;
         };
+
         /**
-         * returns key of last list item, equal to given
+         * Returns key of last list item, equal to given
          *
          * @method lastKeyOf
          *
@@ -146,8 +151,9 @@
             }
             return undefined;
         };
+
         /**
-         * returns size of list
+         * Returns size of list
          *
          * @method size
          *
@@ -158,12 +164,12 @@
         var _size = me.size = function (list) {
             if (xs.isArray(list)) {
                 return list.length;
-            } else {
-                return _keys(list).length;
             }
+            return _keys(list).length;
         };
+
         /**
-         * iterates over list items
+         * Iterates over list items
          *
          * @method each
          *
@@ -178,8 +184,9 @@
                 iterator.call(scope, list[name], name, list);
             }
         };
+
         /**
-         * iterates over list items in reverse order
+         * Iterates over list items in reverse order
          *
          * @method eachReverse
          *
@@ -194,8 +201,9 @@
                 iterator.call(scope, list[name], name, list);
             }
         };
+
         /**
-         * produces a new list with items, returned by iterator function
+         * Produces a new list with items, returned by iterator function
          * if source was array - array is created
          * if source was object - object is created
          *
@@ -214,17 +222,18 @@
             }, scope);
             return result;
         };
+
         /**
-         * reduces a list of items, returned by iterator function from left
+         * Reduces a list of items, returned by iterator function from left
          *
          * @method reduce
          *
          * @param {Array|Object} list reduced list
          * @param {Function} iterator reducing function
-         * @param {*} memo initial item
+         * @param {*} memo initial value. Is optional. If omitted, first item's value is shifted from list and used as memo
          * @param {Object} scope optional scope
          *
-         * @return {*} Reducing result
+         * @returns {*} Reducing result
          */
         me.reduce = function (list, iterator, memo, scope) {
             var result, copy = _clone(list);
@@ -238,17 +247,18 @@
             }, scope);
             return result;
         };
+
         /**
-         * reduces a list of items, returned by iterator function from right
+         * Reduces a list of items, returned by iterator function from right
          *
          * @method reduceRight
          *
          * @param {Array|Object} list reduced list
          * @param {Function} iterator reducing function
-         * @param {*} memo initial item
+         * @param {*} memo initial value. Is optional. If omitted, last item's value is popped from list and used as memo
          * @param {Object} scope optional scope
          *
-         * @return {*} Reducing result
+         * @returns {*} Reducing result
          */
         me.reduceRight = function (list, iterator, memo, scope) {
             var result, copy = _clone(list);
@@ -262,8 +272,9 @@
             }, scope);
             return result;
         };
+
         /**
-         * returns first list item, that passes given test function
+         * Returns first list item, that passes given test function
          *
          * @method find
          *
@@ -283,8 +294,9 @@
                 }
             }
         };
+
         /**
-         * returns last list item, that passes given test function
+         * Returns last list item, that passes given test function
          *
          * @method findLast
          *
@@ -304,8 +316,9 @@
                 }
             }
         };
+
         /**
-         * returns all list items, that pass given test function
+         * Returns all list items, that pass given test function
          *
          * @method findAll
          *
@@ -329,8 +342,9 @@
             }
             return copy;
         };
+
         /**
-         * returns first list item, that suites where clause
+         * Returns first list item, that suites where clause
          *
          * @method filter
          *
@@ -346,8 +360,9 @@
                 });
             });
         };
+
         /**
-         * returns last list item, that suites where clause
+         * Returns last list item, that suites where clause
          *
          * @method filterLast
          *
@@ -363,8 +378,9 @@
                 });
             });
         };
+
         /**
-         * returns all list items, that suite where clause
+         * Returns all list items, that suite where clause
          *
          * @method filterAll
          *
@@ -380,8 +396,9 @@
                 });
             });
         };
+
         /**
-         * returns whether all list items pass tester function
+         * Returns whether all list items pass tester function
          *
          * @method every
          *
@@ -400,8 +417,9 @@
             }
             return true;
         };
+
         /**
-         * returns whether count of list items pass tester function
+         * Returns whether count of list items pass tester function
          *
          * @method some
          *
@@ -424,14 +442,16 @@
             }
             return false;
         };
+
         /**
-         * returns whether none of list items pass tester function
+         * Returns whether none of list items pass tester function
          *
          * @method none
          *
          * @param {Array|Object} list tested list
          * @param {Function} tester tester function
          * @param {Object} scope optional scope
+         *
          * @returns {boolean} whether no one of items pass tester function
          */
         var _none = me.none = function (list, tester, scope) {
@@ -444,12 +464,13 @@
             }
             return true;
         };
+
         /**
-         * returns first item of list
+         * Returns first item of list
          *
          * @method first
          *
-         * @param {Array|List} list
+         * @param {Array|Object} list
          *
          * @returns {*} first item, undefined if list is empty
          */
@@ -457,12 +478,13 @@
             var key = _shift(_keys(list));
             return list[key];
         };
+
         /**
-         * returns last item of list
+         * Returns last item of list
          *
          * @method last
          *
-         * @param {Array|List} list
+         * @param {Array|Object} list
          *
          * @returns {*} last item, undefined if list is empty
          */
@@ -470,12 +492,13 @@
             var key = _pop(_keys(list));
             return list[key];
         };
+
         /**
-         * shifts and returns first item from list
+         * Shifts and returns first item from list
          *
          * @method shift
          *
-         * @param {Array|List} list
+         * @param {Array|Object} list
          *
          * @returns {*} First item of list
          */
@@ -485,12 +508,13 @@
             xs.isArray(list) ? list.splice(0, 1) : delete list[key];
             return item;
         };
+
         /**
-         * pops and returns last item from list
+         * Pops and returns last item from list
          *
          * @method pop
          *
-         * @param {Array|List} list
+         * @param {Array|Object} list
          *
          * @returns {*} Last item of list
          */
@@ -500,10 +524,11 @@
             xs.isArray(list) ? list.splice(-1, 1) : delete list[key];
             return item;
         };
+
         /**
          * Deletes item with given key
          *
-         * @method delete
+         * @method deleteAt
          *
          * @param {Array|Object} list list, item is deleted from
          * @param {number|string} key key of deleted item
@@ -517,6 +542,7 @@
             }
             return false;
         };
+
         /**
          * Deletes first item from list, that matches given item
          *
@@ -535,6 +561,7 @@
             }
             return false;
         };
+
         /**
          * Deletes last item from list, that matches elem as key or as item
          *
@@ -553,6 +580,7 @@
             }
             return false;
         };
+
         /**
          * Deletes all items from list, passed as array/plain arguments
          *
@@ -584,6 +612,7 @@
             });
             return size;
         };
+
         /**
          * Returns shallow copy of list
          *
@@ -601,9 +630,7 @@
             _extend(copy, list);
             return copy;
         };
-        me.deepClone = function () {
 
-        };
         /**
          * Copies all properties from objects/arrays, passed as arguments to given obj
          *
@@ -619,6 +646,7 @@
                 });
             });
         };
+
         /**
          * Returns copy of given list, filtered not to have false-like items
          *
@@ -633,6 +661,7 @@
                 return item;
             });
         };
+
         /**
          * Shuffles list items
          *
@@ -655,6 +684,7 @@
                 list[name] = clone[name];
             }
         };
+
         /**
          * Returns union of lists, passed as arguments
          *
@@ -675,20 +705,21 @@
                         _hasKey(union, key) || (union[key] = item);
                     });
                 });
-            } else {
-                union = [];
-                _each(merge, function (item) {
-                    if (xs.isArray(item)) {
-                        _each(item, function (item) {
-                            union.push(item);
-                        });
-                    } else {
-                        union.push(item);
-                    }
-                });
+                return union;
             }
+            union = [];
+            _each(merge, function (item) {
+                if (xs.isArray(item)) {
+                    _each(item, function (item) {
+                        union.push(item);
+                    });
+                } else {
+                    union.push(item);
+                }
+            });
             return union;
         };
+
         /**
          * Returns intersection of given lists (although intersection items are unique)
          *
@@ -712,26 +743,28 @@
                         return _has(arr, item);
                     }) && (intersect[name] = item);
                 });
-            } else {
-                intersect = [];
-                //iterate over each item (they are unique)
-                _each(all, function (item) {
-                    //if each array has this item, it belongs to intersection
-                    _every(others, function (arr) {
-                        return _has(arr, item);
-                    }) && intersect.push(item);
-                });
+                return intersect;
             }
+            intersect = [];
+            //iterate over each item (they are unique)
+            _each(all, function (item) {
+                //if each array has this item, it belongs to intersection
+                _every(others, function (arr) {
+                    return _has(arr, item);
+                }) && intersect.push(item);
+            });
             return intersect;
         };
+
         /**
-         * Take the difference between one list and a number of other lists.
-         * Only the items present in just the first array will remain.
+         * Takes the difference between one list and a number of other lists.
+         * Items, that are presented just in the first list will remain.
          *
          * @method difference
          *
          * @param {Array|Object} list differed list
-         * @returns {Array|Object}
+         *
+         * @returns {Array|Object} difference list
          */
         me.difference = function (list) {
             var others = slice(arguments, 1); //get objects list
@@ -746,6 +779,7 @@
                 });
             });
         };
+
         /**
          * Returns list, filled by unique items of given list
          *
@@ -762,14 +796,15 @@
                 _each(list, function (item) {
                     _has(unique, item) || unique.push(item);
                 });
-            } else {
-                unique = {};
-                _each(list, function (item, name) {
-                    _has(unique, item) || (unique[name] = item);
-                });
+                return unique;
             }
+            unique = {};
+            _each(list, function (item, name) {
+                _has(unique, item) || (unique[name] = item);
+            });
             return unique;
         };
+
         /**
          * Returns copy of list with only white-listed keys, passed in 2+ arguments
          *
@@ -780,12 +815,21 @@
          * @returns {Array|Object} picked list
          */
         me.pick = function (list) {
-            var copy = xs.isArray(list) ? [] : {}, keys = _union(slice(arguments, 1));
+            var copy, keys = _union(slice(arguments, 1));
+            if (xs.isArray(list)) {
+                copy = [];
+                _each(keys, function (key) {
+                    _hasKey(list, key) && copy.push(list[key]);
+                });
+                return copy;
+            }
+            copy = {};
             _each(keys, function (key) {
-                key in list && (copy[key] = list[key]);
+                _hasKey(list, key) && (copy[key] = list[key]);
             });
             return copy;
         };
+
         /**
          * Returns copy of list without blacklisted keys, passed in 2+ arguments
          *
@@ -795,12 +839,21 @@
          * @returns {Array|Object}
          */
         me.omit = function (list) {
-            var copy = xs.isArray(list) ? [] : {}, keys = _union(slice(arguments, 1));
+            var copy, keys = _union(slice(arguments, 1));
+            if (xs.isArray(list)) {
+                copy = [];
+                _each(list, function (item, name) {
+                    _has(keys, name) || copy.push(item);
+                });
+                return copy;
+            }
+            copy = {};
             _each(list, function (item, name) {
                 _has(keys, name) || (copy[name] = item);
             });
             return copy;
         };
+
         /**
          * Updates list with defaulted items, passed in 2+ arguments
          *

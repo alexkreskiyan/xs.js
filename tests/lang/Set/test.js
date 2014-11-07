@@ -1382,10 +1382,6 @@ test('clone', function () {
     strictEqual(x.b === clone.b, true);
 });
 
-test('deepClone', function () {
-
-});
-
 test('extend', function () {
     var a = {a: 1};
     var b = {b: 1};
@@ -1829,31 +1825,30 @@ test('pick', function () {
         }
     ];
     var correct = '[{"x":1,"y":2},{"x":2,"y":2}]';
+    var correctKeys = '[0,1]';
 
     var clone = xs.pick(x, 0, 1);
+    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
     strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.pick(x, [0], [1]);
+    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
     strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.pick(x, [
         0,
         1
     ]);
+    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
     strictEqual(JSON.stringify(clone), correct);
 
-    clone = xs.pick(x, 99);
+    clone = xs.pick(x);
     strictEqual(JSON.stringify(clone), '[]');
 
     clone = xs.pick(x, 'a');
     strictEqual(JSON.stringify(clone), '[]');
 
-    x = [];
-
-    clone = xs.pick(x, 99);
-    strictEqual(JSON.stringify(clone), '[]');
-
-    clone = xs.pick(x, 'a');
+    clone = xs.pick([], 'a');
     strictEqual(JSON.stringify(clone), '[]');
 
     x = {
@@ -1874,26 +1869,31 @@ test('pick', function () {
             y: 1
         }
     };
+    correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}';
+    correctKeys = '["a","b"]';
 
     clone = xs.pick(x, 'a', 'b', 'e');
-    strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}');
+    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.pick(x, ['a'], ['b']);
-    strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}');
+    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.pick(x, [
         'a',
         'b'
     ]);
-    strictEqual(JSON.stringify(clone), '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}');
+    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.pick(x);
     strictEqual(JSON.stringify(clone), '{}');
 
-    clone = xs.pick({}, 'a');
+    clone = xs.pick(x, 'n');
     strictEqual(JSON.stringify(clone), '{}');
 
-    clone = xs.pick({});
+    clone = xs.pick({}, 'n');
     strictEqual(JSON.stringify(clone), '{}');
 });
 
@@ -1917,35 +1917,31 @@ test('omit', function () {
         }
     ];
     var correct = '[{"x":1,"y":2},{"x":2,"y":2}]';
+    var correctKeys = '[0,1]';
 
     var clone = xs.omit(x, 2, 3);
+    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
     strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.omit(x, [2], [3]);
+    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
     strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.omit(x, [
         2,
         3
     ]);
+    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
     strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.omit(x);
     strictEqual(JSON.stringify(clone), JSON.stringify(x));
 
-    clone = xs.omit(x, 99);
-    strictEqual(JSON.stringify(clone), JSON.stringify(x));
-
     clone = xs.omit(x, 'a');
     strictEqual(JSON.stringify(clone), JSON.stringify(x));
 
-    x = [];
-
-    clone = xs.omit(x, 99);
-    strictEqual(JSON.stringify(clone), JSON.stringify([]));
-
-    clone = xs.omit(x, 'a');
-    strictEqual(JSON.stringify(clone), JSON.stringify([]));
+    clone = xs.omit([], 'a');
+    strictEqual(JSON.stringify(clone), '[]');
 
     x = {
         a: {
@@ -1966,26 +1962,30 @@ test('omit', function () {
         }
     };
     correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}';
+    correctKeys = '["a","b"]';
 
     clone = xs.omit(x, 'c', 'd', 'e');
+    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
     strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.omit(x, ['c'], ['d']);
+    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
     strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.omit(x, [
         'c',
         'd'
     ]);
+    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
     strictEqual(JSON.stringify(clone), correct);
 
     clone = xs.omit(x);
     strictEqual(JSON.stringify(clone), JSON.stringify(x));
 
-    clone = xs.omit({}, 'a');
-    strictEqual(JSON.stringify(clone), '{}');
+    clone = xs.omit(x, 'n');
+    strictEqual(JSON.stringify(clone), JSON.stringify(x));
 
-    clone = xs.omit({});
+    clone = xs.omit({}, 'n');
     strictEqual(JSON.stringify(clone), '{}');
 });
 
