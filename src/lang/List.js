@@ -2207,7 +2207,7 @@
          *     console.log(xs.intersection([1, 2], [2, 3]));
          *     //outputs:
          *     //[
-         *     //    2,
+         *     //    2
          *     //]
          *
          *     //for Object
@@ -2219,7 +2219,7 @@
          *     }));
          *     //outputs:
          *     //{
-         *     //    a: 1,
+         *     //    a: 1
          *     //}
          *
          * @method intersection
@@ -2258,6 +2258,27 @@
         /**
          * Takes the difference between one list and a number of other lists.
          * Items, that are presented just in the first list will remain.
+         *
+         * For example:
+         *
+         *     //for Array
+         *     console.log(xs.difference([1, 2], [2, 3]));
+         *     //outputs:
+         *     //[
+         *     //    1
+         *     //]
+         *
+         *     //for Object
+         *     console.log(xs.difference({
+         *         a: 1,
+         *         b: 2,
+         *     }, {
+         *         b: 1,
+         *     }));
+         *     //outputs:
+         *     //{
+         *     //    b: 2
+         *     //}
          *
          * @method difference
          *
