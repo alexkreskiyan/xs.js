@@ -713,7 +713,7 @@
          *         return this.sum(key, value.x) === 2;
          *     }, scope));
          *     //outputs:
-         *     // {x: 0}, reference to list[0], first value, passed finder function
+         *     // {x: 0}, reference to list[0], last value, passed finder function
          *
          *     //for Object
          *     var list = {
@@ -725,7 +725,7 @@
          *         return this.first(key) === 'a';
          *     }, scope));
          *     //outputs:
-         *     // {x: 3}, reference to list[0], first value, passed finder function
+         *     // {x: 3}, reference to list[0], last value, passed finder function
          *
          * @method findLast
          *
@@ -899,7 +899,7 @@
          *     ];
          *     console.log(xs.filterLast(list, {x: 1}));
          *     //outputs:
-         *     // {x: 1, y: 1}, reference to list[3], first value, matching where
+         *     // {x: 1, y: 1}, reference to list[3], last value, matching where
          *
          *     //for Object
          *     var list = {
@@ -922,7 +922,7 @@
          *     };
          *     console.log(xs.filterLast(list, {x: 1}));
          *     //outputs:
-         *     // {x: 1, y: 1}, reference to list.d, first value, matching where
+         *     // {x: 1, y: 1}, reference to list.d, last value, matching where
          *
          * @method filterLast
          *
@@ -941,6 +941,54 @@
 
         /**
          * Returns all list items, that suite where clause
+         *
+         * For example:
+         *
+         *     //for Array
+         *     var list = [
+         *         {
+         *             x: 1,
+         *             y: 2
+         *         },
+         *         {
+         *             x: 2,
+         *             y: 2
+         *         },
+         *         {
+         *             x: 2,
+         *             y: 1
+         *         },
+         *         {
+         *             x: 1,
+         *             y: 1
+         *         }
+         *     ];
+         *     console.log(xs.filterAll(list, {x: 1}));
+         *     //outputs:
+         *     // [{x: 1, y: 2}, {x: 1, y: 1}], reference to list[0] and x[3] respectively, all values, matching where
+         *
+         *     //for Object
+         *     var list = {
+         *         a: {
+         *             x: 1,
+         *             y: 2
+         *         },
+         *         c: {
+         *             x: 2,
+         *             y: 2
+         *         },
+         *         b: {
+         *             x: 2,
+         *             y: 1
+         *         },
+         *         d: {
+         *             x: 1,
+         *             y: 1
+         *         }
+         *     };
+         *     console.log(xs.filterAll(list, {x: 1}));
+         *     //outputs:
+         *     // {a: {x: 1, y: 2}, d: {x: 1, y: 1}}, reference to list.a and list.d respectively, all values, matching where
          *
          * @method filterAll
          *
