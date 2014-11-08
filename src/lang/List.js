@@ -568,6 +568,48 @@
         /**
          * Reduces a list of items, returned by iterator function from right
          *
+         * For example:
+         *
+         *     var scope = {
+         *         twice: function(x) {
+         *             return x * 2;
+         *         }
+         *     };
+         *
+         *     //for Array
+         *     var list = [
+         *         1,
+         *         2,
+         *         4
+         *     ];
+         *     console.log(xs.reduceRight(list, function(memo, value, key) {
+         *         return memo + key + this.twice(value);
+         *     }, 5, scope));
+         *     //outputs:
+         *     // 22, evaluated as 5 + (2 + 4 * 2) + (1 + 2 * 2) + (0 + 1 * 2)
+         *     console.log(xs.reduceRight(list, function(memo, value, key) {
+         *         return memo + key + 2 * value;
+         *     }));
+         *     //outputs:
+         *     // 11, evaluated as 4 + (1 + 2 * 2) + (0 + 1 * 2)
+         *
+         *     //for Object
+         *     var list = {
+         *         a: 1,
+         *         c: 2,
+         *         b: 4
+         *     };
+         *     console.log(xs.reduceRight(list, function(memo, value, key) {
+         *         return memo + key + this.twice(value);
+         *     }, 5, scope));
+         *     //outputs:
+         *     // '5b8c4a2', evaluated as 5 + ('b' + 2 * 4) + ('c' + 2 * 2) + ('a' + 1 * 2)
+         *     console.log(xs.reduceRight(list, function(memo, value, key) {
+         *         return memo + key + 2 * value;
+         *     }));
+         *     //outputs:
+         *     // '4c4a2', evaluated as 4 + ('c' + 2 * 2) + ('a' + 1 * 2)
+         *
          * @method reduceRight
          *
          * @param {Array|Object} list reduced list
