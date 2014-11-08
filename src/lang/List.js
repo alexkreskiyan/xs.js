@@ -810,12 +810,60 @@
         /**
          * Returns first list item, that suites where clause
          *
+         * For example:
+         *
+         *     //for Array
+         *     var list = [
+         *         {
+         *             x: 1,
+         *             y: 2
+         *         },
+         *         {
+         *             x: 2,
+         *             y: 2
+         *         },
+         *         {
+         *             x: 2,
+         *             y: 1
+         *         },
+         *         {
+         *             x: 1,
+         *             y: 1
+         *         }
+         *     ];
+         *     console.log(xs.filter(list, {x: 1}));
+         *     //outputs:
+         *     // {x: 1, y: 2}, reference to list[0], first value, matching where
+         *
+         *     //for Object
+         *     var list = {
+         *         a: {
+         *             x: 1,
+         *             y: 2
+         *         },
+         *         c: {
+         *             x: 2,
+         *             y: 2
+         *         },
+         *         b: {
+         *             x: 2,
+         *             y: 1
+         *         },
+         *         d: {
+         *             x: 1,
+         *             y: 1
+         *         }
+         *     };
+         *     console.log(xs.filter(list, {x: 1}));
+         *     //outputs:
+         *     // {x: 1, y: 2}, reference to list[0], first value, matching where
+         *
          * @method filter
          *
          * @param {Array|Object} list filtered list
          * @param {Object} where clause object
          *
-         * @returns {*} first object, that suites clause, or undefined, if nothing suites
+         * @returns {Object} first object, that suites clause, or undefined, if nothing suites
          */
         me.filter = function (list, where) {
             return _find(list, function (item) {
@@ -833,7 +881,7 @@
          * @param {Array|Object} list filtered list
          * @param {Object} where clause object
          *
-         * @returns {*} first object, that suites clause, or undefined, if nothing suites
+         * @returns {Object} first object, that suites clause, or undefined, if nothing suites
          */
         me.filterLast = function (list, where) {
             return _findLast(list, function (item) {
