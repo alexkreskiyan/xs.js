@@ -41,7 +41,7 @@
          * Returns all list keys
          *
          * For example:
-         * 
+         *
          *     //for Array
          *     var keys = xs.keys([
          *         1,
@@ -77,6 +77,24 @@
 
         /**
          * Returns all list items
+         *
+         * For example:
+         *
+         *     //for Array
+         *     var values = xs.values([
+         *         1,
+         *         2,
+         *         3
+         *     ]);
+         *     console.log(values); //[1, 2, 3] - returns copy of source array
+         *
+         *     //for Object
+         *     var values = xs.values({
+         *         a: 1,
+         *         b: 2,
+         *         c: 3
+         *     });
+         *     console.log(values); //[1, 2, 3]
          *
          * @method values
          *
