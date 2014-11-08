@@ -158,6 +158,32 @@
         /**
          * Returns whether list has item
          *
+         * For example:
+         *
+         *     var value = {};
+         *
+         *     //for Array
+         *     var list = [
+         *         1,
+         *         2,
+         *         value
+         *     ];
+         *     console.log(xs.has(list, 0)); //false - no item
+         *     console.log(xs.has(list, {})); //false - another object in array
+         *     console.log(xs.has(list, 1)); //true - value exists
+         *     console.log(xs.has(list, value)); //true - value exists
+         *
+         *     //for Object
+         *     var list = {
+         *         a: 1,
+         *         b: 2,
+         *         1: value
+         *     };
+         *     console.log(xs.has(list, 0)); //false - no item
+         *     console.log(xs.has(list, {})); //false - another object in array
+         *     console.log(xs.has(list, 1)); //true - value exists
+         *     console.log(xs.has(list, value)); //true - value exists
+         *
          * @method has
          *
          * @param {Array|Object} list list to search within
