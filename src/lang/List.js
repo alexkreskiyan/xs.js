@@ -1597,6 +1597,60 @@
         /**
          * Deletes first item from list, that matches given item
          *
+         * For example:
+         *
+         *     var item = {
+         *         x: 1
+         *     };
+         *
+         *     var list = [
+         *         1,
+         *         2,
+         *         item,
+         *         2,
+         *         1,
+         *         item
+         *     ];
+         *     console.log(xs.delete(list, item));
+         *     //outputs:
+         *     //true, item exists
+         *     console.log(list);
+         *     //outputs:
+         *     //[
+         *     //    1,
+         *     //    2,
+         *     //    2,
+         *     //    1,
+         *     //    item
+         *     //]
+         *     console.log(xs.delete(list, -1));
+         *     //outputs:
+         *     //false, item missing
+         *
+         *     var list = {
+         *         a: 1,
+         *         c: 2,
+         *         b: item,
+         *         f: 2,
+         *         e: 1,
+         *         d: item
+         *     };
+         *     console.log(xs.delete(list, item));
+         *     //outputs:
+         *     //true, index exists
+         *     console.log(list);
+         *     //outputs:
+         *     //{
+         *     //    a: 1,
+         *     //    c: 2,
+         *     //    f: 2,
+         *     //    e: 1,
+         *     //    d: item
+         *     //}
+         *     console.log(xs.delete(list, 0));
+         *     //outputs:
+         *     //false, index missing
+         *
          * @method delete
          *
          * @param {Array|Object} list list, item is deleted from
