@@ -397,6 +397,40 @@
         /**
          * Iterates over list items in reverse order
          *
+         * For example:
+         *
+         *     var scope = {
+         *         x: 1
+         *     };
+         *
+         *     //for Array
+         *     var list = [
+         *         1,
+         *         2,
+         *         {}
+         *     ];
+         *     xs.eachReverse(list, function(value, key, scope) {
+         *         console.log(this, value, key, scope);
+         *     }, scope);
+         *     //outputs:
+         *     // {x:1}, {}, 2, list
+         *     // {x:1}, 2, 1, list
+         *     // {x:1}, 1, 0, list
+         *
+         *     //for Object
+         *     var list = {
+         *         a: 1,
+         *         c: 2,
+         *         b: {}
+         *     };
+         *     xs.eachReverse(list, function(value, key, scope) {
+         *         console.log(this, value, key, scope);
+         *     }, scope);
+         *     //outputs:
+         *     // {x:1}, {}, b, list
+         *     // {x:1}, 2, c, list
+         *     // {x:1}, 1, a, list
+         *
          * @method eachReverse
          *
          * @param {Array|Object} list list to iterate over
