@@ -176,8 +176,8 @@
          *     //for Object
          *     var list = {
          *         a: 1,
-         *         b: 2,
-         *         1: value
+         *         c: 2,
+         *         b: value
          *     };
          *     console.log(xs.has(list, 0)); //false - no item
          *     console.log(xs.has(list, {})); //false - another object in array
@@ -199,6 +199,40 @@
 
         /**
          * Returns key of first list item, equal to given
+         *
+         * For example:
+         *
+         *     var value = {};
+         *
+         *     //for Array
+         *     var list = [
+         *         1,
+         *         2,
+         *         1,
+         *         value,
+         *         2,
+         *         value
+         *     ];
+         *     console.log(xs.keyOf(list, 0)); //undefined - no item
+         *     console.log(xs.keyOf(list, {})); //undefined - another object in array
+         *     console.log(xs.keyOf(list, 1)); //0
+         *     console.log(xs.keyOf(list, value)); //3
+         *
+         *     //for Object
+         *     var list = {
+         *         a: 1,
+         *         b: 2,
+         *         c: 1,
+         *         f: value,
+         *         d: 2,
+         *         e: value
+         *     };
+         *     console.log(xs.keyOf(list, 0)); //undefined - no item
+         *     console.log(xs.keyOf(list, {})); //undefined - another object in array
+         *     console.log(xs.keyOf(list, 1)); //'a'
+         *     console.log(xs.keyOf(list, value)); //'f'
+         *
+         * ATTENTION: Try to avoid using integer indices in objects, because their order in V8 is not guaranteed!
          *
          * @method keyOf
          *
