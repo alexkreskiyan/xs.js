@@ -1537,6 +1537,48 @@
         /**
          * Deletes item with given key
          *
+         * For example:
+         *
+         *     var item = {
+         *         x: 1
+         *     };
+         *
+         *     var list = [
+         *         1,
+         *         2,
+         *         item,
+         *     ];
+         *     console.log(xs.deleteAt(list, 0));
+         *     //outputs:
+         *     //true, index exists
+         *     console.log(list);
+         *     //outputs:
+         *     //[
+         *     //    2,
+         *     //    item
+         *     //]
+         *     console.log(xs.deleteAt(list, -1));
+         *     //outputs:
+         *     //false, index missing
+         *
+         *     var list = {
+         *         a: 1,
+         *         c: 2,
+         *         b: item,
+         *     };
+         *     console.log(xs.deleteAt(list, 'a'));
+         *     //outputs:
+         *     //true, index exists
+         *     console.log(list);
+         *     //outputs:
+         *     //{
+         *     //    c: 2,
+         *     //    b: item
+         *     //}
+         *     console.log(xs.deleteAt(list, 0));
+         *     //outputs:
+         *     //false, index missing
+         *
          * @method deleteAt
          *
          * @param {Array|Object} list list, item is deleted from
