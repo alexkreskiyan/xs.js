@@ -114,7 +114,32 @@
         };
 
         /**
-         * Returns whether list has given key
+         * Returns whether list has given key. Keys' comparison is strict, differing numbers and strings
+         *
+         * For example:
+         *
+         *     //for Array
+         *     var list = [
+         *         1,
+         *         2,
+         *         3
+         *     ];
+         *     console.log(xs.hasKey(list, -1)); //false - out of bounds
+         *     console.log(xs.hasKey(list, 3)); //false - out of bounds
+         *     console.log(xs.hasKey(list, '1')); //false - string given
+         *     console.log(xs.hasKey(list, 1)); //true - key exists
+         *
+         *     //for Object
+         *     var list = {
+         *         a: 1,
+         *         b: 2,
+         *         c: 3,
+         *         1: 4
+         *     };
+         *     console.log(xs.hasKey(list, 'd')); //false
+         *     console.log(xs.hasKey(list, 'a')); //true
+         *     console.log(xs.hasKey(list, 1)); //false - number given
+         *     console.log(xs.hasKey(list, '1')); //true - string given
          *
          * @method hasKey
          *
@@ -125,9 +150,9 @@
          */
         var _hasKey = me.hasKey = function (list, key) {
             if (xs.isArray(list)) {
-                return key < list.length;
+                return xs.isNumber(key) && key >= 0 && key < list.length;
             }
-            return list.hasOwnProperty(key);
+            return xs.isString(key) && list.hasOwnProperty(key);
         };
 
         /**
