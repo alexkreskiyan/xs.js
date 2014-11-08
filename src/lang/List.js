@@ -1075,6 +1075,59 @@
         /**
          * Returns whether count of list items pass tester function
          *
+         * For example:
+         *
+         *     var scope = {
+         *        one: function(value) {
+         *            return value === 1;
+         *        },
+         *     }
+         *     //for Array
+         *     var list = [
+         *         1,
+         *         1,
+         *         2,
+         *         2,
+         *     ];
+         *     console.log(xs.some(list, function(value) {
+         *         return this.one(value);
+         *     }, 3, scope));
+         *     //outputs:
+         *     // false
+         *     console.log(xs.some(list, function(value) {
+         *         return this.one(value);
+         *     }, 1, scope));
+         *     //outputs:
+         *     // true
+         *     console.log(xs.some(list, function(value) {
+         *         return value === 1;
+         *     }));
+         *     //outputs:
+         *     // true
+         *
+         *     //for Object
+         *     var list = {
+         *         a: 1,
+         *         c: 1,
+         *         b: 2,
+         *         d: 2
+         *     };
+         *     console.log(xs.some(list, function(value) {
+         *         return this.one(value);
+         *     }, 3, scope));
+         *     //outputs:
+         *     // false
+         *     console.log(xs.some(list, function(value) {
+         *         return this.one(value);
+         *     }, 1, scope));
+         *     //outputs:
+         *     // true
+         *     console.log(xs.some(list, function(value) {
+         *         return value === 1;
+         *     }));
+         *     //outputs:
+         *     // true
+         *
          * @method some
          *
          * @param {Array|Object} list tested list
