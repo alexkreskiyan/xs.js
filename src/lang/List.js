@@ -1842,7 +1842,7 @@
          *         c: 2,
          *         b: 3
          *     });
-         *     
+         *
          * @method clone
          *
          * @param {Array|Object} list copied list
@@ -1859,7 +1859,28 @@
         };
 
         /**
-         * Copies all properties from objects/arrays, passed as arguments to given obj
+         * Copies all properties from objects, passed as arguments to given obj
+         *
+         * For example:
+         *
+         *     var list = {
+         *         x: 1
+         *     };
+         *     xs.extend(list, {
+         *         x: 2,
+         *         c: 1
+         *     }, {
+         *         c: 2,
+         *         x: 3,
+         *         a: 4
+         *     });
+         *     console.log(list);
+         *     //outputs:
+         *     //{
+         *     //    x: 3,
+         *     //    c: 2,
+         *     //    a: 4
+         *     //}
          *
          * @method extend
          *
