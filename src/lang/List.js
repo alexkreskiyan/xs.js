@@ -2018,6 +2018,56 @@
         /**
          * Returns list, filled by unique items of given list
          *
+         * For example:
+         *
+         *     //for Array
+         *     console.log(xs.unique([
+         *         1,
+         *         0,
+         *         1,
+         *         2,
+         *         {},
+         *         {},
+         *         3,
+         *         3,
+         *         1,
+         *         4
+         *     ]));
+         *     //outputs:
+         *     //[
+         *     //    1,
+         *     //    0,
+         *     //    2,
+         *     //    {},
+         *     //    {},
+         *     //    3,
+         *     //    4
+         *     //]
+         *
+         *     //for Object
+         *     console.log(xs.unique({
+         *         a: 1,
+         *         g: 0,
+         *         b: 1,
+         *         f: 2,
+         *         i: {},
+         *         m: {},
+         *         d: 3,
+         *         e: 3,
+         *         c: 1,
+         *         h: 4
+         *     }));
+         *     //outputs:
+         *     //{
+         *     //    a: 1,
+         *     //    g: 0,
+         *     //    f: 2,
+         *     //    i: {},
+         *     //    m: {},
+         *     //    d: 3,
+         *     //    h: 4
+         *     //}
+         *
          * @method unique
          *
          * @param {Array|Object} list given list
