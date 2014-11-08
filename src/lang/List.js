@@ -2303,6 +2303,42 @@
         /**
          * Returns copy of list with only white-listed keys, passed in 2+ arguments
          *
+         * For example:
+         *
+         *     //for Array
+         *     console.log(xs.pick([
+         *         1,
+         *         2,
+         *         3,
+         *         4,
+         *         5,
+         *         6,
+         *     ], 1, [3, 2], [5]));
+         *     //outputs:
+         *     //[
+         *     //    2,
+         *     //    4,
+         *     //    3,
+         *     //    6
+         *     //]
+         *
+         *     //for Object
+         *     console.log(xs.pick({
+         *         a: 1,
+         *         c: 2,
+         *         d: 3,
+         *         b: 4,
+         *         f: 5,
+         *         e: 6,
+         *     }, 'a', ['c', 'e'], ['d']));
+         *     //outputs:
+         *     //{
+         *     //    a: 1,
+         *     //    c: 2,
+         *     //    e: 6,
+         *     //    d: 3
+         *     //}
+         *
          * @method pick
          *
          * @param {Array|Object} list source list
