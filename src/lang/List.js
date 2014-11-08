@@ -2201,6 +2201,27 @@
         /**
          * Returns intersection of given lists (although intersection items are unique)
          *
+         * For example:
+         *
+         *     //for Array
+         *     console.log(xs.intersection([1, 2], [2, 3]));
+         *     //outputs:
+         *     //[
+         *     //    2,
+         *     //]
+         *
+         *     //for Object
+         *     console.log(xs.intersection({
+         *         a: 1,
+         *         b: 2,
+         *     }, {
+         *         b: 1,
+         *     }));
+         *     //outputs:
+         *     //{
+         *     //    a: 1,
+         *     //}
+         *
          * @method intersection
          *
          * @returns {Array|Object} lists intersection
