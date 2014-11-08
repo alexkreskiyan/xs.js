@@ -1953,6 +1953,22 @@
         /**
          * Shuffles list items
          *
+         * For example:
+         *
+         *     //for Array
+         *     xs.shuffle([
+         *         1,
+         *         2,
+         *         3
+         *     ]);
+         *
+         *     //for Object
+         *     xs.shuffle({
+         *         a: 1,
+         *         c: 2,
+         *         b: 3
+         *     });
+         *
          * @method shuffle
          *
          * @param {Array|Object} list shuffled list
