@@ -346,6 +346,40 @@
         /**
          * Iterates over list items
          *
+         * For example:
+         *
+         *     var scope = {
+         *         x: 1
+         *     };
+         *
+         *     //for Array
+         *     var list = [
+         *         1,
+         *         2,
+         *         {}
+         *     ];
+         *     xs.each(list, function(value, key, scope) {
+         *         console.log(this, value, key, scope);
+         *     }, scope);
+         *     //outputs:
+         *     // {x:1}, 1, 0, list
+         *     // {x:1}, 2, 1, list
+         *     // {x:1}, {}, 2, list
+         *
+         *     //for Object
+         *     var list = {
+         *         a: 1,
+         *         c: 2,
+         *         b: {}
+         *     };
+         *     xs.each(list, function(value, key, scope) {
+         *         console.log(this, value, key, scope);
+         *     }, scope);
+         *     //outputs:
+         *     // {x:1}, 1, a, list
+         *     // {x:1}, 2, c, list
+         *     // {x:1}, {}, b, list
+         *
          * @method each
          *
          * @param {Array|Object} list list to iterate over
