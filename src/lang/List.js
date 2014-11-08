@@ -1221,6 +1221,54 @@
         /**
          * Returns first item of list
          *
+         * For example:
+         *
+         *     //for Array
+         *     var list = [
+         *         {
+         *             x: 1,
+         *             y: 2
+         *         },
+         *         {
+         *             x: 2,
+         *             y: 2
+         *         },
+         *         {
+         *             x: 2,
+         *             y: 1
+         *         },
+         *         {
+         *             x: 1,
+         *             y: 1
+         *         }
+         *     ];
+         *     console.log(xs.first(list, {x: 1}));
+         *     //outputs:
+         *     // {x: 1, y: 2}, reference to list[0] respectively
+         *
+         *     //for Object
+         *     var list = {
+         *         a: {
+         *             x: 1,
+         *             y: 2
+         *         },
+         *         c: {
+         *             x: 2,
+         *             y: 2
+         *         },
+         *         b: {
+         *             x: 2,
+         *             y: 1
+         *         },
+         *         d: {
+         *             x: 1,
+         *             y: 1
+         *         }
+         *     };
+         *     console.log(xs.first(list, {x: 1}));
+         *     //outputs:
+         *     // {x: 1, y: 2}, reference to list.a respectively
+         *
          * @method first
          *
          * @param {Array|Object} list
