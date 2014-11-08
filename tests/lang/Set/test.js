@@ -1405,6 +1405,86 @@ test('extend', function () {
     strictEqual(x.e, a);
 });
 
+test('defaults', function () {
+    var x = [
+        {
+            x: 1,
+            y: 2
+        },
+        {
+            x: 2,
+            y: 2
+        },
+        {
+            x: 2,
+            y: 1
+        },
+        {
+            x: 1,
+            y: 1
+        }
+    ];
+
+    var clone = xs.clone(x);
+    xs.defaults(clone, 1, 2, 3);
+    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1}]');
+
+    clone = xs.clone(x);
+    xs.defaults(clone, 1, 2, 3, 4, 5);
+    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1},5]');
+
+    clone = xs.clone(x);
+    xs.defaults(clone);
+    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1}]');
+
+    x = {
+        a: {
+            x: 1,
+            y: 2
+        },
+        b: {
+            x: 2,
+            y: 2
+        },
+        c: {
+            x: 2,
+            y: 1
+        },
+        d: {
+            x: 1,
+            y: 1
+        }
+    };
+
+    var correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}';
+
+    clone = xs.clone({});
+    xs.defaults(clone, {
+        e: 1
+    }, {
+        f: 1
+    });
+    strictEqual(JSON.stringify(clone), '{"e":1,"f":1}');
+
+    clone = xs.clone(x);
+    xs.defaults(clone, {
+        e: 1
+    }, {
+        f: 1
+    });
+    strictEqual(JSON.stringify(clone), correct);
+
+    clone = xs.clone(x);
+    xs.defaults(clone, {
+        a: 1
+    });
+    strictEqual(JSON.stringify(clone), JSON.stringify(x));
+
+    clone = xs.clone(x);
+    xs.defaults(clone);
+    strictEqual(JSON.stringify(clone), JSON.stringify(x));
+});
+
 test('compact', function () {
     var x = [
         0,
@@ -1445,6 +1525,48 @@ test('compact', function () {
 
     x = {};
     strictEqual(JSON.stringify(xs.compact(x)), '{}');
+});
+
+test('unique', function () {
+    var arr = [];
+    var obj = {};
+    var x = [
+        1,
+        1,
+        2,
+        2,
+        obj,
+        null,
+        true,
+        false,
+        '',
+        obj,
+        arr
+    ];
+    var unique = xs.unique(x);
+    strictEqual(JSON.stringify(unique), '[1,2,{},null,true,false,"",[]]');
+
+    unique = xs.unique([]);
+    strictEqual(JSON.stringify(unique), '[]');
+
+    arr = [];
+    obj = {};
+    x = {
+        a: 1,
+        b: 1,
+        c: true,
+        d: arr,
+        e: arr,
+        f: obj,
+        g: obj
+    };
+    unique = xs.unique(x);
+    strictEqual(JSON.stringify(unique), '{"a":1,"c":true,"d":[],"f":{}}');
+    strictEqual(xs.has(unique, arr), true);
+    strictEqual(xs.has(unique, obj), true);
+
+    unique = xs.unique({});
+    strictEqual(JSON.stringify(unique), '{}');
 });
 
 test('shuffle', function () {
@@ -1763,48 +1885,6 @@ test('difference', function () {
     strictEqual(JSON.stringify(diff), JSON.stringify({}));
 });
 
-test('unique', function () {
-    var arr = [];
-    var obj = {};
-    var x = [
-        1,
-        1,
-        2,
-        2,
-        obj,
-        null,
-        true,
-        false,
-        '',
-        obj,
-        arr
-    ];
-    var unique = xs.unique(x);
-    strictEqual(JSON.stringify(unique), '[1,2,{},null,true,false,"",[]]');
-
-    unique = xs.unique([]);
-    strictEqual(JSON.stringify(unique), '[]');
-
-    arr = [];
-    obj = {};
-    x = {
-        a: 1,
-        b: 1,
-        c: true,
-        d: arr,
-        e: arr,
-        f: obj,
-        g: obj
-    };
-    unique = xs.unique(x);
-    strictEqual(JSON.stringify(unique), '{"a":1,"c":true,"d":[],"f":{}}');
-    strictEqual(xs.has(unique, arr), true);
-    strictEqual(xs.has(unique, obj), true);
-
-    unique = xs.unique({});
-    strictEqual(JSON.stringify(unique), '{}');
-});
-
 test('pick', function () {
     var x = [
         {
@@ -1987,84 +2067,4 @@ test('omit', function () {
 
     clone = xs.omit({}, 'n');
     strictEqual(JSON.stringify(clone), '{}');
-});
-
-test('defaults', function () {
-    var x = [
-        {
-            x: 1,
-            y: 2
-        },
-        {
-            x: 2,
-            y: 2
-        },
-        {
-            x: 2,
-            y: 1
-        },
-        {
-            x: 1,
-            y: 1
-        }
-    ];
-
-    var clone = xs.clone(x);
-    xs.defaults(clone, 1, 2, 3);
-    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1}]');
-
-    clone = xs.clone(x);
-    xs.defaults(clone, 1, 2, 3, 4, 5);
-    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1},5]');
-
-    clone = xs.clone(x);
-    xs.defaults(clone);
-    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1}]');
-
-    x = {
-        a: {
-            x: 1,
-            y: 2
-        },
-        b: {
-            x: 2,
-            y: 2
-        },
-        c: {
-            x: 2,
-            y: 1
-        },
-        d: {
-            x: 1,
-            y: 1
-        }
-    };
-
-    var correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}';
-
-    clone = xs.clone({});
-    xs.defaults(clone, {
-        e: 1
-    }, {
-        f: 1
-    });
-    strictEqual(JSON.stringify(clone), '{"e":1,"f":1}');
-
-    clone = xs.clone(x);
-    xs.defaults(clone, {
-        e: 1
-    }, {
-        f: 1
-    });
-    strictEqual(JSON.stringify(clone), correct);
-
-    clone = xs.clone(x);
-    xs.defaults(clone, {
-        a: 1
-    });
-    strictEqual(JSON.stringify(clone), JSON.stringify(x));
-
-    clone = xs.clone(x);
-    xs.defaults(clone);
-    strictEqual(JSON.stringify(clone), JSON.stringify(x));
 });

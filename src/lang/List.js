@@ -1896,6 +1896,27 @@
         };
 
         /**
+         * Updates list with defaulted items, passed in 2+ arguments
+         *
+         * @method defaults
+         *
+         * @param {Array|Object} list operated list
+         */
+        me.defaults = function (list) {
+            var defaults = _union(slice(arguments, 1));
+            if (xs.isArray(list)) {
+                var len = defaults.length, idx;
+                for (idx = list.length; idx < len; idx++) {
+                    list[idx] = defaults[idx];
+                }
+                return;
+            }
+            _each(defaults, function (item, name) {
+                _hasKey(list, name) || (list[name] = item);
+            });
+        };
+
+        /**
          * Returns copy of given list, filtered not to have false-like items
          *
          * For example:
@@ -1948,6 +1969,31 @@
             return _findAll(list, function (item) {
                 return item;
             });
+        };
+
+        /**
+         * Returns list, filled by unique items of given list
+         *
+         * @method unique
+         *
+         * @param {Array|Object} list given list
+         *
+         * @returns {Array|Object} copy with unique items
+         */
+        var _unique = me.unique = function (list) {
+            var unique;
+            if (xs.isArray(list)) {
+                unique = [];
+                _each(list, function (item) {
+                    _has(unique, item) || unique.push(item);
+                });
+                return unique;
+            }
+            unique = {};
+            _each(list, function (item, name) {
+                _has(unique, item) || (unique[name] = item);
+            });
+            return unique;
         };
 
         /**
@@ -2085,31 +2131,6 @@
         };
 
         /**
-         * Returns list, filled by unique items of given list
-         *
-         * @method unique
-         *
-         * @param {Array|Object} list given list
-         *
-         * @returns {Array|Object} copy with unique items
-         */
-        var _unique = me.unique = function (list) {
-            var unique;
-            if (xs.isArray(list)) {
-                unique = [];
-                _each(list, function (item) {
-                    _has(unique, item) || unique.push(item);
-                });
-                return unique;
-            }
-            unique = {};
-            _each(list, function (item, name) {
-                _has(unique, item) || (unique[name] = item);
-            });
-            return unique;
-        };
-
-        /**
          * Returns copy of list with only white-listed keys, passed in 2+ arguments
          *
          * @method pick
@@ -2156,27 +2177,6 @@
                 _has(keys, name) || (copy[name] = item);
             });
             return copy;
-        };
-
-        /**
-         * Updates list with defaulted items, passed in 2+ arguments
-         *
-         * @method defaults
-         *
-         * @param {Array|Object} list operated list
-         */
-        me.defaults = function (list) {
-            var defaults = _union(slice(arguments, 1));
-            if (xs.isArray(list)) {
-                var len = defaults.length, idx;
-                for (idx = list.length; idx < len; idx++) {
-                    list[idx] = defaults[idx];
-                }
-                return;
-            }
-            _each(defaults, function (item, name) {
-                _hasKey(list, name) || (list[name] = item);
-            });
         };
     });
     list.extend(xs, list);
