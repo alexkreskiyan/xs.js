@@ -692,6 +692,41 @@
         /**
          * Returns last list item, that passes given test function
          *
+         * For example:
+         *
+         *     var scope = {
+         *         sum: function(x, y) {
+         *             return x + y;
+         *         },
+         *         first: function(x) {
+         *             return x[0];
+         *         }
+         *     };
+         *
+         *     //for Array
+         *     var list = [
+         *         {x: 2},
+         *         {x: 1},
+         *         {x: 0}
+         *     ];
+         *     console.log(xs.findLast(list, function(value, key) {
+         *         return this.sum(key, value.x) === 2;
+         *     }, scope));
+         *     //outputs:
+         *     // {x: 0}, reference to list[0], first value, passed finder function
+         *
+         *     //for Object
+         *     var list = {
+         *         aa: {x: 1},
+         *         ac: {x: 2},
+         *         ab: {x: 3}
+         *     };
+         *     console.log(xs.findLast(list, function(value, key) {
+         *         return this.first(key) === 'a';
+         *     }, scope));
+         *     //outputs:
+         *     // {x: 3}, reference to list[0], first value, passed finder function
+         *
          * @method findLast
          *
          * @param {Array|Object} list list, search is made over
