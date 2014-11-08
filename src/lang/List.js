@@ -1670,6 +1670,60 @@
         /**
          * Deletes last item from list, that matches elem as key or as item
          *
+         * For example:
+         *
+         *     var item = {
+         *         x: 1
+         *     };
+         *
+         *     var list = [
+         *         1,
+         *         2,
+         *         item,
+         *         2,
+         *         1,
+         *         item
+         *     ];
+         *     console.log(xs.deleteLast(list, item));
+         *     //outputs:
+         *     //true, item exists
+         *     console.log(list);
+         *     //outputs:
+         *     //[
+         *     //    1,
+         *     //    2,
+         *     //    item,
+         *     //    2,
+         *     //    1
+         *     //]
+         *     console.log(xs.deleteLast(list, -1));
+         *     //outputs:
+         *     //false, item missing
+         *
+         *     var list = {
+         *         a: 1,
+         *         c: 2,
+         *         b: item,
+         *         f: 2,
+         *         e: 1,
+         *         d: item
+         *     };
+         *     console.log(xs.deleteLast(list, item));
+         *     //outputs:
+         *     //true, index exists
+         *     console.log(list);
+         *     //outputs:
+         *     //{
+         *     //    a: 1,
+         *     //    c: 2,
+         *     //    b: item
+         *     //    f: 2,
+         *     //    e: 1
+         *     //}
+         *     console.log(xs.deleteLast(list, 0));
+         *     //outputs:
+         *     //false, index missing
+         *
          * @method deleteLast
          *
          * @param {Array|Object} list list, item is deleted from
