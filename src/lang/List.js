@@ -2364,6 +2364,38 @@
         /**
          * Returns copy of list without blacklisted keys, passed in 2+ arguments
          *
+         * For example:
+         *
+         *     //for Array
+         *     console.log(xs.omit([
+         *         1,
+         *         2,
+         *         3,
+         *         4,
+         *         5,
+         *         6,
+         *     ], 1, [3, 2], [5]));
+         *     //outputs:
+         *     //[
+         *     //    1,
+         *     //    5
+         *     //]
+         *
+         *     //for Object
+         *     console.log(xs.omit({
+         *         a: 1,
+         *         c: 2,
+         *         d: 3,
+         *         b: 4,
+         *         f: 5,
+         *         e: 6,
+         *     }, 'a', ['c', 'e'], ['d']));
+         *     //outputs:
+         *     //{
+         *     //    b: 4,
+         *     //    f: 5
+         *     //}
+         *
          * @method omit
          *
          * @param {Array|Object} list source list
