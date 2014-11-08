@@ -1898,6 +1898,50 @@
         /**
          * Updates list with defaulted items, passed in 2+ arguments
          *
+         * For example:
+         *
+         *     //for Array
+         *     var list = [
+         *         5
+         *     ];
+         *     xs.defaults(list, [
+         *         2,
+         *         1
+         *     ], [
+         *         4,
+         *         3,
+         *         2
+         *     ]);
+         *     console.log(list);
+         *     //outputs:
+         *     //[
+         *     //    5,
+         *     //    1,
+         *     //    4,
+         *     //    3,
+         *     //    2
+         *     //]
+         *
+         *     //for Object
+         *     var list = {
+         *         x: 1
+         *     };
+         *     xs.defaults(list, {
+         *         x: 2,
+         *         c: 1
+         *     }, {
+         *         c: 2,
+         *         x: 3,
+         *         a: 4
+         *     });
+         *     console.log(list);
+         *     //outputs:
+         *     //{
+         *     //    x: 1,
+         *     //    c: 1,
+         *     //    a: 4
+         *     //}
+         *
          * @method defaults
          *
          * @param {Array|Object} list operated list
