@@ -2132,6 +2132,40 @@
         /**
          * Returns union of lists, passed as arguments
          *
+         * For example:
+         *
+         *     //for Array
+         *     console.log(xs.union([1, 2], 2, [3], 4));
+         *     //outputs:
+         *     //[
+         *     //    1,
+         *     //    2,
+         *     //    2,
+         *     //    3,
+         *     //    4
+         *     //]
+         *
+         *     //for Object
+         *     console.log(xs.union({
+         *         a: 1,
+         *         g: 0,
+         *     }, {
+         *         b: 1,
+         *     }, {
+         *         b: 2,
+         *         a: 2,
+         *         i: {},
+         *         h: 4
+         *     }));
+         *     //outputs:
+         *     //{
+         *     //    a: 1,
+         *     //    g: 0,
+         *     //    b: 1,
+         *     //    i: {},
+         *     //    h: 4
+         *     //}
+         *
          * @method union
          *
          * @returns {Array|Object} lists union
