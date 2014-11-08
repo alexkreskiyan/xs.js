@@ -1827,6 +1827,22 @@
         /**
          * Returns shallow copy of list
          *
+         * For example:
+         *
+         *     //for Array
+         *     xs.clone([
+         *         1,
+         *         2,
+         *         3
+         *     ]);
+         *
+         *     //for Object
+         *     xs.clone({
+         *         a: 1,
+         *         c: 2,
+         *         b: 3
+         *     });
+         *     
          * @method clone
          *
          * @param {Array|Object} list copied list
