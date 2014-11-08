@@ -358,8 +358,8 @@
          *         2,
          *         {}
          *     ];
-         *     xs.each(list, function(value, key, scope) {
-         *         console.log(this, value, key, scope);
+         *     xs.each(list, function(value, key, list) {
+         *         console.log(this, value, key, list);
          *     }, scope);
          *     //outputs:
          *     // {x:1}, 1, 0, list
@@ -372,8 +372,8 @@
          *         c: 2,
          *         b: {}
          *     };
-         *     xs.each(list, function(value, key, scope) {
-         *         console.log(this, value, key, scope);
+         *     xs.each(list, function(value, key, list) {
+         *         console.log(this, value, key, list);
          *     }, scope);
          *     //outputs:
          *     // {x:1}, 1, a, list
@@ -409,8 +409,8 @@
          *         2,
          *         {}
          *     ];
-         *     xs.eachReverse(list, function(value, key, scope) {
-         *         console.log(this, value, key, scope);
+         *     xs.eachReverse(list, function(value, key, list) {
+         *         console.log(this, value, key, list);
          *     }, scope);
          *     //outputs:
          *     // {x:1}, {}, 2, list
@@ -423,8 +423,8 @@
          *         c: 2,
          *         b: {}
          *     };
-         *     xs.eachReverse(list, function(value, key, scope) {
-         *         console.log(this, value, key, scope);
+         *     xs.eachReverse(list, function(value, key, list) {
+         *         console.log(this, value, key, list);
          *     }, scope);
          *     //outputs:
          *     // {x:1}, {}, b, list
@@ -449,6 +449,38 @@
          * Produces a new list with items, returned by iterator function
          * if source was array - array is created
          * if source was object - object is created
+         *
+         * For example:
+         *
+         *     var scope = {
+         *         twice: function(x) {
+         *             return x * 2;
+         *         }
+         *     };
+         *
+         *     //for Array
+         *     var list = [
+         *         1,
+         *         2,
+         *         4
+         *     ];
+         *     console.log(xs.map(list, function(value, key) {
+         *         return key + this.twice(value);
+         *     }, scope));
+         *     //outputs:
+         *     // [ 2, 5, 10 ]
+         *
+         *     //for Object
+         *     var list = {
+         *         a: 1,
+         *         c: 2,
+         *         b: 4
+         *     };
+         *     console.log(xs.map(list, function(value, key) {
+         *         return key + this.twice(value);
+         *     }, scope));
+         *     //outputs:
+         *     // { a: 'a2', c: 'c4', b: 'b8' ]
          *
          * @method map
          *
