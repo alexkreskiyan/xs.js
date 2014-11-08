@@ -1898,6 +1898,46 @@
         /**
          * Returns copy of given list, filtered not to have false-like items
          *
+         * For example:
+         *
+         *     //for Array
+         *     console.log(xs.compact([
+         *         1,
+         *         0,
+         *         -1,
+         *         false,
+         *         null,
+         *         [],
+         *         undefined,
+         *         {}
+         *     ]));
+         *     //outputs:
+         *     //[
+         *     //    1,
+         *     //    -1,
+         *     //    [],
+         *     //    {}
+         *     //]
+         *
+         *     //for Object
+         *     console.log(xs.compact({
+         *         a: 1,
+         *         f: 0,
+         *         g: -1,
+         *         e: false,
+         *         b: null,
+         *         c: [],
+         *         d: undefined,
+         *         h: {}
+         *     }));
+         *     //outputs:
+         *     //{
+         *     //    a: 1,
+         *     //    g: -1,
+         *     //    c: [],
+         *     //    h: {}
+         *     //}
+         *
          * @method compact
          *
          * @param {Array|Object} list compacted list
