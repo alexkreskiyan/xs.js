@@ -21,7 +21,8 @@
  * @class xs.lang.List
  * @singleton
  * @private
- * xs.lang.List is private singleton, defining basic list operations, for both Array and Object
+ *
+ * xs.lang.List is private singleton, defining basic list operations, for both Array and Object.
  */
 (function (root, ns) {
 
