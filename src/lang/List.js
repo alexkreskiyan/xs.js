@@ -40,6 +40,24 @@
         /**
          * Returns all list keys
          *
+         * For example:
+         * 
+         *     //for Array
+         *     var keys = xs.keys([
+         *         1,
+         *         2,
+         *         3
+         *     ]);
+         *     console.log(keys); //[0, 1, 2]
+         *
+         *     //for Object
+         *     var keys = xs.keys({
+         *         a: 1,
+         *         b: 2,
+         *         c: 3
+         *     });
+         *     console.log(keys); //['a', 'b', 'c']
+         *
          * @method keys
          *
          * @param {Array|Object} list list, keys are fetched from
