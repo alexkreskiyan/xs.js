@@ -649,7 +649,7 @@
          *     //for Array
          *     var list = [
          *         {x: 2},
-         *         {x: 1},
+         *         {x: 2},
          *         {x: 0}
          *     ];
          *     console.log(xs.find(list, function(value, key) {
@@ -661,7 +661,7 @@
          *     //for Object
          *     var list = {
          *         aa: {x: 1},
-         *         ac: {x: 2},
+         *         c: {x: 2},
          *         ab: {x: 3}
          *     };
          *     console.log(xs.find(list, function(value, key) {
@@ -706,7 +706,7 @@
          *     //for Array
          *     var list = [
          *         {x: 2},
-         *         {x: 1},
+         *         {x: 2},
          *         {x: 0}
          *     ];
          *     console.log(xs.findLast(list, function(value, key) {
@@ -718,7 +718,7 @@
          *     //for Object
          *     var list = {
          *         aa: {x: 1},
-         *         ac: {x: 2},
+         *         c: {x: 2},
          *         ab: {x: 3}
          *     };
          *     console.log(xs.findLast(list, function(value, key) {
@@ -748,6 +748,41 @@
 
         /**
          * Returns all list items, that pass given test function
+         *
+         * For example:
+         *
+         *     var scope = {
+         *         sum: function(x, y) {
+         *             return x + y;
+         *         },
+         *         first: function(x) {
+         *             return x[0];
+         *         }
+         *     };
+         *
+         *     //for Array
+         *     var list = [
+         *         {x: 2},
+         *         {x: 2},
+         *         {x: 0}
+         *     ];
+         *     console.log(xs.findAll(list, function(value, key) {
+         *         return this.sum(key, value.x) === 2;
+         *     }, scope));
+         *     //outputs:
+         *     // [{x: 2}, {x: 0}], references to list[0] and list[2] respectively, all values, passed finder function
+         *
+         *     //for Object
+         *     var list = {
+         *         aa: {x: 1},
+         *         c: {x: 2},
+         *         ab: {x: 3}
+         *     };
+         *     console.log(xs.findAll(list, function(value, key) {
+         *         return this.first(key) === 'a';
+         *     }, scope));
+         *     //outputs:
+         *     // {aa: {x: 1}, ab: {x: 3}], references to list.aa and list.ab respectively, all values, passed finder function
          *
          * @method findAll
          *
