@@ -1153,6 +1153,52 @@
         /**
          * Returns whether none of list items pass tester function
          *
+         * For example:
+         *
+         *     var scope = {
+         *        one: function(value) {
+         *            return value === 1;
+         *        },
+         *        three: function(value) {
+         *            return value === 3;
+         *        }
+         *     }
+         *     //for Array
+         *     var list = [
+         *         1,
+         *         1,
+         *         2,
+         *         2,
+         *     ];
+         *     console.log(xs.none(list, function(value) {
+         *         return this.one(value);
+         *     }, scope));
+         *     //outputs:
+         *     // false
+         *     console.log(xs.none(list, function(value) {
+         *         return this.three(value);
+         *     }, scope));
+         *     //outputs:
+         *     // true
+         *
+         *     //for Object
+         *     var list = {
+         *         a: 1,
+         *         c: 1,
+         *         b: 2,
+         *         d: 2
+         *     };
+         *     console.log(xs.none(list, function(value) {
+         *         return this.one(value);
+         *     }, scope));
+         *     //outputs:
+         *     // false
+         *     console.log(xs.none(list, function(value) {
+         *         return this.three(value);
+         *     }, scope));
+         *     //outputs:
+         *     // true
+         *
          * @method none
          *
          * @param {Array|Object} list tested list
