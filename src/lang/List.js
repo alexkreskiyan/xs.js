@@ -310,6 +310,26 @@
         /**
          * Returns size of list
          *
+         * For example:
+         *
+         *     //for Array
+         *     var list = [
+         *         1,
+         *         2,
+         *         {}
+         *     ];
+         *     console.log(xs.size(list)); //3
+         *     console.log(xs.size([])); //0
+         *
+         *     //for Object
+         *     var list = {
+         *         a: 1,
+         *         b: 2,
+         *         e: {}
+         *     };
+         *     console.log(xs.size(list)); //3
+         *     console.log(xs.size({})); //0
+         *
          * @method size
          *
          * @param {Array|Object} list list, to get size of
