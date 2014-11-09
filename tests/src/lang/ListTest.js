@@ -1,5 +1,5 @@
 syncLoad([
-    'xs.Detect',
+    'xs.lang.Detect',
     'xs.lang.List'
 ], function () {
     function speed(fn, n) {

@@ -27,7 +27,7 @@
     //framework shorthand
     var xs = root[ns];
 
-    var detect = xs.Detect = new (function () {
+    var detect = new (function () {
         var me = this;
         /**
          * Return type passed arguments.
@@ -176,17 +176,7 @@
             }
         };
     });
-    xs.isArray = detect.isArray;
-    xs.isObject = detect.isObject;
-    xs.isIterable = detect.isIterable;
-    xs.isPrimitive = detect.isPrimitive;
-    xs.isFunction = detect.isFunction;
-    xs.isDate = detect.isDate;
-    xs.isString = detect.isString;
-    xs.isNumeric = detect.isNumeric;
-    xs.isNumber = detect.isNumber;
-    xs.isNull = detect.isNull;
-    xs.isDefined = detect.isDefined;
-    xs.isBoolean = detect.isBoolean;
-    xs.isEmpty = detect.isEmpty;
+    Object.keys(detect).forEach(function (method) {
+        xs[method] = detect[method];
+    });
 })(window, 'xs');
