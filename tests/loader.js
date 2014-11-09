@@ -1,5 +1,6 @@
 (function () {
     var me = this;
+    var head = document.getElementsByTagName('head')[0];
 
     var tests = (function (key) {
         var paramsPairs = /\?([^#\?]+)/.exec(me.location.search).slice(1).shift().split('&');
@@ -39,11 +40,13 @@
     };
 
     request('/src/src.json', function (sources) {
-        var head = document.getElementsByTagName('head')[0];
         getTestFiles(sources, tests).forEach(function (file) {
             addScript(head, file);
         });
     });
+    var resolveSourceFileName = function (name) {
+        return '/src/' + name.split('.').slice(1).join('/') + '.js';
+    };
     var resolveTestFileName = function (name) {
         return '/tests/src/' + name.split('.').slice(1).join('/') + 'Test.js';
     };
@@ -58,7 +61,17 @@
         return files;
     };
 
-    me.syncload = function (files, callback) {
-        console.log('load tests', files, callback);
+    me.syncLoad = function (files, callback) {
+        console.log('load files', files);
+        if (!files.length) {
+            return;
+        }
+        if (files.length == 1) {
+            addScript(head, resolveSourceFileName(files[0]), callback);
+        } else {
+            addScript(head, resolveSourceFileName(files[0]), function () {
+                me.syncLoad(files.slice(1), callback);
+            });
+        }
     };
 }).call(window);
