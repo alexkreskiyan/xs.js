@@ -62,7 +62,6 @@
     };
 
     me.syncLoad = function (files, callback) {
-        console.log('load files', files);
         if (!files.length) {
             return;
         }
