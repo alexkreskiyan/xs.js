@@ -1,5 +1,5 @@
-/**
- This file is core of xs.js 0.1
+/*!
+ This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
@@ -18,183 +18,358 @@
 
  */
 /**
- * array class pre-definition
- * @type {Object}
+ * @class xs.lang.Attribute
+ * @singleton
  * @private
+ *
+ * xs.lang.Attribute is private singleton, providing basic attributes' operations
  */
-'use strict';
 (function (root, ns) {
+
+    'use strict';
 
     //framework shorthand
     var xs = root[ns];
 
-    var property = xs.Attribute = new (function () {
+    var attribute = xs.Attribute = new (function () {
         var me = this;
+
         /**
-         * Checks whether object has own property defined
-         * @param obj
-         * @param key
-         * @returns {boolean}
+         * Checks whether object has name, defined as own property
+         *
+         * For example:
+         *
+         *     var object = {
+         *         x: 1
+         *     };
+         *     console.log(xs.Attribute.defined(object, 'x'));//true
+         *     console.log(xs.Attribute.defined(object, 'y'));//false
+         *
+         * @method defined
+         *
+         * @param {Object} object verified object
+         * @param {String} name verified name
+         *
+         * @returns {boolean} verification result
          */
-        var defined = me.defined = function (obj, key) {
-            return !!(obj.hasOwnProperty(key));
+        var defined = me.defined = function (object, name) {
+            return object.hasOwnProperty(name);
         };
+
         /**
          * Defines property with given descriptor for object
-         * If descriptor given - one property with name equal to key is defined
-         * If no descriptor is given - a set of properties given in key is defined
-         * @param obj
-         * @param key
-         * @param descriptor
-         * @returns {Object}
+         * If descriptor given - one property with name equal to name is defined
+         * If no descriptor is given - a set of properties given in name is defined
+         *
+         * For example:
+         *
+         *     var x = {};
+         *     xs.Attribute.define(x, 'a', {
+         *         value: 5,
+         *         configurable: true
+         *     });
+         *     console.log(x);
+         *     //outputs:
+         *     //{
+         *     //    a: 5
+         *     //}
+         *
+         *     xs.Attribute.define(x, {
+         *         a: {value: 1},
+         *         b: {value: 2}
+         *     });
+         *     console.log(x);
+         *     //outputs:
+         *     //{
+         *     //    a: 1,
+         *     //    b: 2
+         *     //}
+         *
+         * @method define
+         *
+         * @param {Object} object used object
+         * @param {Object|string} name new property's name of list of new properties
+         * @param {Object} descriptor descriptor of new property
          */
-        var define = me.define = function (obj, key, descriptor) {
-            return descriptor ? Object.defineProperty(obj, key, descriptor) : Object.defineProperties(obj, key);
+        var define = me.define = function (object, name, descriptor) {
+            descriptor ? Object.defineProperty(object, name, descriptor) : Object.defineProperties(object, name);
         };
+
         /**
          * Fetches own property descriptor
-         * @param obj
-         * @param key
-         * @returns {Object}
+         *
+         * For example:
+         *
+         *     xs.Attribute.getDescriptor({x: 1}, 'x');
+         *
+         * @method getDescriptor
+         *
+         * @param {Object} object used object
+         * @param {string} name property name
+         *
+         * @returns {Object} property descriptor
          */
-        var getDescriptor = me.getDescriptor = function (obj, key) {
-            return Object.getOwnPropertyDescriptor(obj, key);
+        var getDescriptor = me.getDescriptor = function (object, name) {
+            return Object.getOwnPropertyDescriptor(object, name);
         };
+
         /**
-         * Checks whether property is assignable
-         * @param obj
-         * @param key
-         * @returns {boolean}
+         * Checks whether property is assignable (Value name exists in descriptor)
+         *
+         * For example:
+         *
+         *     var x = {};
+         *     xs.Attribute.define(x, 'a', {value: 1, configurable: true});
+         *     console.log(xs.Attribute.isAssigned(x, 'a')); //true
+         *     xs.Attribute.define(x, 'a', {set: function(){}});
+         *     console.log(xs.Attribute.isAssigned(x, 'a')); //false
+         *
+         * @method isAssigned
+         *
+         * @param {Object} object used object
+         * @param {string} name property name
+         *
+         * @returns {boolean} whether property is assigned
          */
-        me.isAssigned = function (obj, key) {
-            var descriptor = getDescriptor(obj, key);
+        me.isAssigned = function (object, name) {
+            var descriptor = getDescriptor(object, name);
             return !!descriptor && descriptor.hasOwnProperty('value');
         };
+
         /**
          * Checks whether property is accessed
-         * @param obj
-         * @param key
-         * @returns {boolean}
+         *
+         * For example:
+         *
+         *     var x = {};
+         *     xs.Attribute.define(x, 'a', {value: 1, configurable: true});
+         *     console.log(xs.Attribute.isAccessed(x, 'a')); //false
+         *     xs.Attribute.define(x, 'a', {set: function(){}});
+         *     console.log(xs.Attribute.isAccessed(x, 'a')); //true
+         *
+         * @method isAccessed
+         *
+         * @param {Object} object used object
+         * @param {string} name property name
+         *
+         * @returns {boolean} whether property is accessed
          */
-        me.isAccessed = function (obj, key) {
-            var descriptor = getDescriptor(obj, key);
-            return !!descriptor && (descriptor.hasOwnProperty('get') || descriptor.hasOwnProperty('get'));
+        me.isAccessed = function (object, name) {
+            var descriptor = getDescriptor(object, name);
+            return !!descriptor && (descriptor.hasOwnProperty('get') || descriptor.hasOwnProperty('set'));
         };
+
         /**
          * Checks whether property is writable
-         * @param obj
-         * @param key
-         * @returns {boolean}
+         *
+         * For example:
+         *
+         *     var x = {};
+         *     xs.Attribute.define(x, 'a', {value: 1, writable: true, configurable: true});
+         *     console.log(xs.Attribute.isWritable(x, 'a')); //true
+         *     xs.Attribute.define(x, 'a', {set: function(){ }});
+         *     console.log(xs.Attribute.isWritable(x, 'a')); //false
+         *
+         * @method isWritable
+         *
+         * @param {Object} object used object
+         * @param {string} name property name
+         *
+         * @returns {boolean} whether property is writable
          */
-        me.isWritable = function (obj, key) {
-            var descriptor = getDescriptor(obj, key);
+        me.isWritable = function (object, name) {
+            var descriptor = getDescriptor(object, name);
             return !!descriptor && !!descriptor.writable;
         };
+
         /**
          * Checks whether property is configurable
-         * @param obj
-         * @param key
-         * @returns {boolean|*}
+         *
+         * For example:
+         *
+         *     var x = {};
+         *     xs.Attribute.define(x, 'a', {value: 1, writable: true, configurable: true});
+         *     console.log(xs.Attribute.isWritable(x, 'a')); //true
+         *     xs.Attribute.define(x, 'a', {set: function(){ }});
+         *     console.log(xs.Attribute.isWritable(x, 'a')); //false
+         *
+         * @method isConfigurable
+         *
+         * @param {Object} object used object
+         * @param {string} name property name
+         * @returns {boolean} whether property is configurable
          */
-        var isConfigurable = me.isConfigurable = function (obj, key) {
-            var descriptor = getDescriptor(obj, key);
-            return !!descriptor && descriptor.configurable;
+        var isConfigurable = me.isConfigurable = function (object, name) {
+            var descriptor = getDescriptor(object, name);
+            return !!descriptor && !!descriptor.configurable;
         };
+
         /**
          * Checks whether property is enumerable
-         * @param obj
-         * @param key
-         * @returns {boolean|*}
+         *
+         * For example:
+         *
+         *     var x = {};
+         *     xs.Attribute.define(x, 'a', {enumerable: true, configurable: true});
+         *     console.log(xs.Attribute.isEnumerable(x, 'a')); //true
+         *     xs.Attribute.define(x, 'a', {enumerable: false});
+         *     console.log(xs.Attribute.isEnumerable(x, 'a')); //false
+         *
+         * @method isEnumerable
+         *
+         * @param {Object} object used object
+         * @param {string} name property name
+         * @returns {boolean} whether property is enumerable
          */
-        me.isEnumerable = function (obj, key) {
-            var descriptor = getDescriptor(obj, key);
-            return !!descriptor && descriptor.enumerable;
+        me.isEnumerable = function (object, name) {
+            var descriptor = getDescriptor(object, name);
+            return !!descriptor && !!descriptor.enumerable;
         };
-        /**
-         * Defines constant
-         * @param obj
-         * @param name
-         * @param value
-         * @returns {boolean}
-         */
-        me.const = function (obj, name, value) {
-            if (defined(obj, name) && !isConfigurable(obj, name)) {
-                return false;
-            }
-            define(obj, name, {
-                value: value,
-                writable: false,
-                enumerable: true,
-                configurable: false
-            });
-            return true;
-        };
+
         /**
          * Checks whether given desc is descriptor
-         * @param desc
-         * @returns {boolean}
+         *
+         * For example:
+         *
+         *     console.log(xs.Attribute.isDescriptor({enumerable: true, configurable: true})); //true
+         *     console.log(xs.Attribute.isDescriptor({date: 1, number: 3})); //false
+         *
+         * @method isDescriptor
+         *
+         * @param {Object} desc verified descriptor
+         *
+         * @returns {boolean} whether descriptor given
          */
         var isDescriptor = me.isDescriptor = function (desc) {
             //false if descriptor is not object
             if (!xs.isObject(desc)) {
                 return false;
             }
+
             //if any descriptor fields specified - it is descriptor
-            if (desc.hasOwnProperty('get') ||
-                desc.hasOwnProperty('set') ||
-                desc.hasOwnProperty('value') ||
-                desc.hasOwnProperty('writable') ||
-                desc.hasOwnProperty('configurable') ||
-                desc.hasOwnProperty('enumerable')) {
-                return true;
-            }
-            return false;
+            return defined(desc, 'get') || defined(desc, 'set') || defined(desc, 'value') || defined(desc, 'writable') || defined(desc, 'configurable') || defined(desc, 'enumerable');
         };
+
         /**
-         * prepares descriptor from given object
+         * Defines constant
+         *
+         * For example:
+         *
+         *     var x = {};
+         *     xs.const(x, 'a', 5);
+         *     console.log(xs.Attribute.isAssigned(x, 'a')); //true
+         *     console.log(xs.Attribute.isAccessed(x, 'a')); //false
+         *     console.log(xs.Attribute.isWritable(x, 'a')); //false
+         *     console.log(xs.Attribute.isConfigurable(x, 'a')); //false
+         *     console.log(xs.Attribute.isEnumerable(x, 'a')); //true
+         *
+         * @param object
+         * @param name
+         * @param value
+         * @returns {boolean}
+         */
+        me.const = function (object, name, value) {
+            if (defined(object, name) && !isConfigurable(object, name)) {
+                return false;
+            }
+            define(object, name, {
+                value:        value,
+                writable:     false,
+                enumerable:   true,
+                configurable: false
+            });
+            return true;
+        };
+
+        /**
+         * Prepares descriptor from given object
+         *
+         * For example:
+         *
+         *     console.log(xs.Attribute.prepareDescriptor({
+         *         value: 1,
+         *         x: 5
+         *     }));
+         *     //outputs:
+         *     //{
+         *     //    value: 1,
+         *     //    x: 5 //properties, not relative to descriptor are not deleted
+         *     //}
+         *     console.log(xs.Attribute.prepareDescriptor({
+         *         get: 5,
+         *         value: 1,
+         *         x: 5
+         *     }));
+         *     //outputs:
+         *     //{
+         *     //    value: 1,
+         *     //    x: 5 //properties, not relative to descriptor are not deleted
+         *     //}
+         *     console.log(xs.Attribute.prepareDescriptor({
+         *         get: function() {},
+         *         value: 1,
+         *         x: 5
+         *     }));
+         *     //outputs:
+         *     //{
+         *     //    get: function() {},
+         *     //    x: 5 //properties, not relative to descriptor are not deleted
+         *     //}
+         *
+         * Important: Properties, that are not relative to property descriptor itself, are not removed from given descriptor
+         *
          * @param desc
          * @returns {Object}
          */
         var prepareDescriptor = me.prepareDescriptor = function (desc) {
-            //non-function accessors are removed
-            if (desc.hasOwnProperty('get') && !xs.isFunction(desc.get)) {
+            //non-function get|set are removed
+            if (defined(desc, 'get') && !xs.isFunction(desc.get)) {
                 delete desc.get;
             }
-            if (desc.hasOwnProperty('set') && !xs.isFunction(desc.set)) {
+            if (defined(desc, 'set') && !xs.isFunction(desc.set)) {
                 delete desc.set;
             }
 
-            //accessors are preferred to value: value and writable are removed
+            //get|set are preferred to value: value and writable are removed
             if (desc.get || desc.set) {
                 delete desc.value;
                 delete desc.writable;
             }
 
             //writable,enumerable,configurable - are converted if presented
-            desc.hasOwnProperty('writable') && (desc.writable = Boolean(desc.writable));
-            desc.hasOwnProperty('configurable') && (desc.configurable = Boolean(desc.configurable));
-            desc.hasOwnProperty('enumerable') && (desc.enumerable = Boolean(desc.enumerable));
+            defined(desc, 'writable') && (desc.writable = !!desc.writable);
+            defined(desc, 'configurable') && (desc.configurable = !!desc.configurable);
+            defined(desc, 'enumerable') && (desc.enumerable = !!desc.enumerable);
+
             //any additional fields allowed
             return desc;
         };
+
         /**
-         * Property object
-         * @type {{prepare: prepare, define: define}}
+         * @class xs.lang.Attribute.property
+         * @singleton
+         * @private
+         *
+         * Contains methods to prepare and define properties
          */
         me.property = {
             /**
              * Prepares property descriptor
+             *
+             * @method prepare
+             *
              * @param name
              * @param desc
+             *
              * @returns {Object}
              */
             prepare: function (name, desc) {
                 //if not descriptor - returns generated one
                 if (!isDescriptor(desc)) {
                     return {
-                        value: desc,
-                        writable: true,
-                        enumerable: true,
+                        value:        desc,
+                        writable:     true,
+                        enumerable:   true,
                         configurable: false
                     };
                 }
@@ -206,7 +381,7 @@
                     desc.get || eval('desc.get = function () {return this.__get(\'' + name + '\');}');
                     desc.set || eval('desc.set = function (value) {return this.__set(\'' + name + '\',value);}');
                 } else {
-                    desc.hasOwnProperty('value') || (desc.value = undefined);
+                    defined(desc, 'value') || (desc.value = undefined);
                     desc.writable = true;
                 }
                 desc.enumerable = true;
@@ -216,39 +391,56 @@
             },
             /**
              * Defines property for object
-             * @param obj
+             *
+             * @method define
+             *
+             * @param object
              * @param name
              * @param desc
+             *
              * @returns {boolean}
              */
-            define: function (obj, name, desc) {
-                if (defined(obj, name) && !isConfigurable(obj, name)) {
+            define:  function (object, name, desc) {
+                if (defined(object, name) && !isConfigurable(object, name)) {
+
                     return false;
                 }
 
                 //writable, enumerable and configurable are immutable defaults
                 var defaults = {
-                    enumerable: true,
+                    enumerable:   true,
                     configurable: false
                 };
                 if (!desc.get && !desc.set) {
                     defaults.writable = true;
                 }
+
                 var descriptor = xs.Object.defaults(defaults, desc);
+
                 //define property and return
-                define(obj, name, descriptor);
+                define(object, name, descriptor);
+
                 return true;
             }
         };
+
         /**
-         * Method object
-         * @type {{prepare: prepare, define: define}}
+         * @class xs.lang.Attribute.method
+         * @singleton
+         * @private
+         *
+         * Contains methods to prepare and define methods
          */
         me.method = {
+
             /**
              * Prepares method descriptor
+             *
+             * @method prepare
+             *
              * @param name
              * @param desc
+             *
              * @returns {Object}
              */
             prepare: function (name, desc) {
@@ -270,30 +462,38 @@
                 }
                 return descriptor;
             },
+
             /**
              * Define method for object
-             * @param obj
+             *
+             * @method define
+             *
+             * @param object
              * @param name
              * @param desc
+             *
              * @returns {boolean}
              */
-            define: function (obj, name, desc) {
-                if (defined(obj, name) && !isConfigurable(obj, name)) {
+            define: function (object, name, desc) {
+                if (defined(object, name) && !isConfigurable(object, name)) {
                     return false;
                 }
                 var descriptor = xs.Object.defaults({
-                    writable: false,
-                    enumerable: true,
+                    writable:     false,
+                    enumerable:   true,
                     configurable: false
                 }, desc);
-                define(obj, name, descriptor);
+                define(object, name, descriptor);
                 return true;
             }
+
         };
+
     });
+
     xs.extend(xs, {
-        const: property.const,
-        property: property.property,
-        method: property.method
+        const:    attribute.const,
+        property: attribute.property,
+        method:   attribute.method
     });
 })(window, 'xs');
