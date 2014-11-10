@@ -197,6 +197,7 @@
          *
          * @param {Object} object used object
          * @param {string} name property name
+         *
          * @returns {boolean} whether property is configurable
          */
         var isConfigurable = me.isConfigurable = function (object, name) {
@@ -219,6 +220,7 @@
          *
          * @param {Object} object used object
          * @param {string} name property name
+         *
          * @returns {boolean} whether property is enumerable
          */
         me.isEnumerable = function (object, name) {
@@ -256,17 +258,21 @@
          * For example:
          *
          *     var x = {};
-         *     xs.const(x, 'a', 5);
+         *     console.log(xs.Attribute.const(x, 'a', 5)); //true
+         *     console.log(xs.Attribute.const(x, 'a', 5)); //false
          *     console.log(xs.Attribute.isAssigned(x, 'a')); //true
          *     console.log(xs.Attribute.isAccessed(x, 'a')); //false
          *     console.log(xs.Attribute.isWritable(x, 'a')); //false
          *     console.log(xs.Attribute.isConfigurable(x, 'a')); //false
          *     console.log(xs.Attribute.isEnumerable(x, 'a')); //true
          *
-         * @param object
-         * @param name
-         * @param value
-         * @returns {boolean}
+         * @method const
+         *
+         * @param {Object} object used object
+         * @param {string} name const name
+         * @param {*} value const value
+         *
+         * @returns {boolean} define status. false is returned if object.name is already defined and not configurable
          */
         me.const = function (object, name, value) {
             if (defined(object, name) && !isConfigurable(object, name)) {
@@ -318,10 +324,14 @@
          *
          * Important: Properties, that are not relative to property descriptor itself, are not removed from given descriptor
          *
-         * @param desc
-         * @returns {Object}
+         * @method prepareDescriptor
+         *
+         * @param {Object} descriptor incoming descriptor
+         *
+         * @returns {Object} corrected descriptor copy
          */
-        var prepareDescriptor = me.prepareDescriptor = function (desc) {
+        var prepareDescriptor = me.prepareDescriptor = function (descriptor) {
+            var desc = xs.clone(descriptor);
             //non-function get|set are removed
             if (defined(desc, 'get') && !xs.isFunction(desc.get)) {
                 delete desc.get;
@@ -353,33 +363,59 @@
          * Contains methods to prepare and define properties
          */
         me.property = {
+
             /**
              * Prepares property descriptor
              *
+             * For example:
+             *
+             *     var descriptor = xs.Attribute.property.prepare();
+             *     console.log(descriptor);
+             *     //outputs:
+             *     //{
+             *     //    value: undefined
+             *     //    writable: false
+             *     //    enumerable: true
+             *     //    configurable: false
+             *     //}
+             *     var descriptor = xs.Attribute.property.prepare('x', {
+             *         get: function() {}
+             *     });
+             *     console.log(descriptor);
+             *     //outputs:
+             *     //{
+             *     //    get: function(){}
+             *     //    set: function(value) { this.privates.x = value }
+             *     //    enumerable: true
+             *     //    configurable: false
+             *     //}
+             *
              * @method prepare
              *
-             * @param name
-             * @param desc
+             * @param {string} name property name
+             * @param {Object|*} descriptor property descriptor
              *
-             * @returns {Object}
+             * @returns {Object} prepared descriptor
              */
-            prepare: function (name, desc) {
+            prepare: function (name, descriptor) {
                 //if not descriptor - returns generated one
-                if (!isDescriptor(desc)) {
+                if (!isDescriptor(descriptor)) {
+
                     return {
-                        value:        desc,
+                        value:        descriptor,
                         writable:     true,
                         enumerable:   true,
                         configurable: false
                     };
                 }
-                //prepares descriptor
-                desc = prepareDescriptor(desc);
 
-                //accessors priority
+                //prepares descriptor
+                var desc = prepareDescriptor(descriptor);
+
+                //get|set priority
                 if (desc.get || desc.set) {
-                    desc.get || eval('desc.get = function () {return this.__get(\'' + name + '\');}');
-                    desc.set || eval('desc.set = function (value) {return this.__set(\'' + name + '\',value);}');
+                    desc.get || eval('desc.get = function () {return this.privates.' + name + ';}');
+                    desc.set || eval('desc.set = function (value) {this.privates.' + name + ' = value;}');
                 } else {
                     defined(desc, 'value') || (desc.value = undefined);
                     desc.writable = true;
@@ -389,33 +425,51 @@
 
                 return desc;
             },
+
             /**
              * Defines property for object
              *
+             * For example:
+             *
+             *     var x = {};
+             *     xs.Attribute.property.define(x, 'a', {
+             *         value: 1,
+             *         enumerable: false,
+             *         configurable: true
+             *     });
+             *     console.log(xs.Attribute.getDescriptor(x, 'a'));
+             *     //outputs:
+             *     //{
+             *     //    value: 1,
+             *     //    writable: true,
+             *     //    enumerable: true,
+             *     //    configurable: false
+             *     //}
+             *
              * @method define
              *
-             * @param object
-             * @param name
-             * @param desc
+             * @param {Object} object used object
+             * @param {string} name defined property name
+             * @param {Object} desc defined property descriptor
              *
              * @returns {boolean}
              */
-            define:  function (object, name, desc) {
+            define: function (object, name, desc) {
                 if (defined(object, name) && !isConfigurable(object, name)) {
 
                     return false;
                 }
 
                 //writable, enumerable and configurable are immutable defaults
-                var defaults = {
+                var descriptor = {
                     enumerable:   true,
                     configurable: false
                 };
                 if (!desc.get && !desc.set) {
-                    defaults.writable = true;
+                    descriptor.writable = true;
                 }
 
-                var descriptor = xs.Object.defaults(defaults, desc);
+                xs.defaults(descriptor, desc);
 
                 //define property and return
                 define(object, name, descriptor);
