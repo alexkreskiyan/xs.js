@@ -373,9 +373,9 @@
              *     console.log(descriptor);
              *     //outputs:
              *     //{
-             *     //    value: undefined
-             *     //    writable: false
-             *     //    enumerable: true
+             *     //    value: undefined,
+             *     //    writable: false,
+             *     //    enumerable: true,
              *     //    configurable: false
              *     //}
              *     var descriptor = xs.Attribute.property.prepare('x', {
@@ -384,9 +384,9 @@
              *     console.log(descriptor);
              *     //outputs:
              *     //{
-             *     //    get: function(){}
-             *     //    set: function(value) { this.privates.x = value }
-             *     //    enumerable: true
+             *     //    get: function(){},
+             *     //    set: function(value) { this.privates.x = value },
+             *     //    enumerable: true,
              *     //    configurable: false
              *     //}
              *
@@ -432,11 +432,13 @@
              * For example:
              *
              *     var x = {};
-             *     xs.Attribute.property.define(x, 'a', {
+             *     console.log(xs.Attribute.property.define(x, 'a', {
              *         value: 1,
              *         enumerable: false,
              *         configurable: true
-             *     });
+             *     }));
+             *     //outputs:
+             *     //true
              *     console.log(xs.Attribute.getDescriptor(x, 'a'));
              *     //outputs:
              *     //{
@@ -445,6 +447,13 @@
              *     //    enumerable: true,
              *     //    configurable: false
              *     //}
+             *     console.log(xs.Attribute.property.define(x, 'a', {
+             *         value: 1,
+             *         enumerable: false,
+             *         configurable: true
+             *     }));
+             *     //outputs:
+             *     //false
              *
              * @method define
              *
@@ -490,6 +499,22 @@
             /**
              * Prepares method descriptor
              *
+             * For example:
+             *
+             *     var descriptor = xs.Attribute.method.prepare();
+             *     console.log(descriptor);
+             *     //outputs:
+             *     //false
+             *     var descriptor = xs.Attribute.method.prepare('x', function() {});
+             *     console.log(descriptor);
+             *     //outputs:
+             *     //{
+             *     //    value: function(){},
+             *     //    writable: function(value) { this.privates.x = value },
+             *     //    enumerable: true,
+             *     //    configurable: false
+             *     //}
+             *
              * @method prepare
              *
              * @param name
@@ -498,18 +523,16 @@
              * @returns {Object}
              */
             prepare: function (name, desc) {
-                var descriptor = {};
+                var descriptor = {
+                    writable:     false,
+                    enumerable:   true,
+                    configurable: false
+                };
                 if (xs.isFunction(desc)) {
                     descriptor.value = desc;
                     //allowed as object with fn property, containing method function
-                } else if (xs.isObject(desc)) {
-                    desc = prepareDescriptor(desc);
-                    //function may be specified in fn or value properties
-                    if (xs.isFunction(desc.value)) {
-                        descriptor.value = desc.value;
-                    } else {
-                        return false;
-                    }
+                } else if (xs.isObject(desc) && xs.isFunction(desc.value)) {
+                    descriptor.value = desc.value;
                     //else  - return false
                 } else {
                     return false;
@@ -519,6 +542,28 @@
 
             /**
              * Define method for object
+             *
+             * For example:
+             *
+             *     var x = {};
+             *     console.log(xs.Attribute.method.define(x, 'a', {
+             *         value:function(){ }
+             *     }));
+             *     //outputs:
+             *     //true
+             *     console.log(xs.Attribute.getDescriptor(x, 'a'));
+             *     //outputs:
+             *     //{
+             *     //    value: function(){ },
+             *     //    writable: false,
+             *     //    enumerable: true,
+             *     //    configurable: false
+             *     //}
+             *     console.log(xs.Attribute.method.define(x, 'a', {
+             *         value:function(){ }
+             *     }));
+             *     //outputs:
+             *     //false
              *
              * @method define
              *
@@ -532,12 +577,12 @@
                 if (defined(object, name) && !isConfigurable(object, name)) {
                     return false;
                 }
-                var descriptor = xs.Object.defaults({
+                define(object, name, {
+                    value:        desc.value,
                     writable:     false,
                     enumerable:   true,
                     configurable: false
-                }, desc);
-                define(object, name, descriptor);
+                });
                 return true;
             }
 
