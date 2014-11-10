@@ -14,7 +14,7 @@
         }
     }).call(me, 'tests');
 
-    var addScript = function (container, src, onLoad) {
+    var addScript = function (container, src, onLoad, cover) {
         if (scripts.indexOf(src) >= 0) {
             onLoad && onLoad();
             return;
@@ -24,6 +24,7 @@
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = src;
+        cover && script.setAttribute('data-cover', '');
         container.appendChild(script);
         if (!onLoad) {
             return;
@@ -75,10 +76,10 @@
         }
         var file = resolveSourceFileName(files[0]);
         if (files.length == 1) {
-            addScript(head, file, callback);
+            addScript(head, file, callback, true);
         } else {
             addScript(head, file, function () {
-                me.syncLoad(files.slice(1), callback);
+                me.syncLoad(files.slice(1), callback, true);
             });
         }
     };

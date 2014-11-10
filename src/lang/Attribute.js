@@ -229,7 +229,7 @@
         };
 
         /**
-         * Checks whether given desc is descriptor
+         * Checks whether given descriptor is descriptor
          *
          * For example:
          *
@@ -238,18 +238,18 @@
          *
          * @method isDescriptor
          *
-         * @param {Object} desc verified descriptor
+         * @param {Object} descriptor verified descriptor
          *
          * @returns {boolean} whether descriptor given
          */
-        var isDescriptor = me.isDescriptor = function (desc) {
+        var isDescriptor = me.isDescriptor = function (descriptor) {
             //false if descriptor is not object
-            if (!xs.isObject(desc)) {
+            if (!xs.isObject(descriptor)) {
                 return false;
             }
 
             //if any descriptor fields specified - it is descriptor
-            return defined(desc, 'get') || defined(desc, 'set') || defined(desc, 'value') || defined(desc, 'writable') || defined(desc, 'configurable') || defined(desc, 'enumerable');
+            return defined(descriptor, 'get') || defined(descriptor, 'set') || defined(descriptor, 'value') || defined(descriptor, 'writable') || defined(descriptor, 'configurable') || defined(descriptor, 'enumerable');
         };
 
         /**
@@ -331,28 +331,28 @@
          * @returns {Object} corrected descriptor copy
          */
         var prepareDescriptor = me.prepareDescriptor = function (descriptor) {
-            var desc = xs.clone(descriptor);
+            descriptor = xs.clone(descriptor);
             //non-function get|set are removed
-            if (defined(desc, 'get') && !xs.isFunction(desc.get)) {
-                delete desc.get;
+            if (defined(descriptor, 'get') && !xs.isFunction(descriptor.get)) {
+                delete descriptor.get;
             }
-            if (defined(desc, 'set') && !xs.isFunction(desc.set)) {
-                delete desc.set;
+            if (defined(descriptor, 'set') && !xs.isFunction(descriptor.set)) {
+                delete descriptor.set;
             }
 
             //get|set are preferred to value: value and writable are removed
-            if (desc.get || desc.set) {
-                delete desc.value;
-                delete desc.writable;
+            if (descriptor.get || descriptor.set) {
+                delete descriptor.value;
+                delete descriptor.writable;
             }
 
             //writable,enumerable,configurable - are converted if presented
-            defined(desc, 'writable') && (desc.writable = !!desc.writable);
-            defined(desc, 'configurable') && (desc.configurable = !!desc.configurable);
-            defined(desc, 'enumerable') && (desc.enumerable = !!desc.enumerable);
+            defined(descriptor, 'writable') && (descriptor.writable = !!descriptor.writable);
+            defined(descriptor, 'configurable') && (descriptor.configurable = !!descriptor.configurable);
+            defined(descriptor, 'enumerable') && (descriptor.enumerable = !!descriptor.enumerable);
 
             //any additional fields allowed
-            return desc;
+            return descriptor;
         };
 
         /**
@@ -410,20 +410,20 @@
                 }
 
                 //prepares descriptor
-                var desc = prepareDescriptor(descriptor);
+                descriptor = prepareDescriptor(descriptor);
 
                 //get|set priority
-                if (desc.get || desc.set) {
-                    desc.get || eval('desc.get = function () {return this.privates.' + name + ';}');
-                    desc.set || eval('desc.set = function (value) {this.privates.' + name + ' = value;}');
+                if (descriptor.get || descriptor.set) {
+                    descriptor.get || eval('descriptor.get = function () {return this.privates.' + name + ';}');
+                    descriptor.set || eval('descriptor.set = function (value) {this.privates.' + name + ' = value;}');
                 } else {
-                    defined(desc, 'value') || (desc.value = undefined);
-                    desc.writable = true;
+                    defined(descriptor, 'value') || (descriptor.value = undefined);
+                    descriptor.writable = true;
                 }
-                desc.enumerable = true;
-                desc.configurable = false;
+                descriptor.enumerable = true;
+                descriptor.configurable = false;
 
-                return desc;
+                return descriptor;
             },
 
             /**
@@ -459,26 +459,24 @@
              *
              * @param {Object} object used object
              * @param {string} name defined property name
-             * @param {Object} desc defined property descriptor
+             * @param {Object} descriptor defined property descriptor
              *
              * @returns {boolean}
              */
-            define: function (object, name, desc) {
+            define: function (object, name, descriptor) {
                 if (defined(object, name) && !isConfigurable(object, name)) {
 
                     return false;
                 }
 
                 //writable, enumerable and configurable are immutable defaults
-                var descriptor = {
+                xs.extend(descriptor, {
                     enumerable:   true,
                     configurable: false
-                };
-                if (!desc.get && !desc.set) {
+                });
+                if (!descriptor.get && !descriptor.set) {
                     descriptor.writable = true;
                 }
-
-                xs.defaults(descriptor, desc);
 
                 //define property and return
                 define(object, name, descriptor);
@@ -518,26 +516,27 @@
              * @method prepare
              *
              * @param name
-             * @param desc
+             * @param descriptor
              *
              * @returns {Object}
              */
-            prepare: function (name, desc) {
-                var descriptor = {
-                    writable:     false,
-                    enumerable:   true,
-                    configurable: false
-                };
-                if (xs.isFunction(desc)) {
-                    descriptor.value = desc;
+            prepare: function (name, descriptor) {
+                var value;
+                if (xs.isFunction(descriptor)) {
+                    value = descriptor;
                     //allowed as object with fn property, containing method function
-                } else if (xs.isObject(desc) && xs.isFunction(desc.value)) {
-                    descriptor.value = desc.value;
+                } else if (xs.isObject(descriptor) && xs.isFunction(descriptor.value)) {
+                    value = descriptor.value;
                     //else  - return false
                 } else {
                     return false;
                 }
-                return descriptor;
+                return {
+                    value:        value,
+                    writable:     false,
+                    enumerable:   true,
+                    configurable: false
+                };
             },
 
             /**
@@ -569,16 +568,16 @@
              *
              * @param object
              * @param name
-             * @param desc
+             * @param descriptor
              *
              * @returns {boolean}
              */
-            define: function (object, name, desc) {
+            define: function (object, name, descriptor) {
                 if (defined(object, name) && !isConfigurable(object, name)) {
                     return false;
                 }
                 define(object, name, {
-                    value:        desc.value,
+                    value:        descriptor.value,
                     writable:     false,
                     enumerable:   true,
                     configurable: false
