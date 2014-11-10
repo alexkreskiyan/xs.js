@@ -1,6 +1,7 @@
 (function () {
     var me = this;
     var head = document.getElementsByTagName('head')[0];
+    var scripts = [];
 
     var tests = (function (key) {
         var paramsPairs = /\?([^#\?]+)/.exec(me.location.search).slice(1).shift().split('&');
@@ -14,6 +15,12 @@
     }).call(me, 'tests');
 
     var addScript = function (container, src, onLoad) {
+        if (scripts.indexOf(src) >= 0) {
+            onLoad && onLoad();
+            return;
+        }
+        scripts.push(src);
+
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = src;
@@ -40,8 +47,8 @@
     };
 
     request('/src/src.json', function (sources) {
-        getTestFiles(sources, tests).forEach(function (file) {
-            addScript(head, file);
+        getTests(sources, tests).forEach(function (test) {
+            addScript(head, resolveTestFileName(test));
         });
     });
     var resolveSourceFileName = function (name) {
@@ -50,25 +57,27 @@
     var resolveTestFileName = function (name) {
         return '/tests/src/' + name.split('.').slice(1).join('/') + 'Test.js';
     };
-    var getTestFiles = function (sources, tests) {
-        var files = [];
+    var getTests = function (sources, tests) {
+        var list = [];
         sources.forEach(function (source) {
             tests.forEach(function (test) {
-                var file = resolveTestFileName(source);
-                source.indexOf(test) === 0 && files.indexOf(file) < 0 && files.push(file);
+                if (source === test || source.indexOf(test + '.') == 0) { //either strict or namespace match
+                    list.indexOf(source) < 0 && list.push(source);
+                }
             });
         });
-        return files;
+        return list;
     };
 
     me.syncLoad = function (files, callback) {
         if (!files.length) {
             return;
         }
+        var file = resolveSourceFileName(files[0]);
         if (files.length == 1) {
-            addScript(head, resolveSourceFileName(files[0]), callback);
+            addScript(head, file, callback);
         } else {
-            addScript(head, resolveSourceFileName(files[0]), function () {
+            addScript(head, file, function () {
                 me.syncLoad(files.slice(1), callback);
             });
         }

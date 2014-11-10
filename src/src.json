@@ -1,5 +1,5 @@
 [
-    "xs.Detect",
+    "xs.lang.Detect",
     "xs.lang.Array",
     "xs.lang.Attribute",
     "xs.lang.Date",
