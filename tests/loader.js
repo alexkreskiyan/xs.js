@@ -4,7 +4,11 @@
     var scripts = [];
 
     var tests = (function (key) {
-        var paramsPairs = /\?([^#\?]+)/.exec(me.location.search).slice(1).shift().split('&');
+        var result = /\?([^#\?]+)/.exec(me.location.search);
+        if (!result) {
+            return [];
+        }
+        var paramsPairs = result.slice(1).shift().split('&');
         var pair;
         for (var idx = 0; idx < paramsPairs.length; i++) {
             pair = paramsPairs[idx].split('=');
