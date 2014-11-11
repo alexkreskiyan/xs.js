@@ -26,13 +26,7 @@
     //create framework
     var xs = new (function () {
         var me = this;
-        /**
-         * @method
-         * @private
-         * Represents empty function. is used internally
-         */
-        me.emptyFn = function () {
-        };
+
         /**
          * @method
          * Returns unique id

@@ -173,6 +173,14 @@
             scope && (fn = _bind(fn, scope));
             setTimeout(fn, 0);
         }
+
+        /**
+         * @ignore
+         *
+         * Represents empty function. is used internally
+         */
+        me.emptyFn = function () {
+        };
     });
     xs.extend(xs, fn);
 })(window, 'xs');
