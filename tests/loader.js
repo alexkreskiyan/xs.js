@@ -20,7 +20,7 @@
 
     var addScript = function (container, src, onLoad, cover) {
         if (scripts.indexOf(src) >= 0) {
-            onLoad && onLoad();
+            onLoad && setTimeout(onLoad, 0);
             return;
         }
         scripts.push(src);
@@ -35,7 +35,7 @@
         }
         var loadHandler = function () {
             script.removeEventListener('load', loadHandler);
-            onLoad();
+            setTimeout(onLoad, 0);
         };
         script.addEventListener('load', loadHandler);
     };

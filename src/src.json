@@ -1,10 +1,7 @@
 [
     "xs.lang.Detect",
-    "xs.lang.Array",
     "xs.lang.Attribute",
-    "xs.lang.Date",
     "xs.lang.Function",
     "xs.lang.List",
-    "xs.lang.Object",
     "xs.lang.String"
 ]

@@ -1,79 +1,69 @@
 syncLoad([
-    'xs.lang.Detect', 'xs.lang.List'
+    'xs.lang.Detect',
+    'xs.lang.List'
 ], function () {
-    function speed(fn, n) {
-        var start = Date.now();
-        for (var i = 0; i < n; i++) {
-            fn();
-        }
-        var duration = Date.now() - start;
-        console.log('duration: ', duration, 'ms for ', n, 'operations');
-        console.log('median: ', duration / n, 'ms per operation');
-        console.log('mark: about', n / duration, 'operation per ms');
-    }
-
     module('xs.Detect');
 
     test('isArray', function () {
         var tests = [
             {
                 data: null,
-                ok: false
+                ok:   false
             },
             {
                 data: undefined,
-                ok: false
+                ok:   false
             },
             {
                 data: true,
-                ok: false
+                ok:   false
             },
             {
                 data: new Date(),
-                ok: false
+                ok:   false
             },
             {
                 data: function () {
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: {},
-                ok: false
+                ok:   false
             },
             {
                 data: {
                     a: 1
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: [],
-                ok: true
+                ok:   true
             },
             {
                 data: [1],
-                ok: true
+                ok:   true
             },
             {
                 data: 1,
-                ok: false
+                ok:   false
             },
             {
                 data: 0,
-                ok: false
+                ok:   false
             },
             {
                 data: '1',
-                ok: false
+                ok:   false
             },
             {
                 data: 'a',
-                ok: false
+                ok:   false
             },
             {
                 data: '',
-                ok: false
+                ok:   false
             }
         ];
         xs.each(tests, function (test) {
@@ -86,62 +76,62 @@ syncLoad([
         var tests = [
             {
                 data: null,
-                ok: false
+                ok:   false
             },
             {
                 data: undefined,
-                ok: false
+                ok:   false
             },
             {
                 data: true,
-                ok: false
+                ok:   false
             },
             {
                 data: new Date(),
-                ok: true
+                ok:   true
             },
             {
                 data: function () {
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: {},
-                ok: true
+                ok:   true
             },
             {
                 data: {
                     a: 1
                 },
-                ok: true
+                ok:   true
             },
             {
                 data: [],
-                ok: false
+                ok:   false
             },
             {
                 data: [1],
-                ok: false
+                ok:   false
             },
             {
                 data: 1,
-                ok: false
+                ok:   false
             },
             {
                 data: 0,
-                ok: false
+                ok:   false
             },
             {
                 data: '1',
-                ok: false
+                ok:   false
             },
             {
                 data: 'a',
-                ok: false
+                ok:   false
             },
             {
                 data: '',
-                ok: false
+                ok:   false
             }
         ];
         xs.each(tests, function (test) {
@@ -153,62 +143,62 @@ syncLoad([
         var tests = [
             {
                 data: null,
-                ok: false
+                ok:   false
             },
             {
                 data: undefined,
-                ok: false
+                ok:   false
             },
             {
                 data: true,
-                ok: false
+                ok:   false
             },
             {
                 data: new Date(),
-                ok: true
+                ok:   true
             },
             {
                 data: function () {
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: {},
-                ok: true
+                ok:   true
             },
             {
                 data: {
                     a: 1
                 },
-                ok: true
+                ok:   true
             },
             {
                 data: [],
-                ok: true
+                ok:   true
             },
             {
                 data: [1],
-                ok: true
+                ok:   true
             },
             {
                 data: 1,
-                ok: false
+                ok:   false
             },
             {
                 data: 0,
-                ok: false
+                ok:   false
             },
             {
                 data: '1',
-                ok: false
+                ok:   false
             },
             {
                 data: 'a',
-                ok: false
+                ok:   false
             },
             {
                 data: '',
-                ok: false
+                ok:   false
             }
         ];
         xs.each(tests, function (test) {
@@ -220,62 +210,62 @@ syncLoad([
         var tests = [
             {
                 data: null,
-                ok: true
+                ok:   true
             },
             {
                 data: undefined,
-                ok: true
+                ok:   true
             },
             {
                 data: true,
-                ok: true
+                ok:   true
             },
             {
                 data: new Date(),
-                ok: false
+                ok:   false
             },
             {
                 data: function () {
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: {},
-                ok: false
+                ok:   false
             },
             {
                 data: {
                     a: 1
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: [],
-                ok: false
+                ok:   false
             },
             {
                 data: [1],
-                ok: false
+                ok:   false
             },
             {
                 data: 1,
-                ok: true
+                ok:   true
             },
             {
                 data: 0,
-                ok: true
+                ok:   true
             },
             {
                 data: '1',
-                ok: true
+                ok:   true
             },
             {
                 data: 'a',
-                ok: true
+                ok:   true
             },
             {
                 data: '',
-                ok: true
+                ok:   true
             }
         ];
         xs.each(tests, function (test) {
@@ -287,62 +277,62 @@ syncLoad([
         var tests = [
             {
                 data: null,
-                ok: false
+                ok:   false
             },
             {
                 data: undefined,
-                ok: false
+                ok:   false
             },
             {
                 data: true,
-                ok: false
+                ok:   false
             },
             {
                 data: new Date(),
-                ok: false
+                ok:   false
             },
             {
                 data: function () {
                 },
-                ok: true
+                ok:   true
             },
             {
                 data: {},
-                ok: false
+                ok:   false
             },
             {
                 data: {
                     a: 1
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: [],
-                ok: false
+                ok:   false
             },
             {
                 data: [1],
-                ok: false
+                ok:   false
             },
             {
                 data: 1,
-                ok: false
+                ok:   false
             },
             {
                 data: 0,
-                ok: false
+                ok:   false
             },
             {
                 data: '1',
-                ok: false
+                ok:   false
             },
             {
                 data: 'a',
-                ok: false
+                ok:   false
             },
             {
                 data: '',
-                ok: false
+                ok:   false
             }
         ];
         xs.each(tests, function (test) {
@@ -354,62 +344,62 @@ syncLoad([
         var tests = [
             {
                 data: null,
-                ok: false
+                ok:   false
             },
             {
                 data: undefined,
-                ok: false
+                ok:   false
             },
             {
                 data: true,
-                ok: false
+                ok:   false
             },
             {
                 data: new Date(),
-                ok: false
+                ok:   false
             },
             {
                 data: function () {
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: {},
-                ok: false
+                ok:   false
             },
             {
                 data: {
                     a: 1
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: [],
-                ok: false
+                ok:   false
             },
             {
                 data: [1],
-                ok: false
+                ok:   false
             },
             {
                 data: 1,
-                ok: false
+                ok:   false
             },
             {
                 data: 0,
-                ok: false
+                ok:   false
             },
             {
                 data: '1',
-                ok: true
+                ok:   true
             },
             {
                 data: 'a',
-                ok: true
+                ok:   true
             },
             {
                 data: '',
-                ok: true
+                ok:   true
             }
         ];
         xs.each(tests, function (test) {
@@ -421,62 +411,62 @@ syncLoad([
         var tests = [
             {
                 data: null,
-                ok: false
+                ok:   false
             },
             {
                 data: undefined,
-                ok: false
+                ok:   false
             },
             {
                 data: true,
-                ok: false
+                ok:   false
             },
             {
                 data: new Date(),
-                ok: false
+                ok:   false
             },
             {
                 data: function () {
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: {},
-                ok: false
+                ok:   false
             },
             {
                 data: {
                     a: 1
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: [],
-                ok: false
+                ok:   false
             },
             {
                 data: [1],
-                ok: false
+                ok:   false
             },
             {
                 data: 1,
-                ok: true
+                ok:   true
             },
             {
                 data: 0,
-                ok: true
+                ok:   true
             },
             {
                 data: '1',
-                ok: true
+                ok:   true
             },
             {
                 data: 'a',
-                ok: false
+                ok:   false
             },
             {
                 data: '',
-                ok: false
+                ok:   false
             }
         ];
         xs.each(tests, function (test) {
@@ -488,62 +478,62 @@ syncLoad([
         var tests = [
             {
                 data: null,
-                ok: false
+                ok:   false
             },
             {
                 data: undefined,
-                ok: false
+                ok:   false
             },
             {
                 data: true,
-                ok: false
+                ok:   false
             },
             {
                 data: new Date(),
-                ok: false
+                ok:   false
             },
             {
                 data: function () {
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: {},
-                ok: false
+                ok:   false
             },
             {
                 data: {
                     a: 1
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: [],
-                ok: false
+                ok:   false
             },
             {
                 data: [1],
-                ok: false
+                ok:   false
             },
             {
                 data: 1,
-                ok: true
+                ok:   true
             },
             {
                 data: 0,
-                ok: true
+                ok:   true
             },
             {
                 data: '1',
-                ok: false
+                ok:   false
             },
             {
                 data: 'a',
-                ok: false
+                ok:   false
             },
             {
                 data: '',
-                ok: false
+                ok:   false
             }
         ];
         xs.each(tests, function (test) {
@@ -555,62 +545,62 @@ syncLoad([
         var tests = [
             {
                 data: null,
-                ok: true
+                ok:   true
             },
             {
                 data: undefined,
-                ok: false
+                ok:   false
             },
             {
                 data: true,
-                ok: false
+                ok:   false
             },
             {
                 data: new Date(),
-                ok: false
+                ok:   false
             },
             {
                 data: function () {
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: {},
-                ok: false
+                ok:   false
             },
             {
                 data: {
                     a: 1
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: [],
-                ok: false
+                ok:   false
             },
             {
                 data: [1],
-                ok: false
+                ok:   false
             },
             {
                 data: 1,
-                ok: false
+                ok:   false
             },
             {
                 data: 0,
-                ok: false
+                ok:   false
             },
             {
                 data: '1',
-                ok: false
+                ok:   false
             },
             {
                 data: 'a',
-                ok: false
+                ok:   false
             },
             {
                 data: '',
-                ok: false
+                ok:   false
             }
         ];
         xs.each(tests, function (test) {
@@ -622,62 +612,62 @@ syncLoad([
         var tests = [
             {
                 data: null,
-                ok: true
+                ok:   true
             },
             {
                 data: undefined,
-                ok: false
+                ok:   false
             },
             {
                 data: true,
-                ok: true
+                ok:   true
             },
             {
                 data: new Date(),
-                ok: true
+                ok:   true
             },
             {
                 data: function () {
                 },
-                ok: true
+                ok:   true
             },
             {
                 data: {},
-                ok: true
+                ok:   true
             },
             {
                 data: {
                     a: 1
                 },
-                ok: true
+                ok:   true
             },
             {
                 data: [],
-                ok: true
+                ok:   true
             },
             {
                 data: [1],
-                ok: true
+                ok:   true
             },
             {
                 data: 1,
-                ok: true
+                ok:   true
             },
             {
                 data: 0,
-                ok: true
+                ok:   true
             },
             {
                 data: '1',
-                ok: true
+                ok:   true
             },
             {
                 data: 'a',
-                ok: true
+                ok:   true
             },
             {
                 data: '',
-                ok: true
+                ok:   true
             }
         ];
         xs.each(tests, function (test) {
@@ -689,62 +679,62 @@ syncLoad([
         var tests = [
             {
                 data: null,
-                ok: false
+                ok:   false
             },
             {
                 data: undefined,
-                ok: false
+                ok:   false
             },
             {
                 data: true,
-                ok: true
+                ok:   true
             },
             {
                 data: new Date(),
-                ok: false
+                ok:   false
             },
             {
                 data: function () {
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: {},
-                ok: false
+                ok:   false
             },
             {
                 data: {
                     a: 1
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: [],
-                ok: false
+                ok:   false
             },
             {
                 data: [1],
-                ok: false
+                ok:   false
             },
             {
                 data: 1,
-                ok: false
+                ok:   false
             },
             {
                 data: 0,
-                ok: false
+                ok:   false
             },
             {
                 data: '1',
-                ok: false
+                ok:   false
             },
             {
                 data: 'a',
-                ok: false
+                ok:   false
             },
             {
                 data: '',
-                ok: false
+                ok:   false
             }
         ];
         xs.each(tests, function (test) {
@@ -756,58 +746,58 @@ syncLoad([
         var tests = [
             {
                 data: null,
-                ok: true
+                ok:   true
             },
             {
                 data: undefined,
-                ok: true
+                ok:   true
             },
             {
                 data: true,
-                ok: false
+                ok:   false
             },
             {
                 data: function () {
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: {},
-                ok: true
+                ok:   true
             },
             {
                 data: {
                     a: 1
                 },
-                ok: false
+                ok:   false
             },
             {
                 data: [],
-                ok: true
+                ok:   true
             },
             {
                 data: [1],
-                ok: false
+                ok:   false
             },
             {
                 data: 1,
-                ok: false
+                ok:   false
             },
             {
                 data: 0,
-                ok: true
+                ok:   true
             },
             {
                 data: '1',
-                ok: false
+                ok:   false
             },
             {
                 data: 'a',
-                ok: false
+                ok:   false
             },
             {
                 data: '',
-                ok: true
+                ok:   true
             }
         ];
         xs.each(tests, function (test) {

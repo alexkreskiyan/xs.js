@@ -14,28 +14,29 @@ var karma = require('karma').server;
 var paths = {
     scripts: [
         'src/xs.js',
-        'src/Detect.js',
+        'src/lang/Detect.js',
         'src/lang/List.js',
-        'src/lang/Object.js',
-        'src/lang/Array.js'
-//        'src/Environment.js',
-//        'src/lang/Attribute.js',
-//        'src/lang/Date.js',
-//        'src/lang/Error.js',
-//        'src/lang/Function.js',
-//        'src/lang/Number.js',
-//        'src/lang/String.js',
-//        'src/class/Class.js',
-//        'src/class/ClassManager.js',
-//        'src/class/Base.js',
-//        'src/class/Loader.js',
-//        'src/util/Observable.js',
-//        'src/promise/Deferred.js',
-//        'src/promise/Promise.js',
-//        'src/promise/Resolver.js',
-//        'src/data/Connection.js',
-//        'src/draw/Color.js',
-//        'src/Ajax.js'
+        'src/lang/Attribute.js',
+        'src/lang/Function.js',
+        'src/lang/String.js'
+        //        'src/Environment.js',
+        //        'src/lang/Attribute.js',
+        //        'src/lang/Date.js',
+        //        'src/lang/Error.js',
+        //        'src/lang/Function.js',
+        //        'src/lang/Number.js',
+        //        'src/lang/String.js',
+        //        'src/class/Class.js',
+        //        'src/class/ClassManager.js',
+        //        'src/class/Base.js',
+        //        'src/class/Loader.js',
+        //        'src/util/Observable.js',
+        //        'src/promise/Deferred.js',
+        //        'src/promise/Promise.js',
+        //        'src/promise/Resolver.js',
+        //        'src/data/Connection.js',
+        //        'src/draw/Color.js',
+        //        'src/Ajax.js'
     ]
 };
 

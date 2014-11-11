@@ -4,9 +4,11 @@ syncLoad([
     'xs.lang.Attribute'
 ], function () {
     module('xs.lang.Attribute');
+
     test('defined', function () {
         strictEqual(xs.Attribute.defined({}, 'a'), false);
     });
+
     test('define', function () {
         var obj = {};
 
@@ -14,6 +16,7 @@ syncLoad([
         xs.Attribute.define(obj, 'a', {value: {x: 1}});
         strictEqual(xs.Attribute.defined(obj, 'a'), true);
     });
+
     test('getDescriptor', function () {
         var obj = {};
         var getter = function () {
@@ -48,6 +51,7 @@ syncLoad([
         strictEqual(descriptor.configurable, true);
         strictEqual(descriptor.enumerable, true);
     });
+
     test('isAssigned', function () {
         var obj = {};
         var getter = function () {
@@ -72,6 +76,7 @@ syncLoad([
         });
         strictEqual(xs.Attribute.isAssigned(obj, 'a'), false);
     });
+
     test('isAccessed', function () {
         var obj = {};
         var getter = function () {
@@ -96,6 +101,7 @@ syncLoad([
         });
         strictEqual(xs.Attribute.isAccessed(obj, 'a'), true);
     });
+
     test('isWritable', function () {
         var obj = {};
         var getter = function () {
@@ -126,6 +132,7 @@ syncLoad([
         });
         strictEqual(xs.Attribute.isWritable(obj, 'a'), false);
     });
+
     test('isConfigurable', function () {
         var obj = {};
         var value = {x: 1};
@@ -143,6 +150,7 @@ syncLoad([
         });
         strictEqual(xs.Attribute.isConfigurable(obj, 'a'), false);
     });
+
     test('isEnumerable', function () {
         var obj = {};
         var value = {x: 1};
@@ -160,6 +168,7 @@ syncLoad([
         });
         strictEqual(xs.Attribute.isEnumerable(obj, 'a'), false);
     });
+
     test('isDescriptor', function () {
         //not-object desc
         strictEqual(xs.Attribute.isDescriptor(null), false, 'null has type object, but fails');
@@ -169,6 +178,7 @@ syncLoad([
         //object desc with any property
         strictEqual(xs.Attribute.isDescriptor({a: 1, value: true}), true);
     });
+
     test('prepareDescriptor', function () {
         //get|set to value priority
         var source = {
@@ -201,6 +211,7 @@ syncLoad([
         strictEqual(desc.configurable, true);
         strictEqual(desc.enumerable, true);
     });
+
     test('const', function () {
         var obj = {};
         var value = {x: 1};
@@ -216,6 +227,7 @@ syncLoad([
         obj['a'] = null;
         strictEqual(obj['a'], value);
     });
+
     test('property.prepare', function () {
         //checks for not descriptor given
         var desc = {
@@ -260,6 +272,7 @@ syncLoad([
         strictEqual(result.value, desc.value);
         strictEqual(result.default, desc.default);
     });
+
     test('property.define', function () {
         //check for defined and not configurable property
         //check defaults mechanism
@@ -299,6 +312,7 @@ syncLoad([
         strictEqual(xs.Attribute.isConfigurable(obj, 'c'), false);
         strictEqual(xs.Attribute.isEnumerable(obj, 'c'), true);
     });
+
     test('method.prepare', function () {
         //check for descriptor given incorrectly
         strictEqual(xs.Attribute.method.prepare('a', null), false);
@@ -326,6 +340,7 @@ syncLoad([
         result = xs.Attribute.method.prepare('a', {});
         strictEqual(result, false);
     });
+
     test('method.define', function () {
         var obj = {};
         var value = function (x) {
