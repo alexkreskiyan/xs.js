@@ -1,5 +1,5 @@
-/**
- This file is core of xs.js 0.1
+/*!
+ This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
@@ -18,25 +18,50 @@
 
  */
 /**
- * set class pre-definition
- * @type {Object}
+ * @class xs.lang.Detect
+ * @singleton
+ * @private
+ *
+ * xs.lang.Detect is private singleton, defining basic language detection operations
  */
-'use strict';
 (function (root, ns) {
+
+    'use strict';
 
     //framework shorthand
     var xs = root[ns];
 
     var detect = new (function () {
         var me = this;
+
         /**
-         * Return type passed arguments.
-         * @param  {*} value
-         * @return {string}
+         * Returns type of passed value.
+         *
+         * For example:
+         *
+         *     //for Array
+         *     var keys = xs.keys([
+         *         1,
+         *         2,
+         *         3
+         *     ]);
+         *     console.log(keys); //[0, 1, 2]
+         *
+         *     //for Object
+         *     var keys = xs.keys({
+         *         a: 1,
+         *         b: 2,
+         *         c: 3
+         *     });
+         *     console.log(keys); //['a', 'b', 'c']
+         *
+         * @method getType
+         * @param  {*} value given value
+         * @return {string} value's type
          */
         var getType = function (value) {
             var type = typeof value;
-            if (value == null) {
+            if (value === null) {
                 type = 'null';
             } else if (Array.isArray(value)) {
                 type = 'array';
@@ -80,7 +105,7 @@
          */
         me.isPrimitive = function (value) {
             var valueType = getType(value);
-            return valueType !== 'object' && valueType !== 'array' && !this.isFunction(value);
+            return valueType !== 'object' && valueType !== 'array' && valueType !== 'function';
         };
 
         /**
@@ -90,15 +115,6 @@
          */
         me.isFunction = function (value) {
             return typeof value == 'function';
-        };
-
-        /**
-         * Return true if the passed arguments is JavaScript Date, false otherwise.
-         * @param  {*}  value
-         * @return {Boolean}
-         */
-        me.isDate = function (value) {
-            return this.isObject(value) && value instanceof Date;
         };
 
         /**
@@ -117,7 +133,7 @@
          * @return {Boolean}
          */
         me.isNumeric = function (value) {
-            return !isNaN(parseFloat(value)) && isFinite(value) && !this.isArray(value);
+            return !isNaN(parseFloat(value)) && isFinite(value) && !Array.isArray(value);
         };
 
         /**
@@ -135,7 +151,7 @@
          * @return {Boolean}
          */
         me.isNull = function (value) {
-            return value == null;
+            return value === null;
         };
 
         /**
