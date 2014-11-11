@@ -1,5 +1,5 @@
-/**
- This file is core of xs.js 0.1
+/*!
+ This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
@@ -18,26 +18,49 @@
 
  */
 /**
- * array class pre-definition
- * @type {}
+ * @class xs.lang.String
+ * @singleton
  * @private
+ *
+ * xs.lang.String is private singleton, defining basic string operations.
  */
-'use strict';
 (function (root, ns) {
+
+    'use strict';
 
     //framework shorthand
     var xs = root[ns];
 
-    var string = xs.String = new (function () {
+    var string = new (function () {
         var me = this;
+
+        /**
+         * Translates string with given replacements
+         *
+         * For example:
+         *
+         *     console.log(xs.translate('My fox is small and brown. I love my small brown fox', {
+         *         small: 'big',
+         *         brown: 'black',
+         *         fox: 'bear'
+         *     }));
+         *     //outputs:
+         *     //My bear is big and black. I love my big black bear
+         *
+         *
+         * @method translate
+         *
+         * @param {String} string translated string
+         * @param {Object} replaces replaces hash, where keys are replaced strings and values are respective replaces
+         *
+         * @returns {string} translated string
+         */
         me.translate = function (string, replaces) {
-            xs.Object.each(replaces, function (to, from) {
+            xs.each(replaces, function (to, from) {
                 string = string.split(from).join(to);
             });
             return string;
         };
     });
-    xs.extend(xs, {
-        translate: string.translate
-    });
+    xs.extend(xs, string);
 })(window, 'xs');
