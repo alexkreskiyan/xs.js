@@ -1,3 +1,5 @@
+
+
 function speed(fn, n) {
     var start = Date.now();
     for (var i = 0; i < n; i++) {
