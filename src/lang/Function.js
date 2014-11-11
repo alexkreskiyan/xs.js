@@ -1,5 +1,5 @@
-/**
- This file is core of xs.js 0.1
+/*!
+ This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
@@ -18,81 +18,161 @@
 
  */
 /**
- * array class pre-definition
- * @type {}
+ * @class xs.lang.Function
+ * @singleton
  * @private
+ *
+ * xs.lang.Function is private singleton, defining basic function operations.
  */
-'use strict';
 (function (root, ns) {
+
+    'use strict';
 
     //framework shorthand
     var xs = root[ns];
 
-    var fn = xs.Function = new (function () {
-        var functionPrototype = Function.prototype,
-            slice = Function.prototype.call.bind(Array.prototype.slice),
-            concat = Function.prototype.apply.bind(Array.prototype.concat);
+    var fn = new (function () {
+        var me = this;
+
+        var functionPrototype = Function.prototype;
+        var slice = Function.prototype.call.bind(Array.prototype.slice);
+        var concatenate = Function.prototype.apply.bind(Array.prototype.concat);
+
         /**
-         * binds function with scope and arguments
-         * @param fn
-         * @param scope
-         * @param args
-         * @returns {Function}
+         * Binds function with scope and arguments
+         *
+         * For example:
+         *
+         *     var fn = function (a, b, c) {
+         *         return this.x + (a - b) * c;
+         *     };
+         *     var bind = xs.bind(fn, {x: 5}, [2, 3]);
+         *     console.log(bind(4));//1
+         *
+         * @method bind
+         *
+         * @param {Function} fn bound function
+         * @param {Object} scope optional execution scope
+         * @param {Array} args optional additional arguments, prepended to function
+         *
+         * @returns {Function} bound function
          */
-        var _bind = this.bind = function (fn, scope, args) {
-            return functionPrototype.bind.apply(fn, concat(scope, args));
+        var _bind = me.bind = function (fn, scope, args) {
+            return functionPrototype.bind.apply(fn, concatenate(scope, args));
         };
+
         /**
-         * prefills function's arguments
-         * @param fn
-         * @param defaults
-         * @param scope
-         * @returns {Function}
+         * Prefills function's arguments
+         *
+         * For example:
+         *
+         *     var fn = function (a, b, c) {
+         *         return this.x + (a - b) * c;
+         *     };
+         *     var filled = xs.prefill(fn, [1, 2, 3], {x: 5});
+         *     console.log(filled(4));//11
+         *
+         * @method prefill
+         *
+         * @param {Function} fn bound function
+         * @param {Array} defaults predefined params' defaults
+         * @param {Object} scope optional execution scope
+         *
+         * @returns {Function} bound function
          */
-        this.prefill = function (fn, defaults, scope) {
+        me.prefill = function (fn, defaults, scope) {
             return function () {
-                var args = xs.Array.defaults(xs.Array.values(arguments), defaults);
+                var args = xs.values(arguments);
+                xs.defaults(args, defaults);
                 return fn.apply(scope, args);
             }
         };
+
         /**
-         * creates function, being called once
-         * @param fn
-         * @returns {Function}
+         * Creates function, that is executed only once
+         *
+         * For example:
+         *
+         *     var fn = function (obj) {
+         *         obj.x++;
+         *     };
+         *     var obj = {x: 1};
+         *     var one = xs.once(fn);
+         *     one(obj);
+         *     console.log(obj.x); //2
+         *     one(obj);
+         *     console.log(obj.x); //2
+         *
+         * @method once
+         *
+         * @param {Function} fn bound function
+         *
+         * @returns {Function} bound function
          */
-        this.once = function (fn) {
+        me.once = function (fn) {
             var ran = false, memo;
             return function () {
-                if (ran) return memo;
+                if (ran) {
+                    return memo;
+                }
                 ran = true;
                 memo = fn.apply(this, arguments);
                 fn = null;
                 return memo;
             };
         };
+
         /**
-         * wraps function within another function
-         * @param fn
-         * @param wrapper
-         * @returns {Function}
+         * Wraps function within another function
+         *
+         * For example:
+         *
+         *     var fn = function (val) {
+         *         return 2 * val;
+         *     };
+         *     var wrapped = xs.wrap(fn, function (func, a, b, c) {
+         *         return a + func(b) + c;
+         *     });
+         *     console.log(wrapped(1, 2, 3)); //8
+         *
+         * @method wrap
+         *
+         * @param {Function} fn wrapped function
+         * @param {Function} wrapper wrapper function
+         * @param {Object} scope optional execution scope
+         *
+         * @returns {Function} wrapped function
          */
-        this.wrap = function (fn, wrapper) {
+        me.wrap = function (fn, wrapper, scope) {
             return function () {
                 var args = slice(arguments);
                 args.unshift(fn);
-                return wrapper.apply(undefined, args);
+                return wrapper.apply(scope, args);
             }
         };
-        this.nextTick = function (fn, scope) {
+
+        /**
+         * Executes given function on next tick
+         *
+         * For example:
+         *
+         *     xs.nextTick(function(){
+         *         console.log(this);
+         *     }, {x: 1});
+         *     //outputs:
+         *     //{
+         *     //    x: 1
+         *     //}
+         *
+         * @method nextTick
+         *
+         * @param fn
+         * @param scope
+         */
+        me.nextTick = function (fn, scope) {
             scope && (fn = _bind(fn, scope));
             setTimeout(fn, 0);
         }
     });
-    xs.extend(xs, {
-        bind: fn.bind,
-        prefill: fn.prefill,
-        once: fn.once,
-        wrap: fn.wrap,
-        nextTick: fn.nextTick
-    });
+    xs.extend(xs, fn);
 })(window, 'xs');
