@@ -37,26 +37,12 @@
         /**
          * Returns type of passed value.
          *
-         * For example:
-         *
-         *     //for Array
-         *     var keys = xs.keys([
-         *         1,
-         *         2,
-         *         3
-         *     ]);
-         *     console.log(keys); //[0, 1, 2]
-         *
-         *     //for Object
-         *     var keys = xs.keys({
-         *         a: 1,
-         *         b: 2,
-         *         c: 3
-         *     });
-         *     console.log(keys); //['a', 'b', 'c']
+         * @ignore
          *
          * @method getType
-         * @param  {*} value given value
+         *
+         * @param {*} value given value
+         *
          * @return {string} value's type
          */
         var getType = function (value) {
@@ -70,27 +56,55 @@
         };
 
         /**
-         * Return true if the passed arguments is a JavaScript Array, false otherwise.
-         * @param  {*}  value
-         * @return {Boolean}
+         * Returns whether given value is array
+         *
+         * For example:
+         *
+         *     console.log(xs.isArray([])); //true
+         *     console.log(xs.isArray({})); //false
+         *
+         * @method isArray
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
          */
         me.isArray = function (value) {
             return Array.isArray(value);
         };
 
         /**
-         * Return true if the passed arguments is JavaScript Object, false otherwise.
-         * @param  {*}  value
-         * @return {Boolean}
+         * Returns whether given value is object
+         *
+         * For example:
+         *
+         *     console.log(xs.isObject(null)); //false
+         *     console.log(xs.isObject({})); //true
+         *
+         * @method isObject
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
          */
         me.isObject = function (value) {
             return getType(value) == 'object';
         };
 
         /**
-         * Return true if the passed arguments is JavaScript Object or JavaScript Array
-         * @param  {*}  value
-         * @return {Boolean}
+         * Returns whether given value is iterable: is array or object
+         *
+         * For example:
+         *
+         *     console.log(xs.isIterable(null)); //false
+         *     console.log(xs.isIterable({})); //true
+         *     console.log(xs.isIterable([])); //true
+         *
+         * @method isIterable
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
          */
         me.isIterable = function (value) {
             var valueType = getType(value);
@@ -98,10 +112,19 @@
         };
 
         /**
-         * Returns true if the passed value is a JavaScript 'primitive', a string,
-         * number or boolean. False otherwise.
-         * @param  {*}  value
-         * @return {Boolean}
+         * Returns whether given value is a 'primitive', a string, number or boolean.
+         *
+         * For example:
+         *
+         *     console.log(xs.isPrimitive(null)); //true
+         *     console.log(xs.isPrimitive({})); //false
+         *     console.log(xs.isPrimitive([])); //false
+         *
+         * @method isPrimitive
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
          */
         me.isPrimitive = function (value) {
             var valueType = getType(value);
@@ -109,73 +132,155 @@
         };
 
         /**
-         * Return true if the passed arguments is JavaScript Function, false otherwise.
-         * @param  {*}  value [description]
-         * @return {Boolean}       [description]
+         * Returns whether given value is function.
+         *
+         * For example:
+         *
+         *     console.log(xs.isFunction(new Function())); //true
+         *     console.log(xs.isFunction({})); //false
+         *
+         * @method isFunction
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
          */
         me.isFunction = function (value) {
             return typeof value == 'function';
         };
 
         /**
-         * Return true if the passed arguments is JavaScript String, false otherwise.
-         * @param  {*}  value
-         * @return {Boolean}
+         * Returns whether given value is string.
+         *
+         * For example:
+         *
+         *     console.log(xs.isString('4')); //true
+         *     console.log(xs.isString(4)); //false
+         *
+         * @method isString
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
          */
         me.isString = function (value) {
             return typeof value == 'string';
         };
 
         /**
-         * Return true if the passed arguments is JavaScript String which contain number
-         * or JavaScript Number, false otherwise.
-         * @param  {*}  value
-         * @return {Boolean}
+         * Returns whether given value number, or string, which contains number
+         *
+         * For example:
+         *
+         *     console.log(xs.isNumeric('4')); //true
+         *     console.log(xs.isNumeric(4)); //true
+         *     console.log(xs.isNumeric('a')); //false
+         *
+         * @method isNumeric
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
          */
         me.isNumeric = function (value) {
             return !isNaN(parseFloat(value)) && isFinite(value) && !Array.isArray(value);
         };
 
         /**
-         * Return true if the passed arguments is JavaScript Number, false otherwise.
-         * @param  {*}  value
-         * @return {Boolean}
+         * Returns whether given value is number.
+         *
+         * For example:
+         *
+         *     console.log(xs.isNumber(4)); //true
+         *     console.log(xs.isNumber('4')); //false
+         *
+         * @method isNumber
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
          */
         me.isNumber = function (value) {
             return typeof value == 'number';
         };
 
         /**
-         * Return true if the passed arguments is null, false otherwise.
-         * @param  {*}  value
-         * @return {Boolean}
+         * Returns whether given value is null.
+         *
+         * For example:
+         *
+         *     console.log(xs.isNull(null)); //true
+         *     console.log(xs.isNull(0)); //false
+         *
+         * @method isNull
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
          */
         me.isNull = function (value) {
             return value === null;
         };
 
         /**
-         * Return true if the passed value is not 'undefined', false otherwise.
-         * @param  {*}  value
-         * @return {Boolean}
+         * Returns whether given value is not defined
+         *
+         * For example:
+         *
+         *     console.log(xs.isDefined(null)); //true
+         *     console.log(xs.isDefined(undefined)); //false
+         *
+         * @method isDefined
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
          */
         me.isDefined = function (value) {
             return typeof value != 'undefined';
         };
 
         /**
-         * Return true if the passed value is JavaScript Boolean, false otherwise.
-         * @param  {*}  value
-         * @return {Boolean}
+         * Returns whether given value is boolean
+         *
+         * For example:
+         *
+         *     console.log(xs.isBoolean(false)); //true
+         *     console.log(xs.isBoolean(0)); //false
+         *
+         * @method isBoolean
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
          */
         me.isBoolean = function (value) {
             return typeof value == 'boolean';
         };
 
         /**
-         * Return true if the passed value is empty, false otherwise.
-         * @param  {*}  value
-         * @return {Boolean}
+         * Returns whether given value is boolean
+         *
+         * For example:
+         *
+         *     console.log(xs.isEmpty({})); //true
+         *     console.log(xs.isEmpty({a:1})); //false
+         *     console.log(xs.isEmpty([])); //true
+         *     console.log(xs.isEmpty([1])); //false
+         *     console.log(xs.isEmpty('')); //true
+         *     console.log(xs.isEmpty('a')); //false
+         *     console.log(xs.isEmpty(0)); //true
+         *     console.log(xs.isEmpty(-1)); //false
+         *     console.log(xs.isEmpty(undefined)); //true
+         *     console.log(xs.isEmpty(null)); //true
+         *     console.log(xs.isEmpty(false)); //false
+         *     console.log(xs.isEmpty(function(){})); //false
+         *
+         * @method isEmpty
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
          */
         me.isEmpty = function (value) {
             var type = getType(value);
