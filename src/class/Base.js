@@ -22,9 +22,38 @@
  * @author Alex Kreskiyan
  * xs.Base is base class for all classes, defined by {@link xs#define xs.define}. All classes, defined that way, inherit {@link xs.Base xs.Base}.
  */
+/**
+ * Register pre-base class
+ */
+(function (root, ns) {
+
+    //framework shorthand
+    var xs = root[ns];
+
+    xs.Base = new Function;
+    //apply empty descriptor
+    var descriptor = applyDescriptor(xs.Base, {
+        const:      {},
+        mixins:     {},
+        static:     {
+            properties: {},
+            methods:    {}
+        },
+        properties: {},
+        methods:    {}
+    });
+
+    //define descriptor static property
+    xs.property.define(xs.Base, 'descriptor', {
+        get: function () {
+            return descriptor;
+        }
+    });
+})(window, 'xs');
+
 xs.define('xs.Base', function (self) {
     return {
-        static: {
+        static:  {
             methods: {
                 /**
                  * Returns whether this is child of given parent
@@ -33,7 +62,7 @@ xs.define('xs.Base', function (self) {
                  * @param {xs.Base} parent Class, being checked to be parent of this Class
                  * @return {Boolean}
                  */
-                isChild: function (parent) {
+                isChild:  function (parent) {
                     var me = this;
                     if (me.parent == parent) {
                         return true;
@@ -62,7 +91,7 @@ xs.define('xs.Base', function (self) {
              * @method
              * @return {xs.Base} clone object
              */
-            clone: function () {
+            clone:   function () {
                 var me = this;
                 return xs.create(me.self.label, me.toJSON());
             },
@@ -78,9 +107,8 @@ xs.define('xs.Base', function (self) {
              * @method
              * @return {Object} object JSON representation
              */
-            toJSON: function () {
-                var me = this,
-                    json = {};
+            toJSON:  function () {
+                var me = this, json = {};
                 xs.Object.each(me.self.descriptor.properties, function (descriptor, name) {
                     json[name] = me[name];
                 });

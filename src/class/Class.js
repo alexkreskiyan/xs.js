@@ -1,5 +1,5 @@
 /*!
- This file is core of xs.js 0.1
+ This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
@@ -66,8 +66,8 @@
                 //position defaults to last
                 position || (position = 'last');
                 items[name] = {
-                    name: name,
-                    fn: fn,
+                    name:       name,
+                    fn:         fn,
                     properties: properties
                 };
                 setPosition(name, position, relativeTo);
@@ -136,15 +136,12 @@
             };
             return {
                 Class: Class,
-                desc: desc
+                desc:  desc
             };
         };
 
         var prepare = function (Class, desc, queue) {
-            var stack = queue.getStack(),
-                registered = queue.get(),
-                used = [], processor,
-                properties;
+            var stack = queue.getStack(), registered = queue.get(), used = [], processor, properties;
             xs.Object.each(stack, function (name) {
                 processor = registered[name];
                 properties = processor.properties;
@@ -160,9 +157,7 @@
         };
 
         var process = function (Class, desc, hooks) {
-            var me = this,
-                processors = hooks.processors,
-                processor = processors.shift();
+            var me = this, processors = hooks.processors, processor = processors.shift();
 
             for (; processor; processor = processors.shift()) {
                 // Returning false signifies an asynchronous preprocessor - it will call doProcess when we can continue
@@ -193,259 +188,33 @@
 
             //process class
             process(Class, desc, {
-                createdFn: createdFn,
-                processors: usedPreprocessors,
+                createdFn:      createdFn,
+                processors:     usedPreprocessors,
                 postprocessors: usedPostprocessors
             });
         };
 
         xs.extend(classCreator, {
-            registerPreprocessor: preprocessors.register,
+            registerPreprocessor:  preprocessors.register,
             registerPostprocessor: postprocessors.register
         });
         return classCreator;
     });
 
-    var extend = function (child, parent) {
-        var fn = function () {
-        };
-        fn.prototype = parent.prototype;
-        child.prototype = new fn();
-        child.prototype.constructor = child;
-        //save reference to parent
-        xs.const(child, 'parent', parent);
-    };
-
-    var applyDescriptor = function (Class, desc) {
-        //processed descriptor
-        var realDesc = {
-                constructor: undefined,
-                const: {},
-                static: {
-                    properties: {},
-                    methods: {}
-                },
-                properties: {},
-                methods: {},
-                mixins: {}
-            },
-            each = xs.Object.each,
-            property = xs.property,
-            method = xs.method;
-
-        //constructor
-        realDesc.constructor = desc.constructor;
-
-        // constants
-        each(desc.const, function (value, name) {
-            realDesc.const[name] = value;
-            xs.const(Class, name, value);
-        });
-
-        //public static properties
-        each(desc.static.properties, function (value, name) {
-            var descriptor = property.prepare(name, value);
-            realDesc.static.properties[name] = descriptor;
-            property.define(Class, name, descriptor);
-            descriptor.hasOwnProperty('default') && (Class[name] = descriptor.default);
-        });
-
-        //public static methods
-        each(desc.static.methods, function (value, name) {
-            var descriptor = method.prepare(name, value);
-            if (!descriptor) {
-                return;
-            }
-            realDesc.static.methods[name] = descriptor;
-            method.define(Class, name, descriptor);
-        });
-
-        //public properties
-        each(desc.properties, function (value, name) {
-            realDesc.properties[name] = property.prepare(name, value);
-        });
-
-        //public methods
-        each(desc.methods, function (value, name) {
-            var descriptor = method.prepare(name, value);
-            if (!descriptor) {
-                return;
-            }
-            realDesc.methods[name] = descriptor;
-            method.define(Class.prototype, name, descriptor);
-        });
-
-        //mixins processing
-        //define mixins storage in class
-        if (xs.Object.size(desc.mixins)) {
-            Class.mixins = {};
-            Class.prototype.mixins = {};
-        }
-        each(desc.mixins, function (value, name) {
-            //leave mixin in descriptor
-            realDesc.mixins[name] = value;
-            //get mixClass
-            var mixClass = xs.ClassManager.get(value);
-            Class.mixins[name] = mixClass;
-            Class.prototype.mixins[name] = mixClass.prototype;
-        });
-
-        return realDesc;
-    };
-
-    /*!
-     * Register extend preprocessor
-     */
-    xs.Class.registerPreprocessor('extend', function (Class, desc, hooks, ready) {
-        //if incorrect parent given - extend from Base
-        if (!xs.isString(desc.extend)) {
-            extend(Class, xs.Base);
-            return;
-        }
-
-        //if parent class exists - extend from it
-        var Parent = xs.ClassManager.get(desc.extend);
-        if (Parent) {
-            extend(Class, Parent);
-            return;
-        }
-
-        //check require is available
-        if (!xs.require) {
-            xs.Error.raise('xs.Loader not loaded. Class ' + desc.extend + ' load fails');
-        }
-
-        var me = this;
-        //require async
-        xs.require(desc.extend, function () {
-            extend(Class, xs.ClassManager.get(desc.extend));
-            ready.call(me, Class, desc, hooks);
-        });
-
-        //return false to sign async processor
-        return false;
-    });
-    xs.Class.registerPreprocessor('configure', function (Class, desc) {
-        //combine class descriptor with inherited descriptor
-        var inherits = Class.parent.descriptor;
-
-        //constructor
-        desc.constructor = desc.hasOwnProperty('constructor') && xs.isFunction(desc.constructor) ? desc.constructor : undefined;
-        //const
-        desc.const = xs.isObject(desc.const) ? desc.const : {};
-        //static properties and methods
-        xs.isObject(desc.static) || (desc.static = {});
-        desc.static.properties = xs.isObject(desc.static.properties) ? desc.static.properties : {};
-        desc.static.methods = xs.isObject(desc.static.methods) ? desc.static.methods : {};
-        //public properties and methods
-        desc.properties = xs.isObject(desc.properties) ? desc.properties : {};
-        desc.methods = xs.isObject(desc.methods) ? desc.methods : {};
-        //mixins
-        if (xs.isString(desc.mixins)) {
-            desc.mixins = [desc.mixins];
-        }
-        if (xs.isArray(desc.mixins)) {
-            var mixins = {}, mixClass;
-            xs.Array.each(desc.mixins, function (mixin) {
-                mixClass = xs.ClassManager.get(mixin);
-                xs.Array.has(mixins, mixin) || (mixins[mixClass.label] = mixin);
-            });
-            //update mixins at descriptor
-            desc.mixins = mixins;
-        } else if (!xs.isObject(desc.mixins)) {
-            desc.mixins = {};
-        }
-
-        //constructor
-        desc.constructor = desc.constructor ? desc.constructor : inherits.constructor;
-        //constructor
-        desc.const = xs.Object.defaults(desc.const, inherits.const);
-        //static properties and methods
-        desc.static.properties = xs.Object.defaults(desc.static.properties, inherits.static.properties);
-        desc.static.methods = xs.Object.defaults(desc.static.methods, inherits.static.methods);
-        //public properties and methods
-        desc.properties = xs.Object.defaults(desc.properties, inherits.properties);
-        //methods are not defaulted from inherits - prototype usage covers that
-        //mixins
-        desc.mixins = xs.Object.unique(xs.Object.defaults(desc.mixins, inherits.mixins));
-    });
-    xs.Class.registerPreprocessor('mixins', function (Class, desc) {
-        var mixClasses = {};
-
-        if (!xs.Object.size(desc.mixins)) {
-            return;
-        }
-
-        //process mixins
-        xs.Object.each(desc.mixins, function (mixin, alias) {
-            mixClasses[alias] = xs.ClassManager.get(mixin);
-        });
-
-        //overriden mixed storage, that will be defaulted to descriptor
-        var mixed = {
-            const: {},
-            static: {
-                properties: {},
-                methods: {}
-            },
-            properties: {},
-            methods: {}
-        };
-
-        //iterate mixins and prepare
-        var descriptor;
-        xs.Object.each(mixClasses, function (mixClass) {
-            descriptor = mixClass.descriptor;
-            xs.extend(mixed.const, descriptor.const);
-            xs.extend(mixed.static.properties, descriptor.static.properties);
-            xs.extend(mixed.static.methods, descriptor.static.methods);
-            xs.extend(mixed.properties, descriptor.properties);
-            xs.extend(mixed.methods, descriptor.methods);
-        });
-
-        //const
-        desc.const = xs.Object.defaults(desc.const, mixed.const);
-        //static properties and methods
-        desc.static.properties = xs.Object.defaults(desc.static.properties, mixed.static.properties);
-        desc.static.methods = xs.Object.defaults(desc.static.methods, mixed.static.methods);
-        //public properties and methods
-        desc.properties = xs.Object.defaults(desc.properties, mixed.properties);
-        desc.methods = xs.Object.defaults(desc.methods, mixed.methods);
-    }, 'mixins');
-    xs.Class.registerPreprocessor('inherit', function (Class, desc) {
-        //apply configured descriptor
-        var descriptor = applyDescriptor(Class, desc);
-
-        //define descriptor static property
-        xs.property.define(Class, 'descriptor', {
-            get: function () {
-                return descriptor;
-            }
-        });
-    });
-    /*!
-     * Register singleton preprocessor
-     */
-    xs.Class.registerPreprocessor('singleton', function (Class, desc, hooks, ready) {
-        if (desc.singleton) {
-            ready.call(this, new Class, desc, hooks);
-            return false;
-        }
-    }, 'singleton');
     /**
      * Register pre-base class
      */
     xs.Base = new Function;
     //apply empty descriptor
     var descriptor = applyDescriptor(xs.Base, {
-        const: {},
-        mixins: {},
-        static: {
+        const:      {},
+        mixins:     {},
+        static:     {
             properties: {},
-            methods: {}
+            methods:    {}
         },
         properties: {},
-        methods: {}
+        methods:    {}
     });
 
     //define descriptor static property
