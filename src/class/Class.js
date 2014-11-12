@@ -31,57 +31,105 @@
     //framework shorthand
     var xs = root[ns];
 
-    xs.Class = new (function () {
+    /**
+     * Private internal queue class
+     *
+     * @ignore
+     */
+    var Queue = function () {
+        var me = this;
 
-        var ProcessingQueue = function () {
-            var me = this;
-            var items = {};
-            var stack = [];
-            var setPosition = function (name, position, relativeTo) {
-                //if old preprocessor in stack - remove it
-                var currentIndex = stack.indexOf(name);
-                if (currentIndex >= 0) {
-                    stack.splice(currentIndex, 1);
+        //items hash
+        var items = {};
+
+        /**
+         * Sets item in queue no new position
+         *
+         * @param {string} name
+         * @param {string} position
+         * @param {*} relativeTo
+         */
+        var setPosition = function (name, position, relativeTo) {
+            if (!xs.has([
+                'first',
+                'last',
+                'before',
+                'after'
+            ], position)) {
+                throw new Exception('Incorrect position given');
+            }
+
+            //if old processor in stack - remove it previously
+            var processor = items[name];
+            xs.deleteAt(items, name);
+
+            //get current keys
+            var keys = xs.keys(items);
+
+            //insert to specified position
+            if (position == 'first') {
+
+                xs.unshift(stack, name);
+            } else if (position == 'last') {
+                xs.push(stack, name);
+            } else {
+                var relativeKey = xs.keyOf(stack, relativeTo);
+                if (!xs.isDefined(relativeKey)) {
+                    throw new Exception('Relative item missing in queue');
                 }
-                //insert to specified position
-                if (position == 'first') {
-                    stack.unshift(name);
-                } else if (position == 'last') {
-                    stack.push(name);
-                } else {
-                    var relativeIndex = stack.indexOf(relativeTo);
-                    if (relativeIndex >= 0) {
-                        position == 'after' && relativeIndex++;
-                        stack.splice(relativeIndex, 0, name);
-                    }
-                }
-            };
-            me.register = function (name, fn, properties, position, relativeTo) {
-                //default properties to array if string and to true (all properties) - if none
-                if (xs.isString(properties)) {
-                    properties = [properties];
-                } else if (!xs.isArray(properties)) {
-                    properties = true;
-                }
-                //position defaults to last
-                position || (position = 'last');
-                items[name] = {
-                    name:       name,
-                    fn:         fn,
-                    properties: properties
-                };
-                setPosition(name, position, relativeTo);
-            };
-            me.get = function (name) {
-                return name ? items[name] : items;
-            };
-            me.getStack = function () {
-                return stack;
+                position == 'after' && relativeKey++;
+                stack.splice(relativeKey, 0, name);
             }
         };
 
-        var preprocessors = new ProcessingQueue();
-        var postprocessors = new ProcessingQueue();
+        /**
+         * Adds
+         * @param name
+         * @param fn
+         * @param properties
+         * @param position
+         * @param relativeTo
+         */
+        me.add = function (name, fn, properties, position, relativeTo) {
+            //default properties to array if string and to true (all properties) - if none
+            if (xs.isString(properties)) {
+                properties = [properties];
+            } else if (!xs.isArray(properties)) {
+                properties = true;
+            }
+            //position defaults to last
+            position || (position = 'last');
+            items[name] = {
+                name:       name,
+                fn:         fn,
+                properties: properties
+            };
+            setPosition(name, position, relativeTo);
+        };
+
+        /**
+         * Returns items by name or ordered stack
+         * @param name
+         * @returns {*}
+         */
+        me.get = function (name) {
+            if (name) {
+                return items[name];
+            }
+            return xs.pick(items, stack);
+        };
+    };
+
+    xs.Class = new (function () {
+
+        //Queue of processors, processing class before it's considered to be created
+        var preProcessors = new Queue();
+        //Queue of processors, processing class after it's considered to be created
+        var postProcessors = new Queue();
+        //Queue of processors, called before object constructor is called
+        var preConstructors = new Queue();
+        //Queue of processors, called before object constructor is called
+        var postConstructors = new Queue();
 
         var create = function (descFn) {
             var _each = xs.Object.each;
@@ -111,7 +159,7 @@
                     privates[name] = value;
                 };
                 //apply properties to object
-                _each(Class.descriptor.properties, function (descriptor, name) {
+                xs.each(Class.descriptor.properties, function (descriptor, name) {
                     //accessed descriptor only
                     if (descriptor.get) {
                         _define(me, name, descriptor);
@@ -166,8 +214,8 @@
                 }
             }
             hooks.createdFn && hooks.createdFn.apply(me, arguments);
-            hooks.postprocessors && process(Class, desc, {
-                processors: hooks.postprocessors
+            hooks.postProcessors && process(Class, desc, {
+                processors: hooks.postProcessors
             });
         };
 
@@ -182,21 +230,21 @@
             var Class = result.Class;
             var desc = result.desc;
 
-            //prepare pre- and postprocessors for class
-            var usedPreprocessors = prepare(Class, desc, preprocessors);
-            var usedPostprocessors = prepare(Class, desc, postprocessors);
+            //prepare pre- and postProcessors for class
+            var usedPreprocessors = prepare(Class, desc, preProcessors);
+            var usedPostprocessors = prepare(Class, desc, postProcessors);
 
             //process class
             process(Class, desc, {
                 createdFn:      createdFn,
                 processors:     usedPreprocessors,
-                postprocessors: usedPostprocessors
+                postProcessors: usedPostprocessors
             });
         };
 
         xs.extend(classCreator, {
-            registerPreprocessor:  preprocessors.register,
-            registerPostprocessor: postprocessors.register
+            registerPreprocessor:  preProcessors.register,
+            registerPostprocessor: postProcessors.register
         });
         return classCreator;
     });
