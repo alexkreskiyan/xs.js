@@ -1799,10 +1799,11 @@
          * @method deleteAll
          *
          * @param {Array|Object} list list, items are deleted from
+         * @param {*} item optional deleted item. If specified all item entries will be removed from list. If not - list is truncated
          *
          * @returns {number} count of deleted items
          */
-        var _deleteAll = me.deleteAll = function (list, item) {
+        me.deleteAll = function (list, item) {
             var deleted = 0;
             //if item specified
             if (arguments.length > 1) {
@@ -1855,45 +1856,10 @@
                 return slice(list);
             }
             var copy = {};
-            _extend(copy, list);
-            return copy;
-        };
-
-        /**
-         * Copies all properties from objects, passed as arguments to given obj
-         *
-         * For example:
-         *
-         *     var list = {
-         *         x: 1
-         *     };
-         *     xs.extend(list, {
-         *         x: 2,
-         *         c: 1
-         *     }, {
-         *         c: 2,
-         *         x: 3,
-         *         a: 4
-         *     });
-         *     console.log(list);
-         *     //outputs:
-         *     //{
-         *     //    x: 3,
-         *     //    c: 2,
-         *     //    a: 4
-         *     //}
-         *
-         * @method extend
-         *
-         * @param {Object} object extended object
-         */
-        var _extend = me.extend = function (object) {
-            var adds = slice(arguments, 1);
-            _each(adds, function (source) {
-                xs.isObject(source) && _each(source, function (item, name) {
-                    object[name] = item;
-                });
+            _each(list, function (item, key) {
+                copy[key] = item;
             });
+            return copy;
         };
 
         /**
@@ -2089,45 +2055,6 @@
                 _has(unique, item) || (unique[name] = item);
             });
             return unique;
-        };
-
-        /**
-         * Shuffles list items
-         *
-         * For example:
-         *
-         *     //for Array
-         *     xs.shuffle([
-         *         1,
-         *         2,
-         *         3
-         *     ]);
-         *
-         *     //for Object
-         *     xs.shuffle({
-         *         a: 1,
-         *         c: 2,
-         *         b: 3
-         *     });
-         *
-         * @method shuffle
-         *
-         * @param {Array|Object} list shuffled list
-         */
-        var _shuffle = me.shuffle = function (list) {
-            if (xs.isArray(list)) {
-                list.sort(function () {
-                    return Math.random() - 0.5;
-                });
-                return;
-            }
-            var idx, keys = _keys(list), len = keys.length, name, clone = _clone(list);
-            _shuffle(keys);
-            _deleteAll(list);
-            for (idx = 0; idx < len; idx++) {
-                name = keys[idx];
-                list[name] = clone[name];
-            }
         };
 
         /**
@@ -2418,5 +2345,7 @@
             return copy;
         };
     });
-    list.extend(xs, list);
+    Object.keys(list).forEach(function (key) {
+        xs[key] = list[key];
+    });
 })(window, 'xs');

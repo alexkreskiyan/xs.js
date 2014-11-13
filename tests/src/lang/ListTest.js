@@ -1129,7 +1129,7 @@ syncLoad([
         var shifted = x[0];
         strictEqual(xs.shift(x), shifted);
         strictEqual(JSON.stringify(xs.keys(x)), '[0,1,2]');
-        strictEqual(xs.shift({}), undefined);
+        strictEqual(xs.shift([]), undefined);
 
         x = {
             a: {
@@ -1177,7 +1177,7 @@ syncLoad([
         var popped = x[x.length - 1];
         strictEqual(xs.pop(x), popped);
         strictEqual(JSON.stringify(xs.keys(x)), '[0,1,2]');
-        strictEqual(xs.pop({}), undefined);
+        strictEqual(xs.pop([]), undefined);
 
         x = {
             a: {
@@ -1376,29 +1376,6 @@ syncLoad([
         strictEqual(x.b === clone.b, true);
     });
 
-    test('extend', function () {
-        var a = {a: 1};
-        var b = {b: 1};
-        var c = {c: 1};
-        var x = {
-            a: a,
-            b: b,
-            c: c,
-            d: 1,
-            e: xs.clone(a)
-        };
-        xs.extend(x, {a: b}, 3, [
-            4,
-            5
-        ], {b: 1}, {e: a});
-        //check replacements
-        strictEqual(x.a, b);
-        strictEqual(x.b, 1);
-        strictEqual(x.c, c);
-        strictEqual(x.d, 1);
-        strictEqual(x.e, a);
-    });
-
     test('defaults', function () {
         var x = [
             {
@@ -1561,75 +1538,6 @@ syncLoad([
 
         unique = xs.unique({});
         strictEqual(JSON.stringify(unique), '{}');
-    });
-
-    test('shuffle', function () {
-        var item = {x: 1};
-        var x, clone;
-        x = [
-            0,
-            1,
-            2,
-            item,
-            item,
-            item,
-            item,
-            item,
-            item,
-            item,
-            item,
-            item,
-            item,
-            item,
-            item,
-            item,
-            item
-        ];
-
-        clone = xs.clone(x);
-        xs.shuffle(x);
-        //check items all saved
-        strictEqual(true, xs.every(clone, function (value) {
-            return xs.has(x, value);
-        }));
-        //check all keys exist
-        strictEqual(true, xs.every(clone, function (value, key) {
-            return xs.hasKey(x, key);
-        }));
-        //check order is changed
-        strictEqual(false, xs.every(clone, function (value) {
-            return xs.keyOf(x, value) === xs.keyOf(clone, value);
-        }));
-
-        x = {
-            a: 0,
-            b: 1,
-            c: 2,
-            d: item,
-            e: item,
-            f: item,
-            g: item,
-            h: item,
-            k: item,
-            l: item,
-            m: item,
-            n: item,
-            o: item,
-            p: item
-        };
-
-        clone = xs.clone(x);
-        xs.shuffle(x);
-        //check items all saved
-        strictEqual(true, xs.every(clone, function (value) {
-            return xs.has(x, value);
-        }));
-        //check all keys exist
-        strictEqual(true, xs.every(clone, function (value, key) {
-            return xs.hasKey(x, key);
-        }));
-        //check order is changed
-        strictEqual(false, JSON.stringify(xs.keys(x)) == JSON.stringify(xs.keys(clone)));
     });
 
     test('union', function () {

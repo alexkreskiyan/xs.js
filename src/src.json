@@ -4,5 +4,6 @@
     "xs.lang.Detect",
     "xs.lang.Function",
     "xs.lang.List",
+    "xs.lang.Object",
     "xs.lang.String"
 ]
