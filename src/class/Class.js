@@ -85,25 +85,26 @@
          * Adds new processor to stack
          *
          * @param {string} name processor name
-         * @param {Function} handler processor body
          * @param {Function} verifier processor verifier.
+         * @param {Function} handler processor body
          * Returns boolean whether processor should be applied to Class. Accepts class descriptor as param
          * @param {string} position position, class processor is inserted at
          * @param {string} relativeTo name of processor, relative to position is evaluated
          */
-        me.add = function (name, handler, verifier, position, relativeTo) {
+        me.add = function (name, verifier, handler, position, relativeTo) {
             //position defaults to last
             position || (position = 'last');
             items[name] = {
-                handler:  handler,
-                verifier: verifier
+                verifier: verifier,
+                handler:  handler
             };
             reorder(name, position, relativeTo);
         };
 
         /**
          * Returns items by name or ordered items
-         * @param name
+         *
+         * @param {string} [name] name processor name
          * @returns {*}
          */
         me.get = function (name) {
@@ -112,157 +113,151 @@
             }
             return xs.clone(items);
         };
-    };
 
-    xs.Class = new (function () {
-
-        //Stack of processors, processing class before it's considered to be created
-        var preProcessors = new Stack();
-        //Stack of processors, processing class after it's considered to be created
-        var postProcessors = new Stack();
-        //Stack of processors, called before object constructor is called
-        var preConstructors = new Stack();
-        //Stack of processors, called before object constructor is called
-        var postConstructors = new Stack();
-
-        var create = function (descFn) {
-            var _each = xs.Object.each;
-            var _define = xs.Attribute.define;
-
-            //create class
-            var Class = function xClass(desc) {
-                var me = this;
-                desc || (desc = {});
-                //define class constructor
-                var descriptor = Class.descriptor;
-                var constructor = descriptor.hasOwnProperty('constructor') && xs.isFunction(descriptor.constructor) ? descriptor.constructor : undefined;
-                //if parent constructor - just call it
-                if (me.self && me.self !== Class) {
-                    constructor && constructor.call(me, desc);
-                    return;
-                }
-                //class reference
-                me.self = Class;
-                //instance privates
-                var privates = {};
-                //private setter/getter
-                me.__get = function (name) {
-                    return privates[name];
-                };
-                me.__set = function (name, value) {
-                    privates[name] = value;
-                };
-                //apply properties to object
-                xs.each(Class.descriptor.properties, function (descriptor, name) {
-                    //accessed descriptor only
-                    if (descriptor.get) {
-                        _define(me, name, descriptor);
-                    } else {
-                        me[name] = descriptor.value;
-                    }
-                }, me);
-                //apply constructor
-                constructor && constructor.call(me, desc);
-            };
-
-            var desc = descFn(Class);
-
-            //static privates
-            var privates = {};
-            //static getter/setter
-            Class.__get = function (name) {
-                return privates[name];
-            };
-            Class.__set = function (name, value) {
-                privates[name] = value;
-            };
-            return {
-                Class: Class,
-                desc:  desc
-            };
+        /**
+         * Starts stack processing chain with given arguments
+         *
+         * @param {Array} verifierArgs
+         * @param {Array} handlerArgs
+         * @param {Function} callback
+         */
+        me.process = function (verifierArgs, handlerArgs, callback) {
+            process(xs.values(items), verifierArgs, handlerArgs, callback);
         };
 
-        var prepare = function (Class, desc, stack) {
-            var items = stack.getStack(), registered = stack.get(), used = [], processor, properties;
-            xs.Object.each(items, function (name) {
-                processor = registered[name];
-                properties = processor.properties;
-                if (properties === true) {
-                    used.push(processor.fn);
-                } else {
-                    xs.Array.some(properties, function (property) {
-                        return desc.hasOwnProperty(property);
-                    }) && used.push(processor.fn);
-                }
-            });
-            return used;
-        };
+        /**
+         * Internal process function
+         *
+         * @param {Array} items items stack
+         * @param {Array} verifierArgs arguments for items' verifiers
+         * @param {Array} handlerArgs arguments for items' handlers
+         * @param {Function} callback stack ready callback
+         */
+        var process = function (items, verifierArgs, handlerArgs, callback) {
+            if (!items.length) {
+                xs.isFunction(callback) && callback();
+                return;
+            }
+            var item = xs.shift(items);
 
-        var process = function (Class, desc, hooks) {
-            var me = this, processors = hooks.processors, processor = processors.shift();
+            //if item.verifier allows handler execution, process next
+            if (item.verifier.apply(this, verifierArgs)) {
 
-            for (; processor; processor = processors.shift()) {
-                // Returning false signifies an asynchronous preprocessor - it will call doProcess when we can continue
-                if (processor.call(me, Class, desc, hooks, process) === false) {
+                var ready = function () {
+                    process(items, verifierArgs, handlerArgs, callback);
+                };
+                //if item.handler returns false, processing is async, stop processing, awaiting ready call
+                if (item.handler.apply(this, xs.union(handlerArgs, ready)) === false) {
                     return;
                 }
             }
-            hooks.createdFn && hooks.createdFn.apply(me, arguments);
-            hooks.postProcessors && process(Class, desc, {
-                processors: hooks.postProcessors
-            });
+
+            process(items, verifierArgs, handlerArgs, callback);
+        };
+    };
+
+    /**
+     * @ignore
+     *
+     * Class constructor method. Use is simple:
+     *
+     *     var Class = xs.Class(function (Class) {
+     *         //here is Class descriptor returned
+     *         return {
+     *         };
+     *     });
+     *
+     */
+    xs.Class = (function () {
+
+        //Stack of processors, processing class before it's considered to be created
+        var preProcessors = new Stack();
+
+        //Stack of processors, processing class after it's considered to be created
+        var postProcessors = new Stack();
+
+        //Stack of processors, called before object constructor is called
+        var preConstructors = new Stack();
+
+        //Stack of processors, called before object constructor is called
+        var postConstructors = new Stack();
+
+        /**
+         * Returns new xClass sample
+         *
+         * @returns {Function} new xClass
+         */
+        var create = function () {
+            var Class = function xClass() {
+                var me = this;
+
+                //define class constructor
+                var descriptor = Class.descriptor;
+
+                //get constructor shortcut
+                var constructor = xs.isFunction(descriptor.constructor) ? descriptor.constructor : undefined;
+
+                //if parent constructor - just call it
+                if (me.self && me.self !== Class) {
+                    constructor && constructor.apply(me, arguments);
+                    return;
+                }
+
+                //save class reference
+                xs.const(me, 'self', Class);
+
+                //process preConstructors
+                preConstructors.process([Class], [Class]);
+
+                //apply constructor
+                constructor && constructor.apply(me, arguments);
+
+                //process postConstructors
+                postConstructors.process([Class], [Class]);
+            };
+            return Class;
         };
 
-        var classCreator = function (descFn, createdFn) {
+        /**
+         * Class creator. Creates class sample and starts processors applying
+         * @param descFn
+         * @param createdFn
+         * @returns {Function}
+         */
+        var creator = function (descFn, createdFn) {
             if (!xs.isFunction(descFn)) {
-                xs.Error.raise('incorrect incoming decriptor function');
+                throw new Exception('Class descriptor must be function');
             }
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
 
             //create class
-            var result = create(descFn);
-            var Class = result.Class;
-            var desc = result.desc;
+            var Class = create();
 
-            //prepare pre- and postProcessors for class
-            var usedPreprocessors = prepare(Class, desc, preProcessors);
-            var usedPostprocessors = prepare(Class, desc, postProcessors);
+            //get Class descriptor
+            var descriptor = descFn(Class);
 
-            //process class
-            process(Class, desc, {
-                createdFn:      createdFn,
-                processors:     usedPreprocessors,
-                postProcessors: usedPostprocessors
+            //process preProcessors stack before createdFn called
+            preProcessors.process([descriptor], [
+                Class,
+                descriptor
+            ], function () {
+                createdFn();
+                //process postProcessors stack before createdFn called
+                postProcessors.process([descriptor], [
+                    Class,
+                    descriptor
+                ]);
             });
+
+            return Class;
         };
 
-        xs.extend(classCreator, {
-            registerPreprocessor:  preProcessors.register,
-            registerPostprocessor: postProcessors.register
+        xs.extend(creator, {
+            preProcessors:    preProcessors,
+            postProcessors:   postProcessors,
+            preConstructors:  preConstructors,
+            postConstructors: postConstructors
         });
-        return classCreator;
-    });
-
-    /**
-     * Register pre-base class
-     */
-    xs.Base = new Function;
-    //apply empty descriptor
-    var descriptor = applyDescriptor(xs.Base, {
-        const:      {},
-        mixins:     {},
-        static:     {
-            properties: {},
-            methods:    {}
-        },
-        properties: {},
-        methods:    {}
-    });
-
-    //define descriptor static property
-    xs.property.define(xs.Base, 'descriptor', {
-        get: function () {
-            return descriptor;
-        }
-    });
+        return creator;
+    })();
 })(window, 'xs');
