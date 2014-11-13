@@ -32,24 +32,24 @@
     var xs = root[ns];
 
     /**
-     * Private internal queue class
+     * Private internal stack class
      *
      * @ignore
      */
-    var Queue = function () {
+    var Stack = function () {
         var me = this;
 
         //items hash
         var items = {};
 
         /**
-         * Sets item in queue no new position
+         * Reorders item in stack relative to item with given name
          *
-         * @param {string} name
-         * @param {string} position
-         * @param {*} relativeTo
+         * @param {string} name name of repositioned item
+         * @param {string} position new item position
+         * @param {*} relativeTo name of relativeTo positioned item
          */
-        var setPosition = function (name, position, relativeTo) {
+        var reorder = function (name, position, relativeTo) {
             if (!xs.has([
                 'first',
                 'last',
@@ -59,56 +59,50 @@
                 throw new Exception('Incorrect position given');
             }
 
-            //if old processor in stack - remove it previously
-            var processor = items[name];
-            xs.deleteAt(items, name);
-
             //get current keys
             var keys = xs.keys(items);
 
-            //insert to specified position
-            if (position == 'first') {
+            //remove name from keys
+            xs.delete(name);
 
-                xs.unshift(stack, name);
-            } else if (position == 'last') {
-                xs.push(stack, name);
+            //insert to specified position
+            if (position == 'first' || position == 'last') {
+                position == 'first' ? xs.unshift(keys, name) : xs.push(keys, name);
             } else {
-                var relativeKey = xs.keyOf(stack, relativeTo);
+                var relativeKey = xs.keyOf(keys, relativeTo);
                 if (!xs.isDefined(relativeKey)) {
-                    throw new Exception('Relative item missing in queue');
+                    throw new Exception('Relative item missing in stack');
                 }
                 position == 'after' && relativeKey++;
-                stack.splice(relativeKey, 0, name);
+                keys.splice(relativeKey, 0, name);
             }
+
+            //pick items in new order
+            items = xs.pick(keys);
         };
 
         /**
-         * Adds
-         * @param name
-         * @param fn
-         * @param properties
-         * @param position
-         * @param relativeTo
+         * Adds new processor to stack
+         *
+         * @param {string} name processor name
+         * @param {Function} handler processor body
+         * @param {Function} verifier processor verifier.
+         * Returns boolean whether processor should be applied to Class. Accepts class descriptor as param
+         * @param {string} position position, class processor is inserted at
+         * @param {string} relativeTo name of processor, relative to position is evaluated
          */
-        me.add = function (name, fn, properties, position, relativeTo) {
-            //default properties to array if string and to true (all properties) - if none
-            if (xs.isString(properties)) {
-                properties = [properties];
-            } else if (!xs.isArray(properties)) {
-                properties = true;
-            }
+        me.add = function (name, handler, verifier, position, relativeTo) {
             //position defaults to last
             position || (position = 'last');
             items[name] = {
-                name:       name,
-                fn:         fn,
-                properties: properties
+                handler:  handler,
+                verifier: verifier
             };
-            setPosition(name, position, relativeTo);
+            reorder(name, position, relativeTo);
         };
 
         /**
-         * Returns items by name or ordered stack
+         * Returns items by name or ordered items
          * @param name
          * @returns {*}
          */
@@ -116,20 +110,20 @@
             if (name) {
                 return items[name];
             }
-            return xs.pick(items, stack);
+            return xs.clone(items);
         };
     };
 
     xs.Class = new (function () {
 
-        //Queue of processors, processing class before it's considered to be created
-        var preProcessors = new Queue();
-        //Queue of processors, processing class after it's considered to be created
-        var postProcessors = new Queue();
-        //Queue of processors, called before object constructor is called
-        var preConstructors = new Queue();
-        //Queue of processors, called before object constructor is called
-        var postConstructors = new Queue();
+        //Stack of processors, processing class before it's considered to be created
+        var preProcessors = new Stack();
+        //Stack of processors, processing class after it's considered to be created
+        var postProcessors = new Stack();
+        //Stack of processors, called before object constructor is called
+        var preConstructors = new Stack();
+        //Stack of processors, called before object constructor is called
+        var postConstructors = new Stack();
 
         var create = function (descFn) {
             var _each = xs.Object.each;
@@ -188,9 +182,9 @@
             };
         };
 
-        var prepare = function (Class, desc, queue) {
-            var stack = queue.getStack(), registered = queue.get(), used = [], processor, properties;
-            xs.Object.each(stack, function (name) {
+        var prepare = function (Class, desc, stack) {
+            var items = stack.getStack(), registered = stack.get(), used = [], processor, properties;
+            xs.Object.each(items, function (name) {
                 processor = registered[name];
                 properties = processor.properties;
                 if (properties === true) {
