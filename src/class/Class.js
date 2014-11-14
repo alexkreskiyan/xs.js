@@ -17,15 +17,6 @@
  at http://annium.com/contact.
 
  */
-/**
- * @class xs.Class
- * @singleton
- * xs.Class is core class, that is used internally for class generation.
- *
- * xs.Class defines 2 static methods:
- * {@link xs.Class#registerPreprocessor registerPreprocessor}
- * {@link xs.Class#registerPostprocessor registerPostprocessor}
- */
 (function (root, ns) {
 
     //framework shorthand
@@ -34,7 +25,13 @@
     /**
      * Private internal stack class
      *
-     * @ignore
+     * Stack is used to store ordered list of processors
+     *
+     * @class xs.Class.Stack
+     *
+     * @singleton
+     *
+     * @private
      */
     var Stack = function () {
         var me = this;
@@ -44,6 +41,8 @@
 
         /**
          * Reorders item in stack relative to item with given name
+         *
+         * @ignore
          *
          * @param {string} name name of repositioned item
          * @param {string} position new item position
@@ -82,14 +81,41 @@
         };
 
         /**
+         * Returns stack items copy
+         *
+         * @method get
+         *
+         * @returns {Object} stack items copy
+         */
+        me.get = function (name) {
+            return xs.clone(items);
+        };
+
+        /**
          * Adds new processor to stack
+         *
+         * For example:
+         *
+         *     stack.add('addY', function() {
+         *         return true;
+         *     }, function() {
+         *        this.x = 0;
+         *     }, 'after', 'addY')
+         *
+         * @method add
          *
          * @param {string} name processor name
          * @param {Function} verifier processor verifier.
          * @param {Function} handler processor body
          * Returns boolean whether processor should be applied to Class. Accepts class descriptor as param
-         * @param {string} position position, class processor is inserted at
-         * @param {string} relativeTo name of processor, relative to position is evaluated
+         * @param {string} position position, class processor is inserted at. Valid values are:
+         *
+         *  - first,
+         *  - last,
+         *  - before, (relativeTo is required)
+         *  - after (relativeTo is required)
+         *
+         * @param {string} relativeTo name of processor, presented in stack, relative to which new item's position is evaluated
          */
         me.add = function (name, verifier, handler, position, relativeTo) {
             //position defaults to last
@@ -102,31 +128,47 @@
         };
 
         /**
-         * Returns items by name or ordered items
+         * Deletes processor from stack. If processor not found, error is thrown
          *
-         * @param {string} [name] name processor name
-         * @returns {*}
+         * For example:
+         *
+         *     stack.delete('addY');
+         *
+         * @method delete
+         *
+         * @param {string} name processor name
          */
-        me.get = function (name) {
-            if (name) {
-                return items[name];
+        me.delete = function (name) {
+            if (xs.has(items, name)) {
+                xs.delete(items, name);
+            } else {
+                throw new Exception('processor "' + name + '" not found in stack');
             }
-            return xs.clone(items);
         };
 
         /**
          * Starts stack processing chain with given arguments
          *
-         * @param {Array} verifierArgs
-         * @param {Array} handlerArgs
-         * @param {Function} callback
+         * For example:
+         *
+         *     stack.process([1, 2], [2, 3], function() {
+         *         console.log('ready');
+         *     });
+         *
+         * @method process
+         *
+         * @param {Array} verifierArgs arguments, passed to each stack item's verifier
+         * @param {Array} handlerArgs arguments, passed to each stack item's handler
+         * @param {Function} callback optional executed callback
          */
         me.process = function (verifierArgs, handlerArgs, callback) {
-            process(xs.values(items), verifierArgs, handlerArgs, callback);
+            process(xs.values(items), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
         };
 
         /**
          * Internal process function
+         *
+         * @ignore
          *
          * @param {Array} items items stack
          * @param {Array} verifierArgs arguments for items' verifiers
@@ -135,7 +177,7 @@
          */
         var process = function (items, verifierArgs, handlerArgs, callback) {
             if (!items.length) {
-                xs.isFunction(callback) && callback();
+                callback();
                 return;
             }
             var item = xs.shift(items);
@@ -157,37 +199,120 @@
     };
 
     /**
-     * @ignore
+     * xs.Class is core class, that is used internally for class generation.
      *
-     * Class constructor method. Use is simple:
+     * xs.Class provides 4 stacks to register processors:
      *
-     *     var Class = xs.Class(function (Class) {
+     * - {@link xs.Class#preProcessors preProcessors}
+     * - {@link xs.Class#postProcessors postProcessors}
+     * - {@link xs.Class#preConstructors preConstructors}
+     * - {@link xs.Class#postConstructors postConstructors}
+     *
+     * Usage example:
+     *
+     *     //create simple Class
+     *     var Class = xs.Class.create(function (Class) {
      *         //here is Class descriptor returned
      *         return {
      *         };
      *     });
      *
+     * @class xs.Class
+     *
+     * @singleton
      */
     xs.Class = (function () {
 
-        //Stack of processors, processing class before it's considered to be created
+        /**
+         * Stack of processors, processing class before it's considered to be created (before createdFn is called)
+         *
+         * Provided arguments are:
+         *
+         * For verifier:
+         *
+         *  - descriptor
+         *
+         * For handler:
+         *
+         *  - Class
+         *  - descriptor
+         *
+         * @property preProcessors
+         *
+         * @type {xs.Class.Stack}
+         */
         var preProcessors = new Stack();
 
-        //Stack of processors, processing class after it's considered to be created
+        /**
+         * Stack of processors, processing class after it's considered to be created (after createdFn is called)
+         *
+         * Provided arguments are:
+         *
+         * For verifier:
+         *
+         *  - descriptor
+         *
+         * For handler:
+         *
+         *  - Class
+         *  - descriptor
+         *
+         * @property postProcessors
+         *
+         * @type {xs.Class.Stack}
+         */
         var postProcessors = new Stack();
 
-        //Stack of processors, called before object constructor is called
+        /**
+         * Stack of processors, processing object instance before object constructor is called
+         *
+         * Provided arguments are:
+         *
+         * For verifier:
+         *
+         *  - Class
+         *  - instance
+         *
+         * For handler:
+         *
+         *  - Class
+         *  - instance
+         *
+         * @property preConstructors
+         *
+         * @type {xs.Class.Stack}
+         */
         var preConstructors = new Stack();
 
-        //Stack of processors, called before object constructor is called
+        /**
+         * Stack of processors, processing object instance after object constructor is called
+         *
+         * Provided arguments are:
+         *
+         * For verifier:
+         *
+         *  - Class
+         *  - instance
+         *
+         * For handler:
+         *
+         *  - Class
+         *  - instance
+         *
+         * @property postConstructors
+         *
+         * @type {xs.Class.Stack}
+         */
         var postConstructors = new Stack();
 
         /**
          * Returns new xClass sample
          *
+         * @ignore
+         *
          * @returns {Function} new xClass
          */
-        var create = function () {
+        var createClass = function () {
             var Class = function xClass() {
                 var me = this;
 
@@ -207,31 +332,59 @@
                 xs.const(me, 'self', Class);
 
                 //process preConstructors
-                preConstructors.process([Class], [Class]);
+                preConstructors.process([
+                    Class,
+                    me
+                ], [
+                    Class,
+                    me
+                ]);
 
                 //apply constructor
                 constructor && constructor.apply(me, arguments);
 
                 //process postConstructors
-                postConstructors.process([Class], [Class]);
+                postConstructors.process([
+                    Class,
+                    me
+                ], [
+                    Class,
+                    me
+                ]);
             };
             return Class;
         };
 
         /**
-         * Class creator. Creates class sample and starts processors applying
-         * @param descFn
-         * @param createdFn
-         * @returns {Function}
+         * Creates class sample and starts processors applying
+         *
+         * For example:
+         *
+         *     //create simple Class
+         *     var Class = xs.Class.create(function (Class) {
+         *         //here is Class descriptor returned
+         *         return {
+         *         };
+         *     }, function(Class) {
+         *         console.log('class', Class, 'created');
+         *     );
+         *
+         * @param {Function} descFn
+         * @param {Function} createdFn
+         *
+         * @returns {Function} created Class
          */
-        var creator = function (descFn, createdFn) {
+        var create = function (descFn, createdFn) {
+
+            //descFn must be function
             if (!xs.isFunction(descFn)) {
                 throw new Exception('Class descriptor must be function');
             }
+
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
 
             //create class
-            var Class = create();
+            var Class = createClass();
 
             //get Class descriptor
             var descriptor = descFn(Class);
@@ -241,7 +394,7 @@
                 Class,
                 descriptor
             ], function () {
-                createdFn();
+                createdFn(Class);
                 //process postProcessors stack before createdFn called
                 postProcessors.process([descriptor], [
                     Class,
@@ -252,12 +405,12 @@
             return Class;
         };
 
-        xs.extend(creator, {
+        return {
+            create:           create,
             preProcessors:    preProcessors,
             postProcessors:   postProcessors,
             preConstructors:  preConstructors,
             postConstructors: postConstructors
-        });
-        return creator;
+        };
     })();
 })(window, 'xs');
