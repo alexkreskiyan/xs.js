@@ -1,5 +1,5 @@
 /*!
- This file is core of xs.js 0.1
+ This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
@@ -22,154 +22,145 @@
     //framework shorthand
     var xs = root[ns];
 
-    xs.ClassManager = new (function () {
+    /**
+     * Private internal stack class
+     *
+     * Stack is used to store ordered list of processors
+     *
+     * @class xs.ClassManager
+     *
+     * @singleton
+     *
+     * @private
+     */
+    xs.ClassManager = (function () {
 
-        var storage = {};
+        var registry = {};
+
+        var defined = function (name) {
+            return xs.hasKey(registry, name);
+        };
 
         var define = function (name, descFn, createdFn) {
+            //throw new Error if trying to redefine
             if (defined(name)) {
-                return;
+                throw new Error('Class "' + name + '" is already defined');
             }
+
+            //createdFn is function anyway
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
 
-            xs.Class(descFn, function (Class, desc, hooks) {
-                Class.label = name;
+            //create Class and save it to registry
+            xs.Class.create(descFn, function (Class) {
+
+                //assign real name as label
+                xs.const(Class, 'label', name);
+
+                //save Class in registry by name
                 set(name, Class);
-                createdFn(Class, desc, hooks);
+
+                //call user-defined createdFn
+                createdFn(Class);
             });
         };
-        var defined = function (name) {
-            return storage.hasOwnProperty(name);
-        };
-        var undefine = function (name) {
+
+        var unset = function (name) {
+            //throw new Error if trying to unset undefined
             if (!defined(name)) {
-                return;
+                throw new Error('Class "' + name + '" is not defined');
             }
-            var namespace = getNamespace(root, getNamespaceName(name));
-            delete namespace[name];
-            delete storage[name];
+
+            //get short name of Class
+            var label = getName(name);
+
+            //get Class namespace by path
+            var namespace = namespace(root, getPath(name));
+
+            //unset Class from namespace
+            delete namespace[label];
+
+            //unset Class from registry
+            delete registry[name];
         };
+
+        //return Class from registry if defined
         var get = function (name) {
-            return storage.hasOwnProperty(name) ? storage[name] : undefined;
+            return defined(name) ? registry[name] : undefined;
         };
+
         var set = function (name, Class) {
-            var label = getClassName(name);
-            //create namespace for class
-            var namespace = createNamespace(root, getNamespaceName(name));
-            storage[name] = namespace[label] = Class;
-            Class.label = name;
+            //get short name of Class
+            var label = getName(name);
+
+            //get Class namespace by path
+            var namespace = namespace(root, getPath(name));
+
+            //save Class to namespace
+            namespace[label] = Class;
+
+            //save Class to registry
+            registry[name] = Class;
         };
-        var getName = function (object) {
-            //if instance
-            if (object.self) {
-                return object.self.label;
-                //if class
-            } else if (object.label) {
-                return object.label;
-            } else {
-                return undefined;
-            }
-        };
-        var getClassName = function (name) {
+
+        var getName = function (name) {
             return name.split('.').slice(-1).join('.');
         };
-        var getNamespaceName = function (name) {
+
+        var getPath = function (name) {
             return name.split('.').slice(0, -1).join('.');
         };
-        var getNamespace = function (root, namespace) {
-            //explode name to parts
-            var names = namespace.split('.');
-            //get parent name part
-            var name = names.shift();
-            //downcall if not leave
-            if (names.length) {
-                //downcall
-                return getNamespace(root[name], names.join('.'));
-            } else {
-                return root[name];
-            }
-        };
-        var createNamespace = function (root, namespace) {
-            //explode name to parts
-            var names = namespace.split('.');
-            //get parent name part
-            var name = names.shift();
-            //create namespace if doesn't exist
-            xs.isFunction(root[name]) || xs.isObject(root[name]) || (root[name] = {});
-            //downcall if not leave
-            if (names.length) {
-                //downcall
-                return createNamespace(root[name], names.join('.'));
-            } else {
-                return root[name];
-            }
-        };
-        var deleteNamespace = function (root, namespace) {
-            //explode name to parts
-            var names = namespace.split('.');
-            //get parent name part
-            var name = names.shift();
-            //downcall if not leave
-            if (names.length) {
-                //downcall
-                deleteNamespace(root[namespace], names.join('.'));
-            }
-            //create namespace if doesn't exist
-            delete root[name];
-        };
-        var create = function (name) {
-            var Class, instance;
 
-            //if class is given
-            if (xs.isFunction(name)) {
-                Class = name;
-            } else {
-                //replace with Loader usage
-                if (!defined(name)) {
-                    throw 'class "' + name + '" doesn\'t exist';
-                }
-                //create instance
-                Class = get(name);
+        var namespace = function (root, name) {
+            //explode name to parts
+            var parts = name.split('.');
+
+            //get name parent part
+            var part = parts.shift();
+
+            //create namespace if missing
+            if (!xs.isFunction(root[part]) && !xs.isObject(root[part])) {
+                root[part] = {};
             }
 
-            //all data is passed in the second argument
-            instance = new Class(arguments[1]);
+            //process down or return
+            if (parts.length) {
 
-            //return created instance
-            return instance;
+                return namespace(root[part], parts.join('.'));
+            } else {
+
+                return root[part];
+            }
         };
-        var is = function (object, compared) {
-            if (object === compared) {
+
+        var is = function (object, target) {
+            //if object is equal to target - return true
+            if (object === target) {
+
                 return true;
             }
-            if (xs.isFunction(compared) && object instanceof compared) {
+
+            //if target is constructor and object is it's instance - return true
+            if (xs.isFunction(target) && object instanceof target) {
+
                 return true;
             }
-            if (xs.isString(compared)) {
-                return is(object, get(compared));
+
+            //if target is string, try to compare object to Class which label is target
+            if (xs.isString(target)) {
+                return is(object, get(target));
             }
+
+            //return false otherwise
             return false;
         };
 
         return {
-            define:           define,
-            defined:          defined,
-            undefine:         undefine,
-            get:              get,
-            getName:          getName,
-            getClassName:     getClassName,
-            getNamespaceName: getNamespaceName,
-            create:           create,
-            is:               is
+            define:  define,
+            defined: defined,
+            unset:   unset,
+            get:     get,
+            is:      is
         }
     });
-    xs.extend(xs, {
-        is:           xs.ClassManager.is,
-        define:       xs.ClassManager.define,
-        defined:      xs.ClassManager.defined,
-        undefine:     xs.ClassManager.undefine,
-        getClass:     xs.ClassManager.get,
-        getClassName: xs.ClassManager.getName,
-        create:       xs.ClassManager.create
-    })
+    xs.extend(xs, xs.ClassManager);
 })(window, 'xs');
