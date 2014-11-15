@@ -17,13 +17,6 @@
  at http://annium.com/contact.
 
  */
-/**
- * @class xs.lang.List
- * @singleton
- * @private
- *
- * xs.lang.List is private singleton, defining basic list operations, for both Array and Object.
- */
 (function (root, ns) {
 
     'use strict';
@@ -31,6 +24,15 @@
     //framework shorthand
     var xs = root[ns];
 
+    /**
+     * xs.lang.List is private singleton, defining basic list operations, for both Array and Object.
+     *
+     * @class xs.lang.List
+     *
+     * @singleton
+     *
+     * @private
+     */
     var list = new (function () {
         var me = this;
 
