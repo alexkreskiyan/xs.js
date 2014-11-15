@@ -17,13 +17,6 @@
  at http://annium.com/contact.
 
  */
-/**
- * @class xs.lang.Attribute
- * @singleton
- * @private
- *
- * xs.lang.Attribute is private singleton, providing basic attributes' operations
- */
 (function (root, ns) {
 
     'use strict';
@@ -31,6 +24,15 @@
     //framework shorthand
     var xs = root[ns];
 
+    /**
+     * xs.lang.Attribute is private singleton, providing basic attributes' operations
+     *
+     * @class xs.lang.Attribute
+     *
+     * @singleton
+     * 
+     * @private
+     */
     var attribute = xs.Attribute = new (function () {
         var me = this;
 
