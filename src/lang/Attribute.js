@@ -30,7 +30,7 @@
      * @class xs.lang.Attribute
      *
      * @singleton
-     * 
+     *
      * @private
      */
     var attribute = xs.Attribute = new (function () {

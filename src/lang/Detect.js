@@ -17,13 +17,6 @@
  at http://annium.com/contact.
 
  */
-/**
- * @class xs.lang.Detect
- * @singleton
- * @private
- *
- * xs.lang.Detect is private singleton, defining basic language detection operations
- */
 (function (root, ns) {
 
     'use strict';
@@ -31,6 +24,15 @@
     //framework shorthand
     var xs = root[ns];
 
+    /**
+     * xs.lang.Detect is private singleton, defining basic language detection operations
+     *
+     * @class xs.lang.Detect
+     *
+     * @singleton
+     *
+     * @private
+     */
     var detect = new (function () {
         var me = this;
 
