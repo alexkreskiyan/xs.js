@@ -48,7 +48,7 @@
          * @param {string} position new item position
          * @param {*} relativeTo name of relativeTo positioned item
          */
-        var apply = function (name, position, relativeTo) {
+        var _apply = function (name, position, relativeTo) {
             if (!xs.has([
                 'first',
                 'last',
@@ -128,7 +128,7 @@
                 verifier: verifier,
                 handler:  handler
             };
-            apply(name, position, relativeTo);
+            _apply(name, position, relativeTo);
         };
 
         /**
@@ -151,7 +151,7 @@
          * @param {string} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
          */
         me.reorder = function (name, position, relativeTo) {
-            apply(name, position, relativeTo);
+            _apply(name, position, relativeTo);
         };
 
         /**
@@ -189,7 +189,7 @@
          * @param {Function} [callback] optional executed callback
          */
         me.process = function (verifierArgs, handlerArgs, callback) {
-            process(xs.values(items), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
+            _process(xs.values(items), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
         };
 
         /**
@@ -202,7 +202,7 @@
          * @param {Array} handlerArgs arguments for items' handlers
          * @param {Function} callback stack ready callback
          */
-        var process = function (items, verifierArgs, handlerArgs, callback) {
+        var _process = function (items, verifierArgs, handlerArgs, callback) {
             if (!items.length) {
                 callback();
                 return;
@@ -213,7 +213,7 @@
             if (item.verifier.apply(this, verifierArgs)) {
 
                 var ready = function () {
-                    process(items, verifierArgs, handlerArgs, callback);
+                    _process(items, verifierArgs, handlerArgs, callback);
                 };
                 //if item.handler returns false, processing is async, stop processing, awaiting ready call
                 if (item.handler.apply(this, xs.union(handlerArgs, ready)) === false) {
@@ -221,12 +221,12 @@
                 }
             }
 
-            process(items, verifierArgs, handlerArgs, callback);
+            _process(items, verifierArgs, handlerArgs, callback);
         };
     };
 
     /**
-     * xs.Class is core class, that is used internally for class generation.
+     * xs.Class is core class, that is used for class generation.
      *
      * xs.Class provides 3 stacks to register processors:
      *
@@ -323,7 +323,7 @@
          *
          * @returns {Function} new xClass
          */
-        var createClass = function () {
+        var _create = function () {
             var Class = function xClass() {
                 var me = this;
 
@@ -391,7 +391,7 @@
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
 
             //create class
-            var Class = createClass();
+            var Class = _create();
 
             //get descriptor
             var namespace = {};
@@ -405,6 +405,9 @@
             //save Class descriptor
             xs.const(Class, 'descriptor', descriptor);
 
+            //set class not ready yet
+            Class.isReady = false;
+
             //process preProcessors stack before createdFn called
             preProcessors.process([
                 Class,
@@ -415,8 +418,13 @@
                 descriptor,
                 namespace
             ], function () {
+                //set class ready
+                Class.isReady = true;
+
+                //call createdFn
                 createdFn(Class);
-                //process postProcessors stack before createdFn called
+
+                //process postProcessors stack after createdFn called
                 postProcessors.process([
                     Class,
                     descriptor,
