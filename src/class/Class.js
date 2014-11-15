@@ -87,7 +87,7 @@
          *
          * @returns {Object} stack items copy
          */
-        me.get = function (name) {
+        me.get = function () {
             return xs.clone(items);
         };
 
@@ -159,7 +159,7 @@
          *
          * @param {Array} verifierArgs arguments, passed to each stack item's verifier
          * @param {Array} handlerArgs arguments, passed to each stack item's handler
-         * @param {Function} callback optional executed callback
+         * @param {Function} [callback] optional executed callback
          */
         me.process = function (verifierArgs, handlerArgs, callback) {
             process(xs.values(items), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
