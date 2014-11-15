@@ -152,24 +152,24 @@
         };
 
         return {
-            define: define,
-            defined: defined,
-            undefine: undefine,
-            get: get,
-            getName: getName,
-            getClassName: getClassName,
+            define:           define,
+            defined:          defined,
+            undefine:         undefine,
+            get:              get,
+            getName:          getName,
+            getClassName:     getClassName,
             getNamespaceName: getNamespaceName,
-            create: create,
-            is: is
+            create:           create,
+            is:               is
         }
     });
     xs.extend(xs, {
-        is: xs.ClassManager.is,
-        define: xs.ClassManager.define,
-        defined: xs.ClassManager.defined,
-        undefine: xs.ClassManager.undefine,
-        getClass: xs.ClassManager.get,
+        is:           xs.ClassManager.is,
+        define:       xs.ClassManager.define,
+        defined:      xs.ClassManager.defined,
+        undefine:     xs.ClassManager.undefine,
+        getClass:     xs.ClassManager.get,
         getClassName: xs.ClassManager.getName,
-        create: xs.ClassManager.create
+        create:       xs.ClassManager.create
     })
 })(window, 'xs');
