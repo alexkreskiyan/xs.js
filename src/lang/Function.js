@@ -17,13 +17,6 @@
  at http://annium.com/contact.
 
  */
-/**
- * @class xs.lang.Function
- * @singleton
- * @private
- *
- * xs.lang.Function is private singleton, defining basic function operations.
- */
 (function (root, ns) {
 
     'use strict';
@@ -31,6 +24,15 @@
     //framework shorthand
     var xs = root[ns];
 
+    /**
+     * xs.lang.Function is private singleton, defining basic function operations.
+     *
+     * @class xs.lang.Function
+     *
+     * @singleton
+     *
+     * @private
+     */
     var fn = new (function () {
         var me = this;
 
@@ -172,7 +174,7 @@
         me.nextTick = function (fn, scope) {
             scope && (fn = _bind(fn, scope));
             setTimeout(fn, 0);
-        }
+        };
 
         /**
          * @ignore
