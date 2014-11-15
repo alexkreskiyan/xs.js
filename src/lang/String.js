@@ -17,13 +17,6 @@
  at http://annium.com/contact.
 
  */
-/**
- * @class xs.lang.String
- * @singleton
- * @private
- *
- * xs.lang.String is private singleton, defining basic string operations.
- */
 (function (root, ns) {
 
     'use strict';
@@ -31,6 +24,15 @@
     //framework shorthand
     var xs = root[ns];
 
+    /**
+     * xs.lang.String is private singleton, defining basic string operations.
+     *
+     * @class xs.lang.String
+     *
+     * @singleton
+     *
+     * @private
+     */
     var string = new (function () {
         var me = this;
 
