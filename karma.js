@@ -38,7 +38,7 @@ module.exports = function (config) {
         },
         // the default configuration
         htmlReporter:     {
-            outputFile:    'reports/index.html'
+            outputFile: 'reports/index.html'
         },
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor

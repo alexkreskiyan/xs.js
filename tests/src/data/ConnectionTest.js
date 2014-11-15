@@ -19,25 +19,25 @@ test('demo', function () {
     conn.async = true;
     conn.timeout = 500;
     conn.send();
-//    if (xs.isIE && xs.engine.major <= 9) {
-//        var xhr = new XDomainRequest();
-//        xhr.onprogress = function () {
-//            console.log('progress', arguments);
-//        };
-//        xhr.onerror = function () {
-//            console.log('error', arguments);
-//        };
-//        xhr.onload = function () {
-//            console.log('contentType', xhr.contentType);
-//            console.log('contentType', xhr.responseText);
-//            console.log('load', arguments);
-//        };
-//        xhr.ontimeout = function () {
-//            console.log('timeout', arguments);
-//        };
-//        xhr.open(method, url);
-//        xhr.send(data);
-//    }
+    //    if (xs.isIE && xs.engine.major <= 9) {
+    //        var xhr = new XDomainRequest();
+    //        xhr.onprogress = function () {
+    //            console.log('progress', arguments);
+    //        };
+    //        xhr.onerror = function () {
+    //            console.log('error', arguments);
+    //        };
+    //        xhr.onload = function () {
+    //            console.log('contentType', xhr.contentType);
+    //            console.log('contentType', xhr.responseText);
+    //            console.log('load', arguments);
+    //        };
+    //        xhr.ontimeout = function () {
+    //            console.log('timeout', arguments);
+    //        };
+    //        xhr.open(method, url);
+    //        xhr.send(data);
+    //    }
 });
 var urls = {
     local: 'server.php',
@@ -45,7 +45,7 @@ var urls = {
 };
 var native = {
     local: {
-        get: function (data) {
+        get:  function (data) {
             send(urls.local, 'get', data);
         },
         post: function (data) {
@@ -53,7 +53,7 @@ var native = {
         }
     },
     cross: {
-        get: function (data) {
+        get:  function (data) {
             send(urls.cross, 'get', data);
         },
         post: function (data) {
@@ -63,32 +63,32 @@ var native = {
 };
 var ajax = {
     local: {
-        get: function (data) {
+        get:  function (data) {
             xs.Ajax.request({
-                url: urls.local,
+                url:    urls.local,
                 method: 'get',
                 params: data
             }).promise.always(onAnything).then(onResolved, onRejected);
         },
         post: function (data) {
             xs.Ajax.request({
-                url: urls.local,
+                url:    urls.local,
                 method: 'post',
                 params: data
             }).promise.always(onAnything).then(onResolved, onRejected);
         }
     },
     cross: {
-        get: function (data) {
+        get:  function (data) {
             xs.Ajax.request({
-                url: urls.cross,
+                url:    urls.cross,
                 method: 'get',
                 params: data
             }).promise.always(onAnything).then(onResolved, onRejected);
         },
         post: function (data) {
             xs.Ajax.request({
-                url: urls.cross,
+                url:    urls.cross,
                 method: 'post',
                 params: data
             }).promise.always(onAnything).then(onResolved, onRejected);
@@ -139,8 +139,7 @@ var urlAppend = function (url, params) {
     return url;
 };
 var toQueryObjects = function (name, object, recursive) {
-    var self = toQueryObjects,
-        objects = [];
+    var self = toQueryObjects, objects = [];
 
     if (xs.isArray(object) || xs.isObject(object)) {
         xs.each(object, function (value, param) {
@@ -148,14 +147,14 @@ var toQueryObjects = function (name, object, recursive) {
                 objects = objects.concat(self(name + '[' + param + ']', value, true));
             } else {
                 objects.push({
-                    name: name,
+                    name:  name,
                     value: value
                 });
             }
         });
     } else {
         objects.push({
-            name: name,
+            name:  name,
             value: object
         });
     }
@@ -164,8 +163,7 @@ var toQueryObjects = function (name, object, recursive) {
 };
 
 var toQueryString = function (object, recursive) {
-    var paramObjects = [],
-        params = [];
+    var paramObjects = [], params = [];
 
     xs.each(object, function (value, name) {
         paramObjects = paramObjects.concat(toQueryObjects(name, value, recursive));

@@ -1,7 +1,7 @@
 {
-    "--title": "xs.js framework docs",
-    "--output": "docs",
-    "--": [
+    "--title":           "xs.js framework docs",
+    "--output":          "docs",
+    "--":                [
     ],
     "--builtin-classes": true
 }

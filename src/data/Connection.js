@@ -55,87 +55,87 @@ xs.define('xs.data.Connection', function () {
         return options;
     };
 
-//    var XMLHttpRequestProto = {
-//        //event handlers
-//        onloadstart: xs.emptyFn,
-//        onprogress: xs.emptyFn,
-//        onabort: xs.emptyFn,
-//        onerror: xs.emptyFn,
-//        onload: xs.emptyFn,
-//        ontimeout: xs.emptyFn,
-//        onloadend: xs.emptyFn,
-//        onreadystatechange: xs.emptyFn,
-//        //responseType
-//        '': '',
-//        arraybuffer: '',
-//        blob: '',
-//        document: '',
-//        json: '',
-//        text: '',
-//        //states
-//        UNSENT: 0,
-//        OPENED: 1,
-//        HEADERS_RECEIVED: 2,
-//        LOADING: 3,
-//        DONE: 4,
-//        readyState: 0,
-//        //request
-//        open: function () {
-//            open(method, url);
-//            open(method, url, async, username, password);
-//        },
-//        setRequestHeader: function (header, value) {
-//        },
-//        timeout: 30000,
-//        withCredentials: true,
-//        upload: new XMLHttpRequestUpload,
-//        send: function (data) {
-//        },
-//        abort: function () {
-//        },
-//        //response
-//        status: 0,
-//        statusText: '',
-//        getResponseHeader: function (header) {
-//        },
-//        getAllResponseHeaders: function () {
-//        },
-//        overrideMimeType: function (mime) {
-//        },
-//        responseType: '',
-//        response: '',
-//        responseText: '',
-//        responseXML: ''
-//    };
-//    var XDomainRequestProto = {
-//        //event handlers
-//        onprogress: xs.emptyFn,
-//        onerror: xs.emptyFn,
-//        onload: xs.emptyFn,
-//        ontimeout: xs.emptyFn,
-//        //methods
-//        open: function (method, url) {
-//        }, //async?user?pass? anonymous!!
-//        send: function (data) {
-//        },
-//        abort: function () {
-//        },
-//        //properties
-//        contentType: '', //both for request and response???
-//        responseText: '',
-//        timeout: 10000
-//    };
+    //    var XMLHttpRequestProto = {
+    //        //event handlers
+    //        onloadstart: xs.emptyFn,
+    //        onprogress: xs.emptyFn,
+    //        onabort: xs.emptyFn,
+    //        onerror: xs.emptyFn,
+    //        onload: xs.emptyFn,
+    //        ontimeout: xs.emptyFn,
+    //        onloadend: xs.emptyFn,
+    //        onreadystatechange: xs.emptyFn,
+    //        //responseType
+    //        '': '',
+    //        arraybuffer: '',
+    //        blob: '',
+    //        document: '',
+    //        json: '',
+    //        text: '',
+    //        //states
+    //        UNSENT: 0,
+    //        OPENED: 1,
+    //        HEADERS_RECEIVED: 2,
+    //        LOADING: 3,
+    //        DONE: 4,
+    //        readyState: 0,
+    //        //request
+    //        open: function () {
+    //            open(method, url);
+    //            open(method, url, async, username, password);
+    //        },
+    //        setRequestHeader: function (header, value) {
+    //        },
+    //        timeout: 30000,
+    //        withCredentials: true,
+    //        upload: new XMLHttpRequestUpload,
+    //        send: function (data) {
+    //        },
+    //        abort: function () {
+    //        },
+    //        //response
+    //        status: 0,
+    //        statusText: '',
+    //        getResponseHeader: function (header) {
+    //        },
+    //        getAllResponseHeaders: function () {
+    //        },
+    //        overrideMimeType: function (mime) {
+    //        },
+    //        responseType: '',
+    //        response: '',
+    //        responseText: '',
+    //        responseXML: ''
+    //    };
+    //    var XDomainRequestProto = {
+    //        //event handlers
+    //        onprogress: xs.emptyFn,
+    //        onerror: xs.emptyFn,
+    //        onload: xs.emptyFn,
+    //        ontimeout: xs.emptyFn,
+    //        //methods
+    //        open: function (method, url) {
+    //        }, //async?user?pass? anonymous!!
+    //        send: function (data) {
+    //        },
+    //        abort: function () {
+    //        },
+    //        //properties
+    //        contentType: '', //both for request and response???
+    //        responseText: '',
+    //        timeout: 10000
+    //    };
 
     var cleanUp = function () {
 
     };
 
     return {
-        requires: [
+        requires:    [
             'xs.promise.Deferred',
             'xs.promise.Promise'
         ],
-        mixins: {
+        mixins:      {
             observable: 'xs.util.Observable'
         },
         /**
@@ -177,76 +177,76 @@ xs.define('xs.data.Connection', function () {
             me.headers = config.headers;
             me.postContentType = config.postContentType;
         },
-        properties: {
+        properties:  {
             /**
              * @property pending {Object} pending requests
              */
-            pending: {
+            pending:         {
                 set: xs.emptyFn
             },
             /**
              * @param {xs.request.Request}, containing
              */
-            request: {
+            request:         {
                 set: function (request) {
                     request = prepareRequest(request);
                     request && this.__set('request', request);
                 }
             },
-            async: {
-                set: function (async) {
+            async:           {
+                set:     function (async) {
                     this.__set('async', Boolean(async));
                 },
                 default: true
             },
-            cache: {
-                set: function (cache) {
+            cache:           {
+                set:     function (cache) {
                     this.__set('cache', Boolean(cache));
                 },
                 default: true
             },
-            cacheParam: {
-                set: function (cacheParam) {
+            cacheParam:      {
+                set:     function (cacheParam) {
                     this.__set('cacheParam', String(cacheParam));
                 },
                 default: 'xsNoCache'
             },
-            credentials: {
-                set: function (credentials) {
+            credentials:     {
+                set:     function (credentials) {
                     this.__set('credentials', Boolean(credentials));
                 },
                 default: false
             },
-            timeout: {
-                set: function (timeout) {
+            timeout:         {
+                set:     function (timeout) {
                     xs.isNumeric(timeout) && (this.__set('timeout', Number(timeout)));
                 },
                 default: 30000
             },
-            autoAbort: {
-                set: function (autoAbort) {
+            autoAbort:       {
+                set:     function (autoAbort) {
                     this.__set('autoAbort', Boolean(autoAbort));
                 },
                 default: false
             },
-            headers: {
+            headers:         {
                 set: function (headers) {
                     xs.isObject(headers) || (headers = {});
                     this.__set('headers', headers);
                 }
             },
             postContentType: {
-                set: function (postContentType) {
+                set:     function (postContentType) {
                     xs.isString(postContentType) && this.__set('postContentType', postContentType);
                 },
                 default: 'application/x-www-form-urlencoded; charset=UTF-8'
             }
         },
-        methods: {
+        methods:     {
             /**
              * Sends an HTTP request to a remote server.
              */
-            send: function (options) {
+            send:              function (options) {
                 var me = this;
 
                 //set request options
@@ -260,17 +260,9 @@ xs.define('xs.data.Connection', function () {
                 //return request sending result
                 return sendRequest(me, request);
             },
-            request: function (options) {
+            request:           function (options) {
                 options = options || {};
-                var me = this,
-                    scope = options.scope || window,
-                    username = options.username || me.username,
-                    password = options.password || me.password || '',
-                    async,
-                    requestOptions,
-                    request,
-                    headers,
-                    xhr;
+                var me = this, scope = options.scope || window, username = options.username || me.username, password = options.password || me.password || '', async, requestOptions, request, headers, xhr;
 
                 requestOptions = me.setOptions(options, scope);
 
@@ -290,11 +282,11 @@ xs.define('xs.data.Connection', function () {
 
                 // create the transaction object
                 request = {
-                    id: ++xs.data.Connection.requestId,
-                    xhr: xhr,
+                    id:      ++xs.data.Connection.requestId,
+                    xhr:     xhr,
                     headers: headers,
                     options: options,
-                    async: async,
+                    async:   async,
                     timeout: setTimeout(function () {
                         request.timedout = true;
                         me.abort(request);
@@ -335,8 +327,14 @@ xs.define('xs.data.Connection', function () {
 
                 request.contentType = request.options.contentType || me.defaultXdrContentType;
 
-                xhr.onload = xs.bind(me.stateChange, me, [request, true]);
-                xhr.onerror = xhr.ontimeout = xs.bind(me.stateChange, me, [request, false]);
+                xhr.onload = xs.bind(me.stateChange, me, [
+                    request,
+                    true
+                ]);
+                xhr.onerror = xhr.ontimeout = xs.bind(me.stateChange, me, [
+                    request,
+                    false
+                ]);
             },
 
             /**
@@ -362,11 +360,7 @@ xs.define('xs.data.Connection', function () {
              * @return {Object} The params for the request
              */
             setOptions: function (options, scope) {
-                var me = this,
-                    params = options.params || {},
-                    url = options.url || me.url,
-                    method;
-
+                var me = this, params = options.params || {}, url = options.url || me.url, method;
 
                 // allow params to be a method that returns the params object
                 if (xs.isFunction(params)) {
@@ -399,9 +393,9 @@ xs.define('xs.data.Connection', function () {
                 }
 
                 return {
-                    url: url,
+                    url:    url,
                     method: method,
-                    data: params || null
+                    data:   params || null
                 };
             },
 
@@ -413,9 +407,7 @@ xs.define('xs.data.Connection', function () {
              * @param {Object} data The data for the request
              */
             setupHeaders: function (xhr, options, data) {
-                var me = this,
-                    headers = xs.extend({}, options.headers || {}, me.defaultHeaders || {}),
-                    contentType = me.defaultPostHeader;
+                var me = this, headers = xs.extend({}, options.headers || {}, me.defaultHeaders || {}), contentType = me.defaultPostHeader;
 
                 if (!headers['Content-Type'] && data) {
                     headers['Content-Type'] = contentType;
@@ -437,8 +429,7 @@ xs.define('xs.data.Connection', function () {
              * @private
              */
             newRequest: function (options) {
-                var me = this,
-                    xhr;
+                var me = this, xhr;
 
                 if ((options.cors || me.cors) && window.XDomainRequest) {
                     xhr = me.getXdrInstance();
@@ -457,8 +448,7 @@ xs.define('xs.data.Connection', function () {
              * @private
              */
             openRequest: function (options, requestOptions, async, username, password) {
-                var me = this,
-                    xhr = me.newRequest(options);
+                var me = this, xhr = me.newRequest(options);
 
                 if (username) {
                     xhr.open(requestOptions.method, requestOptions.url, async, username, password);
@@ -549,8 +539,7 @@ xs.define('xs.data.Connection', function () {
              * @return {Object} The request. Null if there is no recent request
              */
             getLatest: function () {
-                var id = this.latestId,
-                    request;
+                var id = this.latestId, request;
 
                 if (id) {
                     request = this.requests[id];
@@ -604,17 +593,14 @@ xs.define('xs.data.Connection', function () {
              * @returns {*}
              */
             complete: function (request, xdrResult) {
-                var me = this,
-                    result,
-                    success,
-                    response;
+                var me = this, result, success, response;
 
                 try {
                     result = me.parseStatus(request.xhr.status);
                 } catch (e) {
                     // in some browsers we can't access the status if the readyState is not 4, so the request has failed
                     result = {
-                        success: false,
+                        success:     false,
                         isException: false
                     };
 
@@ -645,8 +631,7 @@ xs.define('xs.data.Connection', function () {
                 // see: https://prototype.lighthouseapp.com/projects/8886/tickets/129-ie-mangles-http-response-status-code-204-to-1223
                 status = status == 1223 ? 204 : status;
 
-                var success = (status >= 200 && status < 300) || status == 304,
-                    isException = false;
+                var success = (status >= 200 && status < 300) || status == 304, isException = false;
 
                 if (!success) {
                     switch (status) {
@@ -661,7 +646,7 @@ xs.define('xs.data.Connection', function () {
                     }
                 }
                 return {
-                    success: success,
+                    success:     success,
                     isException: isException
                 };
             },
@@ -671,13 +656,8 @@ xs.define('xs.data.Connection', function () {
              * @private
              * @param {Object} request
              */
-            createResponse: function (request) {
-                var me = this,
-                    xhr = request.xhr,
-                    isXdr = me.isXdr,
-                    headers = {},
-                    lines = isXdr ? [] : xhr.getAllResponseHeaders().replace(/\r\n/g, '\n').split('\n'),
-                    response;
+            createResponse:    function (request) {
+                var me = this, xhr = request.xhr, isXdr = me.isXdr, headers = {}, lines = isXdr ? [] : xhr.getAllResponseHeaders().replace(/\r\n/g, '\n').split('\n'), response;
 
                 xs.eachReverse(lines, function (line) {
                     var index = line.indexOf(':');
@@ -695,17 +675,17 @@ xs.define('xs.data.Connection', function () {
                 delete request.xhr;
 
                 response = {
-                    request: request,
-                    requestId: request.id,
-                    status: xhr.status,
-                    statusText: xhr.statusText,
-                    getResponseHeader: function (header) {
+                    request:               request,
+                    requestId:             request.id,
+                    status:                xhr.status,
+                    statusText:            xhr.statusText,
+                    getResponseHeader:     function (header) {
                         return headers[header.toLowerCase()];
                     },
                     getAllResponseHeaders: function () {
                         return headers;
                     },
-                    ok: true
+                    ok:                    true
                 };
 
                 if (isXdr) {
@@ -745,15 +725,15 @@ xs.define('xs.data.Connection', function () {
              * @private
              * @param {Object} request
              */
-            createException: function (request) {
+            createException:   function (request) {
                 return {
-                    request: request,
-                    requestId: request.id,
-                    status: request.aborted ? -1 : 0,
+                    request:    request,
+                    requestId:  request.id,
+                    status:     request.aborted ? -1 : 0,
                     statusText: request.aborted ? 'transaction aborted' : 'communication failure',
-                    aborted: request.aborted,
-                    timedout: request.timedout,
-                    ok: false
+                    aborted:    request.aborted,
+                    timedout:   request.timedout,
+                    ok:         false
                 };
             }
 

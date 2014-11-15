@@ -71,9 +71,9 @@
         };
     });
     xs.extend(xs, {
-        raiseError: error.raise,
+        raiseError:          error.raise,
         raiseReferenceError: error.raiseReference,
-        raiseSyntaxError: error.raiseSyntax,
-        raiseTypeError: error.raiseType
+        raiseSyntaxError:    error.raiseSyntax,
+        raiseTypeError:      error.raiseType
     });
 })(window, 'xs');

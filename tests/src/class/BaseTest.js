@@ -25,13 +25,13 @@ xs.define('xs.class.Base.demo.Base', function (self) {
 });
 xs.define('xs.class.Base.demo.Parent', function (self) {
     return {
-        extend: 'xs.class.Base.demo.Base',
+        extend:      'xs.class.Base.demo.Base',
         constructor: function (config) {
             self.parent.call(this, config);
             this.propThree = config.c;
         },
-        properties: {
-            propTwo: 155,
+        properties:  {
+            propTwo:   155,
             propThree: {
                 set: function (value) {
                     return this.__set('propThree', '--' + value);
@@ -42,19 +42,19 @@ xs.define('xs.class.Base.demo.Parent', function (self) {
 });
 xs.define('demo.Child', function (self) {
     return {
-        extend: 'xs.class.Base.demo.Parent',
+        extend:      'xs.class.Base.demo.Parent',
         constructor: function (config) {
             self.parent.call(this, config);
             this.propFour = config.d;
         },
-        properties: {
-            propTwo: {
+        properties:  {
+            propTwo:   {
                 set: function (value) {
                     return this.__set('propTwo', '--++' + value);
                 }
             },
             propThree: 155,
-            propFour: {
+            propFour:  {
                 get: function () {
                     return this.__get('propFour') + '--++';
                 }

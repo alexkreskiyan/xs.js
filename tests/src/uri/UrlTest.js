@@ -10,13 +10,7 @@ function speed(fn, n) {
 }
 test('parse', function () {
     var url = xs.create('xs.uri.Url');
-    var proto = 'https',
-        host = 'mail.com',
-        port = 80,
-        path = 'asd/sdf/dsad',
-        params = 'x=1',
-        paramsStr = '{"x":1}',
-        hash = 'xx.ssdas';
+    var proto = 'https', host = 'mail.com', port = 80, path = 'asd/sdf/dsad', params = 'x=1', paramsStr = '{"x":1}', hash = 'xx.ssdas';
     //protocol-host-port-path-params-hash
     //000000 1
     url.fromString();
@@ -554,14 +548,14 @@ test('constructor', function () {
     //via config
     url = xs.create('xs.uri.Url', {
         protocol: 'http',
-        host: 'сай2.рф',
-        port: 88,
-        path: 'тестовый',
-        params: {
+        host:     'сай2.рф',
+        port:     88,
+        path:     'тестовый',
+        params:   {
             ф: 'ыв',
             x: 'asd'
         },
-        hash: 'йхуу;;$$asd'
+        hash:     'йхуу;;$$asd'
     });
     strictEqual(url.protocol, 'http', 'protocol');
     strictEqual(url.host, 'сай2.рф', 'host');
@@ -571,16 +565,16 @@ test('constructor', function () {
     strictEqual(url.hash, 'йхуу;;$$asd', 'hash');
     //both
     url = xs.create('xs.uri.Url', {
-        url: 'https://сайт.рф/тест?ф=б&x=y#фыв;;$$asd',
+        url:      'https://сайт.рф/тест?ф=б&x=y#фыв;;$$asd',
         protocol: 'http',
-        host: 'сай2.рф',
-        port: 88,
-        path: 'тестовый',
-        params: {
+        host:     'сай2.рф',
+        port:     88,
+        path:     'тестовый',
+        params:   {
             ф: 'ыв',
             x: 'asd'
         },
-        hash: 'йхуу;;$$asd'
+        hash:     'йхуу;;$$asd'
     });
     strictEqual(url.protocol, 'https', 'protocol');
     strictEqual(url.host, 'сайт.рф', 'host');

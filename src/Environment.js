@@ -32,11 +32,7 @@
         var parse = function (userAgent, rules, params) {
             var result = {};
             xs.Array.find(rules, function (rule) {
-                var defaults = xs.Array.clone(rule[0]),
-                    negativeRegExps = rule[1],
-                    positiveRegExps = rule[2],
-                    data = [],
-                    match;
+                var defaults = xs.Array.clone(rule[0]), negativeRegExps = rule[1], positiveRegExps = rule[2], data = [], match;
 
                 //check if userAgent doesn't match any one of negativeRegExps given in rule
                 match = xs.Array.some(negativeRegExps, function (regExp) {
@@ -110,14 +106,31 @@
             //location
             me.location = location;
             //set session variables with correct values
-            me.browser = parse(userAgent, rules.browser, ['name', 'major', 'minor', 'version']);
+            me.browser = parse(userAgent, rules.browser, [
+                'name',
+                'major',
+                'minor',
+                'version'
+            ]);
             me.browser.major = Number(me.browser.major);
             me.browser.minor = Number(me.browser.minor);
-            me.engine = parse(userAgent, rules.engine, ['name', 'major', 'minor', 'version']);
+            me.engine = parse(userAgent, rules.engine, [
+                'name',
+                'major',
+                'minor',
+                'version'
+            ]);
             me.engine.major = Number(me.engine.major);
             me.engine.minor = Number(me.engine.minor);
-            me.os = parse(userAgent, rules.os, ['name', 'version']);
-            me.device = parse(userAgent, rules.device, ['model', 'type', 'vendor']);
+            me.os = parse(userAgent, rules.os, [
+                'name',
+                'version'
+            ]);
+            me.device = parse(userAgent, rules.device, [
+                'model',
+                'type',
+                'vendor'
+            ]);
             me.cpu = parse(userAgent, rules.cpu, ['architecture']);
             //set shortcuts
             //for desktop os
@@ -135,7 +148,10 @@
             me.isPresto = me.engine.name == engine.presto;
             me.isTrident = me.engine.name == engine.trident;
             //desktop browsers
-            me.isChrome = xs.Array.has([browser.chrome, browser.chromium], me.browser.name);
+            me.isChrome = xs.Array.has([
+                browser.chrome,
+                browser.chromium
+            ], me.browser.name);
             me.isFirefox = me.browser.name == browser.firefox;
             me.isOpera = me.browser.name == browser.opera;
             me.isSafari = me.browser.name == browser.safari;
@@ -166,137 +182,208 @@
          * @type {Object}
          */
         var browser = {
-                chrome: 'chrome',
-                chromeMobile: 'chrome mobile',
-                chromium: 'chromium',
-                firefox: 'firefox',
-                firefoxMobile: 'firefox mobile',
-                waterfox: 'waterfox',
-                safari: 'safari',
-                safariMobile: 'safari mobile',
-                opera: 'opera',
-                operaMobile: 'opera mobile',
-                operaMini: 'opera mini',
-                ie: 'ie',
-                ieMobile: 'ie mobile',
-                yabrowser: 'yabrowser'
-            },
-            engine = {
-                webkit: 'webkit',
-                blink: 'blink',
-                gecko: 'gecko',
-                presto: 'presto',
-                trident: 'trident'
-            },
-            os = {
-                linux: 'linux',
-                windows: 'windows',
-                windowsPhone: 'windows phone',
-                android: 'android',
-                osx: 'os x',
-                ios: 'ios'
-            },
-            device = {
-                mobile: 'mobile',
-                tablet: 'tablet'
-            },
-            arch = {
-                x32: '32',
-                x64: '64'
-            };
+            chrome:        'chrome',
+            chromeMobile:  'chrome mobile',
+            chromium:      'chromium',
+            firefox:       'firefox',
+            firefoxMobile: 'firefox mobile',
+            waterfox:      'waterfox',
+            safari:        'safari',
+            safariMobile:  'safari mobile',
+            opera:         'opera',
+            operaMobile:   'opera mobile',
+            operaMini:     'opera mini',
+            ie:            'ie',
+            ieMobile:      'ie mobile',
+            yabrowser:     'yabrowser'
+        }, engine = {
+            webkit:  'webkit',
+            blink:   'blink',
+            gecko:   'gecko',
+            presto:  'presto',
+            trident: 'trident'
+        }, os = {
+            linux:        'linux',
+            windows:      'windows',
+            windowsPhone: 'windows phone',
+            android:      'android',
+            osx:          'os x',
+            ios:          'ios'
+        }, device = {
+            mobile: 'mobile',
+            tablet: 'tablet'
+        }, arch = {
+            x32: '32',
+            x64: '64'
+        };
         var rules = {
             browser: [
                 [
                     [browser.chrome],
-                    [/chromium/, /mobile/, /yabrowser/, /opr\//],
-                    [/chrome\/([\d]+)\.([\d]+)/, /chrome\/([\d\.]+)/]
+                    [
+                        /chromium/,
+                        /mobile/,
+                        /yabrowser/,
+                        /opr\//
+                    ],
+                    [
+                        /chrome\/([\d]+)\.([\d]+)/,
+                        /chrome\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [browser.chromeMobile],
                     [/yabrowser/],
-                    [/mobile/, /(?:chrome|crios)\/([\d]+)\.([\d]+)/, /(?:chrome|crios)\/([\d\.]+)/]
+                    [
+                        /mobile/,
+                        /(?:chrome|crios)\/([\d]+)\.([\d]+)/,
+                        /(?:chrome|crios)\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [browser.chromium],
                     [],
-                    [/chromium\/([\d]+)\.([\d]+)/, /chromium\/([\d\.]+)/]
+                    [
+                        /chromium\/([\d]+)\.([\d]+)/,
+                        /chromium\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [browser.firefox],
                     [/waterfox/],
-                    [/firefox\/([\d]+)\.([\d]+)/, /firefox\/([\d\.]+)/]
+                    [
+                        /firefox\/([\d]+)\.([\d]+)/,
+                        /firefox\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [browser.waterfox],
                     [],
-                    [/waterfox/, /firefox\/([\d]+)\.([\d]+)/, /firefox\/([\d\.]+)/]
+                    [
+                        /waterfox/,
+                        /firefox\/([\d]+)\.([\d]+)/,
+                        /firefox\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [browser.safari],
-                    [/chrome/, /mobile/],
-                    [/safari/, /version\/([\d]+)\.([\d]+)/, /version\/([\d\.]+)/]
+                    [
+                        /chrome/,
+                        /mobile/
+                    ],
+                    [
+                        /safari/,
+                        /version\/([\d]+)\.([\d]+)/,
+                        /version\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [browser.safariMobile],
                     [/chrome/],
-                    [/mobile/, /version\/([\d]+)\.([\d]+)/, /version\/([\d\.]+)/]
+                    [
+                        /mobile/,
+                        /version\/([\d]+)\.([\d]+)/,
+                        /version\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [browser.opera],
                     [],
-                    [/opera/, /version\/([\d]+)\.([\d]+)/, /version\/([\d\.]+)/]
+                    [
+                        /opera/,
+                        /version\/([\d]+)\.([\d]+)/,
+                        /version\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [browser.opera],
                     [],
-                    [/opr\/([\d]+)\.([\d]+)/, /opr\/([\d\.]+)/]
+                    [
+                        /opr\/([\d]+)\.([\d]+)/,
+                        /opr\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [browser.ie],
                     [/iemobile/],
-                    [/msie\s([\d]+)\.([\d]+)/, /msie\s([\d\.]+)/]
+                    [
+                        /msie\s([\d]+)\.([\d]+)/,
+                        /msie\s([\d\.]+)/
+                    ]
                 ],
                 [
-                    [browser.ie, '11', '0', '11.0'],
+                    [
+                        browser.ie,
+                        '11',
+                        '0',
+                        '11.0'
+                    ],
                     [/iemobile/],
                     [/trident\/7/]
                 ],
                 [
                     [browser.ieMobile],
                     [],
-                    [/iemobile\/([\d]+)\.([\d]+)/, /iemobile\/([\d\.]+)/]
+                    [
+                        /iemobile\/([\d]+)\.([\d]+)/,
+                        /iemobile\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [browser.yabrowser],
                     [],
-                    [/yabrowser\/([\d]+)\.([\d]+)/, /yabrowser\/([\d\.]+)/]
+                    [
+                        /yabrowser\/([\d]+)\.([\d]+)/,
+                        /yabrowser\/([\d\.]+)/
+                    ]
                 ]
             ],
-            engine: [
+            engine:  [
                 [
                     [engine.webkit],
-                    [/opr\//, /yabrowser\//, /(?:chrome|crios)\/(?:2[8-9]|[3-9][0-9])\./],
-                    [/applewebkit\/([\d]+)\.([\d]+)/, /applewebkit\/([\d\.]+)/]
+                    [
+                        /opr\//,
+                        /yabrowser\//,
+                        /(?:chrome|crios)\/(?:2[8-9]|[3-9][0-9])\./
+                    ],
+                    [
+                        /applewebkit\/([\d]+)\.([\d]+)/,
+                        /applewebkit\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [engine.blink],
                     [/chrome\/(?:[1-9]|1[0-9]|2[0-7])\./],
-                    [/(?:opr|crios|chrome|yabrowser)\//, /applewebkit\/([\d]+)\.([\d]+)/, /applewebkit\/([\d\.]+)/]
+                    [
+                        /(?:opr|crios|chrome|yabrowser)\//,
+                        /applewebkit\/([\d]+)\.([\d]+)/,
+                        /applewebkit\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [engine.gecko],
                     [],
-                    [/gecko\//, /rv:([\d]+)\.([\d]+)/, /rv:([\d\.]+)/]
+                    [
+                        /gecko\//,
+                        /rv:([\d]+)\.([\d]+)/,
+                        /rv:([\d\.]+)/
+                    ]
                 ],
                 [
                     [engine.presto],
                     [],
-                    [/presto\/([\d]+)\.([\d]+)/, /presto\/([\d\.]+)/]
+                    [
+                        /presto\/([\d]+)\.([\d]+)/,
+                        /presto\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [engine.trident],
                     [],
-                    [/trident\/([\d]+)\.([\d]+)/, /trident\/([\d\.]+)/]
+                    [
+                        /trident\/([\d]+)\.([\d]+)/,
+                        /trident\/([\d\.]+)/
+                    ]
                 ],
                 [
                     [engine.trident],
@@ -304,34 +391,49 @@
                     [/msie/]
                 ]
             ],
-            os: [
+            os:      [
                 [
                     [os.linux],
                     [/android/],
                     [/linux\s/]
                 ],
                 [
-                    [os.windows, 'xp'],
+                    [
+                        os.windows,
+                        'xp'
+                    ],
                     [],
                     [/windows\snt\s5\.(?:1|2)/]
                 ],
                 [
-                    [os.windows, 'vista'],
+                    [
+                        os.windows,
+                        'vista'
+                    ],
                     [],
                     [/windows\snt\s6\.0/]
                 ],
                 [
-                    [os.windows, '7'],
+                    [
+                        os.windows,
+                        '7'
+                    ],
                     [],
                     [/windows\snt\s6\.1/]
                 ],
                 [
-                    [os.windows, '8'],
+                    [
+                        os.windows,
+                        '8'
+                    ],
                     [],
                     [/windows\snt\s6\.2/]
                 ],
                 [
-                    [os.windows, '8.1'],
+                    [
+                        os.windows,
+                        '8.1'
+                    ],
                     [],
                     [/windows\snt\s6\.3/]
                 ],
@@ -346,89 +448,157 @@
                     [/android\s([\d\.]+)/]
                 ],
                 [
-                    [os.osx, [/([\d]+)(?:_|\.)([\d]+)(?:_|\.)([\d]+)/, '$1.$2.$3']],
+                    [
+                        os.osx,
+                        [
+                            /([\d]+)(?:_|\.)([\d]+)(?:_|\.)([\d]+)/,
+                            '$1.$2.$3'
+                        ]
+                    ],
                     [],
                     [/os\sx\s([\d_\.]+)/]
                 ],
                 [
-                    [os.ios, [/([\d]+)(?:_|\.)([\d]+)(?:_|\.)([\d]+)/, '$1.$2.$3']],
+                    [
+                        os.ios,
+                        [
+                            /([\d]+)(?:_|\.)([\d]+)(?:_|\.)([\d]+)/,
+                            '$1.$2.$3'
+                        ]
+                    ],
                     [],
                     [/iphone\sos\s([\d_\.]+)/]
                 ]
             ],
-            device: [
+            device:  [
                 [
-                    ['k900', device.mobile, 'lenovo'],
+                    [
+                        'k900',
+                        device.mobile,
+                        'lenovo'
+                    ],
                     [],
                     [/k900/]
                 ],
                 [
-                    ['xperia ion', device.mobile, 'sony'],
+                    [
+                        'xperia ion',
+                        device.mobile,
+                        'sony'
+                    ],
                     [],
                     [/lt28h/]
                 ],
                 [
-                    [null, device.mobile, 'google'],
+                    [
+                        null,
+                        device.mobile,
+                        'google'
+                    ],
                     [],
                     [/(nexus\s(?:4|5|6)+)/]
                 ],
                 [
-                    [null, device.tablet, 'google'],
+                    [
+                        null,
+                        device.tablet,
+                        'google'
+                    ],
                     [],
                     [/(nexus\s(?:7|8|9|10)+)/]
                 ],
                 [
-                    ['galaxy s4', device.mobile, 'samsung'],
+                    [
+                        'galaxy s4',
+                        device.mobile,
+                        'samsung'
+                    ],
                     [],
                     [/gt-i950[\d]{1}/]
                 ],
                 [
-                    ['galaxy mega', device.mobile, 'samsung'],
+                    [
+                        'galaxy mega',
+                        device.mobile,
+                        'samsung'
+                    ],
                     [],
                     [/gt-i920[\d]{1}/]
                 ],
                 [
-                    ['iphone', device.mobile, 'apple'],
+                    [
+                        'iphone',
+                        device.mobile,
+                        'apple'
+                    ],
                     [],
                     [/iphone/]
                 ],
                 [
-                    ['galaxy note 3', device.mobile, 'samsung'],
+                    [
+                        'galaxy note 3',
+                        device.mobile,
+                        'samsung'
+                    ],
                     [],
                     [/sm-n900/]
                 ],
                 [
-                    ['galaxy s4 mini', device.mobile, 'samsung'],
+                    [
+                        'galaxy s4 mini',
+                        device.mobile,
+                        'samsung'
+                    ],
                     [],
                     [/gt-i9190/]
                 ],
                 [
-                    ['xenium w6610', device.mobile, 'philips'],
+                    [
+                        'xenium w6610',
+                        device.mobile,
+                        'philips'
+                    ],
                     [],
                     [/philips\sw6610/]
                 ],
                 [
-                    ['galaxy s4 mini duos', device.mobile, 'samsung'],
+                    [
+                        'galaxy s4 mini duos',
+                        device.mobile,
+                        'samsung'
+                    ],
                     [],
                     [/gt-i9192/]
                 ],
                 [
-                    ['zopo captain s', device.mobile, 'zopo'],
+                    [
+                        'zopo captain s',
+                        device.mobile,
+                        'zopo'
+                    ],
                     [],
                     [/zp990/]
                 ],
                 [
-                    ['galaxy ace 3', device.mobile, 'samsung'],
+                    [
+                        'galaxy ace 3',
+                        device.mobile,
+                        'samsung'
+                    ],
                     [],
                     [/gt-s7270/]
                 ],
                 [
-                    ['lumia 625', device.mobile, 'nokia'],
+                    [
+                        'lumia 625',
+                        device.mobile,
+                        'nokia'
+                    ],
                     [],
                     [/lumia\s625/]
                 ]
             ],
-            cpu: [
+            cpu:     [
                 [
                     [arch.x64],
                     [],
@@ -441,7 +611,10 @@
                 ],
                 [
                     [arch.x32],
-                    [/(?:x|wow)64/, /phone/],
+                    [
+                        /(?:x|wow)64/,
+                        /phone/
+                    ],
                     [/windows/]
                 ]
             ]
@@ -450,43 +623,42 @@
     });
     xs.extend(xs, {
         //commons
-        userAgent: xs.env.userAgent,
-        location: xs.env.location,
-        browser: xs.env.browser,
-        engine: xs.env.engine,
-        os: xs.env.os,
-        device: xs.env.device,
-        cpu: xs.env.cpu,
+        userAgent:       xs.env.userAgent,
+        location:        xs.env.location,
+        browser:         xs.env.browser,
+        engine:          xs.env.engine,
+        os:              xs.env.os,
+        device:          xs.env.device,
+        cpu:             xs.env.cpu,
         //shortcuts
         //desktop os
-        isLinux: xs.env.isLinux,
-        isWindows: xs.env.isWindows,
-        isMac: xs.env.isMac,
+        isLinux:         xs.env.isLinux,
+        isWindows:       xs.env.isWindows,
+        isMac:           xs.env.isMac,
         //mobile os
-        isAndroid: xs.env.isAndroid,
-        isiOS: xs.env.isiOS,
-        isWindowsPhone: xs.env.isWindowsPhone,
+        isAndroid:       xs.env.isAndroid,
+        isiOS:           xs.env.isiOS,
+        isWindowsPhone:  xs.env.isWindowsPhone,
         //engines
-        isWebkit: xs.env.isWebkit,
-        isBlink: xs.env.isBlink,
-        isGecko: xs.env.isGecko,
-        isPresto: xs.env.isPresto,
-        isTrident: xs.env.isTrident,
+        isWebkit:        xs.env.isWebkit,
+        isBlink:         xs.env.isBlink,
+        isGecko:         xs.env.isGecko,
+        isPresto:        xs.env.isPresto,
+        isTrident:       xs.env.isTrident,
         //desktop browsers
-        isChrome: xs.env.isChrome,
-        isFirefox: xs.env.isFirefox,
-        isOpera: xs.env.isOpera,
-        isSafari: xs.env.isSafari,
-        isIE: xs.env.isIE,
+        isChrome:        xs.env.isChrome,
+        isFirefox:       xs.env.isFirefox,
+        isOpera:         xs.env.isOpera,
+        isSafari:        xs.env.isSafari,
+        isIE:            xs.env.isIE,
         //mobile browsers
-        isChromeMobile: xs.env.isChromeMobile,
+        isChromeMobile:  xs.env.isChromeMobile,
         isFirefoxMobile: xs.env.isFirefoxMobile,
-        isOperaMobile: xs.env.isOperaMobile,
-        isSafariMobile: xs.env.isSafariMobile,
-        isIEMobile: xs.env.isIEMobile,
+        isOperaMobile:   xs.env.isOperaMobile,
+        isSafariMobile:  xs.env.isSafariMobile,
+        isIEMobile:      xs.env.isIEMobile,
         //arch
-        is32: xs.env.is32,
-        is64: xs.env.is64
+        is32:            xs.env.is32,
+        is64:            xs.env.is64
     });
-})
-(window, 'xs');
+})(window, 'xs');

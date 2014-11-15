@@ -72,7 +72,7 @@ test('5. Create demo', function () {
                 me.a = config.a;
                 me.b = arguments[1];
             },
-            properties: {
+            properties:  {
                 a: undefined,
                 b: undefined
             }

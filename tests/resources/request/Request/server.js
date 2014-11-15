@@ -19,12 +19,7 @@ server.listen(3001);
 
 function display_form(request, response) {
     response.writeHead(200, {'Content-Type': 'text/html'});
-    response.write(
-            '<form action="/upload" method="post" enctype="multipart/form-data">' +
-            '<input type="file" name="upload-file">' +
-            '<input type="submit" value="Upload">' +
-            '</form>'
-    );
+    response.write('<form action="/upload" method="post" enctype="multipart/form-data">' + '<input type="file" name="upload-file">' + '<input type="submit" value="Upload">' + '</form>');
     response.end();
 }
 
@@ -34,11 +29,11 @@ function upload_file(request, response) {
     var file = fs.createWriteStream(filePath);
     request.pipe(file);
     var total = {
-        b: request.headers['content-length'],
+        b:  request.headers['content-length'],
         mb: (request.headers['content-length'] / (1024 * 1024)).toFixed(2)
     };
     var uploaded = {
-        b: 0,
+        b:  0,
         mb: 0
     };
     var body = '';
@@ -63,18 +58,18 @@ function send_file(filePath, response) {
     var stat = fs.statSync(filePath);
 
     response.writeHead(200, {
-        'Content-Type': 'text/html',
+        'Content-Type':   'text/html',
         'Content-Length': stat.size
     });
 
     var readStream = fs.createReadStream(filePath);
 
     var total = {
-        b: stat.size,
+        b:  stat.size,
         mb: (stat.size / (1024 * 1024)).toFixed(2)
     };
     var downloaded = {
-        b: 0,
+        b:  0,
         mb: 0
     };
 

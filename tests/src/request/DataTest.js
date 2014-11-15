@@ -53,7 +53,10 @@ test('toQueryString', function () {
         []
     ]}), 'x[0]=', 'from complex string without value 1');
     strictEqual(encode({x: [
-        [1, 2],
+        [
+            1,
+            2
+        ],
         3,
         4
     ]}), 'x[0][0]=1&x[0][1]=2&x[1]=3&x[2]=4', 'from complex string without value 2');
@@ -67,7 +70,10 @@ test('toQueryString', function () {
         'тест'
     ]}, true), 'x[0]=&x[1]=%D1%82%D0%B5%D1%81%D1%82', 'from complex string without value 1');
     strictEqual(encode({x: [
-        [1, 'тест'],
+        [
+            1,
+            'тест'
+        ],
         3,
         4
     ]}, true), 'x[0][0]=1&x[0][1]=%D1%82%D0%B5%D1%81%D1%82&x[1]=3&x[2]=4', 'from complex string without value 2');
@@ -105,20 +111,20 @@ test('constructor', function () {
     //test constructor with all params
     //test constructor without any params
     var p = {
-        url: 'https://тест.me/com/[a=1]/?x=1#asd',
-        reqUrl: 'https://тест.me/com/[a=1]/#asd',
-        method: 'post',
-        params: {x: 3},
-        user: 'alex',
-        password: 'lord',
-        async: false,
-        credentials: true,
-        headers: {
+        url:             'https://тест.me/com/[a=1]/?x=1#asd',
+        reqUrl:          'https://тест.me/com/[a=1]/#asd',
+        method:          'post',
+        params:          {x: 3},
+        user:            'alex',
+        password:        'lord',
+        async:           false,
+        credentials:     true,
+        headers:         {
             'Custom-header': 'Custom-header-value'
         },
-        timeout: 500,
-        isCrossDomain: true,
-        isXhr: !(xs.isIE && xs.browser.major <= 9),
+        timeout:         500,
+        isCrossDomain:   true,
+        isXhr:           !(xs.isIE && xs.browser.major <= 9),
         postContentType: 'application/x-www-form-urlencoded'
     };
     req = xs.create('xs.request.Request', p);

@@ -23,13 +23,13 @@ asyncTest('base', function () {
     }
     fn().then(function (value) {
         result += 2 * value;
-    }, null,function (progress) {
+    }, null, function (progress) {
         result *= progress;
     }).always(function () {
-            result *= 5;
-        }).otherwise(function (reason) {
-            result /= reason;
-        });
+        result *= 5;
+    }).otherwise(function (reason) {
+        result /= reason;
+    });
     var result = 1;
     setTimeout(function () {
         start();
@@ -51,10 +51,10 @@ asyncTest('done', function () {
     fn().then(function (value) {
         console.log('resolved', value, result);
         result += 2 * value;
-    },function (reason) {
+    }, function (reason) {
         console.log('rejected', reason, result);
         result += 3 * reason;
-    },function (progress) {
+    }, function (progress) {
         console.log('progress', progress, result);
         result *= progress;
     }).done();
@@ -78,9 +78,9 @@ asyncTest('cancel', function () {
     }
     fn().then(function (value) {
         result += 2 * value;
-    },function (reason) {
+    }, function (reason) {
         result += 3 * reason;
-    },function (progress) {
+    }, function (progress) {
         result *= progress;
     }).cancel(7);
     var result = 1;

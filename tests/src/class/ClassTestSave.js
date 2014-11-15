@@ -13,12 +13,12 @@ module('xs.Class');
 function xsStart(suffix) {
     xs.define('xs.class.Class.demo.Base' + suffix, function (self) {
         return {
-            const: {
+            const:      {
                 a: function () {
                     return 'a!';
                 }
             },
-            static: {
+            static:     {
                 properties: {
                     propOne: {
                         get: function () {
@@ -30,7 +30,7 @@ function xsStart(suffix) {
                     },
                     propTwo: 11
                 },
-                methods: {
+                methods:    {
                     metOne: function (a, b) {
                         return a + b + 'base.static.a';
                     },
@@ -50,7 +50,7 @@ function xsStart(suffix) {
                 },
                 propTwo: 15
             },
-            methods: {
+            methods:    {
                 metOne: function (a, b) {
                     return a + b + 'base.a';
                 },
@@ -62,28 +62,28 @@ function xsStart(suffix) {
     });
     xs.define('xs.class.Class.demo.Parent' + suffix, function (self) {
         return {
-            extend: 'xs.class.Class.demo.Base',
+            extend:      'xs.class.Class.demo.Base',
             constructor: function (config) {
                 var parent = xs.class.Class.demo.Parent.parent;
                 parent.call(this, config);
                 this.propThree = config.propThree;
             },
-            const: {
+            const:       {
                 b: function () {
                     return 'bb!!';
                 }
             },
-            static: {
+            static:      {
                 properties: {
-                    propTwo: 111,
+                    propTwo:   111,
                     propThree: {
                         set: function (value) {
                             return this.__set('propThree', '-' + value);
                         }
                     }
                 },
-                methods: {
-                    metTwo: function (a, b) {
+                methods:    {
+                    metTwo:   function (a, b) {
                         return a + b + 'parent.static.b';
                     },
                     metThree: function (a, b) {
@@ -92,16 +92,16 @@ function xsStart(suffix) {
                     }
                 }
             },
-            properties: {
-                propTwo: 155,
+            properties:  {
+                propTwo:   155,
                 propThree: {
                     set: function (value) {
                         return this.__set('propThree', '--' + value);
                     }
                 }
             },
-            methods: {
-                metTwo: function (a, b) {
+            methods:     {
+                metTwo:   function (a, b) {
                     return a + b + 'parent.b';
                 },
                 metThree: function (a, b) {
@@ -113,34 +113,34 @@ function xsStart(suffix) {
     });
     xs.define('xs.class.Class.demo.Child' + suffix, function (self) {
         return {
-            extend: 'xs.class.Class.demo.Parent',
+            extend:      'xs.class.Class.demo.Parent',
             constructor: function (config) {
                 var parent = xs.class.Class.demo.Child.parent;
                 parent.call(this, config);
                 this.propFour = config.propFour;
             },
-            const: {
+            const:       {
                 c: function () {
                     return 'ccc!!!';
                 }
             },
-            static: {
+            static:      {
                 properties: {
                     propThree: {
-                        set: function (value) {
+                        set:     function (value) {
                             return this.__set('propThree', '-+' + value);
                         },
                         default: 5
                     },
-                    propFour: {
-                        get: function () {
+                    propFour:  {
+                        get:     function () {
                             return this.__get('propFour') + '-+';
                         },
                         default: 6
                     }
                 },
-                methods: {
-                    metOne: function (a, b) {
+                methods:    {
+                    metOne:   function (a, b) {
                         return a + b + 'child.static.a';
                     },
                     metThree: function (a, b) {
@@ -149,22 +149,22 @@ function xsStart(suffix) {
                     }
                 }
             },
-            properties: {
-                propTwo: {
+            properties:  {
+                propTwo:   {
                     set: function (value) {
                         return this.__set('propTwo', '--++' + value);
                     }
                 },
                 propThree: 155,
-                propFour: {
+                propFour:  {
                     get: function () {
                         return this.__get('propFour') + '--++';
                     }
                 }
 
             },
-            methods: {
-                metOne: function (a, b) {
+            methods:     {
+                metOne:   function (a, b) {
                     return a + b + 'child.a';
                 },
                 metThree: function (a, b) {
@@ -290,14 +290,14 @@ test('4. Constructor: inheritance', function () {
             constructor: function (config) {
                 this.a = config.a;
             },
-            properties: {
+            properties:  {
                 a: 1
             }
         };
     });
     xs.define('inherited.Child', function (self) {
         return {
-            extend: 'inherited.Parent',
+            extend:     'inherited.Parent',
             properties: {
                 b: 2
             }
@@ -673,8 +673,8 @@ test('10. Creation with attributes: base', function () {
 test('10. Creation with attributes: parent', function () {
     //get class instance
     var inst = xs.create('xs.class.Class.demo.Parent', {
-        propOne: 2,
-        propTwo: 74,
+        propOne:   2,
+        propTwo:   74,
         propThree: 89
     });
     //check instance properties
@@ -685,10 +685,10 @@ test('10. Creation with attributes: parent', function () {
 test('10. Creation with attributes: child', function () {
     //get class instance
     var inst = xs.create('xs.class.Class.demo.Child', {
-        propOne: 4,
-        propTwo: 74,
+        propOne:   4,
+        propTwo:   74,
         propThree: 89,
-        propFour: 32
+        propFour:  32
     });
     //check instance properties
     strictEqual(inst.propOne, 'undefined!!', 'property "propOne" of class xs.class.Class.demo.Child instance assigned correctly');
@@ -700,18 +700,18 @@ test('11. Singleton: base', function () {
     //get class instance
     xs.define('xs.class.Class.demo.Single', function (self) {
         return {
-            extend: 'xs.class.Class.demo.Base',
-            singleton: true,
-            const: {
+            extend:     'xs.class.Class.demo.Base',
+            singleton:  true,
+            const:      {
                 a: 1
             },
-            static: {
+            static:     {
                 properties: {
                     b: 2
                 },
-                methods: {
+                methods:    {
                     c: {
-                        fn: function (value) {
+                        fn:      function (value) {
                             return value;
                         },
                         default: [3]
@@ -721,7 +721,7 @@ test('11. Singleton: base', function () {
             properties: {
                 d: 4
             },
-            methods: {
+            methods:    {
                 e: function (value) {
                     return value;
                 }

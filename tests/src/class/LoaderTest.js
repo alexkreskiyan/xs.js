@@ -14,199 +14,237 @@ module('xs.Base');
 function xsStart(suffix) {
     xs.define('demo.Base' + suffix, {
         constructor: {
-            fn: function (a, b) {
+            fn:      function (a, b) {
                 this.propOne = a;
                 this.propTwo = b;
             },
-            default: [1, 2]
+            default: [
+                1,
+                2
+            ]
         },
-        const: {
+        const:       {
             a: function () {
                 return 'a!';
             }
         },
-        static: {
+        static:      {
             properties: {
                 propOne: {
-                    get: function () {
+                    get:     function () {
                         return this.__get('propOne') + '!';
                     },
-                    set: function (value) {
+                    set:     function (value) {
                         return this.__set('propOne', '?' + value);
                     },
                     default: 1
                 },
                 propTwo: 11
             },
-            methods: {
+            methods:    {
                 metOne: function (a, b) {
                     return a + b + 'base.static.a';
                 },
                 metTwo: {
-                    fn: function (a, b) {
+                    fn:      function (a, b) {
                         return a + b + 'base.static.b';
                     },
-                    default: [1, 2]
+                    default: [
+                        1,
+                        2
+                    ]
                 }
             }
         },
-        properties: {
+        properties:  {
             propOne: {
-                get: function () {
+                get:     function () {
                     return this.__get('propOne') + '!!';
                 },
-                set: function (value) {
+                set:     function (value) {
                     return this.__set('propOne', '??' + value);
                 },
                 default: 12
             },
             propTwo: 15
         },
-        methods: {
+        methods:     {
             metOne: function (a, b) {
                 return a + b + 'base.a';
             },
             metTwo: {
-                fn: function (a, b) {
+                fn:      function (a, b) {
                     return a + b + 'base.b';
                 },
-                default: [2, 3]
+                default: [
+                    2,
+                    3
+                ]
             }
         }
     });
     xs.define('demo.Parent' + suffix, {
-        extend: 'demo.Base',
+        extend:      'demo.Base',
         constructor: {
-            fn: function (a, b, c) {
+            fn:      function (a, b, c) {
                 var parent = demo.Parent.parent;
-                parent.call(this, [a, b]);
+                parent.call(this, [
+                    a,
+                    b
+                ]);
                 this.propThree = c;
             },
-            default: [2, 4]
+            default: [
+                2,
+                4
+            ]
         },
-        const: {
+        const:       {
             b: function () {
                 return 'bb!!';
             }
         },
-        static: {
+        static:      {
             properties: {
-                propTwo: 111,
+                propTwo:   111,
                 propThree: {
-                    set: function (value) {
+                    set:     function (value) {
                         return this.__set('propThree', '-' + value);
                     },
                     default: 1
                 }
             },
-            methods: {
-                metTwo: {
-                    fn: function (a, b) {
+            methods:    {
+                metTwo:   {
+                    fn:      function (a, b) {
                         return a + b + 'parent.static.b';
                     },
-                    default: [1, 2]
+                    default: [
+                        1,
+                        2
+                    ]
                 },
                 metThree: {
-                    fn: function (a, b) {
+                    fn:      function (a, b) {
                         var parent = demo.Parent.parent;
                         return parent.metTwo.call(this, a - 1, b + 1);
                     },
-                    wrap: true,
-                    default: [3, 4]
+                    wrap:    true,
+                    default: [
+                        3,
+                        4
+                    ]
                 }
             }
         },
-        properties: {
-            propTwo: 155,
+        properties:  {
+            propTwo:   155,
             propThree: {
                 set: function (value) {
                     return this.__set('propThree', '--' + value);
                 }
             }
         },
-        methods: {
-            metTwo: {
-                fn: function (a, b) {
+        methods:     {
+            metTwo:   {
+                fn:      function (a, b) {
                     return a + b + 'parent.b';
                 },
-                default: [3, 4]
+                default: [
+                    3,
+                    4
+                ]
             },
             metThree: {
-                fn: function (a, b) {
+                fn:      function (a, b) {
                     var parent = demo.Parent.parent.prototype;
                     return parent.metTwo.call(this, a - 10, b + 1);
                 },
-                wrap: true,
-                default: [5, 6]
+                wrap:    true,
+                default: [
+                    5,
+                    6
+                ]
             }
         }
     });
     xs.define('demo.Child' + suffix, {
-        extend: 'demo.Parent',
+        extend:      'demo.Parent',
         constructor: {
-            fn: function (a, b, c, d) {
+            fn:      function (a, b, c, d) {
                 var parent = demo.Child.parent;
-                parent.call(this, [a, b, c]);
+                parent.call(this, [
+                    a,
+                    b,
+                    c
+                ]);
                 this.propFour = d;
             },
-            default: [4, 8, 12]
+            default: [
+                4,
+                8,
+                12
+            ]
         },
-        const: {
+        const:       {
             c: function () {
                 return 'ccc!!!';
             }
         },
-        static: {
+        static:      {
             properties: {
                 propThree: {
-                    set: function (value) {
+                    set:     function (value) {
                         return this.__set('propThree', '-+' + value);
                     },
                     default: 5
                 },
-                propFour: {
-                    get: function () {
+                propFour:  {
+                    get:     function () {
                         return this.__get('propFour') + '-+';
                     },
                     default: 6
                 }
             },
-            methods: {
-                metOne: function (a, b) {
+            methods:    {
+                metOne:   function (a, b) {
                     return a + b + 'child.static.a';
                 },
                 metThree: {
-                    fn: function (a, b) {
+                    fn:      function (a, b) {
                         var parent = demo.Child.parent;
                         return parent.metThree.call(this, a + 3, b + 1);
                     },
-                    wrap: true,
-                    default: [3, 4]
+                    wrap:    true,
+                    default: [
+                        3,
+                        4
+                    ]
                 }
             }
         },
-        properties: {
-            propTwo: {
-                set: function (value) {
+        properties:  {
+            propTwo:   {
+                set:     function (value) {
                     return this.__set('propTwo', '--++' + value);
                 },
                 default: 7
             },
             propThree: 155,
-            propFour: {
-                get: function () {
+            propFour:  {
+                get:     function () {
                     return this.__get('propFour') + '--++';
                 },
                 default: 8
             }
 
         },
-        methods: {
-            metOne: function (a, b) {
+        methods:     {
+            metOne:   function (a, b) {
                 return a + b + 'child.a';
             },
             metThree: {
-                fn: function (a, b) {
+                fn:   function (a, b) {
                     var parent = demo.Child.parent.prototype;
                     return parent.metThree.call(this, a + 3, b + 1);
                 },
@@ -706,18 +744,18 @@ module('11. Singleton');
 test('base', function () {
     //get class instance
     xs.define('demo.Single', {
-        extend: 'demo.Base',
-        singleton: true,
-        const: {
+        extend:     'demo.Base',
+        singleton:  true,
+        const:      {
             a: 1
         },
-        static: {
+        static:     {
             properties: {
                 b: 2
             },
-            methods: {
+            methods:    {
                 c: {
-                    fn: function (value) {
+                    fn:      function (value) {
                         return value;
                     },
                     default: [3]
@@ -727,9 +765,9 @@ test('base', function () {
         properties: {
             d: 4
         },
-        methods: {
+        methods:    {
             e: {
-                fn: function (value) {
+                fn:      function (value) {
                     return value;
                 },
                 default: [5]
