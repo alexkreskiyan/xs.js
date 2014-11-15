@@ -148,7 +148,7 @@
          *  - before, (relativeTo is required)
          *  - after (relativeTo is required)
          *
-         * @param {string} relativeTo name of processor, presented in stack, relative to which new item's position is evaluated
+         * @param {string} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
          */
         me.reorder = function (name, position, relativeTo) {
             apply(name, position, relativeTo);
@@ -256,12 +256,15 @@
          *
          * For verifier:
          *
+         *  - Class
          *  - descriptor
+         *  - namespace
          *
          * For handler:
          *
          *  - Class
          *  - descriptor
+         *  - namespace
          *
          * @property preProcessors
          *
@@ -276,12 +279,15 @@
          *
          * For verifier:
          *
+         *  - Class
          *  - descriptor
+         *  - namespace
          *
          * For handler:
          *
          *  - Class
          *  - descriptor
+         *  - namespace
          *
          * @property postProcessors
          *
@@ -379,7 +385,7 @@
 
             //descFn must be function
             if (!xs.isFunction(descFn)) {
-                throw new Error('Class descriptor must be function');
+                throw new Error('Class descriptor must be evaluated function');
             }
 
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
@@ -387,19 +393,38 @@
             //create class
             var Class = createClass();
 
+            //get descriptor
+            var namespace = {};
+            var descriptor = descFn(Class, namespace);
+
+            //check descriptor is object
+            if (!xs.isObject(descriptor)) {
+                throw new Error('Evaluated class descriptor must be object');
+            }
+
             //save Class descriptor
-            xs.const(Class, 'descriptor', descFn(Class, {}));
+            xs.const(Class, 'descriptor', descriptor);
 
             //process preProcessors stack before createdFn called
-            preProcessors.process([Class.descriptor], [
+            preProcessors.process([
                 Class,
-                Class.descriptor
+                descriptor,
+                namespace
+            ], [
+                Class,
+                descriptor,
+                namespace
             ], function () {
                 createdFn(Class);
                 //process postProcessors stack before createdFn called
-                postProcessors.process([Class.descriptor], [
+                postProcessors.process([
                     Class,
-                    Class.descriptor
+                    descriptor,
+                    namespace
+                ], [
+                    Class,
+                    descriptor,
+                    namespace
                 ]);
             });
 
