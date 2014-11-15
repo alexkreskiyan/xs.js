@@ -55,7 +55,7 @@
                 'before',
                 'after'
             ], position)) {
-                throw new Exception('Incorrect position given');
+                throw new Error('Incorrect position given');
             }
 
             //get current keys
@@ -70,7 +70,7 @@
             } else {
                 var relativeKey = xs.keyOf(keys, relativeTo);
                 if (!xs.isDefined(relativeKey)) {
-                    throw new Exception('Relative item missing in stack');
+                    throw new Error('Relative item missing in stack');
                 }
                 position == 'after' && relativeKey++;
                 keys.splice(relativeKey, 0, name);
@@ -142,7 +142,7 @@
             if (xs.has(items, name)) {
                 xs.delete(items, name);
             } else {
-                throw new Exception('processor "' + name + '" not found in stack');
+                throw new Error('processor "' + name + '" not found in stack');
             }
         };
 
@@ -201,12 +201,11 @@
     /**
      * xs.Class is core class, that is used internally for class generation.
      *
-     * xs.Class provides 4 stacks to register processors:
+     * xs.Class provides 3 stacks to register processors:
      *
      * - {@link xs.Class#preProcessors preProcessors}
      * - {@link xs.Class#postProcessors postProcessors}
-     * - {@link xs.Class#preConstructors preConstructors}
-     * - {@link xs.Class#postConstructors postConstructors}
+     * - {@link xs.Class#constructors constructors}
      *
      * Usage example:
      *
@@ -278,32 +277,11 @@
          *  - Class
          *  - instance
          *
-         * @property preConstructors
+         * @property constructors
          *
          * @type {xs.Class.Stack}
          */
-        var preConstructors = new Stack();
-
-        /**
-         * Stack of processors, processing object instance after object constructor is called
-         *
-         * Provided arguments are:
-         *
-         * For verifier:
-         *
-         *  - Class
-         *  - instance
-         *
-         * For handler:
-         *
-         *  - Class
-         *  - instance
-         *
-         * @property postConstructors
-         *
-         * @type {xs.Class.Stack}
-         */
-        var postConstructors = new Stack();
+        var constructors = new Stack();
 
         /**
          * Returns new xClass sample
@@ -329,10 +307,10 @@
                 }
 
                 //save class reference
-                xs.const(me, 'self', Class);
+                me.self = Class;
 
-                //process preConstructors
-                preConstructors.process([
+                //process constructors
+                constructors.process([
                     Class,
                     me
                 ], [
@@ -342,15 +320,6 @@
 
                 //apply constructor
                 constructor && constructor.apply(me, arguments);
-
-                //process postConstructors
-                postConstructors.process([
-                    Class,
-                    me
-                ], [
-                    Class,
-                    me
-                ]);
             };
             return Class;
         };
@@ -378,7 +347,7 @@
 
             //descFn must be function
             if (!xs.isFunction(descFn)) {
-                throw new Exception('Class descriptor must be function');
+                throw new Error('Class descriptor must be function');
             }
 
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
@@ -406,11 +375,10 @@
         };
 
         return {
-            create:           create,
-            preProcessors:    preProcessors,
-            postProcessors:   postProcessors,
-            preConstructors:  preConstructors,
-            postConstructors: postConstructors
+            create:         create,
+            preProcessors:  preProcessors,
+            postProcessors: postProcessors,
+            constructors:   constructors
         };
     })();
 })(window, 'xs');

@@ -1,6 +1,10 @@
 syncLoad([
     'xs.lang.Detect',
-    'xs.lang.List'
+    'xs.lang.List',
+    'xs.lang.Object',
+    'xs.lang.Attribute',
+    'xs.lang.Function',
+    'xs.class.Class'
 ], function () {
     'use strict';
     module('xs.Class');
