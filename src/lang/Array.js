@@ -17,13 +17,6 @@
  at http://annium.com/contact.
 
  */
-/**
- * @class xs.lang.Array
- * @singleton
- * @private
- *
- * xs.lang.Array is private singleton, defining basic Array operations.
- */
 (function (root, ns) {
 
     'use strict';
@@ -31,6 +24,15 @@
     //framework shorthand
     var xs = root[ns];
 
+    /**
+     * xs.lang.Array is private singleton, defining basic Array operations.
+     *
+     * @class xs.lang.Array
+     *
+     * @singleton
+     *
+     * @private
+     */
     var array = new (function () {
         var me = this;
 
