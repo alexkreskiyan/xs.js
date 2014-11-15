@@ -1,4 +1,4 @@
-syncLoad([
+require([
     'xs.lang.Detect',
     'xs.lang.List',
     'xs.lang.String'
