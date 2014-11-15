@@ -88,7 +88,7 @@
         }
     };
 }).call(window);
-function speed(fn, n) {
+function benchmark(fn, n) {
     var start = Date.now();
     for (var i = 0; i < n; i++) {
         fn();
