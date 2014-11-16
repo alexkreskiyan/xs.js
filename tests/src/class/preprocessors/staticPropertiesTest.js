@@ -8,11 +8,11 @@ require([
     'xs.class.ClassManager',
     'xs.class.Base',
     'xs.class.preprocessors.extend',
-    'xs.class.preprocessors.const'
+    'xs.class.preprocessors.staticProperties'
 ], function () {
     'use strict';
-    module('xs.class.preprocessors.const');
-    test('const chain', function () {
+    module('xs.class.preprocessors.staticProperties');
+    test('static properties chain', function () {
         //setUp
 
         //Base
@@ -20,8 +20,10 @@ require([
         //define
         var Base = xs.Class.create(function () {
             return {
-                const: {
-                    a: 1
+                static: {
+                    properties: {
+                        a: 1
+                    }
                 }
             };
         });
@@ -37,9 +39,11 @@ require([
         var Parent = xs.Class.create(function () {
             return {
                 extends: 'my.Base',
-                const:   {
-                    a: 2,
-                    b: 3
+                static:  {
+                    properties: {
+                        a: 2,
+                        b: 3
+                    }
                 }
             };
         });
@@ -55,8 +59,10 @@ require([
         var Child = xs.Class.create(function () {
             return {
                 extends: 'my.Parent',
-                const:   {
-                    c: 5
+                static:  {
+                    properties: {
+                        c: 5
+                    }
                 }
             };
         });
@@ -66,29 +72,29 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
-        //check constants
+        //check properties
         //Base
         strictEqual(my.Base.a, 1);
-        strictEqual(xs.Attribute.isWritable(my.Base, 'a'), false);
+        strictEqual(xs.Attribute.isWritable(my.Base, 'a'), true);
         strictEqual(xs.Attribute.isConfigurable(my.Base, 'a'), false);
 
         //Parent
         strictEqual(my.Parent.a, 2);
-        strictEqual(xs.Attribute.isWritable(my.Parent, 'a'), false);
+        strictEqual(xs.Attribute.isWritable(my.Parent, 'a'), true);
         strictEqual(xs.Attribute.isConfigurable(my.Parent, 'a'), false);
         strictEqual(my.Parent.b, 3);
-        strictEqual(xs.Attribute.isWritable(my.Parent, 'b'), false);
+        strictEqual(xs.Attribute.isWritable(my.Parent, 'b'), true);
         strictEqual(xs.Attribute.isConfigurable(my.Parent, 'b'), false);
 
         //Child
         strictEqual(my.Child.a, 2);
-        strictEqual(xs.Attribute.isWritable(my.Child, 'a'), false);
+        strictEqual(xs.Attribute.isWritable(my.Child, 'a'), true);
         strictEqual(xs.Attribute.isConfigurable(my.Child, 'a'), false);
         strictEqual(my.Child.b, 3);
-        strictEqual(xs.Attribute.isWritable(my.Child, 'b'), false);
+        strictEqual(xs.Attribute.isWritable(my.Child, 'b'), true);
         strictEqual(xs.Attribute.isConfigurable(my.Child, 'b'), false);
         strictEqual(my.Child.c, 5);
-        strictEqual(xs.Attribute.isWritable(my.Child, 'c'), false);
+        strictEqual(xs.Attribute.isWritable(my.Child, 'c'), true);
         strictEqual(xs.Attribute.isConfigurable(my.Child, 'c'), false);
 
         //tearDown
