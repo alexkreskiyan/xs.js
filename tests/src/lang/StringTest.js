@@ -1,6 +1,7 @@
 require([
     'xs.lang.Detect',
     'xs.lang.List',
+    'xs.lang.Object',
     'xs.lang.String'
 ], function () {
     module('xs.lang.String');
