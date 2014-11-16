@@ -77,12 +77,19 @@
         if (parent) {
             extend(Class, parent);
 
+            //save extends to descriptor
+            Class.descriptor.extends = extended;
+
             return;
         }
 
         //require async
         xs.require(extended, function () {
             extend(Class, xs.ClassManager.get(extended));
+
+            //save extends to descriptor
+            Class.descriptor.extends = extended;
+
             ready();
         });
 

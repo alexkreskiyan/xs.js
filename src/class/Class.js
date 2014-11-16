@@ -423,7 +423,7 @@
             }
 
             //save Class descriptor
-            xs.const(Class, 'descriptor', descriptor);
+            xs.const(Class, 'descriptor', {});
 
             //set class not ready yet
             Class.isReady = false;
