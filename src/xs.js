@@ -17,25 +17,29 @@
  at http://annium.com/contact.
 
  */
-/**
- * @class xs
- * @singleton
- */
 (function (root, ns) {
 
-    //create framework
-    var xs = new (function () {
+    /**
+     * Framework entry point
+     *
+     * @class xs
+     *
+     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     *
+     * @singleton
+     */
+    root[ns] = new (function () {
         var me = this;
 
         /**
-         * @method
          * Returns unique id
-         * @returns {Number} unique id
+         *
+         * @method uid
+         *
+         * @return {number} unique id
          */
         me.uid = function () {
             return Math.round(Math.random() * 10 ^ 10);
         }
     });
-    //save framework in root
-    root[ns] = xs;
 })(window, 'xs');
