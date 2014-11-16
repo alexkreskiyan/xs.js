@@ -27,6 +27,8 @@
      *
      * @class xs.ClassManager
      *
+     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     *
      * @singleton
      */
     xs.ClassManager = (function () {
@@ -44,7 +46,7 @@
          *
          * @param {string} name verified name
          *
-         * @returns {boolean} verification result
+         * @return {boolean} verification result
          */
         var _has = me.has = function (name) {
             return xs.hasKey(registry, name);
@@ -61,9 +63,9 @@
          *
          * @param {string} name class name
          *
-         * @returns {Function|undefined} class by name or undefined
+         * @return {Function|undefined} class by name or undefined
          */
-        var _get = me.get = function (name) {
+        me.get = function (name) {
             return registry[name];
         };
 
@@ -91,11 +93,23 @@
          * @throws {Error} Error is thrown, when:
          *
          * - class with given name is already registered
+         * - class is not function
+         * - class is not extended from xs.Base
          */
         var _add = me.add = function (name, Class) {
             //throw error if trying to set defined
             if (_has(name)) {
                 throw new Error('Class "' + name + '" is already defined');
+            }
+
+            //throw error if Class is not function
+            if (!xs.isFunction(Class)) {
+                throw new Error('Class "' + name + '" is not a function');
+            }
+
+            //throw error if Class is not extended from xs.Base
+            if (!(Class.prototype instanceof xs.Base)) {
+                throw new Error('Class "' + name + '" is not extended from xs.Base');
             }
 
             //assign real name as label
@@ -189,7 +203,7 @@
          * @param {Function} createdFn class creation callback. Is called after
          * {@link xs.Class#preProcessors preProcessors} stack is processed. When called, created class is passed as param
          *
-         * @returns {Function} created Class
+         * @return {Function} created Class
          *
          * @throws {Error} Error is thrown, when:
          *
@@ -211,41 +225,6 @@
         };
 
         /**
-         * Returns whether:
-         *
-         * - object is instanceof target (target must be function, of course)
-         * - object is instanceof target, given by string (target is name of registered class)
-         *
-         * For example:
-         *
-         *     var x = new my.Class();
-         *     xs.is(x, my.Class); //true
-         *     xs.is(x, 'my.Class'); //true
-         *
-         * @method is
-         *
-         * @param {*} object verified object
-         * @param {*} target verification target
-         *
-         * @returns {boolean} verification result
-         */
-        var _is = me.is = function (object, target) {
-            //if target is constructor and object is it's instance - return true
-            if (xs.isFunction(target) && object instanceof target) {
-
-                return true;
-            }
-
-            //if target is string, try to compare object to Class which label is target
-            if (xs.isString(target)) {
-                return _is(object, _get(target));
-            }
-
-            //return false otherwise
-            return false;
-        };
-
-        /**
          * Returns short name of class by full name
          *
          * For example:
@@ -258,7 +237,7 @@
          *
          * @param {string} name class name
          *
-         * @returns {string} short name
+         * @return {string} short name
          */
         var _getName = function (name) {
             return name.split('.').slice(-1).join('.');
@@ -277,7 +256,7 @@
          *
          * @param {string} name class name
          *
-         * @returns {string} class path
+         * @return {string} class path
          */
         var _getPath = function (name) {
             return name.split('.').slice(0, -1).join('.');
@@ -297,7 +276,7 @@
          * @param {Object|Function} root namespace relative root
          * @param {string} name relative name to root
          *
-         * @returns {Object|Function} namespace for given name
+         * @return {Object|Function} namespace for given name
          */
         var _namespace = function (root, name) {
             //explode name to parts
@@ -342,7 +321,6 @@
         return me;
     })();
     xs.extend(xs, {
-        define: xs.ClassManager.define,
-        is:     xs.ClassManager.is
+        define: xs.ClassManager.define
     });
 })(window, 'xs');
