@@ -73,7 +73,6 @@
         var file = files.shift();
         if (files.length) {
             addScript(head, file, function () {
-                console.log('source', file, 'loaded');
                 load(files, callback, true);
             });
         } else {
@@ -82,7 +81,6 @@
     };
 
     var addItems = function (list, items) {
-        console.log('list', list, ' - add items', items);
         for (var idx = 0; idx < items.length; idx++) {
             var item = items[idx];
             list.indexOf(item) < 0 && list.push(item);
@@ -110,12 +108,6 @@
         }
     }).call(me, 'tests');
 
-    var addTools = function () {
-//        addScript(head, tester);
-//        addScript(head, coverage, runTests);
-        runTests();
-    };
-
     var runTests = function () {
         for (var idx = 0; idx < handlers.length; idx++) {
             var handler = handlers[idx];
@@ -126,20 +118,14 @@
     request('/src/src.json', function (src) {
         sources = src;
         tests = getTests(src, testsList);
-        console.log('sources', sources);
-        console.log('tests', tests);
         tests.forEach(function (test) {
             var name = test;
             pendingTests.push(name);
-            console.log('add pending test', name);
-            console.log('pending ...', pendingTests);
             addScript(head, resolveTestFile(name), function () {
                 pendingTests.splice(pendingTests.indexOf(name), 1);
-                console.log('remove pending test', name);
-                console.log('pending ...', pendingTests);
                 pendingTests.length || load(pendingSources.map(function (source) {
                     return resolveSourceFile(source);
-                }), addTools);
+                }), runTests);
             });
         });
     });
