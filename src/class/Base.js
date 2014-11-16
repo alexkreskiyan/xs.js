@@ -18,102 +18,60 @@
 
  */
 /**
+ * xs.Base is base class for all classes, defined by {@link xs.ClassManager xs.ClassManager}.
+ * All classes, defined that way, extend xs.Base
+ *
  * @class xs.Base
- * @author Alex Kreskiyan
- * xs.Base is base class for all classes, defined by {@link xs#define xs.define}. All classes, defined that way, inherit {@link xs.Base xs.Base}.
+ *
+ * @author Alex Kreskiyan <brutalllord@gmail.com>
+ *
+ * @abstract
  */
-/**
- * Register pre-base class
- */
-(function (root, ns) {
-
-    //framework shorthand
-    var xs = root[ns];
-
-    xs.Base = new Function;
-    //apply empty descriptor
-    var descriptor = applyDescriptor(xs.Base, {
-        const:      {},
-        mixins:     {},
-        static:     {
-            properties: {},
-            methods:    {}
-        },
-        properties: {},
-        methods:    {}
-    });
-
-    //define descriptor static property
-    xs.property.define(xs.Base, 'descriptor', {
-        get: function () {
-            return descriptor;
-        }
-    });
-})(window, 'xs');
-
 xs.define('xs.Base', function (self) {
     return {
         static:  {
             methods: {
+
                 /**
                  * Returns whether this is child of given parent
+                 *
+                 * For example:
+                 *
+                 *     Bird.inherits(Animal); //true
+                 *     Bird.inherits(Transport); //false
+                 *
                  * @static
-                 * @method
-                 * @param {xs.Base} parent Class, being checked to be parent of this Class
-                 * @return {Boolean}
+                 *
+                 * @method inherits
+                 *
+                 * @param {xs.Base} parent Class, being verified to be ancestor of this Class
+                 *
+                 * @return {boolean} verification result
                  */
-                isChild:  function (parent) {
-                    var me = this;
-                    if (me.parent == parent) {
-                        return true;
-                    } else if (me.parent.isChild) {
-                        return me.parent.isChild(parent);
-                    } else {
-                        return false;
-                    }
-                },
-                /**
-                 * Returns whether this is parent of given child
-                 * @static
-                 * @method
-                 * @param {xs.Base} child Class, being checked to be child of this Class
-                 * @return {Boolean}
-                 */
-                isParent: function (child) {
-                    return xs.isFunction(child.isChild) ? child.isChild(this) : false;
+                inherits: function (parent) {
+                    return this.prototype instanceof parent;
                 }
             }
         },
         methods: {
+
             /**
-             * Returns clone of this object. Basically clone is made by instantiating Class with this object's {@link #toJSON JSON representation}
-             * @member
-             * @method
+             * Returns clone of this object. Basically clone is made by xs.clone
+             *
+             * @method clone
+             *
              * @return {xs.Base} clone object
              */
-            clone:   function () {
-                var me = this;
-                return xs.create(me.self.label, me.toJSON());
+            clone: function () {
+                return xs.clone(this);
             },
+
             /**
              * Completes internal object destruction
-             * @member
-             * @method
+             *
+             * @method destroy
              */
-            destroy: xs.emptyFn,
-            /**
-             * Returns object's JSON representation. Basically is returned hash with object's values for all declared properties
-             * @member
-             * @method
-             * @return {Object} object JSON representation
-             */
-            toJSON:  function () {
-                var me = this, json = {};
-                xs.Object.each(me.self.descriptor.properties, function (descriptor, name) {
-                    json[name] = me[name];
-                });
-                return json;
-            }
+            destroy: xs.emptyFn
         }
     };
 });
