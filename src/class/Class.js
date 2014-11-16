@@ -330,7 +330,7 @@
          * For example:
          *
          *     //create simple Class
-         *     var Class = xs.Class.create(function (Class) {
+         *     var Class = xs.Class.create(function (self, ns) {
          *         //here is Class descriptor returned
          *         return {
          *         };
@@ -338,8 +338,13 @@
          *         console.log('class', Class, 'created');
          *     );
          *
-         * @param {Function} descFn
-         * @param {Function} createdFn
+         * @param {Function} descFn descriptor function. Is called with 2 params:
+         *
+         * - self. Created class instance
+         * - ns. namespace object, where namespace references are placed
+         *
+         * @param {Function} createdFn class creation callback. Is called after
+         * {@link xs.Class#preProcessors preProcessors} stack is processed. When called, created class is passed as param
          *
          * @returns {Function} created Class
          */
@@ -355,19 +360,19 @@
             //create class
             var Class = createClass();
 
-            //get Class descriptor
-            var descriptor = descFn(Class);
+            //save Class descriptor
+            xs.const(Class, 'descriptor', descFn(Class, {}));
 
             //process preProcessors stack before createdFn called
-            preProcessors.process([descriptor], [
+            preProcessors.process([Class.descriptor], [
                 Class,
-                descriptor
+                Class.descriptor
             ], function () {
                 createdFn(Class);
                 //process postProcessors stack before createdFn called
-                postProcessors.process([descriptor], [
+                postProcessors.process([Class.descriptor], [
                     Class,
-                    descriptor
+                    Class.descriptor
                 ]);
             });
 

@@ -9,7 +9,30 @@ require([
     'use strict';
     module('xs.Class');
     test('create', function () {
+        //test create without descriptor fails
+        throws(xs.Class.create);
 
+        //test class descriptor
+        var descriptor = {};
+        var Class = xs.Class.create(function (self, ns) {
+            xs.extend(descriptor, {
+                self: self,
+                ns:   ns
+            });
+            return descriptor;
+        });
+
+        //class is function
+        strictEqual(xs.isFunction(Class), true);
+
+        //class descriptor is assigned correctly
+        strictEqual(Class.descriptor, descriptor);
+
+        //self is saved
+        strictEqual(Class.descriptor.self, Class);
+
+        //ns is saved
+        strictEqual(xs.isObject(Class.descriptor.ns), true);
     });
     test('processors add', function () {
 
