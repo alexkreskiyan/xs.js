@@ -5,6 +5,7 @@
     "xs.class.preprocessors.extend",
     "xs.class.preprocessors.const",
     "xs.class.preprocessors.staticProperties",
+    "xs.class.preprocessors.staticMethods",
     "xs.lang.Array",
     "xs.lang.Attribute",
     "xs.lang.Detect",

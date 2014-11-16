@@ -538,12 +538,14 @@
                 } else {
                     throw new Error('Incorrect method descriptor');
                 }
-                return {
+                descriptor = xs.clone(descriptor);
+                xs.extend(descriptor, {
                     value:        value,
                     writable:     false,
                     enumerable:   true,
                     configurable: false
-                };
+                });
+                return descriptor;
             },
 
             /**
