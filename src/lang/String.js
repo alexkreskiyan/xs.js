@@ -29,6 +29,8 @@
      *
      * @class xs.lang.String
      *
+     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     *
      * @singleton
      *
      * @private
@@ -55,7 +57,7 @@
          * @param {String} string translated string
          * @param {Object} replaces replaces hash, where keys are replaced strings and values are respective replaces
          *
-         * @returns {string} translated string
+         * @return {string} translated string
          */
         me.translate = function (string, replaces) {
             xs.each(replaces, function (to, from) {

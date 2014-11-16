@@ -29,6 +29,8 @@
      *
      * @class xs.lang.List
      *
+     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     *
      * @singleton
      *
      * @private
@@ -65,7 +67,7 @@
          *
          * @param {Array|Object} list list, keys are fetched from
          *
-         * @returns {Array} list keys
+         * @return {Array} list keys
          */
         var _keys = me.keys = function (list) {
             if (xs.isArray(list)) {
@@ -103,7 +105,7 @@
          *
          * @param {Array|Object} list list, values are fetched from
          *
-         * @returns {Array} list values
+         * @return {Array} list values
          */
         me.values = function (list) {
             if (xs.isArray(list)) {
@@ -149,7 +151,7 @@
          * @param {Array|Object} list list to search within
          * @param {string|number} key key to lookup for
          *
-         * @returns {boolean} whether list has key
+         * @return {boolean} whether list has key
          */
         var _hasKey = me.hasKey = function (list, key) {
             if (xs.isArray(list)) {
@@ -192,7 +194,7 @@
          * @param {Array|Object} list list to search within
          * @param {*} value value to lookup for
          *
-         * @returns {boolean} whether list has value
+         * @return {boolean} whether list has value
          */
         var _has = me.has = function (list, value) {
             return _find(list, function (val) {
@@ -242,7 +244,7 @@
          * @param {Array|Object} list list to search within
          * @param {*} value value to lookup for
          *
-         * @returns {string|number|undefined} found key, or undefined if nothing found
+         * @return {string|number|undefined} found key, or undefined if nothing found
          */
         var _keyOf = me.keyOf = function (list, value) {
             var idx, keys = _keys(list), len = keys.length, key;
@@ -297,7 +299,7 @@
          * @param {Array|Object} list list to search within
          * @param {*} value value to lookup for
          *
-         * @returns {string|number|undefined} found key, or undefined if nothing found
+         * @return {string|number|undefined} found key, or undefined if nothing found
          */
         var _lastKeyOf = me.lastKeyOf = function (list, value) {
             var idx, keys = _keys(list), len = keys.length, key;
@@ -337,7 +339,7 @@
          *
          * @param {Array|Object} list list, to get size of
          *
-         * @returns {number} size of list
+         * @return {number} size of list
          */
         var _size = me.size = function (list) {
             if (xs.isArray(list)) {
@@ -491,7 +493,7 @@
          * @param {Function} iterator mapping function
          * @param {Object} scope optional scope
          *
-         * @returns {Array|Object} Mapping result
+         * @return {Array|Object} Mapping result
          */
         me.map = function (list, iterator, scope) {
             var result = xs.isArray(list) ? [] : {};
@@ -553,7 +555,7 @@
          * @param {*} memo initial value. Is optional. If omitted, first value's value is shifted from list and used as memo
          * @param {Object} scope optional scope
          *
-         * @returns {*} Reducing result
+         * @return {*} Reducing result
          */
         me.reduce = function (list, iterator, memo, scope) {
             var result, copy = _clone(list);
@@ -620,7 +622,7 @@
          * @param {*} memo initial value. Is optional. If omitted, last value's value is popped from list and used as memo
          * @param {Object} scope optional scope
          *
-         * @returns {*} Reducing result
+         * @return {*} Reducing result
          */
         me.reduceRight = function (list, iterator, memo, scope) {
             var result, copy = _clone(list);
@@ -679,7 +681,7 @@
          * @param {Function} finder function, returning true if value matches given conditions
          * @param {Object} scope optional scope
          *
-         * @returns {*} found value, undefined if nothing found
+         * @return {*} found value, undefined if nothing found
          */
         var _find = me.find = function (list, finder, scope) {
             var idx, keys = _keys(list), len = keys.length, key, value;
@@ -736,7 +738,7 @@
          * @param {Function} finder function, returning true if value matches given conditions
          * @param {Object} scope optional scope
          *
-         * @returns {*} found value, undefined if nothing found
+         * @return {*} found value, undefined if nothing found
          */
         var _findLast = me.findLast = function (list, finder, scope) {
             var idx, keys = _keys(list), len = keys.length, key, value;
@@ -793,7 +795,7 @@
          * @param {Function} finder function, returning true if value matches given conditions
          * @param {Object} scope optional scope
          *
-         * @returns {Array|Object} found values
+         * @return {Array|Object} found values
          */
         var _findAll = me.findAll = function (list, finder, scope) {
             var isArray = xs.isArray(list);
@@ -866,7 +868,7 @@
          * @param {Array|Object} list filtered list
          * @param {Object} where clause object
          *
-         * @returns {Object} first object, that suites clause, or undefined, if nothing suites
+         * @return {Object} first object, that suites clause, or undefined, if nothing suites
          */
         me.filter = function (list, where) {
             return _find(list, function (value) {
@@ -932,7 +934,7 @@
          * @param {Array|Object} list filtered list
          * @param {Object} where clause object
          *
-         * @returns {Object} first object, that suites clause, or undefined, if nothing suites
+         * @return {Object} first object, that suites clause, or undefined, if nothing suites
          */
         me.filterLast = function (list, where) {
             return _findLast(list, function (value) {
@@ -998,7 +1000,7 @@
          * @param {Array|Object} list filtered list
          * @param {Object} where clause object
          *
-         * @returns {Array|Object} List values, filtered from original
+         * @return {Array|Object} List values, filtered from original
          */
         me.filterAll = function (list, where) {
             return _findAll(list, function (value) {
@@ -1062,7 +1064,7 @@
          * @param {Array|Object} list tested list
          * @param {Function} tester tester function
          * @param {Object} scope optional scope
-         * @returns {boolean} whether all values pass tester function
+         * @return {boolean} whether all values pass tester function
          */
         var _every = me.every = function (list, tester, scope) {
             var idx, keys = _keys(list), len = keys.length, key;
@@ -1138,7 +1140,7 @@
          * @param {number} count count of values needed to resolve as true
          * @param {Object} scope optional scope
          *
-         * @returns {boolean}
+         * @return {boolean}
          */
         me.some = function (list, tester, count, scope) {
             var idx, keys = _keys(list), len = keys.length, key, found = 0;
@@ -1208,7 +1210,7 @@
          * @param {Function} tester tester function
          * @param {Object} scope optional scope
          *
-         * @returns {boolean} whether no one of values pass tester function
+         * @return {boolean} whether no one of values pass tester function
          */
         var _none = me.none = function (list, tester, scope) {
             var idx, keys = _keys(list), len = keys.length, key;
@@ -1276,7 +1278,7 @@
          *
          * @param {Array|Object} list
          *
-         * @returns {*} first value, undefined if list is empty
+         * @return {*} first value, undefined if list is empty
          */
         me.first = function (list) {
             var key = _shift(_keys(list));
@@ -1338,7 +1340,7 @@
          *
          * @param {Array|Object} list
          *
-         * @returns {*} last value, undefined if list is empty
+         * @return {*} last value, undefined if list is empty
          */
         me.last = function (list) {
             var key = _pop(_keys(list));
@@ -1432,7 +1434,7 @@
          *
          * @param {Array|Object} list
          *
-         * @returns {*} First value of list
+         * @return {*} First value of list
          */
         var _shift = me.shift = function (list) {
             var key = _keys(list).shift();
@@ -1528,7 +1530,7 @@
          *
          * @param {Array|Object} list
          *
-         * @returns {*} Last value of list
+         * @return {*} Last value of list
          */
         var _pop = me.pop = function (list) {
             var key = _keys(list).pop();
@@ -1587,7 +1589,7 @@
          * @param {Array|Object} list list, value is deleted from
          * @param {number|string} key key of deleted value
          *
-         * @returns {boolean} whether value was deleted
+         * @return {boolean} whether value was deleted
          */
         var _deleteAt = me.deleteAt = function (list, key) {
             if (_hasKey(list, key)) {
@@ -1659,7 +1661,7 @@
          * @param {Array|Object} list list, value is deleted from
          * @param {*} value deleted value
          *
-         * @returns {boolean} whether something was deleted
+         * @return {boolean} whether something was deleted
          */
         me.delete = function (list, value) {
             var key = _keyOf(list, value);
@@ -1732,7 +1734,7 @@
          * @param {Array|Object} list list, value is deleted from
          * @param {*} value deleted value
          *
-         * @returns {boolean} whether value was deleted
+         * @return {boolean} whether value was deleted
          */
         me.deleteLast = function (list, value) {
             var key = _lastKeyOf(list, value);
@@ -1803,7 +1805,7 @@
          * @param {Array|Object} list list, values are deleted from
          * @param {*} value optional deleted value. If specified all value entries will be removed from list. If not - list is truncated
          *
-         * @returns {number} count of deleted values
+         * @return {number} count of deleted values
          */
         me.deleteAll = function (list, value) {
             var deleted = 0;
@@ -1851,7 +1853,7 @@
          *
          * @param {Array|Object} list copied list
          *
-         * @returns {Array|Object} list shallow copy
+         * @return {Array|Object} list shallow copy
          */
         var _clone = me.clone = function (list) {
             if (xs.isArray(list)) {
@@ -1976,7 +1978,7 @@
          *
          * @param {Array|Object} list compacted list
          *
-         * @returns {Array|Object}
+         * @return {Array|Object}
          */
         me.compact = function (list) {
             return _findAll(list, function (value) {
@@ -2041,7 +2043,7 @@
          *
          * @param {Array|Object} list given list
          *
-         * @returns {Array|Object} copy with unique values
+         * @return {Array|Object} copy with unique values
          */
         var _unique = me.unique = function (list) {
             var unique;
@@ -2098,7 +2100,7 @@
          *
          * @method union
          *
-         * @returns {Array|Object} lists union
+         * @return {Array|Object} lists union
          */
         var _union = me.union = function () {
             var merge = concatenate([], slice(arguments));
@@ -2154,7 +2156,7 @@
          *
          * @method intersection
          *
-         * @returns {Array|Object} lists intersection
+         * @return {Array|Object} lists intersection
          */
         me.intersection = function () {
             var others = slice(arguments), merge = concatenate([], others);
@@ -2214,7 +2216,7 @@
          *
          * @param {Array|Object} list differed list
          *
-         * @returns {Array|Object} difference list
+         * @return {Array|Object} difference list
          */
         me.difference = function (list) {
             var others = slice(arguments, 1); //get objects list
@@ -2273,7 +2275,7 @@
          *
          * @param {Array|Object} list source list
          *
-         * @returns {Array|Object} picked list
+         * @return {Array|Object} picked list
          */
         me.pick = function (list) {
             var copy, keys = _union(slice(arguments, 1));
@@ -2329,7 +2331,7 @@
          * @method omit
          *
          * @param {Array|Object} list source list
-         * @returns {Array|Object}
+         * @return {Array|Object}
          */
         me.omit = function (list) {
             var copy, keys = _union(slice(arguments, 1));

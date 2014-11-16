@@ -29,6 +29,8 @@
      *
      * @class xs.lang.Function
      *
+     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     *
      * @singleton
      *
      * @private
@@ -57,7 +59,7 @@
          * @param {Object} scope optional execution scope
          * @param {Array} args optional additional arguments, prepended to function
          *
-         * @returns {Function} bound function
+         * @return {Function} bound function
          */
         var _bind = me.bind = function (fn, scope, args) {
             return functionPrototype.bind.apply(fn, concatenate(scope, args));
@@ -80,7 +82,7 @@
          * @param {Array} defaults predefined params' defaults
          * @param {Object} scope optional execution scope
          *
-         * @returns {Function} bound function
+         * @return {Function} bound function
          */
         me.prefill = function (fn, defaults, scope) {
             return function () {
@@ -109,7 +111,7 @@
          *
          * @param {Function} fn bound function
          *
-         * @returns {Function} bound function
+         * @return {Function} bound function
          */
         me.once = function (fn) {
             var ran = false, memo;
@@ -143,7 +145,7 @@
          * @param {Function} wrapper wrapper function
          * @param {Object} scope optional execution scope
          *
-         * @returns {Function} wrapped function
+         * @return {Function} wrapped function
          */
         me.wrap = function (fn, wrapper, scope) {
             return function () {

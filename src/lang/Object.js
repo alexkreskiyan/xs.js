@@ -29,6 +29,8 @@
      *
      * @class xs.lang.Object
      *
+     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     *
      * @singleton
      *
      * @private

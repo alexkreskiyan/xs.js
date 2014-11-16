@@ -29,6 +29,8 @@
      *
      * @class xs.lang.Attribute
      *
+     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     *
      * @singleton
      *
      * @private
@@ -52,7 +54,7 @@
          * @param {Object} object verified object
          * @param {String} name verified name
          *
-         * @returns {boolean} verification result
+         * @return {boolean} verification result
          */
         var defined = me.defined = function (object, name) {
             return object.hasOwnProperty(name);
@@ -109,7 +111,7 @@
          * @param {Object} object used object
          * @param {string} name property name
          *
-         * @returns {Object} property descriptor
+         * @return {Object} property descriptor
          */
         var getDescriptor = me.getDescriptor = function (object, name) {
             return Object.getOwnPropertyDescriptor(object, name);
@@ -131,7 +133,7 @@
          * @param {Object} object used object
          * @param {string} name property name
          *
-         * @returns {boolean} whether property is assigned
+         * @return {boolean} whether property is assigned
          */
         me.isAssigned = function (object, name) {
             var descriptor = getDescriptor(object, name);
@@ -154,7 +156,7 @@
          * @param {Object} object used object
          * @param {string} name property name
          *
-         * @returns {boolean} whether property is accessed
+         * @return {boolean} whether property is accessed
          */
         me.isAccessed = function (object, name) {
             var descriptor = getDescriptor(object, name);
@@ -177,7 +179,7 @@
          * @param {Object} object used object
          * @param {string} name property name
          *
-         * @returns {boolean} whether property is writable
+         * @return {boolean} whether property is writable
          */
         me.isWritable = function (object, name) {
             var descriptor = getDescriptor(object, name);
@@ -200,7 +202,7 @@
          * @param {Object} object used object
          * @param {string} name property name
          *
-         * @returns {boolean} whether property is configurable
+         * @return {boolean} whether property is configurable
          */
         var isConfigurable = me.isConfigurable = function (object, name) {
             var descriptor = getDescriptor(object, name);
@@ -223,7 +225,7 @@
          * @param {Object} object used object
          * @param {string} name property name
          *
-         * @returns {boolean} whether property is enumerable
+         * @return {boolean} whether property is enumerable
          */
         me.isEnumerable = function (object, name) {
             var descriptor = getDescriptor(object, name);
@@ -242,7 +244,7 @@
          *
          * @param {Object} descriptor verified descriptor
          *
-         * @returns {boolean} whether descriptor given
+         * @return {boolean} whether descriptor given
          */
         var isDescriptor = me.isDescriptor = function (descriptor) {
             //false if descriptor is not object
@@ -331,7 +333,7 @@
          *
          * @param {Object} descriptor incoming descriptor
          *
-         * @returns {Object} corrected descriptor copy
+         * @return {Object} corrected descriptor copy
          */
         var prepareDescriptor = me.prepareDescriptor = function (descriptor) {
             descriptor = xs.clone(descriptor);
@@ -398,7 +400,7 @@
              * @param {string} name property name
              * @param {Object|*} descriptor raw property descriptor
              *
-             * @returns {Object} prepared descriptor
+             * @return {Object} prepared descriptor
              */
             prepare: function (name, descriptor) {
                 //if not descriptor - returns generated one
@@ -519,7 +521,7 @@
              *
              * @param descriptor raw descriptor
              *
-             * @returns {Object} prepared method descriptor
+             * @return {Object} prepared method descriptor
              *
              * @throws {Error} Error is thrown, when:
              *
