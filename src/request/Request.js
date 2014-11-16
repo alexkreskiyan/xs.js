@@ -31,7 +31,7 @@ xs.define('xs.request.Request', function () {
     /**
      * Removes brackets in given index
      * @param index
-     * @returns {Array}
+     * @return {Array}
      */
     var removeIndexBrackets = function (index) {
         return index.slice(1, index.length - 1)
@@ -39,7 +39,7 @@ xs.define('xs.request.Request', function () {
     /**
      * process object from query string
      * @param {String} str
-     * @returns {Object}
+     * @return {Object}
      */
     var fromQueryString = function (str) {
         str || (str = '');
@@ -72,7 +72,7 @@ xs.define('xs.request.Request', function () {
     /**
      * Gets next numeric index in params array/object
      * @param {Array|Object} params
-     * @returns {Integer}
+     * @return {Integer}
      */
     var getNextIndex = function (params) {
         if (xs.isArray(params)) {
@@ -90,7 +90,7 @@ xs.define('xs.request.Request', function () {
      * @param name
      * @param value
      * @param indexes
-     * @returns {Undefined}
+     * @return {Undefined}
      */
     var fromQueryObjects = function (params, name, value, indexes) {
         //assign value if no indexes
@@ -127,7 +127,7 @@ xs.define('xs.request.Request', function () {
      * process object to query string
      * @param {*} object
      * @param {Boolean} encode
-     * @returns {String}
+     * @return {String}
      */
     var toQueryString = function (object, encode) {
         object || (object = {});
@@ -154,7 +154,7 @@ xs.define('xs.request.Request', function () {
      * @param name
      * @param object
      * @param encode
-     * @returns {Array}
+     * @return {Array}
      */
     var toQueryObjects = function (name, object, encode) {
         var self = toQueryObjects, objects = [];
