@@ -56,7 +56,7 @@
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.preProcessors.add('extend', function () {
+    xs.Class.preprocessors.add('extend', function () {
         return true;
     }, function (Class, descriptor, ns, ready) {
         var extended = descriptor.extends;

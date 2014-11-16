@@ -20,7 +20,7 @@ require([
         strictEqual(xs.isFunction(Class), true);
     });
     test('processors add', function () {
-        var stack = xs.Class.preProcessors;
+        var stack = xs.Class.preprocessors;
 
         //save stack items
         var save = stack.get();
@@ -81,7 +81,7 @@ require([
         });
     });
     test('processors reorder', function () {
-        var stack = xs.Class.preProcessors;
+        var stack = xs.Class.preprocessors;
 
         //save stack items
         var save = stack.get();
@@ -142,7 +142,7 @@ require([
         });
     });
     test('processors delete', function () {
-        var stack = xs.Class.preProcessors;
+        var stack = xs.Class.preprocessors;
 
         //save stack items
         var save = stack.get();
@@ -194,7 +194,7 @@ require([
         });
     });
     asyncTest('process class', function () {
-        var stack = xs.Class.preProcessors;
+        var stack = xs.Class.preprocessors;
 
         //save stack items
         var save = stack.get();

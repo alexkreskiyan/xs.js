@@ -245,8 +245,8 @@
      *
      * xs.Class provides 3 stacks to register processors:
      *
-     * - {@link xs.Class#preProcessors preProcessors}
-     * - {@link xs.Class#postProcessors postProcessors}
+     * - {@link xs.Class#preprocessors preprocessors}
+     * - {@link xs.Class#postprocessors postprocessors}
      * - {@link xs.Class#constructors constructors}
      *
      * Usage example:
@@ -281,11 +281,11 @@
          *  - descriptor
          *  - namespace
          *
-         * @property preProcessors
+         * @property preprocessors
          *
          * @type {xs.Class.Stack}
          */
-        var preProcessors = new Stack();
+        var preprocessors = new Stack();
 
         /**
          * Stack of processors, processing class after it's considered to be created (after createdFn is called)
@@ -304,11 +304,11 @@
          *  - descriptor
          *  - namespace
          *
-         * @property postProcessors
+         * @property postprocessors
          *
          * @type {xs.Class.Stack}
          */
-        var postProcessors = new Stack();
+        var postprocessors = new Stack();
 
         /**
          * Stack of processors, processing object instance before object constructor is called
@@ -392,7 +392,7 @@
          * - ns. namespace object, where namespace references are placed
          *
          * @param {Function} createdFn class creation callback. Is called after
-         * {@link xs.Class#preProcessors preProcessors} stack is processed. When called, created class is passed as param
+         * {@link xs.Class#preprocessors preprocessors} stack is processed. When called, created class is passed as param
          *
          * @return {Function} created Class
          *
@@ -428,8 +428,8 @@
             //set class not ready yet
             Class.isReady = false;
 
-            //process preProcessors stack before createdFn called
-            preProcessors.process([
+            //process preprocessors stack before createdFn called
+            preprocessors.process([
                 Class,
                 descriptor,
                 namespace
@@ -444,8 +444,8 @@
                 //call createdFn
                 createdFn(Class);
 
-                //process postProcessors stack after createdFn called
-                postProcessors.process([
+                //process postprocessors stack after createdFn called
+                postprocessors.process([
                     Class,
                     descriptor,
                     namespace
@@ -461,8 +461,8 @@
 
         return {
             create:         create,
-            preProcessors:  preProcessors,
-            postProcessors: postProcessors,
+            preprocessors:  preprocessors,
+            postprocessors: postprocessors,
             constructors:   constructors
         };
     })();
