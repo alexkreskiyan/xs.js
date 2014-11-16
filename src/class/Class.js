@@ -40,7 +40,7 @@
         var items = {};
 
         /**
-         * Reorders item in stack relative to item with given name
+         * Applies item in stack relative to item with given name
          *
          * @ignore
          *
@@ -48,7 +48,7 @@
          * @param {string} position new item position
          * @param {*} relativeTo name of relativeTo positioned item
          */
-        var reorder = function (name, position, relativeTo) {
+        var apply = function (name, position, relativeTo) {
             if (!xs.has([
                 'first',
                 'last',
@@ -62,11 +62,11 @@
             var keys = xs.keys(items);
 
             //remove name from keys
-            xs.delete(name);
+            xs.delete(keys, name);
 
             //insert to specified position
             if (position == 'first' || position == 'last') {
-                position == 'first' ? xs.unshift(keys, name) : xs.push(keys, name);
+                position == 'first' ? keys.unshift(name) : keys.push(name);
             } else {
                 var relativeKey = xs.keyOf(keys, relativeTo);
                 if (!xs.isDefined(relativeKey)) {
@@ -77,7 +77,7 @@
             }
 
             //pick items in new order
-            items = xs.pick(keys);
+            items = xs.pick(items, keys);
         };
 
         /**
@@ -106,8 +106,41 @@
          *
          * @param {string} name processor name
          * @param {Function} verifier processor verifier.
-         * @param {Function} handler processor body
          * Returns boolean whether processor should be applied to Class. Accepts class descriptor as param
+         * @param {Function} handler processor body
+         * @param {string} [position] position, class processor is inserted at. Valid values are:
+         *
+         *  - first,
+         *  - last,
+         *  - before, (relativeTo is required)
+         *  - after (relativeTo is required)
+         *
+         * By default, last is used
+         * @param {string} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
+         */
+        me.add = function (name, verifier, handler, position, relativeTo) {
+            //position defaults to last
+            position || (position = 'last');
+            if (xs.hasKey(items, name)) {
+                throw new Error('processor "' + name + '" already in stack');
+            }
+            items[name] = {
+                verifier: verifier,
+                handler:  handler
+            };
+            apply(name, position, relativeTo);
+        };
+
+        /**
+         * Reorders processor at stack
+         *
+         * For example:
+         *
+         *     stack.reorder('addY','before','addX');
+         *
+         * @method reorder
+         *
+         * @param {string} name processor name
          * @param {string} position position, class processor is inserted at. Valid values are:
          *
          *  - first,
@@ -117,14 +150,8 @@
          *
          * @param {string} relativeTo name of processor, presented in stack, relative to which new item's position is evaluated
          */
-        me.add = function (name, verifier, handler, position, relativeTo) {
-            //position defaults to last
-            position || (position = 'last');
-            items[name] = {
-                verifier: verifier,
-                handler:  handler
-            };
-            reorder(name, position, relativeTo);
+        me.reorder = function (name, position, relativeTo) {
+            apply(name, position, relativeTo);
         };
 
         /**
@@ -139,8 +166,8 @@
          * @param {string} name processor name
          */
         me.delete = function (name) {
-            if (xs.has(items, name)) {
-                xs.delete(items, name);
+            if (xs.hasKey(items, name)) {
+                xs.deleteAt(items, name);
             } else {
                 throw new Error('processor "' + name + '" not found in stack');
             }

@@ -35,9 +35,36 @@ require([
         strictEqual(xs.isObject(Class.descriptor.ns), true);
     });
     test('processors add', function () {
+        var stack = xs.Class.preProcessors;
 
+        var size = xs.size(stack.get());
+        var verifier = function () {
+            return true;
+        };
+        var handler = function () {
+
+        };
+
+        //add processor
+        stack.add('demo', verifier, handler);
+
+        //processor added
+        strictEqual(xs.size(stack.get()), size + 1);
+        var items = stack.get();
+
+        //position is last
+        strictEqual(xs.keys(items).pop(), 'demo');
+
+        //verifier assigned
+        strictEqual(items.demo.verifier, verifier);
+
+        //handler assigned
+        strictEqual(items.demo.handler, handler);
+
+        //remove processor
+        stack.delete('demo');
     });
-    test('processors get', function () {
+    test('processors reorder', function () {
 
     });
     test('processors delete', function () {
