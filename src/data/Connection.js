@@ -590,7 +590,7 @@ xs.define('xs.data.Connection', function () {
              * @private
              * @param request {Object}
              * @param xdrResult {Boolean}
-             * @returns {*}
+             * @return {*}
              */
             complete: function (request, xdrResult) {
                 var me = this, result, success, response;
@@ -707,7 +707,7 @@ xs.define('xs.data.Connection', function () {
             /**
              * parses response text according to
              * @param response {Object}
-             * @returns {*}
+             * @return {*}
              */
             //TODO
             parseResponseText: function (response) {
