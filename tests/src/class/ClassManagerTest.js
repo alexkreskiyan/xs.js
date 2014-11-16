@@ -5,7 +5,6 @@ require([
     'xs.lang.Attribute',
     'xs.lang.Function',
     'xs.class.Class',
-    'xs.class.Base',
     'xs.class.ClassManager'
 ], function () {
     'use strict';

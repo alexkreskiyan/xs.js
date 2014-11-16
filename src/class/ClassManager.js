@@ -107,11 +107,6 @@
                 throw new Error('Class "' + name + '" is not a function');
             }
 
-            //throw error if Class is not extended from xs.Base
-            if (!(Class.prototype instanceof xs.Base)) {
-                throw new Error('Class "' + name + '" is not extended from xs.Base');
-            }
-
             //assign real name as label
             Class.label = name;
 
