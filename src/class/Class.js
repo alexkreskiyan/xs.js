@@ -29,6 +29,8 @@
      *
      * @class xs.Class.Stack
      *
+     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     *
      * @singleton
      *
      * @private
@@ -90,7 +92,7 @@
          *
          * @method get
          *
-         * @returns {Object} stack items copy
+         * @return {Object} stack items copy
          */
         me.get = function () {
             return xs.clone(items);
@@ -334,7 +336,7 @@
          *
          * @ignore
          *
-         * @returns {Function} new xClass
+         * @return {Function} new xClass
          */
         var _create = function () {
             var Class = function xClass() {
@@ -392,7 +394,7 @@
          * @param {Function} createdFn class creation callback. Is called after
          * {@link xs.Class#preProcessors preProcessors} stack is processed. When called, created class is passed as param
          *
-         * @returns {Function} created Class
+         * @return {Function} created Class
          *
          * @throws {Error} Error is thrown, when:
          *
@@ -464,4 +466,7 @@
             constructors:   constructors
         };
     })();
+
+    //define prototype of xs.Base
+    xs.Base = new Function;
 })(window, 'xs');
