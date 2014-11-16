@@ -17,12 +17,6 @@
  at http://annium.com/contact.
 
  */
-/**
- * Registers extend pre-processor.
- * Is used to extend child class from parent class
- *
- * @ignore
- */
 (function (root, ns) {
 
     //framework shorthand
@@ -40,51 +34,59 @@
         //create fake constructor
         var fn = function () {
         };
-        //assign fake constructor prototype
+
+        //assign prototype for fake constructor
         fn.prototype = parent.prototype;
+
         //assign new fake constructor's instance as child prototype, establishing correct prototype chain
         child.prototype = new fn();
+
         //assign correct constructor instead fake constructor
         child.prototype.constructor = child;
+
         //save reference to parent
         xs.const(child, 'parent', parent);
     };
 
     /**
-     * Registers extend pre-processor.
+     * PreProcessor extend
+     * Is used to extend child class from parent class
      *
      * @ignore
+     *
+     * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.registerPreprocessor('extend', function (Class, desc, hooks, ready) {
-        //if incorrect parent given - extend from Base
-        if (!xs.isString(desc.extend)) {
+    xs.Class.preProcessors.add('extend', function () {
+        return true;
+    }, function (Class, descriptor, ns, ready) {
+        var extended = descriptor.extends;
+
+        //if incorrect/no parent given - extend from xs.Base
+        if (!xs.isString(extended)) {
             extend(Class, xs.Base);
+
             return;
         }
 
-        //if parent class exists - extend from it
-        //TODO namespaces workaround
-        var Parent = xs.ClassManager.get(desc.extend);
-        if (Parent) {
-            extend(Class, Parent);
+        //TODO namespaces workaround (here extend is replaced with real name through namespace)
+
+        //try to get parent from ClassManager
+        var parent = xs.ClassManager.get(extended);
+
+        //extend from parent, if exists
+        if (parent) {
+            extend(Class, parent);
+
             return;
         }
 
-        //check require is available
-        if (!xs.require) {
-            xs.Error.raise('xs.Loader not loaded. Class ' + desc.extend + ' load fails');
-        }
-
-        var me = this;
         //require async
-        xs.require(desc.extend, function () {
-            extend(Class, xs.ClassManager.get(desc.extend));
-            ready.call(me, Class, desc, hooks);
+        xs.require(extended, function () {
+            extend(Class, xs.ClassManager.get(extended));
+            ready();
         });
 
         //return false to sign async processor
         return false;
-    }, function () {
-        return true;
     });
 })(window, 'xs');
