@@ -30,7 +30,7 @@
      * @singleton
      */
     xs.ClassManager = (function () {
-
+        var me = {};
         var registry = {};
 
         /**
@@ -46,7 +46,7 @@
          *
          * @returns {boolean} verification result
          */
-        var has = function (name) {
+        var _has = me.has = function (name) {
             return xs.hasKey(registry, name);
         };
 
@@ -63,7 +63,7 @@
          *
          * @returns {Function|undefined} class by name or undefined
          */
-        var get = function (name) {
+        var _get = me.get = function (name) {
             return registry[name];
         };
 
@@ -81,16 +81,16 @@
          *     var Class = xs.Class.create(function() {
          *         return {};
          *     });
-         *     xs.ClassManager.set('xs.myClass', Class);
+         *     xs.ClassManager.add('xs.myClass', Class);
          *
-         * @method set
+         * @method add
          *
          * @param {string} name new class name
          * @param {Function} Class registered class
          */
-        var set = function (name, Class) {
+        var _add = me.add = function (name, Class) {
             //throw error if trying to set defined
-            if (has(name)) {
+            if (_has(name)) {
                 throw new Error('Class "' + name + '" is already defined');
             }
 
@@ -122,15 +122,15 @@
          * For example:
          *
          *     //unset Class
-         *     xs.ClassManager.unset('xs.myClass');
+         *     xs.ClassManager.delete('xs.myClass');
          *
-         * @method unset
+         * @method delete
          *
          * @param {string} name name of unset Class
          */
-        var unset = function (name) {
+        me.delete = function (name) {
             //throw error if trying to unset undefined
-            if (!has(name)) {
+            if (!_has(name)) {
                 throw new Error('Class "' + name + '" is not defined');
             }
 
@@ -183,9 +183,9 @@
          *
          * @returns {Function} created Class
          */
-        var define = function (name, descFn, createdFn) {
+        me.define = function (name, descFn, createdFn) {
             //throw error if trying to redefine
-            if (has(name)) {
+            if (_has(name)) {
                 throw new Error('Class "' + name + '" is already defined');
             }
 
@@ -193,7 +193,9 @@
             var Class = xs.Class.create(descFn, createdFn);
 
             //save Class in registry by name
-            set(name, Class);
+            _add(name, Class);
+
+            return Class;
         };
 
         /**
@@ -215,7 +217,7 @@
          *
          * @returns {boolean} verification result
          */
-        var is = function (object, target) {
+        var _is = me.is = function (object, target) {
             //if target is constructor and object is it's instance - return true
             if (xs.isFunction(target) && object instanceof target) {
 
@@ -224,7 +226,7 @@
 
             //if target is string, try to compare object to Class which label is target
             if (xs.isString(target)) {
-                return is(object, get(target));
+                return _is(object, _get(target));
             }
 
             //return false otherwise
@@ -325,16 +327,10 @@
 
         };
 
-        return {
-            has:    has,
-            get:    get,
-            set:    set,
-            unset:  unset,
-            define: define,
-            is:     is
-        }
-    });
+        return me;
+    })();
     xs.extend(xs, {
-        define: xs.ClassManager.define
+        define: xs.ClassManager.define,
+        is:     xs.ClassManager.is
     });
 })(window, 'xs');

@@ -1,5 +1,6 @@
 [
     "xs.class.Class",
+    "xs.class.ClassManager",
     "xs.lang.Array",
     "xs.lang.Attribute",
     "xs.lang.Detect",
