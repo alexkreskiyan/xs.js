@@ -274,11 +274,13 @@
          * @param {string} name const name
          * @param {*} value const value
          *
-         * @returns {boolean} define status. false is returned if object.name is already defined and not configurable
+         * @throws {Error} Error is thrown, when:
+         *
+         * - constant with given name is already defined
          */
         me.const = function (object, name, value) {
             if (defined(object, name) && !isConfigurable(object, name)) {
-                return false;
+                throw new Error('constant "' + name + '" is already defined');
             }
             define(object, name, {
                 value:        value,
@@ -286,7 +288,6 @@
                 enumerable:   true,
                 configurable: false
             });
-            return true;
         };
 
         /**
@@ -395,7 +396,7 @@
              * @method prepare
              *
              * @param {string} name property name
-             * @param {Object|*} descriptor property descriptor
+             * @param {Object|*} descriptor raw property descriptor
              *
              * @returns {Object} prepared descriptor
              */
@@ -463,12 +464,13 @@
              * @param {string} name defined property name
              * @param {Object} descriptor defined property descriptor
              *
-             * @returns {boolean}
+             * @throws {Error} Error is thrown, when:
+             *
+             * - property with given name is already defined
              */
             define: function (object, name, descriptor) {
                 if (defined(object, name) && !isConfigurable(object, name)) {
-
-                    return false;
+                    throw new Error('property "' + name + '" is already defined');
                 }
 
                 //writable, enumerable and configurable are immutable defaults
@@ -482,8 +484,6 @@
 
                 //define property and return
                 define(object, name, descriptor);
-
-                return true;
             }
         };
 
@@ -517,12 +517,15 @@
              *
              * @method prepare
              *
-             * @param name
-             * @param descriptor
+             * @param descriptor raw descriptor
              *
-             * @returns {Object}
+             * @returns {Object} prepared method descriptor
+             *
+             * @throws {Error} Error is thrown, when:
+             *
+             * - method descriptor is incorrect
              */
-            prepare: function (name, descriptor) {
+            prepare: function (descriptor) {
                 var value;
                 if (xs.isFunction(descriptor)) {
                     value = descriptor;
@@ -531,7 +534,7 @@
                     value = descriptor.value;
                     //else  - return false
                 } else {
-                    return false;
+                    throw new Error('Incorrect method descriptor');
                 }
                 return {
                     value:        value,
@@ -568,15 +571,17 @@
              *
              * @method define
              *
-             * @param object
-             * @param name
-             * @param descriptor
+             * @param {Object} object used object
+             * @param {string} name defined method name
+             * @param {Object} descriptor defined method descriptor
              *
-             * @returns {boolean}
+             * @throws {Error} Error is thrown, when:
+             *
+             * - method with given name is already defined
              */
             define: function (object, name, descriptor) {
                 if (defined(object, name) && !isConfigurable(object, name)) {
-                    return false;
+                    throw new Error('Method "' + name + '" is already defined');
                 }
                 define(object, name, {
                     value:        descriptor.value,
@@ -584,11 +589,8 @@
                     enumerable:   true,
                     configurable: false
                 });
-                return true;
             }
-
         };
-
     });
 
     xs.extend(xs, {

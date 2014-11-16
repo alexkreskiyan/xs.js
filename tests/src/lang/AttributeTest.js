@@ -1,6 +1,7 @@
 require([
     'xs.lang.Detect',
     'xs.lang.List',
+    'xs.lang.Object',
     'xs.lang.Attribute'
 ], function () {
     module('xs.lang.Attribute');
@@ -216,8 +217,13 @@ require([
         var obj = {};
         var value = {x: 1};
 
-        strictEqual(xs.Attribute.const(obj, 'a', value), true);
-        strictEqual(xs.Attribute.const(obj, 'a', value), false);
+        xs.Attribute.const(obj, 'a', value);
+        strictEqual(obj.a, value);
+
+        //const redefined throws error
+        throws(function () {
+            xs.Attribute.const(obj, 'a', value);
+        });
 
         strictEqual('a' in obj, true);
 
@@ -286,28 +292,32 @@ require([
         };
         var value = {x: 1};
 
-        strictEqual(xs.Attribute.property.define(obj, 'a', value), true);
-        strictEqual(xs.Attribute.property.define(obj, 'a', value), false);
+        xs.Attribute.property.define(obj, 'a', value);
+
+        //redefine throws error
+        throws(function () {
+            xs.Attribute.property.define(obj, 'a', value);
+        });
         strictEqual(obj.a, undefined);
 
-        strictEqual(xs.Attribute.property.define(obj, 'b', {
+        xs.Attribute.property.define(obj, 'b', {
             value:        value,
             configurable: true,
             enumerable:   false,
             writable:     false,
             default:      5,
             someProperty: null
-        }), true);
+        });
         strictEqual(xs.Attribute.isAssigned(obj, 'b'), true);
         strictEqual(xs.Attribute.isConfigurable(obj, 'b'), false);
         strictEqual(xs.Attribute.isWritable(obj, 'b'), true);
         strictEqual(xs.Attribute.isEnumerable(obj, 'b'), true);
         strictEqual(obj.b, value);
 
-        strictEqual(xs.Attribute.property.define(obj, 'c', {
+        xs.Attribute.property.define(obj, 'c', {
             get: getter,
             set: setter
-        }), true);
+        });
         strictEqual(xs.Attribute.isAccessed(obj, 'c'), true);
         strictEqual(xs.Attribute.isConfigurable(obj, 'c'), false);
         strictEqual(xs.Attribute.isEnumerable(obj, 'c'), true);
@@ -315,11 +325,14 @@ require([
 
     test('method.prepare', function () {
         //check for descriptor given incorrectly
-        strictEqual(xs.Attribute.method.prepare('a', null), false);
+        throws(function () {
+            xs.Attribute.method.prepare(null);
+        });
+
         //check for descriptor given as function
         var desc = function () {
         };
-        var result = xs.Attribute.method.prepare('a', desc);
+        var result = xs.Attribute.method.prepare(desc);
         strictEqual(Object.keys(result).sort().toString(), 'configurable,enumerable,value,writable');
         strictEqual(result.value, desc);
 
@@ -328,17 +341,21 @@ require([
         desc = {
             value: value
         };
+
         //object with descriptor as function
-        result = xs.Attribute.method.prepare('a', value);
+        result = xs.Attribute.method.prepare(value);
         strictEqual(Object.keys(result).sort().toString(), 'configurable,enumerable,value,writable');
         strictEqual(result.value, value);
+
         //object with descriptor, keeping function in value
-        result = xs.Attribute.method.prepare('a', desc);
+        result = xs.Attribute.method.prepare(desc);
         strictEqual(Object.keys(result).sort().toString(), 'configurable,enumerable,value,writable');
         strictEqual(result.value, value);
-        //otherwise - false
-        result = xs.Attribute.method.prepare('a', {});
-        strictEqual(result, false);
+
+        //otherwise - error
+        throws(function () {
+            xs.Attribute.method.prepare({});
+        });
     });
 
     test('method.define', function () {
@@ -348,10 +365,14 @@ require([
         };
 
         xs.Attribute.const(obj, 'const', null);
-        //test when false for created && !configurable property
-        strictEqual(xs.Attribute.method.define(obj, 'const', {value: value}), false);
+
+        //test when error for created && !configurable property
+        throws(function () {
+            xs.Attribute.method.define(obj, 'const', {value: value});
+        });
+
         //rights assignments are not writable, enumerable and not configurable
-        strictEqual(xs.Attribute.method.define(obj, 'simple', {value: value}), true);
+        xs.Attribute.method.define(obj, 'simple', {value: value});
         strictEqual(xs.Attribute.isWritable(obj, 'simple'), false);
         strictEqual(xs.Attribute.isConfigurable(obj, 'simple'), false);
         strictEqual(xs.Attribute.isEnumerable(obj, 'simple'), true);
