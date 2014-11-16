@@ -87,6 +87,10 @@
          *
          * @param {string} name new class name
          * @param {Function} Class registered class
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - class with given name is already registered
          */
         var _add = me.add = function (name, Class) {
             //throw error if trying to set defined
@@ -127,6 +131,10 @@
          * @method delete
          *
          * @param {string} name name of unset Class
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - class with given name is not registered
          */
         me.delete = function (name) {
             //throw error if trying to unset undefined
@@ -182,6 +190,10 @@
          * {@link xs.Class#preProcessors preProcessors} stack is processed. When called, created class is passed as param
          *
          * @returns {Function} created Class
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - class with given name is already registered
          */
         me.define = function (name, descFn, createdFn) {
             //throw error if trying to redefine
