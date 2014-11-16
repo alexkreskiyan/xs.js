@@ -1,14 +1,16 @@
 (function () {
     var me = this;
     var head = document.getElementsByTagName('head')[0];
-    var coverage = '/node_modules/blanket/dist/qunit/blanket.js';
+
     var scripts = []; //all scripts sources
+
     var sources = []; //all sources
     var pendingSources = []; //pending sources
-    var readySources = []; //pending sources
+
     var tests = []; //all acquired tests files
-    var pendingTests = []; //registered tests handlers
-    var readyTests = []; //registered tests handlers
+    var pendingTests = []; //pending tests loaded
+
+    var handlers = [];
 
     //resolves source File
     var resolveSourceFile = function (name) {
@@ -68,25 +70,29 @@
         if (!files.length) {
             return;
         }
-        var file = resolveSourceFile(files[0]);
-        if (files.length == 1) {
-            addScript(head, file, callback, true);
-        } else {
+        var file = files.shift();
+        if (files.length) {
             addScript(head, file, function () {
-                me.syncLoad(files.slice(1), callback, true);
+                console.log('source', file, 'loaded');
+                load(files, callback, true);
             });
+        } else {
+            addScript(head, file, callback, true);
         }
     };
 
-    var addFiles = function (files) {
-        if (pendingSources) {
-
+    var addItems = function (list, items) {
+        console.log('list', list, ' - add items', items);
+        for (var idx = 0; idx < items.length; idx++) {
+            var item = items[idx];
+            list.indexOf(item) < 0 && list.push(item);
         }
     };
 
     // Adds sources to pending list and callback to handlers
-    me.require = function (files, callback) {
-
+    me.require = function (components, callback) {
+        addItems(pendingSources, components);
+        handlers.push(callback);
     };
 
     var testsList = (function (key) {
@@ -96,7 +102,7 @@
         }
         var paramsPairs = result.slice(1).shift().split('&');
         var pair;
-        for (var idx = 0; idx < paramsPairs.length; i++) {
+        for (var idx = 0; idx < paramsPairs.length; idx++) {
             pair = paramsPairs[idx].split('=');
             if (pair[0] == key) {
                 return pair[1].split(',');
@@ -104,9 +110,24 @@
         }
     }).call(me, 'tests');
 
+    var addTools = function () {
+//        addScript(head, tester);
+//        addScript(head, coverage, runTests);
+        runTests();
+    };
+
+    var runTests = function () {
+        for (var idx = 0; idx < handlers.length; idx++) {
+            var handler = handlers[idx];
+            handler();
+        }
+    };
+
     request('/src/src.json', function (src) {
         sources = src;
         tests = getTests(src, testsList);
+        console.log('sources', sources);
+        console.log('tests', tests);
         tests.forEach(function (test) {
             var name = test;
             pendingTests.push(name);
@@ -116,6 +137,9 @@
                 pendingTests.splice(pendingTests.indexOf(name), 1);
                 console.log('remove pending test', name);
                 console.log('pending ...', pendingTests);
+                pendingTests.length || load(pendingSources.map(function (source) {
+                    return resolveSourceFile(source);
+                }), addTools);
             });
         });
     });
