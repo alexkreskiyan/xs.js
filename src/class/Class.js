@@ -47,6 +47,11 @@
          * @param {string} name name of repositioned item
          * @param {string} position new item position
          * @param {*} relativeTo name of relativeTo positioned item
+         *
+         * @throws {Error} Error is thrown:
+         *
+         * - if incorrect position given
+         * - relativeTo item is missing in stack
          */
         var _apply = function (name, position, relativeTo) {
             if (!xs.has([
@@ -117,6 +122,10 @@
          *
          * By default, last is used
          * @param {string} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - processor with given name is already in stack
          */
         me.add = function (name, verifier, handler, position, relativeTo) {
             //position defaults to last
@@ -164,6 +173,10 @@
          * @method delete
          *
          * @param {string} name processor name
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - processor with given name is not found in stack
          */
         me.delete = function (name) {
             if (xs.hasKey(items, name)) {
@@ -380,6 +393,11 @@
          * {@link xs.Class#preProcessors preProcessors} stack is processed. When called, created class is passed as param
          *
          * @returns {Function} created Class
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - descFn is given not as function
+         * - descFn doesn't return object
          */
         var create = function (descFn, createdFn) {
 
