@@ -3,6 +3,7 @@
     "xs.class.Class",
     "xs.class.ClassManager",
     "xs.class.preProcessors.extend",
+    "xs.class.preProcessors.const",
     "xs.lang.Array",
     "xs.lang.Attribute",
     "xs.lang.Detect",
