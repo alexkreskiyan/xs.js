@@ -7,11 +7,11 @@ require([
     'xs.class.Class',
     'xs.class.ClassManager',
     'xs.class.Base',
-    'xs.class.preProcessors.extend',
-    'xs.class.preProcessors.const'
+    'xs.class.preprocessors.extend',
+    'xs.class.preprocessors.const'
 ], function () {
     'use strict';
-    module('xs.class.preProcessors.extend');
+    module('xs.class.preprocessors.extend');
     test('const chain', function () {
         //setUp
 

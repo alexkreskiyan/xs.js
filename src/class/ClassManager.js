@@ -172,7 +172,7 @@
         };
 
         /**
-         * Creates class sample via {@link xs.Class#create xs.Class}. After that, when {@link xs.Class#preProcessors}
+         * Creates class sample via {@link xs.Class#create xs.Class}. After that, when {@link xs.Class#preprocessors}
          * stack is processed, saves created class in internal registry with given name. If class with that name is already defined,
          * respective error is thrown.
          *
@@ -196,7 +196,7 @@
          * - ns. namespace object, where namespace references are placed
          *
          * @param {Function} createdFn class creation callback. Is called after
-         * {@link xs.Class#preProcessors preProcessors} stack is processed. When called, created class is passed as param
+         * {@link xs.Class#preprocessors preprocessors} stack is processed. When called, created class is passed as param
          *
          * @return {Function} created Class
          *

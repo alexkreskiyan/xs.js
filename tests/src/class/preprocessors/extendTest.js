@@ -7,10 +7,10 @@ require([
     'xs.class.Class',
     'xs.class.ClassManager',
     'xs.class.Base',
-    'xs.class.preProcessors.extend'
+    'xs.class.preprocessors.extend'
 ], function () {
     'use strict';
-    module('xs.class.preProcessors.extend');
+    module('xs.class.preprocessors.extend');
     test('extend base', function () {
         //create Class
         var Class = xs.Class.create(function () {

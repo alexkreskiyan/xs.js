@@ -30,7 +30,7 @@
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.preProcessors.add('const', function () {
+    xs.Class.preprocessors.add('const', function () {
         return true;
     }, function (Class, descriptor) {
         //get own constants from raw descriptor
@@ -50,7 +50,7 @@
 
         //save constants to Class.descriptor
         Class.descriptor.const = constants;
-        
+
         //apply all constants
         xs.each(constants, function (value, name) {
             xs.const(Class, name, value);
