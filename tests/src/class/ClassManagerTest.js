@@ -5,6 +5,7 @@ require([
     'xs.lang.Attribute',
     'xs.lang.Function',
     'xs.class.Class',
+    'xs.class.Base',
     'xs.class.ClassManager'
 ], function () {
     'use strict';
@@ -177,53 +178,5 @@ require([
 
         //restore save
         save && xs.ClassManager.add(className, save);
-    });
-    test('is', function () {
-        var One = xs.Class.create(function () {
-            return {};
-        });
-        var oneName = 'xs.myOne';
-
-        //save class, if defined
-        var saveOne = xs.ClassManager.get(oneName);
-        saveOne && xs.ClassManager.delete(oneName);
-
-
-        var Two = xs.Class.create(function () {
-            return {};
-        });
-        var twoName = 'xs.myTwo';
-
-        //save class, if defined
-        var saveTwo = xs.ClassManager.get(twoName);
-        saveTwo && xs.ClassManager.delete(twoName);
-
-
-        //add classes
-        xs.ClassManager.add(oneName, One);
-        xs.ClassManager.add(twoName, Two);
-
-        var x = new One;
-
-        //direct class notation
-        strictEqual(xs.is(x, One), true);
-        strictEqual(xs.is(x, Two), false);
-
-        //use namespace notation
-        strictEqual(xs.is(x, xs.myOne), true);
-        strictEqual(xs.is(x, xs.myTwo), false);
-
-        //use string notation
-        strictEqual(xs.is(x, 'xs.myOne'), true);
-        strictEqual(xs.is(x, 'xs.myTwo'), false);
-
-        //delete classes
-        xs.ClassManager.delete(oneName);
-        xs.ClassManager.delete(twoName);
-
-
-        //restore saved
-        saveOne && xs.ClassManager.add(oneName, saveOne);
-        saveTwo && xs.ClassManager.add(twoName, saveTwo);
     });
 });
