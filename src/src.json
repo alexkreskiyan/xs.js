@@ -7,6 +7,7 @@
     "xs.class.preprocessors.staticProperties",
     "xs.class.preprocessors.staticMethods",
     "xs.class.preprocessors.methods",
+    "xs.class.preprocessors.properties",
     "xs.lang.Array",
     "xs.lang.Attribute",
     "xs.lang.Detect",
