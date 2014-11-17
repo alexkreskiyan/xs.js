@@ -419,8 +419,8 @@
 
                 //get|set priority
                 if (descriptor.get || descriptor.set) {
-                    descriptor.get || eval('descriptor.get = function () {return this.privates.' + name + ';}');
-                    descriptor.set || eval('descriptor.set = function (value) {this.privates.' + name + ' = value;}');
+                    descriptor.get || eval('descriptor.get = function () { \'use strict\'; return this.privates.' + name + ';}');
+                    descriptor.set || eval('descriptor.set = function (value) { \'use strict\'; this.privates.' + name + ' = value;}');
                 } else {
                     defined(descriptor, 'value') || (descriptor.value = undefined);
                     descriptor.writable = true;
