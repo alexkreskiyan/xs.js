@@ -326,13 +326,13 @@ require([
     test('method.prepare', function () {
         //check for descriptor given incorrectly
         throws(function () {
-            xs.Attribute.method.prepare(null);
+            xs.Attribute.method.prepare('a', null);
         });
 
         //check for descriptor given as function
         var desc = function () {
         };
-        var result = xs.Attribute.method.prepare(desc);
+        var result = xs.Attribute.method.prepare('a', desc);
         strictEqual(Object.keys(result).sort().toString(), 'configurable,enumerable,value,writable');
         strictEqual(result.value, desc);
 
@@ -343,18 +343,18 @@ require([
         };
 
         //object with descriptor as function
-        result = xs.Attribute.method.prepare(value);
+        result = xs.Attribute.method.prepare('a', value);
         strictEqual(Object.keys(result).sort().toString(), 'configurable,enumerable,value,writable');
         strictEqual(result.value, value);
 
         //object with descriptor, keeping function in value
-        result = xs.Attribute.method.prepare(desc);
+        result = xs.Attribute.method.prepare('a', desc);
         strictEqual(Object.keys(result).sort().toString(), 'configurable,enumerable,value,writable');
         strictEqual(result.value, value);
 
         //otherwise - error
         throws(function () {
-            xs.Attribute.method.prepare({});
+            xs.Attribute.method.prepare('a', {});
         });
     });
 

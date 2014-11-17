@@ -519,7 +519,8 @@
              *
              * @method prepare
              *
-             * @param descriptor raw descriptor
+             * @param {String} name raw descriptor
+             * @param {*} descriptor raw descriptor
              *
              * @return {Object} prepared method descriptor
              *
@@ -527,7 +528,7 @@
              *
              * - method descriptor is incorrect
              */
-            prepare: function (descriptor) {
+            prepare: function (name, descriptor) {
                 var value;
                 if (xs.isFunction(descriptor)) {
                     value = descriptor;
