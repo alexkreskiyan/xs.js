@@ -36,7 +36,9 @@
      *
      * @private
      */
-    xs.env = new (function () {
+    //create or update xs.env
+    xs.isObject(env) || (xs.env = {});
+    xs.env.context = new (function () {
         var me = this;
 
         /**
@@ -45,13 +47,8 @@
          * @method defined
          *
          * @param {String} userAgent information about the web-browser
+
          * @param {Array} rules rules for check browser
-         *
-         *                [
-         *                    [browser.chrome],
-         *                    [/chromium/, /mobile/, /yabrowser/, /opr\//],
-         *                    [/chrome\/([\d]+)\.([\d]+)/, /chrome\/([\d\.]+)/]
-         *                ],
          *
          * @param {Array} params ['name', 'major', 'minor', 'version']
          *
