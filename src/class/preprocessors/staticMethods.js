@@ -54,7 +54,7 @@
         if (xs.isObject(own)) {
             //prepare them
             xs.each(own, function (value, name, list) {
-                list[name] = xs.Attribute.method.prepare(value);
+                list[name] = xs.Attribute.method.prepare(name, value);
             });
 
             //extend methods with own ones

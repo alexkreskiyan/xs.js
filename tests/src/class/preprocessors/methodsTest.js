@@ -78,29 +78,17 @@ require([
         //Base
         var base = new my.Base;
         strictEqual(base.a(), 1);
-        strictEqual(xs.Attribute.isWritable(base, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(base, 'a'), false);
 
         //Parent
         var parent = new my.Parent;
         strictEqual(parent.a(), 2);
-        strictEqual(xs.Attribute.isWritable(parent, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(parent, 'a'), false);
         strictEqual(parent.b(), 3);
-        strictEqual(xs.Attribute.isWritable(parent, 'b'), false);
-        strictEqual(xs.Attribute.isConfigurable(parent, 'b'), false);
 
         //Child
         var child = new my.Child;
         strictEqual(child.a(), 2);
-        strictEqual(xs.Attribute.isWritable(child, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(child, 'a'), false);
         strictEqual(child.b(), 3);
-        strictEqual(xs.Attribute.isWritable(child, 'b'), false);
-        strictEqual(xs.Attribute.isConfigurable(child, 'b'), false);
         strictEqual(child.c(), 5);
-        strictEqual(xs.Attribute.isWritable(child, 'c'), false);
-        strictEqual(xs.Attribute.isConfigurable(child, 'c'), false);
 
         //tearDown
 
