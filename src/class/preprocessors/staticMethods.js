@@ -23,7 +23,7 @@
     var xs = root[ns];
 
     /**
-     * PreProcessor staticMethods
+     * Preprocessor staticMethods
      * Is used to extend child class from parent class
      *
      * @ignore
@@ -67,7 +67,7 @@
         xs.isObject(Class.descriptor.static) || (Class.descriptor.static = {});
         Class.descriptor.static.methods = methods;
 
-        //apply all constants
+        //apply all methods
         xs.each(methods, function (value, name) {
             xs.Attribute.method.define(Class, name, value);
         });

@@ -23,7 +23,7 @@
     var xs = root[ns];
 
     /**
-     * PreProcessor staticProperties
+     * Preprocessor staticProperties
      * Is used to extend child class from parent class
      *
      * @ignore
@@ -67,7 +67,7 @@
         xs.isObject(Class.descriptor.static) || (Class.descriptor.static = {});
         Class.descriptor.static.properties = properties;
 
-        //apply all constants
+        //apply all properties
         xs.each(properties, function (value, name) {
             xs.Attribute.property.define(Class, name, value);
         });

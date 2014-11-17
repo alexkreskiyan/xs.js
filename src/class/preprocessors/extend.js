@@ -49,7 +49,7 @@
     };
 
     /**
-     * PreProcessor extend
+     * Preprocessor extend
      * Is used to extend child class from parent class
      *
      * @ignore

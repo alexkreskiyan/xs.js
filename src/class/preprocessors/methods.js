@@ -23,44 +23,52 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor const
+     * Preprocessor methods
      * Is used to extend child class from parent class
      *
      * @ignore
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.preprocessors.add('const', function () {
+    xs.Class.preprocessors.add('methods', function () {
         return true;
     }, function (Class, descriptor) {
 
-        //init constants as empty hash
-        var constants = {};
+        //init methods as empty hash
+        var methods = {};
 
 
         //inherited
-        //get inherited constants from parent descriptor
-        var inherited = Class.parent.descriptor.const;
+        //get inherited methods from parent descriptor
+        var inherited = Class.parent.descriptor.methods;
 
-        //extend constants with inherited
-        xs.isObject(inherited) && xs.extend(constants, inherited);
+        //extend methods with inherited
+        xs.isObject(inherited) && xs.extend(methods, inherited);
 
 
         //own
-        //get own constants from raw descriptor
-        var own = descriptor.const;
+        //get own methods from raw descriptor
+        var own = descriptor.methods;
 
-        //extend constants with own
-        xs.isObject(own) && xs.extend(constants, own);
+        //apply if any
+        if (xs.isObject(own)) {
+            //prepare them
+            xs.each(own, function (value, name, list) {
+                list[name] = xs.Attribute.method.prepare(value);
+            });
+
+            //extend methods with own ones
+            xs.extend(methods, own);
+        }
 
 
         //apply
-        //save constants to Class.descriptor
-        Class.descriptor.const = constants;
+        //save methods to Class.descriptor
+        Class.descriptor.methods = methods;
 
-        //apply all constants
-        xs.each(constants, function (value, name) {
-            xs.const(Class, name, value);
+        //apply all methods
+        xs.each(methods, function (value, name) {
+            xs.Attribute.method.define(Class.prototype, name, value);
         });
     });
 })(window, 'xs');
