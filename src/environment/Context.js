@@ -17,18 +17,46 @@
  at http://annium.com/contact.
 
  */
-/**
- * set class pre-definition
- * @type {Object}
- */
-'use strict';
 (function (root, ns) {
+
+    'use strict';
 
     //framework shorthand
     var xs = root[ns];
 
+    /**
+     * xs.environment.Context is private singleton,provision of basic operations to determine the browser and
+     * definition of the system architecture
+     *
+     * @class xs.lang.List
+     *
+     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     *
+     * @singleton
+     *
+     * @private
+     */
     xs.env = new (function () {
         var me = this;
+
+        /**
+         * Parsing the packet header to determine the type of browser
+         *
+         * @method defined
+         *
+         * @param {String} userAgent information about the web-browser
+         * @param {Array} rules rules for check browser
+         *
+         *                [
+         *                    [browser.chrome],
+         *                    [/chromium/, /mobile/, /yabrowser/, /opr\//],
+         *                    [/chrome\/([\d]+)\.([\d]+)/, /chrome\/([\d\.]+)/]
+         *                ],
+         *
+         * @param {Array} params ['name', 'major', 'minor', 'version']
+         *
+         * @returns {boolean} verification result
+         */
         var parse = function (userAgent, rules, params) {
             var result = {};
             xs.Array.find(rules, function (rule) {
@@ -99,6 +127,10 @@
         /**
          * Detect function, that consumes userAgent from navigator and updates stored values.
          * Is called automatically once on start
+         *
+         * @method define
+         *
+         * @param none
          */
         me.detect = function () {
             //user agent string
@@ -126,11 +158,7 @@
                 'name',
                 'version'
             ]);
-            me.device = parse(userAgent, rules.device, [
-                'model',
-                'type',
-                'vendor'
-            ]);
+
             me.cpu = parse(userAgent, rules.cpu, ['architecture']);
             //set shortcuts
             //for desktop os
@@ -209,9 +237,6 @@
             android:      'android',
             osx:          'os x',
             ios:          'ios'
-        }, device = {
-            mobile: 'mobile',
-            tablet: 'tablet'
         }, arch = {
             x32: '32',
             x64: '64'
@@ -470,134 +495,6 @@
                     [/iphone\sos\s([\d_\.]+)/]
                 ]
             ],
-            device:  [
-                [
-                    [
-                        'k900',
-                        device.mobile,
-                        'lenovo'
-                    ],
-                    [],
-                    [/k900/]
-                ],
-                [
-                    [
-                        'xperia ion',
-                        device.mobile,
-                        'sony'
-                    ],
-                    [],
-                    [/lt28h/]
-                ],
-                [
-                    [
-                        null,
-                        device.mobile,
-                        'google'
-                    ],
-                    [],
-                    [/(nexus\s(?:4|5|6)+)/]
-                ],
-                [
-                    [
-                        null,
-                        device.tablet,
-                        'google'
-                    ],
-                    [],
-                    [/(nexus\s(?:7|8|9|10)+)/]
-                ],
-                [
-                    [
-                        'galaxy s4',
-                        device.mobile,
-                        'samsung'
-                    ],
-                    [],
-                    [/gt-i950[\d]{1}/]
-                ],
-                [
-                    [
-                        'galaxy mega',
-                        device.mobile,
-                        'samsung'
-                    ],
-                    [],
-                    [/gt-i920[\d]{1}/]
-                ],
-                [
-                    [
-                        'iphone',
-                        device.mobile,
-                        'apple'
-                    ],
-                    [],
-                    [/iphone/]
-                ],
-                [
-                    [
-                        'galaxy note 3',
-                        device.mobile,
-                        'samsung'
-                    ],
-                    [],
-                    [/sm-n900/]
-                ],
-                [
-                    [
-                        'galaxy s4 mini',
-                        device.mobile,
-                        'samsung'
-                    ],
-                    [],
-                    [/gt-i9190/]
-                ],
-                [
-                    [
-                        'xenium w6610',
-                        device.mobile,
-                        'philips'
-                    ],
-                    [],
-                    [/philips\sw6610/]
-                ],
-                [
-                    [
-                        'galaxy s4 mini duos',
-                        device.mobile,
-                        'samsung'
-                    ],
-                    [],
-                    [/gt-i9192/]
-                ],
-                [
-                    [
-                        'zopo captain s',
-                        device.mobile,
-                        'zopo'
-                    ],
-                    [],
-                    [/zp990/]
-                ],
-                [
-                    [
-                        'galaxy ace 3',
-                        device.mobile,
-                        'samsung'
-                    ],
-                    [],
-                    [/gt-s7270/]
-                ],
-                [
-                    [
-                        'lumia 625',
-                        device.mobile,
-                        'nokia'
-                    ],
-                    [],
-                    [/lumia\s625/]
-                ]
-            ],
             cpu:     [
                 [
                     [arch.x64],
@@ -628,7 +525,6 @@
         browser:         xs.env.browser,
         engine:          xs.env.engine,
         os:              xs.env.os,
-        device:          xs.env.device,
         cpu:             xs.env.cpu,
         //shortcuts
         //desktop os
