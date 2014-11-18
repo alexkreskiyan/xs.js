@@ -25,9 +25,9 @@
     var xs = root[ns];
 
     /**
-     * xs.lang.Detect is private singleton, defining basic language detection operations
+     * xs.lang.Type is private singleton, defining basic language detection operations
      *
-     * @class xs.lang.Detect
+     * @class xs.lang.Type
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      *
@@ -35,7 +35,7 @@
      *
      * @private
      */
-    var detect = new (function () {
+    var type = new (function () {
         var me = this;
 
         /**
@@ -301,7 +301,7 @@
             }
         };
     });
-    Object.keys(detect).forEach(function (method) {
-        xs[method] = detect[method];
+    Object.keys(type).forEach(function (method) {
+        xs[method] = type[method];
     });
 })(window, 'xs');

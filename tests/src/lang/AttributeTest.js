@@ -1,5 +1,5 @@
 require([
-    'xs.lang.Detect',
+    'xs.lang.Type',
     'xs.lang.List',
     'xs.lang.Object',
     'xs.lang.Attribute'

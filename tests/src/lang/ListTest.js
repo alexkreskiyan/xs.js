@@ -1,5 +1,5 @@
 require([
-    'xs.lang.Detect',
+    'xs.lang.Type',
     'xs.lang.List'
 ], function () {
     module('xs.lang.List');

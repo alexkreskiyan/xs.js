@@ -1,8 +1,8 @@
 require([
-    'xs.lang.Detect',
+    'xs.lang.Type',
     'xs.lang.List'
 ], function () {
-    module('xs.Detect');
+    module('xs.Type');
 
     test('isArray', function () {
         var tests = [
