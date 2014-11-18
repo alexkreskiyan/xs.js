@@ -367,7 +367,8 @@
          *
          * Contains methods to prepare and define properties
          */
-        me.property = {
+        me.property = new (function () {
+            var me = this;
 
             /**
              * Prepares property descriptor
@@ -402,7 +403,7 @@
              *
              * @return {Object} prepared descriptor
              */
-            prepare: function (name, descriptor) {
+            me.prepare = function (name, descriptor) {
                 //if not descriptor - returns generated one
                 if (!isDescriptor(descriptor)) {
 
@@ -429,7 +430,7 @@
                 descriptor.configurable = false;
 
                 return descriptor;
-            },
+            };
 
             /**
              * Defines property for object
@@ -470,7 +471,7 @@
              *
              * - property with given name is already defined
              */
-            define: function (object, name, descriptor) {
+            me.define = function (object, name, descriptor) {
                 if (defined(object, name) && !isConfigurable(object, name)) {
                     throw new Error('property "' + name + '" is already defined');
                 }
@@ -486,8 +487,8 @@
 
                 //define property and return
                 define(object, name, descriptor);
-            }
-        };
+            };
+        });
 
         /**
          * @class xs.lang.Attribute.method
@@ -496,8 +497,8 @@
          *
          * Contains methods to prepare and define methods
          */
-        me.method = {
-
+        me.method = new (function () {
+            var me = this;
             /**
              * Prepares method descriptor
              *
@@ -528,7 +529,7 @@
              *
              * - method descriptor is incorrect
              */
-            prepare: function (name, descriptor) {
+            me.prepare = function (name, descriptor) {
                 var value;
                 if (xs.isFunction(descriptor)) {
                     value = descriptor;
@@ -547,7 +548,7 @@
                     configurable: false
                 });
                 return descriptor;
-            },
+            };
 
             /**
              * Define method for object
@@ -584,7 +585,7 @@
              *
              * - method with given name is already defined
              */
-            define: function (object, name, descriptor) {
+            me.define = function (object, name, descriptor) {
                 if (defined(object, name) && !isConfigurable(object, name)) {
                     throw new Error('Method "' + name + '" is already defined');
                 }
@@ -594,8 +595,8 @@
                     enumerable:   true,
                     configurable: false
                 });
-            }
-        };
+            };
+        });
     });
 
     xs.extend(xs, {
