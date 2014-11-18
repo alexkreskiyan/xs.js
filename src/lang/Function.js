@@ -170,8 +170,8 @@
          *
          * @method nextTick
          *
-         * @param fn
-         * @param scope
+         * @param {Function} fn executed function
+         * @param {Object} scope optional execution scope
          */
         me.nextTick = function (fn, scope) {
             scope && (fn = _bind(fn, scope));
@@ -185,6 +185,113 @@
          */
         me.emptyFn = function () {
         };
+
+        var getNameRe = /function\s+([A-z_0-9]*)/i;
+        /**
+         * Fetches name from function
+         *
+         * For example:
+         *
+         *     console.log(xs.Function.getName(function(){
+         *         console.log(this);
+         *     }); // ''
+         *     console.log(xs.Function.getName(function demo (){
+         *         console.log(this);
+         *     }); // 'demo'
+         *
+         * @method getName
+         *
+         * @param {Function} fn parsed function
+         *
+         * @return {String} function name
+         */
+        me.getName = function (fn) {
+            getNameRe.lastIndex = 0;
+            return getNameRe.exec(fn.toString()).pop();
+        };
+
+        var getArgsRe = /function\s+[A-z_0-9]*\s*\(([A-z_0-9\s,]*)\)/i;
+        /**
+         * Fetches args list from function
+         *
+         * For example:
+         *
+         *     console.log(xs.Function.getArgs(function(){
+         *         console.log(this);
+         *     }); // []
+         *     console.log(xs.Function.getArgs(function (a,b,e){
+         *         console.log(this);
+         *     }); // ['a','b','e']
+         *
+         * @method getArgs
+         *
+         * @param {Function} fn parsed function
+         *
+         * @return {Array} array with function formal params
+         */
+        me.getArgs = function (fn) {
+            getArgsRe.lastIndex = 0;
+            return xs.compact(xs.map(getArgsRe.exec(fn.toString()).pop().split(','), function (name) {
+                return name.trim();
+            }));
+        };
+
+        var getBodyRe = /function\s+[A-z_0-9]*\s*\([A-z_0-9\s,]*\)\s*\{(.*)\}/gi;
+        /**
+         * Fetches function body
+         *
+         * For example:
+         *
+         *     console.log(xs.Function.getBody(function(){
+         *         console.log(this);
+         *     }); // 'console.log(this);'
+         *     console.log(xs.Function.getBody(function (a,b,e){}); // ''
+         *
+         * @method getBody
+         *
+         * @param {Function} fn parsed function
+         *
+         * @return {String} function body
+         */
+        me.getBody = function (fn) {
+            getBodyRe.lastIndex = 0;
+            return getBodyRe.exec(fn.toString()).pop();
+        };
+
+        var parseRe = /function\s+([A-z_0-9]*)\s*\(([A-z_0-9\s,]*)\)\s*\{(.*)\}/gi;
+        /**
+         * Fetches function name, args and body
+         *
+         * For example:
+         *
+         *     console.log(xs.Function.parse(function asd(a,b){
+         *         console.log(this);
+         *     }); // {name:'asd', args: ['a','b'], body: 'console.log(this);' }
+         *
+         * @method parse
+         *
+         * @param {Function} fn parsed function
+         *
+         * @return {Object} function data
+         */
+        me.parse = function (fn) {
+            parseRe.lastIndex = 0;
+            var data = parseRe.exec(fn.toString());
+            return {
+                name: data[1],
+                args: xs.compact(xs.map(data[2].split(','), function (name) {
+                    return name.trim();
+                })),
+                body: data[3]
+            };
+        };
     });
-    xs.extend(xs, fn);
+    xs.extend(xs, xs.pick(fn, [
+        'bind',
+        'prefill',
+        'once',
+        'wrap',
+        'nextTick',
+        'emptyFn'
+    ]));
 })(window, 'xs');
