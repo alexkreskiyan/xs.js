@@ -35,7 +35,7 @@
      *
      * @private
      */
-    var fn = new (function () {
+    var fn = xs.Function = new (function () {
         var me = this;
 
         var functionPrototype = Function.prototype;

@@ -35,7 +35,7 @@
      *
      * @private
      */
-    var list = new (function () {
+    var list = xs.List = new (function () {
         var me = this;
 
         // Create quick reference variables for speed access to core prototypes.

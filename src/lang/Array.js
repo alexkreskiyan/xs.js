@@ -35,7 +35,7 @@
      *
      * @private
      */
-    var array = new (function () {
+    var array = xs.Array = new (function () {
         var me = this;
 
         /**
