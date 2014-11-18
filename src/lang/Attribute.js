@@ -530,23 +530,41 @@
              * - method descriptor is incorrect
              */
             me.prepare = function (name, descriptor) {
-                var value;
+
+                //simple function
                 if (xs.isFunction(descriptor)) {
-                    value = descriptor;
-                    //allowed as object with fn property, containing method function
-                } else if (xs.isObject(descriptor) && xs.isFunction(descriptor.value)) {
-                    value = descriptor.value;
-                    //else  - return false
-                } else {
+
+                    return {
+                        value:        descriptor,
+                        writable:     false,
+                        enumerable:   true,
+                        configurable: false
+                    };
+
+                    //or complex object descriptor
+                } else if (!xs.isObject(descriptor)) {
                     throw new Error('Incorrect method descriptor');
                 }
+
                 descriptor = xs.clone(descriptor);
                 xs.extend(descriptor, {
-                    value:        value,
                     writable:     false,
                     enumerable:   true,
                     configurable: false
                 });
+
+                var value;
+
+                //value is saved in fn (preferred) or value. If fn is given, it overrides value. Otherwise - error
+                if (xs.isFunction(descriptor.fn)) {
+                    value = descriptor.fn;
+                } else if (xs.isFunction(descriptor.value)) {
+                    value = descriptor.value;
+                } else {
+                    throw new Error('Incorrect method descriptor');
+                }
+
+                //TODO add xs.lang.Function.parse (returns functions all data: name, args list, body) and separate methods for that
                 return descriptor;
             };
 
