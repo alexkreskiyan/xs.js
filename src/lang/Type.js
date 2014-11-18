@@ -35,8 +35,161 @@
      *
      * @private
      */
-    var type = new (function () {
+    var type = xs.Type = new (function () {
         var me = this;
+
+        /**
+         * Declares type Object.
+         *
+         * For example:
+         *
+         *     xs.Type.Object
+         *
+         * @static
+         *
+         * @property
+         *
+         * @readonly
+         *
+         * @type {String}
+         */
+        me.object = 'Object';
+
+        /**
+         * Declares type Array.
+         *
+         * For example:
+         *
+         *     xs.Type.array
+         *
+         * @static
+         *
+         * @property
+         *
+         * @readonly
+         *
+         * @type {String}
+         */
+        me.array = 'Array';
+
+        /**
+         * Declares type Function.
+         *
+         * For example:
+         *
+         *     xs.Type.Function
+         *
+         * @static
+         *
+         * @property
+         *
+         * @readonly
+         *
+         * @type {String}
+         */
+        me.function = 'Function';
+
+        /**
+         * Declares type String.
+         *
+         * For example:
+         *
+         *     xs.Type.String
+         *
+         * @static
+         *
+         * @property
+         *
+         * @readonly
+         *
+         * @type {String}
+         */
+        me.string = 'String';
+
+        /**
+         * Declares type Number.
+         *
+         * For example:
+         *
+         *     xs.Type.Number
+         *
+         * @static
+         *
+         * @property
+         *
+         * @readonly
+         *
+         * @type {String}
+         */
+        me.number = 'Number';
+
+        /**
+         * Declares type Boolean.
+         *
+         * For example:
+         *
+         *     xs.Type.Boolean
+         *
+         * @static
+         *
+         * @property
+         *
+         * @readonly
+         *
+         * @type {String}
+         */
+        me.boolean = 'Boolean';
+
+        /**
+         * Declares type RegExp.
+         *
+         * For example:
+         *
+         *     xs.Type.RegExp
+         *
+         * @static
+         *
+         * @property
+         *
+         * @readonly
+         *
+         * @type {String}
+         */
+        me.regexp = 'RegExp';
+
+        /**
+         * Declares type Error.
+         *
+         * For example:
+         *
+         *     xs.Type.Error
+         *
+         * @static
+         *
+         * @property
+         *
+         * @readonly
+         *
+         * @type {String}
+         */
+        me.error = 'Error';
+
+        /**
+         * Declares type Null.
+         *
+         * For example:
+         *
+         *     xs.Type.Null
+         *
+         * @static
+         *
+         * @property
+         *
+         * @readonly
+         *
+         * @type {String}
+         */
+        me.null = 'Null';
 
         /**
          * Returns type of passed value.
@@ -60,6 +213,24 @@
         };
 
         /**
+         * Returns whether given value is object
+         *
+         * For example:
+         *
+         *     console.log(xs.isObject(null)); //false
+         *     console.log(xs.isObject({})); //true
+         *
+         * @method isObject
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
+         */
+        me.isObject = function (value) {
+            return getType(value) == 'object';
+        };
+
+        /**
          * Returns whether given value is array
          *
          * For example:
@@ -78,21 +249,129 @@
         };
 
         /**
-         * Returns whether given value is object
+         * Returns whether given value is function.
          *
          * For example:
          *
-         *     console.log(xs.isObject(null)); //false
-         *     console.log(xs.isObject({})); //true
+         *     console.log(xs.isFunction(new Function())); //true
+         *     console.log(xs.isFunction({})); //false
          *
-         * @method isObject
+         * @method isFunction
          *
          * @param {*} value verified value
          *
          * @return {boolean} verification result
          */
-        me.isObject = function (value) {
-            return getType(value) == 'object';
+        me.isFunction = function (value) {
+            return typeof value == 'function';
+        };
+
+        /**
+         * Returns whether given value is string.
+         *
+         * For example:
+         *
+         *     console.log(xs.isString('4')); //true
+         *     console.log(xs.isString(4)); //false
+         *
+         * @method isString
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
+         */
+        me.isString = function (value) {
+            return typeof value == 'string';
+        };
+
+        /**
+         * Returns whether given value is number.
+         *
+         * For example:
+         *
+         *     console.log(xs.isNumber(4)); //true
+         *     console.log(xs.isNumber('4')); //false
+         *
+         * @method isNumber
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
+         */
+        me.isNumber = function (value) {
+            return typeof value == 'number';
+        };
+
+        /**
+         * Returns whether given value is boolean
+         *
+         * For example:
+         *
+         *     console.log(xs.isBoolean(false)); //true
+         *     console.log(xs.isBoolean(0)); //false
+         *
+         * @method isBoolean
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
+         */
+        me.isBoolean = function (value) {
+            return typeof value == 'boolean';
+        };
+
+        /**
+         * Returns whether given value is a regexp instance
+         *
+         * For example:
+         *
+         *     console.log(xs.isRegExp(/a/)); //true
+         *     console.log(xs.isRegExp(0)); //false
+         *
+         * @method isRegExp
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
+         */
+        me.isRegExp = function (value) {
+            return value instanceof RegExp;
+        };
+
+        /**
+         * Returns whether given value is an error instance.
+         *
+         * For example:
+         *
+         *     console.log(xs.isError(new Error)); //true
+         *     console.log(xs.isError(0)); //false
+         *
+         * @method isError
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
+         */
+        me.isError = function (value) {
+            return value instanceof Error;
+        };
+
+        /**
+         * Returns whether given value is null.
+         *
+         * For example:
+         *
+         *     console.log(xs.isNull(null)); //true
+         *     console.log(xs.isNull(0)); //false
+         *
+         * @method isNull
+         *
+         * @param {*} value verified value
+         *
+         * @return {boolean} verification result
+         */
+        me.isNull = function (value) {
+            return value === null;
         };
 
         /**
@@ -136,42 +415,6 @@
         };
 
         /**
-         * Returns whether given value is function.
-         *
-         * For example:
-         *
-         *     console.log(xs.isFunction(new Function())); //true
-         *     console.log(xs.isFunction({})); //false
-         *
-         * @method isFunction
-         *
-         * @param {*} value verified value
-         *
-         * @return {boolean} verification result
-         */
-        me.isFunction = function (value) {
-            return typeof value == 'function';
-        };
-
-        /**
-         * Returns whether given value is string.
-         *
-         * For example:
-         *
-         *     console.log(xs.isString('4')); //true
-         *     console.log(xs.isString(4)); //false
-         *
-         * @method isString
-         *
-         * @param {*} value verified value
-         *
-         * @return {boolean} verification result
-         */
-        me.isString = function (value) {
-            return typeof value == 'string';
-        };
-
-        /**
          * Returns whether given value number, or string, which contains number
          *
          * For example:
@@ -191,42 +434,6 @@
         };
 
         /**
-         * Returns whether given value is number.
-         *
-         * For example:
-         *
-         *     console.log(xs.isNumber(4)); //true
-         *     console.log(xs.isNumber('4')); //false
-         *
-         * @method isNumber
-         *
-         * @param {*} value verified value
-         *
-         * @return {boolean} verification result
-         */
-        me.isNumber = function (value) {
-            return typeof value == 'number';
-        };
-
-        /**
-         * Returns whether given value is null.
-         *
-         * For example:
-         *
-         *     console.log(xs.isNull(null)); //true
-         *     console.log(xs.isNull(0)); //false
-         *
-         * @method isNull
-         *
-         * @param {*} value verified value
-         *
-         * @return {boolean} verification result
-         */
-        me.isNull = function (value) {
-            return value === null;
-        };
-
-        /**
          * Returns whether given value is not defined
          *
          * For example:
@@ -242,24 +449,6 @@
          */
         me.isDefined = function (value) {
             return typeof value != 'undefined';
-        };
-
-        /**
-         * Returns whether given value is boolean
-         *
-         * For example:
-         *
-         *     console.log(xs.isBoolean(false)); //true
-         *     console.log(xs.isBoolean(0)); //false
-         *
-         * @method isBoolean
-         *
-         * @param {*} value verified value
-         *
-         * @return {boolean} verification result
-         */
-        me.isBoolean = function (value) {
-            return typeof value == 'boolean';
         };
 
         /**
@@ -301,7 +490,23 @@
             }
         };
     });
-    Object.keys(type).forEach(function (method) {
+
+    [
+        'isObject',
+        'isArray',
+        'isFunction',
+        'isString',
+        'isNumber',
+        'isBoolean',
+        'isRegExp',
+        'isError',
+        'isNull',
+        'isIterable',
+        'isPrimitive',
+        'isNumeric',
+        'isDefined',
+        'isEmpty'
+    ].forEach(function (method) {
         xs[method] = type[method];
     });
 })(window, 'xs');
