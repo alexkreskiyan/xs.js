@@ -23,6 +23,7 @@
 
     //framework shorthand
     var xs = root[ns];
+    xs.isObject(env) || (xs.env = {});
 
     /**
      * xs.environment.Context is private singleton,provision of basic operations to determine the browser and
@@ -37,8 +38,7 @@
      * @private
      */
     //create or update xs.env
-    xs.isObject(env) || (xs.env = {});
-    xs.env.context = new (function () {
+    xs.env.Context = new (function () {
         var me = this;
 
         /**
@@ -55,6 +55,8 @@
          * @returns {boolean} verification result
          */
         var parse = function (userAgent, rules, params) {
+
+            //accumulate result of the regular expression
             var result = {};
             xs.Array.find(rules, function (rule) {
                 var defaults = xs.Array.clone(rule[0]), negativeRegExps = rule[1], positiveRegExps = rule[2], data = [], match;
@@ -204,7 +206,7 @@
          *  - positive and data containing regular expressions
          *    here are expressions, that have to be executed for rule to be matched. some of them contain data selections
          *    data selection order should match variables list order
-         * @type {Object}
+         *
          */
         var browser = {
             chrome:        'chrome',
@@ -238,7 +240,11 @@
             x32: '32',
             x64: '64'
         };
+
+        //set of rules
         var rules = {
+
+            //rules for determining the browser
             browser: [
                 [
                     [browser.chrome],
@@ -360,6 +366,8 @@
                     ]
                 ]
             ],
+
+            //rules for determining the engine
             engine:  [
                 [
                     [engine.webkit],
@@ -413,6 +421,8 @@
                     [/msie/]
                 ]
             ],
+
+            //rules for determining the operating system
             os:      [
                 [
                     [os.linux],
@@ -492,6 +502,8 @@
                     [/iphone\sos\s([\d_\.]+)/]
                 ]
             ],
+
+            //rules for determining the processor architecture
             cpu:     [
                 [
                     [arch.x64],
@@ -515,6 +527,8 @@
         };
         me.detect();
     });
+
+    //Needed simple xs.extend(xs, xs.env.Context)
     xs.extend(xs, {
         //commons
         userAgent:       xs.env.userAgent,
