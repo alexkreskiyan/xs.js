@@ -541,8 +541,8 @@
                         configurable: false
                     };
 
-                    //or complex object descriptor
-                } else if (!xs.isObject(descriptor)) {
+                    //or complex object descriptor with fn in descriptor.value
+                } else if (!xs.isObject(descriptor) || !xs.isFunction(descriptor.value)) {
                     throw new Error('Incorrect method descriptor');
                 }
 
@@ -553,18 +553,6 @@
                     configurable: false
                 });
 
-                var value;
-
-                //value is saved in fn (preferred) or value. If fn is given, it overrides value. Otherwise - error
-                if (xs.isFunction(descriptor.fn)) {
-                    value = descriptor.fn;
-                } else if (xs.isFunction(descriptor.value)) {
-                    value = descriptor.value;
-                } else {
-                    throw new Error('Incorrect method descriptor');
-                }
-
-                //TODO add xs.lang.Function.parse (returns functions all data: name, args list, body) and separate methods for that
                 return descriptor;
             };
 

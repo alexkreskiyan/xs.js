@@ -54,4 +54,41 @@ require([
 
         strictEqual(wrapped(1, 2, 3), 9);
     });
+
+    test('getName', function () {
+        //test anonymous function
+        strictEqual(xs.Function.getName(function () {
+        }), '');
+        //test named function
+        strictEqual(xs.Function.getName(function demo123_Asd() {
+        }), 'demo123_Asd');
+    });
+
+    test('getArguments', function () {
+        //test empty arguments
+        strictEqual(JSON.stringify(xs.Function.getArguments(function () {
+        })), '[]');
+        //test arguments
+        strictEqual(JSON.stringify(xs.Function.getArguments(function demo123_Asd(demo123_Asd, asd_123_ASD) {
+        })), '["demo123_Asd","asd_123_ASD"]');
+    });
+
+    test('getBody', function () {
+        //test empty body
+        strictEqual(xs.Function.getBody(function () {
+        }).trim(), '');
+        //test named function
+        strictEqual(xs.Function.getBody(function demo123_Asd(demo123_Asd, asd_123_ASD) {
+            return demo123_Asd + asd_123_ASD + "";
+        }).trim(), 'return demo123_Asd + asd_123_ASD + "";');
+    });
+
+    test('parse', function () {
+        var data = xs.Function.parse(function demo123_Asd(demo123_Asd, asd_123_ASD) {
+            return demo123_Asd + asd_123_ASD + "";
+        });
+        strictEqual(data.name, 'demo123_Asd');
+        strictEqual(JSON.stringify(data.arguments), '["demo123_Asd","asd_123_ASD"]');
+        strictEqual(data.body.trim(), 'return demo123_Asd + asd_123_ASD + "";');
+    });
 });

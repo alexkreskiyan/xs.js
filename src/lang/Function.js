@@ -186,7 +186,7 @@
         me.emptyFn = function () {
         };
 
-        var getNameRe = /function\s+([A-z_0-9]*)/i;
+        var getNameRe = /^function\s*([A-z_0-9]*)/i;
         /**
          * Fetches name from function
          *
@@ -210,33 +210,32 @@
             return getNameRe.exec(fn.toString()).pop();
         };
 
-        var getArgsRe = /function\s+[A-z_0-9]*\s*\(([A-z_0-9\s,]*)\)/i;
+        var getArgumentsRe = /^function\s*[A-z_0-9]*\s*\(([A-z_0-9\s,]*)\)/i;
         /**
-         * Fetches args list from function
+         * Fetches arguments list from function
          *
          * For example:
          *
-         *     console.log(xs.Function.getArgs(function(){
+         *     console.log(xs.Function.getArguments(function(){
          *         console.log(this);
          *     }); // []
-         *     console.log(xs.Function.getArgs(function (a,b,e){
+         *     console.log(xs.Function.getArguments(function (a,b,e){
          *         console.log(this);
          *     }); // ['a','b','e']
          *
-         * @method getArgs
+         * @method getArguments
          *
          * @param {Function} fn parsed function
          *
          * @return {Array} array with function formal params
          */
-        me.getArgs = function (fn) {
-            getArgsRe.lastIndex = 0;
-            return xs.compact(xs.map(getArgsRe.exec(fn.toString()).pop().split(','), function (name) {
+        me.getArguments = function (fn) {
+            getArgumentsRe.lastIndex = 0;
+            return xs.compact(xs.map(getArgumentsRe.exec(fn.toString()).pop().split(','), function (name) {
                 return name.trim();
             }));
         };
 
-        var getBodyRe = /function\s+[A-z_0-9]*\s*\([A-z_0-9\s,]*\)\s*\{(.*)\}/gi;
         /**
          * Fetches function body
          *
@@ -254,19 +253,19 @@
          * @return {String} function body
          */
         me.getBody = function (fn) {
-            getBodyRe.lastIndex = 0;
-            return getBodyRe.exec(fn.toString()).pop();
+            var stringFn = fn.toString();
+            return stringFn.substring(stringFn.indexOf('{') + 1, stringFn.length - 1);
         };
 
-        var parseRe = /function\s+([A-z_0-9]*)\s*\(([A-z_0-9\s,]*)\)\s*\{(.*)\}/gi;
+        var parseRe = /^function\s*([A-z_0-9]*)\s*\(([A-z_0-9\s,]*)\)/i;
         /**
-         * Fetches function name, args and body
+         * Fetches function name, arguments and body
          *
          * For example:
          *
          *     console.log(xs.Function.parse(function asd(a,b){
          *         console.log(this);
-         *     }); // {name:'asd', args: ['a','b'], body: 'console.log(this);' }
+         *     }); // {name:'asd', arguments: ['a','b'], body: 'console.log(this);' }
          *
          * @method parse
          *
@@ -276,13 +275,14 @@
          */
         me.parse = function (fn) {
             parseRe.lastIndex = 0;
-            var data = parseRe.exec(fn.toString());
+            var stringFn = fn.toString();
+            var data = parseRe.exec(stringFn);
             return {
-                name: data[1],
-                args: xs.compact(xs.map(data[2].split(','), function (name) {
+                name:      data[1],
+                arguments: xs.compact(xs.map(data[2].split(','), function (name) {
                     return name.trim();
                 })),
-                body: data[3]
+                body:      stringFn.substring(stringFn.indexOf('{') + 1, stringFn.length - 1)
             };
         };
     });
