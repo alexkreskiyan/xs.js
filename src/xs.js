@@ -36,7 +36,7 @@
          *
          * @method uid
          *
-         * @return {number} unique id
+         * @return {Number} unique id
          */
         me.uid = function () {
             return Math.round(Math.random() * 10 ^ 10);

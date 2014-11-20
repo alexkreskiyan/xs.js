@@ -46,7 +46,7 @@ xs.define('xs.Base', function (self) {
                  *
                  * @param {xs.Base} parent Class, being verified to be ancestor of this Class
                  *
-                 * @return {boolean} verification result
+                 * @return {Boolean} verification result
                  */
                 inherits: function (parent) {
                     return this.prototype instanceof parent;

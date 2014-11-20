@@ -149,9 +149,9 @@
          * @method hasKey
          *
          * @param {Array|Object} list list to search within
-         * @param {string|number} key key to lookup for
+         * @param {String|Number} key key to lookup for
          *
-         * @return {boolean} whether list has key
+         * @return {Boolean} whether list has key
          */
         var _hasKey = me.hasKey = function (list, key) {
             if (xs.isArray(list)) {
@@ -194,7 +194,7 @@
          * @param {Array|Object} list list to search within
          * @param {*} value value to lookup for
          *
-         * @return {boolean} whether list has value
+         * @return {Boolean} whether list has value
          */
         var _has = me.has = function (list, value) {
             return _find(list, function (val) {
@@ -244,7 +244,7 @@
          * @param {Array|Object} list list to search within
          * @param {*} value value to lookup for
          *
-         * @return {string|number|undefined} found key, or undefined if nothing found
+         * @return {String|Number|undefined} found key, or undefined if nothing found
          */
         var _keyOf = me.keyOf = function (list, value) {
             var idx, keys = _keys(list), len = keys.length, key;
@@ -299,7 +299,7 @@
          * @param {Array|Object} list list to search within
          * @param {*} value value to lookup for
          *
-         * @return {string|number|undefined} found key, or undefined if nothing found
+         * @return {String|Number|undefined} found key, or undefined if nothing found
          */
         var _lastKeyOf = me.lastKeyOf = function (list, value) {
             var idx, keys = _keys(list), len = keys.length, key;
@@ -339,7 +339,7 @@
          *
          * @param {Array|Object} list list, to get size of
          *
-         * @return {number} size of list
+         * @return {Number} size of list
          */
         var _size = me.size = function (list) {
             if (xs.isArray(list)) {
@@ -1064,7 +1064,7 @@
          * @param {Array|Object} list tested list
          * @param {Function} tester tester function
          * @param {Object} scope optional scope
-         * @return {boolean} whether all values pass tester function
+         * @return {Boolean} whether all values pass tester function
          */
         var _every = me.every = function (list, tester, scope) {
             var idx, keys = _keys(list), len = keys.length, key;
@@ -1137,10 +1137,10 @@
          *
          * @param {Array|Object} list tested list
          * @param {Function} tester tester function
-         * @param {number} count count of values needed to resolve as true
+         * @param {Number} count count of values needed to resolve as true
          * @param {Object} scope optional scope
          *
-         * @return {boolean}
+         * @return {Boolean}
          */
         me.some = function (list, tester, count, scope) {
             var idx, keys = _keys(list), len = keys.length, key, found = 0;
@@ -1210,7 +1210,7 @@
          * @param {Function} tester tester function
          * @param {Object} scope optional scope
          *
-         * @return {boolean} whether no one of values pass tester function
+         * @return {Boolean} whether no one of values pass tester function
          */
         var _none = me.none = function (list, tester, scope) {
             var idx, keys = _keys(list), len = keys.length, key;
@@ -1587,9 +1587,9 @@
          * @method deleteAt
          *
          * @param {Array|Object} list list, value is deleted from
-         * @param {number|string} key key of deleted value
+         * @param {Number|String} key key of deleted value
          *
-         * @return {boolean} whether value was deleted
+         * @return {Boolean} whether value was deleted
          */
         var _deleteAt = me.deleteAt = function (list, key) {
             if (_hasKey(list, key)) {
@@ -1661,7 +1661,7 @@
          * @param {Array|Object} list list, value is deleted from
          * @param {*} value deleted value
          *
-         * @return {boolean} whether something was deleted
+         * @return {Boolean} whether something was deleted
          */
         me.delete = function (list, value) {
             var key = _keyOf(list, value);
@@ -1734,7 +1734,7 @@
          * @param {Array|Object} list list, value is deleted from
          * @param {*} value deleted value
          *
-         * @return {boolean} whether value was deleted
+         * @return {Boolean} whether value was deleted
          */
         me.deleteLast = function (list, value) {
             var key = _lastKeyOf(list, value);
@@ -1805,7 +1805,7 @@
          * @param {Array|Object} list list, values are deleted from
          * @param {*} value optional deleted value. If specified all value entries will be removed from list. If not - list is truncated
          *
-         * @return {number} count of deleted values
+         * @return {Number} count of deleted values
          */
         me.deleteAll = function (list, value) {
             var deleted = 0;

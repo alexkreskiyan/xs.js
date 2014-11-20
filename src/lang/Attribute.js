@@ -54,7 +54,7 @@
          * @param {Object} object verified object
          * @param {String} name verified name
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         var defined = me.defined = function (object, name) {
             return object.hasOwnProperty(name);
@@ -109,9 +109,9 @@
          * @method getDescriptor
          *
          * @param {Object} object used object
-         * @param {string} name property name
+         * @param {String} name property name
          *
-         * @return {Object} property descriptor
+         * @return {Object} property descriptorZ
          */
         var getDescriptor = me.getDescriptor = function (object, name) {
             return Object.getOwnPropertyDescriptor(object, name);
@@ -131,9 +131,9 @@
          * @method isAssigned
          *
          * @param {Object} object used object
-         * @param {string} name property name
+         * @param {String} name property name
          *
-         * @return {boolean} whether property is assigned
+         * @return {Boolean} whether property is assigned
          */
         me.isAssigned = function (object, name) {
             var descriptor = getDescriptor(object, name);
@@ -154,9 +154,9 @@
          * @method isAccessed
          *
          * @param {Object} object used object
-         * @param {string} name property name
+         * @param {String} name property name
          *
-         * @return {boolean} whether property is accessed
+         * @return {Boolean} whether property is accessed
          */
         me.isAccessed = function (object, name) {
             var descriptor = getDescriptor(object, name);
@@ -177,9 +177,9 @@
          * @method isWritable
          *
          * @param {Object} object used object
-         * @param {string} name property name
+         * @param {String} name property name
          *
-         * @return {boolean} whether property is writable
+         * @return {Boolean} whether property is writable
          */
         me.isWritable = function (object, name) {
             var descriptor = getDescriptor(object, name);
@@ -200,9 +200,9 @@
          * @method isConfigurable
          *
          * @param {Object} object used object
-         * @param {string} name property name
+         * @param {String} name property name
          *
-         * @return {boolean} whether property is configurable
+         * @return {Boolean} whether property is configurable
          */
         var isConfigurable = me.isConfigurable = function (object, name) {
             var descriptor = getDescriptor(object, name);
@@ -223,9 +223,9 @@
          * @method isEnumerable
          *
          * @param {Object} object used object
-         * @param {string} name property name
+         * @param {String} name property name
          *
-         * @return {boolean} whether property is enumerable
+         * @return {Boolean} whether property is enumerable
          */
         me.isEnumerable = function (object, name) {
             var descriptor = getDescriptor(object, name);
@@ -244,7 +244,7 @@
          *
          * @param {Object} descriptor verified descriptor
          *
-         * @return {boolean} whether descriptor given
+         * @return {Boolean} whether descriptor given
          */
         var isDescriptor = me.isDescriptor = function (descriptor) {
             //false if descriptor is not object
@@ -273,7 +273,7 @@
          * @method const
          *
          * @param {Object} object used object
-         * @param {string} name const name
+         * @param {String} name const name
          * @param {*} value const value
          *
          * @throws {Error} Error is thrown, when:
@@ -398,7 +398,7 @@
              *
              * @method prepare
              *
-             * @param {string} name property name
+             * @param {String} name property name
              * @param {Object|*} descriptor raw property descriptor
              *
              * @return {Object} prepared descriptor
@@ -464,7 +464,7 @@
              * @method define
              *
              * @param {Object} object used object
-             * @param {string} name defined property name
+             * @param {String} name defined property name
              * @param {Object} descriptor defined property descriptor
              *
              * @throws {Error} Error is thrown, when:
@@ -584,7 +584,7 @@
              * @method define
              *
              * @param {Object} object used object
-             * @param {string} name defined method name
+             * @param {String} name defined method name
              * @param {Object} descriptor defined method descriptor
              *
              * @throws {Error} Error is thrown, when:

@@ -44,8 +44,8 @@
          *
          * @ignore
          *
-         * @param {string} name name of repositioned item
-         * @param {string} position new item position
+         * @param {String} name name of repositioned item
+         * @param {String} position new item position
          * @param {*} relativeTo name of relativeTo positioned item
          *
          * @throws {Error} Error is thrown:
@@ -109,11 +109,11 @@
          *
          * @method add
          *
-         * @param {string} name processor name
+         * @param {String} name processor name
          * @param {Function} verifier processor verifier.
          * Returns boolean whether processor should be applied to Class. Accepts class descriptor as param
          * @param {Function} handler processor body
-         * @param {string} [position] position, class processor is inserted at. Valid values are:
+         * @param {String} [position] position, class processor is inserted at. Valid values are:
          *
          *  - first,
          *  - last,
@@ -121,7 +121,7 @@
          *  - after (relativeTo is required)
          *
          * By default, last is used
-         * @param {string} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
+         * @param {String} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
          *
          * @throws {Error} Error is thrown, when:
          *
@@ -149,15 +149,15 @@
          *
          * @method reorder
          *
-         * @param {string} name processor name
-         * @param {string} position position, class processor is inserted at. Valid values are:
+         * @param {String} name processor name
+         * @param {String} position position, class processor is inserted at. Valid values are:
          *
          *  - first,
          *  - last,
          *  - before, (relativeTo is required)
          *  - after (relativeTo is required)
          *
-         * @param {string} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
+         * @param {String} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
          */
         me.reorder = function (name, position, relativeTo) {
             _apply(name, position, relativeTo);
@@ -172,7 +172,7 @@
          *
          * @method delete
          *
-         * @param {string} name processor name
+         * @param {String} name processor name
          *
          * @throws {Error} Error is thrown, when:
          *

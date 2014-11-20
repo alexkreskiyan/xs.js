@@ -44,9 +44,9 @@
          *
          * @method has
          *
-         * @param {string} name verified name
+         * @param {String} name verified name
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         var _has = me.has = function (name) {
             return xs.hasKey(registry, name);
@@ -61,7 +61,7 @@
          *
          * @method get
          *
-         * @param {string} name class name
+         * @param {String} name class name
          *
          * @return {Function|undefined} class by name or undefined
          */
@@ -87,7 +87,7 @@
          *
          * @method add
          *
-         * @param {string} name new class name
+         * @param {String} name new class name
          * @param {Function} Class registered class
          *
          * @throws {Error} Error is thrown, when:
@@ -139,7 +139,7 @@
          *
          * @method delete
          *
-         * @param {string} name name of unset Class
+         * @param {String} name name of unset Class
          *
          * @throws {Error} Error is thrown, when:
          *
@@ -189,7 +189,7 @@
          *
          * @method define
          *
-         * @param {string} name name of created class
+         * @param {String} name name of created class
          * @param {Function} descFn descriptor function. Is called with 2 params:
          *
          * - self. Created class instance
@@ -230,9 +230,9 @@
          *
          * @method getName
          *
-         * @param {string} name class name
+         * @param {String} name class name
          *
-         * @return {string} short name
+         * @return {String} short name
          */
         var _getName = function (name) {
             return name.split('.').slice(-1).join('.');
@@ -249,9 +249,9 @@
          *
          * @method getPath
          *
-         * @param {string} name class name
+         * @param {String} name class name
          *
-         * @return {string} class path
+         * @return {String} class path
          */
         var _getPath = function (name) {
             return name.split('.').slice(0, -1).join('.');
@@ -269,7 +269,7 @@
          * @method namespace
          *
          * @param {Object|Function} root namespace relative root
-         * @param {string} name relative name to root
+         * @param {String} name relative name to root
          *
          * @return {Object|Function} namespace for given name
          */
@@ -307,7 +307,7 @@
          * @method cleanNamespace
          *
          * @param {Object|Function} root namespace relative root
-         * @param {string} name relative name to root
+         * @param {String} name relative name to root
          */
         var _cleanNamespace = function (root, name) {
 

@@ -57,7 +57,7 @@
          * @param {String} string translated string
          * @param {Object} replaces replaces hash, where keys are replaced strings and values are respective replaces
          *
-         * @return {string} translated string
+         * @return {String} translated string
          */
         me.translate = function (string, replaces) {
             xs.each(replaces, function (to, from) {

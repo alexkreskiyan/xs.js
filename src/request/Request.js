@@ -90,7 +90,7 @@ xs.define('xs.request.Request', function () {
      * @param name
      * @param value
      * @param indexes
-     * @return {Undefined}
+     * @return {undefined}
      */
     var fromQueryObjects = function (params, name, value, indexes) {
         //assign value if no indexes
@@ -187,7 +187,7 @@ xs.define('xs.request.Request', function () {
     };
     /**
      * Request methods, class, class works with
-     * @type {string[]}
+     * @type {String[]}
      */
     var methods = [
         'get',

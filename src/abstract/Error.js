@@ -42,7 +42,7 @@
         };
         /**
          * Handler for errors raising
-         * @type {raise}
+         * @type {Function}
          */
         this.raise = raise;
         /**

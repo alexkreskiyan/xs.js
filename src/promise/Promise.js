@@ -103,7 +103,7 @@ xs.define('xs.promise.Promise', function () {
                 /**
                  * Determines whether the specified value is a Promise (including third-party untrusted Promises or then()-ables), based on the Promises/A specification feature test.
                  *
-                 * @param {Mixed} value A potential Promise.
+                 * @param {*} value A potential Promise.
                  * @return {Boolean} A Boolean indicating whether the specified value was a Promise.
                  */
 
@@ -116,7 +116,7 @@ xs.define('xs.promise.Promise', function () {
                  * The specified map function may return either a value or a promise.
                  *
                  * @param {*[]/xs.promise.Promise[]/xs.promise.Promise} promisesOrValues An Array of values or Promises, or a Promise of an Array of values or Promises.
-                 * @param {function} mapFn A Function to call to transform each resolved value in the Array.
+                 * @param {Function} mapFn A Function to call to transform each resolved value in the Array.
                  * @return {Promise} A Promise of an Array of the mapped resolved values.
                  */
                 map:       function (promisesOrValues, mapFn) {

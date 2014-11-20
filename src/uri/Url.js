@@ -24,7 +24,7 @@
 xs.define('xs.uri.Url', function () {
     /**
      * Protocols, class works with
-     * @type {string[]}
+     * @type {String[]}
      */
     var protocols = [
         'http',

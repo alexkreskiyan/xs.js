@@ -47,7 +47,7 @@
          *
          * @param {*} value given value
          *
-         * @return {string} value's type
+         * @return {String} value's type
          */
         var getType = function (value) {
             var type = typeof value;
@@ -71,7 +71,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isObject = function (value) {
             return getType(value) == 'object';
@@ -89,7 +89,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isArray = function (value) {
             return Array.isArray(value);
@@ -107,7 +107,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isFunction = function (value) {
             return typeof value == 'function';
@@ -125,7 +125,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isString = function (value) {
             return typeof value == 'string';
@@ -143,7 +143,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isNumber = function (value) {
             return typeof value == 'number';
@@ -161,7 +161,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isBoolean = function (value) {
             return typeof value == 'boolean';
@@ -179,7 +179,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isRegExp = function (value) {
             return value instanceof RegExp;
@@ -197,7 +197,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isError = function (value) {
             return value instanceof Error;
@@ -215,7 +215,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isNull = function (value) {
             return value === null;
@@ -234,7 +234,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isIterable = function (value) {
             var valueType = getType(value);
@@ -254,7 +254,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isPrimitive = function (value) {
             var valueType = getType(value);
@@ -274,7 +274,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isNumeric = function (value) {
             return !isNaN(parseFloat(value)) && isFinite(value) && !Array.isArray(value);
@@ -292,7 +292,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isDefined = function (value) {
             return typeof value != 'undefined';
@@ -320,7 +320,7 @@
          *
          * @param {*} value verified value
          *
-         * @return {boolean} verification result
+         * @return {Boolean} verification result
          */
         me.isEmpty = function (value) {
             var type = getType(value);
