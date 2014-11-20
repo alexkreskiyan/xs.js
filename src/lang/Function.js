@@ -178,14 +178,6 @@
             setTimeout(fn, 0);
         };
 
-        /**
-         * @ignore
-         *
-         * Represents empty function. is used internally
-         */
-        me.emptyFn = function () {
-        };
-
         var getNameRe = /^function\s*([A-z_0-9]*)/i;
         /**
          * Fetches name from function
@@ -284,6 +276,14 @@
                 })),
                 body:      stringFn.substring(stringFn.indexOf('{') + 1, stringFn.length - 1)
             };
+        };
+
+        /**
+         * @ignore
+         *
+         * Represents empty function. is used internally
+         */
+        me.emptyFn = function () {
         };
     });
     xs.extend(xs, xs.pick(fn, [
