@@ -2349,6 +2349,7 @@
             return copy;
         };
     });
+
     Object.keys(list).forEach(function (key) {
         xs[key] = list[key];
     });

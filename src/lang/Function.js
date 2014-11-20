@@ -286,6 +286,7 @@
         me.emptyFn = function () {
         };
     });
+
     xs.extend(xs, xs.pick(fn, [
         'bind',
         'prefill',

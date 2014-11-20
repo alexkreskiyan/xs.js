@@ -66,5 +66,6 @@
             return string;
         };
     });
+
     xs.extend(xs, string);
 })(window, 'xs');

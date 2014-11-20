@@ -31,8 +31,6 @@
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      *
-     * @singleton
-     *
      * @private
      */
     var Stack = function () {
@@ -262,7 +260,7 @@
      *
      * @singleton
      */
-    xs.Class = (function () {
+    xs.Class = new (function () {
 
         /**
          * Stack of processors, processing class before it's considered to be created (before createdFn is called)
@@ -459,13 +457,12 @@
             return Class;
         };
 
-        return {
-            create:         create,
-            preprocessors:  preprocessors,
-            postprocessors: postprocessors,
-            constructors:   constructors
-        };
-    })();
+        var me = this;
+        me.create = create;
+        me.preprocessors = preprocessors;
+        me.postprocessors = postprocessors;
+        me.constructors = constructors;
+    });
 
     //define prototype of xs.Base
     xs.Base = new Function;

@@ -79,5 +79,6 @@
         };
 
     });
+    
     object.extend(xs, object);
 })(window, 'xs');

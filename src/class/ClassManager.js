@@ -31,8 +31,8 @@
      *
      * @singleton
      */
-    xs.ClassManager = (function () {
-        var me = {};
+    xs.ClassManager = new (function () {
+        var me = this;
         var registry = {};
 
         /**
@@ -312,9 +312,7 @@
         var _cleanNamespace = function (root, name) {
 
         };
-
-        return me;
-    })();
+    });
     xs.extend(xs, {
         define: xs.ClassManager.define
     });

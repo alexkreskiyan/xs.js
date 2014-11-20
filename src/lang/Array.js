@@ -58,7 +58,7 @@
                 return Math.random() - 0.5;
             });
         };
-
     });
+
     xs.extend(xs, array);
 })(window, 'xs');
