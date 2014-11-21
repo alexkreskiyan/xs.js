@@ -1,20 +1,11 @@
-/*!
+/*
  This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
- Contact:  http://annium.com/contact
+ Contact: http://annium.com/contact
 
- GNU General Public License Usage
- This file may be used under the terms of the GNU General Public License version 3.0 as
- published by the Free Software Foundation and appearing in the file LICENSE included in the
- packaging of this file.
-
- Please review the following information to ensure the GNU General Public License version 3.0
- requirements will be met: http://www.gnu.org/copyleft/gpl.html.
-
- If you are unsure which license is appropriate for your use, please contact the sales department
- at http://annium.com/contact.
+ License: http://annium.com/contact
 
  */
 (function (root, ns) {
@@ -27,13 +18,13 @@
     /**
      * xs.lang.Type is private singleton, defining basic language detection operations
      *
-     * @class xs.lang.Type
-     *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      *
-     * @singleton
-     *
      * @private
+     *
+     * @class xs.lang.Type
+     *
+     * @singleton
      */
     var type = xs.Type = new (function () {
         var me = this;
@@ -51,11 +42,13 @@
          */
         var getType = function (value) {
             var type = typeof value;
+
             if (value === null) {
                 type = 'null';
             } else if (Array.isArray(value)) {
                 type = 'array';
             }
+
             return type;
         };
 
@@ -74,6 +67,7 @@
          * @return {Boolean} verification result
          */
         me.isObject = function (value) {
+
             return getType(value) == 'object';
         };
 
@@ -92,6 +86,7 @@
          * @return {Boolean} verification result
          */
         me.isArray = function (value) {
+
             return Array.isArray(value);
         };
 
@@ -110,6 +105,7 @@
          * @return {Boolean} verification result
          */
         me.isFunction = function (value) {
+
             return typeof value == 'function';
         };
 
@@ -128,6 +124,7 @@
          * @return {Boolean} verification result
          */
         me.isString = function (value) {
+
             return typeof value == 'string';
         };
 
@@ -146,6 +143,7 @@
          * @return {Boolean} verification result
          */
         me.isNumber = function (value) {
+
             return typeof value == 'number';
         };
 
@@ -164,6 +162,7 @@
          * @return {Boolean} verification result
          */
         me.isBoolean = function (value) {
+
             return typeof value == 'boolean';
         };
 
@@ -182,6 +181,7 @@
          * @return {Boolean} verification result
          */
         me.isRegExp = function (value) {
+
             return value instanceof RegExp;
         };
 
@@ -200,6 +200,7 @@
          * @return {Boolean} verification result
          */
         me.isError = function (value) {
+
             return value instanceof Error;
         };
 
@@ -218,6 +219,7 @@
          * @return {Boolean} verification result
          */
         me.isNull = function (value) {
+
             return value === null;
         };
 
@@ -238,6 +240,7 @@
          */
         me.isIterable = function (value) {
             var valueType = getType(value);
+
             return valueType == 'object' || valueType == 'array';
         };
 
@@ -258,6 +261,7 @@
          */
         me.isPrimitive = function (value) {
             var valueType = getType(value);
+
             return valueType !== 'object' && valueType !== 'array' && valueType !== 'function';
         };
 
@@ -277,6 +281,7 @@
          * @return {Boolean} verification result
          */
         me.isNumeric = function (value) {
+
             return !isNaN(parseFloat(value)) && isFinite(value) && !Array.isArray(value);
         };
 
@@ -295,6 +300,7 @@
          * @return {Boolean} verification result
          */
         me.isDefined = function (value) {
+
             return typeof value != 'undefined';
         };
 
@@ -324,20 +330,26 @@
          */
         me.isEmpty = function (value) {
             var type = getType(value);
+
             if (type == 'object') {
+
                 return !Object.keys(value).length;
             } else if (type == 'array') {
+
                 return !value.length;
             } else if (type == 'string') {
+
                 return !value.trim();
             } else if (type == 'number') {
+
                 return value == 0;
-            } else {
-                return type != 'function' && type != 'boolean';
             }
+
+            return type != 'function' && type != 'boolean';
         };
     });
 
+    //extend xs with type
     Object.keys(type).forEach(function (method) {
         xs[method] = type[method];
     });
