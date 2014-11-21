@@ -1,20 +1,11 @@
-/*!
+/*
  This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
- Contact:  http://annium.com/contact
+ Contact: http://annium.com/contact
 
- GNU General Public License Usage
- This file may be used under the terms of the GNU General Public License version 3.0 as
- published by the Free Software Foundation and appearing in the file LICENSE included in the
- packaging of this file.
-
- Please review the following information to ensure the GNU General Public License version 3.0
- requirements will be met: http://www.gnu.org/copyleft/gpl.html.
-
- If you are unsure which license is appropriate for your use, please contact the sales department
- at http://annium.com/contact.
+ License: http://annium.com/contact
 
  */
 (function (root, ns) {
@@ -27,20 +18,18 @@
     /**
      * xs.lang.Function is private singleton, defining basic function operations.
      *
-     * @class xs.lang.Function
-     *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      *
-     * @singleton
-     *
      * @private
+     *
+     * @class xs.lang.Function
+     *
+     * @singleton
      */
     var fn = xs.Function = new (function () {
         var me = this;
 
-        var functionPrototype = Function.prototype;
-        var slice = Function.prototype.call.bind(Array.prototype.slice);
-        var concatenate = Function.prototype.apply.bind(Array.prototype.concat);
+        var _concatenate = Function.prototype.apply.bind(Array.prototype.concat);
 
         /**
          * Binds function with scope and arguments
@@ -62,7 +51,7 @@
          * @return {Function} bound function
          */
         var _bind = me.bind = function (fn, scope, args) {
-            return functionPrototype.bind.apply(fn, concatenate(scope, args));
+            return Function.prototype.bind.apply(fn, _concatenate(scope, args));
         };
 
         /**
