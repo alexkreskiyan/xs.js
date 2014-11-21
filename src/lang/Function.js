@@ -29,6 +29,7 @@
     var fn = xs.Function = new (function () {
         var me = this;
 
+        var _slice = Function.prototype.apply.bind(Array.prototype.slice);
         var _concatenate = Function.prototype.apply.bind(Array.prototype.concat);
 
         /**
@@ -138,7 +139,7 @@
          */
         me.wrap = function (fn, wrapper, scope) {
             return function () {
-                var args = slice(arguments);
+                var args = _slice(arguments);
                 args.unshift(fn);
                 return wrapper.apply(scope, args);
             }
