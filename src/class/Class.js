@@ -1,20 +1,11 @@
-/*!
+/*
  This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
- Contact:  http://annium.com/contact
+ Contact: http://annium.com/contact
 
- GNU General Public License Usage
- This file may be used under the terms of the GNU General Public License version 3.0 as
- published by the Free Software Foundation and appearing in the file LICENSE included in the
- packaging of this file.
-
- Please review the following information to ensure the GNU General Public License version 3.0
- requirements will be met: http://www.gnu.org/copyleft/gpl.html.
-
- If you are unsure which license is appropriate for your use, please contact the sales department
- at http://annium.com/contact.
+ License: http://annium.com/contact
 
  */
 (function (root, ns) {
@@ -27,11 +18,11 @@
      *
      * Stack is used to store ordered list of processors
      *
-     * @class xs.Class.Stack
-     *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      *
      * @private
+     *
+     * @class xs.Class.Stack
      */
     var Stack = function () {
         var me = this;
@@ -74,6 +65,7 @@
                 position == 'first' ? keys.unshift(name) : keys.push(name);
             } else {
                 var relativeKey = xs.keyOf(keys, relativeTo);
+
                 if (!xs.isDefined(relativeKey)) {
                     throw new Error('Relative item missing in stack');
                 }
@@ -93,6 +85,7 @@
          * @return {Object} stack items copy
          */
         me.get = function () {
+
             return xs.clone(items);
         };
 
@@ -130,13 +123,16 @@
         me.add = function (name, verifier, handler, position, relativeTo) {
             //position defaults to last
             position || (position = 'last');
+
             if (xs.hasKey(items, name)) {
                 throw new Error('processor "' + name + '" already in stack');
             }
+
             items[name] = {
                 verifier: verifier,
                 handler:  handler
             };
+
             _apply(name, position, relativeTo);
         };
 
@@ -210,6 +206,8 @@
          *
          * @ignore
          *
+         * @method process
+         *
          * @param {Array} items items stack
          * @param {Array} verifierArgs arguments for items' verifiers
          * @param {Array} handlerArgs arguments for items' handlers
@@ -218,6 +216,7 @@
         var _process = function (items, verifierArgs, handlerArgs, callback) {
             if (!items.length) {
                 callback();
+
                 return;
             }
             var item = xs.shift(items);
@@ -228,8 +227,10 @@
                 var ready = function () {
                     _process(items, verifierArgs, handlerArgs, callback);
                 };
+
                 //if item.handler returns false, processing is async, stop processing, awaiting ready call
                 if (item.handler.apply(this, xs.union(handlerArgs, ready)) === false) {
+
                     return;
                 }
             }
@@ -255,6 +256,8 @@
      *         return {
      *         };
      *     });
+     *
+     * @author Alex Kreskiyan <brutalllord@gmail.com>
      *
      * @class xs.Class
      *
@@ -334,9 +337,11 @@
          *
          * @ignore
          *
+         * @method createRaw
+         *
          * @return {Function} new xClass
          */
-        var _create = function () {
+        var _createRaw = function () {
             var Class = function xClass() {
                 var me = this;
 
@@ -349,6 +354,7 @@
                 //if parent constructor - just call it
                 if (me.self && me.self !== Class) {
                     constructor && constructor.apply(me, arguments);
+
                     return;
                 }
 
@@ -367,6 +373,7 @@
                 //apply constructor
                 constructor && constructor.apply(me, arguments);
             };
+
             return Class;
         };
 
@@ -384,6 +391,8 @@
          *         console.log('class', Class, 'created');
          *     );
          *
+         * @method create
+         *
          * @param {Function} descFn descriptor function. Is called with 2 params:
          *
          * - self. Created class instance
@@ -399,7 +408,7 @@
          * - descFn is given not as function
          * - descFn doesn't return object
          */
-        var create = function (descFn, createdFn) {
+        var _create = function (descFn, createdFn) {
 
             //descFn must be function
             if (!xs.isFunction(descFn)) {
@@ -409,7 +418,7 @@
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
 
             //create class
-            var Class = _create();
+            var Class = _createRaw();
 
             //get descriptor
             var namespace = {};
@@ -457,8 +466,9 @@
             return Class;
         };
 
+        //assign instance attributes
         var me = this;
-        me.create = create;
+        me.create = _create;
         me.preprocessors = preprocessors;
         me.postprocessors = postprocessors;
         me.constructors = constructors;
