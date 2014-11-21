@@ -1,20 +1,11 @@
-/*!
+/*
  This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
- Contact:  http://annium.com/contact
+ Contact: http://annium.com/contact
 
- GNU General Public License Usage
- This file may be used under the terms of the GNU General Public License version 3.0 as
- published by the Free Software Foundation and appearing in the file LICENSE included in the
- packaging of this file.
-
- Please review the following information to ensure the GNU General Public License version 3.0
- requirements will be met: http://www.gnu.org/copyleft/gpl.html.
-
- If you are unsure which license is appropriate for your use, please contact the sales department
- at http://annium.com/contact.
+ License: http://annium.com/contact
 
  */
 (function (root, ns) {
@@ -25,14 +16,24 @@
     /**
      * xs.ClassManager is core class, that is used to manage created classes
      *
-     * @class xs.ClassManager
-     *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
+     *
+     * @class xs.ClassManager
      *
      * @singleton
      */
     xs.ClassManager = new (function () {
         var me = this;
+
+        /**
+         * Store of all registered classes
+         *
+         * @private
+         *
+         * @property registry
+         *
+         * @type {Object}
+         */
         var registry = {};
 
         /**
@@ -49,6 +50,7 @@
          * @return {Boolean} verification result
          */
         var _has = me.has = function (name) {
+
             return xs.hasKey(registry, name);
         };
 
@@ -66,6 +68,7 @@
          * @return {Function|undefined} class by name or undefined
          */
         me.get = function (name) {
+
             return registry[name];
         };
 
@@ -100,6 +103,11 @@
             //throw error if trying to set defined
             if (_has(name)) {
                 throw new Error('Class "' + name + '" is already defined');
+            }
+
+            //throw error if trying to add already added with other name
+            if (xs.has(registry, Class)) {
+                throw new Error('Class "' + Class.label + '" can not be added as "' + name + '"');
             }
 
             //throw error if Class is not function
@@ -157,7 +165,9 @@
             //get short name of Class
             var label = _getName(name);
 
+            //get path of Class
             var path = _getPath(name);
+
             //get Class namespace by path
             var namespace = _namespace(root, path);
 
@@ -235,6 +245,7 @@
          * @return {String} short name
          */
         var _getName = function (name) {
+
             return name.split('.').slice(-1).join('.');
         };
 
@@ -254,6 +265,7 @@
          * @return {String} class path
          */
         var _getPath = function (name) {
+
             return name.split('.').slice(0, -1).join('.');
         };
 
@@ -269,15 +281,20 @@
          * @method namespace
          *
          * @param {Object|Function} root namespace relative root
-         * @param {String} name relative name to root
+         * @param {String} path relative path to root
          *
-         * @return {Object|Function} namespace for given name
+         * @return {Object|Function} namespace for given path
          */
-        var _namespace = function (root, name) {
-            //explode name to parts
-            var parts = name.split('.');
+        var _namespace = function (root, path) {
+            //use root if no path
+            if (!path) {
+                return root;
+            }
 
-            //get name parent part
+            //explode name to parts
+            var parts = path.split('.');
+
+            //get first path's part
             var part = parts.shift();
 
             //create namespace if missing
@@ -289,10 +306,9 @@
             if (parts.length) {
 
                 return _namespace(root[part], parts.join('.'));
-            } else {
-
-                return root[part];
             }
+
+            return root[part];
         };
 
         /**
@@ -307,10 +323,35 @@
          * @method cleanNamespace
          *
          * @param {Object|Function} root namespace relative root
-         * @param {String} name relative name to root
+         * @param {String} path relative path to root
          */
-        var _cleanNamespace = function (root, name) {
+        var _cleanNamespace = function (root, path) {
+            //return if path is empty
+            if (!path) {
+                return;
+            }
 
+            //explode name to parts
+            var parts = path.split('.');
+
+            //get last path's part
+            var part = parts.pop();
+
+            //set path to parent
+            path = parts.join('.');
+
+            //get parent namespace
+            var namespace = _namespace(root, path);
+
+            //remove namespace if empty
+            if (xs.isEmpty(namespace[part])) {
+
+                //remove empty namespace
+                delete namespace[part];
+
+                //try to clean parent
+                _cleanNamespace(root, path);
+            }
         };
     });
     xs.extend(xs, {
