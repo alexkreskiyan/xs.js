@@ -1,3 +1,13 @@
+/*
+ This file is core of xs.js
+
+ Copyright (c) 2013-2014, Annium Inc
+
+ Contact: http://annium.com/contact
+
+ License: http://annium.com/contact
+
+ */
 require([
     'xs.lang.Type',
     'xs.lang.List',
@@ -10,15 +20,19 @@ require([
     'xs.class.preprocessors.extend',
     'xs.class.preprocessors.methods'
 ], function () {
+
     'use strict';
+
     module('xs.class.preprocessors.methods');
     test('methods chain', function () {
         //setUp
 
         //Base
         var BaseName = 'my.Base';
+
         //define
         var Base = xs.Class.create(function () {
+
             return {
                 methods: {
                     a: function () {
@@ -27,16 +41,20 @@ require([
                 }
             };
         });
+
         //save
         var BaseSave = xs.ClassManager.get(BaseName);
         BaseSave && xs.ClassManager.delete(BaseName);
+
         //add to ClassManager
         xs.ClassManager.add(BaseName, Base);
 
         //Parent
         var ParentName = 'my.Parent';
+
         //define
         var Parent = xs.Class.create(function () {
+
             return {
                 extends: 'my.Base',
                 methods: {
@@ -49,28 +67,35 @@ require([
                 }
             };
         });
+
         //save
         var ParentSave = xs.ClassManager.get(ParentName);
         ParentSave && xs.ClassManager.delete(ParentName);
+
         //add to ClassManager
         xs.ClassManager.add(ParentName, Parent);
 
         //Child
         var ChildName = 'my.Child';
+
         //define
         var Child = xs.Class.create(function () {
+
             return {
                 extends: 'my.Parent',
                 methods: {
                     c: function () {
+
                         return 5;
                     }
                 }
             };
         });
+
         //save
         var ChildSave = xs.ClassManager.get(ChildName);
         ChildSave && xs.ClassManager.delete(ChildName);
+
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
@@ -104,5 +129,4 @@ require([
         xs.ClassManager.delete(ChildName);
         ChildSave && xs.ClassManager.add(ChildName, ChildSave);
     });
-    //TODO test async extend with using xs.Loader
 });

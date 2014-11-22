@@ -1,3 +1,13 @@
+/*
+ This file is core of xs.js
+
+ Copyright (c) 2013-2014, Annium Inc
+
+ Contact: http://annium.com/contact
+
+ License: http://annium.com/contact
+
+ */
 require([
     'xs.lang.Type',
     'xs.lang.List',
@@ -10,31 +20,38 @@ require([
     'xs.class.preprocessors.extend',
     'xs.class.preprocessors.const'
 ], function () {
+
     'use strict';
+
     module('xs.class.preprocessors.const');
     test('const chain', function () {
         //setUp
-
         //Base
         var BaseName = 'my.Base';
+
         //define
         var Base = xs.Class.create(function () {
+
             return {
                 const: {
                     a: 1
                 }
             };
         });
+
         //save
         var BaseSave = xs.ClassManager.get(BaseName);
         BaseSave && xs.ClassManager.delete(BaseName);
+
         //add to ClassManager
         xs.ClassManager.add(BaseName, Base);
 
         //Parent
         var ParentName = 'my.Parent';
+
         //define
         var Parent = xs.Class.create(function () {
+
             return {
                 extends: 'my.Base',
                 const:   {
@@ -43,16 +60,20 @@ require([
                 }
             };
         });
+
         //save
         var ParentSave = xs.ClassManager.get(ParentName);
         ParentSave && xs.ClassManager.delete(ParentName);
+
         //add to ClassManager
         xs.ClassManager.add(ParentName, Parent);
 
         //Child
         var ChildName = 'my.Child';
+
         //define
         var Child = xs.Class.create(function () {
+
             return {
                 extends: 'my.Parent',
                 const:   {
@@ -60,11 +81,16 @@ require([
                 }
             };
         });
+
         //save
         var ChildSave = xs.ClassManager.get(ChildName);
         ChildSave && xs.ClassManager.delete(ChildName);
+
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
+
+
+        //run test
 
         //check constants
         //Base
@@ -90,6 +116,7 @@ require([
         strictEqual(my.Child.c, 5);
         strictEqual(xs.Attribute.isWritable(my.Child, 'c'), false);
         strictEqual(xs.Attribute.isConfigurable(my.Child, 'c'), false);
+
 
         //tearDown
 
