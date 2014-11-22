@@ -1,9 +1,22 @@
+/*
+ This file is core of xs.js
+
+ Copyright (c) 2013-2014, Annium Inc
+
+ Contact: http://annium.com/contact
+
+ License: http://annium.com/contact
+
+ */
 require([
     'xs.lang.Type',
     'xs.lang.List',
     'xs.lang.Object',
     'xs.lang.Attribute'
 ], function () {
+
+    'use strict';
+
     module('xs.lang.Attribute');
 
     test('defined', function () {
@@ -11,14 +24,18 @@ require([
     });
 
     test('define', function () {
+        //init test object
         var obj = {};
 
         strictEqual(xs.Attribute.defined(obj, 'a'), false);
+
         xs.Attribute.define(obj, 'a', {value: {x: 1}});
+
         strictEqual(xs.Attribute.defined(obj, 'a'), true);
     });
 
     test('getDescriptor', function () {
+        //init test object
         var obj = {};
         var getter = function () {
             return 1;
@@ -28,24 +45,34 @@ require([
         };
         var value = {x: 1};
 
+        //define assignable test property
         xs.Attribute.define(obj, 'a', {
             value:        value,
             writable:     true,
             configurable: true,
             enumerable:   true
         });
+
+        //get descriptor
         var descriptor = xs.Attribute.getDescriptor(obj, 'a');
+
+        //check descriptor was applied correctly
         strictEqual(Object.keys(descriptor).length, 4);
         strictEqual(descriptor.value, value);
         strictEqual(descriptor.writable, true);
         strictEqual(descriptor.configurable, true);
         strictEqual(descriptor.enumerable, true);
 
+        //define accessed test property
         xs.Attribute.define(obj, 'a', {
             get: getter,
             set: setter
         });
+
+        //get descriptor
         descriptor = xs.Attribute.getDescriptor(obj, 'a');
+
+        //check descriptor was applied correctly
         strictEqual(Object.keys(descriptor).length, 4);
         strictEqual(descriptor.get, getter);
         strictEqual(descriptor.set, setter);
@@ -54,6 +81,7 @@ require([
     });
 
     test('isAssigned', function () {
+        //init test object
         var obj = {};
         var getter = function () {
             return 1;
@@ -63,22 +91,29 @@ require([
         };
         var value = {x: 1};
 
+        //define assigned property
         xs.Attribute.define(obj, 'a', {
             value:        value,
             writable:     true,
             configurable: true,
             enumerable:   true
         });
+
+        //test that it is assigned
         strictEqual(xs.Attribute.isAssigned(obj, 'a'), true);
 
+        //define accessed property
         xs.Attribute.define(obj, 'a', {
             get: getter,
             set: setter
         });
+
+        //test that it is not assigned
         strictEqual(xs.Attribute.isAssigned(obj, 'a'), false);
     });
 
     test('isAccessed', function () {
+        //init test object
         var obj = {};
         var getter = function () {
             return 1;
@@ -88,22 +123,29 @@ require([
         };
         var value = {x: 1};
 
+        //define assigned property
         xs.Attribute.define(obj, 'a', {
             value:        value,
             writable:     true,
             configurable: true,
             enumerable:   true
         });
+
+        //test that it is not accessed
         strictEqual(xs.Attribute.isAccessed(obj, 'a'), false);
 
+        //define accessed property
         xs.Attribute.define(obj, 'a', {
             get: getter,
             set: setter
         });
+
+        //test that is accessed
         strictEqual(xs.Attribute.isAccessed(obj, 'a'), true);
     });
 
     test('isWritable', function () {
+        //init test object
         var obj = {};
         var getter = function () {
             return 1;
@@ -113,60 +155,83 @@ require([
         };
         var value = {x: 1};
 
+        //define writable property
         xs.Attribute.define(obj, 'a', {
             value:        value,
             writable:     true,
             configurable: true,
             enumerable:   true
         });
+
+        //test that it is writable
         strictEqual(xs.Attribute.isWritable(obj, 'a'), true);
 
+        //define non-writable property
         xs.Attribute.define(obj, 'a', {
             value:    value,
             writable: false
         });
+
+        //test that it is not writable
         strictEqual(xs.Attribute.isWritable(obj, 'a'), false);
 
+        //define accessed property
         xs.Attribute.define(obj, 'a', {
             get: getter,
             set: setter
         });
+
+        //test that it is not writable
         strictEqual(xs.Attribute.isWritable(obj, 'a'), false);
     });
 
     test('isConfigurable', function () {
+        //init test objects
         var obj = {};
         var value = {x: 1};
 
+        //define configurable property
         xs.Attribute.define(obj, 'a', {
             value:        value,
             writable:     true,
             configurable: true,
             enumerable:   true
         });
+
+        //test that it is configurable
         strictEqual(xs.Attribute.isConfigurable(obj, 'a'), true);
 
+        //define non-configurable property
         xs.Attribute.define(obj, 'a', {
             configurable: false
         });
+
+        //test that it is not configurable
         strictEqual(xs.Attribute.isConfigurable(obj, 'a'), false);
     });
 
     test('isEnumerable', function () {
+        //init test objects
         var obj = {};
         var value = {x: 1};
 
+        //define enumerable property
         xs.Attribute.define(obj, 'a', {
             value:        value,
             writable:     true,
             configurable: true,
             enumerable:   true
         });
+
+        //test that it is enumerable
         strictEqual(xs.Attribute.isEnumerable(obj, 'a'), true);
 
+        //define non-enumerable property
         xs.Attribute.define(obj, 'a', {
             enumerable: false
         });
+
+        //test that it is not enumerable
         strictEqual(xs.Attribute.isEnumerable(obj, 'a'), false);
     });
 
@@ -174,8 +239,10 @@ require([
         //not-object desc
         strictEqual(xs.Attribute.isDescriptor(null), false, 'null has type object, but fails');
         strictEqual(xs.Attribute.isDescriptor([]), false);
+
         //object desc without any properties
         strictEqual(xs.Attribute.isDescriptor({a: 1}), false);
+
         //object desc with any property
         strictEqual(xs.Attribute.isDescriptor({a: 1, value: true}), true);
     });
@@ -190,6 +257,8 @@ require([
             set:      function () {
             }
         };
+
+        //get descriptor
         var desc = xs.Attribute.prepareDescriptor(source);
         strictEqual(Object.keys(desc).toString(), 'get,set');
         strictEqual(desc.get, source.get);
@@ -205,6 +274,8 @@ require([
             get:          5,
             set:          null
         };
+
+        //get descriptor
         desc = xs.Attribute.prepareDescriptor(source);
         strictEqual(Object.keys(desc).toString(), 'value,writable,configurable,enumerable');
         strictEqual(desc.value, source.value);
@@ -214,9 +285,11 @@ require([
     });
 
     test('const', function () {
+        //init test objects
         var obj = {};
         var value = {x: 1};
 
+        //define and test constant
         xs.Attribute.const(obj, 'a', value);
         strictEqual(obj.a, value);
 
@@ -225,12 +298,18 @@ require([
             xs.Attribute.const(obj, 'a', value);
         });
 
+        //const is defined
         strictEqual('a' in obj, true);
 
-        delete obj['a'];
+        //const is immutable
+        throws(function () {
+            delete obj['a'];
+        });
         strictEqual(obj['a'], value);
 
-        obj['a'] = null;
+        throws(function () {
+            obj['a'] = null;
+        });
         strictEqual(obj['a'], value);
     });
 
@@ -283,6 +362,7 @@ require([
         //check for defined and not configurable property
         //check defaults mechanism
 
+        //init test objects
         var obj = {};
         var getter = function () {
             return 1;
@@ -292,6 +372,7 @@ require([
         };
         var value = {x: 1};
 
+        //try to define incorrect descriptor
         xs.Attribute.property.define(obj, 'a', value);
 
         //redefine throws error
@@ -300,6 +381,7 @@ require([
         });
         strictEqual(obj.a, undefined);
 
+        //define assigned property correctly
         xs.Attribute.property.define(obj, 'b', {
             value:        value,
             configurable: true,
@@ -314,6 +396,7 @@ require([
         strictEqual(xs.Attribute.isEnumerable(obj, 'b'), true);
         strictEqual(obj.b, value);
 
+        //define accessed property correctly
         xs.Attribute.property.define(obj, 'c', {
             get: getter,
             set: setter
@@ -359,11 +442,13 @@ require([
     });
 
     test('method.define', function () {
+        //init test objects
         var obj = {};
         var value = function (x) {
             return x;
         };
 
+        //define sample const
         xs.Attribute.const(obj, 'const', null);
 
         //test when error for created && !configurable property

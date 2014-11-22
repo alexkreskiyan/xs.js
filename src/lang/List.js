@@ -1879,7 +1879,7 @@
          * @method deleteAll
          *
          * @param {Array|Object} list list, values are deleted from
-         * @param {*} value optional deleted value. If specified all value entries will be removed from list. If not - list is truncated
+         * @param {*} [value] optional deleted value. If specified all value entries will be removed from list. If not - list is truncated
          *
          * @return {Number} count of deleted values
          */
@@ -2212,7 +2212,7 @@
             var merge = _concatenate([], _slice(arguments));
 
             //get union scenario
-            var byObject = _every(merge, function (arg) {
+            var byObject = xs.size(merge) && _every(merge, function (arg) {
 
                 return xs.isObject(arg);
             });

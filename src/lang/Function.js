@@ -83,7 +83,7 @@
         };
 
         /**
-         * Creates function, that is executed only once
+         * Creates function, that is executed only memorize
          *
          * For example:
          *
@@ -91,19 +91,19 @@
          *         obj.x++;
          *     };
          *     var obj = {x: 1};
-         *     var one = xs.once(fn);
+         *     var one = xs.memorize(fn);
          *     one(obj);
          *     console.log(obj.x); //2
          *     one(obj);
          *     console.log(obj.x); //2
          *
-         * @method once
+         * @method memorize
          *
          * @param {Function} fn bound function
          *
          * @return {Function} bound function
          */
-        me.once = function (fn) {
+        me.memorize = function (fn) {
             var ran = false, memo;
             return function () {
                 if (ran) {
@@ -280,7 +280,7 @@
     xs.extend(xs, xs.pick(fn, [
         'bind',
         'prefill',
-        'once',
+        'memorize',
         'wrap',
         'nextTick',
         'emptyFn'
