@@ -15,7 +15,7 @@
 
     /**
      * Preprocessor const
-     * Is used to extend child class from parent class
+     * Is used to process class constants
      *
      * @ignore
      *
