@@ -8,6 +8,7 @@
     "xs.class.preprocessors.staticMethods",
     "xs.class.preprocessors.methods",
     "xs.class.preprocessors.properties",
+    "xs.class.preprocessors.singleton",
     "xs.lang.Array",
     "xs.lang.Attribute",
     "xs.lang.Type",

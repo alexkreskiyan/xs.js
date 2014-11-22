@@ -19,16 +19,15 @@ require([
     'xs.class.Base',
     'xs.class.preprocessors.extend',
     'xs.class.preprocessors.properties',
-    'xs.class.preprocessors.methods'
+    'xs.class.preprocessors.singleton'
 ], function () {
 
     'use strict';
 
-    module('xs.class.preprocessors.methods');
+    module('xs.class.preprocessors.singleton');
 
-    test('methods chain', function () {
+    test('singleton chain', function () {
         //setUp
-
         //Base
         var BaseName = 'my.Base';
 
@@ -36,11 +35,6 @@ require([
         var Base = xs.Class.create(function () {
 
             return {
-                methods: {
-                    a: function () {
-                        return 1;
-                    }
-                }
             };
         });
 
@@ -58,15 +52,8 @@ require([
         var Parent = xs.Class.create(function () {
 
             return {
-                extends: 'my.Base',
-                methods: {
-                    a: function () {
-                        return 2;
-                    },
-                    b: function () {
-                        return 3;
-                    }
-                }
+                extends:   'my.Base',
+                singleton: true
             };
         });
 
@@ -84,13 +71,7 @@ require([
         var Child = xs.Class.create(function () {
 
             return {
-                extends: 'my.Parent',
-                methods: {
-                    c: function () {
-
-                        return 5;
-                    }
-                }
+                extends: 'my.Parent'
             };
         });
 
@@ -101,24 +82,21 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
-        //check methods
+
+        //check chain
         //Base
-        var base = new my.Base;
-        strictEqual(base.a(), 1);
+        new my.Base;
 
         //Parent
-        var parent = new my.Parent;
-        strictEqual(parent.a(), 2);
-        strictEqual(parent.b(), 3);
+        throws(function () {
+            new my.Parent;
+        });
 
         //Child
-        var child = new my.Child;
-        strictEqual(child.a(), 2);
-        strictEqual(child.b(), 3);
-        strictEqual(child.c(), 5);
+        new my.Child;
+
 
         //tearDown
-
         //Base
         xs.ClassManager.delete(BaseName);
         BaseSave && xs.ClassManager.add(BaseName, BaseSave);
