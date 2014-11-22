@@ -242,11 +242,10 @@
     /**
      * xs.Class is core class, that is used for class generation.
      *
-     * xs.Class provides 3 stacks to register processors:
+     * xs.Class provides 2 stacks to register processors:
      *
      * - {@link xs.Class#preprocessors preprocessors}
      * - {@link xs.Class#postprocessors postprocessors}
-     * - {@link xs.Class#constructors constructors}
      *
      * Usage example:
      *
@@ -312,27 +311,6 @@
         var postprocessors = new Stack();
 
         /**
-         * Stack of processors, processing object instance before object constructor is called
-         *
-         * Provided arguments are:
-         *
-         * For verifier:
-         *
-         *  - Class
-         *  - instance
-         *
-         * For handler:
-         *
-         *  - Class
-         *  - instance
-         *
-         * @property constructors
-         *
-         * @type {xs.Class.Stack}
-         */
-        var constructors = new Stack();
-
-        /**
          * Returns new xClass sample
          *
          * @ignore
@@ -348,8 +326,13 @@
                 //define class constructor
                 var descriptor = Class.descriptor;
 
+                //throw exception if Class is singleton
+                if (descriptor.singleton) {
+                    throw new Error('Can not create instance of singleton class');
+                }
+
                 //get constructor shortcut
-                var constructor = xs.isFunction(descriptor.constructor) ? descriptor.constructor : undefined;
+                var constructor = descriptor.constructor;
 
                 //if parent constructor - just call it
                 if (me.self && me.self !== Class) {
@@ -361,14 +344,19 @@
                 //save class reference
                 me.self = Class;
 
-                //process constructors
-                constructors.process([
-                    Class,
-                    me
-                ], [
-                    Class,
-                    me
-                ]);
+                //init privates storage
+                me.privates = {};
+
+                //assign values
+                var properties = descriptor.properties;
+                var keys = Object.keys(properties);
+                var i, length = keys.length, name, property;
+
+                for (i = 0; i < length; i++) {
+                    name = keys[i];
+                    property = properties[name];
+                    property.hasOwnProperty('value') && (me[name] = property.value);
+                }
 
                 //apply constructor
                 constructor && constructor.apply(me, arguments);
@@ -471,7 +459,6 @@
         me.create = _create;
         me.preprocessors = preprocessors;
         me.postprocessors = postprocessors;
-        me.constructors = constructors;
     });
 
     //define prototype of xs.Base

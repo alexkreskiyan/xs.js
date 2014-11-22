@@ -63,8 +63,8 @@
         Class.descriptor.static.properties = properties;
 
         //apply all properties
-        xs.each(properties, function (value, name) {
-            xs.Attribute.property.define(Class, name, value);
+        xs.each(properties, function (descriptor, name) {
+            xs.Attribute.property.define(Class, name, descriptor);
         });
     });
 })(window, 'xs');

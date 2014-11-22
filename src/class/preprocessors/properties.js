@@ -27,10 +27,7 @@
     }, function (Class, descriptor) {
 
         //init properties as empty hash
-        var properties = {
-            accessed: {},
-            assigned: {}
-        };
+        var properties = {};
 
 
         //inherited
@@ -39,29 +36,19 @@
 
         //extend properties with inherited
         if (xs.isObject(inherited)) {
-            xs.extend(properties.accessed, inherited.accessed);
-            xs.extend(properties.assigned, inherited.assigned);
+            xs.extend(properties, inherited);
         }
 
 
         //own
+        var own = descriptor.properties;
+
         //get own properties from raw descriptor and apply
-        if (xs.isObject(descriptor.properties)) {
-            var own = {
-                accessed: {},
-                assigned: {}
-            };
+        if (xs.isObject(own)) {
 
             //prepare them
-            xs.each(descriptor.properties, function (value, name) {
-                var descriptor = xs.Attribute.property.prepare(name, value);
-
-                //save depending on property type
-                if (descriptor.get) {
-                    own.accessed[name] = descriptor;
-                } else {
-                    own.assigned[name] = descriptor;
-                }
+            xs.each(own, function (value, name, list) {
+                list[name] = xs.Attribute.property.prepare(name, value);
             });
 
             //extend properties with own ones
@@ -74,8 +61,17 @@
         Class.descriptor.properties = properties;
 
         //apply all accessed properties
-        xs.each(properties.accessed, function (value, name) {
-            xs.Attribute.property.define(Class.prototype, name, value);
+        var prototype = Class.prototype;
+
+        xs.each(properties, function (descriptor, name) {
+
+            //save property to prototype
+            xs.Attribute.property.define(prototype, name, descriptor);
+
+            //set undefined for assigned properties
+            if (xs.hasKey(descriptor, 'value')) {
+                prototype[name] = undefined;
+            }
         });
     });
 })(window, 'xs');

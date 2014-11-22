@@ -119,8 +119,6 @@ require([
         //check methods
         //Base
         var base = new my.Base;
-        //TODO
-        base.privates = {};
         strictEqual(base.a, 1);
 
         //readonly
@@ -129,8 +127,6 @@ require([
 
         //Parent
         var parent = new my.Parent;
-        //TODO
-        parent.privates = {};
         strictEqual(parent.a, undefined);
 
         //setter assigned
@@ -146,9 +142,7 @@ require([
 
         //Child
         var child = new my.Child;
-        //TODO
-        child.privates = {};
-        strictEqual(child.a, undefined); //TODO - default not assigned
+        strictEqual(child.a, 2);
         strictEqual(child.b, undefined);
 
         //getter assigned
