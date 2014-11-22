@@ -26,6 +26,9 @@
         return true;
     }, function (Class, descriptor) {
 
+        //create privates storage in class
+        Class.privates = {};
+
         //init properties as empty hash
         var properties = {};
 
