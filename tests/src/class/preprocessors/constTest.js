@@ -24,6 +24,7 @@ require([
     'use strict';
 
     module('xs.class.preprocessors.const');
+
     test('const chain', function () {
         //setUp
         //Base

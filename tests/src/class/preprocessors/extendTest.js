@@ -23,6 +23,7 @@ require([
     'use strict';
 
     module('xs.class.preprocessors.extend');
+
     test('extend base', function () {
         //create Class
         var Class = xs.Class.create(function () {
@@ -32,6 +33,7 @@ require([
         //Class extends xs.Base
         strictEqual(Class.parent, xs.Base);
     });
+
     test('extend chain', function () {
         //setUp
 

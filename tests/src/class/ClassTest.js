@@ -1,3 +1,13 @@
+/*
+ This file is core of xs.js
+
+ Copyright (c) 2013-2014, Annium Inc
+
+ Contact: http://annium.com/contact
+
+ License: http://annium.com/contact
+
+ */
 require([
     'xs.lang.Type',
     'xs.lang.List',
@@ -6,20 +16,26 @@ require([
     'xs.lang.Function',
     'xs.class.Class'
 ], function () {
+
     'use strict';
+
     module('xs.Class');
+
     test('create', function () {
         //test create without descriptor fails
         throws(xs.Class.create);
 
         var Class = xs.Class.create(function (self, ns) {
+
             return {};
         });
 
         //class is function
         strictEqual(xs.isFunction(Class), true);
     });
+
     test('processors add', function () {
+        //setUp
         var stack = xs.Class.preprocessors;
 
         //save stack items
@@ -31,11 +47,15 @@ require([
         });
 
         var verifier = function () {
+
             return true;
         };
         var handler = function () {
 
         };
+
+
+        //run test
 
         //add processor to last
         stack.add('one', verifier, handler);
@@ -70,6 +90,9 @@ require([
             strictEqual(item.handler, handler);
         });
 
+
+        //tearDown
+
         //clear stack
         xs.each(stack.get(), function (item, name) {
             stack.delete(name);
@@ -80,7 +103,9 @@ require([
             stack.add(name, item.verifier, item.handler);
         });
     });
+
     test('processors reorder', function () {
+        //setUp
         var stack = xs.Class.preprocessors;
 
         //save stack items
@@ -92,11 +117,15 @@ require([
         });
 
         var verifier = function () {
+
             return true;
         };
         var handler = function () {
 
         };
+
+
+        //run test
 
         //add processors
         stack.add('one', verifier, handler);
@@ -131,6 +160,9 @@ require([
         stack.reorder('three', 'after', 'one');
         strictEqual(JSON.stringify(xs.keys(stack.get())), '["two","one","three","four"]');
 
+
+        //tearDown
+
         //clear stack
         xs.each(stack.get(), function (item, name) {
             stack.delete(name);
@@ -141,7 +173,9 @@ require([
             stack.add(name, item.verifier, item.handler);
         });
     });
+
     test('processors delete', function () {
+        //setUp
         var stack = xs.Class.preprocessors;
 
         //save stack items
@@ -153,11 +187,15 @@ require([
         });
 
         var verifier = function () {
+
             return true;
         };
         var handler = function () {
 
         };
+
+
+        //run test
 
         //add processors
         stack.add('one', verifier, handler);
@@ -183,6 +221,9 @@ require([
         stack.delete('three');
         strictEqual(JSON.stringify(xs.keys(stack.get())), '["two","four"]');
 
+
+        //tearDown
+
         //clear stack
         xs.each(stack.get(), function (item, name) {
             stack.delete(name);
@@ -193,7 +234,9 @@ require([
             stack.add(name, item.verifier, item.handler);
         });
     });
+
     asyncTest('process class', function () {
+        //setUp
         var stack = xs.Class.preprocessors;
 
         //save stack items
@@ -205,8 +248,12 @@ require([
         });
 
         var verifier = function () {
+
             return true;
         };
+
+
+        //run test
 
         //add processors
         stack.add('one', verifier, function (self) {
@@ -215,20 +262,27 @@ require([
         stack.add('two', verifier, function (self, descriptor, ns, ready) {
             self.descriptor.chain += 'two';
             setTimeout(ready, 100);
+
             return false;
         });
         stack.add('three', verifier, function (self, descriptor, ns, ready) {
             self.descriptor.chain += 'three';
             setTimeout(ready, 100);
+
             return false;
         });
 
         xs.Class.create(function () {
+
             return {};
         }, function (Class) {
             start();
 
             strictEqual(Class.descriptor.chain, 'onetwothree');
+
+
+            //tearDown
+
             //clear stack
             xs.each(stack.get(), function (item, name) {
                 stack.delete(name);

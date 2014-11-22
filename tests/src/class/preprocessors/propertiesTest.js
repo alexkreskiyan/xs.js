@@ -24,6 +24,7 @@ require([
     'use strict';
 
     module('xs.class.preprocessors.properties');
+
     test('properties chain', function () {
         //setUp
         //Base

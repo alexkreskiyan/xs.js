@@ -24,6 +24,7 @@ require([
     'use strict';
 
     module('xs.class.preprocessors.methods');
+
     test('methods chain', function () {
         //setUp
 

@@ -24,6 +24,7 @@ require([
     'use strict';
 
     module('xs.class.preprocessors.staticMethods');
+
     test('static methods chain', function () {
         //setUp
         //Base
