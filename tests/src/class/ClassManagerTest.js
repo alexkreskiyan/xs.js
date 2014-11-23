@@ -87,9 +87,9 @@ require([
     test('add', function () {
         //setUp
         //define names
-        var classOneName = 'my.demo.first.Class_One';
-        var classTwoName = 'my.demo.first.Class_Two';
-        var classThreeName = 'Class_Three';
+        var classOneName = 'my.demo.first.ClassOne';
+        var classTwoName = 'my.demo.first.ClassTwo';
+        var classThreeName = 'ClassThree';
 
         //save classes, if defined
         var saveOne = xs.ClassManager.get(classOneName);
@@ -140,7 +140,10 @@ require([
         strictEqual(ClassOne.label, classOneName);
 
         //namespace ok
-        strictEqual(my.demo.first.Class_One, ClassOne);
+        strictEqual(xs.keys(my.demo.first).toString(), 'ClassOne');
+        strictEqual(my.demo.first.ClassOne, ClassOne);
+        strictEqual(xs.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne');
+        strictEqual(my.demo.first.ClassOne.namespace.ClassOne, ClassOne);
 
         //add class two
         xs.ClassManager.add(classTwoName, ClassTwo);
@@ -162,7 +165,14 @@ require([
         strictEqual(ClassTwo.label, classTwoName);
 
         //namespace ok
-        strictEqual(my.demo.first.Class_Two, ClassTwo);
+        strictEqual(xs.keys(my.demo.first).toString(), 'ClassOne,ClassTwo');
+        strictEqual(my.demo.first.ClassTwo, ClassTwo);
+        strictEqual(xs.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne,ClassTwo');
+        strictEqual(my.demo.first.ClassOne.namespace.ClassOne, ClassOne);
+        strictEqual(my.demo.first.ClassOne.namespace.ClassTwo, ClassTwo);
+        strictEqual(xs.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassOne,ClassTwo');
+        strictEqual(my.demo.first.ClassTwo.namespace.ClassOne, ClassOne);
+        strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, ClassTwo);
 
         //add class three
         xs.ClassManager.add(classThreeName, ClassThree);
@@ -184,7 +194,9 @@ require([
         strictEqual(ClassThree.label, classThreeName);
 
         //namespace ok
-        strictEqual(Class_Three, ClassThree);
+        strictEqual(window.ClassThree, ClassThree);
+        strictEqual(xs.keys(window.ClassThree.namespace).toString(), 'ClassThree');
+        strictEqual(window.ClassThree.namespace.ClassThree, ClassThree);
 
 
         //tearDown
@@ -243,6 +255,16 @@ require([
         //add classThree
         xs.ClassManager.add(classThreeName, ClassThree);
 
+        //test namespaces
+        strictEqual(xs.keys(my.demo.first).toString(), 'ClassOne,ClassTwo');
+        strictEqual(my.demo.first.ClassTwo, ClassTwo);
+        strictEqual(xs.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne,ClassTwo');
+        strictEqual(my.demo.first.ClassOne.namespace.ClassOne, ClassOne);
+        strictEqual(my.demo.first.ClassOne.namespace.ClassTwo, ClassTwo);
+        strictEqual(xs.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassOne,ClassTwo');
+        strictEqual(my.demo.first.ClassTwo.namespace.ClassOne, ClassOne);
+        strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, ClassTwo);
+
         //delete classOne
         xs.ClassManager.delete(classOneName);
 
@@ -259,6 +281,10 @@ require([
 
         //namespace is cleaned
         strictEqual(xs.Attribute.defined(my.demo.first, 'ClassOne'), false);
+        strictEqual(xs.keys(my.demo.first).toString(), 'ClassTwo');
+        strictEqual(my.demo.first.ClassTwo, ClassTwo);
+        strictEqual(xs.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassTwo');
+        strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, ClassTwo);
 
         //delete classTwo
         xs.ClassManager.delete(classTwoName);
@@ -276,6 +302,7 @@ require([
 
         //namespace is cleaned
         strictEqual(xs.Attribute.defined(window, 'my'), false);
+        strictEqual(xs.keys(ClassTwo.namespace).toString(), '');
 
         //delete classThree
         xs.ClassManager.delete(classThreeName);

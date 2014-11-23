@@ -129,6 +129,9 @@
 
             //save Class to registry
             registry[name] = Class;
+
+            //sync namespaces
+            _syncNamespaces(namespace, 'add', label);
         };
 
         /**
@@ -171,13 +174,16 @@
             //get Class namespace by path
             var namespace = _namespace(root, path);
 
+            //sync namespaces
+            _syncNamespaces(namespace, 'delete', label);
+
             //unset Class from namespace
             delete namespace[label];
 
             //clean namespace
             _cleanNamespace(root, path);
 
-            //unset Class from registry
+            //delete Class from registry
             delete registry[name];
         };
 
@@ -351,6 +357,49 @@
 
                 //try to clean parent
                 _cleanNamespace(root, path);
+            }
+        };
+
+        /**
+         * Updates internal namespaces of all classes, registered in namespace
+         *
+         * For example:
+         *
+         *     _syncNamespaces(window, 'add', 'Demo');
+         *
+         * @ignore
+         *
+         * @method syncNamespaces
+         *
+         * @param {Object|Function} namespace synchronized namespace
+         * @param {String} operation operation name
+         * @param {String} name name of changed class
+         */
+        var _syncNamespaces = function (namespace, operation, name) {
+            var classes = xs.findAll(namespace, function (value) {
+                return xs.isFunction(value) && xs.isObject(value.namespace);
+            });
+            var changedClass = classes[name];
+
+            //add new class to all namespaces
+            if (operation == 'add') {
+                //add all classes to new class' namespace
+                xs.each(classes, function (Class, name) {
+                    changedClass.namespace[name] = Class;
+                });
+
+                //add new class to all namespaces
+                xs.each(classes, function (Class) {
+                    Class.namespace[name] = classes[name];
+                });
+            } else if (operation == 'delete') {
+                //empty old class' namespace
+                xs.deleteAll(changedClass.namespace);
+
+                //delete old class from all namespaces
+                xs.each(classes, function (Class) {
+                    delete Class.namespace[name];
+                });
             }
         };
     });

@@ -455,8 +455,10 @@
             //assign factory for class
             Class.factory = _createFactory(Class);
 
+            //get namespace for Class
+            var namespace = Class.namespace = {};
+
             //get descriptor
-            var namespace = {};
             var descriptor = descFn(Class, namespace);
 
             //check descriptor is object
