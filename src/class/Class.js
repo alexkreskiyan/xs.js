@@ -326,6 +326,9 @@
                 //define class constructor
                 var descriptor = Class.descriptor;
 
+
+                //singleton processing
+
                 //throw exception if Class is singleton
                 if (descriptor.singleton) {
                     throw new Error('Can not create instance of singleton class');
@@ -341,8 +344,11 @@
                     return;
                 }
 
-                //save class reference
-                me.self = Class;
+
+                //save call arguments
+                me.factoryArguments = arguments;
+
+                //properties processing
 
                 //init privates storage
                 me.privates = {};
@@ -358,11 +364,37 @@
                     property.hasOwnProperty('value') && (me[name] = property.value);
                 }
 
+
+                //native constructor call
+
+                //save class reference
+                me.self = Class;
+
                 //apply constructor
                 constructor && constructor.apply(me, arguments);
             };
 
             return Class;
+        };
+
+        var _createFactory = function (Class) {
+            //this - current class
+            //arguments - new instance arguments
+
+            //create wrapper
+            var xClass = function () {
+                return Class.apply(this, arguments);
+            };
+
+            //assign prototype
+            xClass.prototype = Class.prototype;
+
+            //return factory
+            return function () {
+
+                //return instance
+                return new xClass(arguments);
+            };
         };
 
         /**
@@ -408,6 +440,9 @@
             //create class
             var Class = _createRaw();
 
+            //assign factory for class
+            Class.factory = _createFactory(Class);
+
             //get descriptor
             var namespace = {};
             var descriptor = descFn(Class, namespace);
@@ -420,9 +455,9 @@
             //save Class descriptor
             xs.const(Class, 'descriptor', {});
 
-            //set class not ready yet
-            Class.isReady = false;
-
+//            //set class not ready yet (until preprocessors done)
+//            Class.isReady = false;
+//TODO make more pretty
             //process preprocessors stack before createdFn called
             preprocessors.process([
                 Class,
@@ -433,9 +468,9 @@
                 descriptor,
                 namespace
             ], function () {
-                //set class ready
-                Class.isReady = true;
-
+//                //set class ready
+//                Class.isReady = true;
+//TODO make more pretty
                 //call createdFn
                 createdFn(Class);
 
@@ -463,4 +498,5 @@
 
     //define prototype of xs.Base
     xs.Base = new Function;
+    xs.Base.descriptor = {};
 })(window, 'xs');

@@ -16,8 +16,8 @@ require([
     'xs.lang.Function',
     'xs.class.Class',
     'xs.class.ClassManager',
-    'xs.class.Base',
-    'xs.class.preprocessors.extend'
+    'xs.class.preprocessors.extend',
+    'xs.class.Base'
 ], function () {
 
     'use strict';

@@ -1,55 +1,64 @@
-/*!
- This file is core of xs.js 0.1
+/*
+ This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
- Contact:  http://annium.com/contact
+ Contact: http://annium.com/contact
 
- GNU General Public License Usage
- This file may be used under the terms of the GNU General Public License version 3.0 as
- published by the Free Software Foundation and appearing in the file LICENSE included in the
- packaging of this file.
-
- Please review the following information to ensure the GNU General Public License version 3.0
- requirements will be met: http://www.gnu.org/copyleft/gpl.html.
-
- If you are unsure which license is appropriate for your use, please contact the sales department
- at http://annium.com/contact.
+ License: http://annium.com/contact
 
  */
 /**
- * xs.Base is base class for all classes, defined by {@link xs.ClassManager xs.ClassManager}.
- * All classes, defined that way, extend xs.Base
- *
- * @class xs.Base
+ * Private internal core class. All xs classes inherit xs.Base
  *
  * @author Alex Kreskiyan <brutalllord@gmail.com>
  *
  * @abstract
+ *
+ * @class xs.Class.Stack
  */
-xs.define('xs.Base', function (self) {
+xs.define('xs.Base', function () {
     return {
         static:  {
             methods: {
-
                 /**
                  * Returns whether this is child of given parent
                  *
                  * For example:
                  *
-                 *     Bird.inherits(Animal); //true
-                 *     Bird.inherits(Transport); //false
+                 *     Bird.isChild(Animal); //true
+                 *     Bird.isChild(Transport); //false
                  *
                  * @static
                  *
-                 * @method inherits
+                 * @method isChild
                  *
                  * @param {xs.Base} parent Class, being verified to be ancestor of this Class
                  *
                  * @return {Boolean} verification result
                  */
-                inherits: function (parent) {
+                isChild: function (parent) {
                     return this.prototype instanceof parent;
+                },
+
+                /**
+                 * Returns whether this is parent of given child
+                 *
+                 * For example:
+                 *
+                 *     Animal.isParent(Bird); //true
+                 *     Transport.isParent(Bird); //false
+                 *
+                 * @static
+                 *
+                 * @method isParent
+                 *
+                 * @param {xs.Base} child Class, being verified to be descendant of this Class
+                 *
+                 * @return {Boolean} verification result
+                 */
+                isParent: function (child) {
+                    return child.isChild(this);
                 }
             }
         },
@@ -63,7 +72,16 @@ xs.define('xs.Base', function (self) {
              * @return {xs.Base} clone object
              */
             clone: function () {
-                return xs.clone(this);
+                var me = this;
+
+                //create clone via factory
+                var clone = me.self.factory.apply(me, me.factoryArguments);
+
+                //assign properties
+                xs.extend(clone, me);
+
+                //return clone
+                return clone;
             },
 
             /**
