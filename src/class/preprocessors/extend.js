@@ -60,7 +60,7 @@
             return;
         }
 
-        //TODO namespaces workaround (here extend is replaced with real name through namespace)
+        extended = Class.descriptor.namespace.resolve(extended);
 
         //try to get parent from ClassManager
         var parent = xs.ClassManager.get(extended);
