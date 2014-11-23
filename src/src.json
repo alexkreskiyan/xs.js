@@ -6,6 +6,7 @@
     "xs.class.preprocessors.const",
     "xs.class.preprocessors.staticProperties",
     "xs.class.preprocessors.staticMethods",
+    "xs.class.preprocessors.constructor",
     "xs.class.preprocessors.properties",
     "xs.class.preprocessors.methods",
     "xs.class.preprocessors.singleton",
