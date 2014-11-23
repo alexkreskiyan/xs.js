@@ -458,8 +458,11 @@
             //get namespace for Class
             var namespace = Class.namespace = {};
 
+            //get imports for Class
+            var imports = Class.imports = {};
+
             //get descriptor
-            var descriptor = descFn(Class, namespace);
+            var descriptor = descFn(Class, namespace, imports);
 
             //check descriptor is object
             if (!xs.isObject(descriptor)) {
