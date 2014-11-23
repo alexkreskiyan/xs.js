@@ -15,7 +15,7 @@
  *
  * @abstract
  *
- * @class xs.Class.Stack
+ * @class xs.Base
  */
 xs.define('xs.Base', function () {
     return {
@@ -65,7 +65,7 @@ xs.define('xs.Base', function () {
         methods: {
 
             /**
-             * Returns clone of this object. Basically clone is made by xs.clone
+             * Returns clone of this object. Basically clone is made by factory and then extended with source properties
              *
              * @method clone
              *
