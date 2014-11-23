@@ -34,6 +34,41 @@ require([
         strictEqual(xs.isFunction(Class), true);
     });
 
+    test('factory', function () {
+        //create simple class
+        var Class = xs.Class.create(function (self, ns) {
+
+            return {};
+        });
+
+        //assign some constructor
+        Class.descriptor.constructor = function (a, b) {
+            this.a = a;
+            this.b = b;
+        };
+
+
+        //compare new and factory variants
+
+        //get instances
+        var sampleNew = new Class(1, 2);
+        var sampleFactory = Class.factory(1, 2);
+
+        //constructor is Class
+        strictEqual(sampleNew.constructor, Class);
+        strictEqual(sampleFactory.constructor, Class);
+
+        //constructor is assigned in prototype
+        strictEqual(sampleNew.hasOwnProperty('constructor'), false);
+        strictEqual(sampleFactory.hasOwnProperty('constructor'), false);
+
+        //parameters assigned correctly
+        strictEqual(sampleNew.a, 1);
+        strictEqual(sampleNew.b, 2);
+        strictEqual(sampleFactory.a, 1);
+        strictEqual(sampleFactory.b, 2);
+    });
+
     test('processors add', function () {
         //setUp
         var stack = xs.Class.preprocessors;

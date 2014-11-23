@@ -335,7 +335,7 @@
                 }
 
                 //get constructor shortcut
-                var constructor = descriptor.constructor;
+                var constructor = descriptor.constructor != Object ? descriptor.constructor : undefined;
 
                 //if parent constructor - just call it
                 if (me.self && me.self !== Class) {
@@ -354,16 +354,17 @@
                 me.privates = {};
 
                 //assign values
-                var properties = descriptor.properties;
-                var keys = Object.keys(properties);
-                var i, length = keys.length, name, property;
+                if (xs.isObject(descriptor.properties)) {
+                    var properties = descriptor.properties;
+                    var keys = Object.keys(properties);
+                    var i, length = keys.length, name, property;
 
-                for (i = 0; i < length; i++) {
-                    name = keys[i];
-                    property = properties[name];
-                    property.hasOwnProperty('value') && (me[name] = property.value);
+                    for (i = 0; i < length; i++) {
+                        name = keys[i];
+                        property = properties[name];
+                        property.hasOwnProperty('value') && (me[name] = property.value);
+                    }
                 }
-
 
                 //native constructor call
 
@@ -377,13 +378,24 @@
             return Class;
         };
 
+        /**
+         * Returns factory for given Class
+         *
+         * @ignore
+         *
+         * @method createFactory
+         *
+         * @param {Function} Class
+         *
+         * @return {Function} factory for given Class
+         */
         var _createFactory = function (Class) {
             //this - current class
             //arguments - new instance arguments
 
             //create wrapper
-            var xClass = function () {
-                return Class.apply(this, arguments);
+            var xClass = function (args) {
+                return Class.apply(this, args);
             };
 
             //assign prototype
