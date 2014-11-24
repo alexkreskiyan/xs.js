@@ -33,7 +33,7 @@
         var _concatenate = Function.prototype.apply.bind(Array.prototype.concat);
 
         /**
-         * Binds function with scope and arguments
+         * Creates binded function, that will be called with given scope and optional args, prepended to call arguments
          *
          * For example:
          *
@@ -47,7 +47,7 @@
          *
          * @param {Function} fn bound function
          * @param {Object} scope optional execution scope
-         * @param {Array} args optional additional arguments, prepended to function
+         * @param {Array} [args] optional additional arguments, prepended to function
          *
          * @return {Function} bound function
          */
@@ -56,7 +56,7 @@
         };
 
         /**
-         * Prefills function's arguments
+         * Prefills function's arguments and optionally adds execution scope
          *
          * For example:
          *
@@ -70,7 +70,7 @@
          *
          * @param {Function} fn bound function
          * @param {Array} defaults predefined params' defaults
-         * @param {Object} scope optional execution scope
+         * @param {Object} [scope] optional execution scope
          *
          * @return {Function} bound function
          */
@@ -83,7 +83,7 @@
         };
 
         /**
-         * Creates function, that is executed only memorize
+         * Creates function, that is executed only once. Result is memorized and is simply returned in later calls
          *
          * For example:
          *
