@@ -33,15 +33,10 @@ require([
 
         //define
         var Base = xs.Class.create(function () {
+            this.properties.a = {
+                get: function () {
 
-            return {
-                properties: {
-                    a: {
-                        get: function () {
-
-                            return 1;
-                        }
-                    }
+                    return 1;
                 }
             };
         });
@@ -58,22 +53,17 @@ require([
 
         //define
         var Parent = xs.Class.create(function () {
+            this.extends = 'my.Base';
+            this.properties.a = {
+                get: function () {
 
-            return {
-                extends:    'my.Base',
-                properties: {
-                    a: {
-                        get: function () {
+                    return this.privates.a;
+                }
+            };
+            this.properties.b = {
+                set: function (b) {
 
-                            return this.privates.a;
-                        }
-                    },
-                    b: {
-                        set: function (b) {
-
-                            return this.privates.b = b + 1;
-                        }
-                    }
+                    return this.privates.b = b + 1;
                 }
             };
         });
@@ -90,21 +80,16 @@ require([
 
         //define
         var Child = xs.Class.create(function () {
+            this.extends = 'my.Parent';
+            this.properties.a = 2;
+            this.properties.c = {
+                get: function () {
 
-            return {
-                extends:    'my.Parent',
-                properties: {
-                    a: 2,
-                    c: {
-                        get: function () {
+                    return this.privates.c + '!';
+                },
+                set: function (c) {
 
-                            return this.privates.c + '!';
-                        },
-                        set: function (c) {
-
-                            return this.privates.c = '?' + c;
-                        }
-                    }
+                    return this.privates.c = '?' + c;
                 }
             };
         });
@@ -171,4 +156,5 @@ require([
         xs.ClassManager.delete(ChildName);
         ChildSave && xs.ClassManager.add(ChildName, ChildSave);
     });
-});
+})
+;

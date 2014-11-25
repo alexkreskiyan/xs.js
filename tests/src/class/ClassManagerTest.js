@@ -24,8 +24,6 @@ require([
 
     test('has', function () {
         var Class = xs.Class.create(function () {
-
-            return {};
         });
 
         var className = 'xs.myClass';
@@ -55,8 +53,6 @@ require([
 
     test('get', function () {
         var Class = xs.Class.create(function () {
-
-            return {};
         });
 
         var className = 'xs.myClass';
@@ -104,20 +100,14 @@ require([
 
         //create ClassOne
         var ClassOne = xs.Class.create(function () {
-
-            return {};
         });
 
         //create ClassTwo
         var ClassTwo = xs.Class.create(function () {
-
-            return {};
         });
 
         //create ClassThree
         var ClassThree = xs.Class.create(function () {
-
-            return {};
         });
 
         //add class one
@@ -232,20 +222,14 @@ require([
 
         //create ClassOne
         var ClassOne = xs.Class.create(function () {
-
-            return {};
         });
 
         //create ClassTwo
         var ClassTwo = xs.Class.create(function () {
-
-            return {};
         });
 
         //create ClassThree
         var ClassThree = xs.Class.create(function () {
-
-            return {};
         });
 
         //add classOne
@@ -340,15 +324,11 @@ require([
 
         //define class
         var Class = xs.define(className, function () {
-
-            return {};
         });
 
         //not defined again
         throws(function () {
             xs.define(className, function () {
-
-                return {};
             })
         });
 

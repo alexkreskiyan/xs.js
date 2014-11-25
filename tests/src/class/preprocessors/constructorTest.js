@@ -41,10 +41,7 @@ require([
 
         //define
         var Base = xs.Class.create(function () {
-
-            return {
-                constructor: constructor
-            };
+            this.constructor = constructor;
         });
 
         //save
@@ -59,10 +56,7 @@ require([
 
         //define
         var Parent = xs.Class.create(function () {
-
-            return {
-                extends: 'my.Base'
-            };
+            this.extends = 'my.Base';
         });
 
         //save
@@ -77,11 +71,8 @@ require([
 
         //define
         var Child = xs.Class.create(function () {
-
-            return {
-                extends:     'my.Parent',
-                constructor: constructor2
-            };
+            this.extends = 'my.Parent';
+            this.constructor = constructor2;
         });
 
         //save

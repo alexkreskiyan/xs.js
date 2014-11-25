@@ -28,18 +28,18 @@
 
         //inherited
         //get inherited constructor from parent descriptor
-        var inherited = Class.parent.descriptor.constructor;
+        var inherited = xs.hasKey(Class.parent.descriptor, 'constructor') ? Class.parent.descriptor.constructor : undefined;
 
 
         //own
         //get own methods from raw descriptor
-        var own = descriptor.constructor;
+        var own = xs.hasKey(descriptor, 'constructor') ? descriptor.constructor : undefined;
 
 
         //apply (comparison to Object guarantees, that constructor was really assigned)
-        if (own != Object) {
+        if (own) {
             Class.descriptor.constructor = own;
-        } else if (inherited != Object) {
+        } else if (inherited) {
             Class.descriptor.constructor = inherited;
         }
 

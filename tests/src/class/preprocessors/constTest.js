@@ -33,12 +33,7 @@ require([
 
         //define
         var Base = xs.Class.create(function () {
-
-            return {
-                const: {
-                    a: 1
-                }
-            };
+            this.const.a = 1;
         });
 
         //save
@@ -53,14 +48,9 @@ require([
 
         //define
         var Parent = xs.Class.create(function () {
-
-            return {
-                extends: 'my.Base',
-                const:   {
-                    a: 2,
-                    b: 3
-                }
-            };
+            this.extends = 'my.Base';
+            this.const.a = 2;
+            this.const.b = 3;
         });
 
         //save
@@ -75,13 +65,8 @@ require([
 
         //define
         var Child = xs.Class.create(function () {
-
-            return {
-                extends: 'my.Parent',
-                const:   {
-                    c: 5
-                }
-            };
+            this.extends = 'my.Parent';
+            this.const.c = 5;
         });
 
         //save

@@ -26,8 +26,6 @@ require([
         throws(xs.Class.create);
 
         var Class = xs.Class.create(function (self, ns) {
-
-            return {};
         });
 
         //class is function
@@ -37,8 +35,6 @@ require([
     test('factory', function () {
         //create simple class
         var Class = xs.Class.create(function (self, ns) {
-
-            return {};
         });
 
         //assign some constructor

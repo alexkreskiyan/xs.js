@@ -33,16 +33,9 @@ require([
 
         //define
         var Base = xs.Class.create(function () {
+            this.static.methods.a = function () {
 
-            return {
-                static: {
-                    methods: {
-                        a: function () {
-
-                            return 1;
-                        }
-                    }
-                }
+                return 1;
             };
         });
 
@@ -58,21 +51,14 @@ require([
 
         //define
         var Parent = xs.Class.create(function () {
+            this.extends = 'my.Base';
+            this.static.methods.a = function () {
 
-            return {
-                extends: 'my.Base',
-                static:  {
-                    methods: {
-                        a: function () {
+                return 2;
+            };
+            this.static.methods.b = function () {
 
-                            return 2;
-                        },
-                        b: function () {
-
-                            return 3;
-                        }
-                    }
-                }
+                return 3;
             };
         });
 
@@ -88,17 +74,10 @@ require([
 
         //define
         var Child = xs.Class.create(function () {
+            this.extends = 'my.Parent';
+            this.static.methods.c = function () {
 
-            return {
-                extends: 'my.Parent',
-                static:  {
-                    methods: {
-                        c: function () {
-
-                            return 5;
-                        }
-                    }
-                }
+                return 5;
             };
         });
 

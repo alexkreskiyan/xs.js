@@ -33,17 +33,10 @@ require([
 
         //define
         var Base = xs.Class.create(function () {
+            this.static.properties.a = {
+                get: function () {
 
-            return {
-                static: {
-                    properties: {
-                        a: {
-                            get: function () {
-
-                                return 1;
-                            }
-                        }
-                    }
+                    return 1;
                 }
             };
         });
@@ -60,24 +53,17 @@ require([
 
         //define
         var Parent = xs.Class.create(function () {
+            this.extends = 'my.Base';
+            this.static.properties.a = {
+                get: function () {
 
-            return {
-                extends: 'my.Base',
-                static:  {
-                    properties: {
-                        a: {
-                            get: function () {
+                    return this.privates.a;
+                }
+            };
+            this.static.properties.b = {
+                set: function (b) {
 
-                                return this.privates.a;
-                            }
-                        },
-                        b: {
-                            set: function (b) {
-
-                                return this.privates.b = b + 1;
-                            }
-                        }
-                    }
+                    return this.privates.b = b + 1;
                 }
             };
         });
@@ -94,23 +80,16 @@ require([
 
         //define
         var Child = xs.Class.create(function () {
+            this.extends = 'my.Parent';
+            this.static.properties.a = 2;
+            this.static.properties.c = {
+                get: function () {
 
-            return {
-                extends: 'my.Parent',
-                static:  {
-                    properties: {
-                        a: 2,
-                        c: {
-                            get: function () {
+                    return this.privates.c + '!';
+                },
+                set: function (c) {
 
-                                return this.privates.c + '!';
-                            },
-                            set: function (c) {
-
-                                return this.privates.c = '?' + c;
-                            }
-                        }
-                    }
+                    return this.privates.c = '?' + c;
                 }
             };
         });

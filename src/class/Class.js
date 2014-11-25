@@ -410,6 +410,62 @@
         };
 
         /**
+         * Returns prototype for descriptor function
+         *
+         * @ignore
+         *
+         * @method createDescriptorPrototype
+         *
+         * @return {Object} new descriptor prototype
+         */
+        var _createDescriptorPrototype = function () {
+            return {
+
+                //class namespace
+                namespace:   undefined,
+
+                //class imports list
+                imports:     {},
+
+                //class parent
+                extends:     undefined,
+
+                //class mixins list
+                mixins:      {},
+
+                //class implements list
+                implements:  {},
+
+                //class singleton flag
+                singleton:   undefined,
+
+                //class interface flag
+                interface:   undefined,
+
+                //class constants list
+                const:       {},
+
+                //class statics list
+                static:      {
+                    //class static methods list
+                    methods:    {},
+
+                    //class static properties list
+                    properties: {}
+                },
+
+                //class constructor
+                constructor: undefined,
+
+                //class methods list
+                methods:     {},
+
+                //class properties list
+                properties:  {}
+            };
+        };
+
+        /**
          * Creates class sample and starts processors applying
          *
          * For example:
@@ -425,10 +481,11 @@
          *
          * @method create
          *
-         * @param {Function} descFn descriptor function. Is called with 2 params:
+         * @param {Function} Descriptor descriptor constructor. Creates raw descriptor instance. Is called with 3 params:
          *
          * - self. Created class instance
          * - ns. namespace object, where namespace references are placed
+         * - imports. namespace object, where namespace references are placed
          *
          * @param {Function} createdFn class creation callback. Is called after
          * {@link xs.Class#preprocessors preprocessors} stack is processed. When called, created class is passed as param
@@ -440,10 +497,10 @@
          * - descFn is given not as function
          * - descFn doesn't return object
          */
-        var _create = function (descFn, createdFn) {
+        var _create = function (Descriptor, createdFn) {
 
-            //descFn must be function
-            if (!xs.isFunction(descFn)) {
+            //Descriptor must be function
+            if (!xs.isFunction(Descriptor)) {
                 throw new Error('Class descriptor must be evaluated function');
             }
 
@@ -461,8 +518,11 @@
             //get imports for Class
             var imports = Class.imports = {};
 
-            //get descriptor
-            var descriptor = descFn(Class, namespace, imports);
+            //Fill descriptor prototype
+            Descriptor.prototype = _createDescriptorPrototype();
+
+            //get descriptor instance
+            var descriptor = new Descriptor(Class, namespace, imports);
 
             //check descriptor is object
             if (!xs.isObject(descriptor)) {

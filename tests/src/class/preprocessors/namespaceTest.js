@@ -32,9 +32,6 @@ require([
 
         //define
         var Base = xs.Class.create(function () {
-
-            return {
-            };
         });
 
         //save
@@ -49,11 +46,8 @@ require([
 
         //define
         var Parent = xs.Class.create(function () {
-
-            return {
-                namespace: 'my.base',
-                extends:   'ns.Base'
-            };
+            this.namespace = 'my.base';
+            this.extends = 'ns.Base';
         });
 
         //save
@@ -68,11 +62,8 @@ require([
 
         //define
         var Child = xs.Class.create(function () {
-
-            return {
-                namespace: 'my.demo',
-                extends:   'my.base.Parent'
-            };
+            this.namespace = 'my.demo';
+            this.extends = 'my.base.Parent';
         });
 
         //save
