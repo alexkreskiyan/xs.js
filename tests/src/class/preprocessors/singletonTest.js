@@ -16,6 +16,7 @@ require([
     'xs.lang.Function',
     'xs.class.Class',
     'xs.class.ClassManager',
+    'xs.class.preprocessors.namespace',
     'xs.class.preprocessors.extend',
     'xs.class.preprocessors.properties',
     'xs.class.preprocessors.singleton',
