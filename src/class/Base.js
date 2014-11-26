@@ -75,7 +75,7 @@ xs.define('xs.Base', function () {
                 var me = this;
 
                 //create clone via factory
-                var clone = me.self.factory.apply(me, me.factoryArguments);
+                var clone = me.self.factory.apply(me, me.initArguments);
 
                 //assign properties
                 xs.extend(clone, me);

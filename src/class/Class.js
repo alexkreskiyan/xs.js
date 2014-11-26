@@ -346,7 +346,7 @@
 
 
                 //save call arguments
-                me.factoryArguments = arguments;
+                me.initArguments = arguments;
 
                 //properties processing
 
