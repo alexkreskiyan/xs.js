@@ -22,10 +22,27 @@
  * @singleton
  * @markdown
 
- 1. sync load
- - cls1 ... clsN
- - [cls1 ... clsN]
- 2. async load:
+ configs:
+ - cache
+ - cacheParam
+ - preserveScripts - ??
+ - scriptChainDelay - ?? may be usefull to add always
+ - scriptCharset - ?? Is it useful?
+
+ paths:
+ - add
+ - delete
+ - get (returns path by classname) if no variants specified/ returns path from current folder
+
+ params:
+ - queue - loading list
+ - history - loaded classes list - will be private. Will have states:
+ * loaded (file contains acquired class)
+ * failed (load failed)
+ * missing (file was loaded, but acquired class is missing in that file)
+
+
+ 1. Load is async:
  - cls1 ... clsN
  - [cls1 ... clsN]
  : deferred
