@@ -263,6 +263,7 @@
      * @singleton
      */
     xs.Class = new (function () {
+        var me = this;
 
         /**
          * Stack of processors, processing class before it's considered to be created (before createdFn is called)
@@ -285,7 +286,7 @@
          *
          * @type {xs.Class.Stack}
          */
-        var preprocessors = new Stack();
+        var preprocessors = me.preprocessors = new Stack();
 
         /**
          * Stack of processors, processing class after it's considered to be created (after createdFn is called)
@@ -308,18 +309,18 @@
          *
          * @type {xs.Class.Stack}
          */
-        var postprocessors = new Stack();
+        var postprocessors = me.postprocessors = new Stack();
 
         /**
          * Returns new xClass sample
          *
          * @ignore
          *
-         * @method createRaw
+         * @method create
          *
          * @return {Function} new xClass
          */
-        var _createRaw = function () {
+        var _create = function () {
             var Class = function xClass() {
                 var me = this;
 
@@ -497,7 +498,7 @@
          * - descFn is given not as function
          * - descFn doesn't return object
          */
-        var _create = function (Descriptor, createdFn) {
+        me.create = function (Descriptor, createdFn) {
 
             //Descriptor must be function
             if (!xs.isFunction(Descriptor)) {
@@ -507,7 +508,7 @@
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
 
             //create class
-            var Class = _createRaw();
+            var Class = _create();
 
             //assign factory for class
             Class.factory = _createFactory(Class);
@@ -565,12 +566,6 @@
 
             return Class;
         };
-
-        //assign instance attributes
-        var me = this;
-        me.create = _create;
-        me.preprocessors = preprocessors;
-        me.postprocessors = postprocessors;
     });
 
     //define prototype of xs.Base
