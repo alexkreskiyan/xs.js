@@ -177,6 +177,12 @@
                 });
             };
 
+            var aliasRe = /^[A-z_]+(?:\.{1}[A-z_]+)*$/;
+            console.log(re.test('a'));
+            console.log(re.test('A'));
+            console.log(re.test('Aa.aa'));
+            console.log(re.test('As.'));
+            console.log(re.test('As_._'));
             /**
              * Checks whether alias is already registered in xs.Loader
              *
@@ -198,10 +204,12 @@
              * - if given alias is not a string
              */
             me.has = function (alias) {
+                //throw Error if alias is not string
                 if (!xs.isString(alias)) {
                     throw new Error('xs.Loader alias must be a string');
                 }
 
+                //return whether alias is in paths
                 return xs.hasKey(paths, alias);
             };
 
@@ -259,11 +267,23 @@
              * - if given class name is not a string
              */
             me.get = function (name) {
+                //most suitable alias for name
+                var nameAlias;
+                //path of most suitable alias
+                var namePath;
 
+                //iterate over all paths to find most suitable alias
+                xs.each(paths, function (path, alias) {
+                    //if name starts from alias and alias length if longer, than current
+                    if (name.indexOf(alias) === 0 && alias.length > nameAlias.length) {
+                        nameAlias = alias;
+                        namePath = path;
+                    }
+                });
             };
         });
 
-//        var callbacks = [];
+        //        var callbacks = [];
         me.require = function (name, callback) {
 
         };
