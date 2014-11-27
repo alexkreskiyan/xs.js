@@ -2,6 +2,7 @@
     "xs.class.Base",
     "xs.class.Class",
     "xs.class.ClassManager",
+    "xs.class.Loader",
     "xs.class.preprocessors.namespace",
     "xs.class.preprocessors.extend",
     "xs.class.preprocessors.const",

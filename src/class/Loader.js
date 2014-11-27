@@ -111,6 +111,15 @@
     xs.Loader = new (function () {
         var me = this;
 
+        /**
+         * xs.Loader paths storage
+         *
+         * @property paths
+         *
+         * @readonly
+         *
+         * @type {Object}
+         */
         me.paths = new (function () {
             var me = this;
 
@@ -124,7 +133,7 @@
             var paths = {};
 
             /**
-             * Adds new path alias to {@link xs.Loader.paths}. Has single and multiple mode
+             * Adds new path alias to {@link xs.Loader#paths}. Has single and multiple mode
              *
              * For example:
              *
@@ -135,6 +144,8 @@
              *         my: 'app/my',
              *         demo: 'app/demo'
              *     });
+             *
+             * @chainable
              *
              * @method add
              *
@@ -168,7 +179,7 @@
 
                 //check that pairs are given as list
                 if (!xs.isObject(alias)) {
-                    throw new Error('Added aliases have incorrect format');
+                    throw new Error('Aliases list has incorrect format');
                 }
 
                 //add each path
@@ -177,12 +188,8 @@
                 });
             };
 
-            var aliasRe = /^[A-z_]+(?:\.{1}[A-z_]+)*$/;
-            console.log(re.test('a'));
-            console.log(re.test('A'));
-            console.log(re.test('Aa.aa'));
-            console.log(re.test('As.'));
-            console.log(re.test('As_._'));
+            //name matching regular expression
+            var nameRe = /^[A-z_]+(?:\.{1}[A-z_]+)*$/;
             /**
              * Checks whether alias is already registered in xs.Loader
              *
@@ -209,6 +216,11 @@
                     throw new Error('xs.Loader alias must be a string');
                 }
 
+                //check that alias matches regular expression
+                if (!nameRe.test(alias)) {
+                    throw new Error('xs.Loader alias is given incorrectly');
+                }
+
                 //return whether alias is in paths
                 return xs.hasKey(paths, alias);
             };
@@ -225,6 +237,8 @@
              *         'my',
              *         'demo'
              *     ]);
+             *
+             * @chainable
              *
              * @method delete
              *
@@ -253,6 +267,9 @@
                 xs.each(alias, me.delete);
             };
 
+            //file extension
+            var ext = '.js';
+
             /**
              * Resolves class path, using registered aliases
              *
@@ -267,19 +284,38 @@
              * - if given class name is not a string
              */
             me.get = function (name) {
+                //throw Error if name is not string
+                if (!xs.isString(name)) {
+                    throw new Error('xs.Loader name must be a string');
+                }
+
+                //check that name matches regular expression
+                if (!nameRe.test(name)) {
+                    throw new Error('xs.Loader name is given incorrectly');
+                }
+
                 //most suitable alias for name
-                var nameAlias;
+                var nameAlias = '';
                 //path of most suitable alias
-                var namePath;
+                var namePath = '';
 
                 //iterate over all paths to find most suitable alias
                 xs.each(paths, function (path, alias) {
-                    //if name starts from alias and alias length if longer, than current
-                    if (name.indexOf(alias) === 0 && alias.length > nameAlias.length) {
+                    //update current, if name starts from alias + dot and alias length if longer, than current
+                    if (name.indexOf(alias + '.') === 0 && alias.length > nameAlias.length) {
                         nameAlias = alias;
                         namePath = path;
                     }
                 });
+
+                //if alias not found - return name, where dots are replaced with slashes
+                if (!nameAlias) {
+
+                    return name.split('.').join('/') + ext;
+                }
+
+                //return path joined with rest of name by / and suffix added
+                return namePath + '/' + name.substring(nameAlias.length + 1).split('.').join('/') + ext;
             };
         });
 
