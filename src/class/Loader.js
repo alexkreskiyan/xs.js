@@ -114,11 +114,11 @@
         /**
          * xs.Loader paths storage
          *
-         * @property paths
+         * @author Alex Kreskiyan <brutalllord@gmail.com>
          *
-         * @readonly
+         * @class xs.Loader.paths
          *
-         * @type {Object}
+         * @singleton
          */
         me.paths = new (function () {
             var me = this;
@@ -133,7 +133,7 @@
             var paths = {};
 
             /**
-             * Adds new path alias to {@link xs.Loader#paths}. Has single and multiple mode
+             * Adds new path alias. Has single and multiple mode
              *
              * For example:
              *
@@ -145,12 +145,12 @@
              *         demo: 'app/demo'
              *     });
              *
-             * @chainable
-             *
              * @method add
              *
              * @param {String|Object} alias Path alias string in single mode. Object with aliases in multiple mode
              * @param {String} [path] Alias target path
+             *
+             * @chainable
              *
              * @throws {Error} Error is thrown:
              *
@@ -174,7 +174,7 @@
                     //register new path alias
                     paths[alias] = path;
 
-                    return;
+                    return this;
                 }
 
                 //check that pairs are given as list
@@ -186,10 +186,12 @@
                 xs.each(alias, function (path, alias) {
                     me.add(alias, path);
                 });
+
+                return this;
             };
 
             //name matching regular expression
-            var nameRe = /^[A-z_]+(?:\.{1}[A-z_]+)*$/;
+            var nameRe = /^[A-z_]{1}[A-z0-9_]*(?:\.{1}[A-z_]{1}[A-z0-9_]*)*$/;
             /**
              * Checks whether alias is already registered in xs.Loader
              *
@@ -238,11 +240,11 @@
              *         'demo'
              *     ]);
              *
-             * @chainable
-             *
              * @method delete
              *
              * @param {String|String[]} alias Single alias or aliases array
+             *
+             * @chainable
              *
              * @throws {Error} Error is thrown:
              *
@@ -260,20 +262,44 @@
                     //remove alias
                     delete paths[alias];
 
-                    return;
+                    return this;
                 }
 
                 //delete each alias
                 xs.each(alias, me.delete);
+
+                return this;
+            };
+
+            /**
+             * Returns copy of registered paths list
+             *
+             * @method get
+             *
+             * @returns {Object} paths copy
+             */
+            me.get = function () {
+                return xs.clone(paths);
             };
 
             //file extension
             var ext = '.js';
 
             /**
-             * Resolves class path, using registered aliases
+             * Resolves class path, using registered aliases.
              *
-             * @method get
+             * For example:
+             *
+             *     //add common alias
+             *     xs.Loader.paths.add('my', 'mylib');
+             *     //resolve className, that starts in "my" namespace
+             *     xs.Loader.paths.resolve('my.demo.Class');//mylib/demo/Class.js
+             *     //add more specific alias
+             *     xs.Loader.paths.add('my.demo', 'mydemolib');
+             *     //resolve same className
+             *     xs.Loader.paths.resolve('my.demo.Class');//mydemolib/Class.js
+             *
+             * @method resolve
              *
              * @param {String} name resolved class name
              *
@@ -283,7 +309,7 @@
              *
              * - if given class name is not a string
              */
-            me.get = function (name) {
+            me.resolve = function (name) {
                 //throw Error if name is not string
                 if (!xs.isString(name)) {
                     throw new Error('xs.Loader name must be a string');
