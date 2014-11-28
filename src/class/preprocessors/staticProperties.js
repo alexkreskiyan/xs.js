@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     //framework shorthand
     var xs = root[ns];
@@ -21,10 +21,10 @@
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.preprocessors.add('staticProperties', function () {
+    xs.Class.preprocessors.add( 'staticProperties', function () {
 
         return true;
-    }, function (Class, descriptor) {
+    }, function ( Class, descriptor ) {
 
         //create privates storage in class
         Class.privates = {};
@@ -35,36 +35,36 @@
 
         //inherited
         //get inherited static properties from parent descriptor
-        var inherited = xs.isObject(Class.parent.descriptor.static) ? Class.parent.descriptor.static.properties : undefined;
+        var inherited = xs.isObject( Class.parent.descriptor.static ) ? Class.parent.descriptor.static.properties : undefined;
 
         //extend static properties with inherited
-        xs.isObject(inherited) && xs.extend(properties, inherited);
+        xs.isObject( inherited ) && xs.extend( properties, inherited );
 
 
         //own
         //get own static properties from raw descriptor
-        var own = xs.isObject(descriptor.static) ? descriptor.static.properties : undefined;
+        var own = xs.isObject( descriptor.static ) ? descriptor.static.properties : undefined;
 
         //apply if any
-        if (xs.isObject(own)) {
+        if ( xs.isObject( own ) ) {
             //prepare them
-            xs.each(own, function (value, name, list) {
-                list[name] = xs.Attribute.property.prepare(name, value);
-            });
+            xs.each( own, function ( value, name, list ) {
+                list[name] = xs.Attribute.property.prepare( name, value );
+            } );
 
             //extend properties with own ones
-            xs.extend(properties, own);
+            xs.extend( properties, own );
         }
 
 
         //apply
         //save static properties to Class.descriptor
-        xs.isObject(Class.descriptor.static) || (Class.descriptor.static = {});
+        xs.isObject( Class.descriptor.static ) || (Class.descriptor.static = {});
         Class.descriptor.static.properties = properties;
 
         //apply all properties
-        xs.each(properties, function (descriptor, name) {
-            xs.Attribute.property.define(Class, name, descriptor);
-        });
-    });
-})(window, 'xs');
+        xs.each( properties, function ( descriptor, name ) {
+            xs.Attribute.property.define( Class, name, descriptor );
+        } );
+    } );
+})( window, 'xs' );

@@ -52,9 +52,9 @@
  requests in the application.
 
  */
-xs.define('xs.Ajax', {
-    extend:     'xs.data.Connection',
-    singleton:  true,
+xs.define( 'xs.Ajax', {
+    extend: 'xs.data.Connection',
+    singleton: true,
     properties: {
         /**
          * @property requestId {Integer} counter
@@ -63,10 +63,10 @@ xs.define('xs.Ajax', {
         /**
          * @property requests {Object} pending requests
          */
-        requests:  {},
+        requests: {},
         /**
          * @property cors {Boolean} means, that request is cross-domain by default
          */
-        cors:      true//TODO
+        cors: true//TODO
     }
-});
+} );

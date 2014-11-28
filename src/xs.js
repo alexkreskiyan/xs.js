@@ -17,7 +17,7 @@
  at http://annium.com/contact.
 
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     /**
      * Framework entry point
@@ -39,7 +39,7 @@
          * @return {Number} unique id
          */
         me.uid = function () {
-            return Math.round(Math.random() * 10 ^ 10);
+            return Math.round( Math.random() * 10 ^ 10 );
         }
     });
-})(window, 'xs');
+})( window, 'xs' );

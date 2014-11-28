@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-require([
+require( [
     'xs.lang.Type',
     'xs.lang.List',
     'xs.lang.Object',
@@ -24,35 +24,35 @@ require([
 
     'use strict';
 
-    module('xs.class.preprocessors.staticProperties');
+    module( 'xs.class.preprocessors.staticProperties' );
 
-    test('static properties chain', function () {
+    test( 'static properties chain', function () {
         //setUp
         //Base
         var BaseName = 'my.Base';
 
         //define
-        var Base = xs.Class.create(function () {
+        var Base = xs.Class.create( function () {
             this.static.properties.a = {
                 get: function () {
 
                     return 1;
                 }
             };
-        });
+        } );
 
         //save
-        var BaseSave = xs.ClassManager.get(BaseName);
-        BaseSave && xs.ClassManager.delete(BaseName);
+        var BaseSave = xs.ClassManager.get( BaseName );
+        BaseSave && xs.ClassManager.delete( BaseName );
 
         //add to ClassManager
-        xs.ClassManager.add(BaseName, Base);
+        xs.ClassManager.add( BaseName, Base );
 
         //Parent
         var ParentName = 'my.Parent';
 
         //define
-        var Parent = xs.Class.create(function () {
+        var Parent = xs.Class.create( function () {
             this.extends = 'my.Base';
             this.static.properties.a = {
                 get: function () {
@@ -61,25 +61,25 @@ require([
                 }
             };
             this.static.properties.b = {
-                set: function (b) {
+                set: function ( b ) {
 
                     return this.privates.b = b + 1;
                 }
             };
-        });
+        } );
 
         //save
-        var ParentSave = xs.ClassManager.get(ParentName);
-        ParentSave && xs.ClassManager.delete(ParentName);
+        var ParentSave = xs.ClassManager.get( ParentName );
+        ParentSave && xs.ClassManager.delete( ParentName );
 
         //add to ClassManager
-        xs.ClassManager.add(ParentName, Parent);
+        xs.ClassManager.add( ParentName, Parent );
 
         //Child
         var ChildName = 'my.Child';
 
         //define
-        var Child = xs.Class.create(function () {
+        var Child = xs.Class.create( function () {
             this.extends = 'my.Parent';
             this.static.properties.a = 2;
             this.static.properties.c = {
@@ -87,70 +87,70 @@ require([
 
                     return this.privates.c + '!';
                 },
-                set: function (c) {
+                set: function ( c ) {
 
                     return this.privates.c = '?' + c;
                 }
             };
-        });
+        } );
 
         //save
-        var ChildSave = xs.ClassManager.get(ChildName);
-        ChildSave && xs.ClassManager.delete(ChildName);
+        var ChildSave = xs.ClassManager.get( ChildName );
+        ChildSave && xs.ClassManager.delete( ChildName );
 
         //add to ClassManager
-        xs.ClassManager.add(ChildName, Child);
+        xs.ClassManager.add( ChildName, Child );
 
 
         //check methods
         //Base
-        strictEqual(my.Base.a, 1);
+        strictEqual( my.Base.a, 1 );
 
         //readonly
         my.Base.a = 2;
-        strictEqual(my.Base.a, 1);
+        strictEqual( my.Base.a, 1 );
 
         //Parent
-        strictEqual(my.Parent.a, undefined);
+        strictEqual( my.Parent.a, undefined );
 
         //setter assigned
         my.Parent.a = 2;
-        strictEqual(my.Parent.a, 2);
-        strictEqual(my.Parent.privates.a, 2);
-        strictEqual(my.Parent.b, undefined);
+        strictEqual( my.Parent.a, 2 );
+        strictEqual( my.Parent.privates.a, 2 );
+        strictEqual( my.Parent.b, undefined );
 
         //getter assigned
         my.Parent.b = 2;
-        strictEqual(my.Parent.b, 3);
-        strictEqual(my.Parent.privates.b, 3);
+        strictEqual( my.Parent.b, 3 );
+        strictEqual( my.Parent.privates.b, 3 );
 
         //Child
-        strictEqual(my.Child.a, 2);
-        strictEqual(my.Child.b, undefined);
+        strictEqual( my.Child.a, 2 );
+        strictEqual( my.Child.b, undefined );
 
         //getter assigned
         my.Child.b = 2;
-        strictEqual(my.Child.b, 3);
-        strictEqual(my.Child.privates.b, 3);
+        strictEqual( my.Child.b, 3 );
+        strictEqual( my.Child.privates.b, 3 );
 
-        strictEqual(my.Child.c, 'undefined!');
-        strictEqual(my.Child.privates.c, undefined);
+        strictEqual( my.Child.c, 'undefined!' );
+        strictEqual( my.Child.privates.c, undefined );
         my.Child.c = 3;
-        strictEqual(my.Child.c, '?3!');
-        strictEqual(my.Child.privates.c, '?3');
+        strictEqual( my.Child.c, '?3!' );
+        strictEqual( my.Child.privates.c, '?3' );
 
 
         //tearDown
         //Base
-        xs.ClassManager.delete(BaseName);
-        BaseSave && xs.ClassManager.add(BaseName, BaseSave);
+        xs.ClassManager.delete( BaseName );
+        BaseSave && xs.ClassManager.add( BaseName, BaseSave );
 
         //Parent
-        xs.ClassManager.delete(ParentName);
-        ParentSave && xs.ClassManager.add(ParentName, ParentSave);
+        xs.ClassManager.delete( ParentName );
+        ParentSave && xs.ClassManager.add( ParentName, ParentSave );
 
         //Child
-        xs.ClassManager.delete(ChildName);
-        ChildSave && xs.ClassManager.add(ChildName, ChildSave);
-    });
-});
+        xs.ClassManager.delete( ChildName );
+        ChildSave && xs.ClassManager.add( ChildName, ChildSave );
+    } );
+} );

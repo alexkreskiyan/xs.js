@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     //framework shorthand
     var xs = root[ns];
@@ -49,9 +49,9 @@
          *
          * @return {Boolean} verification result
          */
-        var _has = me.has = function (name) {
+        var _has = me.has = function ( name ) {
 
-            return xs.hasKey(registry, name);
+            return xs.hasKey( registry, name );
         };
 
         /**
@@ -67,7 +67,7 @@
          *
          * @return {Function|undefined} class by name or undefined
          */
-        me.get = function (name) {
+        me.get = function ( name ) {
 
             return registry[name];
         };
@@ -99,30 +99,30 @@
          * - class is not function
          * - class is not extended from xs.Base
          */
-        var _add = me.add = function (name, Class) {
+        var _add = me.add = function ( name, Class ) {
             //throw error if trying to set defined
-            if (_has(name)) {
-                throw new Error('Class "' + name + '" is already defined');
+            if ( _has( name ) ) {
+                throw new Error( 'Class "' + name + '" is already defined' );
             }
 
             //throw error if trying to add already added with other name
-            if (xs.has(registry, Class)) {
-                throw new Error('Class "' + Class.label + '" can not be added as "' + name + '"');
+            if ( xs.has( registry, Class ) ) {
+                throw new Error( 'Class "' + Class.label + '" can not be added as "' + name + '"' );
             }
 
             //throw error if Class is not function
-            if (!xs.isFunction(Class)) {
-                throw new Error('Class "' + name + '" is not a function');
+            if ( !xs.isFunction( Class ) ) {
+                throw new Error( 'Class "' + name + '" is not a function' );
             }
 
             //assign real name as label
             Class.label = name;
 
             //get short name of Class
-            var label = _getName(name);
+            var label = _getName( name );
 
             //get Class namespace by path
-            var namespace = _namespace(root, _getPath(name));
+            var namespace = _namespace( root, _getPath( name ) );
 
             //save Class to namespace
             namespace[label] = Class;
@@ -131,7 +131,7 @@
             registry[name] = Class;
 
             //sync namespaces
-            _syncNamespaces(namespace, 'add', label);
+            _syncNamespaces( namespace, 'add', label );
         };
 
         /**
@@ -156,32 +156,32 @@
          *
          * - class with given name is not registered
          */
-        me.delete = function (name) {
+        me.delete = function ( name ) {
             //throw error if trying to unset undefined
-            if (!_has(name)) {
-                throw new Error('Class "' + name + '" is not defined');
+            if ( !_has( name ) ) {
+                throw new Error( 'Class "' + name + '" is not defined' );
             }
 
             //unset Class label
             delete registry[name].label;
 
             //get short name of Class
-            var label = _getName(name);
+            var label = _getName( name );
 
             //get path of Class
-            var path = _getPath(name);
+            var path = _getPath( name );
 
             //get Class namespace by path
-            var namespace = _namespace(root, path);
+            var namespace = _namespace( root, path );
 
             //sync namespaces
-            _syncNamespaces(namespace, 'delete', label);
+            _syncNamespaces( namespace, 'delete', label );
 
             //unset Class from namespace
             delete namespace[label];
 
             //clean namespace
-            _cleanNamespace(root, path);
+            _cleanNamespace( root, path );
 
             //delete Class from registry
             delete registry[name];
@@ -220,17 +220,17 @@
          *
          * - class with given name is already registered
          */
-        me.define = function (name, descFn, createdFn) {
+        me.define = function ( name, descFn, createdFn ) {
             //throw error if trying to redefine
-            if (_has(name)) {
-                throw new Error('Class "' + name + '" is already defined');
+            if ( _has( name ) ) {
+                throw new Error( 'Class "' + name + '" is already defined' );
             }
 
             //create Class and save it to registry
-            var Class = xs.Class.create(descFn, createdFn);
+            var Class = xs.Class.create( descFn, createdFn );
 
             //save Class in registry by name
-            _add(name, Class);
+            _add( name, Class );
 
             return Class;
         };
@@ -250,9 +250,9 @@
          *
          * @return {String} short name
          */
-        var _getName = function (name) {
+        var _getName = function ( name ) {
 
-            return name.split('.').slice(-1).join('.');
+            return name.split( '.' ).slice( -1 ).join( '.' );
         };
 
         /**
@@ -270,9 +270,9 @@
          *
          * @return {String} class path
          */
-        var _getPath = function (name) {
+        var _getPath = function ( name ) {
 
-            return name.split('.').slice(0, -1).join('.');
+            return name.split( '.' ).slice( 0, -1 ).join( '.' );
         };
 
         /**
@@ -291,27 +291,27 @@
          *
          * @return {Object|Function} namespace for given path
          */
-        var _namespace = function (root, path) {
+        var _namespace = function ( root, path ) {
             //use root if no path
-            if (!path) {
+            if ( !path ) {
                 return root;
             }
 
             //explode name to parts
-            var parts = path.split('.');
+            var parts = path.split( '.' );
 
             //get first path's part
             var part = parts.shift();
 
             //create namespace if missing
-            if (!xs.isFunction(root[part]) && !xs.isObject(root[part])) {
+            if ( !xs.isFunction( root[part] ) && !xs.isObject( root[part] ) ) {
                 root[part] = {};
             }
 
             //process down or return
-            if (parts.length) {
+            if ( parts.length ) {
 
-                return _namespace(root[part], parts.join('.'));
+                return _namespace( root[part], parts.join( '.' ) );
             }
 
             return root[part];
@@ -331,32 +331,32 @@
          * @param {Object|Function} root namespace relative root
          * @param {String} path relative path to root
          */
-        var _cleanNamespace = function (root, path) {
+        var _cleanNamespace = function ( root, path ) {
             //return if path is empty
-            if (!path) {
+            if ( !path ) {
                 return;
             }
 
             //explode name to parts
-            var parts = path.split('.');
+            var parts = path.split( '.' );
 
             //get last path's part
             var part = parts.pop();
 
             //set path to parent
-            path = parts.join('.');
+            path = parts.join( '.' );
 
             //get parent namespace
-            var namespace = _namespace(root, path);
+            var namespace = _namespace( root, path );
 
             //remove namespace if empty
-            if (xs.isEmpty(namespace[part])) {
+            if ( xs.isEmpty( namespace[part] ) ) {
 
                 //remove empty namespace
                 delete namespace[part];
 
                 //try to clean parent
-                _cleanNamespace(root, path);
+                _cleanNamespace( root, path );
             }
         };
 
@@ -375,35 +375,35 @@
          * @param {String} operation operation name
          * @param {String} name name of changed class
          */
-        var _syncNamespaces = function (namespace, operation, name) {
-            var classes = xs.findAll(namespace, function (value) {
-                return xs.isFunction(value) && xs.isObject(value.namespace);
-            });
+        var _syncNamespaces = function ( namespace, operation, name ) {
+            var classes = xs.findAll( namespace, function ( value ) {
+                return xs.isFunction( value ) && xs.isObject( value.namespace );
+            } );
             var changedClass = classes[name];
 
             //add new class to all namespaces
-            if (operation == 'add') {
+            if ( operation == 'add' ) {
                 //add all classes to new class' namespace
-                xs.each(classes, function (Class, name) {
+                xs.each( classes, function ( Class, name ) {
                     changedClass.namespace[name] = Class;
-                });
+                } );
 
                 //add new class to all namespaces
-                xs.each(classes, function (Class) {
+                xs.each( classes, function ( Class ) {
                     Class.namespace[name] = classes[name];
-                });
-            } else if (operation == 'delete') {
+                } );
+            } else if ( operation == 'delete' ) {
                 //empty old class' namespace
-                xs.deleteAll(changedClass.namespace);
+                xs.deleteAll( changedClass.namespace );
 
                 //delete old class from all namespaces
-                xs.each(classes, function (Class) {
+                xs.each( classes, function ( Class ) {
                     delete Class.namespace[name];
-                });
+                } );
             }
         };
     });
-    xs.extend(xs, {
+    xs.extend( xs, {
         define: xs.ClassManager.define
-    });
-})(window, 'xs');
+    } );
+})( window, 'xs' );

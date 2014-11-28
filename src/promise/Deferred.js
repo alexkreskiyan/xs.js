@@ -32,9 +32,9 @@
  */
 'use strict';
 
-xs.define('xs.promise.Deferred', {
-    requires:    ['xs.promise.Resolver'],
-    static:      {
+xs.define( 'xs.promise.Deferred', {
+    requires: ['xs.promise.Resolver'],
+    static: {
         methods: {
             /**
              * Returns a new {@link xs.promise.Promise} that resolves immediately with the specified value.
@@ -42,10 +42,10 @@ xs.define('xs.promise.Deferred', {
              * @param {*} value The resolved future value.
              * @return {xs.promise.Promise} Promise resolved with the specified value.
              */
-            resolve: function (value) {
+            resolve: function ( value ) {
                 var deferred;
-                deferred = xs.create('xs.promise.Deferred');
-                deferred.resolve(value);
+                deferred = xs.create( 'xs.promise.Deferred' );
+                deferred.resolve( value );
                 return deferred.promise;
             },
             /**
@@ -54,54 +54,54 @@ xs.define('xs.promise.Deferred', {
              * @param {Error} reason The rejection reason.
              * @return {xs.promise.Promise} Promise rejected with the specified reason.
              */
-            reject:  function (reason) {
+            reject: function ( reason ) {
                 var deferred;
-                deferred = xs.create('xs.promise.Deferred');
-                deferred.reject(reason);
+                deferred = xs.create( 'xs.promise.Deferred' );
+                deferred.reject( reason );
                 return deferred.promise;
             }
         }
     },
     constructor: function () {
-        this.resolver = xs.create('xs.promise.Resolver');
+        this.resolver = xs.create( 'xs.promise.Resolver' );
         this.promise = this.resolver.promise;
     },
-    properties:  {
+    properties: {
         /**
          * @property {xs.promise.Promise}
          * The {@link xs.promise.Promise Promise} of a future value associated with this Deferred.
          */
-        promise:  null,
+        promise: null,
         /**
          * @property {xs.promise.Resolver}
          * internal resolver object
          */
         resolver: null
     },
-    methods:     {
+    methods: {
         /**
          * Resolves this Deferred's {@link xs.promise.Promise Promise} with the specified value.
          *
          * @param {*} value The resolved future value.
          */
-        resolve:  function (value) {
-            return this.resolver.resolve(value);
+        resolve: function ( value ) {
+            return this.resolver.resolve( value );
         },
         /**
          * Rejects this Deferred's {@link xs.promise.Promise Promise} with the specified reason.
          *
          * @param {Error} reason The rejection reason.
          */
-        reject:   function (reason) {
-            return this.resolver.reject(reason);
+        reject: function ( reason ) {
+            return this.resolver.reject( reason );
         },
         /**
          * Updates progress for this Deferred's {@link xs.promise.Promise Promise}, if it is still pending.
          *
          * @param {*} progress The progress value.
          */
-        progress: function (progress) {
-            return this.resolver.progress(progress);
+        progress: function ( progress ) {
+            return this.resolver.progress( progress );
         }
     }
-});
+} );

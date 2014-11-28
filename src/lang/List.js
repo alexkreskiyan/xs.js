@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     'use strict';
 
@@ -30,8 +30,8 @@
         var me = this;
 
         // Create quick reference variables for speed access to core prototypes.
-        var _slice = Function.prototype.call.bind(Array.prototype.slice);
-        var _concatenate = Function.prototype.apply.bind(Array.prototype.concat);
+        var _slice = Function.prototype.call.bind( Array.prototype.slice );
+        var _concatenate = Function.prototype.apply.bind( Array.prototype.concat );
 
         /**
          * Returns all list keys
@@ -60,20 +60,20 @@
          *
          * @return {Array} list keys
          */
-        var _keys = me.keys = function (list) {
+        var _keys = me.keys = function ( list ) {
             //handle array list
-            if (xs.isArray(list)) {
+            if ( xs.isArray( list ) ) {
                 var keys = [], length = list.length;
 
-                for (var i = 0; i < length; i++) {
-                    keys.push(i);
+                for ( var i = 0; i < length; i++ ) {
+                    keys.push( i );
                 }
 
                 return keys;
             }
 
             //handle object list
-            return Object.keys(list);
+            return Object.keys( list );
         };
 
         /**
@@ -103,18 +103,18 @@
          *
          * @return {Array} list values
          */
-        me.values = function (list) {
+        me.values = function ( list ) {
             //handle array list
-            if (xs.isArray(list)) {
+            if ( xs.isArray( list ) ) {
 
-                return _slice(list);
+                return _slice( list );
             }
 
             //handle object list
-            var values = [], idx, keys = _keys(list), len = keys.length;
+            var values = [], idx, keys = _keys( list ), len = keys.length;
 
-            for (idx = 0; idx < len; idx++) {
-                values.push(list[keys[idx]]);
+            for ( idx = 0; idx < len; idx++ ) {
+                values.push( list[keys[idx]] );
             }
 
             return values;
@@ -155,15 +155,15 @@
          *
          * @return {Boolean} whether list has key
          */
-        var _hasKey = me.hasKey = function (list, key) {
+        var _hasKey = me.hasKey = function ( list, key ) {
             //handle array list
-            if (xs.isArray(list)) {
+            if ( xs.isArray( list ) ) {
 
-                return xs.isNumber(key) && key >= 0 && key < list.length;
+                return xs.isNumber( key ) && key >= 0 && key < list.length;
             }
 
             //handle object list
-            return xs.isString(key) && list.hasOwnProperty(key);
+            return xs.isString( key ) && list.hasOwnProperty( key );
         };
 
         /**
@@ -202,11 +202,11 @@
          *
          * @return {Boolean} whether list has value
          */
-        var _has = me.has = function (list, value) {
-            return _find(list, function (val) {
+        var _has = me.has = function ( list, value ) {
+            return _find( list, function ( val ) {
 
                 return val === value;
-            }) !== undefined;
+            } ) !== undefined;
         };
 
         /**
@@ -253,13 +253,13 @@
          *
          * @return {String|Number|undefined} found key, or undefined if nothing found
          */
-        var _keyOf = me.keyOf = function (list, value) {
-            var idx, keys = _keys(list), len = keys.length, key;
+        var _keyOf = me.keyOf = function ( list, value ) {
+            var idx, keys = _keys( list ), len = keys.length, key;
 
-            for (idx = 0; idx < len; idx++) {
+            for ( idx = 0; idx < len; idx++ ) {
                 key = keys[idx];
 
-                if (list[key] === value) {
+                if ( list[key] === value ) {
 
                     return key;
                 }
@@ -312,13 +312,13 @@
          *
          * @return {String|Number|undefined} found key, or undefined if nothing found
          */
-        var _lastKeyOf = me.lastKeyOf = function (list, value) {
-            var idx, keys = _keys(list), len = keys.length, key;
+        var _lastKeyOf = me.lastKeyOf = function ( list, value ) {
+            var idx, keys = _keys( list ), len = keys.length, key;
 
-            for (idx = len - 1; idx >= 0; idx--) {
+            for ( idx = len - 1; idx >= 0; idx-- ) {
                 key = keys[idx];
 
-                if (list[key] === value) {
+                if ( list[key] === value ) {
 
                     return key;
                 }
@@ -356,15 +356,15 @@
          *
          * @return {Number} size of list
          */
-        var _size = me.size = function (list) {
+        var _size = me.size = function ( list ) {
             //handle array list
-            if (xs.isArray(list)) {
+            if ( xs.isArray( list ) ) {
 
                 return list.length;
             }
 
             //handle object list
-            return _keys(list).length;
+            return _keys( list ).length;
         };
 
         /**
@@ -410,13 +410,13 @@
          * @param {Function} iterator list iterator
          * @param {Object} scope optional scope
          */
-        var _each = me.each = function (list, iterator, scope) {
-            var idx, keys = _keys(list), len = keys.length, key;
+        var _each = me.each = function ( list, iterator, scope ) {
+            var idx, keys = _keys( list ), len = keys.length, key;
 
-            for (idx = 0; idx < len; idx++) {
+            for ( idx = 0; idx < len; idx++ ) {
                 key = keys[idx];
 
-                iterator.call(scope, list[key], key, list);
+                iterator.call( scope, list[key], key, list );
             }
         };
 
@@ -463,13 +463,13 @@
          * @param {Function} iterator list iterator
          * @param {Object} scope optional scope
          */
-        var _eachReverse = me.eachReverse = function (list, iterator, scope) {
-            var idx, keys = _keys(list), len = keys.length, key;
+        var _eachReverse = me.eachReverse = function ( list, iterator, scope ) {
+            var idx, keys = _keys( list ), len = keys.length, key;
 
-            for (idx = len - 1; idx >= 0; idx--) {
+            for ( idx = len - 1; idx >= 0; idx-- ) {
                 key = keys[idx];
 
-                iterator.call(scope, list[key], key, list);
+                iterator.call( scope, list[key], key, list );
             }
         };
 
@@ -518,12 +518,12 @@
          *
          * @return {Array|Object} Mapping result
          */
-        me.map = function (list, iterator, scope) {
-            var result = xs.isArray(list) ? [] : {};
+        me.map = function ( list, iterator, scope ) {
+            var result = xs.isArray( list ) ? [] : {};
 
-            _each(list, function (value, key, array) {
-                result[key] = iterator.call(this, value, key, array);
-            }, scope);
+            _each( list, function ( value, key, array ) {
+                result[key] = iterator.call( this, value, key, array );
+            }, scope );
 
             return result;
         };
@@ -582,18 +582,18 @@
          *
          * @return {*} Reducing result
          */
-        me.reduce = function (list, iterator, memo, scope) {
-            var result, copy = _clone(list);
+        me.reduce = function ( list, iterator, memo, scope ) {
+            var result, copy = _clone( list );
 
-            if (arguments.length > 2) {
+            if ( arguments.length > 2 ) {
                 result = memo;
             } else {
-                result = _shift(copy);
+                result = _shift( copy );
             }
 
-            _each(copy, function (value, key, object) {
-                result = iterator.call(this, result, value, key, object);
-            }, scope);
+            _each( copy, function ( value, key, object ) {
+                result = iterator.call( this, result, value, key, object );
+            }, scope );
 
             return result;
         };
@@ -652,18 +652,18 @@
          *
          * @return {*} Reducing result
          */
-        me.reduceRight = function (list, iterator, memo, scope) {
-            var result, copy = _clone(list);
+        me.reduceRight = function ( list, iterator, memo, scope ) {
+            var result, copy = _clone( list );
 
-            if (arguments.length > 2) {
+            if ( arguments.length > 2 ) {
                 result = memo;
             } else {
-                result = _pop(copy);
+                result = _pop( copy );
             }
 
-            _eachReverse(copy, function (value, key, object) {
-                result = iterator.call(this, result, value, key, object);
-            }, scope);
+            _eachReverse( copy, function ( value, key, object ) {
+                result = iterator.call( this, result, value, key, object );
+            }, scope );
 
             return result;
         };
@@ -714,14 +714,14 @@
          *
          * @return {*} found value, undefined if nothing found
          */
-        var _find = me.find = function (list, finder, scope) {
-            var idx, keys = _keys(list), len = keys.length, key, value;
+        var _find = me.find = function ( list, finder, scope ) {
+            var idx, keys = _keys( list ), len = keys.length, key, value;
 
-            for (idx = 0; idx < len; idx++) {
+            for ( idx = 0; idx < len; idx++ ) {
                 key = keys[idx];
                 value = list[key];
 
-                if (finder.call(scope, value, key, list)) {
+                if ( finder.call( scope, value, key, list ) ) {
 
                     return value;
                 }
@@ -774,14 +774,14 @@
          *
          * @return {*} found value, undefined if nothing found
          */
-        var _findLast = me.findLast = function (list, finder, scope) {
-            var idx, keys = _keys(list), len = keys.length, key, value;
+        var _findLast = me.findLast = function ( list, finder, scope ) {
+            var idx, keys = _keys( list ), len = keys.length, key, value;
 
-            for (idx = len - 1; idx >= 0; idx--) {
+            for ( idx = len - 1; idx >= 0; idx-- ) {
                 key = keys[idx];
                 value = list[key];
 
-                if (finder.call(scope, value, key, list)) {
+                if ( finder.call( scope, value, key, list ) ) {
 
                     return value;
                 }
@@ -834,20 +834,20 @@
          *
          * @return {Array|Object} found values
          */
-        var _findAll = me.findAll = function (list, finder, scope) {
-            var isArray = xs.isArray(list);
+        var _findAll = me.findAll = function ( list, finder, scope ) {
+            var isArray = xs.isArray( list );
             var copy = isArray ? [] : {};
 
-            if (isArray) {
+            if ( isArray ) {
                 //handle array list
-                _each(list, function (value, key, obj) {
-                    finder.call(this, value, key, obj) && copy.push(value);
-                }, scope);
+                _each( list, function ( value, key, obj ) {
+                    finder.call( this, value, key, obj ) && copy.push( value );
+                }, scope );
             } else {
                 //handle object list
-                _each(list, function (value, key, obj) {
-                    finder.call(this, value, key, obj) && (copy[key] = value);
-                }, scope);
+                _each( list, function ( value, key, obj ) {
+                    finder.call( this, value, key, obj ) && (copy[key] = value);
+                }, scope );
             }
 
             return copy;
@@ -911,14 +911,14 @@
          *
          * @return {Object} first object, that suites clause, or undefined, if nothing suites
          */
-        me.filter = function (list, where) {
-            return _find(list, function (value) {
+        me.filter = function ( list, where ) {
+            return _find( list, function ( value ) {
 
-                return _every(where, function (param, key) {
+                return _every( where, function ( param, key ) {
 
                     return value[key] === param;
-                });
-            });
+                } );
+            } );
         };
 
         /**
@@ -979,14 +979,14 @@
          *
          * @return {Object} first object, that suites clause, or undefined, if nothing suites
          */
-        me.filterLast = function (list, where) {
-            return _findLast(list, function (value) {
+        me.filterLast = function ( list, where ) {
+            return _findLast( list, function ( value ) {
 
-                return _every(where, function (param, key) {
+                return _every( where, function ( param, key ) {
 
                     return value[key] === param;
-                });
-            });
+                } );
+            } );
         };
 
         /**
@@ -1047,14 +1047,14 @@
          *
          * @return {Array|Object} List values, filtered from original
          */
-        me.filterAll = function (list, where) {
-            return _findAll(list, function (value) {
+        me.filterAll = function ( list, where ) {
+            return _findAll( list, function ( value ) {
 
-                return _every(where, function (param, key) {
+                return _every( where, function ( param, key ) {
 
                     return value[key] === param;
-                });
-            });
+                } );
+            } );
         };
 
         /**
@@ -1114,13 +1114,13 @@
          *
          * @return {Boolean} whether all values pass tester function
          */
-        var _every = me.every = function (list, tester, scope) {
-            var idx, keys = _keys(list), len = keys.length, key;
+        var _every = me.every = function ( list, tester, scope ) {
+            var idx, keys = _keys( list ), len = keys.length, key;
 
-            for (idx = 0; idx < len; idx++) {
+            for ( idx = 0; idx < len; idx++ ) {
                 key = keys[idx];
 
-                if (!tester.call(scope, list[key], key, list)) {
+                if ( !tester.call( scope, list[key], key, list ) ) {
 
                     return false;
                 }
@@ -1194,17 +1194,17 @@
          *
          * @return {Boolean} whether some values pass tester function
          */
-        me.some = function (list, tester, count, scope) {
-            var idx, keys = _keys(list), len = keys.length, key, found = 0;
+        me.some = function ( list, tester, count, scope ) {
+            var idx, keys = _keys( list ), len = keys.length, key, found = 0;
 
-            xs.isNumber(count) || (count = 1);
+            xs.isNumber( count ) || (count = 1);
 
-            for (idx = 0; idx < len; idx++) {
+            for ( idx = 0; idx < len; idx++ ) {
                 key = keys[idx];
 
-                tester.call(scope, list[key], key, list) && found++;
+                tester.call( scope, list[key], key, list ) && found++;
 
-                if (found >= count) {
+                if ( found >= count ) {
 
                     return true;
                 }
@@ -1270,13 +1270,13 @@
          *
          * @return {Boolean} whether no one of values pass tester function
          */
-        var _none = me.none = function (list, tester, scope) {
-            var idx, keys = _keys(list), len = keys.length, key;
+        var _none = me.none = function ( list, tester, scope ) {
+            var idx, keys = _keys( list ), len = keys.length, key;
 
-            for (idx = 0; idx < len; idx++) {
+            for ( idx = 0; idx < len; idx++ ) {
                 key = keys[idx];
 
-                if (tester.call(scope, list[key], key, list)) {
+                if ( tester.call( scope, list[key], key, list ) ) {
 
                     return false;
                 }
@@ -1342,8 +1342,8 @@
          *
          * @return {*} first value, undefined if list is empty
          */
-        me.first = function (list) {
-            var key = _shift(_keys(list));
+        me.first = function ( list ) {
+            var key = _shift( _keys( list ) );
 
             return list[key];
         };
@@ -1405,8 +1405,8 @@
          *
          * @return {*} last value, undefined if list is empty
          */
-        me.last = function (list) {
-            var key = _pop(_keys(list));
+        me.last = function ( list ) {
+            var key = _pop( _keys( list ) );
 
             return list[key];
         };
@@ -1500,11 +1500,11 @@
          *
          * @return {*} First value of list
          */
-        var _shift = me.shift = function (list) {
-            var key = _keys(list).shift();
+        var _shift = me.shift = function ( list ) {
+            var key = _keys( list ).shift();
             var value = list[key];
 
-            xs.isArray(list) ? list.splice(0, 1) : delete list[key];
+            xs.isArray( list ) ? list.splice( 0, 1 ) : delete list[key];
 
             return value;
         };
@@ -1598,11 +1598,11 @@
          *
          * @return {*} Last value of list
          */
-        var _pop = me.pop = function (list) {
-            var key = _keys(list).pop();
+        var _pop = me.pop = function ( list ) {
+            var key = _keys( list ).pop();
             var value = list[key];
 
-            xs.isArray(list) ? list.splice(-1, 1) : delete list[key];
+            xs.isArray( list ) ? list.splice( -1, 1 ) : delete list[key];
 
             return value;
         };
@@ -1659,9 +1659,9 @@
          *
          * @return {Boolean} whether value was deleted
          */
-        var _deleteAt = me.deleteAt = function (list, key) {
-            if (_hasKey(list, key)) {
-                xs.isArray(list) ? list.splice(key, 1) : delete list[key];
+        var _deleteAt = me.deleteAt = function ( list, key ) {
+            if ( _hasKey( list, key ) ) {
+                xs.isArray( list ) ? list.splice( key, 1 ) : delete list[key];
 
                 return true;
             }
@@ -1733,11 +1733,11 @@
          *
          * @return {Boolean} whether something was deleted
          */
-        me.delete = function (list, value) {
-            var key = _keyOf(list, value);
+        me.delete = function ( list, value ) {
+            var key = _keyOf( list, value );
 
-            if (key !== undefined) {
-                xs.isArray(list) ? list.splice(key, 1) : delete list[key];
+            if ( key !== undefined ) {
+                xs.isArray( list ) ? list.splice( key, 1 ) : delete list[key];
 
                 return true;
             }
@@ -1809,11 +1809,11 @@
          *
          * @return {Boolean} whether value was deleted
          */
-        me.deleteLast = function (list, value) {
-            var key = _lastKeyOf(list, value);
+        me.deleteLast = function ( list, value ) {
+            var key = _lastKeyOf( list, value );
 
-            if (key !== undefined) {
-                xs.isArray(list) ? list.splice(key, 1) : delete list[key];
+            if ( key !== undefined ) {
+                xs.isArray( list ) ? list.splice( key, 1 ) : delete list[key];
 
                 return true;
             }
@@ -1883,35 +1883,35 @@
          *
          * @return {Number} count of deleted values
          */
-        me.deleteAll = function (list, value) {
+        me.deleteAll = function ( list, value ) {
             var deleted = 0;
 
             //if value specified
-            if (arguments.length > 1) {
+            if ( arguments.length > 1 ) {
                 var key;
 
                 //delete each entry
-                while ((key = _keyOf(list, value)) !== undefined) {
-                    _deleteAt(list, key);
+                while ( (key = _keyOf( list, value )) !== undefined ) {
+                    _deleteAt( list, key );
                     deleted++;
                 }
 
                 return deleted;
             }
 
-            var size = _size(list);
+            var size = _size( list );
 
             //handle array list
-            if (xs.isArray(list)) {
-                list.splice(0, size);
+            if ( xs.isArray( list ) ) {
+                list.splice( 0, size );
 
                 return size;
             }
 
             //handle object list
-            _each(list, function (value, key) {
+            _each( list, function ( value, key ) {
                 delete list[key];
-            });
+            } );
 
             return size;
         };
@@ -1941,19 +1941,19 @@
          *
          * @return {Array|Object} list shallow copy
          */
-        var _clone = me.clone = function (list) {
+        var _clone = me.clone = function ( list ) {
             //handle array list
-            if (xs.isArray(list)) {
+            if ( xs.isArray( list ) ) {
 
-                return _slice(list);
+                return _slice( list );
             }
 
             //handle object list
             var copy = {};
 
-            _each(list, function (value, key) {
+            _each( list, function ( value, key ) {
                 copy[key] = value;
-            });
+            } );
 
             return copy;
         };
@@ -2009,13 +2009,13 @@
          *
          * @param {Array|Object} list operated list
          */
-        me.defaults = function (list) {
-            var defaults = _union(_slice(arguments, 1));
+        me.defaults = function ( list ) {
+            var defaults = _union( _slice( arguments, 1 ) );
 
             //handle array list
-            if (xs.isArray(list)) {
+            if ( xs.isArray( list ) ) {
                 var len = defaults.length, idx;
-                for (idx = list.length; idx < len; idx++) {
+                for ( idx = list.length; idx < len; idx++ ) {
                     list[idx] = defaults[idx];
                 }
 
@@ -2023,9 +2023,9 @@
             }
 
             //handle object list
-            _each(defaults, function (value, key) {
-                _hasKey(list, key) || (list[key] = value);
-            });
+            _each( defaults, function ( value, key ) {
+                _hasKey( list, key ) || (list[key] = value);
+            } );
         };
 
         /**
@@ -2077,11 +2077,11 @@
          *
          * @return {Array|Object}
          */
-        me.compact = function (list) {
-            return _findAll(list, function (value) {
+        me.compact = function ( list ) {
+            return _findAll( list, function ( value ) {
 
                 return value;
-            });
+            } );
         };
 
         /**
@@ -2143,16 +2143,16 @@
          *
          * @return {Array|Object} copy with unique values
          */
-        var _unique = me.unique = function (list) {
+        var _unique = me.unique = function ( list ) {
             var unique;
 
             //handle array list
-            if (xs.isArray(list)) {
+            if ( xs.isArray( list ) ) {
                 unique = [];
 
-                _each(list, function (value) {
-                    _has(unique, value) || unique.push(value);
-                });
+                _each( list, function ( value ) {
+                    _has( unique, value ) || unique.push( value );
+                } );
 
                 return unique;
             }
@@ -2160,9 +2160,9 @@
             //handle object list
             unique = {};
 
-            _each(list, function (value, key) {
-                _has(unique, value) || (unique[key] = value);
-            });
+            _each( list, function ( value, key ) {
+                _has( unique, value ) || (unique[key] = value);
+            } );
 
             return unique;
         };
@@ -2209,25 +2209,25 @@
          * @return {Array|Object} lists union
          */
         var _union = me.union = function () {
-            var merge = _concatenate([], _slice(arguments));
+            var merge = _concatenate( [], _slice( arguments ) );
 
             //get union scenario
-            var byObject = xs.size(merge) && _every(merge, function (arg) {
+            var byObject = xs.size( merge ) && _every( merge, function ( arg ) {
 
-                return xs.isObject(arg);
-            });
+                return xs.isObject( arg );
+            } );
 
             var union;
 
             //handle object union
-            if (byObject) {
+            if ( byObject ) {
                 union = {};
 
-                _each(merge, function (value) {
-                    _each(value, function (value, key) {
-                        _hasKey(union, key) || (union[key] = value);
-                    });
-                });
+                _each( merge, function ( value ) {
+                    _each( value, function ( value, key ) {
+                        _hasKey( union, key ) || (union[key] = value);
+                    } );
+                } );
 
                 return union;
             }
@@ -2235,15 +2235,15 @@
             //handle array union
             union = [];
 
-            _each(merge, function (value) {
-                if (xs.isArray(value)) {
-                    _each(value, function (value) {
-                        union.push(value);
-                    });
+            _each( merge, function ( value ) {
+                if ( xs.isArray( value ) ) {
+                    _each( value, function ( value ) {
+                        union.push( value );
+                    } );
                 } else {
-                    union.push(value);
+                    union.push( value );
                 }
-            });
+            } );
 
             return union;
         };
@@ -2277,31 +2277,30 @@
          * @return {Array|Object} lists intersection
          */
         me.intersection = function () {
-            var others = _slice(arguments), merge = _concatenate([], others);
+            var others = _slice( arguments ), merge = _concatenate( [], others );
 
             //whether to handle objects intersection
-            var byObject = _every(merge, function (arg) {
+            var byObject = _every( merge, function ( arg ) {
 
-                return xs.isObject(arg);
-            });
+                return xs.isObject( arg );
+            } );
 
             //get all values list
-            var all = _unique(_union(others)),
-                //define intersection
+            var all = _unique( _union( others ) ), //define intersection
                 intersect;
 
             //handle object list
-            if (byObject) {
+            if ( byObject ) {
                 intersect = {};
 
                 //iterate over each value (they are unique)
-                _each(all, function (value, key) {
+                _each( all, function ( value, key ) {
                     //if each array has this value, it belongs to intersection
-                    _every(others, function (arr) {
+                    _every( others, function ( arr ) {
 
-                        return _has(arr, value);
-                    }) && (intersect[key] = value);
-                });
+                        return _has( arr, value );
+                    } ) && (intersect[key] = value);
+                } );
 
                 return intersect;
             }
@@ -2310,13 +2309,13 @@
             intersect = [];
 
             //iterate over each value (they are unique)
-            _each(all, function (value) {
+            _each( all, function ( value ) {
                 //if each array has this value, it belongs to intersection
-                _every(others, function (arr) {
+                _every( others, function ( arr ) {
 
-                    return _has(arr, value);
-                }) && intersect.push(value);
-            });
+                    return _has( arr, value );
+                } ) && intersect.push( value );
+            } );
 
             return intersect;
         };
@@ -2352,25 +2351,25 @@
          *
          * @return {Array|Object} difference list
          */
-        me.difference = function (list) {
+        me.difference = function ( list ) {
             //get objects list
-            var others = _slice(arguments, 1);
+            var others = _slice( arguments, 1 );
 
             //return clone if no subtracted elements given
-            if (!others.length) {
+            if ( !others.length ) {
 
-                return _clone(list);
+                return _clone( list );
             }
 
             //iterate over each value in values (they are unique)
-            return _findAll(list, function (value) {
+            return _findAll( list, function ( value ) {
 
                 //check whether all other objects have this value
-                return _none(others, function (other) {
+                return _none( others, function ( other ) {
 
-                    return _has(other, value);
-                });
-            });
+                    return _has( other, value );
+                } );
+            } );
         };
 
         /**
@@ -2418,16 +2417,16 @@
          *
          * @return {Array|Object} picked list
          */
-        me.pick = function (list) {
-            var copy, keys = _union(_slice(arguments, 1));
+        me.pick = function ( list ) {
+            var copy, keys = _union( _slice( arguments, 1 ) );
 
             //handle array list
-            if (xs.isArray(list)) {
+            if ( xs.isArray( list ) ) {
                 copy = [];
 
-                _each(keys, function (key) {
-                    _hasKey(list, key) && copy.push(list[key]);
-                });
+                _each( keys, function ( key ) {
+                    _hasKey( list, key ) && copy.push( list[key] );
+                } );
 
                 return copy;
             }
@@ -2435,9 +2434,9 @@
             //handle object list
             copy = {};
 
-            _each(keys, function (key) {
-                _hasKey(list, key) && (copy[key] = list[key]);
-            });
+            _each( keys, function ( key ) {
+                _hasKey( list, key ) && (copy[key] = list[key]);
+            } );
 
             return copy;
         };
@@ -2483,16 +2482,16 @@
          *
          * @return {Array|Object}
          */
-        me.omit = function (list) {
-            var copy, keys = _union(_slice(arguments, 1));
+        me.omit = function ( list ) {
+            var copy, keys = _union( _slice( arguments, 1 ) );
 
             //handle array list
-            if (xs.isArray(list)) {
+            if ( xs.isArray( list ) ) {
                 copy = [];
 
-                _each(list, function (value, key) {
-                    _has(keys, key) || copy.push(value);
-                });
+                _each( list, function ( value, key ) {
+                    _has( keys, key ) || copy.push( value );
+                } );
 
                 return copy;
             }
@@ -2500,16 +2499,16 @@
             //handle object list
             copy = {};
 
-            _each(list, function (value, key) {
-                _has(keys, key) || (copy[key] = value);
-            });
+            _each( list, function ( value, key ) {
+                _has( keys, key ) || (copy[key] = value);
+            } );
 
             return copy;
         };
     });
 
     //extend xs with list
-    Object.keys(list).forEach(function (key) {
+    Object.keys( list ).forEach( function ( key ) {
         xs[key] = list[key];
-    });
-})(window, 'xs');
+    } );
+})( window, 'xs' );

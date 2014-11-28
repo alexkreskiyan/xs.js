@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-require([
+require( [
     'xs.lang.Type',
     'xs.lang.List',
     'xs.lang.Object',
@@ -17,9 +17,9 @@ require([
 
     'use strict';
 
-    module('xs.lang.Array');
+    module( 'xs.lang.Array' );
 
-    test('shuffle', function () {
+    test( 'shuffle', function () {
         //init sample
         var item = {x: 1};
 
@@ -61,24 +61,24 @@ require([
         ];
 
         //create clone
-        clone = xs.clone(x);
+        clone = xs.clone( x );
 
         //shuffle original array
-        xs.shuffle(x);
+        xs.shuffle( x );
 
         //check items all saved
-        strictEqual(true, xs.every(clone, function (value) {
-            return xs.has(x, value);
-        }));
+        strictEqual( true, xs.every( clone, function ( value ) {
+            return xs.has( x, value );
+        } ) );
 
         //check all keys exist
-        strictEqual(true, xs.every(clone, function (value, key) {
-            return xs.hasKey(x, key);
-        }));
+        strictEqual( true, xs.every( clone, function ( value, key ) {
+            return xs.hasKey( x, key );
+        } ) );
 
         //check order is changed
-        strictEqual(false, xs.every(clone, function (value) {
-            return xs.keyOf(x, value) === xs.keyOf(clone, value);
-        }));
-    });
-});
+        strictEqual( false, xs.every( clone, function ( value ) {
+            return xs.keyOf( x, value ) === xs.keyOf( clone, value );
+        } ) );
+    } );
+} );

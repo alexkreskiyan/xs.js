@@ -23,7 +23,7 @@
  *
  * @ignore
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     //framework shorthand
     var xs = root[ns];
@@ -31,49 +31,49 @@
     /**
      * Registers mixin pre-processor.
      */
-    xs.Class.registerPreprocessor('mixin', function (Class, desc) {
+    xs.Class.registerPreprocessor( 'mixin', function ( Class, desc ) {
         var mixClasses = {};
 
-        if (!xs.Object.size(desc.mixins)) {
+        if ( !xs.Object.size( desc.mixins ) ) {
             return;
         }
 
         //process mixins
-        xs.Object.each(desc.mixins, function (mixin, alias) {
-            mixClasses[alias] = xs.ClassManager.get(mixin);
-        });
+        xs.Object.each( desc.mixins, function ( mixin, alias ) {
+            mixClasses[alias] = xs.ClassManager.get( mixin );
+        } );
 
         //overriden mixed storage, that will be defaulted to descriptor
         var mixed = {
-            const:      {},
-            static:     {
+            const: {},
+            static: {
                 properties: {},
-                methods:    {}
+                methods: {}
             },
             properties: {},
-            methods:    {}
+            methods: {}
         };
 
         //iterate mixins and prepare
         var descriptor;
-        xs.Object.each(mixClasses, function (mixClass) {
+        xs.Object.each( mixClasses, function ( mixClass ) {
             descriptor = mixClass.descriptor;
-            xs.extend(mixed.const, descriptor.const);
-            xs.extend(mixed.static.properties, descriptor.static.properties);
-            xs.extend(mixed.static.methods, descriptor.static.methods);
-            xs.extend(mixed.properties, descriptor.properties);
-            xs.extend(mixed.methods, descriptor.methods);
-        });
+            xs.extend( mixed.const, descriptor.const );
+            xs.extend( mixed.static.properties, descriptor.static.properties );
+            xs.extend( mixed.static.methods, descriptor.static.methods );
+            xs.extend( mixed.properties, descriptor.properties );
+            xs.extend( mixed.methods, descriptor.methods );
+        } );
 
         //const
-        desc.const = xs.Object.defaults(desc.const, mixed.const);
+        desc.const = xs.Object.defaults( desc.const, mixed.const );
         //static properties and methods
-        desc.static.properties = xs.Object.defaults(desc.static.properties, mixed.static.properties);
-        desc.static.methods = xs.Object.defaults(desc.static.methods, mixed.static.methods);
+        desc.static.properties = xs.Object.defaults( desc.static.properties, mixed.static.properties );
+        desc.static.methods = xs.Object.defaults( desc.static.methods, mixed.static.methods );
         //public properties and methods
-        desc.properties = xs.Object.defaults(desc.properties, mixed.properties);
-        desc.methods = xs.Object.defaults(desc.methods, mixed.methods);
-    }, function (Class, descriptor) {
-        return xs.has(descriptor, 'mixins');
-    });
-})(window, 'xs');
+        desc.properties = xs.Object.defaults( desc.properties, mixed.properties );
+        desc.methods = xs.Object.defaults( desc.methods, mixed.methods );
+    }, function ( Class, descriptor ) {
+        return xs.has( descriptor, 'mixins' );
+    } );
+})( window, 'xs' );

@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     //framework shorthand
     var xs = root[ns];
@@ -21,27 +21,27 @@
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.preprocessors.add('constructor', function () {
+    xs.Class.preprocessors.add( 'constructor', function () {
 
         return true;
-    }, function (Class, descriptor) {
+    }, function ( Class, descriptor ) {
 
         //inherited
         //get inherited constructor from parent descriptor
-        var inherited = xs.hasKey(Class.parent.descriptor, 'constructor') ? Class.parent.descriptor.constructor : undefined;
+        var inherited = xs.hasKey( Class.parent.descriptor, 'constructor' ) ? Class.parent.descriptor.constructor : undefined;
 
 
         //own
         //get own methods from raw descriptor
-        var own = xs.hasKey(descriptor, 'constructor') ? descriptor.constructor : undefined;
+        var own = xs.hasKey( descriptor, 'constructor' ) ? descriptor.constructor : undefined;
 
 
         //apply (comparison to Object guarantees, that constructor was really assigned)
-        if (own) {
+        if ( own ) {
             Class.descriptor.constructor = own;
-        } else if (inherited) {
+        } else if ( inherited ) {
             Class.descriptor.constructor = inherited;
         }
 
-    });
-})(window, 'xs');
+    } );
+})( window, 'xs' );

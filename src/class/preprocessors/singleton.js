@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     //framework shorthand
     var xs = root[ns];
@@ -21,10 +21,10 @@
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.preprocessors.add('singleton', function () {
+    xs.Class.preprocessors.add( 'singleton', function () {
 
         return true;
-    }, function (Class, descriptor) {
+    }, function ( Class, descriptor ) {
         Class.descriptor.singleton = !!descriptor.singleton;
-    });
-})(window, 'xs');
+    } );
+})( window, 'xs' );

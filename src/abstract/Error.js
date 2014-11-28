@@ -23,7 +23,7 @@
  * @private
  */
 'use strict';
-(function (root, ns) {
+(function ( root, ns ) {
 
     //framework shorthand
     var xs = root[ns];
@@ -35,10 +35,10 @@
          * @param {Function} type
          * @throws {Error|*}
          */
-        var raise = function (message, type) {
+        var raise = function ( message, type ) {
             message = message || 'error';
             type = type || Error;
-            throw new type(message);
+            throw new type( message );
         };
         /**
          * Handler for errors raising
@@ -50,30 +50,30 @@
          * @param message
          * @throws {ReferenceError}
          */
-        this.raiseReference = function (message) {
-            raise(message, ReferenceError);
+        this.raiseReference = function ( message ) {
+            raise( message, ReferenceError );
         };
         /**
          * Raises syntax error
          * @param message
          * @throws {SyntaxError}
          */
-        this.raiseSyntax = function (message) {
-            raise(message, SyntaxError);
+        this.raiseSyntax = function ( message ) {
+            raise( message, SyntaxError );
         };
         /**
          * Raises type error
          * @param message
          * @throws {TypeError}
          */
-        this.raiseType = function (message) {
-            raise(message, TypeError);
+        this.raiseType = function ( message ) {
+            raise( message, TypeError );
         };
     });
-    xs.extend(xs, {
-        raiseError:          error.raise,
+    xs.extend( xs, {
+        raiseError: error.raise,
         raiseReferenceError: error.raiseReference,
-        raiseSyntaxError:    error.raiseSyntax,
-        raiseTypeError:      error.raiseType
-    });
-})(window, 'xs');
+        raiseSyntaxError: error.raiseSyntax,
+        raiseTypeError: error.raiseType
+    } );
+})( window, 'xs' );

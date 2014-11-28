@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     //framework shorthand
     var xs = root[ns];
@@ -21,9 +21,9 @@
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.preprocessors.add('const', function () {
+    xs.Class.preprocessors.add( 'const', function () {
         return true;
-    }, function (Class, descriptor) {
+    }, function ( Class, descriptor ) {
 
         //init constants as empty hash
         var constants = {};
@@ -34,7 +34,7 @@
         var inherited = Class.parent.descriptor.const;
 
         //extend constants with inherited
-        xs.isObject(inherited) && xs.extend(constants, inherited);
+        xs.isObject( inherited ) && xs.extend( constants, inherited );
 
 
         //own
@@ -42,7 +42,7 @@
         var own = descriptor.const;
 
         //extend constants with own
-        xs.isObject(own) && xs.extend(constants, own);
+        xs.isObject( own ) && xs.extend( constants, own );
 
 
         //apply
@@ -50,8 +50,8 @@
         Class.descriptor.const = constants;
 
         //apply all constants
-        xs.each(constants, function (value, name) {
-            xs.const(Class, name, value);
-        });
-    });
-})(window, 'xs');
+        xs.each( constants, function ( value, name ) {
+            xs.const( Class, name, value );
+        } );
+    } );
+})( window, 'xs' );

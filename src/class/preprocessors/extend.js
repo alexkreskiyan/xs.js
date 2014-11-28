@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     //framework shorthand
     var xs = root[ns];
@@ -21,7 +21,7 @@
      * @param {Function} child child class
      * @param {Function} parent parent class
      */
-    var extend = function (child, parent) {
+    var extend = function ( child, parent ) {
         //create fake constructor
         var fn = function () {
         };
@@ -36,7 +36,7 @@
         child.prototype.constructor = child;
 
         //save reference to parent
-        xs.const(child, 'parent', parent);
+        xs.const( child, 'parent', parent );
     };
 
     /**
@@ -47,27 +47,27 @@
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.preprocessors.add('extend', function () {
+    xs.Class.preprocessors.add( 'extend', function () {
 
         return true;
-    }, function (Class, descriptor, ns, ready) {
+    }, function ( Class, descriptor, ns, ready ) {
         var extended = descriptor.extends;
 
         //if incorrect/no parent given - extend from xs.Base
-        if (!xs.isString(extended)) {
-            extend(Class, xs.Base);
+        if ( !xs.isString( extended ) ) {
+            extend( Class, xs.Base );
 
             return;
         }
 
-        extended = Class.descriptor.namespace.resolve(extended);
+        extended = Class.descriptor.namespace.resolve( extended );
 
         //try to get parent from ClassManager
-        var parent = xs.ClassManager.get(extended);
+        var parent = xs.ClassManager.get( extended );
 
         //extend from parent, if exists
-        if (parent) {
-            extend(Class, parent);
+        if ( parent ) {
+            extend( Class, parent );
 
             //save extends to descriptor
             Class.descriptor.extends = extended;
@@ -76,16 +76,16 @@
         }
 
         //require async
-        xs.require(extended, function () {
-            extend(Class, xs.ClassManager.get(extended));
+        xs.require( extended, function () {
+            extend( Class, xs.ClassManager.get( extended ) );
 
             //save extends to descriptor
             Class.descriptor.extends = extended;
 
             ready();
-        });
+        } );
 
         //return false to sign async processor
         return false;
-    });
-})(window, 'xs');
+    } );
+})( window, 'xs' );

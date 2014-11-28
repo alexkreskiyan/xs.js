@@ -1,225 +1,225 @@
-function speed(fn, n) {
+function speed ( fn, n ) {
     var start = Date.now();
-    for (var i = 0; i < n; i++) {
+    for ( var i = 0; i < n; i++ ) {
         fn();
     }
     var duration = Date.now() - start;
-    console.log('duration: ', duration, 'ms for ', n, 'operations');
-    console.log('median: ', duration / n, 'ms per operation');
-    console.log('mark: about', n / duration, 'operation per ms');
+    console.log( 'duration: ', duration, 'ms for ', n, 'operations' );
+    console.log( 'median: ', duration / n, 'ms per operation' );
+    console.log( 'mark: about', n / duration, 'operation per ms' );
 }
 'use strict';
 
-function setUp() {
+function setUp () {
     return {
         inst: {
-            one:   xs.create('xs.util.Observable'),
-            two:   xs.create('xs.util.Observable'),
-            three: xs.create('xs.util.Observable')
+            one: xs.create( 'xs.util.Observable' ),
+            two: xs.create( 'xs.util.Observable' ),
+            three: xs.create( 'xs.util.Observable' )
         },
-        cnt:  {
-            one:   0,
-            two:   0,
+        cnt: {
+            one: 0,
+            two: 0,
             three: 0
         },
-        fn:   {
-            one:   function (a) {
-                console.log('fn1', this, a);
+        fn: {
+            one: function ( a ) {
+                console.log( 'fn1', this, a );
                 cnt1++;
             },
-            two:   function (a, b) {
-                console.log('fn2', this, a, b);
+            two: function ( a, b ) {
+                console.log( 'fn2', this, a, b );
                 cnt2++;
             },
-            three: function (a, b, c) {
-                console.log('fn3', this, a, b, c);
+            three: function ( a, b, c ) {
+                console.log( 'fn3', this, a, b, c );
                 cnt3++;
             }
         }
     };
 }
-module('xs.util.Observable');
+module( 'xs.util.Observable' );
 
-test('hasEvent', function () {
+test( 'hasEvent', function () {
     var env = setUp();
-    strictEqual(env.inst.one.hasEvent('a'), false, 'env.inst.one has no events');
-});
+    strictEqual( env.inst.one.hasEvent( 'a' ), false, 'env.inst.one has no events' );
+} );
 
-test('addEvent', function () {
+test( 'addEvent', function () {
     var env = setUp();
-    strictEqual(env.inst.one.hasEvent('event'), false, 'env.inst.one has no event "event"');
-    env.inst.one.addEvent('event');
-    strictEqual(env.inst.one.hasEvent('event'), true, 'env.inst.one has events "event"');
-});
+    strictEqual( env.inst.one.hasEvent( 'event' ), false, 'env.inst.one has no event "event"' );
+    env.inst.one.addEvent( 'event' );
+    strictEqual( env.inst.one.hasEvent( 'event' ), true, 'env.inst.one has events "event"' );
+} );
 
-test('deleteEvent', function () {
+test( 'deleteEvent', function () {
     var env = setUp();
-    strictEqual(env.inst.one.hasEvent('event'), false, 'env.inst.one has no event "event"');
-    env.inst.one.addEvent('event');
-    strictEqual(env.inst.one.hasEvent('event'), true, 'env.inst.one was add event "event"');
-    env.inst.one.deleteEvent('event');
-    strictEqual(env.inst.one.hasEvent('event'), false, 'env.inst.one was delete event "event"');
-});
+    strictEqual( env.inst.one.hasEvent( 'event' ), false, 'env.inst.one has no event "event"' );
+    env.inst.one.addEvent( 'event' );
+    strictEqual( env.inst.one.hasEvent( 'event' ), true, 'env.inst.one was add event "event"' );
+    env.inst.one.deleteEvent( 'event' );
+    strictEqual( env.inst.one.hasEvent( 'event' ), false, 'env.inst.one was delete event "event"' );
+} );
 
-test('deleteAllEvent', function () {
+test( 'deleteAllEvent', function () {
     var env = setUp();
-    strictEqual(env.inst.one.hasEvent('foo'), false, 'env.inst.one has no event "foo"');
-    strictEqual(env.inst.one.hasEvent('bar'), false, 'env.inst.one has no event "bar"');
+    strictEqual( env.inst.one.hasEvent( 'foo' ), false, 'env.inst.one has no event "foo"' );
+    strictEqual( env.inst.one.hasEvent( 'bar' ), false, 'env.inst.one has no event "bar"' );
 
-    env.inst.one.addEvent('foo');
-    strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one was add event "foo"');
+    env.inst.one.addEvent( 'foo' );
+    strictEqual( env.inst.one.hasEvent( 'foo' ), true, 'env.inst.one was add event "foo"' );
 
-    env.inst.one.addEvent('bar');
-    strictEqual(env.inst.one.hasEvent('bar'), true, 'env.inst.one was add event "bar"');
+    env.inst.one.addEvent( 'bar' );
+    strictEqual( env.inst.one.hasEvent( 'bar' ), true, 'env.inst.one was add event "bar"' );
 
     env.inst.one.deleteAllEvents();
-    strictEqual(env.inst.one.hasEvent('foo'), false, 'env.inst.one has no event "foo"');
-    strictEqual(env.inst.one.hasEvent('bar'), false, 'env.inst.one has no event "bar"');
-});
+    strictEqual( env.inst.one.hasEvent( 'foo' ), false, 'env.inst.one has no event "foo"' );
+    strictEqual( env.inst.one.hasEvent( 'bar' ), false, 'env.inst.one has no event "bar"' );
+} );
 
-test('applyMap', function () {
+test( 'applyMap', function () {
     var env = setUp();
     var map = {
         create: {
-            handler:  env.fn.one,
+            handler: env.fn.one,
             callback: env.fn.two
         }
     };
 
     var instOne = env.inst.one;
-    strictEqual(Object.keys(instOne.events).length, 0, 'env.inst.one has no events');
-    env.inst.one.applyMap(map);
-    strictEqual(Object.keys(instOne.events).toString(), 'create', 'env.inst.one has only create event');
+    strictEqual( Object.keys( instOne.events ).length, 0, 'env.inst.one has no events' );
+    env.inst.one.applyMap( map );
+    strictEqual( Object.keys( instOne.events ).toString(), 'create', 'env.inst.one has only create event' );
 
-    strictEqual(instOne.events.create.length, 1, 'env.inst.one has is not empty');
-    strictEqual(instOne.events.create[0], map.create, 'env.inst.one has is not empty');
+    strictEqual( instOne.events.create.length, 1, 'env.inst.one has is not empty' );
+    strictEqual( instOne.events.create[0], map.create, 'env.inst.one has is not empty' );
 
-});
+} );
 
-test('on', function () {
+test( 'on', function () {
     var env = setUp();
-    strictEqual(env.inst.one.hasEvent('foo'), false, 'env.inst.one has no event "foo"');
+    strictEqual( env.inst.one.hasEvent( 'foo' ), false, 'env.inst.one has no event "foo"' );
 
-    env.inst.one.on('foo', env.fn.one, {});
-    strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
+    env.inst.one.on( 'foo', env.fn.one, {} );
+    strictEqual( env.inst.one.hasEvent( 'foo' ), true, 'env.inst.one has event "foo"' );
     env.inst.one.deleteAllEvents();
 
-    env.inst.one.on([
+    env.inst.one.on( [
         'foo',
         'bar'
-    ], env.fn.one, {});
-    strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
-    strictEqual(env.inst.one.hasEvent('bar'), true, 'env.inst.one has event "bar"');
+    ], env.fn.one, {} );
+    strictEqual( env.inst.one.hasEvent( 'foo' ), true, 'env.inst.one has event "foo"' );
+    strictEqual( env.inst.one.hasEvent( 'bar' ), true, 'env.inst.one has event "bar"' );
     env.inst.one.deleteAllEvents();
-    strictEqual(env.inst.one.hasEvent('foo'), false, 'env.inst.one has event "foo"');
-    strictEqual(env.inst.one.hasEvent('bar'), false, 'env.inst.one has event "bar"');
+    strictEqual( env.inst.one.hasEvent( 'foo' ), false, 'env.inst.one has event "foo"' );
+    strictEqual( env.inst.one.hasEvent( 'bar' ), false, 'env.inst.one has event "bar"' );
 
     var eventMap = {
         foo: env.fn.one,
         bar: env.fn.two
     };
-    env.inst.one.on(eventMap, {
+    env.inst.one.on( eventMap, {
         x: 'FooBar'
-    });
-    strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
-    strictEqual(env.inst.one.hasEvent('bar'), true, 'env.inst.one has event "bar"');
+    } );
+    strictEqual( env.inst.one.hasEvent( 'foo' ), true, 'env.inst.one has event "foo"' );
+    strictEqual( env.inst.one.hasEvent( 'bar' ), true, 'env.inst.one has event "bar"' );
 
-});
+} );
 
-test('once', function () {
+test( 'once', function () {
     var env = setUp();
-    strictEqual(env.inst.one.hasEvent('foo'), false, 'env.inst.one has no event "foo"');
+    strictEqual( env.inst.one.hasEvent( 'foo' ), false, 'env.inst.one has no event "foo"' );
 
-    env.inst.one.once('foo', env.fn.one, {});
-    strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
+    env.inst.one.once( 'foo', env.fn.one, {} );
+    strictEqual( env.inst.one.hasEvent( 'foo' ), true, 'env.inst.one has event "foo"' );
     env.inst.one.deleteAllEvents();
 
-    env.inst.one.once([
+    env.inst.one.once( [
         'foo',
         'bar'
-    ], env.fn.one, {});
-    strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
-    strictEqual(env.inst.one.hasEvent('bar'), true, 'env.inst.one has event "bar"');
+    ], env.fn.one, {} );
+    strictEqual( env.inst.one.hasEvent( 'foo' ), true, 'env.inst.one has event "foo"' );
+    strictEqual( env.inst.one.hasEvent( 'bar' ), true, 'env.inst.one has event "bar"' );
     env.inst.one.deleteAllEvents();
-    strictEqual(env.inst.one.hasEvent('foo'), false, 'env.inst.one has event "foo"');
-    strictEqual(env.inst.one.hasEvent('bar'), false, 'env.inst.one has event "bar"');
+    strictEqual( env.inst.one.hasEvent( 'foo' ), false, 'env.inst.one has event "foo"' );
+    strictEqual( env.inst.one.hasEvent( 'bar' ), false, 'env.inst.one has event "bar"' );
 
     var eventMap = {
         foo: env.fn.one,
         bar: env.fn.two
     };
-    env.inst.one.once(eventMap, {
+    env.inst.one.once( eventMap, {
         x: 'FooBar'
-    });
-    strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
-    strictEqual(env.inst.one.hasEvent('bar'), true, 'env.inst.one has event "bar"');
+    } );
+    strictEqual( env.inst.one.hasEvent( 'foo' ), true, 'env.inst.one has event "foo"' );
+    strictEqual( env.inst.one.hasEvent( 'bar' ), true, 'env.inst.one has event "bar"' );
 
-});
+} );
 
-test('off', function () {
+test( 'off', function () {
     var env = setUp();
-    strictEqual(env.inst.one.hasEvent('foo'), false, 'env.inst.one has no event "foo"');
+    strictEqual( env.inst.one.hasEvent( 'foo' ), false, 'env.inst.one has no event "foo"' );
 
-    env.inst.one.on('foo', env.fn.one, {});
-    strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
-    env.inst.one.off('foo', env.fn.one);
-    var existsFoo = xs.Array.find(env.inst.one.events.foo, function (dispatcher) {
+    env.inst.one.on( 'foo', env.fn.one, {} );
+    strictEqual( env.inst.one.hasEvent( 'foo' ), true, 'env.inst.one has event "foo"' );
+    env.inst.one.off( 'foo', env.fn.one );
+    var existsFoo = xs.Array.find( env.inst.one.events.foo, function ( dispatcher ) {
         return dispatcher.callback == env.fn.one;
-    });
+    } );
 
-    strictEqual(existsFoo, undefined, 'env.inst.one has no event "foo"');
+    strictEqual( existsFoo, undefined, 'env.inst.one has no event "foo"' );
     env.inst.one.deleteAllEvents();
 
-    env.inst.one.on([
+    env.inst.one.on( [
         'foo',
         'bar'
-    ], env.fn.one, {});
-    strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
-    strictEqual(env.inst.one.hasEvent('bar'), true, 'env.inst.one has event "bar"');
-    env.inst.one.off([
+    ], env.fn.one, {} );
+    strictEqual( env.inst.one.hasEvent( 'foo' ), true, 'env.inst.one has event "foo"' );
+    strictEqual( env.inst.one.hasEvent( 'bar' ), true, 'env.inst.one has event "bar"' );
+    env.inst.one.off( [
         'foo',
         'bar'
-    ], env.fn.one);
-    var existsFoo = xs.Array.find(env.inst.one.events.foo, function (dispatcher) {
+    ], env.fn.one );
+    var existsFoo = xs.Array.find( env.inst.one.events.foo, function ( dispatcher ) {
         return dispatcher.callback == env.fn.one;
-    });
-    var existsBar = xs.Array.find(env.inst.one.events.bar, function (dispatcher) {
+    } );
+    var existsBar = xs.Array.find( env.inst.one.events.bar, function ( dispatcher ) {
         return dispatcher.callback == env.fn.one;
-    });
-    strictEqual(existsFoo, undefined, 'env.inst.one has no event "foo"');
-    strictEqual(existsBar, undefined, 'env.inst.one has no event "foo"');
+    } );
+    strictEqual( existsFoo, undefined, 'env.inst.one has no event "foo"' );
+    strictEqual( existsBar, undefined, 'env.inst.one has no event "foo"' );
     env.inst.one.deleteAllEvents();
 
     var eventMap = {
         foo: env.fn.one,
         bar: env.fn.two
     }
-    env.inst.one.on(eventMap);
-    strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
-    strictEqual(env.inst.one.hasEvent('bar'), true, 'env.inst.one has event "bar"');
-    env.inst.one.off(eventMap);
-    var existsFoo = xs.Array.find(env.inst.one.events.foo, function (dispatcher) {
+    env.inst.one.on( eventMap );
+    strictEqual( env.inst.one.hasEvent( 'foo' ), true, 'env.inst.one has event "foo"' );
+    strictEqual( env.inst.one.hasEvent( 'bar' ), true, 'env.inst.one has event "bar"' );
+    env.inst.one.off( eventMap );
+    var existsFoo = xs.Array.find( env.inst.one.events.foo, function ( dispatcher ) {
         return dispatcher.callback == env.fn.one;
-    });
-    var existsBar = xs.Array.find(env.inst.one.events.bar, function (dispatcher) {
+    } );
+    var existsBar = xs.Array.find( env.inst.one.events.bar, function ( dispatcher ) {
         return dispatcher.callback == env.fn.two;
-    });
-    strictEqual(existsFoo, undefined, 'env.inst.one has no event "foo"');
-    strictEqual(existsBar, undefined, 'env.inst.one has no event "bar"');
+    } );
+    strictEqual( existsFoo, undefined, 'env.inst.one has no event "foo"' );
+    strictEqual( existsBar, undefined, 'env.inst.one has no event "bar"' );
     env.inst.one.deleteAllEvents();
 
-});
+} );
 
-test('listen', function () {
+test( 'listen', function () {
     var env = setUp();
-    strictEqual(env.inst.one.hasEvent('foo'), false, 'env.inst.one has no event "foo"');
-    strictEqual(env.inst.two.hasEvent('foo'), false, 'env.inst.two has no event "foo"');
+    strictEqual( env.inst.one.hasEvent( 'foo' ), false, 'env.inst.one has no event "foo"' );
+    strictEqual( env.inst.two.hasEvent( 'foo' ), false, 'env.inst.two has no event "foo"' );
 
-    env.inst.one.listen(env.inst.two, 'foo', env.fn.one);
-    var existsFoo = xs.Array.find(env.inst.two.events.foo, function (dispatcher) {
+    env.inst.one.listen( env.inst.two, 'foo', env.fn.one );
+    var existsFoo = xs.Array.find( env.inst.two.events.foo, function ( dispatcher ) {
         return dispatcher.callback == env.fn.one;
-    });
-    strictEqual(env.inst.two.hasEvent('foo'), true, 'env.inst.one has event "foo"');
+    } );
+    strictEqual( env.inst.two.hasEvent( 'foo' ), true, 'env.inst.one has event "foo"' );
     env.inst.one.deleteAllEvents();
 
     //env.inst.one.listen(env.inst.two, ['foo', 'bar'], env.fn.one);
@@ -229,7 +229,7 @@ test('listen', function () {
      }*/
     //env.inst.one.listen(env.inst.two, eventMap);
 
-})
+} )
 
 // var run = function() {
 //     var inst1 = xs.create('xs.util.Observable');

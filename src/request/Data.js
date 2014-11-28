@@ -21,60 +21,61 @@
  * @class xs.request.Data represents request data object
  */
 'use strict';
-xs.define('xs.request.Data', function () {
+xs.define( 'xs.request.Data', function () {
     return {
         constructor: function () {
             var me = this;
             //raw data is always simple object
-            me.__set('raw', {});
+            me.__set( 'raw', {} );
             //Check if browser supports FormData API and set data
             var version = xs.browser.major;
-            if ((xs.isChrome && version >= 7) || (xs.isFirefox && version >= 4) || (xs.isIE && version >= 10) || (xs.isOpera && version >= 12) || (xs.isSafari && version >= 5)) {
-                me.__set('data', new FormData);
+            if ( (xs.isChrome && version >= 7) || (xs.isFirefox && version >= 4) || (xs.isIE && version >= 10) ||
+                (xs.isOpera && version >= 12) || (xs.isSafari && version >= 5) ) {
+                me.__set( 'data', new FormData );
             }
         },
-        properties:  {
+        properties: {
             isFormData: {
                 get: function () {
-                    return this.__get('data') instanceof FormData;
+                    return this.__get( 'data' ) instanceof FormData;
                 },
                 set: xs.emptyFn
             },
-            raw:        {
+            raw: {
                 get: function () {
-                    return this.__get('raw');
+                    return this.__get( 'raw' );
                 },
                 set: xs.emptyFn
             },
-            data:       {
+            data: {
                 get: function () {
                     var me = this;
-                    var data = me.__get('data');
-                    return data ? data : me.__get('raw');
+                    var data = me.__get( 'data' );
+                    return data ? data : me.__get( 'raw' );
                 },
                 set: xs.emptyFn
             }
         },
-        methods:     {
-            add:    function (name, value) {
+        methods: {
+            add: function ( name, value ) {
                 var me = this;
-                me.__get('raw')[name] = value;
-                if (me.isFormData) {
-                    me.__get('data').append[name] = value;
+                me.__get( 'raw' )[name] = value;
+                if ( me.isFormData ) {
+                    me.__get( 'data' ).append[name] = value;
                 }
-                console.log(params);
+                console.log( params );
             },
-            get:    function (name) {
+            get: function ( name ) {
                 var me = this;
-                console.log('get', name);
+                console.log( 'get', name );
             },
             delete: function () {
-                var me = this, params = xs.Array.unique(xs.Array.union(xs.Array.clone(arguments)));
-                console.log(params);
+                var me = this, params = xs.Array.unique( xs.Array.union( xs.Array.clone( arguments ) ) );
+                console.log( params );
             }
         }
     };
-});
+} );
 
 
 

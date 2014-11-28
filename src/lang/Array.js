@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     'use strict';
 
@@ -44,12 +44,12 @@
          *
          * @param {Array} array shuffled array
          */
-        me.shuffle = function (array) {
-            array.sort(function () {
+        me.shuffle = function ( array ) {
+            array.sort( function () {
                 return Math.random() - 0.5;
-            });
+            } );
         };
     });
 
-    xs.extend(xs, array);
-})(window, 'xs');
+    xs.extend( xs, array );
+})( window, 'xs' );

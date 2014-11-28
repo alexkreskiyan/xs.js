@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     'use strict';
 
@@ -30,7 +30,7 @@
         var me = this;
 
         // Create quick reference variables for speed access to core prototypes.
-        var _slice = Function.prototype.call.bind(Array.prototype.slice);
+        var _slice = Function.prototype.call.bind( Array.prototype.slice );
 
         /**
          * Copies all properties from objects, passed as arguments to given obj
@@ -60,18 +60,18 @@
          *
          * @param {Object} object extended object
          */
-        me.extend = function (object) {
-            var adds = _slice(arguments, 1);
+        me.extend = function ( object ) {
+            var adds = _slice( arguments, 1 );
 
-            xs.each(adds, function (source) {
-                xs.isObject(source) && xs.each(source, function (item, name) {
+            xs.each( adds, function ( source ) {
+                xs.isObject( source ) && xs.each( source, function ( item, name ) {
                     object[name] = item;
-                });
-            });
+                } );
+            } );
         };
 
     });
 
     //extend xs with object
-    object.extend(xs, object);
-})(window, 'xs');
+    object.extend( xs, object );
+})( window, 'xs' );

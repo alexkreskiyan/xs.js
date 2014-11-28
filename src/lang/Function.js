@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     'use strict';
 
@@ -29,8 +29,8 @@
     var fn = xs.Function = new (function () {
         var me = this;
 
-        var _slice = Function.prototype.apply.bind(Array.prototype.slice);
-        var _concatenate = Function.prototype.apply.bind(Array.prototype.concat);
+        var _slice = Function.prototype.apply.bind( Array.prototype.slice );
+        var _concatenate = Function.prototype.apply.bind( Array.prototype.concat );
 
         /**
          * Creates binded function, that will be called with given scope and optional args, prepended to call arguments
@@ -51,8 +51,8 @@
          *
          * @return {Function} bound function
          */
-        var _bind = me.bind = function (fn, scope, args) {
-            return Function.prototype.bind.apply(fn, _concatenate(scope, args));
+        var _bind = me.bind = function ( fn, scope, args ) {
+            return Function.prototype.bind.apply( fn, _concatenate( scope, args ) );
         };
 
         /**
@@ -74,11 +74,11 @@
          *
          * @return {Function} bound function
          */
-        me.prefill = function (fn, defaults, scope) {
+        me.prefill = function ( fn, defaults, scope ) {
             return function () {
-                var args = xs.values(arguments);
-                xs.defaults(args, defaults);
-                return fn.apply(scope, args);
+                var args = xs.values( arguments );
+                xs.defaults( args, defaults );
+                return fn.apply( scope, args );
             }
         };
 
@@ -103,14 +103,14 @@
          *
          * @return {Function} bound function
          */
-        me.memorize = function (fn) {
+        me.memorize = function ( fn ) {
             var ran = false, memo;
             return function () {
-                if (ran) {
+                if ( ran ) {
                     return memo;
                 }
                 ran = true;
-                memo = fn.apply(this, arguments);
+                memo = fn.apply( this, arguments );
                 fn = null;
                 return memo;
             };
@@ -137,11 +137,11 @@
          *
          * @return {Function} wrapped function
          */
-        me.wrap = function (fn, wrapper, scope) {
+        me.wrap = function ( fn, wrapper, scope ) {
             return function () {
-                var args = _slice(arguments);
-                args.unshift(fn);
-                return wrapper.apply(scope, args);
+                var args = _slice( arguments );
+                args.unshift( fn );
+                return wrapper.apply( scope, args );
             }
         };
 
@@ -163,9 +163,9 @@
          * @param {Function} fn executed function
          * @param {Object} scope optional execution scope
          */
-        me.nextTick = function (fn, scope) {
-            scope && (fn = _bind(fn, scope));
-            setTimeout(fn, 0);
+        me.nextTick = function ( fn, scope ) {
+            scope && (fn = _bind( fn, scope ));
+            setTimeout( fn, 0 );
         };
 
         var getNameRe = /^function\s*([A-z_0-9]*)/i;
@@ -187,9 +187,9 @@
          *
          * @return {String} function name
          */
-        me.getName = function (fn) {
+        me.getName = function ( fn ) {
             getNameRe.lastIndex = 0;
-            return getNameRe.exec(fn.toString()).pop();
+            return getNameRe.exec( fn.toString() ).pop();
         };
 
         var getArgumentsRe = /^function\s*[A-z_0-9]*\s*\(([A-z_0-9\s,]*)\)/i;
@@ -211,11 +211,11 @@
          *
          * @return {Array} array with function formal params
          */
-        me.getArguments = function (fn) {
+        me.getArguments = function ( fn ) {
             getArgumentsRe.lastIndex = 0;
-            return xs.compact(xs.map(getArgumentsRe.exec(fn.toString()).pop().split(','), function (name) {
+            return xs.compact( xs.map( getArgumentsRe.exec( fn.toString() ).pop().split( ',' ), function ( name ) {
                 return name.trim();
-            }));
+            } ) );
         };
 
         /**
@@ -234,9 +234,9 @@
          *
          * @return {String} function body
          */
-        me.getBody = function (fn) {
+        me.getBody = function ( fn ) {
             var stringFn = fn.toString();
-            return stringFn.substring(stringFn.indexOf('{') + 1, stringFn.length - 1);
+            return stringFn.substring( stringFn.indexOf( '{' ) + 1, stringFn.length - 1 );
         };
 
         var parseRe = /^function\s*([A-z_0-9]*)\s*\(([A-z_0-9\s,]*)\)/i;
@@ -255,16 +255,16 @@
          *
          * @return {Object} function data
          */
-        me.parse = function (fn) {
+        me.parse = function ( fn ) {
             parseRe.lastIndex = 0;
             var stringFn = fn.toString();
-            var data = parseRe.exec(stringFn);
+            var data = parseRe.exec( stringFn );
             return {
-                name:      data[1],
-                arguments: xs.compact(xs.map(data[2].split(','), function (name) {
+                name: data[1],
+                arguments: xs.compact( xs.map( data[2].split( ',' ), function ( name ) {
                     return name.trim();
-                })),
-                body:      stringFn.substring(stringFn.indexOf('{') + 1, stringFn.length - 1)
+                } ) ),
+                body: stringFn.substring( stringFn.indexOf( '{' ) + 1, stringFn.length - 1 )
             };
         };
 
@@ -277,12 +277,12 @@
         };
     });
 
-    xs.extend(xs, xs.pick(fn, [
+    xs.extend( xs, xs.pick( fn, [
         'bind',
         'prefill',
         'memorize',
         'wrap',
         'nextTick',
         'emptyFn'
-    ]));
-})(window, 'xs');
+    ] ) );
+})( window, 'xs' );

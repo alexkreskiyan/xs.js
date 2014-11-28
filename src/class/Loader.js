@@ -66,7 +66,7 @@
  queue && refreshQueue
 
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     //framework shorthand
     var xs = root[ns];
@@ -157,18 +157,18 @@
              * - if given alias is already registered
              * - if given path is not a string
              */
-            me.add = function (alias, path) {
+            me.add = function ( alias, path ) {
                 //single alias style
-                if (arguments.length > 1) {
+                if ( arguments.length > 1 ) {
 
                     //check that alias was not defined yet
-                    if (me.has(alias)) {
-                        throw new Error('Alias "' + alias + '" is already registered in xs.Loader');
+                    if ( me.has( alias ) ) {
+                        throw new Error( 'Alias "' + alias + '" is already registered in xs.Loader' );
                     }
 
                     //check that path is string
-                    if (!xs.isString(path)) {
-                        throw new Error('xs.Loader path must be a string');
+                    if ( !xs.isString( path ) ) {
+                        throw new Error( 'xs.Loader path must be a string' );
                     }
 
                     //register new path alias
@@ -178,14 +178,14 @@
                 }
 
                 //check that pairs are given as list
-                if (!xs.isObject(alias)) {
-                    throw new Error('Aliases list has incorrect format');
+                if ( !xs.isObject( alias ) ) {
+                    throw new Error( 'Aliases list has incorrect format' );
                 }
 
                 //add each path
-                xs.each(alias, function (path, alias) {
-                    me.add(alias, path);
-                });
+                xs.each( alias, function ( path, alias ) {
+                    me.add( alias, path );
+                } );
 
                 return this;
             };
@@ -212,19 +212,19 @@
              *
              * - if given alias is not a string
              */
-            me.has = function (alias) {
+            me.has = function ( alias ) {
                 //throw Error if alias is not string
-                if (!xs.isString(alias)) {
-                    throw new Error('xs.Loader alias must be a string');
+                if ( !xs.isString( alias ) ) {
+                    throw new Error( 'xs.Loader alias must be a string' );
                 }
 
                 //check that alias matches regular expression
-                if (!nameRe.test(alias)) {
-                    throw new Error('xs.Loader alias is given incorrectly');
+                if ( !nameRe.test( alias ) ) {
+                    throw new Error( 'xs.Loader alias is given incorrectly' );
                 }
 
                 //return whether alias is in paths
-                return xs.hasKey(paths, alias);
+                return xs.hasKey( paths, alias );
             };
 
             /**
@@ -250,13 +250,13 @@
              *
              * - if given alias is not registered
              */
-            me.delete = function (alias) {
+            me.delete = function ( alias ) {
                 //single alias style
-                if (!xs.isArray(alias)) {
+                if ( !xs.isArray( alias ) ) {
 
                     //check that alias is registered
-                    if (!me.has(alias)) {
-                        throw new Error('Alias "' + alias + '" is not registered in xs.Loader');
+                    if ( !me.has( alias ) ) {
+                        throw new Error( 'Alias "' + alias + '" is not registered in xs.Loader' );
                     }
 
                     //remove alias
@@ -266,7 +266,7 @@
                 }
 
                 //delete each alias
-                xs.each(alias, me.delete);
+                xs.each( alias, me.delete );
 
                 return this;
             };
@@ -279,7 +279,7 @@
              * @returns {Object} paths copy
              */
             me.get = function () {
-                return xs.clone(paths);
+                return xs.clone( paths );
             };
 
             //file extension
@@ -309,15 +309,15 @@
              *
              * - if given class name is not a string
              */
-            me.resolve = function (name) {
+            me.resolve = function ( name ) {
                 //throw Error if name is not string
-                if (!xs.isString(name)) {
-                    throw new Error('xs.Loader name must be a string');
+                if ( !xs.isString( name ) ) {
+                    throw new Error( 'xs.Loader name must be a string' );
                 }
 
                 //check that name matches regular expression
-                if (!nameRe.test(name)) {
-                    throw new Error('xs.Loader name is given incorrectly');
+                if ( !nameRe.test( name ) ) {
+                    throw new Error( 'xs.Loader name is given incorrectly' );
                 }
 
                 //most suitable alias for name
@@ -326,28 +326,28 @@
                 var namePath = '';
 
                 //iterate over all paths to find most suitable alias
-                xs.each(paths, function (path, alias) {
+                xs.each( paths, function ( path, alias ) {
                     //update current, if name starts from alias + dot and alias length if longer, than current
-                    if (name.indexOf(alias + '.') === 0 && alias.length > nameAlias.length) {
+                    if ( name.indexOf( alias + '.' ) === 0 && alias.length > nameAlias.length ) {
                         nameAlias = alias;
                         namePath = path;
                     }
-                });
+                } );
 
                 //if alias not found - return name, where dots are replaced with slashes
-                if (!nameAlias) {
+                if ( !nameAlias ) {
 
-                    return name.split('.').join('/') + ext;
+                    return name.split( '.' ).join( '/' ) + ext;
                 }
 
                 //return path joined with rest of name by / and suffix added
-                return namePath + '/' + name.substring(nameAlias.length + 1).split('.').join('/') + ext;
+                return namePath + '/' + name.substring( nameAlias.length + 1 ).split( '.' ).join( '/' ) + ext;
             };
         });
 
         //        var callbacks = [];
-        me.require = function (name, callback) {
+        me.require = function ( name, callback ) {
 
         };
     });
-})(window, 'xs');
+})( window, 'xs' );

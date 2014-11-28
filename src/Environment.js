@@ -22,75 +22,75 @@
  * @type {Object}
  */
 'use strict';
-(function (root, ns) {
+(function ( root, ns ) {
 
     //framework shorthand
     var xs = root[ns];
 
     xs.env = new (function () {
         var me = this;
-        var parse = function (userAgent, rules, params) {
+        var parse = function ( userAgent, rules, params ) {
             var result = {};
-            xs.Array.find(rules, function (rule) {
-                var defaults = xs.Array.clone(rule[0]), negativeRegExps = rule[1], positiveRegExps = rule[2], data = [], match;
+            xs.Array.find( rules, function ( rule ) {
+                var defaults = xs.Array.clone( rule[0] ), negativeRegExps = rule[1], positiveRegExps = rule[2], data = [], match;
 
                 //check if userAgent doesn't match any one of negativeRegExps given in rule
-                match = xs.Array.some(negativeRegExps, function (regExp) {
+                match = xs.Array.some( negativeRegExps, function ( regExp ) {
                     //check if userAgent matches given regExp
-                    return regExp.test(userAgent);
-                });
+                    return regExp.test( userAgent );
+                } );
 
                 //return false if at least one of negativeRegExps matched
-                if (match) {
+                if ( match ) {
                     return false;
                 }
 
                 //check if userAgent matches all positiveRegExps given in rule
-                match = xs.Array.every(positiveRegExps, function (regExp) {
+                match = xs.Array.every( positiveRegExps, function ( regExp ) {
                     //check if userAgent matches given regExp
-                    var result = regExp.exec(userAgent);
+                    var result = regExp.exec( userAgent );
 
                     //if no match - return false, that will cause xs.Array.every loop break
-                    if (!result) {
+                    if ( !result ) {
                         return false;
                     }
 
                     //shift first element - that means whole match data to gain only selected ones
                     result.shift();
                     //if data not empty - union data with result, saving order
-                    if (result.length) {
-                        data = xs.Array.union(data, result);
+                    if ( result.length ) {
+                        data = xs.Array.union( data, result );
                     }
                     //sign, that userAgent matched this regExp
                     return true;
-                });
+                } );
 
                 //return false if no match established and search will be continues
-                if (!match) {
+                if ( !match ) {
                     return false;
                 }
 
                 //iterate result and fill it
-                xs.Array.each(params, function (param) {
+                xs.Array.each( params, function ( param ) {
                     //if default value given - use it, else - fetch value from data
-                    if (xs.isString(defaults[0])) {
+                    if ( xs.isString( defaults[0] ) ) {
                         result[param] = defaults.shift();
-                    } else if (xs.isArray(defaults[0])) {
+                    } else if ( xs.isArray( defaults[0] ) ) {
                         //defaults item contains parser rules for parsing obtained result
                         var raw = data.shift();
                         var parser = defaults.shift();
                         //parse raw data and assign
-                        result[param] = raw.replace(parser[0], parser[1]);
+                        result[param] = raw.replace( parser[0], parser[1] );
                     } else {
                         result[param] = data.shift();
                         //shift empty default value
                         defaults.length && defaults.shift();
                     }
-                });
+                } );
 
                 //return true stops search
                 return true;
-            });
+            } );
 
             //return search result
             return result;
@@ -106,32 +106,32 @@
             //location
             me.location = location;
             //set session variables with correct values
-            me.browser = parse(userAgent, rules.browser, [
+            me.browser = parse( userAgent, rules.browser, [
                 'name',
                 'major',
                 'minor',
                 'version'
-            ]);
-            me.browser.major = Number(me.browser.major);
-            me.browser.minor = Number(me.browser.minor);
-            me.engine = parse(userAgent, rules.engine, [
+            ] );
+            me.browser.major = Number( me.browser.major );
+            me.browser.minor = Number( me.browser.minor );
+            me.engine = parse( userAgent, rules.engine, [
                 'name',
                 'major',
                 'minor',
                 'version'
-            ]);
-            me.engine.major = Number(me.engine.major);
-            me.engine.minor = Number(me.engine.minor);
-            me.os = parse(userAgent, rules.os, [
+            ] );
+            me.engine.major = Number( me.engine.major );
+            me.engine.minor = Number( me.engine.minor );
+            me.os = parse( userAgent, rules.os, [
                 'name',
                 'version'
-            ]);
-            me.device = parse(userAgent, rules.device, [
+            ] );
+            me.device = parse( userAgent, rules.device, [
                 'model',
                 'type',
                 'vendor'
-            ]);
-            me.cpu = parse(userAgent, rules.cpu, ['architecture']);
+            ] );
+            me.cpu = parse( userAgent, rules.cpu, ['architecture'] );
             //set shortcuts
             //for desktop os
             me.isLinux = me.os.name == os.linux;
@@ -148,10 +148,10 @@
             me.isPresto = me.engine.name == engine.presto;
             me.isTrident = me.engine.name == engine.trident;
             //desktop browsers
-            me.isChrome = xs.Array.has([
+            me.isChrome = xs.Array.has( [
                 browser.chrome,
                 browser.chromium
-            ], me.browser.name);
+            ], me.browser.name );
             me.isFirefox = me.browser.name == browser.firefox;
             me.isOpera = me.browser.name == browser.opera;
             me.isSafari = me.browser.name == browser.safari;
@@ -182,33 +182,33 @@
          * @type {Object}
          */
         var browser = {
-            chrome:        'chrome',
-            chromeMobile:  'chrome mobile',
-            chromium:      'chromium',
-            firefox:       'firefox',
+            chrome: 'chrome',
+            chromeMobile: 'chrome mobile',
+            chromium: 'chromium',
+            firefox: 'firefox',
             firefoxMobile: 'firefox mobile',
-            waterfox:      'waterfox',
-            safari:        'safari',
-            safariMobile:  'safari mobile',
-            opera:         'opera',
-            operaMobile:   'opera mobile',
-            operaMini:     'opera mini',
-            ie:            'ie',
-            ieMobile:      'ie mobile',
-            yabrowser:     'yabrowser'
+            waterfox: 'waterfox',
+            safari: 'safari',
+            safariMobile: 'safari mobile',
+            opera: 'opera',
+            operaMobile: 'opera mobile',
+            operaMini: 'opera mini',
+            ie: 'ie',
+            ieMobile: 'ie mobile',
+            yabrowser: 'yabrowser'
         }, engine = {
-            webkit:  'webkit',
-            blink:   'blink',
-            gecko:   'gecko',
-            presto:  'presto',
+            webkit: 'webkit',
+            blink: 'blink',
+            gecko: 'gecko',
+            presto: 'presto',
             trident: 'trident'
         }, os = {
-            linux:        'linux',
-            windows:      'windows',
+            linux: 'linux',
+            windows: 'windows',
             windowsPhone: 'windows phone',
-            android:      'android',
-            osx:          'os x',
-            ios:          'ios'
+            android: 'android',
+            osx: 'os x',
+            ios: 'ios'
         }, device = {
             mobile: 'mobile',
             tablet: 'tablet'
@@ -338,7 +338,7 @@
                     ]
                 ]
             ],
-            engine:  [
+            engine: [
                 [
                     [engine.webkit],
                     [
@@ -391,7 +391,7 @@
                     [/msie/]
                 ]
             ],
-            os:      [
+            os: [
                 [
                     [os.linux],
                     [/android/],
@@ -470,7 +470,7 @@
                     [/iphone\sos\s([\d_\.]+)/]
                 ]
             ],
-            device:  [
+            device: [
                 [
                     [
                         'k900',
@@ -598,7 +598,7 @@
                     [/lumia\s625/]
                 ]
             ],
-            cpu:     [
+            cpu: [
                 [
                     [arch.x64],
                     [],
@@ -621,44 +621,44 @@
         };
         me.detect();
     });
-    xs.extend(xs, {
+    xs.extend( xs, {
         //commons
-        userAgent:       xs.env.userAgent,
-        location:        xs.env.location,
-        browser:         xs.env.browser,
-        engine:          xs.env.engine,
-        os:              xs.env.os,
-        device:          xs.env.device,
-        cpu:             xs.env.cpu,
+        userAgent: xs.env.userAgent,
+        location: xs.env.location,
+        browser: xs.env.browser,
+        engine: xs.env.engine,
+        os: xs.env.os,
+        device: xs.env.device,
+        cpu: xs.env.cpu,
         //shortcuts
         //desktop os
-        isLinux:         xs.env.isLinux,
-        isWindows:       xs.env.isWindows,
-        isMac:           xs.env.isMac,
+        isLinux: xs.env.isLinux,
+        isWindows: xs.env.isWindows,
+        isMac: xs.env.isMac,
         //mobile os
-        isAndroid:       xs.env.isAndroid,
-        isiOS:           xs.env.isiOS,
-        isWindowsPhone:  xs.env.isWindowsPhone,
+        isAndroid: xs.env.isAndroid,
+        isiOS: xs.env.isiOS,
+        isWindowsPhone: xs.env.isWindowsPhone,
         //engines
-        isWebkit:        xs.env.isWebkit,
-        isBlink:         xs.env.isBlink,
-        isGecko:         xs.env.isGecko,
-        isPresto:        xs.env.isPresto,
-        isTrident:       xs.env.isTrident,
+        isWebkit: xs.env.isWebkit,
+        isBlink: xs.env.isBlink,
+        isGecko: xs.env.isGecko,
+        isPresto: xs.env.isPresto,
+        isTrident: xs.env.isTrident,
         //desktop browsers
-        isChrome:        xs.env.isChrome,
-        isFirefox:       xs.env.isFirefox,
-        isOpera:         xs.env.isOpera,
-        isSafari:        xs.env.isSafari,
-        isIE:            xs.env.isIE,
+        isChrome: xs.env.isChrome,
+        isFirefox: xs.env.isFirefox,
+        isOpera: xs.env.isOpera,
+        isSafari: xs.env.isSafari,
+        isIE: xs.env.isIE,
         //mobile browsers
-        isChromeMobile:  xs.env.isChromeMobile,
+        isChromeMobile: xs.env.isChromeMobile,
         isFirefoxMobile: xs.env.isFirefoxMobile,
-        isOperaMobile:   xs.env.isOperaMobile,
-        isSafariMobile:  xs.env.isSafariMobile,
-        isIEMobile:      xs.env.isIEMobile,
+        isOperaMobile: xs.env.isOperaMobile,
+        isSafariMobile: xs.env.isSafariMobile,
+        isIEMobile: xs.env.isIEMobile,
         //arch
-        is32:            xs.env.is32,
-        is64:            xs.env.is64
-    });
-})(window, 'xs');
+        is32: xs.env.is32,
+        is64: xs.env.is64
+    } );
+})( window, 'xs' );

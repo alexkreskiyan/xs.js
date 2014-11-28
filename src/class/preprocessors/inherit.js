@@ -23,96 +23,96 @@
  *
  * @ignore
  */
-(function (root, ns) {
+(function ( root, ns ) {
 
     //framework shorthand
     var xs = root[ns];
 
-    var applyDescriptor = function (Class, desc) {
+    var applyDescriptor = function ( Class, desc ) {
         //processed descriptor
         var realDesc = {
             constructor: undefined,
-            const:       {},
-            static:      {
+            const: {},
+            static: {
                 properties: {},
-                methods:    {}
+                methods: {}
             },
-            properties:  {},
-            methods:     {},
-            mixins:      {}
+            properties: {},
+            methods: {},
+            mixins: {}
         }, each = xs.Object.each, property = xs.property, method = xs.method;
 
         //constructor
         realDesc.constructor = desc.constructor;
 
         // constants
-        each(desc.const, function (value, name) {
+        each( desc.const, function ( value, name ) {
             realDesc.const[name] = value;
-            xs.const(Class, name, value);
-        });
+            xs.const( Class, name, value );
+        } );
 
         //public static properties
-        each(desc.static.properties, function (value, name) {
-            var descriptor = property.prepare(name, value);
+        each( desc.static.properties, function ( value, name ) {
+            var descriptor = property.prepare( name, value );
             realDesc.static.properties[name] = descriptor;
-            property.define(Class, name, descriptor);
-            descriptor.hasOwnProperty('default') && (Class[name] = descriptor.default);
-        });
+            property.define( Class, name, descriptor );
+            descriptor.hasOwnProperty( 'default' ) && (Class[name] = descriptor.default);
+        } );
 
         //public static methods
-        each(desc.static.methods, function (value, name) {
-            var descriptor = method.prepare(name, value);
-            if (!descriptor) {
+        each( desc.static.methods, function ( value, name ) {
+            var descriptor = method.prepare( name, value );
+            if ( !descriptor ) {
                 return;
             }
             realDesc.static.methods[name] = descriptor;
-            method.define(Class, name, descriptor);
-        });
+            method.define( Class, name, descriptor );
+        } );
 
         //public properties
-        each(desc.properties, function (value, name) {
-            realDesc.properties[name] = property.prepare(name, value);
-        });
+        each( desc.properties, function ( value, name ) {
+            realDesc.properties[name] = property.prepare( name, value );
+        } );
 
         //public methods
-        each(desc.methods, function (value, name) {
-            var descriptor = method.prepare(name, value);
-            if (!descriptor) {
+        each( desc.methods, function ( value, name ) {
+            var descriptor = method.prepare( name, value );
+            if ( !descriptor ) {
                 return;
             }
             realDesc.methods[name] = descriptor;
-            method.define(Class.prototype, name, descriptor);
-        });
+            method.define( Class.prototype, name, descriptor );
+        } );
 
         //mixins processing
         //define mixins storage in class
-        if (xs.Object.size(desc.mixins)) {
+        if ( xs.Object.size( desc.mixins ) ) {
             Class.mixins = {};
             Class.prototype.mixins = {};
         }
-        each(desc.mixins, function (value, name) {
+        each( desc.mixins, function ( value, name ) {
             //leave mixin in descriptor
             realDesc.mixins[name] = value;
             //get mixClass
-            var mixClass = xs.ClassManager.get(value);
+            var mixClass = xs.ClassManager.get( value );
             Class.mixins[name] = mixClass;
             Class.prototype.mixins[name] = mixClass.prototype;
-        });
+        } );
 
         return realDesc;
     };
 
-    xs.Class.registerPreprocessor('inherit', function (Class, desc) {
+    xs.Class.registerPreprocessor( 'inherit', function ( Class, desc ) {
         //apply configured descriptor
-        var descriptor = applyDescriptor(Class, desc);
+        var descriptor = applyDescriptor( Class, desc );
 
         //define descriptor static property
-        xs.property.define(Class, 'descriptor', {
+        xs.property.define( Class, 'descriptor', {
             get: function () {
                 return descriptor;
             }
-        });
+        } );
     }, function () {
         return true;
-    });
-})(window, 'xs');
+    } );
+})( window, 'xs' );
