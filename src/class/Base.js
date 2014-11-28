@@ -17,7 +17,7 @@
  *
  * @class xs.Base
  */
-xs.define( 'xs.Base', function () {
+xs.define('xs.Base', function () {
     return {
         static: {
             methods: {
@@ -58,7 +58,7 @@ xs.define( 'xs.Base', function () {
                  * @return {Boolean} verification result
                  */
                 isParent: function ( child ) {
-                    return child.isChild( this );
+                    return child.isChild(this);
                 }
             }
         },
@@ -75,10 +75,10 @@ xs.define( 'xs.Base', function () {
                 var me = this;
 
                 //create clone via factory
-                var clone = me.self.factory.apply( me, me.initArguments );
+                var clone = me.self.factory.apply(me, me.initArguments);
 
                 //assign properties
-                xs.extend( clone, me );
+                xs.extend(clone, me);
 
                 //return clone
                 return clone;
@@ -92,4 +92,4 @@ xs.define( 'xs.Base', function () {
             destroy: xs.emptyFn
         }
     };
-} );
+});

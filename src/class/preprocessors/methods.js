@@ -21,7 +21,7 @@
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.preprocessors.add( 'methods', function () {
+    xs.Class.preprocessors.add('methods', function () {
 
         return true;
     }, function ( Class, descriptor ) {
@@ -35,7 +35,7 @@
         var inherited = Class.parent.descriptor.methods;
 
         //extend methods with inherited
-        xs.isObject( inherited ) && xs.extend( methods, inherited );
+        xs.isObject(inherited) && xs.extend(methods, inherited);
 
 
         //own
@@ -43,14 +43,14 @@
         var own = descriptor.methods;
 
         //apply if any
-        if ( xs.isObject( own ) ) {
+        if ( xs.isObject(own) ) {
             //prepare them
-            xs.each( own, function ( value, name, list ) {
-                list[name] = xs.Attribute.method.prepare( name, value );
-            } );
+            xs.each(own, function ( value, name, list ) {
+                list[name] = xs.Attribute.method.prepare(name, value);
+            });
 
             //extend methods with own ones
-            xs.extend( methods, own );
+            xs.extend(methods, own);
         }
 
 
@@ -59,8 +59,8 @@
         Class.descriptor.methods = methods;
 
         //apply all methods
-        xs.each( methods, function ( value, name ) {
-            xs.Attribute.method.define( Class.prototype, name, value );
-        } );
-    } );
-})( window, 'xs' );
+        xs.each(methods, function ( value, name ) {
+            xs.Attribute.method.define(Class.prototype, name, value);
+        });
+    });
+})(window, 'xs');

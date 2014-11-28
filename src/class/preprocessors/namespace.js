@@ -21,15 +21,14 @@
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.preprocessors.add( 'namespace', function () {
+    xs.Class.preprocessors.add('namespace', function () {
 
         return true;
     }, function ( Class, descriptor ) {
 
         //save namespace
         Class.descriptor.namespace = {
-            path: (xs.isString( descriptor.namespace ) &&
-                descriptor.namespace.length) ? descriptor.namespace : undefined,
+            path: (xs.isString(descriptor.namespace) && descriptor.namespace.length) ? descriptor.namespace : undefined,
             resolve: function ( path ) {
                 var me = this;
 
@@ -40,14 +39,14 @@
                 }
 
                 //if name starts from namespace - resolve it
-                if ( path.substring( 0, 3 ) == 'ns.' ) {
+                if ( path.substring(0, 3) == 'ns.' ) {
 
-                    return this.path + path.substring( 2 );
+                    return this.path + path.substring(2);
                 }
 
                 //else - simply return path
                 return path;
             }
         };
-    } );
-})( window, 'xs' );
+    });
+})(window, 'xs');

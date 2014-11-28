@@ -45,7 +45,7 @@
 
             if ( value === null ) {
                 type = 'null';
-            } else if ( Array.isArray( value ) ) {
+            } else if ( Array.isArray(value) ) {
                 type = 'array';
             }
 
@@ -68,7 +68,7 @@
          */
         me.isObject = function ( value ) {
 
-            return getType( value ) == 'object';
+            return getType(value) == 'object';
         };
 
         /**
@@ -87,7 +87,7 @@
          */
         me.isArray = function ( value ) {
 
-            return Array.isArray( value );
+            return Array.isArray(value);
         };
 
         /**
@@ -239,7 +239,7 @@
          * @return {Boolean} verification result
          */
         me.isIterable = function ( value ) {
-            var valueType = getType( value );
+            var valueType = getType(value);
 
             return valueType == 'object' || valueType == 'array';
         };
@@ -260,7 +260,7 @@
          * @return {Boolean} verification result
          */
         me.isPrimitive = function ( value ) {
-            var valueType = getType( value );
+            var valueType = getType(value);
 
             return valueType !== 'object' && valueType !== 'array' && valueType !== 'function';
         };
@@ -282,7 +282,7 @@
          */
         me.isNumeric = function ( value ) {
 
-            return !isNaN( parseFloat( value ) ) && isFinite( value ) && !Array.isArray( value );
+            return !isNaN(parseFloat(value)) && isFinite(value) && !Array.isArray(value);
         };
 
         /**
@@ -329,11 +329,11 @@
          * @return {Boolean} verification result
          */
         me.isEmpty = function ( value ) {
-            var type = getType( value );
+            var type = getType(value);
 
             if ( type == 'object' ) {
 
-                return !Object.keys( value ).length;
+                return !Object.keys(value).length;
             } else if ( type == 'array' ) {
 
                 return !value.length;
@@ -350,7 +350,7 @@
     });
 
     //extend xs with type
-    Object.keys( type ).forEach( function ( method ) {
+    Object.keys(type).forEach(function ( method ) {
         xs[method] = type[method];
-    } );
-})( window, 'xs' );
+    });
+})(window, 'xs');

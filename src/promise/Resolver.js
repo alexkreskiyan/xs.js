@@ -39,13 +39,13 @@
  @private
  */
 
-xs.define( 'xs.promise.Resolver', {
+xs.define('xs.promise.Resolver', {
     constructor: function ( onResolved, onRejected, onProgress ) {
         //create promise object
-        this.promise = xs.create( 'xs.promise.Promise', this );
+        this.promise = xs.create('xs.promise.Promise', this);
         //prepare callbacks
         this.onResolved = onResolved;
-        this.onRejected = xs.isFunction( onRejected ) ? onRejected : function ( error ) {
+        this.onRejected = xs.isFunction(onRejected) ? onRejected : function ( error ) {
             throw error;
         };
         this.onProgress = onProgress;
@@ -73,9 +73,9 @@ xs.define( 'xs.promise.Resolver', {
          * private method to execute action in resolvers
          */
         propagate: function () {
-            this.pendingResolvers.forEach( function ( resolver ) {
-                resolver[this.completionAction]( this.completionValue );
-            }, this );
+            this.pendingResolvers.forEach(function ( resolver ) {
+                resolver[this.completionAction](this.completionValue);
+            }, this);
             this.pendingResolvers = [];
         },
         /**
@@ -83,7 +83,7 @@ xs.define( 'xs.promise.Resolver', {
          * @param pendingResolver
          */
         schedule: function ( pendingResolver ) {
-            this.pendingResolvers.push( pendingResolver );
+            this.pendingResolvers.push(pendingResolver);
             this.completed && this.propagate();
         },
         /**
@@ -103,14 +103,14 @@ xs.define( 'xs.promise.Resolver', {
          * @param value
          */
         completeResolved: function ( value ) {
-            this.complete( 'resolve', value );
+            this.complete('resolve', value);
         },
         /**
          * shortcut function to complete rejected
          * @param reason
          */
         completeRejected: function ( reason ) {
-            this.complete( 'reject', reason );
+            this.complete('reject', reason);
         },
         /**
          * processes callback with given value
@@ -120,16 +120,16 @@ xs.define( 'xs.promise.Resolver', {
         process: function ( callback, value ) {
             this.processed = true;
             try {
-                if ( xs.isFunction( callback ) ) {
-                    value = callback( value );
+                if ( xs.isFunction(callback) ) {
+                    value = callback(value);
                 }
-                if ( value && xs.isFunction( value.then ) ) {
-                    value.then( this.completeResolved, this.completeRejected );
+                if ( value && xs.isFunction(value.then) ) {
+                    value.then(this.completeResolved, this.completeRejected);
                 } else {
-                    this.completeResolved( value );
+                    this.completeResolved(value);
                 }
             } catch ( error ) {
-                this.completeRejected( error );
+                this.completeRejected(error);
             }
         },
         /**
@@ -138,7 +138,7 @@ xs.define( 'xs.promise.Resolver', {
          */
         resolve: function ( value ) {
             if ( !this.processed ) {
-                this.process( this.onResolved, value );
+                this.process(this.onResolved, value);
             }
         },
         /**
@@ -147,7 +147,7 @@ xs.define( 'xs.promise.Resolver', {
          */
         reject: function ( reason ) {
             if ( !this.processed ) {
-                this.process( this.onRejected, reason );
+                this.process(this.onRejected, reason);
             }
         },
         /**
@@ -159,12 +159,12 @@ xs.define( 'xs.promise.Resolver', {
             if ( this.completed ) {
                 return;
             }
-            if ( xs.isFunction( this.onProgress ) ) {
-                progress = this.onProgress( progress );
+            if ( xs.isFunction(this.onProgress) ) {
+                progress = this.onProgress(progress);
             }
             for ( index = 0; index < this.pendingResolvers.length; index++ ) {
                 pendingResolver = this.pendingResolvers[index];
-                pendingResolver.progress( progress );
+                pendingResolver.progress(progress);
             }
         },
         /**
@@ -177,14 +177,14 @@ xs.define( 'xs.promise.Resolver', {
          */
         then: function ( onResolved, onRejected, onProgress ) {
             var me = this;
-            if ( !xs.isFunction( onResolved ) && !xs.isFunction( onRejected ) && !xs.isFunction( onProgress ) ) {
+            if ( !xs.isFunction(onResolved) && !xs.isFunction(onRejected) && !xs.isFunction(onProgress) ) {
                 return me.promise;
             }
-            var pendingResolver = xs.create( 'xs.promise.Resolver', onResolved, onRejected, onProgress );
-            xs.nextTick( function () {
-                me.schedule( pendingResolver );
-            } );
+            var pendingResolver = xs.create('xs.promise.Resolver', onResolved, onRejected, onProgress);
+            xs.nextTick(function () {
+                me.schedule(pendingResolver);
+            });
             return pendingResolver.promise;
         }
     }
-} );
+});

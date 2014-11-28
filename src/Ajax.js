@@ -52,7 +52,7 @@
  requests in the application.
 
  */
-xs.define( 'xs.Ajax', {
+xs.define('xs.Ajax', {
     extend: 'xs.data.Connection',
     singleton: true,
     properties: {
@@ -69,4 +69,4 @@ xs.define( 'xs.Ajax', {
          */
         cors: true//TODO
     }
-} );
+});

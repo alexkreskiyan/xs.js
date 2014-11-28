@@ -45,36 +45,36 @@
          * - relativeTo item is missing in stack
          */
         var _apply = function ( name, position, relativeTo ) {
-            if ( !xs.has( [
+            if ( !xs.has([
                 'first',
                 'last',
                 'before',
                 'after'
-            ], position ) ) {
-                throw new Error( 'Incorrect position given' );
+            ], position) ) {
+                throw new Error('Incorrect position given');
             }
 
             //get current keys
-            var keys = xs.keys( items );
+            var keys = xs.keys(items);
 
             //remove name from keys
-            xs.delete( keys, name );
+            xs.delete(keys, name);
 
             //insert to specified position
             if ( position == 'first' || position == 'last' ) {
-                position == 'first' ? keys.unshift( name ) : keys.push( name );
+                position == 'first' ? keys.unshift(name) : keys.push(name);
             } else {
-                var relativeKey = xs.keyOf( keys, relativeTo );
+                var relativeKey = xs.keyOf(keys, relativeTo);
 
-                if ( !xs.isDefined( relativeKey ) ) {
-                    throw new Error( 'Relative item missing in stack' );
+                if ( !xs.isDefined(relativeKey) ) {
+                    throw new Error('Relative item missing in stack');
                 }
                 position == 'after' && relativeKey++;
-                keys.splice( relativeKey, 0, name );
+                keys.splice(relativeKey, 0, name);
             }
 
             //pick items in new order
-            items = xs.pick( items, keys );
+            items = xs.pick(items, keys);
         };
 
         /**
@@ -86,7 +86,7 @@
          */
         me.get = function () {
 
-            return xs.clone( items );
+            return xs.clone(items);
         };
 
         /**
@@ -124,8 +124,8 @@
             //position defaults to last
             position || (position = 'last');
 
-            if ( xs.hasKey( items, name ) ) {
-                throw new Error( 'processor "' + name + '" already in stack' );
+            if ( xs.hasKey(items, name) ) {
+                throw new Error('processor "' + name + '" already in stack');
             }
 
             items[name] = {
@@ -133,7 +133,7 @@
                 handler: handler
             };
 
-            _apply( name, position, relativeTo );
+            _apply(name, position, relativeTo);
         };
 
         /**
@@ -156,7 +156,7 @@
          * @param {String} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
          */
         me.reorder = function ( name, position, relativeTo ) {
-            _apply( name, position, relativeTo );
+            _apply(name, position, relativeTo);
         };
 
         /**
@@ -175,10 +175,10 @@
          * - processor with given name is not found in stack
          */
         me.delete = function ( name ) {
-            if ( xs.hasKey( items, name ) ) {
-                xs.deleteAt( items, name );
+            if ( xs.hasKey(items, name) ) {
+                xs.deleteAt(items, name);
             } else {
-                throw new Error( 'processor "' + name + '" not found in stack' );
+                throw new Error('processor "' + name + '" not found in stack');
             }
         };
 
@@ -198,7 +198,7 @@
          * @param {Function} [callback] optional executed callback
          */
         me.process = function ( verifierArgs, handlerArgs, callback ) {
-            _process( xs.values( items ), verifierArgs, handlerArgs, xs.isFunction( callback ) ? callback : xs.emptyFn );
+            _process(xs.values(items), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
         };
 
         /**
@@ -219,23 +219,23 @@
 
                 return;
             }
-            var item = xs.shift( items );
+            var item = xs.shift(items);
 
             //if item.verifier allows handler execution, process next
-            if ( item.verifier.apply( this, verifierArgs ) ) {
+            if ( item.verifier.apply(this, verifierArgs) ) {
 
                 var ready = function () {
-                    _process( items, verifierArgs, handlerArgs, callback );
+                    _process(items, verifierArgs, handlerArgs, callback);
                 };
 
                 //if item.handler returns false, processing is async, stop processing, awaiting ready call
-                if ( item.handler.apply( this, xs.union( handlerArgs, ready ) ) === false ) {
+                if ( item.handler.apply(this, xs.union(handlerArgs, ready)) === false ) {
 
                     return;
                 }
             }
 
-            _process( items, verifierArgs, handlerArgs, callback );
+            _process(items, verifierArgs, handlerArgs, callback);
         };
     };
 
@@ -332,7 +332,7 @@
 
                 //throw exception if Class is singleton
                 if ( descriptor.singleton ) {
-                    throw new Error( 'Can not create instance of singleton class' );
+                    throw new Error('Can not create instance of singleton class');
                 }
 
                 //get constructor shortcut
@@ -340,7 +340,7 @@
 
                 //if parent constructor - just call it
                 if ( me.self && me.self !== Class ) {
-                    constructor && constructor.apply( me, arguments );
+                    constructor && constructor.apply(me, arguments);
 
                     return;
                 }
@@ -355,15 +355,15 @@
                 me.privates = {};
 
                 //assign values
-                if ( xs.isObject( descriptor.properties ) ) {
+                if ( xs.isObject(descriptor.properties) ) {
                     var properties = descriptor.properties;
-                    var keys = Object.keys( properties );
+                    var keys = Object.keys(properties);
                     var i, length = keys.length, name, property;
 
                     for ( i = 0; i < length; i++ ) {
                         name = keys[i];
                         property = properties[name];
-                        property.hasOwnProperty( 'value' ) && (me[name] = property.value);
+                        property.hasOwnProperty('value') && (me[name] = property.value);
                     }
                 }
 
@@ -373,7 +373,7 @@
                 me.self = Class;
 
                 //apply constructor
-                constructor && constructor.apply( me, arguments );
+                constructor && constructor.apply(me, arguments);
             };
 
             return Class;
@@ -396,7 +396,7 @@
 
             //create wrapper
             var xClass = function ( args ) {
-                return Class.apply( this, args );
+                return Class.apply(this, args);
             };
 
             //assign prototype
@@ -406,7 +406,7 @@
             return function () {
 
                 //return instance
-                return new xClass( arguments );
+                return new xClass(arguments);
             };
         };
 
@@ -501,17 +501,17 @@
         me.create = function ( Descriptor, createdFn ) {
 
             //Descriptor must be function
-            if ( !xs.isFunction( Descriptor ) ) {
-                throw new Error( 'Class descriptor must be evaluated function' );
+            if ( !xs.isFunction(Descriptor) ) {
+                throw new Error('Class descriptor must be evaluated function');
             }
 
-            xs.isFunction( createdFn ) || (createdFn = xs.emptyFn);
+            xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
 
             //create class
             var Class = _create();
 
             //assign factory for class
-            Class.factory = _createFactory( Class );
+            Class.factory = _createFactory(Class);
 
             //get namespace for Class
             var namespace = Class.namespace = {};
@@ -523,21 +523,21 @@
             Descriptor.prototype = _createDescriptorPrototype();
 
             //get descriptor instance
-            var descriptor = new Descriptor( Class, namespace, imports );
+            var descriptor = new Descriptor(Class, namespace, imports);
 
             //check descriptor is object
-            if ( !xs.isObject( descriptor ) ) {
-                throw new Error( 'Evaluated class descriptor must be object' );
+            if ( !xs.isObject(descriptor) ) {
+                throw new Error('Evaluated class descriptor must be object');
             }
 
             //save Class descriptor
-            xs.const( Class, 'descriptor', {} );
+            xs.const(Class, 'descriptor', {});
 
 //            //set class not ready yet (until preprocessors done)
 //            Class.isReady = false;
 //TODO make more pretty
             //process preprocessors stack before createdFn called
-            preprocessors.process( [
+            preprocessors.process([
                 Class,
                 descriptor,
                 namespace
@@ -550,10 +550,10 @@
 //                Class.isReady = true;
 //TODO make more pretty
                 //call createdFn
-                createdFn( Class );
+                createdFn(Class);
 
                 //process postprocessors stack after createdFn called
-                postprocessors.process( [
+                postprocessors.process([
                     Class,
                     descriptor,
                     namespace
@@ -561,8 +561,8 @@
                     Class,
                     descriptor,
                     namespace
-                ] );
-            } );
+                ]);
+            });
 
             return Class;
         };
@@ -571,4 +571,4 @@
     //define prototype of xs.Base
     xs.Base = new Function;
     xs.Base.descriptor = {};
-})( window, 'xs' );
+})(window, 'xs');

@@ -38,7 +38,7 @@
         var raise = function ( message, type ) {
             message = message || 'error';
             type = type || Error;
-            throw new type( message );
+            throw new type(message);
         };
         /**
          * Handler for errors raising
@@ -51,7 +51,7 @@
          * @throws {ReferenceError}
          */
         this.raiseReference = function ( message ) {
-            raise( message, ReferenceError );
+            raise(message, ReferenceError);
         };
         /**
          * Raises syntax error
@@ -59,7 +59,7 @@
          * @throws {SyntaxError}
          */
         this.raiseSyntax = function ( message ) {
-            raise( message, SyntaxError );
+            raise(message, SyntaxError);
         };
         /**
          * Raises type error
@@ -67,13 +67,13 @@
          * @throws {TypeError}
          */
         this.raiseType = function ( message ) {
-            raise( message, TypeError );
+            raise(message, TypeError);
         };
     });
-    xs.extend( xs, {
+    xs.extend(xs, {
         raiseError: error.raise,
         raiseReferenceError: error.raiseReference,
         raiseSyntaxError: error.raiseSyntax,
         raiseTypeError: error.raiseType
-    } );
-})( window, 'xs' );
+    });
+})(window, 'xs');

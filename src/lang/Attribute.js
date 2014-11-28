@@ -48,7 +48,7 @@
          * @return {Boolean} verification result
          */
         var _defined = me.defined = function ( object, name ) {
-            return object.hasOwnProperty( name );
+            return object.hasOwnProperty(name);
         };
 
         /**
@@ -87,7 +87,7 @@
          * @param {Object} descriptor descriptor of new property
          */
         var _define = me.define = function ( object, name, descriptor ) {
-            descriptor ? Object.defineProperty( object, name, descriptor ) : Object.defineProperties( object, name );
+            descriptor ? Object.defineProperty(object, name, descriptor) : Object.defineProperties(object, name);
         };
 
         /**
@@ -105,7 +105,7 @@
          * @return {Object} property descriptor
          */
         var _getDescriptor = me.getDescriptor = function ( object, name ) {
-            return Object.getOwnPropertyDescriptor( object, name );
+            return Object.getOwnPropertyDescriptor(object, name);
         };
 
         /**
@@ -127,8 +127,8 @@
          * @return {Boolean} whether property is assigned
          */
         me.isAssigned = function ( object, name ) {
-            var descriptor = _getDescriptor( object, name );
-            return !!descriptor && descriptor.hasOwnProperty( 'value' );
+            var descriptor = _getDescriptor(object, name);
+            return !!descriptor && descriptor.hasOwnProperty('value');
         };
 
         /**
@@ -150,8 +150,8 @@
          * @return {Boolean} whether property is accessed
          */
         me.isAccessed = function ( object, name ) {
-            var descriptor = _getDescriptor( object, name );
-            return !!descriptor && (descriptor.hasOwnProperty( 'get' ) || descriptor.hasOwnProperty( 'set' ));
+            var descriptor = _getDescriptor(object, name);
+            return !!descriptor && (descriptor.hasOwnProperty('get') || descriptor.hasOwnProperty('set'));
         };
 
         /**
@@ -173,7 +173,7 @@
          * @return {Boolean} whether property is writable
          */
         me.isWritable = function ( object, name ) {
-            var descriptor = _getDescriptor( object, name );
+            var descriptor = _getDescriptor(object, name);
             return !!descriptor && !!descriptor.writable;
         };
 
@@ -196,7 +196,7 @@
          * @return {Boolean} whether property is configurable
          */
         var _isConfigurable = me.isConfigurable = function ( object, name ) {
-            var descriptor = _getDescriptor( object, name );
+            var descriptor = _getDescriptor(object, name);
             return !!descriptor && !!descriptor.configurable;
         };
 
@@ -219,7 +219,7 @@
          * @return {Boolean} whether property is enumerable
          */
         me.isEnumerable = function ( object, name ) {
-            var descriptor = _getDescriptor( object, name );
+            var descriptor = _getDescriptor(object, name);
             return !!descriptor && !!descriptor.enumerable;
         };
 
@@ -239,14 +239,14 @@
          */
         var _isDescriptor = me.isDescriptor = function ( descriptor ) {
             //false if descriptor is not object
-            if ( !xs.isObject( descriptor ) ) {
+            if ( !xs.isObject(descriptor) ) {
                 return false;
             }
 
             //if any descriptor fields specified - it is descriptor
-            return _defined( descriptor, 'get' ) || _defined( descriptor, 'set' ) || _defined( descriptor, 'value' ) ||
-                _defined( descriptor, 'writable' ) || _defined( descriptor, 'configurable' ) ||
-                _defined( descriptor, 'enumerable' );
+            return _defined(descriptor, 'get') || _defined(descriptor, 'set') || _defined(descriptor, 'value') ||
+                _defined(descriptor, 'writable') || _defined(descriptor, 'configurable') ||
+                _defined(descriptor, 'enumerable');
         };
 
         /**
@@ -274,15 +274,15 @@
          * - constant with given name is already defined
          */
         me.const = function ( object, name, value ) {
-            if ( _defined( object, name ) && !_isConfigurable( object, name ) ) {
-                throw new Error( 'constant "' + name + '" is already defined' );
+            if ( _defined(object, name) && !_isConfigurable(object, name) ) {
+                throw new Error('constant "' + name + '" is already defined');
             }
-            _define( object, name, {
+            _define(object, name, {
                 value: value,
                 writable: false,
                 enumerable: true,
                 configurable: false
-            } );
+            });
         };
 
         /**
@@ -329,12 +329,12 @@
          * @return {Object} corrected descriptor copy
          */
         var _prepareDescriptor = me.prepareDescriptor = function ( descriptor ) {
-            descriptor = xs.clone( descriptor );
+            descriptor = xs.clone(descriptor);
             //non-function get|set are removed
-            if ( _defined( descriptor, 'get' ) && !xs.isFunction( descriptor.get ) ) {
+            if ( _defined(descriptor, 'get') && !xs.isFunction(descriptor.get) ) {
                 delete descriptor.get;
             }
-            if ( _defined( descriptor, 'set' ) && !xs.isFunction( descriptor.set ) ) {
+            if ( _defined(descriptor, 'set') && !xs.isFunction(descriptor.set) ) {
                 delete descriptor.set;
             }
 
@@ -345,9 +345,9 @@
             }
 
             //writable,enumerable,configurable - are converted if presented
-            _defined( descriptor, 'writable' ) && (descriptor.writable = !!descriptor.writable);
-            _defined( descriptor, 'configurable' ) && (descriptor.configurable = !!descriptor.configurable);
-            _defined( descriptor, 'enumerable' ) && (descriptor.enumerable = !!descriptor.enumerable);
+            _defined(descriptor, 'writable') && (descriptor.writable = !!descriptor.writable);
+            _defined(descriptor, 'configurable') && (descriptor.configurable = !!descriptor.configurable);
+            _defined(descriptor, 'enumerable') && (descriptor.enumerable = !!descriptor.enumerable);
 
             //any additional fields allowed
             return descriptor;
@@ -398,7 +398,7 @@
              */
             me.prepare = function ( name, descriptor ) {
                 //if not descriptor - returns generated one
-                if ( !_isDescriptor( descriptor ) ) {
+                if ( !_isDescriptor(descriptor) ) {
 
                     return {
                         value: descriptor,
@@ -409,16 +409,16 @@
                 }
 
                 //prepares descriptor
-                descriptor = _prepareDescriptor( descriptor );
+                descriptor = _prepareDescriptor(descriptor);
 
                 //get|set priority
                 if ( descriptor.get || descriptor.set ) {
                     descriptor.get ||
-                    eval( 'descriptor.get = function () { \'use strict\'; return this.privates.' + name + ';}' );
+                    eval('descriptor.get = function () { \'use strict\'; return this.privates.' + name + ';}');
                     descriptor.set ||
-                    eval( 'descriptor.set = function (value) { \'use strict\'; this.privates.' + name + ' = value;}' );
+                    eval('descriptor.set = function (value) { \'use strict\'; this.privates.' + name + ' = value;}');
                 } else {
-                    _defined( descriptor, 'value' ) || (descriptor.value = undefined);
+                    _defined(descriptor, 'value') || (descriptor.value = undefined);
                     descriptor.writable = true;
                 }
                 descriptor.enumerable = true;
@@ -467,21 +467,21 @@
              * - property with given name is already defined
              */
             me.define = function ( object, name, descriptor ) {
-                if ( _defined( object, name ) && !_isConfigurable( object, name ) ) {
-                    throw new Error( 'property "' + name + '" is already defined' );
+                if ( _defined(object, name) && !_isConfigurable(object, name) ) {
+                    throw new Error('property "' + name + '" is already defined');
                 }
 
                 //writable, enumerable and configurable are immutable defaults
-                xs.extend( descriptor, {
+                xs.extend(descriptor, {
                     enumerable: true,
                     configurable: false
-                } );
+                });
                 if ( !descriptor.get && !descriptor.set ) {
                     descriptor.writable = true;
                 }
 
                 //define property and return
-                _define( object, name, descriptor );
+                _define(object, name, descriptor);
             };
         });
 
@@ -527,7 +527,7 @@
             me.prepare = function ( name, descriptor ) {
 
                 //simple function
-                if ( xs.isFunction( descriptor ) ) {
+                if ( xs.isFunction(descriptor) ) {
 
                     return {
                         value: descriptor,
@@ -537,16 +537,16 @@
                     };
 
                     //or complex object descriptor with fn in descriptor.value
-                } else if ( !xs.isObject( descriptor ) || !xs.isFunction( descriptor.value ) ) {
-                    throw new Error( 'Incorrect method descriptor' );
+                } else if ( !xs.isObject(descriptor) || !xs.isFunction(descriptor.value) ) {
+                    throw new Error('Incorrect method descriptor');
                 }
 
-                descriptor = xs.clone( descriptor );
-                xs.extend( descriptor, {
+                descriptor = xs.clone(descriptor);
+                xs.extend(descriptor, {
                     writable: false,
                     enumerable: true,
                     configurable: false
-                } );
+                });
 
                 return descriptor;
             };
@@ -587,22 +587,22 @@
              * - method with given name is already defined
              */
             me.define = function ( object, name, descriptor ) {
-                if ( _defined( object, name ) && !_isConfigurable( object, name ) ) {
-                    throw new Error( 'Method "' + name + '" is already defined' );
+                if ( _defined(object, name) && !_isConfigurable(object, name) ) {
+                    throw new Error('Method "' + name + '" is already defined');
                 }
-                _define( object, name, {
+                _define(object, name, {
                     value: descriptor.value,
                     writable: false,
                     enumerable: true,
                     configurable: false
-                } );
+                });
             };
         });
     });
 
-    xs.extend( xs, {
+    xs.extend(xs, {
         const: attribute.const,
         property: attribute.property,
         method: attribute.method
-    } );
-})( window, 'xs' );
+    });
+})(window, 'xs');

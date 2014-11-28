@@ -21,7 +21,7 @@
  * @class xs.request.Request represents request object
  */
 'use strict';
-xs.define( 'xs.request.Request', function () {
+xs.define('xs.request.Request', function () {
     /**
      * Fetches all param indexes from param name
      * @type {RegExp}
@@ -34,7 +34,7 @@ xs.define( 'xs.request.Request', function () {
      * @return {Array}
      */
     var removeIndexBrackets = function ( index ) {
-        return index.slice( 1, index.length - 1 )
+        return index.slice(1, index.length - 1)
     };
     /**
      * process object from query string
@@ -43,14 +43,14 @@ xs.define( 'xs.request.Request', function () {
      */
     var fromQueryString = function ( str ) {
         str || (str = '');
-        var params = {}, rawParams = str.split( '&' );
+        var params = {}, rawParams = str.split('&');
 
-        xs.Array.each( rawParams, function ( param ) {
+        xs.Array.each(rawParams, function ( param ) {
             //split name and value
-            var pair = param.split( '=' );
+            var pair = param.split('=');
 
             //try to get name
-            var name = pair[0].match( queryParamNameRe );
+            var name = pair[0].match(queryParamNameRe);
             if ( !name ) {
                 return;
             } else {
@@ -58,15 +58,15 @@ xs.define( 'xs.request.Request', function () {
             }
 
             //get value
-            var value = xs.isString( pair[1] ) ? pair[1] : '';
+            var value = xs.isString(pair[1]) ? pair[1] : '';
 
             //try to get indexes (for nested values)
-            var indexes = pair[0].match( queryParamIndexesRe );
-            indexes = indexes ? indexes.map( removeIndexBrackets ) : null;
+            var indexes = pair[0].match(queryParamIndexesRe);
+            indexes = indexes ? indexes.map(removeIndexBrackets) : null;
 
             //process data
-            fromQueryObjects( params, name, value, indexes );
-        } );
+            fromQueryObjects(params, name, value, indexes);
+        });
         return params;
     };
     /**
@@ -75,11 +75,11 @@ xs.define( 'xs.request.Request', function () {
      * @return {Integer}
      */
     var getNextIndex = function ( params ) {
-        if ( xs.isArray( params ) ) {
+        if ( xs.isArray(params) ) {
             return params.length;
         }
         var index = 0;
-        while ( xs.Object.hasKey( params, index ) ) {
+        while ( xs.Object.hasKey(params, index) ) {
             index++;
         }
         return index;
@@ -95,9 +95,9 @@ xs.define( 'xs.request.Request', function () {
     var fromQueryObjects = function ( params, name, value, indexes ) {
         //assign value if no indexes
         if ( !indexes || !indexes.length ) {
-            value = decodeURIComponent( value );
+            value = decodeURIComponent(value);
             try {
-                params[name] = JSON.parse( value );
+                params[name] = JSON.parse(value);
             } catch ( e ) {
                 params[name] = value;
             }
@@ -114,14 +114,14 @@ xs.define( 'xs.request.Request', function () {
         var param = params[name];
 
         if ( index ) {
-            xs.isNumeric( index ) && (index = Number( index ));
+            xs.isNumeric(index) && (index = Number(index));
         } else {
-            index = getNextIndex( param );
+            index = getNextIndex(param);
         }
-        if ( xs.isArray( param ) && xs.isString( index ) ) {
-            params[name] = xs.Array.toObject( param );
+        if ( xs.isArray(param) && xs.isString(index) ) {
+            params[name] = xs.Array.toObject(param);
         }
-        fromQueryObjects( params[name], index, value, indexes.slice( 1 ) );
+        fromQueryObjects(params[name], index, value, indexes.slice(1));
     };
     /**
      * process object to query string
@@ -134,20 +134,20 @@ xs.define( 'xs.request.Request', function () {
         var paramObjects = [], params = [];
 
         if ( encode ) {
-            xs.each( object, function ( value, name ) {
-                paramObjects = paramObjects.concat( toQueryObjects( encodeURIComponent( name ), value, encode ) );
-            }, this );
+            xs.each(object, function ( value, name ) {
+                paramObjects = paramObjects.concat(toQueryObjects(encodeURIComponent(name), value, encode));
+            }, this);
         } else {
-            xs.each( object, function ( value, name ) {
-                paramObjects = paramObjects.concat( toQueryObjects( name, value, encode ) );
-            }, this );
+            xs.each(object, function ( value, name ) {
+                paramObjects = paramObjects.concat(toQueryObjects(name, value, encode));
+            }, this);
 
         }
-        xs.Array.each( paramObjects, function ( paramObject ) {
-            params.push( paramObject.name + '=' + String( paramObject.value ) );
-        } );
+        xs.Array.each(paramObjects, function ( paramObject ) {
+            params.push(paramObject.name + '=' + String(paramObject.value));
+        });
 
-        return params.join( '&' );
+        return params.join('&');
     };
     /**
      * processes object to query object
@@ -159,27 +159,27 @@ xs.define( 'xs.request.Request', function () {
     var toQueryObjects = function ( name, object, encode ) {
         var self = toQueryObjects, objects = [];
 
-        if ( xs.isIterable( object ) && xs.size( object ) ) {
+        if ( xs.isIterable(object) && xs.size(object) ) {
             if ( encode ) {
-                xs.each( object, function ( value, param ) {
-                    objects = objects.concat( self( name + '[' + encodeURIComponent( param ) + ']', value, encode ) );
-                } );
+                xs.each(object, function ( value, param ) {
+                    objects = objects.concat(self(name + '[' + encodeURIComponent(param) + ']', value, encode));
+                });
             } else {
-                xs.each( object, function ( value, param ) {
-                    objects = objects.concat( self( name + '[' + param + ']', value ) );
-                } );
+                xs.each(object, function ( value, param ) {
+                    objects = objects.concat(self(name + '[' + param + ']', value));
+                });
             }
         } else {
             if ( encode ) {
-                objects.push( {
+                objects.push({
                     name: name,
-                    value: encodeURIComponent( object )
-                } );
+                    value: encodeURIComponent(object)
+                });
             } else {
-                objects.push( {
+                objects.push({
                     name: name,
                     value: object
-                } );
+                });
             }
         }
 
@@ -215,7 +215,7 @@ xs.define( 'xs.request.Request', function () {
                 break;
             case 'url':
                 if ( me.method == 'get' ) {
-                    if ( xs.Object.size( me.url.params ) ) {
+                    if ( xs.Object.size(me.url.params) ) {
                         //if any params in url - assign them to request
                         me.params = me.url.params; //because of Object bylink passing - we achieve direct sync
                     } else {
@@ -223,7 +223,7 @@ xs.define( 'xs.request.Request', function () {
                         me.url.params = me.params; //because of Object bylink passing - we achieve direct sync
                     }
                 } else {
-                    if ( xs.Object.size( me.url.params ) ) {
+                    if ( xs.Object.size(me.url.params) ) {
                         //if any params in url - assign them to request
                         me.params = me.url.params; //because of Object bylink passing - we achieve direct sync
                     }
@@ -242,13 +242,13 @@ xs.define( 'xs.request.Request', function () {
 
     var setRequest = function ( me ) {
         //request object
-        me.__set( 'isCrossDomain', me.url.host !== xs.location.host );
+        me.__set('isCrossDomain', me.url.host !== xs.location.host);
         if ( me.isCrossDomain && xs.isIE && xs.browser.major <= 9 ) {
-            me.__set( 'xhr', new XDomainRequest() );
-            me.__set( 'isXhr', false );
+            me.__set('xhr', new XDomainRequest());
+            me.__set('isXhr', false);
         } else {
-            me.__set( 'xhr', new XMLHttpRequest() );
-            me.__set( 'isXhr', true );
+            me.__set('xhr', new XMLHttpRequest());
+            me.__set('isXhr', true);
         }
     };
 
@@ -256,9 +256,9 @@ xs.define( 'xs.request.Request', function () {
         var xhr = me.xhr, method = me.method.toUpperCase(), url = me.url.toUri();
 
         if ( me.isXhr ) {
-            xhr.open( method, url, me.async, me.user, me.password );
+            xhr.open(method, url, me.async, me.user, me.password);
         } else {
-            xhr.open( method, url );
+            xhr.open(method, url);
         }
     };
 
@@ -271,7 +271,7 @@ xs.define( 'xs.request.Request', function () {
         var headers = me.headers, xhr = me.xhr;
 
         //if no content type specified, method is not GET and some data is going to be sent - specify
-        if ( !headers['Content-Type'] && me.method !== 'get' && xs.Object.size( me.params ) ) {
+        if ( !headers['Content-Type'] && me.method !== 'get' && xs.Object.size(me.params) ) {
             headers['Content-Type'] = me.postContentType;
         }
 
@@ -280,35 +280,35 @@ xs.define( 'xs.request.Request', function () {
             headers['X-Requested-With'] = 'XMLHttpRequest';
         }
 
-        xs.each( headers, function ( header, name ) {
-            xhr.setRequestHeader( name, header );
-        } );
+        xs.each(headers, function ( header, name ) {
+            xhr.setRequestHeader(name, header);
+        });
     };
 
     var setEventHandlers = function ( me ) {
         var xhr = me.xhr;
         xhr.onprogress = function ( event ) {
-            console.log( 'PROGRESS', 'request', me, 'event', event );
+            console.log('PROGRESS', 'request', me, 'event', event);
             if ( me.isXhr && event.lengthComputable ) {
-                me.deferred.progress( event.loaded / event.total );
+                me.deferred.progress(event.loaded / event.total);
             }
         };
         xhr.onerror = function () {
-            console.log( 'ERROR', 'request', me );
-            me.abort( false );
+            console.log('ERROR', 'request', me);
+            me.abort(false);
         };
         xhr.onload = function () {
-            console.log( 'LOAD', 'request', me );
-            complete( me );
+            console.log('LOAD', 'request', me);
+            complete(me);
         };
         xhr.ontimeout = function () {
-            console.log( 'TIMEOUT', 'request', me );
-            me.abort( true );
+            console.log('TIMEOUT', 'request', me);
+            me.abort(true);
         };
     };
 
     var complete = function ( me ) {
-        console.log( 'Request completed' );
+        console.log('Request completed');
     };
 
     var createResponse = function () {
@@ -332,13 +332,13 @@ xs.define( 'xs.request.Request', function () {
         constructor: function ( config ) {
             var me = this;
 
-            xs.isObject( config ) || (config = {});
+            xs.isObject(config) || (config = {});
 
             //basics
             me.method = config.method;
             me.url = config.url;
             //set params if given
-            if ( xs.isObject( config.params ) ) {
+            if ( xs.isObject(config.params) ) {
                 me.params = config.params;
                 //or default to empty ones, if not defined yet via url
             } else if ( !me.params ) {
@@ -348,10 +348,10 @@ xs.define( 'xs.request.Request', function () {
             me.password = config.password;
             me.async = config.async;
             me.credentials = config.credentials;
-            me.headers = xs.isObject( config.headers ) ? config.headers : {};
+            me.headers = xs.isObject(config.headers) ? config.headers : {};
 
             //deferred request handler
-            me.__set( 'deferred', xs.create( 'xs.promise.Deferred' ) );
+            me.__set('deferred', xs.create('xs.promise.Deferred'));
 
             //request timeout
             me.timeout = config.timeout;
@@ -364,14 +364,14 @@ xs.define( 'xs.request.Request', function () {
                 set: function ( method ) {
                     var me = this;
 
-                    if ( !xs.isString( method ) ) {
+                    if ( !xs.isString(method) ) {
                         return;
                     }
 
                     method = method.toLowerCase();
-                    xs.Array.has( methods, method ) && me.__set( 'method', method );
+                    xs.Array.has(methods, method) && me.__set('method', method);
 
-                    me.url && syncParams( me, 'method' );
+                    me.url && syncParams(me, 'method');
                 },
                 default: 'get'
             },
@@ -379,78 +379,78 @@ xs.define( 'xs.request.Request', function () {
                 set: function ( url ) {
                     var me = this;
 
-                    if ( xs.isString( url ) ) {
-                        url = xs.create( 'xs.uri.Url', {url: url} );
-                    } else if ( xs.isObject( url ) ) {
-                        url = xs.create( 'xs.uri.Url', url );
-                    } else if ( !xs.is( url, xs.uri.Url ) ) {
+                    if ( xs.isString(url) ) {
+                        url = xs.create('xs.uri.Url', {url: url});
+                    } else if ( xs.isObject(url) ) {
+                        url = xs.create('xs.uri.Url', url);
+                    } else if ( !xs.is(url, xs.uri.Url) ) {
                         var loc = xs.location;
-                        url = xs.create( 'xs.uri.Url', {
+                        url = xs.create('xs.uri.Url', {
                             url: loc.protocol + '//' + loc.host + (loc.port ? ':' + loc.port : '') + loc.pathname +
                                 loc.search + loc.hash
-                        } );
+                        });
                     }
-                    me.__set( 'url', url );
+                    me.__set('url', url);
 
-                    syncParams( me, 'url' );
+                    syncParams(me, 'url');
 
-                    setRequest( me );
+                    setRequest(me);
                 }
             },
             params: {
                 set: function ( params ) {
                     var me = this;
 
-                    if ( !xs.isObject( params ) ) {
+                    if ( !xs.isObject(params) ) {
                         return;
                     }
 
-                    me.__set( 'params', params );
-                    syncParams( me, 'params' );
+                    me.__set('params', params);
+                    syncParams(me, 'params');
                 }
             },
             user: {
                 set: function ( user ) {
                     var me = this;
-                    if ( xs.isString( user ) ) {
-                        me.__set( 'user', user );
+                    if ( xs.isString(user) ) {
+                        me.__set('user', user);
                     } else if ( !user ) {
-                        me.__set( 'user', null );
+                        me.__set('user', null);
                     }
                 }
             },
             password: {
                 set: function ( password ) {
                     var me = this;
-                    if ( xs.isString( password ) ) {
-                        me.__set( 'password', password );
+                    if ( xs.isString(password) ) {
+                        me.__set('password', password);
                     } else if ( !password ) {
-                        me.__set( 'password', null );
+                        me.__set('password', null);
                     }
                 }
             },
             async: {
                 set: function ( async ) {
-                    xs.isDefined( async ) && this.__set( 'async', Boolean( async ) );
+                    xs.isDefined(async) && this.__set('async', Boolean(async));
                 },
                 default: true
             },
             credentials: {
                 set: function ( credentials ) {
-                    xs.isDefined( credentials ) && this.__set( 'credentials', Boolean( credentials ) );
+                    xs.isDefined(credentials) && this.__set('credentials', Boolean(credentials));
                 },
                 default: false
             },
             headers: {
                 set: function ( headers ) {
-                    xs.isObject( headers ) && this.__set( 'headers', headers );
+                    xs.isObject(headers) && this.__set('headers', headers);
                 }
             },
             timeout: {
                 set: function ( timeout ) {
                     var me = this;
-                    xs.isNumeric( timeout ) && me.__set( 'timeout', Number( timeout ) );
-                    me.xhr && (me.xhr.timeout = me.__get( 'timeout' ));
+                    xs.isNumeric(timeout) && me.__set('timeout', Number(timeout));
+                    me.xhr && (me.xhr.timeout = me.__get('timeout'));
                 },
                 default: 30000
             },
@@ -469,34 +469,34 @@ xs.define( 'xs.request.Request', function () {
             },
             postContentType: {
                 set: function ( postContentType ) {
-                    xs.isString( postContentType ) && this.__set( 'postContentType', postContentType );
+                    xs.isString(postContentType) && this.__set('postContentType', postContentType);
                 },
                 default: 'application/x-www-form-urlencoded; charset=UTF-8'
             }
         },
         methods: {
             send: function () {
-                var me = this, data = me.method == 'get' ? '' : toQueryString( me.params, false );
+                var me = this, data = me.method == 'get' ? '' : toQueryString(me.params, false);
 
-                open( me );
+                open(me);
 
                 me.isCrossDomain && me.isXhr && (me.xhr.withCredentials = me.credentials);
 
-                setHeaders( me );
-                setEventHandlers( me );
+                setHeaders(me);
+                setEventHandlers(me);
 
-                me.timeoutId = setTimeout( function () {
-                    me.abort( true );
-                }, me.timeout );
+                me.timeoutId = setTimeout(function () {
+                    me.abort(true);
+                }, me.timeout);
 
-                me.xhr.send( data );
+                me.xhr.send(data);
 
                 return me.deferred.promise;
             },
             abort: function ( timedOut ) {
                 var me = this;
-                me.deferred.reject( Boolean( timedOut ) );
+                me.deferred.reject(Boolean(timedOut));
             }
         }
     };
-} );
+});

@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-require( [
+require([
     'xs.lang.Type',
     'xs.lang.List',
     'xs.lang.Object'
@@ -16,9 +16,9 @@ require( [
 
     'use strict';
 
-    module( 'xs.lang.Object' );
+    module('xs.lang.Object');
 
-    test( 'extend', function () {
+    test('extend', function () {
         //init test data
         var a = {a: 1};
         var b = {b: 1};
@@ -28,20 +28,20 @@ require( [
             b: b,
             c: c,
             d: 1,
-            e: xs.clone( a )
+            e: xs.clone(a)
         };
 
         //extend
-        xs.extend( x, {a: b}, 3, [
+        xs.extend(x, {a: b}, 3, [
             4,
             5
-        ], {b: 1}, {e: a} );
+        ], {b: 1}, {e: a});
 
         //check replacements
-        strictEqual( x.a, b );
-        strictEqual( x.b, 1 );
-        strictEqual( x.c, c );
-        strictEqual( x.d, 1 );
-        strictEqual( x.e, a );
-    } );
-} );
+        strictEqual(x.a, b);
+        strictEqual(x.b, 1);
+        strictEqual(x.c, c);
+        strictEqual(x.d, 1);
+        strictEqual(x.e, a);
+    });
+});

@@ -2,7 +2,7 @@
 
     //framework shorthand
     var xs = root[ns];
-    xs.define( ns + '.draw.Color', function () {
+    xs.define(ns + '.draw.Color', function () {
         var Color = function () {
             this.red = 0;
             this.green = 0;
@@ -53,8 +53,7 @@
         };
 
         var tryRgbArray = function ( value ) {
-            if ( !xs.isArray( value ) || !xs.isNumeric( value[0] ) || !xs.isNumeric( value[1] ) ||
-                !xs.isNumeric( value[2] ) ) {
+            if ( !xs.isArray(value) || !xs.isNumeric(value[0]) || !xs.isNumeric(value[1]) || !xs.isNumeric(value[2]) ) {
                 return false;
             }
 
@@ -71,14 +70,14 @@
             color.red = value[0];
             color.green = value[1];
             color.blue = value[2];
-            xs.isNumeric( value[3] ) && (color.alpha = +value[3]);
+            xs.isNumeric(value[3]) && (color.alpha = +value[3]);
 
             return color;
         };
 
         var tryRgbObject = function ( value ) {
-            if ( !xs.isObject( value ) || !xs.isNumeric( value.red ) || !xs.isNumeric( value.green ) ||
-                !xs.isNumeric( value.blue ) ) {
+            if ( !xs.isObject(value) || !xs.isNumeric(value.red) || !xs.isNumeric(value.green) ||
+                !xs.isNumeric(value.blue) ) {
                 return false;
             }
 
@@ -96,13 +95,13 @@
             color.red = value.red;
             color.green = value.green;
             color.blue = value.blue;
-            xs.isNumeric( value.alpha ) && (color.alpha = +value.alpha);
+            xs.isNumeric(value.alpha) && (color.alpha = +value.alpha);
 
             return color;
         };
 
         var tryRgbList = function ( red, green, blue, alpha ) {
-            if ( !xs.isNumeric( red ) || !xs.isNumeric( green ) || !xs.isNumeric( blue ) ) {
+            if ( !xs.isNumeric(red) || !xs.isNumeric(green) || !xs.isNumeric(blue) ) {
                 return false;
             }
 
@@ -119,14 +118,14 @@
             color.red = red;
             color.green = green;
             color.blue = blue;
-            xs.isNumeric( alpha ) && (color.alpha = +alpha);
+            xs.isNumeric(alpha) && (color.alpha = +alpha);
 
             return color;
         };
 
         var rgbRe = /^(rgb[a]?)\(([0-9]{1,3}),\s?([0-9]{1,3}),\s?([0-9]{1,3})(?:,\s?([0-9\.]{1,4}))?\)$/i;
         var tryRgbCss = function ( css ) {
-            var value = rgbRe.exec( css );
+            var value = rgbRe.exec(css);
             if ( !value ) {
                 return false;
             }
@@ -139,14 +138,13 @@
             color.red = red;
             color.green = green;
             color.blue = blue;
-            type === 'rgba' && xs.isNumeric( alpha ) && (color.alpha = alpha > 1 ? 1 : alpha < 0 ? 0 : alpha);
+            type === 'rgba' && xs.isNumeric(alpha) && (color.alpha = alpha > 1 ? 1 : alpha < 0 ? 0 : alpha);
 
             return color;
         };
 
         var tryHslArray = function ( value ) {
-            if ( !xs.isArray( value ) || !xs.isNumeric( value[0] ) || !xs.isNumeric( value[1] ) ||
-                !xs.isNumeric( value[2] ) ) {
+            if ( !xs.isArray(value) || !xs.isNumeric(value[0]) || !xs.isNumeric(value[1]) || !xs.isNumeric(value[2]) ) {
                 return false;
             }
 
@@ -163,14 +161,14 @@
             color.hue = value[0];
             color.saturation = value[1];
             color.lightness = value[2];
-            xs.isNumeric( value[3] ) && (color.alpha = +value[3]);
+            xs.isNumeric(value[3]) && (color.alpha = +value[3]);
 
             return color;
         };
 
         var tryHslObject = function ( value ) {
-            if ( !xs.isObject( value ) || !xs.isNumeric( value.hue ) || !xs.isNumeric( value.saturation ) ||
-                !xs.isNumeric( value.lightness ) ) {
+            if ( !xs.isObject(value) || !xs.isNumeric(value.hue) || !xs.isNumeric(value.saturation) ||
+                !xs.isNumeric(value.lightness) ) {
                 return false;
             }
 
@@ -188,13 +186,13 @@
             color.hue = value.hue;
             color.saturation = value.saturation;
             color.lightness = value.lightness;
-            xs.isNumeric( value.alpha ) && (color.alpha = +value.alpha);
+            xs.isNumeric(value.alpha) && (color.alpha = +value.alpha);
 
             return color;
         };
 
         var tryHslList = function ( hue, saturation, lightness, alpha ) {
-            if ( !xs.isNumeric( hue ) || !xs.isNumeric( saturation ) || !xs.isNumeric( lightness ) ) {
+            if ( !xs.isNumeric(hue) || !xs.isNumeric(saturation) || !xs.isNumeric(lightness) ) {
                 return false;
             }
 
@@ -211,14 +209,14 @@
             color.hue = hue;
             color.saturation = saturation;
             color.lightness = lightness;
-            xs.isNumeric( alpha ) && (color.alpha = +alpha);
+            xs.isNumeric(alpha) && (color.alpha = +alpha);
 
             return color;
         };
 
         var hslRe = /^(hsl[a]?)\(([0-9]{1,3}),\s?([0-9]{1,3})%,\s?([0-9]{1,3})%(?:,\s?([0-9\.]{1,4}))?\)$/i;
         var tryHslCss = function ( css ) {
-            var value = hslRe.exec( css );
+            var value = hslRe.exec(css);
             if ( !value ) {
                 return false;
             }
@@ -232,33 +230,33 @@
             color.hue = hue;
             color.saturation = saturation;
             color.lightness = lightness;
-            type === 'hsla' && xs.isNumeric( alpha ) && (color.alpha = alpha > 1 ? 1 : alpha < 0 ? 0 : alpha);
+            type === 'hsla' && xs.isNumeric(alpha) && (color.alpha = alpha > 1 ? 1 : alpha < 0 ? 0 : alpha);
 
             return color;
         };
 
         var hexRe = /^#(?:([0-9a-fA-F]{3})|([0-9a-fA-F]{6}))$/i;
         var tryHex = function ( hex ) {
-            if ( !hexRe.test( hex ) ) {
+            if ( !hexRe.test(hex) ) {
                 return false;
             }
             //get hex color value
-            hex = hex.substr( 1 );
+            hex = hex.substr(1);
 
             var color = new Color();
             if ( hex.length == 3 ) {
                 hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
             }
-            color.red = parseInt( hex.substr( 0, 2 ), 16 );
-            color.green = parseInt( hex.substr( 2, 2 ), 16 );
-            color.blue = parseInt( hex.substr( 4, 2 ), 16 );
+            color.red = parseInt(hex.substr(0, 2), 16);
+            color.green = parseInt(hex.substr(2, 2), 16);
+            color.blue = parseInt(hex.substr(4, 2), 16);
 
             return color;
         };
 
         var tryName = function ( name ) {
             var color = knownColors[name];
-            return color ? xs.extend( new Color(), color ) : false;
+            return color ? xs.extend(new Color(), color) : false;
         };
 
         /**
@@ -270,7 +268,7 @@
             var hue = color.hue, saturation = color.saturation, lightness = color.lightness;
 
             if ( saturation == 0 ) {
-                color.red = color.green = color.blue = Math.ceil( lightness * 255 );
+                color.red = color.green = color.blue = Math.ceil(lightness * 255);
                 return color;
             }
 
@@ -283,17 +281,17 @@
 
             p = 2 * lightness - q;
 
-            color.red = Math.ceil( hue2rgb( p, q, hue + 120 ) * 255 );
-            color.green = Math.ceil( hue2rgb( p, q, hue ) * 255 );
-            color.blue = Math.ceil( hue2rgb( p, q, hue - 120 ) * 255 );
+            color.red = Math.ceil(hue2rgb(p, q, hue + 120) * 255);
+            color.green = Math.ceil(hue2rgb(p, q, hue) * 255);
+            color.blue = Math.ceil(hue2rgb(p, q, hue - 120) * 255);
 
             return color;
         };
         var toHsl = function ( color ) {
-            var range = 255, red = color.red, green = color.green, blue = color.blue, max = Math.max( red, green, blue ), min = Math.min( red, green, blue );
+            var range = 255, red = color.red, green = color.green, blue = color.blue, max = Math.max(red, green, blue), min = Math.min(red, green, blue);
 
             color.hue = color.saturation = 0;
-            color.lightness = +(((max + min) / (2 * range)).toFixed( 2 ));
+            color.lightness = +(((max + min) / (2 * range)).toFixed(2));
 
             if ( max == min ) {// achromatic
                 return color;
@@ -311,9 +309,9 @@
                     color.hue = (red - green) / diff + 4;
                     break;
             }
-            color.hue = Math.round( 60 * color.hue );
+            color.hue = Math.round(60 * color.hue);
 
-            color.saturation = +((diff / (range - Math.abs( range - max - min ))).toFixed( 2 ));
+            color.saturation = +((diff / (range - Math.abs(range - max - min))).toFixed(2));
             return color;
         };
         /**
@@ -324,47 +322,47 @@
         var toCSS = function ( color, options ) {
             options || (options = {});
             //default options
-            xs.Object.defaults( options, {
+            xs.Object.defaults(options, {
                 name: true,
                 hex: true,
                 model: 'rgb',
                 alpha: true
-            } );
+            });
 
             if ( options.name ) {
-                var name = xs.Object.find( knownColors, function ( known ) {
-                    if ( known.hasOwnProperty( 'red' ) && known.red !== color.red ) {
+                var name = xs.Object.find(knownColors, function ( known ) {
+                    if ( known.hasOwnProperty('red') && known.red !== color.red ) {
                         return false;
                     }
-                    if ( known.hasOwnProperty( 'green' ) && known.green !== color.green ) {
+                    if ( known.hasOwnProperty('green') && known.green !== color.green ) {
                         return false;
                     }
-                    if ( known.hasOwnProperty( 'blue' ) && known.blue !== color.blue ) {
+                    if ( known.hasOwnProperty('blue') && known.blue !== color.blue ) {
                         return false;
                     }
-                    return !(known.hasOwnProperty( 'alpha' ) && known.alpha !== color.alpha);
+                    return !(known.hasOwnProperty('alpha') && known.alpha !== color.alpha);
 
-                } );
+                });
                 if ( name ) {
-                    return xs.Object.keyOf( knownColors, name );
+                    return xs.Object.keyOf(knownColors, name);
                 }
             }
 
             if ( options.hex ) {
-                var red = color.red.toString( 16 ), green = color.green.toString( 16 ), blue = color.blue.toString( 16 );
+                var red = color.red.toString(16), green = color.green.toString(16), blue = color.blue.toString(16);
                 return '#' + (red.length == 1 ? '0' + red : red) + (green.length == 1 ? '0' + green : green) +
                     (blue.length == 1 ? '0' + blue : blue);
             }
 
             var info;
-            if ( options.model.toLowerCase().substr( 0, 3 ) == 'rgb' ) {
-                info = xs.Object.pick( color, 'red', 'green', 'blue', 'alpha' );
-                return xs.translate( options.alpha ? 'rgba(red, green, blue, alpha)' : 'rgb(red, green, blue)', info );
+            if ( options.model.toLowerCase().substr(0, 3) == 'rgb' ) {
+                info = xs.Object.pick(color, 'red', 'green', 'blue', 'alpha');
+                return xs.translate(options.alpha ? 'rgba(red, green, blue, alpha)' : 'rgb(red, green, blue)', info);
             } else {
-                info = xs.Object.pick( color, 'hue', 'saturation', 'lightness', 'alpha' );
+                info = xs.Object.pick(color, 'hue', 'saturation', 'lightness', 'alpha');
                 info.saturation *= 100;
                 info.lightness *= 100;
-                return xs.translate( options.alpha ? 'hsla(hue, saturation%, lightness%, alpha)' : 'hsl(hue, saturation%, lightness%)', info );
+                return xs.translate(options.alpha ? 'hsla(hue, saturation%, lightness%, alpha)' : 'hsl(hue, saturation%, lightness%)', info);
             }
         };
 
@@ -377,24 +375,24 @@
          * 'hsla(0-360,0-100%,0-100%,[0].[0-9]+)'
          */
         var fromCSS = function ( value ) {
-            var name = tryName( value );
+            var name = tryName(value);
             if ( name ) {
-                return toHsl( name );
+                return toHsl(name);
             }
 
-            var hex = tryHex( value );
+            var hex = tryHex(value);
             if ( hex ) {
-                return toHsl( hex );
+                return toHsl(hex);
             }
 
-            var rgb = tryRgbCss( value );
+            var rgb = tryRgbCss(value);
             if ( rgb ) {
-                return toHsl( rgb );
+                return toHsl(rgb);
             }
 
-            var hsl = tryHslCss( value );
+            var hsl = tryHslCss(value);
             if ( hsl ) {
-                return toRgb( hsl );
+                return toRgb(hsl);
             }
             return false;
         };
@@ -405,19 +403,19 @@
          * r,g,b,a
          */
         var fromRgb = function () {
-            var args = xs.Array.clone( arguments ), len = args.length, info = args[0], color;
+            var args = xs.Array.clone(arguments), len = args.length, info = args[0], color;
 
             if ( len == 1 ) {
-                if ( xs.isArray( info ) ) {
-                    color = tryRgbArray( info );
-                    return color ? toHsl( color ) : color;
+                if ( xs.isArray(info) ) {
+                    color = tryRgbArray(info);
+                    return color ? toHsl(color) : color;
                 } else {
-                    color = tryRgbObject( info );
-                    return color ? toHsl( color ) : color;
+                    color = tryRgbObject(info);
+                    return color ? toHsl(color) : color;
                 }
             } else {
-                color = tryRgbList.apply( this, args );
-                return color ? toHsl( color ) : color;
+                color = tryRgbList.apply(this, args);
+                return color ? toHsl(color) : color;
             }
         };
 
@@ -427,33 +425,33 @@
          * h,s,l,a
          */
         var fromHsl = function () {
-            var args = xs.Array.clone( arguments ), len = args.length, info = args[0], color;
+            var args = xs.Array.clone(arguments), len = args.length, info = args[0], color;
 
             if ( len == 1 ) {
-                if ( xs.isArray( info ) ) {
-                    color = tryHslArray( info );
-                    return color ? toRgb( color ) : color;
+                if ( xs.isArray(info) ) {
+                    color = tryHslArray(info);
+                    return color ? toRgb(color) : color;
                 } else {
-                    color = tryHslObject( info );
-                    return color ? toRgb( color ) : color;
+                    color = tryHslObject(info);
+                    return color ? toRgb(color) : color;
                 }
             } else {
-                color = tryHslList.apply( this, args );
-                return color ? toRgb( color ) : color;
+                color = tryHslList.apply(this, args);
+                return color ? toRgb(color) : color;
             }
         };
 
         var parse = function () {
             var args = arguments, len = args.length, info = args[0];
 
-            if ( len == 1 && xs.isString( info ) ) {
-                return fromCSS( info );
+            if ( len == 1 && xs.isString(info) ) {
+                return fromCSS(info);
             }
-            var hsl = fromHsl.apply( this, args );
+            var hsl = fromHsl.apply(this, args);
             if ( hsl ) {
                 return hsl;
             } else {
-                var rgb = fromRgb.apply( this, args );
+                var rgb = fromRgb.apply(this, args);
                 return rgb ? rgb : new Color();
             }
         };
@@ -461,27 +459,27 @@
         var sync = function ( from ) {
             var me = this;
             var color = {
-                red: me.__get( 'red' ),
-                green: me.__get( 'green' ),
-                blue: me.__get( 'blue' ),
-                hue: me.__get( 'hue' ),
-                saturation: me.__get( 'saturation' ),
-                lightness: me.__get( 'lightness' )
+                red: me.__get('red'),
+                green: me.__get('green'),
+                blue: me.__get('blue'),
+                hue: me.__get('hue'),
+                saturation: me.__get('saturation'),
+                lightness: me.__get('lightness')
             };
 
             if ( from == 'rgb' ) {
-                toHsl( color );
+                toHsl(color);
             } else {
-                toRgb( color );
+                toRgb(color);
             }
 
-            me.__set( 'red', color.red );
-            me.__set( 'green', color.green );
-            me.__set( 'blue', color.blue );
-            me.__set( 'hue', color.hue );
-            me.__set( 'saturation', color.saturation );
-            me.__set( 'lightness', color.lightness );
-            me.trigger( 'change' );
+            me.__set('red', color.red);
+            me.__set('green', color.green);
+            me.__set('blue', color.blue);
+            me.__set('hue', color.hue);
+            me.__set('saturation', color.saturation);
+            me.__set('lightness', color.lightness);
+            me.trigger('change');
         };
 
         return {
@@ -496,20 +494,20 @@
                     toRgb: toRgb,
                     toHsl: toHsl,
                     fromRgb: function () {
-                        var color = fromRgb.apply( this, arguments );
-                        return color ? xs.create( ns + '.draw.Color', color ) : color;
+                        var color = fromRgb.apply(this, arguments);
+                        return color ? xs.create(ns + '.draw.Color', color) : color;
                     },
                     fromHsl: function () {
-                        var color = fromHsl.apply( this, arguments );
-                        return color ? xs.create( ns + '.draw.Color', color ) : color;
+                        var color = fromHsl.apply(this, arguments);
+                        return color ? xs.create(ns + '.draw.Color', color) : color;
                     },
                     fromCSS: function () {
-                        var color = fromCSS.apply( this, arguments );
-                        return color ? xs.create( ns + '.draw.Color', color ) : color;
+                        var color = fromCSS.apply(this, arguments);
+                        return color ? xs.create(ns + '.draw.Color', color) : color;
                     },
                     from: function () {
-                        var color = parse.apply( this, arguments );
-                        return color ? xs.create( ns + '.draw.Color', color ) : color;
+                        var color = parse.apply(this, arguments);
+                        return color ? xs.create(ns + '.draw.Color', color) : color;
                     }
                 }
             },
@@ -526,137 +524,137 @@
             constructor: function () {
                 var me = this, color = arguments[0];
                 //if given as color
-                if ( (color instanceof Color) || (color = parse.apply( me, arguments )) ) {
-                    me.__set( 'red', color.red );
-                    me.__set( 'green', color.green );
-                    me.__set( 'blue', color.blue );
-                    me.__set( 'hue', color.hue );
-                    me.__set( 'saturation', color.saturation );
-                    me.__set( 'lightness', color.lightness );
-                    me.__set( 'alpha', color.alpha );
+                if ( (color instanceof Color) || (color = parse.apply(me, arguments)) ) {
+                    me.__set('red', color.red);
+                    me.__set('green', color.green);
+                    me.__set('blue', color.blue);
+                    me.__set('hue', color.hue);
+                    me.__set('saturation', color.saturation);
+                    me.__set('lightness', color.lightness);
+                    me.__set('alpha', color.alpha);
                 } else {
-                    me.__set( 'red', 0 );
-                    me.__set( 'green', 0 );
-                    me.__set( 'blue', 0 );
-                    me.__set( 'hue', 0 );
-                    me.__set( 'saturation', 0 );
-                    me.__set( 'lightness', 0 );
-                    me.__set( 'alpha', 1 );
+                    me.__set('red', 0);
+                    me.__set('green', 0);
+                    me.__set('blue', 0);
+                    me.__set('hue', 0);
+                    me.__set('saturation', 0);
+                    me.__set('lightness', 0);
+                    me.__set('alpha', 1);
                 }
-                me.mixins.observable.constructor.call( me );
+                me.mixins.observable.constructor.call(me);
             },
             properties: {
                 red: {
                     set: function ( value ) {
                         var me = this;
-                        if ( !xs.isNumeric( value ) ) {
+                        if ( !xs.isNumeric(value) ) {
                             return;
                         }
 
                         value = +value;
-                        if ( value < 0 || value > 255 || value == me.__get( 'red' ) ) {
+                        if ( value < 0 || value > 255 || value == me.__get('red') ) {
                             return;
                         }
 
-                        this.__set( 'red', value );
-                        sync.call( me, 'rgb' );
+                        this.__set('red', value);
+                        sync.call(me, 'rgb');
                     }
                 },
                 green: {
                     set: function ( value ) {
                         var me = this;
-                        if ( !xs.isNumeric( value ) ) {
+                        if ( !xs.isNumeric(value) ) {
                             return;
                         }
 
                         value = +value;
-                        if ( value < 0 || value > 255 || value == me.__get( 'green' ) ) {
+                        if ( value < 0 || value > 255 || value == me.__get('green') ) {
                             return;
                         }
 
-                        this.__set( 'green', value );
-                        sync.call( me, 'rgb' );
+                        this.__set('green', value);
+                        sync.call(me, 'rgb');
                     }
                 },
                 blue: {
                     set: function ( value ) {
                         var me = this;
-                        if ( !xs.isNumeric( value ) ) {
+                        if ( !xs.isNumeric(value) ) {
                             return;
                         }
 
                         value = +value;
-                        if ( value < 0 || value > 255 || value == me.__get( 'blue' ) ) {
+                        if ( value < 0 || value > 255 || value == me.__get('blue') ) {
                             return;
                         }
 
-                        this.__set( 'blue', value );
-                        sync.call( me, 'rgb' );
+                        this.__set('blue', value);
+                        sync.call(me, 'rgb');
                     }
                 },
                 hue: {
                     set: function ( value ) {
                         var me = this;
-                        if ( !xs.isNumeric( value ) ) {
+                        if ( !xs.isNumeric(value) ) {
                             return;
                         }
 
                         value = +value;
-                        if ( value < 0 || value > 360 || value == me.__get( 'hue' ) ) {
+                        if ( value < 0 || value > 360 || value == me.__get('hue') ) {
                             return;
                         }
 
-                        this.__set( 'hue', value );
-                        sync.call( me, 'hsl' );
+                        this.__set('hue', value);
+                        sync.call(me, 'hsl');
                     }
                 },
                 saturation: {
                     set: function ( value ) {
                         var me = this;
-                        if ( !xs.isNumeric( value ) ) {
+                        if ( !xs.isNumeric(value) ) {
                             return;
                         }
 
                         value = +value;
-                        if ( value < 0 || value > 1 || value == me.__get( 'saturation' ) ) {
+                        if ( value < 0 || value > 1 || value == me.__get('saturation') ) {
                             return;
                         }
 
-                        this.__set( 'saturation', value );
-                        sync.call( me, 'hsl' );
+                        this.__set('saturation', value);
+                        sync.call(me, 'hsl');
                     }
                 },
                 lightness: {
                     set: function ( value ) {
                         var me = this;
-                        if ( !xs.isNumeric( value ) ) {
+                        if ( !xs.isNumeric(value) ) {
                             return;
                         }
 
                         value = +value;
-                        if ( value < 0 || value > 1 || value == me.__get( 'lightness' ) ) {
+                        if ( value < 0 || value > 1 || value == me.__get('lightness') ) {
                             return;
                         }
 
-                        this.__set( 'lightness', value );
-                        sync.call( me, 'hsl' );
+                        this.__set('lightness', value);
+                        sync.call(me, 'hsl');
                     }
                 },
                 alpha: {
                     set: function ( value ) {
                         var me = this;
-                        if ( !xs.isNumeric( value ) ) {
+                        if ( !xs.isNumeric(value) ) {
                             return;
                         }
 
                         value = +value;
-                        if ( value < 0 || value > 1 || value == me.__get( 'alpha' ) ) {
+                        if ( value < 0 || value > 1 || value == me.__get('alpha') ) {
                             return;
                         }
 
-                        this.__set( 'alpha', value );
+                        this.__set('alpha', value);
 
-                        me.trigger( 'change' );
+                        me.trigger('change');
                     }
                 }
             },
@@ -668,8 +666,8 @@
                     var me = this;
                     options || (options = {});
 
-                    xs.isString( options.format ) || (options.format = 'object');
-                    xs.isBoolean( options.alpha ) || (options.alpha = true);
+                    xs.isString(options.format) || (options.format = 'object');
+                    xs.isBoolean(options.alpha) || (options.alpha = true);
 
                     if ( options.format.toLowerCase() == 'array' ) {
                         if ( options.alpha ) {
@@ -688,9 +686,9 @@
                         }
                     } else {
                         if ( options.alpha ) {
-                            return xs.Object.pick( me, 'red', 'green', 'blue', 'alpha' );
+                            return xs.Object.pick(me, 'red', 'green', 'blue', 'alpha');
                         } else {
-                            return xs.Object.pick( me, 'red', 'green', 'blue' );
+                            return xs.Object.pick(me, 'red', 'green', 'blue');
                         }
                     }
                 },
@@ -701,8 +699,8 @@
                     var me = this;
                     options || (options = {});
 
-                    xs.isString( options.format ) || (options.format = 'object');
-                    xs.isBoolean( options.alpha ) || (options.alpha = true);
+                    xs.isString(options.format) || (options.format = 'object');
+                    xs.isBoolean(options.alpha) || (options.alpha = true);
 
                     if ( options.format.toLowerCase() == 'array' ) {
                         if ( options.alpha ) {
@@ -721,9 +719,9 @@
                         }
                     } else {
                         if ( options.alpha ) {
-                            return xs.Object.pick( me, 'hue', 'saturation', 'lightness', 'alpha' );
+                            return xs.Object.pick(me, 'hue', 'saturation', 'lightness', 'alpha');
                         } else {
-                            return xs.Object.pick( me, 'hue', 'saturation', 'lightness' );
+                            return xs.Object.pick(me, 'hue', 'saturation', 'lightness');
                         }
                     }
                 },
@@ -732,9 +730,9 @@
                  * @param options
                  */
                 toCss: function ( options ) {
-                    return toCSS.call( this, this, options );
+                    return toCSS.call(this, this, options);
                 }
             }
         }
-    } );
-})( window, 'xs' );
+    });
+})(window, 'xs');

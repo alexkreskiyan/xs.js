@@ -4,11 +4,11 @@ function speed ( fn, n ) {
         fn();
     }
     var duration = Date.now() - start;
-    console.log( 'duration: ', duration, 'ms for ', n, 'operations' );
-    console.log( 'median: ', duration / n, 'ms per operation' );
-    console.log( 'mark: about', n / duration, 'operation per ms' );
+    console.log('duration: ', duration, 'ms for ', n, 'operations');
+    console.log('median: ', duration / n, 'ms per operation');
+    console.log('mark: about', n / duration, 'operation per ms');
 }
-module( 'xs.Environment' );
+module('xs.Environment');
 var userAgents = [
     [
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/34.0.1847.116 Chrome/34.0.1847.116 Safari/537.36',
@@ -551,36 +551,36 @@ var userAgents = [
         }
     ]
 ];
-xs.Array.each( userAgents, function ( testCase ) {
-    test( 'env detection for ' + testCase[0], function () {
+xs.Array.each(userAgents, function ( testCase ) {
+    test('env detection for ' + testCase[0], function () {
         var userAgent = testCase[0];
         var std = testCase[1];
         var env = xs.env;
 
-        navigator.__defineGetter__( 'userAgent', function () {
+        navigator.__defineGetter__('userAgent', function () {
             return userAgent; // customized user agent
-        } );
+        });
 
         env.detect();
 
         //browser detection test
-        strictEqual( env.browser.name, std.browser.name, 'browser name: ' + std.browser.name );
-        strictEqual( env.browser.major, std.browser.major, 'browser major: ' + std.browser.major );
-        strictEqual( env.browser.minor, std.browser.minor, 'browser minor: ' + std.browser.minor );
-        strictEqual( env.browser.version, std.browser.version, 'browser version: ' + std.browser.version );
+        strictEqual(env.browser.name, std.browser.name, 'browser name: ' + std.browser.name);
+        strictEqual(env.browser.major, std.browser.major, 'browser major: ' + std.browser.major);
+        strictEqual(env.browser.minor, std.browser.minor, 'browser minor: ' + std.browser.minor);
+        strictEqual(env.browser.version, std.browser.version, 'browser version: ' + std.browser.version);
         //engine detection test
-        strictEqual( env.engine.name, std.engine.name, 'engine name: ' + std.engine.name );
-        strictEqual( env.engine.major, std.engine.major, 'engine major: ' + std.engine.major );
-        strictEqual( env.engine.minor, std.engine.minor, 'engine minor: ' + std.engine.minor );
-        strictEqual( env.engine.version, std.engine.version, 'engine version: ' + std.engine.version );
+        strictEqual(env.engine.name, std.engine.name, 'engine name: ' + std.engine.name);
+        strictEqual(env.engine.major, std.engine.major, 'engine major: ' + std.engine.major);
+        strictEqual(env.engine.minor, std.engine.minor, 'engine minor: ' + std.engine.minor);
+        strictEqual(env.engine.version, std.engine.version, 'engine version: ' + std.engine.version);
         //os detection test
-        strictEqual( env.os.name, std.os.name, 'os name: ' + std.os.name );
-        strictEqual( env.os.version, std.os.version, 'os version: ' + std.os.version );
+        strictEqual(env.os.name, std.os.name, 'os name: ' + std.os.name);
+        strictEqual(env.os.version, std.os.version, 'os version: ' + std.os.version);
         //device detection test
-        strictEqual( env.device.model, std.device.model, 'device model: ' + std.device.model );
-        strictEqual( env.device.type, std.device.type, 'device type: ' + std.device.type );
-        strictEqual( env.device.vendor, std.device.vendor, 'device vendor: ' + std.device.vendor );
+        strictEqual(env.device.model, std.device.model, 'device model: ' + std.device.model);
+        strictEqual(env.device.type, std.device.type, 'device type: ' + std.device.type);
+        strictEqual(env.device.vendor, std.device.vendor, 'device vendor: ' + std.device.vendor);
         //engine detection test
-        strictEqual( env.cpu.architecture, std.cpu.architecture, 'cpu architecture: ' + std.cpu.architecture );
-    } );
-} );
+        strictEqual(env.cpu.architecture, std.cpu.architecture, 'cpu architecture: ' + std.cpu.architecture);
+    });
+});

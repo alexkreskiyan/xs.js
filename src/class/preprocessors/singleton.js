@@ -21,10 +21,10 @@
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.preprocessors.add( 'singleton', function () {
+    xs.Class.preprocessors.add('singleton', function () {
 
         return true;
     }, function ( Class, descriptor ) {
         Class.descriptor.singleton = !!descriptor.singleton;
-    } );
-})( window, 'xs' );
+    });
+})(window, 'xs');

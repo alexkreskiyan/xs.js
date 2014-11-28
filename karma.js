@@ -2,7 +2,7 @@
 // Generated on Sun Nov 02 2014 21:57:39 GMT+0300 (MSK)
 
 module.exports = function ( config ) {
-    config.set( {
+    config.set({
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
@@ -76,5 +76,5 @@ module.exports = function ( config ) {
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: false
-    } );
+    });
 };

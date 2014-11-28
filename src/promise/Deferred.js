@@ -32,7 +32,7 @@
  */
 'use strict';
 
-xs.define( 'xs.promise.Deferred', {
+xs.define('xs.promise.Deferred', {
     requires: ['xs.promise.Resolver'],
     static: {
         methods: {
@@ -44,8 +44,8 @@ xs.define( 'xs.promise.Deferred', {
              */
             resolve: function ( value ) {
                 var deferred;
-                deferred = xs.create( 'xs.promise.Deferred' );
-                deferred.resolve( value );
+                deferred = xs.create('xs.promise.Deferred');
+                deferred.resolve(value);
                 return deferred.promise;
             },
             /**
@@ -56,14 +56,14 @@ xs.define( 'xs.promise.Deferred', {
              */
             reject: function ( reason ) {
                 var deferred;
-                deferred = xs.create( 'xs.promise.Deferred' );
-                deferred.reject( reason );
+                deferred = xs.create('xs.promise.Deferred');
+                deferred.reject(reason);
                 return deferred.promise;
             }
         }
     },
     constructor: function () {
-        this.resolver = xs.create( 'xs.promise.Resolver' );
+        this.resolver = xs.create('xs.promise.Resolver');
         this.promise = this.resolver.promise;
     },
     properties: {
@@ -85,7 +85,7 @@ xs.define( 'xs.promise.Deferred', {
          * @param {*} value The resolved future value.
          */
         resolve: function ( value ) {
-            return this.resolver.resolve( value );
+            return this.resolver.resolve(value);
         },
         /**
          * Rejects this Deferred's {@link xs.promise.Promise Promise} with the specified reason.
@@ -93,7 +93,7 @@ xs.define( 'xs.promise.Deferred', {
          * @param {Error} reason The rejection reason.
          */
         reject: function ( reason ) {
-            return this.resolver.reject( reason );
+            return this.resolver.reject(reason);
         },
         /**
          * Updates progress for this Deferred's {@link xs.promise.Promise Promise}, if it is still pending.
@@ -101,7 +101,7 @@ xs.define( 'xs.promise.Deferred', {
          * @param {*} progress The progress value.
          */
         progress: function ( progress ) {
-            return this.resolver.progress( progress );
+            return this.resolver.progress(progress);
         }
     }
-} );
+});

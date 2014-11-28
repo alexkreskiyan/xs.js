@@ -24,33 +24,33 @@
  * Requests made by this class are asynchronous, and will return immediately. No data from the server will be available
  * to the statement immediately following the {@link #request} call.
  */
-xs.define( 'xs.data.Connection', function () {
+xs.define('xs.data.Connection', function () {
 
     var prepareRequest = function ( request ) {
-        if ( xs.is( request, xs.request.Request ) ) {
+        if ( xs.is(request, xs.request.Request) ) {
             return request;
-        } else if ( xs.isObject( request ) ) {
-            return xs.create( 'xs.request.Request', request );
+        } else if ( xs.isObject(request) ) {
+            return xs.create('xs.request.Request', request);
         }
     };
 
     var setOptions = function ( conn, options ) {
         options = options || {};
         //set temporary connection params
-        if ( xs.isDefined( options.request ) ) {
-            var request = prepareRequest( options.request );
+        if ( xs.isDefined(options.request) ) {
+            var request = prepareRequest(options.request);
             options.request = request ? request : conn.request;
 
         } else {
             options.request = conn.request;
         }
-        options.async = xs.isDefined( options.async ) ? Boolean( options.async ) : conn.async;
-        options.cache = xs.isDefined( options.cache ) ? Boolean( options.cache ) : conn.cache;
+        options.async = xs.isDefined(options.async) ? Boolean(options.async) : conn.async;
+        options.cache = xs.isDefined(options.cache) ? Boolean(options.cache) : conn.cache;
         options.cacheParam = conn.cacheParam;
-        options.credentials = xs.isDefined( options.credentials ) ? Boolean( options.credentials ) : conn.credentials;
-        options.timeout = xs.isDefined( options.timeout ) &&
-            xs.isNumeric( options.timeout ) ? Number( options.timeout ) : conn.timeout;
-        options.autoAbort = xs.isDefined( options.autoAbort ) ? Boolean( options.autoAbort ) : conn.autoAbort;
+        options.credentials = xs.isDefined(options.credentials) ? Boolean(options.credentials) : conn.credentials;
+        options.timeout =
+                xs.isDefined(options.timeout) && xs.isNumeric(options.timeout) ? Number(options.timeout) : conn.timeout;
+        options.autoAbort = xs.isDefined(options.autoAbort) ? Boolean(options.autoAbort) : conn.autoAbort;
         options.headers = conn.headers;
         options.postContentType = conn.postContentType;
         return options;
@@ -166,7 +166,7 @@ xs.define( 'xs.data.Connection', function () {
             var me = this;
             config = config || {};
             //set pending requests
-            me.__set( 'pending', [] );
+            me.__set('pending', []);
             //set connection params
             me.request = config.request;
             me.async = config.async;
@@ -190,55 +190,55 @@ xs.define( 'xs.data.Connection', function () {
              */
             request: {
                 set: function ( request ) {
-                    request = prepareRequest( request );
-                    request && this.__set( 'request', request );
+                    request = prepareRequest(request);
+                    request && this.__set('request', request);
                 }
             },
             async: {
                 set: function ( async ) {
-                    this.__set( 'async', Boolean( async ) );
+                    this.__set('async', Boolean(async));
                 },
                 default: true
             },
             cache: {
                 set: function ( cache ) {
-                    this.__set( 'cache', Boolean( cache ) );
+                    this.__set('cache', Boolean(cache));
                 },
                 default: true
             },
             cacheParam: {
                 set: function ( cacheParam ) {
-                    this.__set( 'cacheParam', String( cacheParam ) );
+                    this.__set('cacheParam', String(cacheParam));
                 },
                 default: 'xsNoCache'
             },
             credentials: {
                 set: function ( credentials ) {
-                    this.__set( 'credentials', Boolean( credentials ) );
+                    this.__set('credentials', Boolean(credentials));
                 },
                 default: false
             },
             timeout: {
                 set: function ( timeout ) {
-                    xs.isNumeric( timeout ) && (this.__set( 'timeout', Number( timeout ) ));
+                    xs.isNumeric(timeout) && (this.__set('timeout', Number(timeout)));
                 },
                 default: 30000
             },
             autoAbort: {
                 set: function ( autoAbort ) {
-                    this.__set( 'autoAbort', Boolean( autoAbort ) );
+                    this.__set('autoAbort', Boolean(autoAbort));
                 },
                 default: false
             },
             headers: {
                 set: function ( headers ) {
-                    xs.isObject( headers ) || (headers = {});
-                    this.__set( 'headers', headers );
+                    xs.isObject(headers) || (headers = {});
+                    this.__set('headers', headers);
                 }
             },
             postContentType: {
                 set: function ( postContentType ) {
-                    xs.isString( postContentType ) && this.__set( 'postContentType', postContentType );
+                    xs.isString(postContentType) && this.__set('postContentType', postContentType);
                 },
                 default: 'application/x-www-form-urlencoded; charset=UTF-8'
             }
@@ -251,15 +251,15 @@ xs.define( 'xs.data.Connection', function () {
                 var me = this;
 
                 //set request options
-                options = setOptions( me, options );
+                options = setOptions(me, options);
                 //create request object
-                var request = createRequest( options );
-                setupHeaders( request );
-                setRequestParams( request );
-                setRequestEventHandlers( request );
-                openRequest( request );
+                var request = createRequest(options);
+                setupHeaders(request);
+                setRequestParams(request);
+                setRequestEventHandlers(request);
+                openRequest(request);
                 //return request sending result
-                return sendRequest( me, request );
+                return sendRequest(me, request);
             },
             request: function ( options ) {
                 options = options || {};
@@ -267,7 +267,7 @@ xs.define( 'xs.data.Connection', function () {
                     me.username, password = options.password || me.password ||
                     '', async, requestOptions, request, headers, xhr;
 
-                requestOptions = me.setOptions( options, scope );
+                requestOptions = me.setOptions(options, scope);
 
                 // if autoAbort is set, cancel the current transactions
                 if ( options.autoAbort || me.autoAbort ) {
@@ -276,11 +276,11 @@ xs.define( 'xs.data.Connection', function () {
 
                 // create a connection object
                 async = options.async !== false ? (options.async || me.async) : false;
-                xhr = me.openRequest( options, requestOptions, async, username, password );
+                xhr = me.openRequest(options, requestOptions, async, username, password);
 
                 // XDR doesn't support setting any headers
                 if ( !me.isXdr ) {
-                    headers = me.setupHeaders( xhr, options, requestOptions.data );
+                    headers = me.setupHeaders(xhr, options, requestOptions.data);
                 }
 
                 // create the transaction object
@@ -290,28 +290,28 @@ xs.define( 'xs.data.Connection', function () {
                     headers: headers,
                     options: options,
                     async: async,
-                    timeout: setTimeout( function () {
+                    timeout: setTimeout(function () {
                         request.timedout = true;
-                        me.abort( request );
-                    }, options.timeout || me.timeout )
+                        me.abort(request);
+                    }, options.timeout || me.timeout)
                 };
-                async && (request.deferred = xs.create( 'xs.promise.Deferred' ));
+                async && (request.deferred = xs.create('xs.promise.Deferred'));
 
                 me.requests[request.id] = request;
                 me.latestId = request.id;
                 // bind our stateChange listener
                 if ( async && !me.isXdr ) {
-                    xhr.onreadystatechange = xs.bind( me.stateChange, me, [request] );
+                    xhr.onreadystatechange = xs.bind(me.stateChange, me, [request]);
                 }
 
                 if ( me.isXdr ) {
-                    me.processXdrRequest( request, xhr );
+                    me.processXdrRequest(request, xhr);
                 }
 
                 // start the request!
-                xhr.send( requestOptions.data );
+                xhr.send(requestOptions.data);
                 if ( !async ) {
-                    return me.complete( request );
+                    return me.complete(request);
                 }
 
                 //return promise
@@ -330,14 +330,14 @@ xs.define( 'xs.data.Connection', function () {
 
                 request.contentType = request.options.contentType || me.defaultXdrContentType;
 
-                xhr.onload = xs.bind( me.stateChange, me, [
+                xhr.onload = xs.bind(me.stateChange, me, [
                     request,
                     true
-                ] );
-                xhr.onerror = xhr.ontimeout = xs.bind( me.stateChange, me, [
+                ]);
+                xhr.onerror = xhr.ontimeout = xs.bind(me.stateChange, me, [
                     request,
                     false
-                ] );
+                ]);
             },
 
             /**
@@ -366,24 +366,24 @@ xs.define( 'xs.data.Connection', function () {
                 var me = this, params = options.params || {}, url = options.url || me.url, method;
 
                 // allow params to be a method that returns the params object
-                if ( xs.isFunction( params ) ) {
-                    params = params.call( scope, options );
+                if ( xs.isFunction(params) ) {
+                    params = params.call(scope, options);
                 }
 
                 // allow url to be a method that returns the actual url
-                if ( xs.isFunction( url ) ) {
-                    url = url.call( scope, options );
+                if ( xs.isFunction(url) ) {
+                    url = url.call(scope, options);
                 }
 
                 //<debug>
                 if ( !url ) {
-                    throw new Error( 'No URL specified' );
+                    throw new Error('No URL specified');
                 }
                 //</debug>
 
                 // make sure params are a url encoded string and include any extraParams if specified
-                if ( xs.isObject( params ) ) {
-                    params = xs.toQueryString( params, true );
+                if ( xs.isObject(params) ) {
+                    params = xs.toQueryString(params, true);
                 }
 
                 // decide the proper method for this request
@@ -391,7 +391,7 @@ xs.define( 'xs.data.Connection', function () {
 
                 // if the method is get or there is json/xml data append the params to the url
                 if ( method == 'GET' && params ) {
-                    url = xs.urlAppend( url, params );
+                    url = xs.urlAppend(url, params);
                     params = null;
                 }
 
@@ -410,8 +410,8 @@ xs.define( 'xs.data.Connection', function () {
              * @param {Object} data The data for the request
              */
             setupHeaders: function ( xhr, options, data ) {
-                var me = this, headers = xs.extend( {}, options.headers || {}, me.defaultHeaders ||
-                {} ), contentType = me.defaultPostHeader;
+                var me = this, headers = xs.extend({}, options.headers || {}, me.defaultHeaders ||
+                {}), contentType = me.defaultPostHeader;
 
                 if ( !headers['Content-Type'] && data ) {
                     headers['Content-Type'] = contentType;
@@ -421,9 +421,9 @@ xs.define( 'xs.data.Connection', function () {
                     headers['X-Requested-With'] = me.defaultXhrHeader;
                 }
                 // set up all the request headers on the xhr object
-                xs.each( headers, function ( header, name ) {
-                    xhr.setRequestHeader( name, header );
-                } );
+                xs.each(headers, function ( header, name ) {
+                    xhr.setRequestHeader(name, header);
+                });
                 return headers;
             },
 
@@ -452,15 +452,15 @@ xs.define( 'xs.data.Connection', function () {
              * @private
              */
             openRequest: function ( options, requestOptions, async, username, password ) {
-                var me = this, xhr = me.newRequest( options );
+                var me = this, xhr = me.newRequest(options);
 
                 if ( username ) {
-                    xhr.open( requestOptions.method, requestOptions.url, async, username, password );
+                    xhr.open(requestOptions.method, requestOptions.url, async, username, password);
                 } else {
                     if ( me.isXdr ) {
-                        xhr.open( requestOptions.method, requestOptions.url );
+                        xhr.open(requestOptions.method, requestOptions.url);
                     } else {
-                        xhr.open( requestOptions.method, requestOptions.url, async );
+                        xhr.open(requestOptions.method, requestOptions.url, async);
                     }
                 }
 
@@ -516,7 +516,7 @@ xs.define( 'xs.data.Connection', function () {
 
                 request = request || this.getLatest();
 
-                if ( !request || !me.isLoading( request ) ) {
+                if ( !request || !me.isLoading(request) ) {
                     return;
                 }
                 /*
@@ -527,14 +527,14 @@ xs.define( 'xs.data.Connection', function () {
                 var xhr = request.xhr;
                 xhr.onreadystatechange = null;
                 xhr.abort();
-                me.clearTimeout( request );
+                me.clearTimeout(request);
                 if ( !request.timedout ) {
                     request.aborted = true;
                 }
-                var response = me.complete( request );
-                response.ok ? request.deferred.resolve( response ) : request.deferred.reject( response.statusText );
+                var response = me.complete(request);
+                response.ok ? request.deferred.resolve(response) : request.deferred.reject(response.statusText);
 
-                me.cleanup( request );
+                me.cleanup(request);
             },
 
             /**
@@ -562,10 +562,10 @@ xs.define( 'xs.data.Connection', function () {
 
                 // Using CORS with IE doesn't support readyState so we fake it
                 if ( (request.xhr && request.xhr.readyState == 4) || me.isXdr ) {
-                    me.clearTimeout( request );
-                    var response = me.complete( request, xdrResult );
-                    response.ok ? request.deferred.resolve( response.response ) : request.deferred.reject( response.statusText );
-                    me.cleanup( request );
+                    me.clearTimeout(request);
+                    var response = me.complete(request, xdrResult);
+                    response.ok ? request.deferred.resolve(response.response) : request.deferred.reject(response.statusText);
+                    me.cleanup(request);
                 }
             },
 
@@ -575,7 +575,7 @@ xs.define( 'xs.data.Connection', function () {
              * @param {Object} request The request
              */
             clearTimeout: function ( request ) {
-                clearTimeout( request.timeout );
+                clearTimeout(request.timeout);
                 delete request.timeout;
             },
 
@@ -600,7 +600,7 @@ xs.define( 'xs.data.Connection', function () {
                 var me = this, result, success, response;
 
                 try {
-                    result = me.parseStatus( request.xhr.status );
+                    result = me.parseStatus(request.xhr.status);
                 } catch ( e ) {
                     // in some browsers we can't access the status if the readyState is not 4, so the request has failed
                     result = {
@@ -612,13 +612,13 @@ xs.define( 'xs.data.Connection', function () {
                 success = me.isXdr ? xdrResult : result.success;
 
                 if ( success ) {
-                    response = me.createResponse( request );
+                    response = me.createResponse(request);
                     //deferred here
                 } else {
                     if ( result.isException || request.aborted || request.timedout ) {
-                        response = me.createException( request );
+                        response = me.createException(request);
                     } else {
-                        response = me.createResponse( request );
+                        response = me.createResponse(request);
                     }
                     //deferred here
                 }
@@ -661,19 +661,19 @@ xs.define( 'xs.data.Connection', function () {
              * @param {Object} request
              */
             createResponse: function ( request ) {
-                var me = this, xhr = request.xhr, isXdr = me.isXdr, headers = {}, lines = isXdr ? [] : xhr.getAllResponseHeaders().replace( /\r\n/g, '\n' ).split( '\n' ), response;
+                var me = this, xhr = request.xhr, isXdr = me.isXdr, headers = {}, lines = isXdr ? [] : xhr.getAllResponseHeaders().replace(/\r\n/g, '\n').split('\n'), response;
 
-                xs.eachReverse( lines, function ( line ) {
-                    var index = line.indexOf( ':' );
+                xs.eachReverse(lines, function ( line ) {
+                    var index = line.indexOf(':');
                     if ( index < 0 ) {
                         return;
                     }
-                    var key = line.substr( 0, index ).toLowerCase();
-                    if ( line.charAt( index + 1 ) == ' ' ) {
+                    var key = line.substr(0, index).toLowerCase();
+                    if ( line.charAt(index + 1) == ' ' ) {
                         ++index;
                     }
-                    headers[key] = line.substr( index + 1 );
-                } );
+                    headers[key] = line.substr(index + 1);
+                });
 
                 request.xhr = null;
                 delete request.xhr;
@@ -693,7 +693,7 @@ xs.define( 'xs.data.Connection', function () {
                 };
 
                 if ( isXdr ) {
-                    me.processXdrResponse( response, xhr );
+                    me.processXdrResponse(response, xhr);
                 }
 
                 response.responseText = xhr.responseText;
@@ -704,7 +704,7 @@ xs.define( 'xs.data.Connection', function () {
                 xhr = null;
 
                 //parse response text
-                response.response = me.parseResponseText( response );
+                response.response = me.parseResponseText(response);
 
                 return response;
             },
@@ -718,7 +718,7 @@ xs.define( 'xs.data.Connection', function () {
                 var result;
                 //return responseText if not content-type given
                 try {
-                    result = JSON.parse( response.responseText );
+                    result = JSON.parse(response.responseText);
                 } catch ( e ) {
                     result = response.responseText;
                 }
@@ -744,4 +744,4 @@ xs.define( 'xs.data.Connection', function () {
         }
 
     }
-} );
+});

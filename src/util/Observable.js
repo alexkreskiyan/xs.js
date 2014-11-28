@@ -37,20 +37,20 @@
 
  trigger(event[string],arg1,arg2)
  */
-xs.define( 'xs.util.Observable', function () {
+xs.define('xs.util.Observable', function () {
     var unbind = function ( event, callback ) {
         var me = this;
-        me.events[event] = xs.Array.findAll( me.events[event], function ( dispatcher ) {
+        me.events[event] = xs.Array.findAll(me.events[event], function ( dispatcher ) {
             return dispatcher.callback != callback;
-        } );
+        });
     };
 
     var applyMap = function ( map ) {
         var me = this;
-        xs.Object.each( map, function ( dispatcher, event ) {
-            me.addEvent( event );
-            me.events[event].push( dispatcher );
-        } );
+        xs.Object.each(map, function ( dispatcher, event ) {
+            me.addEvent(event);
+            me.events[event].push(dispatcher);
+        });
     };
 
     return {
@@ -66,43 +66,43 @@ xs.define( 'xs.util.Observable', function () {
         methods: {
             trigger: function ( event ) {
                 var me = this;
-                if ( !me.hasEvent( event ) ) {
+                if ( !me.hasEvent(event) ) {
                     return;
                 }
-                var args = xs.Array.clone( arguments ).slice( 1 );
-                xs.Array.has( me.suspendedEvents, event ) || xs.Array.each( me.events[event], function ( dispatcher ) {
-                    dispatcher.handler.apply( null, args );
-                } );
+                var args = xs.Array.clone(arguments).slice(1);
+                xs.Array.has(me.suspendedEvents, event) || xs.Array.each(me.events[event], function ( dispatcher ) {
+                    dispatcher.handler.apply(null, args);
+                });
             },
             on: function ( event, callback, context ) {
                 var me = this, eventMap = {}, scope;
 
                 //build eventMap
-                if ( xs.isObject( event ) ) {
+                if ( xs.isObject(event) ) {
                     scope = callback || me;
-                    eventMap = xs.Object.map( event, function ( handler ) {
+                    eventMap = xs.Object.map(event, function ( handler ) {
                         return {
                             handler: function () {
-                                handler.apply( scope, arguments );
+                                handler.apply(scope, arguments);
                             },
                             callback: handler
                         };
-                    } );
-                } else if ( xs.isArray( event ) ) {
+                    });
+                } else if ( xs.isArray(event) ) {
                     scope = context || me;
-                    xs.Array.each( event, function ( name ) {
+                    xs.Array.each(event, function ( name ) {
                         eventMap[name] = {
                             handler: function () {
-                                callback.apply( scope, arguments );
+                                callback.apply(scope, arguments);
                             },
                             callback: callback
                         };
-                    } );
-                } else if ( xs.isString( event ) ) {
+                    });
+                } else if ( xs.isString(event) ) {
                     scope = context || me;
                     eventMap[event] = {
                         handler: function () {
-                            callback.apply( scope, arguments );
+                            callback.apply(scope, arguments);
                         },
                         callback: callback
                     };
@@ -111,40 +111,40 @@ xs.define( 'xs.util.Observable', function () {
                 }
 
                 //apply eventMap
-                applyMap.call( me, eventMap );
+                applyMap.call(me, eventMap);
             },
             once: function ( event, callback, context ) {
                 var me = this, eventMap = {}, scope;
 
                 //build eventMap
-                if ( xs.isObject( event ) ) {
+                if ( xs.isObject(event) ) {
                     scope = callback || me;
-                    eventMap = xs.Object.map( event, function ( handler, event ) {
+                    eventMap = xs.Object.map(event, function ( handler, event ) {
                         return {
                             handler: function () {
-                                unbind.call( me, event, handler );
-                                handler.apply( scope, arguments );
+                                unbind.call(me, event, handler);
+                                handler.apply(scope, arguments);
                             },
                             callback: handler
                         };
-                    } );
-                } else if ( xs.isArray( event ) ) {
+                    });
+                } else if ( xs.isArray(event) ) {
                     scope = context || me;
-                    xs.Array.each( event, function ( event ) {
+                    xs.Array.each(event, function ( event ) {
                         eventMap[event] = {
                             handler: function () {
-                                unbind.call( me, event, callback );
-                                callback.apply( scope, arguments );
+                                unbind.call(me, event, callback);
+                                callback.apply(scope, arguments);
                             },
                             callback: callback
                         };
-                    } );
-                } else if ( xs.isString( event ) ) {
+                    });
+                } else if ( xs.isString(event) ) {
                     scope = context || me;
                     eventMap[event] = {
                         handler: function () {
-                            unbind.call( me, event, callback );
-                            callback.apply( scope, arguments );
+                            unbind.call(me, event, callback);
+                            callback.apply(scope, arguments);
                         },
                         callback: callback
                     };
@@ -153,18 +153,18 @@ xs.define( 'xs.util.Observable', function () {
                 }
 
                 //apply eventMap
-                applyMap.call( me, eventMap );
+                applyMap.call(me, eventMap);
             },
             suspend: function ( event ) {
                 var me = this;
-                me.suspendedEvents = xs.Array.unique( xs.Array.union( me.suspendedEvents, event ) );
+                me.suspendedEvents = xs.Array.unique(xs.Array.union(me.suspendedEvents, event));
             },
             resume: function ( event ) {
                 var me = this;
-                xs.isArray( event ) || (event = [event]);
-                me.suspendedEvents = xs.Array.findAll( me.suspendedEvents, function ( name ) {
-                    return !xs.Array.has( event, name );
-                } );
+                xs.isArray(event) || (event = [event]);
+                me.suspendedEvents = xs.Array.findAll(me.suspendedEvents, function ( name ) {
+                    return !xs.Array.has(event, name);
+                });
             },
             off: function ( event, callback ) {
                 var me = this;
@@ -174,35 +174,35 @@ xs.define( 'xs.util.Observable', function () {
                 }
 
                 if ( arguments.length == 1 ) {
-                    if ( xs.isObject( event ) ) {
-                        xs.Object.each( event, function ( callback, event ) {
-                            unbind.call( me, event, callback );
-                        } );
+                    if ( xs.isObject(event) ) {
+                        xs.Object.each(event, function ( callback, event ) {
+                            unbind.call(me, event, callback);
+                        });
                     } else {
-                        me.deleteEvent( event );
+                        me.deleteEvent(event);
                     }
                     return;
                 }
 
-                if ( xs.isArray( event ) ) {
-                    xs.Array.each( event, function ( event ) {
-                        unbind.call( me, event, callback );
-                    } );
+                if ( xs.isArray(event) ) {
+                    xs.Array.each(event, function ( event ) {
+                        unbind.call(me, event, callback);
+                    });
                 } else {
-                    unbind.call( me, event, callback );
+                    unbind.call(me, event, callback);
                 }
             },
             listen: function ( target, event, callback, context ) {
-                target.on.apply( target, xs.Array.clone( arguments ).slice( 1 ) );
+                target.on.apply(target, xs.Array.clone(arguments).slice(1));
             },
             listenOnce: function ( target, event, callback, context ) {
-                target.once.apply( target, xs.Array.clone( arguments ).slice( 1 ) );
+                target.once.apply(target, xs.Array.clone(arguments).slice(1));
             },
             ignore: function ( target, event, callback ) {
-                target.off.apply( target, xs.Array.clone( arguments ).slice( 1 ) );
+                target.off.apply(target, xs.Array.clone(arguments).slice(1));
             },
             hasEvent: function ( name ) {
-                return this.events.hasOwnProperty( name );
+                return this.events.hasOwnProperty(name);
             },
             addEvent: function ( name ) {
                 var me = this;
@@ -216,4 +216,4 @@ xs.define( 'xs.util.Observable', function () {
             }
         }
     };
-} );
+});

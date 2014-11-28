@@ -21,7 +21,7 @@
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      */
-    xs.Class.preprocessors.add( 'properties', function () {
+    xs.Class.preprocessors.add('properties', function () {
 
         return true;
     }, function ( Class, descriptor ) {
@@ -35,8 +35,8 @@
         var inherited = Class.parent.descriptor.properties;
 
         //extend properties with inherited
-        if ( xs.isObject( inherited ) ) {
-            xs.extend( properties, inherited );
+        if ( xs.isObject(inherited) ) {
+            xs.extend(properties, inherited);
         }
 
 
@@ -44,15 +44,15 @@
         var own = descriptor.properties;
 
         //get own properties from raw descriptor and apply
-        if ( xs.isObject( own ) ) {
+        if ( xs.isObject(own) ) {
 
             //prepare them
-            xs.each( own, function ( value, name, list ) {
-                list[name] = xs.Attribute.property.prepare( name, value );
-            } );
+            xs.each(own, function ( value, name, list ) {
+                list[name] = xs.Attribute.property.prepare(name, value);
+            });
 
             //extend properties with own ones
-            xs.extend( properties, own );
+            xs.extend(properties, own);
         }
 
 
@@ -63,15 +63,15 @@
         //apply all accessed properties
         var prototype = Class.prototype;
 
-        xs.each( properties, function ( descriptor, name ) {
+        xs.each(properties, function ( descriptor, name ) {
 
             //save property to prototype
-            xs.Attribute.property.define( prototype, name, descriptor );
+            xs.Attribute.property.define(prototype, name, descriptor);
 
             //set undefined for assigned properties
-            if ( xs.hasKey( descriptor, 'value' ) ) {
+            if ( xs.hasKey(descriptor, 'value') ) {
                 prototype[name] = undefined;
             }
-        } );
-    } );
-})( window, 'xs' );
+        });
+    });
+})(window, 'xs');

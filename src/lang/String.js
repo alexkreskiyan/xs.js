@@ -51,14 +51,14 @@
          * @return {String} translated string
          */
         me.translate = function ( string, replaces ) {
-            xs.each( replaces, function ( to, from ) {
-                string = string.split( from ).join( to );
-            } );
+            xs.each(replaces, function ( to, from ) {
+                string = string.split(from).join(to);
+            });
 
             return string;
         };
     });
 
     //extend xs with string
-    xs.extend( xs, string );
-})( window, 'xs' );
+    xs.extend(xs, string);
+})(window, 'xs');
