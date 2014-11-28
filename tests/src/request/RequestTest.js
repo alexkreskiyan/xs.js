@@ -85,8 +85,7 @@ test('constructor', function () {
     req = xs.create('xs.request.Request');
     //url
     strictEqual(xs.is(req.url, xs.uri.Url), true, 'default url created');
-    strictEqual(req.url.toString(), loc.protocol + '//' + loc.host + (loc.port ? ':' + loc.port : '') + loc.pathname +
-        loc.hash, 'current url assigned');
+    strictEqual(req.url.toString(), loc.protocol + '//' + loc.host + (loc.port ? ':' + loc.port : '') + loc.pathname + loc.hash, 'current url assigned');
     //method
     strictEqual(req.method, 'get', 'default method set');
     //params
@@ -167,11 +166,9 @@ test('url', function () {
     var loc = xs.location;
     var req = xs.create('xs.request.Request');
     req.url = 'demo?x';
-    strictEqual(req.url.toString(), loc.protocol + '//' + loc.host + (loc.port ? ':' + loc.port : '') +
-        '/demo?x=', 'correct value set');
+    strictEqual(req.url.toString(), loc.protocol + '//' + loc.host + (loc.port ? ':' + loc.port : '') + '/demo?x=', 'correct value set');
     req.url = null;
-    strictEqual(req.url.toString(), loc.protocol + '//' + loc.host + (loc.port ? ':' + loc.port : '') + loc.pathname +
-        '?x=' + loc.hash, 'incorrect value ignored');
+    strictEqual(req.url.toString(), loc.protocol + '//' + loc.host + (loc.port ? ':' + loc.port : '') + loc.pathname + '?x=' + loc.hash, 'incorrect value ignored');
 });
 test('params', function () {
     var req = xs.create('xs.request.Request');

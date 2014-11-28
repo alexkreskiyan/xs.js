@@ -36,8 +36,7 @@
         var inherits = Class.parent.descriptor;
 
         //constructor
-        desc.constructor =
-                desc.hasOwnProperty('constructor') && xs.isFunction(desc.constructor) ? desc.constructor : undefined;
+        desc.constructor = desc.hasOwnProperty('constructor') && xs.isFunction(desc.constructor) ? desc.constructor : undefined;
         //const
         desc.const = xs.isObject(desc.const) ? desc.const : {};
         //static properties and methods

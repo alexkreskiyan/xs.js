@@ -386,8 +386,7 @@ xs.define('xs.request.Request', function () {
                     } else if ( !xs.is(url, xs.uri.Url) ) {
                         var loc = xs.location;
                         url = xs.create('xs.uri.Url', {
-                            url: loc.protocol + '//' + loc.host + (loc.port ? ':' + loc.port : '') + loc.pathname +
-                                loc.search + loc.hash
+                            url: loc.protocol + '//' + loc.host + (loc.port ? ':' + loc.port : '') + loc.pathname + loc.search + loc.hash
                         });
                     }
                     me.__set('url', url);

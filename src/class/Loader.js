@@ -345,6 +345,9 @@
             };
         });
 
+        var queue = new (function () {
+
+        })
         //        var callbacks = [];
         me.require = function ( name, callback ) {
 

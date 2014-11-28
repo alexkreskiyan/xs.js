@@ -76,8 +76,7 @@
         };
 
         var tryRgbObject = function ( value ) {
-            if ( !xs.isObject(value) || !xs.isNumeric(value.red) || !xs.isNumeric(value.green) ||
-                !xs.isNumeric(value.blue) ) {
+            if ( !xs.isObject(value) || !xs.isNumeric(value.red) || !xs.isNumeric(value.green) || !xs.isNumeric(value.blue) ) {
                 return false;
             }
 
@@ -85,8 +84,7 @@
             value.green = +value.green;
             value.blue = +value.blue;
 
-            if ( value.red < 0 || value.red > 255 || value.green < 0 || value.green > 255 || value.blue < 0 ||
-                value.blue > 255 ) {
+            if ( value.red < 0 || value.red > 255 || value.green < 0 || value.green > 255 || value.blue < 0 || value.blue > 255 ) {
                 return false;
             }
 
@@ -167,8 +165,7 @@
         };
 
         var tryHslObject = function ( value ) {
-            if ( !xs.isObject(value) || !xs.isNumeric(value.hue) || !xs.isNumeric(value.saturation) ||
-                !xs.isNumeric(value.lightness) ) {
+            if ( !xs.isObject(value) || !xs.isNumeric(value.hue) || !xs.isNumeric(value.saturation) || !xs.isNumeric(value.lightness) ) {
                 return false;
             }
 
@@ -176,8 +173,7 @@
             value.saturation = +value.saturation;
             value.lightness = +value.lightness;
 
-            if ( value.hue < 0 || value.hue > 360 || value.saturation < 0 || value.saturation > 1 ||
-                value.lightness < 0 || value.lightness > 1 ) {
+            if ( value.hue < 0 || value.hue > 360 || value.saturation < 0 || value.saturation > 1 || value.lightness < 0 || value.lightness > 1 ) {
                 return false;
             }
 
@@ -220,8 +216,7 @@
             if ( !value ) {
                 return false;
             }
-            var color = new Color(), type = value[1], hue = +value[2], saturation = +value[3] /
-                100, lightness = +value[4] / 100, alpha = +value[5];
+            var color = new Color(), type = value[1], hue = +value[2], saturation = +value[3] / 100, lightness = +value[4] / 100, alpha = +value[5];
 
             if ( hue < 0 || hue > 360 || saturation < 0 || saturation > 1 || lightness < 0 || lightness > 1 ) {
                 return false;
@@ -350,8 +345,7 @@
 
             if ( options.hex ) {
                 var red = color.red.toString(16), green = color.green.toString(16), blue = color.blue.toString(16);
-                return '#' + (red.length == 1 ? '0' + red : red) + (green.length == 1 ? '0' + green : green) +
-                    (blue.length == 1 ? '0' + blue : blue);
+                return '#' + (red.length == 1 ? '0' + red : red) + (green.length == 1 ? '0' + green : green) + (blue.length == 1 ? '0' + blue : blue);
             }
 
             var info;

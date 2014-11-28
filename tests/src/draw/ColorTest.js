@@ -105,10 +105,8 @@ test('conversion', function () {
     xs.Array.each(tests, function ( test ) {
         var rgb = xs.Object.clone(test.rgb);
         var hsl = xs.Object.clone(test.hsl);
-        strictEqual(JSON.stringify(xs.Object.pick(Color.toHsl(rgb), 'hue', 'saturation', 'lightness')), JSON.stringify(test.hsl), 'test convertion to HSL for ' +
-            test.name);
-        strictEqual(JSON.stringify(xs.Object.pick(Color.toRgb(hsl), 'red', 'green', 'blue')), JSON.stringify(test.rgb), 'test convertion to RGB for ' +
-            test.name);
+        strictEqual(JSON.stringify(xs.Object.pick(Color.toHsl(rgb), 'hue', 'saturation', 'lightness')), JSON.stringify(test.hsl), 'test convertion to HSL for ' + test.name);
+        strictEqual(JSON.stringify(xs.Object.pick(Color.toRgb(hsl), 'red', 'green', 'blue')), JSON.stringify(test.rgb), 'test convertion to RGB for ' + test.name);
     });
 });
 test('fromRgb factory', function () {
@@ -123,16 +121,13 @@ test('fromRgb factory', function () {
         test.green,
         test.blue
     ]);
-    strictEqual(JSON.stringify(xs.Object.pick(color, 'red', 'green', 'blue')), JSON.stringify(test), 'test rgb factory for ' +
-        test.name + ' creating from array');
+    strictEqual(JSON.stringify(xs.Object.pick(color, 'red', 'green', 'blue')), JSON.stringify(test), 'test rgb factory for ' + test.name + ' creating from array');
     //object
     color = Color.fromRgb(test);
-    strictEqual(JSON.stringify(xs.Object.pick(color, 'red', 'green', 'blue')), JSON.stringify(test), 'test rgb factory for ' +
-        test.name + ' creating from object');
+    strictEqual(JSON.stringify(xs.Object.pick(color, 'red', 'green', 'blue')), JSON.stringify(test), 'test rgb factory for ' + test.name + ' creating from object');
     //list
     color = Color.fromRgb(test.red, test.green, test.blue);
-    strictEqual(JSON.stringify(xs.Object.pick(color, 'red', 'green', 'blue')), JSON.stringify(test), 'test rgb factory for ' +
-        test.name + ' creating from list');
+    strictEqual(JSON.stringify(xs.Object.pick(color, 'red', 'green', 'blue')), JSON.stringify(test), 'test rgb factory for ' + test.name + ' creating from list');
 });
 test('fromHsl factory', function () {
     var Color = xs.draw.Color;
@@ -146,16 +141,13 @@ test('fromHsl factory', function () {
         test.saturation,
         test.lightness
     ]);
-    strictEqual(JSON.stringify(xs.Object.pick(color, 'hue', 'saturation', 'lightness')), JSON.stringify(test), 'test hsl factory for ' +
-        test.name + ' creating from array');
+    strictEqual(JSON.stringify(xs.Object.pick(color, 'hue', 'saturation', 'lightness')), JSON.stringify(test), 'test hsl factory for ' + test.name + ' creating from array');
     //object
     color = Color.fromHsl(test);
-    strictEqual(JSON.stringify(xs.Object.pick(color, 'hue', 'saturation', 'lightness')), JSON.stringify(test), 'test hsl factory for ' +
-        test.name + ' creating from object');
+    strictEqual(JSON.stringify(xs.Object.pick(color, 'hue', 'saturation', 'lightness')), JSON.stringify(test), 'test hsl factory for ' + test.name + ' creating from object');
     //list
     color = Color.fromHsl(test.hue, test.saturation, test.lightness);
-    strictEqual(JSON.stringify(xs.Object.pick(color, 'hue', 'saturation', 'lightness')), JSON.stringify(test), 'test hsl factory for ' +
-        test.name + ' creating from list');
+    strictEqual(JSON.stringify(xs.Object.pick(color, 'hue', 'saturation', 'lightness')), JSON.stringify(test), 'test hsl factory for ' + test.name + ' creating from list');
 });
 test('fromCss factory', function () {
     var Color = xs.draw.Color, test;
@@ -312,8 +304,7 @@ test('fromCss factory', function () {
     };
 
     xs.Object.each(successTests, function ( test, css ) {
-        strictEqual(JSON.stringify(xs.Object.pick(Color.fromCSS(css), test.fields)), JSON.stringify(test.value), 'test css factory for ' +
-            css);
+        strictEqual(JSON.stringify(xs.Object.pick(Color.fromCSS(css), test.fields)), JSON.stringify(test.value), 'test css factory for ' + css);
     });
 
     var failedTests = [
@@ -354,16 +345,13 @@ test('factory', function () {
         test.green,
         test.blue
     ]);
-    strictEqual(JSON.stringify(xs.Object.pick(color, 'red', 'green', 'blue')), JSON.stringify(test), 'test rgb factory for ' +
-        test.name + ' creating from array');
+    strictEqual(JSON.stringify(xs.Object.pick(color, 'red', 'green', 'blue')), JSON.stringify(test), 'test rgb factory for ' + test.name + ' creating from array');
     //object
     color = Color.from(test);
-    strictEqual(JSON.stringify(xs.Object.pick(color, 'red', 'green', 'blue')), JSON.stringify(test), 'test rgb factory for ' +
-        test.name + ' creating from object');
+    strictEqual(JSON.stringify(xs.Object.pick(color, 'red', 'green', 'blue')), JSON.stringify(test), 'test rgb factory for ' + test.name + ' creating from object');
     //list
     color = Color.from(test.red, test.green, test.blue);
-    strictEqual(JSON.stringify(xs.Object.pick(color, 'red', 'green', 'blue')), JSON.stringify(test), 'test rgb factory for ' +
-        test.name + ' creating from list');
+    strictEqual(JSON.stringify(xs.Object.pick(color, 'red', 'green', 'blue')), JSON.stringify(test), 'test rgb factory for ' + test.name + ' creating from list');
 
     //hsl section
     test = tests.pop().hsl;
@@ -374,16 +362,13 @@ test('factory', function () {
         test.saturation,
         test.lightness
     ]);
-    strictEqual(JSON.stringify(xs.Object.pick(color, 'hue', 'saturation', 'lightness')), JSON.stringify(test), 'test hsl factory for ' +
-        test.name + ' creating from array');
+    strictEqual(JSON.stringify(xs.Object.pick(color, 'hue', 'saturation', 'lightness')), JSON.stringify(test), 'test hsl factory for ' + test.name + ' creating from array');
     //object
     color = Color.from(test);
-    strictEqual(JSON.stringify(xs.Object.pick(color, 'hue', 'saturation', 'lightness')), JSON.stringify(test), 'test hsl factory for ' +
-        test.name + ' creating from object');
+    strictEqual(JSON.stringify(xs.Object.pick(color, 'hue', 'saturation', 'lightness')), JSON.stringify(test), 'test hsl factory for ' + test.name + ' creating from object');
     //list
     color = Color.from(test.hue, test.saturation, test.lightness);
-    strictEqual(JSON.stringify(xs.Object.pick(color, 'hue', 'saturation', 'lightness')), JSON.stringify(test), 'test hsl factory for ' +
-        test.name + ' creating from list');
+    strictEqual(JSON.stringify(xs.Object.pick(color, 'hue', 'saturation', 'lightness')), JSON.stringify(test), 'test hsl factory for ' + test.name + ' creating from list');
 
     //css factory section
     var successTests = {
@@ -538,8 +523,7 @@ test('factory', function () {
     };
 
     xs.Object.each(successTests, function ( test, css ) {
-        strictEqual(JSON.stringify(xs.Object.pick(Color.from(css), test.fields)), JSON.stringify(test.value), 'test css factory for ' +
-            css);
+        strictEqual(JSON.stringify(xs.Object.pick(Color.from(css), test.fields)), JSON.stringify(test.value), 'test css factory for ' + css);
     });
 
     var failedTests = [

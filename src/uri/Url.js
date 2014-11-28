@@ -34,8 +34,7 @@ xs.define('xs.uri.Url', function () {
     var protocolRe = new RegExp('^(' + protocols.join('|') + '):\\\/\\\/');
     var hostRe = new RegExp('^(?:' + protocols.join('|') + '):\\\/\\\/([А-яЁё\\\w0-9\\\.-]+)');
     var portRe = new RegExp('^(?:' + protocols.join('|') + '):\\\/\\\/(?:[А-яЁё\\\w0-9\\\.-]+)(?::(\\\d+))');
-    var pathReFull = new RegExp('^(?:(?:(?:' + protocols.join('|') +
-        '):\\\/\\\/)(?:[А-яЁё\\\w\\\.-]+)(?::\\\d+)?)?\\\/([^?^#]+)');
+    var pathReFull = new RegExp('^(?:(?:(?:' + protocols.join('|') + '):\\\/\\\/)(?:[А-яЁё\\\w\\\.-]+)(?::\\\d+)?)?\\\/([^?^#]+)');
     var pathReRelative = new RegExp('^([^?^#]+)');
     var paramsRe = /\?([^#\?]+)/;
     var hashRe = /#(.+)/;

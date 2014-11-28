@@ -309,8 +309,7 @@ test('4. Constructor: inheritance', function () {
             }
         }
     });
-    strictEqual(inherited.Child.descriptor.constructor ===
-        inherited.Parent.descriptor.constructor, true, 'constructor is inherited correctly');
+    strictEqual(inherited.Child.descriptor.constructor === inherited.Parent.descriptor.constructor, true, 'constructor is inherited correctly');
     var parent = xs.create('inherited.Parent', {
         a: 2,
         b: 3

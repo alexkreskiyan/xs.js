@@ -19,8 +19,7 @@ server.listen(3001);
 
 function display_form ( request, response ) {
     response.writeHead(200, {'Content-Type': 'text/html'});
-    response.write('<form action="/upload" method="post" enctype="multipart/form-data">' +
-        '<input type="file" name="upload-file">' + '<input type="submit" value="Upload">' + '</form>');
+    response.write('<form action="/upload" method="post" enctype="multipart/form-data">' + '<input type="file" name="upload-file">' + '<input type="submit" value="Upload">' + '</form>');
     response.end();
 }
 

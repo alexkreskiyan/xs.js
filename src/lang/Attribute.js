@@ -244,9 +244,7 @@
             }
 
             //if any descriptor fields specified - it is descriptor
-            return _defined(descriptor, 'get') || _defined(descriptor, 'set') || _defined(descriptor, 'value') ||
-                _defined(descriptor, 'writable') || _defined(descriptor, 'configurable') ||
-                _defined(descriptor, 'enumerable');
+            return _defined(descriptor, 'get') || _defined(descriptor, 'set') || _defined(descriptor, 'value') || _defined(descriptor, 'writable') || _defined(descriptor, 'configurable') || _defined(descriptor, 'enumerable');
         };
 
         /**
@@ -413,10 +411,8 @@
 
                 //get|set priority
                 if ( descriptor.get || descriptor.set ) {
-                    descriptor.get ||
-                    eval('descriptor.get = function () { \'use strict\'; return this.privates.' + name + ';}');
-                    descriptor.set ||
-                    eval('descriptor.set = function (value) { \'use strict\'; this.privates.' + name + ' = value;}');
+                    descriptor.get || eval('descriptor.get = function () { \'use strict\'; return this.privates.' + name + ';}');
+                    descriptor.set || eval('descriptor.set = function (value) { \'use strict\'; this.privates.' + name + ' = value;}');
                 } else {
                     _defined(descriptor, 'value') || (descriptor.value = undefined);
                     descriptor.writable = true;

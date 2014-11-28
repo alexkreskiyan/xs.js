@@ -1577,12 +1577,10 @@ require([
         };
 
         strictEqual(xs.deleteAll(x, 2), 2);
-        strictEqual(JSON.stringify(x), '{"a":1,"c":' + itemString + ',"d":' + itemString + ',"f":' + itemString +
-            ',"g":1}');
+        strictEqual(JSON.stringify(x), '{"a":1,"c":' + itemString + ',"d":' + itemString + ',"f":' + itemString + ',"g":1}');
 
         strictEqual(xs.deleteAll(x, 3), 0);
-        strictEqual(JSON.stringify(x), '{"a":1,"c":' + itemString + ',"d":' + itemString + ',"f":' + itemString +
-            ',"g":1}');
+        strictEqual(JSON.stringify(x), '{"a":1,"c":' + itemString + ',"d":' + itemString + ',"f":' + itemString + ',"g":1}');
 
         strictEqual(xs.deleteAll(x, item), 3);
         strictEqual(JSON.stringify(x), '{"a":1,"g":1}');

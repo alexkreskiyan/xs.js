@@ -48,8 +48,7 @@ xs.define('xs.data.Connection', function () {
         options.cache = xs.isDefined(options.cache) ? Boolean(options.cache) : conn.cache;
         options.cacheParam = conn.cacheParam;
         options.credentials = xs.isDefined(options.credentials) ? Boolean(options.credentials) : conn.credentials;
-        options.timeout =
-                xs.isDefined(options.timeout) && xs.isNumeric(options.timeout) ? Number(options.timeout) : conn.timeout;
+        options.timeout = xs.isDefined(options.timeout) && xs.isNumeric(options.timeout) ? Number(options.timeout) : conn.timeout;
         options.autoAbort = xs.isDefined(options.autoAbort) ? Boolean(options.autoAbort) : conn.autoAbort;
         options.headers = conn.headers;
         options.postContentType = conn.postContentType;
@@ -263,9 +262,7 @@ xs.define('xs.data.Connection', function () {
             },
             request: function ( options ) {
                 options = options || {};
-                var me = this, scope = options.scope || window, username = options.username ||
-                    me.username, password = options.password || me.password ||
-                    '', async, requestOptions, request, headers, xhr;
+                var me = this, scope = options.scope || window, username = options.username || me.username, password = options.password || me.password || '', async, requestOptions, request, headers, xhr;
 
                 requestOptions = me.setOptions(options, scope);
 
@@ -410,8 +407,7 @@ xs.define('xs.data.Connection', function () {
              * @param {Object} data The data for the request
              */
             setupHeaders: function ( xhr, options, data ) {
-                var me = this, headers = xs.extend({}, options.headers || {}, me.defaultHeaders ||
-                {}), contentType = me.defaultPostHeader;
+                var me = this, headers = xs.extend({}, options.headers || {}, me.defaultHeaders || {}), contentType = me.defaultPostHeader;
 
                 if ( !headers['Content-Type'] && data ) {
                     headers['Content-Type'] = contentType;
