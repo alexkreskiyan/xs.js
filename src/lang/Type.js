@@ -18,7 +18,7 @@
     /**
      * xs.lang.Type is private singleton, defining basic language detection operations
      *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @private
      *

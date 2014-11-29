@@ -18,7 +18,7 @@
     /**
      * xs.lang.String is private singleton, defining basic string operations.
      *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @private
      *

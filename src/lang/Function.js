@@ -18,7 +18,7 @@
     /**
      * xs.lang.Function is private singleton, defining basic function operations.
      *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @private
      *

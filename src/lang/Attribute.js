@@ -18,7 +18,7 @@
     /**
      * xs.lang.Attribute is private singleton, providing basic attributes' operations
      *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @private
      *

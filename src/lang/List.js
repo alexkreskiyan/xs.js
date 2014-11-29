@@ -18,7 +18,7 @@
     /**
      * xs.lang.List is private singleton, defining basic list operations, for both Array and Object.
      *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @private
      *

@@ -24,7 +24,7 @@
      *
      * @class xs
      *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @singleton
      */

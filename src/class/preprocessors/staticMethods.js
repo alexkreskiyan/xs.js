@@ -19,7 +19,7 @@
      *
      * @ignore
      *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
     xs.Class.preprocessors.add('staticMethods', function () {
 

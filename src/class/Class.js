@@ -18,7 +18,7 @@
      *
      * Stack is used to store ordered list of processors
      *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @private
      *
@@ -256,7 +256,7 @@
      *         };
      *     });
      *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @class xs.Class
      *

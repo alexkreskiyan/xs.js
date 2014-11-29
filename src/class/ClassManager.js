@@ -16,7 +16,7 @@
     /**
      * xs.ClassManager is core class, that is used to manage created classes
      *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @class xs.ClassManager
      *

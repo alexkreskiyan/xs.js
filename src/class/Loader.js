@@ -8,64 +8,6 @@
  License: http://annium.com/contact
 
  */
-/**
- * @class xs.Loader
- * @singleton
- * @markdown
-
- configs:
- - cache
- - cacheParam
- - preserveScripts - ??
- - scriptChainDelay - ?? may be usefull to add always
- - scriptCharset - ?? Is it useful?
-
- paths:
- - add
- - has
- - delete
- - get (returns path by classname) if no variants specified/ returns path from current folder
-
- params:
- - queue - loading list
- - history - loaded classes list - will be private. Will have states:
- * loaded (file contains acquired class)
- * failed (load failed)
- * missing (file was loaded, but acquired class is missing in that file)
-
- methods:
- - require - main method, accepts:
- * names - class name or array of class names
- * callback - function, called when all those classes are loaded
-
-
- 1. Load is async:
- - cls1 ... clsN
- - [cls1 ... clsN]
- : deferred
- 3. xs.create => sync.load
- 4. disableCache & disableCacheParam - global properties
- 5. preserveScripts - leave scripts in document
- 6. garbageCollect - prepare async script tag for garbage collection
- 7. paths - classes paths
- 8. scriptChainDelay
- 9. scriptCharset
-
- static.history - history of loaded/loading classes???
-
- getPath - gets class path
-
- setPath - as to args, or config
-
- loadScript - loads script
-
- require - requires a set of classes
-
- syncRequire
-
- queue && refreshQueue
-
- */
 (function ( root, ns ) {
 
     //framework shorthand
@@ -102,7 +44,7 @@
      *     xs.Loader.require(['my.Base', 'my.Demo'], function(Base, Demo) {
      *     });
      *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @class xs.Loader
      *
@@ -112,9 +54,334 @@
         var me = this;
 
         /**
-         * xs.Loader paths storage
+         * Name testing regular expression
          *
-         * @author Alex Kreskiyan <brutalllord@gmail.com>
+         * @ignore
+         *
+         * @type {RegExp}
+         */
+        var nameRe = /^[A-z_]{1}[A-z0-9_]*(?:\.{1}[A-z_]{1}[A-z0-9_]*)*$/;
+
+        /**
+         * Internal loaded files list
+         *
+         * @ignore
+         *
+         * @property {List}
+         */
+        var loaded = new List('loaded');
+
+        /**
+         * Internal failed files list
+         *
+         * @ignore
+         *
+         * @property {List}
+         */
+        var failed = new List('failed');
+
+        /**
+         * Requires list of classes, resolving their paths. After all files loaded, given callback is executed
+         *
+         * @method require
+         *
+         * @param {String|String[]} name class name or array of class names
+         * @param {Function} callback successful load callback
+         */
+        me.require = function ( name, callback ) {
+            var me = this;
+
+            //init loaded classes list
+            var loadList = _getLoadList.call(me, xs.isArray(name) ? name : [name]);
+
+
+            //if list is empty - handle callback
+            if ( !xs.size(loadList) ) {
+                callback();
+
+                return;
+            }
+
+            //add loadList to resolver
+            resolver.add(loadList, callback);
+
+            //add each of loadList to loader
+            xs.each(loadList, function ( path ) {
+                loader.has(path) || loader.add(path);
+            });
+        };
+
+        /**
+         * Returns list of classes to loadChecks loaded and failed lists.
+         *
+         * @ignore
+         *
+         * @method getLoadList
+         *
+         * @param {String[]} classes array with class names, that are attempted to be loaded
+         *
+         * @return {String[]} list of classes, that have to be loaded
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - class name is not string
+         * - class name has incorrect format
+         * - class was already attempted to load, but load failed - error occurred
+         */
+        function _getLoadList ( classes ) {
+            var me = this;
+            var loadList = {};
+            //process loaded and missing classes
+            xs.each(classes, function ( name ) {
+                //check, that name is string
+                if ( !xs.isString(name) ) {
+                    throw new LoaderError('loaded class name must be a string');
+                }
+
+                //check, that name matches regular expression
+                if ( !nameRe.test(name) ) {
+                    throw new LoaderError('loaded class name has incorrect format');
+                }
+
+                //resolve name with paths
+                var path = me.paths.resolve(name);
+
+                //initial suggestion is that class is not loaded yet
+                loadList[path] = false;
+
+                //if the class is already loaded - mark that in checklist
+                if ( loaded.has(path) ) {
+                    loadList[path] = true;
+                }
+
+                //if the class was already attempted to load, but load failed - error occurred
+                if ( failed.has(path) ) {
+                    throw new LoaderError('failed loading url "' + path + '"');
+                }
+            });
+
+            //return names of not loaded classes
+            return xs.keys(xs.compact(loadList));
+        }
+
+        /**
+         * File load succeed handler
+         *
+         * @ignore
+         *
+         * @method handleLoad
+         *
+         * @param {String} path
+         */
+        function _handleLoad ( path ) {
+            //add loaded path
+            loaded.add(path);
+
+            //resolve ready awaiting items
+            resolver.handle(path);
+        }
+
+        /**
+         * File load failed handler
+         *
+         * @ignore
+         *
+         * @method handleFail
+         *
+         * @param {String} path
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - failed loading url
+         */
+        function _handleFail ( path ) {
+            //add failed path
+            failed.add(path);
+
+            //throw load error
+            throw new LoaderError('failed loading url "' + path + '"');
+        }
+
+        /**
+         * Internal resolver instance, that handles all registered callbacks.
+         * As far, as all depended paths are loaded, relative callback is executed and removed from registry
+         *
+         * @ignore
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class Resolver
+         *
+         * @singleton
+         */
+        var resolver = new (function () {
+            var me = this;
+
+            /**
+             * Awaiting handlers list
+             *
+             * @type {Array}
+             */
+            var awaiting = [];
+
+            /**
+             * Adds new awaiting item, consisting of loaded paths list and ready handler
+             *
+             * @method add
+             *
+             * @param {String[]} paths loaded paths
+             * @param {Function} handler handler, that is called, when all paths are loaded
+             */
+            me.add = function ( paths, handler ) {
+                awaiting.push({
+                    paths: paths,
+                    handle: handler
+                });
+            };
+
+            /**
+             * Checks all awaiting items. Deletes path from each item's paths list. If paths list is empty - resolves item
+             *
+             * If any item from awaiting list has all paths' loaded, it's handler is called and item is removed
+             *
+             * @method handle
+             *
+             * @param {String} path
+             */
+            me.handle = function ( path ) {
+                //find resolved items
+                var resolved = xs.findAll(awaiting, function ( item ) {
+                    //item is resolved, if path delete succeeds (path was deleted) and paths are empty
+                    return xs.delete(item.paths, path) && !item.paths.length;
+                });
+
+                //handle each resolved item
+                xs.each(resolved, function ( item ) {
+                    xs.delete(awaiting, item);
+                    item.handle();
+                });
+            };
+        });
+
+        /**
+         * Internal loader instance
+         *
+         * @ignore
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class Loader
+         *
+         * @singleton
+         */
+        var loader = new (function ( handleLoad, handleFail ) {
+            var me = this;
+
+            /**
+             * Loading files list
+             *
+             * @type {Array}
+             */
+            var loading = [];
+
+            /**
+             * Add path to load
+             *
+             * @method add
+             *
+             * @param {String} path loaded path
+             *
+             * @chainable
+             */
+            me.add = function ( path ) {
+
+                //check that path was not added yet
+                if ( me.has(path) ) {
+                    throw new LoaderError('path "' + path + '" is already loading');
+                }
+
+                //register new path alias
+                loading.push(path);
+
+                //execute load
+                _load(path);
+
+                return this;
+            };
+
+            /**
+             * Checks whether loader is loading file with given path
+             *
+             * @param {String} path verified path
+             *
+             * @returns {Boolean} whether loader is loading that path
+             */
+            me.has = function ( path ) {
+                return xs.has(loading, path);
+            };
+
+            /**
+             * Internal loading function. Adds script tag for loading.
+             *
+             * Executes handleLoad on successful load end and handleFail on load error
+             *
+             * @method load
+             *
+             * @param {String} path loaded path
+             */
+            var _load = function ( path ) {
+                //create script element
+                var script = document.createElement('script');
+
+                //set path as src
+                script.src = path;
+
+                //script is loaded asynchronously, without blocking page rendering
+                script.async = true;
+
+                //add load event listener
+                script.addEventListener('load', _handleLoad);
+
+                //add error event listener
+                script.addEventListener('load', _handleFail);
+
+                //append script to head
+                document.head.appendChild(script);
+            };
+
+            /**
+             * Internal handler, that wraps external handleLoad
+             */
+            var _handleLoad = function () {
+                //remove handler after call
+                this.removeEventListener('load', _handleLoad);
+
+                //delete src from loading list
+                xs.delete(loading, this.src);
+
+                //handle load callback
+                handleLoad(this.src);
+            };
+
+            /**
+             * Internal handler, that wraps external handleFail
+             */
+            var _handleFail = function () {
+                //remove handler after call
+                this.removeEventListener('load', _handleFail);
+
+                //delete src from loading list
+                xs.delete(loading, this.src);
+
+                //handle load callback
+                handleFail(this.src);
+            };
+        })(_handleLoad, _handleFail);
+
+        /**
+         * Internal paths class
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
          *
          * @class xs.Loader.paths
          *
@@ -163,12 +430,12 @@
 
                     //check that alias was not defined yet
                     if ( me.has(alias) ) {
-                        throw new Error('Alias "' + alias + '" is already registered in xs.Loader');
+                        throw new LoaderError('alias "' + alias + '" is already registered');
                     }
 
                     //check that path is string
                     if ( !xs.isString(path) ) {
-                        throw new Error('xs.Loader path must be a string');
+                        throw new LoaderError('path must be a string');
                     }
 
                     //register new path alias
@@ -179,7 +446,7 @@
 
                 //check that pairs are given as list
                 if ( !xs.isObject(alias) ) {
-                    throw new Error('Aliases list has incorrect format');
+                    throw new LoaderError('aliases list has incorrect format');
                 }
 
                 //add each path
@@ -190,8 +457,6 @@
                 return this;
             };
 
-            //name matching regular expression
-            var nameRe = /^[A-z_]{1}[A-z0-9_]*(?:\.{1}[A-z_]{1}[A-z0-9_]*)*$/;
             /**
              * Checks whether alias is already registered in xs.Loader
              *
@@ -213,14 +478,14 @@
              * - if given alias is not a string
              */
             me.has = function ( alias ) {
-                //throw Error if alias is not string
+                //check, that alias is string
                 if ( !xs.isString(alias) ) {
-                    throw new Error('xs.Loader alias must be a string');
+                    throw new LoaderError('alias must be a string');
                 }
 
-                //check that alias matches regular expression
+                //check, that alias matches regular expression
                 if ( !nameRe.test(alias) ) {
-                    throw new Error('xs.Loader alias is given incorrectly');
+                    throw new LoaderError('alias is given incorrectly');
                 }
 
                 //return whether alias is in paths
@@ -256,7 +521,7 @@
 
                     //check that alias is registered
                     if ( !me.has(alias) ) {
-                        throw new Error('Alias "' + alias + '" is not registered in xs.Loader');
+                        throw new LoaderError('alias "' + alias + '" is not registered');
                     }
 
                     //remove alias
@@ -310,14 +575,14 @@
              * - if given class name is not a string
              */
             me.resolve = function ( name ) {
-                //throw Error if name is not string
+                //throw LoaderError if name is not string
                 if ( !xs.isString(name) ) {
-                    throw new Error('xs.Loader name must be a string');
+                    throw new LoaderError('class name must be a string');
                 }
 
                 //check that name matches regular expression
                 if ( !nameRe.test(name) ) {
-                    throw new Error('xs.Loader name is given incorrectly');
+                    throw new LoaderError('class name has incorrect format');
                 }
 
                 //most suitable alias for name
@@ -345,12 +610,102 @@
             };
         });
 
-        var queue = new (function () {
+        /**
+         * Internal list class
+         *
+         * @ignore
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class List
+         */
+        function List ( name ) {
+            var me = this;
 
-        })
-        //        var callbacks = [];
-        me.require = function ( name, callback ) {
+            /**
+             * Items storage
+             *
+             * @type {Array}
+             */
+            var list = [];
 
-        };
+            /**
+             * Store list name
+             *
+             * @type {String}
+             */
+            var listName = name;
+
+            /**
+             * Adds item to list
+             *
+             * @method add
+             *
+             * @param {String} item added item
+             *
+             * @chainable
+             */
+            me.add = function ( item ) {
+                var me = this;
+
+                //check that item is not in list
+                if ( me.has(item) ) {
+                    throw new LoaderError('class "' + item + '" is already in ' + listName + ' list');
+                }
+
+                //add item to list
+                list.push(item);
+
+                return me;
+            };
+
+            /**
+             * Checks whether list has item
+             *
+             * @param {String} item verified item
+             *
+             * @returns {Boolean}
+             */
+            me.has = function ( item ) {
+
+                return xs.has(list, item);
+            };
+
+            /**
+             * Deletes item from list
+             *
+             * @method delete
+             *
+             * @param {String} item deleted item
+             *
+             * @chainable
+             */
+            me.delete = function ( item ) {
+                var me = this;
+
+                //check that item is in list
+                if ( !me.has(item) ) {
+                    throw new LoaderError('class "' + item + '" is not in ' + listName + ' list');
+                }
+
+                //delete item from list
+                xs.delete(list, item);
+
+                return me;
+            };
+        }
+
+        /**
+         * Internal error class
+         *
+         * @ignore
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class LoaderError
+         */
+        function LoaderError ( message ) {
+            Error.call(this, 'xs.Loader :: ' + message);
+        }
     });
 })(window, 'xs');

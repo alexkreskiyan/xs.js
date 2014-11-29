@@ -18,7 +18,7 @@
     /**
      * xs.lang.Array is private singleton, defining basic Array operations.
      *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @private
      *

@@ -11,7 +11,7 @@
 /**
  * Private internal core class. All xs classes inherit xs.Base
  *
- * @author Alex Kreskiyan <brutalllord@gmail.com>
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @abstract
  *
