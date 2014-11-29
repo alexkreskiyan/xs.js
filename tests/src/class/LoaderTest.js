@@ -12,6 +12,8 @@ require([
     'xs.lang.Type',
     'xs.lang.List',
     'xs.lang.Object',
+    'xs.lang.Attribute',
+    'xs.core.Debug',
     'xs.class.Loader'
 ], function () {
 
@@ -239,5 +241,22 @@ require([
         xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
         xs.Loader.paths.add(paths);
+    });
+
+    test('require', function () {
+        expect(0);
+        xs.Loader.paths.add('xs', '/src');
+        xs.Loader.require('xs.class.Class', function () {
+            xs.log('DONE: xs.class.Class');
+        });
+        xs.Loader.require([
+            'xs.class.Class',
+            'xs.class.ClassManager'
+        ], function () {
+            xs.log('DONE: xs.class.Class and xs.class.ClassManager');
+        });
+        xs.Loader.require('xs.class.ClassManager', function () {
+            xs.log('DONE: xs.class.ClassManager');
+        });
     });
 });

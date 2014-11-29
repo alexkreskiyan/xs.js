@@ -12,6 +12,7 @@
     "xs.class.preprocessors.properties",
     "xs.class.preprocessors.methods",
     "xs.class.preprocessors.singleton",
+    "xs.core.Debug",
     "xs.lang.Array",
     "xs.lang.Attribute",
     "xs.lang.Type",

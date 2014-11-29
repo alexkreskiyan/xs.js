@@ -90,21 +90,25 @@
          */
         me.require = function ( name, callback ) {
             var me = this;
+            xs.log('xs.Loader::require. Acquired:', name);
 
             //init loaded classes list
             var loadList = _getLoadList.call(me, xs.isArray(name) ? name : [name]);
-
+            xs.log('xs.Loader::require. LoadList:', loadList);
 
             //if list is empty - handle callback
             if ( !xs.size(loadList) ) {
+                xs.log('xs.Loader::require. LoadList is empty. Run callback');
                 callback();
 
                 return;
             }
 
+            xs.log('xs.Loader::require. Add loadList to resolver');
             //add loadList to resolver
             resolver.add(loadList, callback);
 
+            xs.log('xs.Loader::require. Add each of loadList to loader');
             //add each of loadList to loader
             xs.each(loadList, function ( path ) {
                 loader.has(path) || loader.add(path);
@@ -130,7 +134,17 @@
          */
         function _getLoadList ( classes ) {
             var me = this;
+
+            /**
+             * Load list
+             *
+             * @ignore
+             *
+             * @type {Object}
+             */
             var loadList = {};
+
+            xs.log('xs.Loader::getLoadList. Processing classes', classes);
             //process loaded and missing classes
             xs.each(classes, function ( name ) {
                 //check, that name is string
@@ -146,11 +160,14 @@
                 //resolve name with paths
                 var path = me.paths.resolve(name);
 
+                xs.log('xs.Loader::getLoadList. Resolved class "' + name + '" as path"' + path + '"');
                 //initial suggestion is that class is not loaded yet
                 loadList[path] = false;
 
+                xs.log('xs.Loader::getLoadList. Check path "' + path + '"');
                 //if the class is already loaded - mark that in checklist
                 if ( loaded.has(path) ) {
+                    xs.log('xs.Loader::getLoadList. Path "' + path + '" is already loaded');
                     loadList[path] = true;
                 }
 
@@ -160,8 +177,13 @@
                 }
             });
 
+            xs.log('xs.Loader::getLoadList. Result loadList:', loadList);
+
             //return names of not loaded classes
-            return xs.keys(xs.compact(loadList));
+            return xs.keys(xs.findAll(loadList, function ( state ) {
+
+                return !state;
+            }));
         }
 
         /**
@@ -174,6 +196,7 @@
          * @param {String} path
          */
         function _handleLoad ( path ) {
+            xs.log('xs.Loader::handleLoad. Path "' + path + '" loaded');
             //add loaded path
             loaded.add(path);
 
@@ -195,6 +218,7 @@
          * - failed loading url
          */
         function _handleFail ( path ) {
+            xs.log('xs.Loader::handleFail. Path "' + path + '" failed');
             //add failed path
             failed.add(path);
 
@@ -233,6 +257,7 @@
              * @param {Function} handler handler, that is called, when all paths are loaded
              */
             me.add = function ( paths, handler ) {
+                xs.log('xs.Loader::resolver::add. Add paths ', paths);
                 awaiting.push({
                     paths: paths,
                     handle: handler
@@ -250,10 +275,14 @@
              */
             me.handle = function ( path ) {
                 //find resolved items
+                xs.log('xs.Loader::resolver::handler. Handle path "' + path + '"');
                 var resolved = xs.findAll(awaiting, function ( item ) {
+                    xs.log('xs.Loader::resolver::handler. Clean up item.paths', item.paths);
                     //item is resolved, if path delete succeeds (path was deleted) and paths are empty
                     return xs.delete(item.paths, path) && !item.paths.length;
                 });
+
+                xs.log('xs.Loader::resolver::handler. Handling items', resolved);
 
                 //handle each resolved item
                 xs.each(resolved, function ( item ) {
@@ -295,6 +324,7 @@
              */
             me.add = function ( path ) {
 
+                xs.log('xs.Loader::loader::add. Add path "' + path + '"');
                 //check that path was not added yet
                 if ( me.has(path) ) {
                     throw new LoaderError('path "' + path + '" is already loading');
@@ -333,8 +363,9 @@
                 //create script element
                 var script = document.createElement('script');
 
-                //set path as src
-                script.src = path;
+                xs.log('xs.Loader::loader::load. Add script for path "' + path + '"');
+                //set path as src and path (because src is resolved relative to domain)
+                script.src = script.path = path;
 
                 //script is loaded asynchronously, without blocking page rendering
                 script.async = true;
@@ -343,7 +374,7 @@
                 script.addEventListener('load', _handleLoad);
 
                 //add error event listener
-                script.addEventListener('load', _handleFail);
+                script.addEventListener('error', _handleFail);
 
                 //append script to head
                 document.head.appendChild(script);
@@ -357,10 +388,10 @@
                 this.removeEventListener('load', _handleLoad);
 
                 //delete src from loading list
-                xs.delete(loading, this.src);
+                xs.delete(loading, this.path);
 
                 //handle load callback
-                handleLoad(this.src);
+                handleLoad(this.path);
             };
 
             /**
@@ -371,10 +402,10 @@
                 this.removeEventListener('load', _handleFail);
 
                 //delete src from loading list
-                xs.delete(loading, this.src);
+                xs.delete(loading, this.path);
 
                 //handle load callback
-                handleFail(this.src);
+                handleFail(this.path);
             };
         })(_handleLoad, _handleFail);
 
@@ -623,7 +654,7 @@
             var me = this;
 
             /**
-             * Items storage
+             * Paths storage
              *
              * @type {Array}
              */
@@ -637,59 +668,61 @@
             var listName = name;
 
             /**
-             * Adds item to list
+             * Adds path to list
              *
              * @method add
              *
-             * @param {String} item added item
+             * @param {String} path added path
              *
              * @chainable
              */
-            me.add = function ( item ) {
+            me.add = function ( path ) {
                 var me = this;
 
-                //check that item is not in list
-                if ( me.has(item) ) {
-                    throw new LoaderError('class "' + item + '" is already in ' + listName + ' list');
+                xs.log('xs.Loader::' + name + '::add. Add path "' + path + '"');
+                //check that path is not in list
+                if ( me.has(path) ) {
+                    throw new LoaderError('class "' + path + '" is already in ' + listName + ' list');
                 }
 
-                //add item to list
-                list.push(item);
+                //add path to list
+                list.push(path);
 
                 return me;
             };
 
             /**
-             * Checks whether list has item
+             * Checks whether list has path
              *
-             * @param {String} item verified item
+             * @param {String} path verified path
              *
              * @returns {Boolean}
              */
-            me.has = function ( item ) {
+            me.has = function ( path ) {
 
-                return xs.has(list, item);
+                return xs.has(list, path);
             };
 
             /**
-             * Deletes item from list
+             * Deletes path from list
              *
              * @method delete
              *
-             * @param {String} item deleted item
+             * @param {String} path deleted path
              *
              * @chainable
              */
-            me.delete = function ( item ) {
+            me.delete = function ( path ) {
                 var me = this;
 
-                //check that item is in list
-                if ( !me.has(item) ) {
-                    throw new LoaderError('class "' + item + '" is not in ' + listName + ' list');
+                xs.log('xs.Loader::' + name + '::delete. Delete path "' + path + '"');
+                //check that path is in list
+                if ( !me.has(path) ) {
+                    throw new LoaderError('class "' + path + '" is not in ' + listName + ' list');
                 }
 
-                //delete item from list
-                xs.delete(list, item);
+                //delete path from list
+                xs.delete(list, path);
 
                 return me;
             };
@@ -705,7 +738,9 @@
          * @class LoaderError
          */
         function LoaderError ( message ) {
-            Error.call(this, 'xs.Loader :: ' + message);
+            this.message = 'xs.Loader :: ' + message;
         }
+
+        LoaderError.prototype = new Error();
     });
 })(window, 'xs');
