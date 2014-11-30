@@ -246,17 +246,28 @@ require([
     test('require', function () {
         expect(0);
         xs.Loader.paths.add('xs', '/src');
-        xs.Loader.require('xs.class.Class', function () {
-            xs.log('DONE: xs.class.Class');
-        });
+//        xs.Loader.require('xs.class.Class', function ( list ) {
+//            xs.log('DONE:', list);
+//        });
+//        xs.Loader.require('xs.class.ClassManager', function ( list ) {
+//            xs.log('DONE:', list);
+//        });
+//        xs.Loader.require([
+//            'xs.class.Class',
+//            'xs.class.ClassManager'
+//        ], function ( list ) {
+//            xs.log('DONE:', list);
+//        });
         xs.Loader.require([
             'xs.class.Class',
-            'xs.class.ClassManager'
-        ], function () {
-            xs.log('DONE: xs.class.Class and xs.class.ClassManager');
-        });
-        xs.Loader.require('xs.class.ClassManager', function () {
-            xs.log('DONE: xs.class.ClassManager');
+            'xs.class.ClassManager',
+            'xs.class.ClassManager2'
+        ], function ( loaded ) {
+            xs.log('LOADED:', loaded);
+        }, function ( failed, loaded, unresolved ) {
+            xs.log('FAILED:', failed);
+            xs.log('LOADED:', loaded);
+            xs.log('UNRESOLVED:', unresolved);
         });
     });
 });

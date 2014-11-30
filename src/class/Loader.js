@@ -86,9 +86,13 @@
          * @method require
          *
          * @param {String|String[]} name class name or array of class names
-         * @param {Function} callback successful load callback
+         * @param {Function} handleLoad successful classes' load  handler.
+         * When called, hash with name:path pairs of all loaded classes will be passed as single argument
+         * @param {Function} [handleFail] handler for one of files failed.
+         * When called, 3 lists are passed as arguments: failed, loaded and unresolved classes.
+         * Unresolved means, that those were not loaded yet before fail
          */
-        me.require = function ( name, callback ) {
+        me.require = function ( name, handleLoad, handleFail ) {
             var me = this;
             xs.log('xs.Loader::require. Acquired:', name);
 
@@ -96,21 +100,42 @@
             var loadList = _getLoadList.call(me, xs.isArray(name) ? name : [name]);
             xs.log('xs.Loader::require. LoadList:', loadList);
 
-            //if list is empty - handle callback
-            if ( !xs.size(loadList) ) {
-                xs.log('xs.Loader::require. LoadList is empty. Run callback');
-                callback();
+            //if failed section is not empty - handle fail
+            if ( xs.size(loadList.failed) ) {
+                xs.log('xs.Loader::require. LoadList has failed classes. Handle fail');
+                //use handleFail method if given
+                if ( handleFail ) {
+                    xs.nextTick(function () {
+                        handleFail(loadList.failed, loadList.loaded, loadList.unresolved);
+                    });
+                } else {
+                    var failed = [];
+                    xs.each(loadList.failed, function ( path, name ) {
+                        failed.push(name + ' (' + path + ')');
+                    });
+                    throw new LoaderError('failed loading classes: ' + failed.join(', '));
+                }
+
+                return;
+            }
+
+            //if new section is empty - handle load - all classes are in loaded section
+            if ( !xs.size(loadList.unresolved) ) {
+                xs.log('xs.Loader::require. LoadList has only loaded classes. Handle load');
+                xs.nextTick(function () {
+                    handleLoad(loadList.loaded);
+                });
 
                 return;
             }
 
             xs.log('xs.Loader::require. Add loadList to resolver');
             //add loadList to resolver
-            resolver.add(loadList, callback);
+            resolver.add(loadList, handleLoad, handleFail);
 
             xs.log('xs.Loader::require. Add each of loadList to loader');
-            //add each of loadList to loader
-            xs.each(loadList, function ( path ) {
+            //add each of loadList.unresolved to loader
+            xs.each(loadList.unresolved, function ( path ) {
                 loader.has(path) || loader.add(path);
             });
         };
@@ -124,7 +149,7 @@
          *
          * @param {String[]} classes array with class names, that are attempted to be loaded
          *
-         * @return {String[]} list of classes, that have to be loaded
+         * @return {Object} list of classes, that have to be loaded
          *
          * @throws {Error} Error is thrown, when:
          *
@@ -142,7 +167,11 @@
              *
              * @type {Object}
              */
-            var loadList = {};
+            var loadList = {
+                unresolved: {},
+                loaded: {},
+                failed: {}
+            };
 
             xs.log('xs.Loader::getLoadList. Processing classes', classes);
             //process loaded and missing classes
@@ -161,29 +190,26 @@
                 var path = me.paths.resolve(name);
 
                 xs.log('xs.Loader::getLoadList. Resolved class "' + name + '" as path"' + path + '"');
-                //initial suggestion is that class is not loaded yet
-                loadList[path] = false;
-
                 xs.log('xs.Loader::getLoadList. Check path "' + path + '"');
-                //if the class is already loaded - mark that in checklist
+                //if the class is already loaded - add it to loaded section
                 if ( loaded.has(path) ) {
                     xs.log('xs.Loader::getLoadList. Path "' + path + '" is already loaded');
-                    loadList[path] = true;
-                }
+                    loadList.loaded[name] = path;
 
-                //if the class was already attempted to load, but load failed - error occurred
-                if ( failed.has(path) ) {
-                    throw new LoaderError('failed loading url "' + path + '"');
+                    //if the class was already attempted to load, but load failed - add it to failed section
+                } else if ( failed.has(path) ) {
+                    loadList.failed[name] = path;
+
+                    //else - the class was not attempted to load yet - add it to unresolved section
+                } else {
+                    loadList.unresolved[name] = path;
                 }
             });
 
             xs.log('xs.Loader::getLoadList. Result loadList:', loadList);
 
-            //return names of not loaded classes
-            return xs.keys(xs.findAll(loadList, function ( state ) {
-
-                return !state;
-            }));
+            //return loadList
+            return loadList;
         }
 
         /**
@@ -201,7 +227,7 @@
             loaded.add(path);
 
             //resolve ready awaiting items
-            resolver.handle(path);
+            resolver.resolve(path);
         }
 
         /**
@@ -222,8 +248,8 @@
             //add failed path
             failed.add(path);
 
-            //throw load error
-            throw new LoaderError('failed loading url "' + path + '"');
+            //reject ready awaiting items
+            resolver.reject(path);
         }
 
         /**
@@ -249,18 +275,21 @@
             var awaiting = [];
 
             /**
-             * Adds new awaiting item, consisting of loaded paths list and ready handler
+             * Adds new awaiting item, consisting of loaded items list and ready handler
              *
              * @method add
              *
-             * @param {String[]} paths loaded paths
-             * @param {Function} handler handler, that is called, when all paths are loaded
+             * @param {String[]} list loadList
+             * @param {Function} handleLoad successful classes' load  handler.
+             * @param {Function} [handleFail] handler for one of files failed.
              */
-            me.add = function ( paths, handler ) {
-                xs.log('xs.Loader::resolver::add. Add paths ', paths);
+            me.add = function ( list, handleLoad, handleFail ) {
+                xs.log('xs.Loader::resolver::add. Add list ', list);
                 awaiting.push({
-                    paths: paths,
-                    handle: handler
+                    list: list,
+                    pending: xs.values(list.unresolved),
+                    handleLoad: handleLoad,
+                    handleFail: handleFail
                 });
             };
 
@@ -269,25 +298,73 @@
              *
              * If any item from awaiting list has all paths' loaded, it's handler is called and item is removed
              *
-             * @method handle
+             * @method handleLoad
              *
              * @param {String} path
              */
-            me.handle = function ( path ) {
+            me.resolve = function ( path ) {
                 //find resolved items
-                xs.log('xs.Loader::resolver::handler. Handle path "' + path + '"');
+                xs.log('xs.Loader::resolver::resolve. Handle path "' + path + '"');
                 var resolved = xs.findAll(awaiting, function ( item ) {
-                    xs.log('xs.Loader::resolver::handler. Clean up item.paths', item.paths);
-                    //item is resolved, if path delete succeeds (path was deleted) and paths are empty
-                    return xs.delete(item.paths, path) && !item.paths.length;
+                    xs.log('xs.Loader::resolver::handler. Clean up item.pending', item.pending);
+
+                    //item is resolved, if path delete succeeds (path was deleted) and pending is empty
+                    if ( xs.delete(item.pending, path) ) {
+
+                        //update item list
+                        var name = xs.keyOf(item.list.unresolved, path);
+                        delete item.list.unresolved[name];
+                        item.list.loaded[name] = path;
+
+                        return !item.pending.length;
+                    }
+
+                    return false;
                 });
 
-                xs.log('xs.Loader::resolver::handler. Handling items', resolved);
+                xs.log('xs.Loader::resolver::resolve. Handling items', resolved);
 
                 //handle each resolved item
                 xs.each(resolved, function ( item ) {
                     xs.delete(awaiting, item);
-                    item.handle();
+                    item.handleLoad(xs.union(item.list.loaded, item.list.unresolved));
+                });
+            };
+
+            /**
+             * Checks all awaiting items. If any item has path in item.paths, it's handleFail is called or respective error is thrown
+             *
+             * @method handleFail
+             *
+             * @param {String} path
+             */
+            me.reject = function ( path ) {
+                //find rejected items
+                xs.log('xs.Loader::resolver::reject. Handle path "' + path + '"');
+                var rejected = xs.findAll(awaiting, function ( item ) {
+                    xs.log('xs.Loader::resolver::reject. Check item.pending', item.pending);
+                    //item is rejected, if pending has path
+                    return xs.has(item.pending, path);
+                });
+
+                xs.log('xs.Loader::resolver::reject. Handling items', rejected);
+
+                //handle each rejected item
+                xs.each(rejected, function ( item ) {
+                    //delete item from awaiting list
+                    xs.delete(awaiting, item);
+
+                    //update item list
+                    var name = xs.keyOf(item.list.unresolved, path);
+                    delete item.list.unresolved[name];
+                    item.list.failed[name] = path;
+
+                    //handle fail if handler given, or throw error
+                    if ( item.handleFail ) {
+                        item.handleFail(item.list.failed, item.list.loaded, item.list.unresolved);
+                    } else {
+                        throw new LoaderError('failed loading classes: ' + name + ' (' + path + ')');
+                    }
                 });
             };
         });
@@ -321,6 +398,10 @@
              * @param {String} path loaded path
              *
              * @chainable
+             *
+             * @throws {Error} Error is thrown:
+             *
+             * - if given path is already registered in loader
              */
             me.add = function ( path ) {
 
