@@ -58,6 +58,9 @@
 
         //return if no loads required
         if ( !xs.size(loads) ) {
+            //remove imports from Class
+            delete Class.imports;
+
             return;
         }
 
@@ -70,11 +73,14 @@
                 Class.imports[loads[name]] = xs.ClassManager.get(name);
             });
 
+            //remove imports from Class
+            delete Class.imports;
+
             //call ready to notify processor stack, that import succeed
             ready();
         });
 
         //return false to sign async processor
         return false;
-    });
+    }, 'after', 'namespace');
 })(window, 'xs');

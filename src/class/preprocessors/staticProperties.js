@@ -66,5 +66,5 @@
         xs.each(properties, function ( descriptor, name ) {
             xs.Attribute.property.define(Class, name, descriptor);
         });
-    });
+    }, 'after', 'const');
 })(window, 'xs');

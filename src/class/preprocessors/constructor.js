@@ -43,5 +43,5 @@
             Class.descriptor.constructor = inherited;
         }
 
-    });
+    }, 'after', 'staticMethods');
 })(window, 'xs');

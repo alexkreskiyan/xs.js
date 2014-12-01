@@ -8,13 +8,16 @@ require([
     'xs.class.Class',
     'xs.class.ClassManager',
     'xs.class.preprocessors.namespace',
-    'xs.class.preprocessors.extend',
+    'xs.class.preprocessors.imports',
+    'xs.class.preprocessors.extends',
+    'xs.class.preprocessors.mixins',
+    'xs.class.preprocessors.singleton',
     'xs.class.preprocessors.const',
     'xs.class.preprocessors.staticProperties',
     'xs.class.preprocessors.staticMethods',
+    'xs.class.preprocessors.constructor',
     'xs.class.preprocessors.properties',
     'xs.class.preprocessors.methods',
-    'xs.class.preprocessors.singleton',
     'xs.class.Base'
 ], function () {
     'use strict';

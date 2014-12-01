@@ -45,7 +45,8 @@ xs.define('xs.Base', function () {
      * @method clone
      *
      * @return {xs.Base} clone object
-     */me.methods.clone = function () {
+     */
+    me.methods.clone = function () {
         var me = this;
 
         //create clone via factory

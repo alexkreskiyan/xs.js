@@ -144,11 +144,6 @@
             //get descriptor instance
             var descriptor = new Descriptor(Class, namespace, imports);
 
-            //check descriptor is object
-            if ( !xs.isObject(descriptor) ) {
-                throw new ClassError('evaluated descriptor must be object');
-            }
-
             //save Class descriptor
             xs.const(Class, 'descriptor', {});
 
@@ -400,7 +395,7 @@
                 var relativeKey = xs.keyOf(keys, relativeTo);
 
                 if ( !xs.isDefined(relativeKey) ) {
-                    throw new ClassError('relative item missing in stack');
+                    throw new ClassError('relative item "' + relativeTo + '" missing in stack');
                 }
                 position == 'after' && relativeKey++;
                 keys.splice(relativeKey, 0, name);

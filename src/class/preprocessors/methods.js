@@ -62,5 +62,5 @@
         xs.each(methods, function ( value, name ) {
             xs.Attribute.method.define(Class.prototype, name, value);
         });
-    });
+    }, 'after', 'properties');
 })(window, 'xs');

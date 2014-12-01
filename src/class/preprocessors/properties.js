@@ -73,5 +73,5 @@
                 prototype[name] = undefined;
             }
         });
-    });
+    }, 'after', 'constructor');
 })(window, 'xs');

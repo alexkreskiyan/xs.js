@@ -53,5 +53,5 @@
         xs.each(constants, function ( value, name ) {
             xs.const(Class, name, value);
         });
-    });
+    }, 'after', 'singleton');
 })(window, 'xs');

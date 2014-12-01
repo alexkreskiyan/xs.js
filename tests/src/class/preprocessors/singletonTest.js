@@ -14,11 +14,13 @@ require([
     'xs.lang.Object',
     'xs.lang.Attribute',
     'xs.lang.Function',
+    'xs.core.Debug',
     'xs.class.Class',
     'xs.class.ClassManager',
     'xs.class.preprocessors.namespace',
-    'xs.class.preprocessors.extend',
-    'xs.class.preprocessors.properties',
+    'xs.class.preprocessors.imports',
+    'xs.class.preprocessors.extends',
+    'xs.class.preprocessors.mixins',
     'xs.class.preprocessors.singleton',
     'xs.class.Base'
 ], function () {

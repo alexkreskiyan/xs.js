@@ -48,5 +48,5 @@
                 return path;
             }
         };
-    });
+    }, 'first');
 })(window, 'xs');

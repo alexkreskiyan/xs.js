@@ -17,7 +17,9 @@ require([
     'xs.core.Debug',
     'xs.class.Class',
     'xs.class.ClassManager',
-    'xs.class.preprocessors.extend',
+    'xs.class.preprocessors.namespace',
+    'xs.class.preprocessors.imports',
+    'xs.class.preprocessors.extends',
     'xs.class.Loader'
 ], function () {
 

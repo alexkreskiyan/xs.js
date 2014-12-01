@@ -26,5 +26,5 @@
         return true;
     }, function ( Class, descriptor ) {
         Class.descriptor.singleton = !!descriptor.singleton;
-    });
+    }, 'after', 'mixins');
 })(window, 'xs');

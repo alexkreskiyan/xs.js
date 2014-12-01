@@ -40,14 +40,14 @@
     };
 
     /**
-     * Preprocessor extend
+     * Preprocessor extends
      * Is used to extend child class from parent class
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('extend', function () {
+    xs.Class.preprocessors.add('extends', function () {
 
         return true;
     }, function ( Class, descriptor, ns, ready ) {
@@ -93,5 +93,5 @@
 
         //return false to sign async processor
         return false;
-    });
+    }, 'after', 'imports');
 })(window, 'xs');
