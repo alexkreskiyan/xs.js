@@ -29,13 +29,11 @@
         //inherited
         //get inherited constructor from parent descriptor
         var inherited = xs.hasKey(Class.parent.descriptor, 'constructor') ? Class.parent.descriptor.constructor : undefined;
-        xs.log('xs.class.preprocessor.constructor. Inherited:', inherited);
 
 
         //own
         //get own methods from raw descriptor
         var own = xs.hasKey(descriptor, 'constructor') ? descriptor.constructor : undefined;
-        xs.log('xs.class.preprocessor.constructor. Own:', own);
 
 
         //apply (comparison to Object guarantees, that constructor was really assigned)
@@ -44,7 +42,6 @@
         } else if ( inherited ) {
             Class.descriptor.constructor = inherited;
         }
-        xs.log('xs.class.preprocessor.constructor. Resulting:', Class.descriptor.constructor);
 
     });
 })(window, 'xs');

@@ -30,52 +30,51 @@
         var imports = descriptor.imports;
 
         //init loads list
-        var loads = {};
+        var loads = [];
 
 
-        //init imported variable
-        var imported;
+        xs.log('xs.class.preprocessor.imports. Imports:', imports);
         xs.each(imports, function ( alias, name ) {
 
             //resolve name with namespace
             name = Class.descriptor.namespace.resolve(name);
 
             //try to get imported class from ClassManager
-            imported = xs.ClassManager.get(name);
+            var imported = xs.ClassManager.get(name);
 
+            xs.log('xs.class.preprocessor.imports. Importing:', name, 'as', alias);
             //if imported class is already loaded - save it in imports with alias
             if ( imported ) {
+                xs.log('xs.class.preprocessor.imports. Imported', name, 'already loaded, saving as', alias, 'in imports');
                 Class.imports[alias] = imported;
 
                 return;
             }
 
-            //mark incomplete load
-            loads[name] = false;
-
-            //require async
-            xs.require(name, xs.prefill(function ( alias, name ) {
-
-                //mark load complete
-                loads[name] = true;
-
-                //set imported class
-                Class.imports[alias] = xs.ClassManager.get(name); //TODO async require
-
-                //if all ready - continue
-                xs.every(loads, function ( result ) {
-                    return result;
-                }) && ready();
-
-            }, [
-                alias,
-                name
-            ]));
+            xs.log('xs.class.preprocessor.imports. Imported', name, 'not loaded yet, loading');
+            //add class to load list
+            loads.push(name);
         });
 
-        //return false to mark async execution if load initiated
-        if ( xs.size(loads) ) {
-            return false;
+        //return if no loads required
+        if ( !xs.size(loads) ) {
+            return;
         }
+
+        //require async
+        xs.require(loads, function () {
+
+            //assign imports
+            xs.each(loads, function ( name ) {
+                //save loaded class in imports by alias
+                Class.imports[loads[name]] = xs.ClassManager.get(name);
+            });
+
+            //call ready to notify processor stack, that import succeed
+            ready();
+        });
+
+        //return false to sign async processor
+        return false;
     });
 })(window, 'xs');

@@ -29,12 +29,10 @@
         var constants = {};
 
 
-        xs.log('xs.class.preprocessor.const. Register constants');
         //inherited
         //get inherited constants from parent descriptor
         var inherited = Class.parent.descriptor.const;
 
-        xs.log('xs.class.preprocessor.const. Inherited:', inherited);
         //extend constants with inherited
         xs.isObject(inherited) && xs.extend(constants, inherited);
 
@@ -43,12 +41,10 @@
         //get own constants from raw descriptor
         var own = descriptor.const;
 
-        xs.log('xs.class.preprocessor.const. Own:', own);
         //extend constants with own
         xs.isObject(own) && xs.extend(constants, own);
 
 
-        xs.log('xs.class.preprocessor.const. Resulting:', constants);
         //apply
         //save constants to Class.descriptor
         Class.descriptor.const = constants;
