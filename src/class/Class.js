@@ -121,7 +121,7 @@
 
             //Descriptor must be function
             if ( !xs.isFunction(Descriptor) ) {
-                throw new Error('Class descriptor must be evaluated function');
+                throw new ClassError('descriptor must be evaluated function');
             }
 
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
@@ -146,7 +146,7 @@
 
             //check descriptor is object
             if ( !xs.isObject(descriptor) ) {
-                throw new Error('Evaluated class descriptor must be object');
+                throw new ClassError('evaluated descriptor must be object');
             }
 
             //save Class descriptor
@@ -207,7 +207,7 @@
 
                 //throw exception if Class is singleton
                 if ( descriptor.singleton ) {
-                    throw new Error('Can not create instance of singleton class');
+                    throw new ClassError('can not create instance of singleton class');
                 }
 
                 //get constructor shortcut
@@ -384,7 +384,7 @@
                 'before',
                 'after'
             ], position) ) {
-                throw new Error('Incorrect position given');
+                throw new ClassError('incorrect position given');
             }
 
             //get current keys
@@ -400,7 +400,7 @@
                 var relativeKey = xs.keyOf(keys, relativeTo);
 
                 if ( !xs.isDefined(relativeKey) ) {
-                    throw new Error('Relative item missing in stack');
+                    throw new ClassError('relative item missing in stack');
                 }
                 position == 'after' && relativeKey++;
                 keys.splice(relativeKey, 0, name);
@@ -458,7 +458,7 @@
             position || (position = 'last');
 
             if ( xs.hasKey(items, name) ) {
-                throw new Error('processor "' + name + '" already in stack');
+                throw new ClassError('processor "' + name + '" already in stack');
             }
 
             items[name] = {
@@ -511,7 +511,7 @@
             if ( xs.hasKey(items, name) ) {
                 xs.deleteAt(items, name);
             } else {
-                throw new Error('processor "' + name + '" not found in stack');
+                throw new ClassError('processor "' + name + '" not found in stack');
             }
         };
 
@@ -571,5 +571,20 @@
 
             _process(items, verifierArgs, handlerArgs, callback);
         };
+
+        /**
+         * Internal error class
+         *
+         * @ignore
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class ClassError
+         */
+        function ClassError ( message ) {
+            this.message = 'xs.Class :: ' + message;
+        }
+
+        ClassError.prototype = new Error();
     }
 })(window, 'xs');

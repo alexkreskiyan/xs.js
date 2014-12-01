@@ -273,7 +273,7 @@
          */
         me.const = function ( object, name, value ) {
             if ( _defined(object, name) && !_isConfigurable(object, name) ) {
-                throw new Error('constant "' + name + '" is already defined');
+                throw new AttributeError('constant "' + name + '" is already defined');
             }
             _define(object, name, {
                 value: value,
@@ -464,7 +464,7 @@
              */
             me.define = function ( object, name, descriptor ) {
                 if ( _defined(object, name) && !_isConfigurable(object, name) ) {
-                    throw new Error('property "' + name + '" is already defined');
+                    throw new AttributeError('property "' + name + '" is already defined');
                 }
 
                 //writable, enumerable and configurable are immutable defaults
@@ -534,7 +534,7 @@
 
                     //or complex object descriptor with fn in descriptor.value
                 } else if ( !xs.isObject(descriptor) || !xs.isFunction(descriptor.value) ) {
-                    throw new Error('Incorrect method descriptor');
+                    throw new AttributeError('Incorrect method descriptor');
                 }
 
                 descriptor = xs.clone(descriptor);
@@ -584,7 +584,7 @@
              */
             me.define = function ( object, name, descriptor ) {
                 if ( _defined(object, name) && !_isConfigurable(object, name) ) {
-                    throw new Error('Method "' + name + '" is already defined');
+                    throw new AttributeError('Method "' + name + '" is already defined');
                 }
                 _define(object, name, {
                     value: descriptor.value,
@@ -594,6 +594,21 @@
                 });
             };
         });
+
+        /**
+         * Internal error class
+         *
+         * @ignore
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class AttributeError
+         */
+        function AttributeError ( message ) {
+            this.message = 'xs.Attribute :: ' + message;
+        }
+
+        AttributeError.prototype = new Error();
     });
 
     xs.extend(xs, {

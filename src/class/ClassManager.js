@@ -102,17 +102,17 @@
         var _add = me.add = function ( name, Class ) {
             //throw error if trying to set defined
             if ( _has(name) ) {
-                throw new Error('Class "' + name + '" is already defined');
+                throw new ClassManagerError('class "' + name + '" is already defined');
             }
 
             //throw error if trying to add already added with other name
             if ( xs.has(registry, Class) ) {
-                throw new Error('Class "' + Class.label + '" can not be added as "' + name + '"');
+                throw new ClassManagerError('class "' + Class.label + '" can not be added as "' + name + '"');
             }
 
             //throw error if Class is not function
             if ( !xs.isFunction(Class) ) {
-                throw new Error('Class "' + name + '" is not a function');
+                throw new ClassManagerError('class "' + name + '" is not a function');
             }
 
             //assign real name as label
@@ -159,7 +159,7 @@
         me.delete = function ( name ) {
             //throw error if trying to unset undefined
             if ( !_has(name) ) {
-                throw new Error('Class "' + name + '" is not defined');
+                throw new ClassManagerError('class "' + name + '" is not defined');
             }
 
             //unset Class label
@@ -223,7 +223,7 @@
         me.define = function ( name, descFn, createdFn ) {
             //throw error if trying to redefine
             if ( _has(name) ) {
-                throw new Error('Class "' + name + '" is already defined');
+                throw new ClassManagerError('class "' + name + '" is already defined');
             }
 
             //create Class and save it to registry
@@ -403,6 +403,22 @@
             }
         };
     });
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class ClassManagerError
+     */
+    function ClassManagerError ( message ) {
+        this.message = 'xs.ClassManager :: ' + message;
+    }
+
+    ClassManagerError.prototype = new Error();
+
     xs.extend(xs, {
         define: xs.ClassManager.define
     });
