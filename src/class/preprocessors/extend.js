@@ -53,8 +53,10 @@
     }, function ( Class, descriptor, ns, ready ) {
         var extended = descriptor.extends;
 
+        xs.log('xs.class.preprocessor.extend. Extended:', extended);
         //if incorrect/no parent given - extend from xs.Base
         if ( !xs.isString(extended) ) {
+            xs.log('xs.class.preprocessor.extend. Extending xs.Base');
             extend(Class, xs.Base);
 
             return;
@@ -62,6 +64,7 @@
 
         extended = Class.descriptor.namespace.resolve(extended);
 
+        xs.log('xs.class.preprocessor.extend. Extending', extended);
         //try to get parent from ClassManager
         var parent = xs.ClassManager.get(extended);
 
@@ -69,16 +72,19 @@
         if ( parent ) {
             extend(Class, parent);
 
+            xs.log('xs.class.preprocessor.extend. Parent', extended, 'was in class manager, extending');
             //save extends to descriptor
             Class.descriptor.extends = extended;
 
             return;
         }
 
+        xs.log('xs.class.preprocessor.extend. Loading parent class', extended);
         //require async
         xs.require(extended, function () {
             extend(Class, xs.ClassManager.get(extended));
 
+            xs.log('xs.class.preprocessor.extend. Parent', extended, 'loaded, extending');
             //save extends to descriptor
             Class.descriptor.extends = extended;
 
