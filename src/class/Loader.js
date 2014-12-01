@@ -253,244 +253,6 @@
         }
 
         /**
-         * Internal resolver instance, that handles all registered callbacks.
-         * As far, as all depended paths are loaded, relative callback is executed and removed from registry
-         *
-         * @ignore
-         *
-         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-         *
-         * @class Resolver
-         *
-         * @singleton
-         */
-        var resolver = new (function () {
-            var me = this;
-
-            /**
-             * Awaiting handlers list
-             *
-             * @type {Array}
-             */
-            var awaiting = [];
-
-            /**
-             * Adds new awaiting item, consisting of loaded items list and ready handler
-             *
-             * @method add
-             *
-             * @param {String[]} list loadList
-             * @param {Function} handleLoad successful classes' load  handler.
-             * @param {Function} [handleFail] handler for one of files failed.
-             */
-            me.add = function ( list, handleLoad, handleFail ) {
-                xs.log('xs.Loader::resolver::add. Add list ', list);
-                awaiting.push({
-                    list: list,
-                    pending: xs.values(list.unresolved),
-                    handleLoad: handleLoad,
-                    handleFail: handleFail
-                });
-            };
-
-            /**
-             * Checks all awaiting items. Deletes path from each item's paths list. If paths list is empty - resolves item
-             *
-             * If any item from awaiting list has all paths' loaded, it's handler is called and item is removed
-             *
-             * @method handleLoad
-             *
-             * @param {String} path
-             */
-            me.resolve = function ( path ) {
-                //find resolved items
-                xs.log('xs.Loader::resolver::resolve. Handle path "' + path + '"');
-                var resolved = xs.findAll(awaiting, function ( item ) {
-                    xs.log('xs.Loader::resolver::handler. Clean up item.pending', item.pending);
-
-                    //item is resolved, if path delete succeeds (path was deleted) and pending is empty
-                    if ( xs.delete(item.pending, path) ) {
-
-                        //update item list
-                        var name = xs.keyOf(item.list.unresolved, path);
-                        delete item.list.unresolved[name];
-                        item.list.loaded[name] = path;
-
-                        return !item.pending.length;
-                    }
-
-                    return false;
-                });
-
-                xs.log('xs.Loader::resolver::resolve. Handling items', resolved);
-
-                //handle each resolved item
-                xs.each(resolved, function ( item ) {
-                    xs.delete(awaiting, item);
-                    item.handleLoad(xs.union(item.list.loaded, item.list.unresolved));
-                });
-            };
-
-            /**
-             * Checks all awaiting items. If any item has path in item.paths, it's handleFail is called or respective error is thrown
-             *
-             * @method handleFail
-             *
-             * @param {String} path
-             */
-            me.reject = function ( path ) {
-                //find rejected items
-                xs.log('xs.Loader::resolver::reject. Handle path "' + path + '"');
-                var rejected = xs.findAll(awaiting, function ( item ) {
-                    xs.log('xs.Loader::resolver::reject. Check item.pending', item.pending);
-                    //item is rejected, if pending has path
-                    return xs.has(item.pending, path);
-                });
-
-                xs.log('xs.Loader::resolver::reject. Handling items', rejected);
-
-                //handle each rejected item
-                xs.each(rejected, function ( item ) {
-                    //delete item from awaiting list
-                    xs.delete(awaiting, item);
-
-                    //update item list
-                    var name = xs.keyOf(item.list.unresolved, path);
-                    delete item.list.unresolved[name];
-                    item.list.failed[name] = path;
-
-                    //handle fail if handler given, or throw error
-                    if ( item.handleFail ) {
-                        item.handleFail(item.list.failed, item.list.loaded, item.list.unresolved);
-                    } else {
-                        throw new LoaderError('failed loading classes: ' + name + ' (' + path + ')');
-                    }
-                });
-            };
-        });
-
-        /**
-         * Internal loader instance
-         *
-         * @ignore
-         *
-         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-         *
-         * @class Loader
-         *
-         * @singleton
-         */
-        var loader = new (function ( handleLoad, handleFail ) {
-            var me = this;
-
-            /**
-             * Loading files list
-             *
-             * @type {Array}
-             */
-            var loading = [];
-
-            /**
-             * Add path to load
-             *
-             * @method add
-             *
-             * @param {String} path loaded path
-             *
-             * @chainable
-             *
-             * @throws {Error} Error is thrown:
-             *
-             * - if given path is already registered in loader
-             */
-            me.add = function ( path ) {
-
-                xs.log('xs.Loader::loader::add. Add path "' + path + '"');
-                //check that path was not added yet
-                if ( me.has(path) ) {
-                    throw new LoaderError('path "' + path + '" is already loading');
-                }
-
-                //register new path alias
-                loading.push(path);
-
-                //execute load
-                _load(path);
-
-                return this;
-            };
-
-            /**
-             * Checks whether loader is loading file with given path
-             *
-             * @param {String} path verified path
-             *
-             * @returns {Boolean} whether loader is loading that path
-             */
-            me.has = function ( path ) {
-                return xs.has(loading, path);
-            };
-
-            /**
-             * Internal loading function. Adds script tag for loading.
-             *
-             * Executes handleLoad on successful load end and handleFail on load error
-             *
-             * @method load
-             *
-             * @param {String} path loaded path
-             */
-            var _load = function ( path ) {
-                //create script element
-                var script = document.createElement('script');
-
-                xs.log('xs.Loader::loader::load. Add script for path "' + path + '"');
-                //set path as src and path (because src is resolved relative to domain)
-                script.src = script.path = path;
-
-                //script is loaded asynchronously, without blocking page rendering
-                script.async = true;
-
-                //add load event listener
-                script.addEventListener('load', _handleLoad);
-
-                //add error event listener
-                script.addEventListener('error', _handleFail);
-
-                //append script to head
-                document.head.appendChild(script);
-            };
-
-            /**
-             * Internal handler, that wraps external handleLoad
-             */
-            var _handleLoad = function () {
-                //remove handler after call
-                this.removeEventListener('load', _handleLoad);
-
-                //delete src from loading list
-                xs.delete(loading, this.path);
-
-                //handle load callback
-                handleLoad(this.path);
-            };
-
-            /**
-             * Internal handler, that wraps external handleFail
-             */
-            var _handleFail = function () {
-                //remove handler after call
-                this.removeEventListener('load', _handleFail);
-
-                //delete src from loading list
-                xs.delete(loading, this.path);
-
-                //handle load callback
-                handleFail(this.path);
-            };
-        })(_handleLoad, _handleFail);
-
-        /**
          * Internal paths class
          *
          * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
@@ -721,6 +483,249 @@
                 return namePath + '/' + name.substring(nameAlias.length + 1).split('.').join('/') + ext;
             };
         });
+
+        /**
+         * Internal resolver instance, that handles all registered callbacks.
+         * As far, as all depended paths are loaded, relative callback is executed and removed from registry
+         *
+         * @ignore
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class Resolver
+         *
+         * @singleton
+         */
+        var resolver = new (function () {
+            var me = this;
+
+            /**
+             * Awaiting handlers list
+             *
+             * @type {Array}
+             */
+            var awaiting = [];
+
+            /**
+             * Adds new awaiting item, consisting of loaded items list and ready handler
+             *
+             * @method add
+             *
+             * @param {String[]} list loadList
+             * @param {Function} handleLoad successful classes' load  handler.
+             * @param {Function} [handleFail] handler for one of files failed.
+             */
+            me.add = function ( list, handleLoad, handleFail ) {
+                xs.log('xs.Loader::resolver::add. Add list ', list);
+                awaiting.push({
+                    list: list,
+                    pending: xs.values(list.unresolved),
+                    handleLoad: handleLoad,
+                    handleFail: handleFail
+                });
+            };
+
+            /**
+             * Checks all awaiting items. Deletes path from each item's paths list. If paths list is empty - resolves item
+             *
+             * If any item from awaiting list has all paths' loaded, it's handler is called and item is removed
+             *
+             * @method handleLoad
+             *
+             * @param {String} path
+             */
+            me.resolve = function ( path ) {
+                //find resolved items
+                xs.log('xs.Loader::resolver::resolve. Handle path "' + path + '"');
+                var resolved = xs.findAll(awaiting, function ( item ) {
+                    xs.log('xs.Loader::resolver::handler. Clean up item.pending', item.pending);
+
+                    //item is resolved, if path delete succeeds (path was deleted) and pending is empty
+                    if ( xs.delete(item.pending, path) ) {
+
+                        //update item list
+                        var name = xs.keyOf(item.list.unresolved, path);
+                        delete item.list.unresolved[name];
+                        item.list.loaded[name] = path;
+
+                        return !item.pending.length;
+                    }
+
+                    return false;
+                });
+
+                xs.log('xs.Loader::resolver::resolve. Handling items', resolved);
+
+                //handle each resolved item
+                xs.each(resolved, function ( item ) {
+                    xs.delete(awaiting, item);
+                    item.handleLoad(xs.union(item.list.loaded, item.list.unresolved));
+                });
+            };
+
+            /**
+             * Checks all awaiting items. If any item has path in item.paths, it's handleFail is called or respective error is thrown
+             *
+             * @method handleFail
+             *
+             * @param {String} path
+             */
+            me.reject = function ( path ) {
+                //find rejected items
+                xs.log('xs.Loader::resolver::reject. Handle path "' + path + '"');
+                var rejected = xs.findAll(awaiting, function ( item ) {
+                    xs.log('xs.Loader::resolver::reject. Check item.pending', item.pending);
+                    //item is rejected, if pending has path
+                    return xs.has(item.pending, path);
+                });
+
+                xs.log('xs.Loader::resolver::reject. Handling items', rejected);
+
+                //handle each rejected item
+                xs.each(rejected, function ( item ) {
+                    //delete item from awaiting list
+                    xs.delete(awaiting, item);
+
+                    //update item list
+                    var name = xs.keyOf(item.list.unresolved, path);
+                    delete item.list.unresolved[name];
+                    item.list.failed[name] = path;
+
+                    //handle fail if handler given, or throw error
+                    if ( item.handleFail ) {
+                        item.handleFail(item.list.failed, item.list.loaded, item.list.unresolved);
+                    } else {
+                        throw new LoaderError('failed loading classes: ' + name + ' (' + path + ')');
+                    }
+                });
+            };
+        });
+
+        /**
+         * Internal loader instance
+         *
+         * @ignore
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class Loader
+         *
+         * @singleton
+         */
+        var loader = new (function ( handleLoad, handleFail ) {
+            var me = this;
+
+            /**
+             * Loading files list
+             *
+             * @type {Array}
+             */
+            var loading = [];
+
+            /**
+             * Add path to load
+             *
+             * @method add
+             *
+             * @param {String} path loaded path
+             *
+             * @chainable
+             *
+             * @throws {Error} Error is thrown:
+             *
+             * - if given path is already registered in loader
+             */
+            me.add = function ( path ) {
+                var me = this;
+
+                xs.log('xs.Loader::loader::add. Add path "' + path + '"');
+                //check that path was not added yet
+                if ( me.has(path) ) {
+                    throw new LoaderError('path "' + path + '" is already loading');
+                }
+
+                //register new path alias
+                loading.push(path);
+
+                //execute load
+                _load(path);
+
+                return me;
+            };
+
+            /**
+             * Checks whether loader is loading file with given path
+             *
+             * @param {String} path verified path
+             *
+             * @returns {Boolean} whether loader is loading that path
+             */
+            me.has = function ( path ) {
+                return xs.has(loading, path);
+            };
+
+            /**
+             * Internal loading function. Adds script tag for loading.
+             *
+             * Executes handleLoad on successful load end and handleFail on load error
+             *
+             * @method load
+             *
+             * @param {String} path loaded path
+             */
+            var _load = function ( path ) {
+                //create script element
+                var script = document.createElement('script');
+
+                xs.log('xs.Loader::loader::load. Add script for path "' + path + '"');
+                //set path as src and path (because src is resolved relative to domain)
+                script.src = script.path = path;
+
+                //script is loaded asynchronously, without blocking page rendering
+                script.async = true;
+
+                //add load event listener
+                script.addEventListener('load', _handleLoad);
+
+                //add error event listener
+                script.addEventListener('error', _handleFail);
+
+                //append script to head
+                document.head.appendChild(script);
+            };
+
+            /**
+             * Internal handler, that wraps external handleLoad
+             */
+            var _handleLoad = function () {
+                var me = this;
+
+                //remove handler after call
+                me.removeEventListener('load', _handleLoad);
+
+                //delete src from loading list
+                xs.delete(loading, me.path);
+
+                //handle load callback
+                handleLoad(me.path);
+            };
+
+            /**
+             * Internal handler, that wraps external handleFail
+             */
+            var _handleFail = function () {
+                var me = this;
+
+                //remove handler after call
+                me.removeEventListener('load', _handleFail);
+
+                //delete src from loading list
+                xs.delete(loading, me.path);
+
+                //handle load callback
+                handleFail(me.path);
+            };
+        })(_handleLoad, _handleFail);
 
         /**
          * Internal list class

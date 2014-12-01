@@ -14,6 +14,339 @@
     var xs = root[ns];
 
     /**
+     * xs.Class is core class, that is used for class generation.
+     *
+     * xs.Class provides 2 stacks to register processors:
+     *
+     * - {@link xs.Class#preprocessors preprocessors}
+     * - {@link xs.Class#postprocessors postprocessors}
+     *
+     * Usage example:
+     *
+     *     //create simple Class
+     *     var Class = xs.Class.create(function (Class) {
+     *         //here is Class descriptor returned
+     *         return {
+     *         };
+     *     });
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class xs.Class
+     *
+     * @singleton
+     */
+    xs.Class = new (function () {
+        var me = this;
+
+        /**
+         * Stack of processors, processing class before it's considered to be created (before createdFn is called)
+         *
+         * Provided arguments are:
+         *
+         * For verifier:
+         *
+         *  - Class
+         *  - descriptor
+         *  - namespace
+         *
+         * For handler:
+         *
+         *  - Class
+         *  - descriptor
+         *  - namespace
+         *
+         * @property preprocessors
+         *
+         * @type {xs.Class.Stack}
+         */
+        var preprocessors = me.preprocessors = new Stack();
+
+        /**
+         * Stack of processors, processing class after it's considered to be created (after createdFn is called)
+         *
+         * Provided arguments are:
+         *
+         * For verifier:
+         *
+         *  - Class
+         *  - descriptor
+         *  - namespace
+         *
+         * For handler:
+         *
+         *  - Class
+         *  - descriptor
+         *  - namespace
+         *
+         * @property postprocessors
+         *
+         * @type {xs.Class.Stack}
+         */
+        var postprocessors = me.postprocessors = new Stack();
+
+        /**
+         * Creates class sample and starts processors applying
+         *
+         * For example:
+         *
+         *     //create simple Class
+         *     var Class = xs.Class.create(function (self, ns) {
+         *         //here is Class descriptor returned
+         *         return {
+         *         };
+         *     }, function(Class) {
+         *         console.log('class', Class, 'created');
+         *     );
+         *
+         * @method create
+         *
+         * @param {Function} Descriptor descriptor constructor. Creates raw descriptor instance. Is called with 3 params:
+         *
+         * - self. Created class instance
+         * - ns. namespace object, where namespace references are placed
+         * - imports. namespace object, where namespace references are placed
+         *
+         * @param {Function} createdFn class creation callback. Is called after
+         * {@link xs.Class#preprocessors preprocessors} stack is processed. When called, created class is passed as param
+         *
+         * @return {Function} created Class
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - descFn is given not as function
+         * - descFn doesn't return object
+         */
+        me.create = function ( Descriptor, createdFn ) {
+
+            //Descriptor must be function
+            if ( !xs.isFunction(Descriptor) ) {
+                throw new Error('Class descriptor must be evaluated function');
+            }
+
+            xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
+
+            //create class
+            var Class = _create();
+
+            //assign factory for class
+            Class.factory = _createFactory(Class);
+
+            //get namespace for Class
+            var namespace = Class.namespace = {};
+
+            //get imports for Class
+            var imports = Class.imports = {};
+
+            //Fill descriptor prototype
+            Descriptor.prototype = _createDescriptorPrototype();
+
+            //get descriptor instance
+            var descriptor = new Descriptor(Class, namespace, imports);
+
+            //check descriptor is object
+            if ( !xs.isObject(descriptor) ) {
+                throw new Error('Evaluated class descriptor must be object');
+            }
+
+            //save Class descriptor
+            xs.const(Class, 'descriptor', {});
+
+//            //set class not ready yet (until preprocessors done)
+//            Class.isReady = false;
+//TODO make more pretty
+            //process preprocessors stack before createdFn called
+            preprocessors.process([
+                Class,
+                descriptor,
+                namespace
+            ], [
+                Class,
+                descriptor,
+                namespace
+            ], function () {
+//                //set class ready
+//                Class.isReady = true;
+//TODO make more pretty
+                //call createdFn
+                createdFn(Class);
+
+                //process postprocessors stack after createdFn called
+                postprocessors.process([
+                    Class,
+                    descriptor,
+                    namespace
+                ], [
+                    Class,
+                    descriptor,
+                    namespace
+                ]);
+            });
+
+            return Class;
+        };
+
+        /**
+         * Returns new xClass sample
+         *
+         * @ignore
+         *
+         * @method create
+         *
+         * @return {Function} new xClass
+         */
+        var _create = function () {
+            var Class = function xClass () {
+                var me = this;
+
+                //define class constructor
+                var descriptor = Class.descriptor;
+
+
+                //singleton processing
+
+                //throw exception if Class is singleton
+                if ( descriptor.singleton ) {
+                    throw new Error('Can not create instance of singleton class');
+                }
+
+                //get constructor shortcut
+                var constructor = descriptor.constructor != Object ? descriptor.constructor : undefined;
+
+                //if parent constructor - just call it
+                if ( me.self && me.self !== Class ) {
+                    constructor && constructor.apply(me, arguments);
+
+                    return;
+                }
+
+
+                //save call arguments
+                me.initArguments = arguments;
+
+                //properties processing
+
+                //init privates storage
+                me.privates = {};
+
+                //assign values
+                if ( xs.isObject(descriptor.properties) ) {
+                    var properties = descriptor.properties;
+                    var keys = Object.keys(properties);
+                    var i, length = keys.length, name, property;
+
+                    for ( i = 0; i < length; i++ ) {
+                        name = keys[i];
+                        property = properties[name];
+                        property.hasOwnProperty('value') && (me[name] = property.value);
+                    }
+                }
+
+                //native constructor call
+
+                //save class reference
+                me.self = Class;
+
+                //apply constructor
+                constructor && constructor.apply(me, arguments);
+            };
+
+            return Class;
+        };
+
+        /**
+         * Returns factory for given Class
+         *
+         * @ignore
+         *
+         * @method createFactory
+         *
+         * @param {Function} Class
+         *
+         * @return {Function} factory for given Class
+         */
+        var _createFactory = function ( Class ) {
+            //this - current class
+            //arguments - new instance arguments
+
+            //create wrapper
+            var xClass = function ( args ) {
+                return Class.apply(this, args);
+            };
+
+            //assign prototype
+            xClass.prototype = Class.prototype;
+
+            //return factory
+            return function () {
+
+                //return instance
+                return new xClass(arguments);
+            };
+        };
+
+        /**
+         * Returns prototype for descriptor function
+         *
+         * @ignore
+         *
+         * @method createDescriptorPrototype
+         *
+         * @return {Object} new descriptor prototype
+         */
+        var _createDescriptorPrototype = function () {
+            return {
+
+                //class namespace
+                namespace: undefined,
+
+                //class imports list
+                imports: {},
+
+                //class parent
+                extends: undefined,
+
+                //class mixins list
+                mixins: {},
+
+                //class implements list
+                implements: {},
+
+                //class singleton flag
+                singleton: undefined,
+
+                //class interface flag
+                interface: undefined,
+
+                //class constants list
+                const: {},
+
+                //class statics list
+                static: {
+                    //class static methods list
+                    methods: {},
+
+                    //class static properties list
+                    properties: {}
+                },
+
+                //class constructor
+                constructor: undefined,
+
+                //class methods list
+                methods: {},
+
+                //class properties list
+                properties: {}
+            };
+        };
+    });
+
+    //define prototype of xs.Base
+    xs.Base = new Function;
+    xs.Base.descriptor = {};
+
+    /**
      * Private internal stack class
      *
      * Stack is used to store ordered list of processors
@@ -24,7 +357,7 @@
      *
      * @class xs.Class.Stack
      */
-    var Stack = function () {
+    function Stack () {
         var me = this;
 
         //items hash
@@ -214,6 +547,7 @@
          * @param {Function} callback stack ready callback
          */
         var _process = function ( items, verifierArgs, handlerArgs, callback ) {
+            var me = this;
             if ( !items.length ) {
                 callback();
 
@@ -222,14 +556,14 @@
             var item = xs.shift(items);
 
             //if item.verifier allows handler execution, process next
-            if ( item.verifier.apply(this, verifierArgs) ) {
+            if ( item.verifier.apply(me, verifierArgs) ) {
 
                 var ready = function () {
                     _process(items, verifierArgs, handlerArgs, callback);
                 };
 
                 //if item.handler returns false, processing is async, stop processing, awaiting ready call
-                if ( item.handler.apply(this, xs.union(handlerArgs, ready)) === false ) {
+                if ( item.handler.apply(me, xs.union(handlerArgs, ready)) === false ) {
 
                     return;
                 }
@@ -237,338 +571,5 @@
 
             _process(items, verifierArgs, handlerArgs, callback);
         };
-    };
-
-    /**
-     * xs.Class is core class, that is used for class generation.
-     *
-     * xs.Class provides 2 stacks to register processors:
-     *
-     * - {@link xs.Class#preprocessors preprocessors}
-     * - {@link xs.Class#postprocessors postprocessors}
-     *
-     * Usage example:
-     *
-     *     //create simple Class
-     *     var Class = xs.Class.create(function (Class) {
-     *         //here is Class descriptor returned
-     *         return {
-     *         };
-     *     });
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class xs.Class
-     *
-     * @singleton
-     */
-    xs.Class = new (function () {
-        var me = this;
-
-        /**
-         * Stack of processors, processing class before it's considered to be created (before createdFn is called)
-         *
-         * Provided arguments are:
-         *
-         * For verifier:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * For handler:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * @property preprocessors
-         *
-         * @type {xs.Class.Stack}
-         */
-        var preprocessors = me.preprocessors = new Stack();
-
-        /**
-         * Stack of processors, processing class after it's considered to be created (after createdFn is called)
-         *
-         * Provided arguments are:
-         *
-         * For verifier:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * For handler:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * @property postprocessors
-         *
-         * @type {xs.Class.Stack}
-         */
-        var postprocessors = me.postprocessors = new Stack();
-
-        /**
-         * Returns new xClass sample
-         *
-         * @ignore
-         *
-         * @method create
-         *
-         * @return {Function} new xClass
-         */
-        var _create = function () {
-            var Class = function xClass () {
-                var me = this;
-
-                //define class constructor
-                var descriptor = Class.descriptor;
-
-
-                //singleton processing
-
-                //throw exception if Class is singleton
-                if ( descriptor.singleton ) {
-                    throw new Error('Can not create instance of singleton class');
-                }
-
-                //get constructor shortcut
-                var constructor = descriptor.constructor != Object ? descriptor.constructor : undefined;
-
-                //if parent constructor - just call it
-                if ( me.self && me.self !== Class ) {
-                    constructor && constructor.apply(me, arguments);
-
-                    return;
-                }
-
-
-                //save call arguments
-                me.initArguments = arguments;
-
-                //properties processing
-
-                //init privates storage
-                me.privates = {};
-
-                //assign values
-                if ( xs.isObject(descriptor.properties) ) {
-                    var properties = descriptor.properties;
-                    var keys = Object.keys(properties);
-                    var i, length = keys.length, name, property;
-
-                    for ( i = 0; i < length; i++ ) {
-                        name = keys[i];
-                        property = properties[name];
-                        property.hasOwnProperty('value') && (me[name] = property.value);
-                    }
-                }
-
-                //native constructor call
-
-                //save class reference
-                me.self = Class;
-
-                //apply constructor
-                constructor && constructor.apply(me, arguments);
-            };
-
-            return Class;
-        };
-
-        /**
-         * Returns factory for given Class
-         *
-         * @ignore
-         *
-         * @method createFactory
-         *
-         * @param {Function} Class
-         *
-         * @return {Function} factory for given Class
-         */
-        var _createFactory = function ( Class ) {
-            //this - current class
-            //arguments - new instance arguments
-
-            //create wrapper
-            var xClass = function ( args ) {
-                return Class.apply(this, args);
-            };
-
-            //assign prototype
-            xClass.prototype = Class.prototype;
-
-            //return factory
-            return function () {
-
-                //return instance
-                return new xClass(arguments);
-            };
-        };
-
-        /**
-         * Returns prototype for descriptor function
-         *
-         * @ignore
-         *
-         * @method createDescriptorPrototype
-         *
-         * @return {Object} new descriptor prototype
-         */
-        var _createDescriptorPrototype = function () {
-            return {
-
-                //class namespace
-                namespace: undefined,
-
-                //class imports list
-                imports: {},
-
-                //class parent
-                extends: undefined,
-
-                //class mixins list
-                mixins: {},
-
-                //class implements list
-                implements: {},
-
-                //class singleton flag
-                singleton: undefined,
-
-                //class interface flag
-                interface: undefined,
-
-                //class constants list
-                const: {},
-
-                //class statics list
-                static: {
-                    //class static methods list
-                    methods: {},
-
-                    //class static properties list
-                    properties: {}
-                },
-
-                //class constructor
-                constructor: undefined,
-
-                //class methods list
-                methods: {},
-
-                //class properties list
-                properties: {}
-            };
-        };
-
-        /**
-         * Creates class sample and starts processors applying
-         *
-         * For example:
-         *
-         *     //create simple Class
-         *     var Class = xs.Class.create(function (self, ns) {
-         *         //here is Class descriptor returned
-         *         return {
-         *         };
-         *     }, function(Class) {
-         *         console.log('class', Class, 'created');
-         *     );
-         *
-         * @method create
-         *
-         * @param {Function} Descriptor descriptor constructor. Creates raw descriptor instance. Is called with 3 params:
-         *
-         * - self. Created class instance
-         * - ns. namespace object, where namespace references are placed
-         * - imports. namespace object, where namespace references are placed
-         *
-         * @param {Function} createdFn class creation callback. Is called after
-         * {@link xs.Class#preprocessors preprocessors} stack is processed. When called, created class is passed as param
-         *
-         * @return {Function} created Class
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - descFn is given not as function
-         * - descFn doesn't return object
-         */
-        me.create = function ( Descriptor, createdFn ) {
-
-            //Descriptor must be function
-            if ( !xs.isFunction(Descriptor) ) {
-                throw new Error('Class descriptor must be evaluated function');
-            }
-
-            xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
-
-            //create class
-            var Class = _create();
-
-            //assign factory for class
-            Class.factory = _createFactory(Class);
-
-            //get namespace for Class
-            var namespace = Class.namespace = {};
-
-            //get imports for Class
-            var imports = Class.imports = {};
-
-            //Fill descriptor prototype
-            Descriptor.prototype = _createDescriptorPrototype();
-
-            //get descriptor instance
-            var descriptor = new Descriptor(Class, namespace, imports);
-
-            //check descriptor is object
-            if ( !xs.isObject(descriptor) ) {
-                throw new Error('Evaluated class descriptor must be object');
-            }
-
-            //save Class descriptor
-            xs.const(Class, 'descriptor', {});
-
-//            //set class not ready yet (until preprocessors done)
-//            Class.isReady = false;
-//TODO make more pretty
-            //process preprocessors stack before createdFn called
-            preprocessors.process([
-                Class,
-                descriptor,
-                namespace
-            ], [
-                Class,
-                descriptor,
-                namespace
-            ], function () {
-//                //set class ready
-//                Class.isReady = true;
-//TODO make more pretty
-                //call createdFn
-                createdFn(Class);
-
-                //process postprocessors stack after createdFn called
-                postprocessors.process([
-                    Class,
-                    descriptor,
-                    namespace
-                ], [
-                    Class,
-                    descriptor,
-                    namespace
-                ]);
-            });
-
-            return Class;
-        };
-    });
-
-    //define prototype of xs.Base
-    xs.Base = new Function;
-    xs.Base.descriptor = {};
+    }
 })(window, 'xs');

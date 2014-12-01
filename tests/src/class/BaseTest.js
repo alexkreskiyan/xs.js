@@ -68,23 +68,14 @@ require([
         xs.ClassManager.add(ChildName, Child);
 
 
-        //check isChild
-        strictEqual(Child.isChild(Parent), true);
-        strictEqual(Parent.isChild(Base), true);
-        strictEqual(Child.isChild(Base), true);
+        //check inherits
+        strictEqual(Child.inherits(Parent), true);
+        strictEqual(Parent.inherits(Base), true);
+        strictEqual(Child.inherits(Base), true);
 
-        strictEqual(Base.isChild(Parent), false);
-        strictEqual(Parent.isChild(Child), false);
-        strictEqual(Base.isChild(Child), false);
-
-        //check isParent
-        strictEqual(Base.isParent(Parent), true);
-        strictEqual(Parent.isParent(Child), true);
-        strictEqual(Base.isParent(Child), true);
-
-        strictEqual(Child.isParent(Parent), false);
-        strictEqual(Parent.isParent(Base), false);
-        strictEqual(Child.isParent(Base), false);
+        strictEqual(Base.inherits(Parent), false);
+        strictEqual(Parent.inherits(Child), false);
+        strictEqual(Base.inherits(Child), false);
 
         //tearDown
         //Base
