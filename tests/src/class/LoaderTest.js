@@ -13,7 +13,11 @@ require([
     'xs.lang.List',
     'xs.lang.Object',
     'xs.lang.Attribute',
+    'xs.lang.Function',
     'xs.core.Debug',
+    'xs.class.Class',
+    'xs.class.ClassManager',
+    'xs.class.preprocessors.extend',
     'xs.class.Loader'
 ], function () {
 
@@ -243,31 +247,53 @@ require([
         xs.Loader.paths.add(paths);
     });
 
-    test('require', function () {
-        expect(0);
-        xs.Loader.paths.add('xs', '/src');
-//        xs.Loader.require('xs.class.Class', function ( list ) {
-//            xs.log('DONE:', list);
-//        });
-//        xs.Loader.require('xs.class.ClassManager', function ( list ) {
-//            xs.log('DONE:', list);
-//        });
-//        xs.Loader.require([
-//            'xs.class.Class',
-//            'xs.class.ClassManager'
-//        ], function ( list ) {
-//            xs.log('DONE:', list);
-//        });
+    asyncTest('require', function () {
+        //setUp
+        xs.Loader.paths.add('demo.loader', '/tests/resources/class/Loader');
+
+        //assert classes were not loaded yet
+        strictEqual(xs.ClassManager.has('demo.loader.Demo'), false);
+        strictEqual(xs.ClassManager.has('demo.loader.Sample'), false);
+
+        //require classes
         xs.Loader.require([
-            'xs.class.Class',
-            'xs.class.ClassManager',
-            'xs.class.ClassManager2'
-        ], function ( loaded ) {
-            xs.log('LOADED:', loaded);
-        }, function ( failed, loaded, unresolved ) {
-            xs.log('FAILED:', failed);
-            xs.log('LOADED:', loaded);
-            xs.log('UNRESOLVED:', unresolved);
+            'demo.loader.Demo',
+            'demo.loader.Sample'
+        ], function (loaded) {
+            //continue async test
+            start();
+
+            //assert all was loaded nicely
+            strictEqual(JSON.stringify(loaded), '{"demo.loader.Demo":"/tests/resources/class/Loader/Demo.js","demo.loader.Sample":"/tests/resources/class/Loader/Sample.js"}');
+
+            //assert classes loaded
+            strictEqual(xs.ClassManager.has('demo.loader.Demo'), true);
+            strictEqual(xs.ClassManager.has('demo.loader.Sample'), true);
+
+            //cleanUp
+            xs.ClassManager.delete('demo.loader.Demo');
+            xs.ClassManager.delete('demo.loader.Sample');
+
+            //stop async test
+            stop();
+
+            //require loaded and failed classes
+            xs.Loader.require([
+                'demo.loader.Demo',
+                'demo.loader.Sample2'
+            ], function (loaded) {
+            }, function (failed, loaded) {
+                //continue async test
+                start();
+
+                //assert require results are correct
+                strictEqual(JSON.stringify(failed), '{"demo.loader.Sample2":"/tests/resources/class/Loader/Sample2.js"}');
+                strictEqual(JSON.stringify(loaded), '{"demo.loader.Demo":"/tests/resources/class/Loader/Demo.js"}');
+
+                //assert classes not loaded
+                strictEqual(xs.ClassManager.has('demo.loader.Demo'), false);
+                strictEqual(xs.ClassManager.has('demo.loader.Sample'), false);
+            });
         });
     });
 });
