@@ -145,7 +145,7 @@
             var descriptor = new Descriptor(Class, namespace, imports);
 
             //save Class descriptor
-            xs.const(Class, 'descriptor', {});
+            xs.const(Class, 'descriptor', _createDescriptorPrototype());
 
 //            //set class not ready yet (until preprocessors done)
 //            Class.isReady = false;

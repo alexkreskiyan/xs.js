@@ -43,10 +43,13 @@
             var imported = xs.ClassManager.get(name);
 
             xs.log('xs.class.preprocessor.imports. Importing:', name, 'as', alias);
-            //if imported class is already loaded - save it in imports with alias
+            //if imported class is already loaded
             if ( imported ) {
-                xs.log('xs.class.preprocessor.imports. Imported', name, 'already loaded, saving as', alias, 'in imports');
-                Class.imports[alias] = imported;
+                //if alias given -  save it in imports with alias
+                if ( alias !== null ) {
+                    xs.log('xs.class.preprocessor.imports. Imported', name, 'already loaded, saving as', alias, 'in imports');
+                    Class.imports[alias] = imported;
+                }
 
                 return;
             }
@@ -69,8 +72,11 @@
 
             //assign imports
             xs.each(loads, function ( name ) {
-                //save loaded class in imports by alias
-                Class.imports[loads[name]] = xs.ClassManager.get(name);
+                var alias = imports[name];
+                //if alias given -  save it in imports with alias
+                if ( alias !== null ) {
+                    Class.imports[alias] = xs.ClassManager.get(name);
+                }
             });
 
             //remove imports from Class

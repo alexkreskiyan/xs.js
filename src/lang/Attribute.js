@@ -258,7 +258,7 @@
          *     console.log(xs.Attribute.isAssigned(x, 'a')); //true
          *     console.log(xs.Attribute.isAccessed(x, 'a')); //false
          *     console.log(xs.Attribute.isWritable(x, 'a')); //false
-         *     console.log(xs.Attribute.isConfigurable(x, 'a')); //false
+         *     console.log(xs.Attribute.isConfigurable(x, 'a')); //true
          *     console.log(xs.Attribute.isEnumerable(x, 'a')); //true
          *
          * @method const
@@ -279,7 +279,7 @@
                 value: value,
                 writable: false,
                 enumerable: true,
-                configurable: false
+                configurable: true
             });
         };
 
@@ -373,7 +373,7 @@
              *     //    value: undefined,
              *     //    writable: false,
              *     //    enumerable: true,
-             *     //    configurable: false
+             *     //    configurable: true
              *     //}
              *     var descriptor = xs.Attribute.property.prepare('x', {
              *         get: function() {}
@@ -384,7 +384,7 @@
              *     //    get: function(){},
              *     //    set: function(value) { this.privates.x = value },
              *     //    enumerable: true,
-             *     //    configurable: false
+             *     //    configurable: true
              *     //}
              *
              * @method prepare
@@ -402,7 +402,7 @@
                         value: descriptor,
                         writable: true,
                         enumerable: true,
-                        configurable: false
+                        configurable: true
                     };
                 }
 
@@ -418,7 +418,7 @@
                     descriptor.writable = true;
                 }
                 descriptor.enumerable = true;
-                descriptor.configurable = false;
+                descriptor.configurable = true;
 
                 return descriptor;
             };
@@ -442,7 +442,7 @@
              *     //    value: 1,
              *     //    writable: true,
              *     //    enumerable: true,
-             *     //    configurable: false
+             *     //    configurable: true
              *     //}
              *     console.log(xs.Attribute.property.define(x, 'a', {
              *         value: 1,
@@ -470,7 +470,7 @@
                 //writable, enumerable and configurable are immutable defaults
                 xs.extend(descriptor, {
                     enumerable: true,
-                    configurable: false
+                    configurable: true
                 });
                 if ( !descriptor.get && !descriptor.set ) {
                     descriptor.writable = true;
@@ -506,7 +506,7 @@
              *     //    value: function(){},
              *     //    writable: function(value) { this.privates.x = value },
              *     //    enumerable: true,
-             *     //    configurable: false
+             *     //    configurable: true
              *     //}
              *
              * @method prepare
@@ -529,7 +529,7 @@
                         value: descriptor,
                         writable: false,
                         enumerable: true,
-                        configurable: false
+                        configurable: true
                     };
 
                     //or complex object descriptor with fn in descriptor.value
@@ -541,7 +541,7 @@
                 xs.extend(descriptor, {
                     writable: false,
                     enumerable: true,
-                    configurable: false
+                    configurable: true
                 });
 
                 return descriptor;
@@ -564,7 +564,7 @@
              *     //    value: function(){ },
              *     //    writable: false,
              *     //    enumerable: true,
-             *     //    configurable: false
+             *     //    configurable: true
              *     //}
              *     console.log(xs.Attribute.method.define(x, 'a', {
              *         value:function(){ }
@@ -590,7 +590,7 @@
                     value: descriptor.value,
                     writable: false,
                     enumerable: true,
-                    configurable: false
+                    configurable: true
                 });
             };
         });
