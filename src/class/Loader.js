@@ -93,11 +93,10 @@
          * Unresolved means, that those were not loaded yet before fail
          */
         me.require = function ( name, handleLoad, handleFail ) {
-            var me = this;
             xs.log('xs.Loader::require. Acquired:', name);
 
             //init loaded classes list
-            var loadList = _getLoadList.call(me, xs.isArray(name) ? name : [name]);
+            var loadList = _getLoadList(xs.isArray(name) ? name : [name]);
             xs.log('xs.Loader::require. LoadList:', loadList);
 
             //if failed section is not empty - handle fail
@@ -158,7 +157,6 @@
          * - class was already attempted to load, but load failed - error occurred
          */
         function _getLoadList ( classes ) {
-            var me = this;
 
             /**
              * Load list
@@ -187,7 +185,7 @@
                 }
 
                 //resolve name with paths
-                var path = me.paths.resolve(name);
+                var path = paths.resolve(name);
 
                 xs.log('xs.Loader::getLoadList. Resolved class "' + name + '" as path"' + path + '"');
                 xs.log('xs.Loader::getLoadList. Check path "' + path + '"');
@@ -261,7 +259,7 @@
          *
          * @singleton
          */
-        me.paths = new (function () {
+        var paths = me.paths = new (function () {
             var me = this;
 
             /**
@@ -829,4 +827,8 @@
 
         LoaderError.prototype = new Error();
     });
+
+    xs.extend(xs, xs.pick(xs.Loader, [
+        'require'
+    ]));
 })(window, 'xs');

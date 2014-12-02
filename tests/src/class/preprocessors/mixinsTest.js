@@ -17,6 +17,7 @@ require([
     'xs.core.Debug',
     'xs.class.Class',
     'xs.class.ClassManager',
+    'xs.class.Loader',
     'xs.class.preprocessors.namespace',
     'xs.class.preprocessors.imports',
     'xs.class.preprocessors.extends',
@@ -34,4 +35,14 @@ require([
     'use strict';
 
     module('xs.class.preprocessors.mixins');
+
+    test('mixins chain', function () {
+        xs.Loader.paths.add('tests','/tests/resources/');
+        xs.define('tests.class.preprocessors.mixins.Child', function () {
+            this.namespace = 'tests.class.preprocessors.mixins';
+            this.extends = 'ns.Base';
+            this.mixins.mix2 = 'ns.Mix2';
+        });
+    });
+
 });

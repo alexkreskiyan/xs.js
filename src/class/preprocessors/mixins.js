@@ -14,61 +14,6 @@
     var xs = root[ns];
 
     /**
-     * Core mixins function. Defaults target descriptor parts with mix descriptor paths
-     *
-     * @ignore
-     *
-     * @method mixin
-     *
-     * @param {Object} mix mixin class descriptor
-     * @param {Object} target target class descriptor
-     */
-    var mixin = function ( mix, target ) {
-        //constants
-        xs.defaults(target.const, mix.const);
-
-        //static properties
-        xs.defaults(target.static.properties, mix.static.properties);
-
-        //static methods
-        xs.defaults(target.static.methods, mix.static.methods);
-
-        //properties
-        xs.defaults(target.properties, mix.properties);
-
-        //methods
-        xs.defaults(target.methods, mix.methods);
-    };
-
-    /**
-     * Core mixins function. Defaults target descriptor parts with mix descriptor paths
-     *
-     * @ignore
-     *
-     * @method applyMixins
-     *
-     * @param {Object} mixins mixins list
-     * @param {Object} target target class
-     */
-    var applyMixins = function ( mixins, target ) {
-        //create mixins property in target.prototype
-        target.prototype.mixins = {};
-
-        //apply each mix in reverse mode (last mentioned mix has advantage)
-        xs.eachReverse(mixins, function ( name, alias ) {
-
-            //get reference for mixed class
-            var mixed = xs.ClassManager.get(name);
-
-            //mix mixed class descriptor into target descriptor
-            mixin(mixed.descriptor, target.descriptor);
-
-            //save mixed.prototype into target.prototype.mixins
-            target.prototype.mixins[alias] = mixed.prototype;
-        });
-    };
-
-    /**
      * Preprocessor mixins
      * Is used to process class mixins
      *
@@ -123,7 +68,7 @@
         //if no loads required, apply mixes and return
         if ( !xs.size(loads) ) {
             //apply mixins to Class.descriptor
-            applyMixins(mixins, Class);
+            _applyMixins(mixins, Class);
 
             return;
         }
@@ -132,7 +77,7 @@
         xs.require(loads, function () {
 
             //apply mixins to Class.descriptor
-            applyMixins(mixins, Class);
+            _applyMixins(mixins, Class);
 
             //call ready to notify processor stack, that import succeed
             ready();
@@ -142,6 +87,90 @@
         return false;
     }, 'after', 'extends');
 
+    /**
+     * Core mixins function. Defaults target descriptor parts with mix descriptor paths
+     *
+     * @ignore
+     *
+     * @method applyMixins
+     *
+     * @param {Object} mixins mixins list
+     * @param {Object} target target class
+     */
+    var _applyMixins = function ( mixins, target ) {
+        //create mixins property in target.prototype
+        target.prototype.mixins = {};
+
+        //apply each mix in reverse mode (last mentioned mix has advantage)
+        xs.eachReverse(mixins, function ( name, alias ) {
+
+            //get reference for mixed class
+            var mixed = xs.ClassManager.get(name);
+
+            //mix mixed class descriptor into target descriptor
+            _mixin(mixed.descriptor, target.descriptor);
+
+            //save mixed into target.prototype.mixins
+            target.prototype.mixins[alias] = mixed;
+        });
+    };
+
+    /**
+     * Core mixins function. Defaults target descriptor parts with mix descriptor paths
+     *
+     * @ignore
+     *
+     * @method mixin
+     *
+     * @param {Object} mix mixin class descriptor
+     * @param {Object} target target class descriptor
+     */
+    var _mixin = function ( mix, target ) {
+
+        //extend constants
+        _extend('constant', mix.const, target.const);
+
+        //static properties
+        _extend('static property', mix.static.properties, target.static.properties);
+
+        //static methods
+        _extend('static method', mix.static.methods, target.static.methods);
+
+        //properties
+        _extend('property', mix.properties, target.properties);
+
+        //methods
+        _extend('method', mix.methods, target.methods);
+    };
+
+    /**
+     * Core mixins function. Checks that source doesn't override target and extends it
+     *
+     * @ignore
+     *
+     * @method mixin
+     *
+     * @param {String} type type of extended data
+     * @param {Object} source source data
+     * @param {Object} target target data
+     */
+    var _extend = function ( type, source, target ) {
+        //init declared variable, that contains name of already declared element
+        var declared;
+
+        //try to find declared
+        declared = xs.find(xs.keys(source), function ( key ) {
+            return xs.hasKey(target, key);
+        });
+
+        //throw error if found declared
+        if ( declared ) {
+            throw new MixinError(type + ' "' + declared + '" is already declared');
+        }
+
+        //extend target with source
+        xs.extend(target, source);
+    };
 
     /**
      * Internal error class
