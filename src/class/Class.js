@@ -338,8 +338,8 @@
     });
 
     //define prototype of xs.Base
-    xs.Base = new Function;
-    xs.Base.descriptor = {};
+    xs.Base = xs.Class.create(function () {
+    });
 
     /**
      * Private internal stack class

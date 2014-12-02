@@ -47,14 +47,24 @@
      *
      * @method applyMixins
      *
-     * @param {Object} mixes mixes list
-     * @param {Object} target target class descriptor
+     * @param {Object} mixins mixins list
+     * @param {Object} target target class
      */
-    var applyMixins = function ( mixes, target ) {
-        //TODO: inherit mixins, save mixins list, save mixins prototypes, apply mixins
+    var applyMixins = function ( mixins, target ) {
+        //create mixins property in target.prototype
+        target.prototype.mixins = {};
+
         //apply each mix in reverse mode (last mentioned mix has advantage)
-        xs.eachReverse(mixes, function ( mixed, alias ) {
-            mixin(mixed.descriptor, target);
+        xs.eachReverse(mixins, function ( name, alias ) {
+
+            //get reference for mixed class
+            var mixed = xs.ClassManager.get(name);
+
+            //mix mixed class descriptor into target descriptor
+            mixin(mixed.descriptor, target.descriptor);
+
+            //save mixed.prototype into target.prototype.mixins
+            target.prototype.mixins[alias] = mixed.prototype;
         });
     };
 
@@ -71,29 +81,36 @@
         return true;
     }, function ( Class, descriptor, ns, ready ) {
 
-        //get mixins list
-        var mixins = descriptor.mixins;
+        //if mixins are specified not as object - throw respective error
+        if ( !xs.isObject(descriptor.mixins) ) {
+            throw new MixinError('incorrect mixins list');
+        }
 
+        //init
+        //init mixins list
+        var mixins = Class.descriptor.mixins = {};
+
+        //extend mixins with inherited mixins
+        xs.extend(mixins, Class.parent.descriptor.mixins);
+
+        //extend mixins with own mixins
+        xs.extend(mixins, descriptor.mixins);
+
+
+        //load
         //init loads list
         var loads = [];
 
-        //mixed classes list
-        var mixes = {};
-
         xs.log('xs.class.preprocessor.mixins. Mixins:', mixins);
-        xs.each(mixins, function ( name, alias ) {
+        xs.each(mixins, function ( name, alias, list ) {
 
-            //resolve name with namespace
-            name = Class.descriptor.namespace.resolve(name);
-
-            //try to get mixed class from ClassManager
-            var mixed = xs.ClassManager.get(name);
+            //resolve name with namespace and update list
+            name = list[alias] = Class.descriptor.namespace.resolve(name);
 
             xs.log('xs.class.preprocessor.mixins. Mixing in:', name, 'as', alias);
-            //if mixed class is already loaded - save it in mixed with alias
-            if ( mixed ) {
-                xs.log('xs.class.preprocessor.mixins. Mixed', name, 'already loaded, saving as', alias, 'in mixes');
-                mixes[alias] = mixed;
+            //if mixed class is already loaded - go to next mixin
+            if ( xs.ClassManager.has(name) ) {
+                xs.log('xs.class.preprocessor.mixins. Mixed', name, 'already loaded');
 
                 return;
             }
@@ -106,7 +123,7 @@
         //if no loads required, apply mixes and return
         if ( !xs.size(loads) ) {
             //apply mixins to Class.descriptor
-            applyMixins(mixes, Class.descriptor);
+            applyMixins(mixins, Class);
 
             return;
         }
@@ -114,14 +131,8 @@
         //require async
         xs.require(loads, function () {
 
-            //assign mixes
-            xs.each(loads, function ( name ) {
-                //save loaded class in mixes by alias
-                mixes[xs.keyOf(mixins, name)] = xs.ClassManager.get(name);
-            });
-
             //apply mixins to Class.descriptor
-            applyMixins(mixes, Class.descriptor);
+            applyMixins(mixins, Class);
 
             //call ready to notify processor stack, that import succeed
             ready();
@@ -130,4 +141,20 @@
         //return false to sign async processor
         return false;
     }, 'after', 'extends');
+
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class MixinError
+     */
+    function MixinError ( message ) {
+        this.message = 'xs.class.preprocessors.mixin :: ' + message;
+    }
+
+    MixinError.prototype = new Error();
 })(window, 'xs');
