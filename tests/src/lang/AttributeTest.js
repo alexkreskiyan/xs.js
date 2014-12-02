@@ -293,22 +293,12 @@ require([
         xs.Attribute.const(obj, 'a', value);
         strictEqual(obj.a, value);
 
-        //const redefined throws error
-        throws(function () {
-            xs.Attribute.const(obj, 'a', value);
-        });
-
         //const is defined
         strictEqual('a' in obj, true);
 
-        //const is immutable
+        //const is immutable for change
         throws(function () {
-            delete obj['a'];
-        });
-        strictEqual(obj['a'], value);
-
-        throws(function () {
-            obj['a'] = null;
+            obj.a = 1;
         });
         strictEqual(obj['a'], value);
     });
@@ -323,7 +313,7 @@ require([
         strictEqual(result.value, desc);
         strictEqual(result.writable, true);
         strictEqual(result.enumerable, true);
-        strictEqual(result.configurable, false);
+        strictEqual(result.configurable, true);
 
         //check for get|set descriptor
         desc = {
@@ -343,7 +333,7 @@ require([
         strictEqual(result.get, getter);
         strictEqual(result.set.toString(), 'function (value) { \'use strict\'; this.privates.x = value;}');
         strictEqual(result.default, 6);
-        strictEqual(result.configurable, false);
+        strictEqual(result.configurable, true);
         strictEqual(result.enumerable, true);
 
         //check for assigned descriptor
@@ -375,10 +365,6 @@ require([
         //try to define incorrect descriptor
         xs.Attribute.property.define(obj, 'a', value);
 
-        //redefine throws error
-        throws(function () {
-            xs.Attribute.property.define(obj, 'a', value);
-        });
         strictEqual(obj.a, undefined);
 
         //define assigned property correctly
@@ -391,7 +377,7 @@ require([
             someProperty: null
         });
         strictEqual(xs.Attribute.isAssigned(obj, 'b'), true);
-        strictEqual(xs.Attribute.isConfigurable(obj, 'b'), false);
+        strictEqual(xs.Attribute.isConfigurable(obj, 'b'), true);
         strictEqual(xs.Attribute.isWritable(obj, 'b'), true);
         strictEqual(xs.Attribute.isEnumerable(obj, 'b'), true);
         strictEqual(obj.b, value);
@@ -402,7 +388,7 @@ require([
             set: setter
         });
         strictEqual(xs.Attribute.isAccessed(obj, 'c'), true);
-        strictEqual(xs.Attribute.isConfigurable(obj, 'c'), false);
+        strictEqual(xs.Attribute.isConfigurable(obj, 'c'), true);
         strictEqual(xs.Attribute.isEnumerable(obj, 'c'), true);
     });
 
@@ -451,15 +437,10 @@ require([
         //define sample const
         xs.Attribute.const(obj, 'const', null);
 
-        //test when error for created && !configurable property
-        throws(function () {
-            xs.Attribute.method.define(obj, 'const', {value: value});
-        });
-
         //rights assignments are not writable, enumerable and not configurable
         xs.Attribute.method.define(obj, 'simple', {value: value});
         strictEqual(xs.Attribute.isWritable(obj, 'simple'), false);
-        strictEqual(xs.Attribute.isConfigurable(obj, 'simple'), false);
+        strictEqual(xs.Attribute.isConfigurable(obj, 'simple'), true);
         strictEqual(xs.Attribute.isEnumerable(obj, 'simple'), true);
     });
 });
