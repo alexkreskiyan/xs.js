@@ -26,42 +26,61 @@
         return true;
     }, function ( Class, descriptor ) {
 
+        //if static methods are specified not as object - throw respective error
+        if ( !xs.isObject(descriptor.static) || !xs.isObject(descriptor.static.methods) ) {
+            throw new StaticMethodError('incorrect static methods list');
+        }
+
         //init methods as empty hash
         var methods = {};
 
 
         //inherited
         //get inherited static methods from parent descriptor
-        var inherited = xs.isObject(Class.parent.descriptor.static) ? Class.parent.descriptor.static.methods : undefined;
+        var inherited = Class.parent.descriptor.static.methods;
 
         //extend static methods with inherited
-        xs.isObject(inherited) && xs.extend(methods, inherited);
+        xs.extend(methods, inherited);
 
 
         //own
         //get own static methods from raw descriptor
-        var own = xs.isObject(descriptor.static) ? descriptor.static.methods : undefined;
+        var own = Class.own.static.methods = descriptor.static.methods;
 
-        //apply if any
-        if ( xs.isObject(own) ) {
-            //prepare them
-            xs.each(own, function ( value, name, list ) {
-                list[name] = xs.Attribute.method.prepare(name, value);
-            });
+        //prepare them
+        xs.each(own, function ( value, name, list ) {
+            list[name] = xs.Attribute.method.prepare(name, value);
+        });
 
-            //extend methods with own ones
-            xs.extend(methods, own);
-        }
+        //extend methods with own ones
+        xs.extend(methods, own);
 
 
         //apply
         //save static methods to Class.descriptor
-        xs.isObject(Class.descriptor.static) || (Class.descriptor.static = {});
         Class.descriptor.static.methods = methods;
 
         //apply all methods
         xs.each(methods, function ( value, name ) {
+            if ( !xs.isString(name) || !name ) {
+                throw new StaticMethodError('incorrect static method name');
+            }
             xs.Attribute.method.define(Class, name, value);
         });
     }, 'after', 'staticProperties');
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class StaticMethodError
+     */
+    function StaticMethodError ( message ) {
+        this.message = 'xs.class.preprocessors.staticMethods :: ' + message;
+    }
+
+    StaticMethodError.prototype = new Error();
 })(window, 'xs');
