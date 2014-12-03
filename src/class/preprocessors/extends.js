@@ -14,6 +14,73 @@
     var xs = root[ns];
 
     /**
+     * Preprocessor extends
+     * Is used to extend child class from parent class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     */
+    xs.Class.preprocessors.add('extends', function () {
+
+        return true;
+    }, function ( Class, descriptor, ns, ready ) {
+        var extended = descriptor.extends;
+
+        xs.log('xs.class.preprocessor.extends. Extended:', extended);
+        //if incorrect/no parent given - extend from xs.Base
+        if ( !xs.isString(extended) ) {
+            xs.log('xs.class.preprocessor.extends. Extending xs.Base');
+            _extend(Class, xs.Base);
+
+            return;
+        }
+
+        extended = Class.descriptor.namespace.resolve(extended);
+
+        xs.log('xs.class.preprocessor.extends. Extending', extended);
+        //extend from parent, if exists
+        if ( xs.ClassManager.has(extended) ) {
+            xs.log('xs.class.preprocessor.extends. Parent', extended, 'was in class manager, extending');
+            //apply extends
+            _applyExtends(Class, extended);
+
+            return;
+        }
+
+        xs.log('xs.class.preprocessor.extends. Loading parent class', extended);
+        //require async
+        xs.require(extended, function () {
+            xs.log('xs.class.preprocessor.extends. Parent', extended, 'loaded, extending');
+            //apply extends
+            _applyExtends(Class, extended);
+
+            ready();
+        });
+
+        //return false to sign async processor
+        return false;
+    }, 'after', 'imports');
+
+    /**
+     * Core extends function. Saves imported classes by aliases
+     *
+     * @ignore
+     *
+     * @method applyImports
+     *
+     * @param {Object} target target class
+     * @param {Object} extended extended class name
+     */
+    var _applyExtends = function ( target, extended ) {
+        //extend
+        _extend(target, xs.ClassManager.get(extended));
+
+        //save extends to descriptor
+        target.descriptor.extends = extended;
+    };
+
+    /**
      * Core extend function
      *
      * @ignore
@@ -21,7 +88,7 @@
      * @param {Function} child child class
      * @param {Function} parent parent class
      */
-    var extend = function ( child, parent ) {
+    var _extend = function ( child, parent ) {
         //create fake constructor
         var fn = function () {
         };
@@ -38,60 +105,4 @@
         //save reference to parent
         xs.const(child, 'parent', parent);
     };
-
-    /**
-     * Preprocessor extends
-     * Is used to extend child class from parent class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     */
-    xs.Class.preprocessors.add('extends', function () {
-
-        return true;
-    }, function ( Class, descriptor, ns, ready ) {
-        var extended = descriptor.extends;
-
-        xs.log('xs.class.preprocessor.extend. Extended:', extended);
-        //if incorrect/no parent given - extend from xs.Base
-        if ( !xs.isString(extended) ) {
-            xs.log('xs.class.preprocessor.extend. Extending xs.Base');
-            extend(Class, xs.Base);
-
-            return;
-        }
-
-        extended = Class.descriptor.namespace.resolve(extended);
-
-        xs.log('xs.class.preprocessor.extend. Extending', extended);
-        //try to get parent from ClassManager
-        var parent = xs.ClassManager.get(extended);
-
-        //extend from parent, if exists
-        if ( parent ) {
-            extend(Class, parent);
-
-            xs.log('xs.class.preprocessor.extend. Parent', extended, 'was in class manager, extending');
-            //save extends to descriptor
-            Class.descriptor.extends = extended;
-
-            return;
-        }
-
-        xs.log('xs.class.preprocessor.extend. Loading parent class', extended);
-        //require async
-        xs.require(extended, function () {
-            extend(Class, xs.ClassManager.get(extended));
-
-            xs.log('xs.class.preprocessor.extend. Parent', extended, 'loaded, extending');
-            //save extends to descriptor
-            Class.descriptor.extends = extended;
-
-            ready();
-        });
-
-        //return false to sign async processor
-        return false;
-    }, 'after', 'imports');
 })(window, 'xs');
