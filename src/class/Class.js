@@ -340,7 +340,7 @@
 
     //define prototype of xs.Base
     xs.Base = xs.Class.create(function () {
-    });
+    }, xs.emptyFn);
 
     /**
      * Private internal stack class

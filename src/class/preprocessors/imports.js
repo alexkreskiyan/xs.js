@@ -26,6 +26,7 @@
         return xs.isObject(descriptor.imports);
     }, function ( Class, descriptor, ns, ready ) {
 
+        //init
         //get imports list
         var imports = descriptor.imports;
 
@@ -33,23 +34,16 @@
         var loads = [];
 
 
+        //check imports to find not loaded ones
         xs.log('xs.class.preprocessor.imports. Imports:', imports);
         xs.each(imports, function ( alias, name ) {
 
             //resolve name with namespace
             name = Class.descriptor.namespace.resolve(name);
 
-            //try to get imported class from ClassManager
-            var imported = xs.ClassManager.get(name);
-
             xs.log('xs.class.preprocessor.imports. Importing:', name, 'as', alias);
-            //if imported class is already loaded
-            if ( imported ) {
-                //if alias given -  save it in imports with alias
-                if ( alias !== null ) {
-                    xs.log('xs.class.preprocessor.imports. Imported', name, 'already loaded, saving as', alias, 'in imports');
-                    Class.imports[alias] = imported;
-                }
+            //if imported class is already loaded - continue to next item
+            if ( xs.ClassManager.has(name) ) {
 
                 return;
             }
@@ -59,10 +53,11 @@
             loads.push(name);
         });
 
-        //return if no loads required
+        //if no loads required - apply imports immediately and return
         if ( !xs.size(loads) ) {
-            //remove imports from Class
-            delete Class.imports;
+
+            //apply imports
+            _applyImports(Class, imports);
 
             return;
         }
@@ -70,17 +65,8 @@
         //require async
         xs.require(loads, function () {
 
-            //assign imports
-            xs.each(loads, function ( name ) {
-                var alias = imports[name];
-                //if alias given -  save it in imports with alias
-                if ( alias !== null ) {
-                    Class.imports[alias] = xs.ClassManager.get(name);
-                }
-            });
-
-            //remove imports from Class
-            delete Class.imports;
+            //apply imports
+            _applyImports(Class, imports);
 
             //call ready to notify processor stack, that import succeed
             ready();
@@ -89,4 +75,27 @@
         //return false to sign async processor
         return false;
     }, 'after', 'namespace');
+
+    /**
+     * Core imports function. Saves imported classes by aliases
+     *
+     * @ignore
+     *
+     * @method applyImports
+     *
+     * @param {Object} target target class
+     * @param {Object} imports mixins imports
+     */
+    var _applyImports = function ( target, imports ) {
+        //assign imports
+        xs.each(imports, function ( alias, name ) {
+            //if alias given -  save it in imports with alias
+            if ( alias !== null ) {
+                target.imports[alias] = xs.ClassManager.get(name);
+            }
+        });
+
+        //remove imports from Class
+        delete target.imports;
+    };
 })(window, 'xs');
