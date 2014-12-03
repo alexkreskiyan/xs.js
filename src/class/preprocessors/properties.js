@@ -26,6 +26,11 @@
         return true;
     }, function ( Class, descriptor ) {
 
+        //if properties are specified not as object - throw respective error
+        if ( !xs.isObject(descriptor.properties) ) {
+            throw new PropertyError('incorrect properties list');
+        }
+
         //init properties as empty hash
         var properties = {};
 
@@ -35,25 +40,21 @@
         var inherited = Class.parent.descriptor.properties;
 
         //extend properties with inherited
-        if ( xs.isObject(inherited) ) {
-            xs.extend(properties, inherited);
-        }
+        xs.extend(properties, inherited);
 
 
         //own
-        var own = descriptor.properties;
+        var own = Class.own.properties = descriptor.properties;
 
         //get own properties from raw descriptor and apply
-        if ( xs.isObject(own) ) {
 
-            //prepare them
-            xs.each(own, function ( value, name, list ) {
-                list[name] = xs.Attribute.property.prepare(name, value);
-            });
+        //prepare them
+        xs.each(own, function ( value, name, list ) {
+            list[name] = xs.Attribute.property.prepare(name, value);
+        });
 
-            //extend properties with own ones
-            xs.extend(properties, own);
-        }
+        //extend properties with own ones
+        xs.extend(properties, own);
 
 
         //apply
@@ -64,14 +65,30 @@
         var prototype = Class.prototype;
 
         xs.each(properties, function ( descriptor, name ) {
+            if ( !xs.isString(name) || !name ) {
+                throw new PropertyError('incorrect property name');
+            }
 
             //save property to prototype
             xs.Attribute.property.define(prototype, name, descriptor);
 
             //set undefined for assigned properties
-            if ( xs.hasKey(descriptor, 'value') ) {
-                prototype[name] = undefined;
-            }
+            xs.hasKey(descriptor, 'value') && (prototype[name] = undefined);
         });
     }, 'after', 'constructor');
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class PropertyError
+     */
+    function PropertyError ( message ) {
+        this.message = 'xs.class.preprocessors.properties :: ' + message;
+    }
+
+    PropertyError.prototype = new Error();
 })(window, 'xs');

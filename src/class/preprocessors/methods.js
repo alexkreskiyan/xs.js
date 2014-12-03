@@ -26,6 +26,11 @@
         return true;
     }, function ( Class, descriptor ) {
 
+        //if methods are specified not as object - throw respective error
+        if ( !xs.isObject(descriptor.properties) ) {
+            throw new MethodError('incorrect methods list');
+        }
+
         //init methods as empty hash
         var methods = {};
 
@@ -35,23 +40,21 @@
         var inherited = Class.parent.descriptor.methods;
 
         //extend methods with inherited
-        xs.isObject(inherited) && xs.extend(methods, inherited);
+        xs.extend(methods, inherited);
 
 
         //own
         //get own methods from raw descriptor
-        var own = descriptor.methods;
+        var own = Class.own.methods = descriptor.methods;
 
         //apply if any
-        if ( xs.isObject(own) ) {
-            //prepare them
-            xs.each(own, function ( value, name, list ) {
-                list[name] = xs.Attribute.method.prepare(name, value);
-            });
+        //prepare them
+        xs.each(own, function ( value, name, list ) {
+            list[name] = xs.Attribute.method.prepare(name, value);
+        });
 
-            //extend methods with own ones
-            xs.extend(methods, own);
-        }
+        //extend methods with own ones
+        xs.extend(methods, own);
 
 
         //apply
@@ -60,7 +63,26 @@
 
         //apply all methods
         xs.each(methods, function ( value, name ) {
+            if ( !xs.isString(name) || !name ) {
+                throw new MethodError('incorrect method name');
+            }
+
             xs.Attribute.method.define(Class.prototype, name, value);
         });
     }, 'after', 'properties');
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class MethodError
+     */
+    function MethodError ( message ) {
+        this.message = 'xs.class.preprocessors.methods :: ' + message;
+    }
+
+    MethodError.prototype = new Error();
 })(window, 'xs');
