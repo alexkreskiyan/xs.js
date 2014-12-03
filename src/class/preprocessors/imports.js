@@ -26,6 +26,11 @@
         return xs.isObject(descriptor.imports);
     }, function ( Class, descriptor, ns, ready ) {
 
+        //if imports are specified not as object - throw respective error
+        if ( !xs.isObject(descriptor.imports) ) {
+            throw new ImportsError('incorrect imports list');
+        }
+
         //init
         //get imports list
         var imports = descriptor.imports;
@@ -90,12 +95,29 @@
         //assign imports
         xs.each(imports, function ( alias, name ) {
             //if alias given -  save it in imports with alias
-            if ( alias !== null ) {
+            if ( xs.isString(alias) ) {
                 target.imports[alias] = xs.ClassManager.get(name);
+            } else if ( alias !== null ) {
+                throw new ImportsError('incorrect alias:', alias);
             }
         });
 
         //remove imports from Class
         delete target.imports;
     };
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class ImportsError
+     */
+    function ImportsError ( message ) {
+        this.message = 'xs.class.preprocessors.imports :: ' + message;
+    }
+
+    ImportsError.prototype = new Error();
 })(window, 'xs');
