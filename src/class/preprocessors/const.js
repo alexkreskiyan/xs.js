@@ -53,8 +53,8 @@
         //apply
         //apply all constants
         xs.each(constants, function ( value, name ) {
-            if ( !xs.isString(name) ) {
-                throw new ConstError('name of constant', name, 'is incorrect');
+            if ( !xs.isString(name) || !name ) {
+                throw new ConstError('incorrect constant name');
             }
             xs.const(Class, name, value);
         });

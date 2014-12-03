@@ -34,9 +34,9 @@
             _extend(Class, xs.Base);
 
             return;
-            //if extended is not string - throw respective error
-        } else if ( !xs.isString(extended) ) {
-            throw new ImportsError('incorrect extended name:', extended);
+            //if extended is not string (empty string) - throw respective error
+        } else if ( !xs.isString(extended) || !extended ) {
+            throw new ExtendsError('incorrect extended name');
         }
 
         extended = Class.descriptor.namespace.resolve(extended);

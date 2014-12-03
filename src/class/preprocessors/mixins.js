@@ -68,7 +68,7 @@
         //if no loads required, apply mixes and return
         if ( !xs.size(loads) ) {
             //apply mixins to Class.descriptor
-            _applyMixins(mixins, Class);
+            _applyMixins(Class, mixins);
 
             return;
         }
@@ -77,7 +77,7 @@
         xs.require(loads, function () {
 
             //apply mixins to Class.descriptor
-            _applyMixins(mixins, Class);
+            _applyMixins(Class, mixins);
 
             //call ready to notify processor stack, that import succeed
             ready();
@@ -94,10 +94,10 @@
      *
      * @method applyMixins
      *
-     * @param {Object} mixins mixins list
      * @param {Object} target target class
+     * @param {Object} mixins mixins list
      */
-    var _applyMixins = function ( mixins, target ) {
+    var _applyMixins = function ( target, mixins ) {
         //create mixins property in target.prototype
         target.prototype.mixins = {};
 

@@ -95,10 +95,10 @@
         //assign imports
         xs.each(imports, function ( alias, name ) {
             //if alias given -  save it in imports with alias
-            if ( xs.isString(alias) ) {
+            if ( xs.isString(alias) && alias ) {
                 target.imports[alias] = xs.ClassManager.get(name);
             } else if ( alias !== null ) {
-                throw new ImportsError('incorrect alias:', alias);
+                throw new ImportsError('incorrect alias');
             }
         });
 

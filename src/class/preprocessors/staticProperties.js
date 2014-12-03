@@ -26,6 +26,11 @@
         return true;
     }, function ( Class, descriptor ) {
 
+        //if static properties are specified not as object - throw respective error
+        if ( !xs.isObject(descriptor.static) || !xs.isObject(descriptor.static.properties) ) {
+            throw new StaticPropertyError('incorrect static properties list');
+        }
+
         //create privates storage in class
         Class.privates = {};
 
@@ -35,36 +40,50 @@
 
         //inherited
         //get inherited static properties from parent descriptor
-        var inherited = xs.isObject(Class.parent.descriptor.static) ? Class.parent.descriptor.static.properties : undefined;
+        var inherited = Class.parent.descriptor.static.properties;
 
         //extend static properties with inherited
-        xs.isObject(inherited) && xs.extend(properties, inherited);
+        xs.extend(properties, inherited);
 
 
         //own
         //get own static properties from raw descriptor
-        var own = xs.isObject(descriptor.static) ? descriptor.static.properties : undefined;
+        var own = Class.own.static.properties = descriptor.static.properties;
 
-        //apply if any
-        if ( xs.isObject(own) ) {
-            //prepare them
-            xs.each(own, function ( value, name, list ) {
-                list[name] = xs.Attribute.property.prepare(name, value);
-            });
+        //prepare them
+        xs.each(own, function ( value, name, list ) {
+            list[name] = xs.Attribute.property.prepare(name, value);
+        });
 
-            //extend properties with own ones
-            xs.extend(properties, own);
-        }
+        //extend properties with own ones
+        xs.extend(properties, own);
 
 
         //apply
         //save static properties to Class.descriptor
-        xs.isObject(Class.descriptor.static) || (Class.descriptor.static = {});
         Class.descriptor.static.properties = properties;
 
         //apply all properties
         xs.each(properties, function ( descriptor, name ) {
+            if ( !xs.isString(name) || !name ) {
+                throw new StaticPropertyError('incorrect static property name');
+            }
             xs.Attribute.property.define(Class, name, descriptor);
         });
     }, 'after', 'const');
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class StaticPropertyError
+     */
+    function StaticPropertyError ( message ) {
+        this.message = 'xs.class.preprocessors.staticProperties :: ' + message;
+    }
+
+    StaticPropertyError.prototype = new Error();
 })(window, 'xs');
