@@ -27,7 +27,7 @@
 
         //if constants are specified not as object - throw respective error
         if ( !xs.isObject(descriptor.const) ) {
-            throw new MixinError('incorrect constants list');
+            throw new ConstError('incorrect constants list');
         }
 
         //init constants as empty hash and save to Class.descriptor
@@ -53,22 +53,25 @@
         //apply
         //apply all constants
         xs.each(constants, function ( value, name ) {
+            if ( !xs.isString(name) ) {
+                throw new ConstError('name of constant', name, 'is incorrect');
+            }
             xs.const(Class, name, value);
         });
-
-        /**
-         * Internal error class
-         *
-         * @ignore
-         *
-         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-         *
-         * @class ConstError
-         */
-        function ConstError ( message ) {
-            this.message = 'xs.class.preprocessors.const :: ' + message;
-        }
-
-        ConstError.prototype = new Error();
     }, 'after', 'singleton');
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class ConstError
+     */
+    function ConstError ( message ) {
+        this.message = 'xs.class.preprocessors.const :: ' + message;
+    }
+
+    ConstError.prototype = new Error();
 })(window, 'xs');
