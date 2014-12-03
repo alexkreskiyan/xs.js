@@ -144,8 +144,9 @@
             //get descriptor instance
             var descriptor = new Descriptor(Class, namespace, imports);
 
-            //save Class descriptor
+            //save Class full and own descriptor
             xs.const(Class, 'descriptor', _createDescriptorPrototype());
+            xs.const(Class, 'own', _createDescriptorPrototype());
 
 //            //set class not ready yet (until preprocessors done)
 //            Class.isReady = false;

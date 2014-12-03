@@ -25,8 +25,13 @@
         return true;
     }, function ( Class, descriptor ) {
 
-        //init constants as empty hash
-        var constants = {};
+        //if constants are specified not as object - throw respective error
+        if ( !xs.isObject(descriptor.const) ) {
+            throw new MixinError('incorrect constants list');
+        }
+
+        //init constants as empty hash and save to Class.descriptor
+        var constants = Class.descriptor.const = {};
 
 
         //inherited
@@ -34,24 +39,36 @@
         var inherited = Class.parent.descriptor.const;
 
         //extend constants with inherited
-        xs.isObject(inherited) && xs.extend(constants, inherited);
+        xs.extend(constants, inherited);
 
 
         //own
-        //get own constants from raw descriptor
-        var own = descriptor.const;
+        //get own constants from raw descriptor and save to Class.descriptor
+        var own = Class.own.const = descriptor.const;
 
         //extend constants with own
-        xs.isObject(own) && xs.extend(constants, own);
+        xs.extend(constants, own);
 
 
         //apply
-        //save constants to Class.descriptor
-        Class.descriptor.const = constants;
-
         //apply all constants
         xs.each(constants, function ( value, name ) {
             xs.const(Class, name, value);
         });
+
+        /**
+         * Internal error class
+         *
+         * @ignore
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class ConstError
+         */
+        function ConstError ( message ) {
+            this.message = 'xs.class.preprocessors.const :: ' + message;
+        }
+
+        ConstError.prototype = new Error();
     }, 'after', 'singleton');
 })(window, 'xs');
