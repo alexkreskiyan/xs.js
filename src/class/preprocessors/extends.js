@@ -28,12 +28,15 @@
         var extended = descriptor.extends;
 
         xs.log('xs.class.preprocessor.extends. Extended:', extended);
-        //if incorrect/no parent given - extend from xs.Base
-        if ( !xs.isString(extended) ) {
+        //if no parent given - extend from xs.Base
+        if ( !xs.isDefined(extended) ) {
             xs.log('xs.class.preprocessor.extends. Extending xs.Base');
             _extend(Class, xs.Base);
 
             return;
+            //if extended is not string - throw respective error
+        } else if ( !xs.isString(extended) ) {
+            throw new ImportsError('incorrect extended name:', extended);
         }
 
         extended = Class.descriptor.namespace.resolve(extended);
@@ -105,4 +108,19 @@
         //save reference to parent
         xs.const(child, 'parent', parent);
     };
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class ExtendsError
+     */
+    function ExtendsError ( message ) {
+        this.message = 'xs.class.preprocessors.extends :: ' + message;
+    }
+
+    ExtendsError.prototype = new Error();
 })(window, 'xs');
