@@ -20,33 +20,29 @@ require([
     'xs.class.preprocessors.namespace',
     'xs.class.preprocessors.imports',
     'xs.class.preprocessors.extends',
+    'xs.class.preprocessors.prepareConstants',
+    'xs.class.preprocessors.prepareStaticProperties',
+    'xs.class.preprocessors.prepareStaticMethods',
+    'xs.class.preprocessors.prepareProperties',
+    'xs.class.preprocessors.prepareMethods',
     'xs.class.preprocessors.mixins',
     'xs.class.preprocessors.singleton',
-    'xs.class.preprocessors.const',
-    'xs.class.preprocessors.staticProperties',
-    'xs.class.preprocessors.staticMethods',
-    'xs.class.preprocessors.constructor',
-    'xs.class.preprocessors.properties',
-    'xs.class.preprocessors.methods',
+    'xs.class.preprocessors.defineConstants',
     'xs.class.Base'
 ], function () {
 
     'use strict';
 
-    module('xs.class.preprocessors.methods');
+    module('xs.class.preprocessors.defineConstants');
 
-    test('methods chain', function () {
+    test('const chain', function () {
         //setUp
-
         //Base
         var BaseName = 'my.Base';
 
         //define
         var Base = xs.Class.create(function () {
-            this.methods.a = function () {
-
-                return 1;
-            };
+            this.const.a = 1;
         });
 
         //save
@@ -62,14 +58,8 @@ require([
         //define
         var Parent = xs.Class.create(function () {
             this.extends = 'my.Base';
-            this.methods.a = function () {
-
-                return 2;
-            };
-            this.methods.b = function () {
-
-                return 3;
-            };
+            this.const.a = 2;
+            this.const.b = 3;
         });
 
         //save
@@ -85,10 +75,7 @@ require([
         //define
         var Child = xs.Class.create(function () {
             this.extends = 'my.Parent';
-            this.methods.c = function () {
-
-                return 5;
-            };
+            this.const.c = 5;
         });
 
         //save
@@ -98,21 +85,34 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
-        //check methods
+
+        //run test
+
+        //check constants
         //Base
-        var base = new my.Base;
-        strictEqual(base.a(), 1);
+        strictEqual(my.Base.a, 1);
+        strictEqual(xs.Attribute.isWritable(my.Base, 'a'), false);
+        strictEqual(xs.Attribute.isConfigurable(my.Base, 'a'), true);
 
         //Parent
-        var parent = new my.Parent;
-        strictEqual(parent.a(), 2);
-        strictEqual(parent.b(), 3);
+        strictEqual(my.Parent.a, 2);
+        strictEqual(xs.Attribute.isWritable(my.Parent, 'a'), false);
+        strictEqual(xs.Attribute.isConfigurable(my.Parent, 'a'), true);
+        strictEqual(my.Parent.b, 3);
+        strictEqual(xs.Attribute.isWritable(my.Parent, 'b'), false);
+        strictEqual(xs.Attribute.isConfigurable(my.Parent, 'b'), true);
 
         //Child
-        var child = new my.Child;
-        strictEqual(child.a(), 2);
-        strictEqual(child.b(), 3);
-        strictEqual(child.c(), 5);
+        strictEqual(my.Child.a, 2);
+        strictEqual(xs.Attribute.isWritable(my.Child, 'a'), false);
+        strictEqual(xs.Attribute.isConfigurable(my.Child, 'a'), true);
+        strictEqual(my.Child.b, 3);
+        strictEqual(xs.Attribute.isWritable(my.Child, 'b'), false);
+        strictEqual(xs.Attribute.isConfigurable(my.Child, 'b'), true);
+        strictEqual(my.Child.c, 5);
+        strictEqual(xs.Attribute.isWritable(my.Child, 'c'), false);
+        strictEqual(xs.Attribute.isConfigurable(my.Child, 'c'), true);
+
 
         //tearDown
 
@@ -128,4 +128,5 @@ require([
         xs.ClassManager.delete(ChildName);
         ChildSave && xs.ClassManager.add(ChildName, ChildSave);
     });
+    //TODO test async extend with using xs.Loader
 });

@@ -20,32 +20,33 @@ require([
     'xs.class.preprocessors.namespace',
     'xs.class.preprocessors.imports',
     'xs.class.preprocessors.extends',
+    'xs.class.preprocessors.prepareConstants',
+    'xs.class.preprocessors.prepareStaticProperties',
+    'xs.class.preprocessors.prepareStaticMethods',
+    'xs.class.preprocessors.prepareProperties',
+    'xs.class.preprocessors.prepareMethods',
     'xs.class.preprocessors.mixins',
     'xs.class.preprocessors.singleton',
-    'xs.class.preprocessors.const',
-    'xs.class.preprocessors.staticProperties',
-    'xs.class.preprocessors.staticMethods',
-    'xs.class.preprocessors.constructor',
-    'xs.class.preprocessors.properties',
+    'xs.class.preprocessors.defineConstants',
+    'xs.class.preprocessors.defineStaticProperties',
+    'xs.class.preprocessors.defineStaticMethods',
     'xs.class.Base'
 ], function () {
 
     'use strict';
 
-    module('xs.class.preprocessors.properties');
+    module('xs.class.preprocessors.defineStaticMethods');
 
-    test('properties chain', function () {
+    test('static methods chain', function () {
         //setUp
         //Base
         var BaseName = 'my.Base';
 
         //define
         var Base = xs.Class.create(function () {
-            this.properties.a = {
-                get: function () {
+            this.static.methods.a = function () {
 
-                    return 1;
-                }
+                return 1;
             };
         });
 
@@ -62,17 +63,13 @@ require([
         //define
         var Parent = xs.Class.create(function () {
             this.extends = 'my.Base';
-            this.properties.a = {
-                get: function () {
+            this.static.methods.a = function () {
 
-                    return this.privates.a;
-                }
+                return 2;
             };
-            this.properties.b = {
-                set: function ( b ) {
+            this.static.methods.b = function () {
 
-                    return this.privates.b = b + 1;
-                }
+                return 3;
             };
         });
 
@@ -89,16 +86,9 @@ require([
         //define
         var Child = xs.Class.create(function () {
             this.extends = 'my.Parent';
-            this.properties.a = 2;
-            this.properties.c = {
-                get: function () {
+            this.static.methods.c = function () {
 
-                    return this.privates.c + '!';
-                },
-                set: function ( c ) {
-
-                    return this.privates.c = '?' + c;
-                }
+                return 5;
             };
         });
 
@@ -110,48 +100,24 @@ require([
         xs.ClassManager.add(ChildName, Child);
 
 
+        //run test
+
         //check methods
         //Base
-        var base = new my.Base;
-        strictEqual(base.a, 1);
-
-        //readonly
-        base.a = 2;
-        strictEqual(base.a, 1);
+        strictEqual(my.Base.a(), 1);
 
         //Parent
-        var parent = new my.Parent;
-        strictEqual(parent.a, undefined);
-
-        //setter assigned
-        parent.a = 2;
-        strictEqual(parent.a, 2);
-        strictEqual(parent.privates.a, 2);
-        strictEqual(parent.b, undefined);
-
-        //getter assigned
-        parent.b = 2;
-        strictEqual(parent.b, 3);
-        strictEqual(parent.privates.b, 3);
+        strictEqual(my.Parent.a(), 2);
+        strictEqual(my.Parent.b(), 3);
 
         //Child
-        var child = new my.Child;
-        strictEqual(child.a, 2);
-        strictEqual(child.b, undefined);
-
-        //getter assigned
-        child.b = 2;
-        strictEqual(child.b, 3);
-        strictEqual(child.privates.b, 3);
-
-        strictEqual(child.c, 'undefined!');
-        strictEqual(child.privates.c, undefined);
-        child.c = 3;
-        strictEqual(child.c, '?3!');
-        strictEqual(child.privates.c, '?3');
+        strictEqual(my.Child.a(), 2);
+        strictEqual(my.Child.b(), 3);
+        strictEqual(my.Child.c(), 5);
 
 
         //tearDown
+
         //Base
         xs.ClassManager.delete(BaseName);
         BaseSave && xs.ClassManager.add(BaseName, BaseSave);

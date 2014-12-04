@@ -22,25 +22,26 @@ require([
     'xs.class.preprocessors.extends',
     'xs.class.preprocessors.prepareConstants',
     'xs.class.preprocessors.prepareStaticProperties',
-    'xs.class.preprocessors.prepareStaticMethods',
-    'xs.class.preprocessors.prepareProperties',
-    'xs.class.preprocessors.prepareMethods',
-    'xs.class.preprocessors.mixins',
-    'xs.class.preprocessors.singleton',
     'xs.class.Base'
 ], function () {
 
     'use strict';
 
-    module('xs.class.preprocessors.singleton');
+    module('xs.class.preprocessors.prepareStaticProperties');
 
-    test('singleton chain', function () {
+    test('static properties chain', function () {
         //setUp
         //Base
         var BaseName = 'my.Base';
 
         //define
         var Base = xs.Class.create(function () {
+            this.static.properties.a = {
+                get: function () {
+
+                    return 1;
+                }
+            };
         });
 
         //save
@@ -56,7 +57,18 @@ require([
         //define
         var Parent = xs.Class.create(function () {
             this.extends = 'my.Base';
-            this.singleton = true;
+            this.static.properties.a = {
+                get: function () {
+
+                    return this.privates.a;
+                }
+            };
+            this.static.properties.b = {
+                set: function ( b ) {
+
+                    return this.privates.b = b + 1;
+                }
+            };
         });
 
         //save
@@ -72,6 +84,17 @@ require([
         //define
         var Child = xs.Class.create(function () {
             this.extends = 'my.Parent';
+            this.static.properties.a = 2;
+            this.static.properties.c = {
+                get: function () {
+
+                    return this.privates.c + '!';
+                },
+                set: function ( c ) {
+
+                    return this.privates.c = '?' + c;
+                }
+            };
         });
 
         //save
@@ -82,17 +105,42 @@ require([
         xs.ClassManager.add(ChildName, Child);
 
 
-        //check chain
+        //check methods
         //Base
-        new my.Base;
+        strictEqual(my.Base.a, 1);
+
+        //readonly
+        my.Base.a = 2;
+        strictEqual(my.Base.a, 1);
 
         //Parent
-        throws(function () {
-            new my.Parent;
-        });
+        strictEqual(my.Parent.a, undefined);
+
+        //setter assigned
+        my.Parent.a = 2;
+        strictEqual(my.Parent.a, 2);
+        strictEqual(my.Parent.privates.a, 2);
+        strictEqual(my.Parent.b, undefined);
+
+        //getter assigned
+        my.Parent.b = 2;
+        strictEqual(my.Parent.b, 3);
+        strictEqual(my.Parent.privates.b, 3);
 
         //Child
-        new my.Child;
+        strictEqual(my.Child.a, 2);
+        strictEqual(my.Child.b, undefined);
+
+        //getter assigned
+        my.Child.b = 2;
+        strictEqual(my.Child.b, 3);
+        strictEqual(my.Child.privates.b, 3);
+
+        strictEqual(my.Child.c, 'undefined!');
+        strictEqual(my.Child.privates.c, undefined);
+        my.Child.c = 3;
+        strictEqual(my.Child.c, '?3!');
+        strictEqual(my.Child.privates.c, '?3');
 
 
         //tearDown

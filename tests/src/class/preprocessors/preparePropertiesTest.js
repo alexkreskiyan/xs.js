@@ -24,23 +24,26 @@ require([
     'xs.class.preprocessors.prepareStaticProperties',
     'xs.class.preprocessors.prepareStaticMethods',
     'xs.class.preprocessors.prepareProperties',
-    'xs.class.preprocessors.prepareMethods',
-    'xs.class.preprocessors.mixins',
-    'xs.class.preprocessors.singleton',
     'xs.class.Base'
 ], function () {
 
     'use strict';
 
-    module('xs.class.preprocessors.singleton');
+    module('xs.class.preprocessors.prepareProperties');
 
-    test('singleton chain', function () {
+    test('properties chain', function () {
         //setUp
         //Base
         var BaseName = 'my.Base';
 
         //define
         var Base = xs.Class.create(function () {
+            this.properties.a = {
+                get: function () {
+
+                    return 1;
+                }
+            };
         });
 
         //save
@@ -56,7 +59,18 @@ require([
         //define
         var Parent = xs.Class.create(function () {
             this.extends = 'my.Base';
-            this.singleton = true;
+            this.properties.a = {
+                get: function () {
+
+                    return this.privates.a;
+                }
+            };
+            this.properties.b = {
+                set: function ( b ) {
+
+                    return this.privates.b = b + 1;
+                }
+            };
         });
 
         //save
@@ -72,6 +86,17 @@ require([
         //define
         var Child = xs.Class.create(function () {
             this.extends = 'my.Parent';
+            this.properties.a = 2;
+            this.properties.c = {
+                get: function () {
+
+                    return this.privates.c + '!';
+                },
+                set: function ( c ) {
+
+                    return this.privates.c = '?' + c;
+                }
+            };
         });
 
         //save
@@ -82,17 +107,45 @@ require([
         xs.ClassManager.add(ChildName, Child);
 
 
-        //check chain
+        //check methods
         //Base
-        new my.Base;
+        var base = new my.Base;
+        strictEqual(base.a, 1);
+
+        //readonly
+        base.a = 2;
+        strictEqual(base.a, 1);
 
         //Parent
-        throws(function () {
-            new my.Parent;
-        });
+        var parent = new my.Parent;
+        strictEqual(parent.a, undefined);
+
+        //setter assigned
+        parent.a = 2;
+        strictEqual(parent.a, 2);
+        strictEqual(parent.privates.a, 2);
+        strictEqual(parent.b, undefined);
+
+        //getter assigned
+        parent.b = 2;
+        strictEqual(parent.b, 3);
+        strictEqual(parent.privates.b, 3);
 
         //Child
-        new my.Child;
+        var child = new my.Child;
+        strictEqual(child.a, 2);
+        strictEqual(child.b, undefined);
+
+        //getter assigned
+        child.b = 2;
+        strictEqual(child.b, 3);
+        strictEqual(child.privates.b, 3);
+
+        strictEqual(child.c, 'undefined!');
+        strictEqual(child.privates.c, undefined);
+        child.c = 3;
+        strictEqual(child.c, '?3!');
+        strictEqual(child.privates.c, '?3');
 
 
         //tearDown

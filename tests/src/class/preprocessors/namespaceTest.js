@@ -25,7 +25,7 @@ require([
 
     'use strict';
 
-    module('xs.class.preprocessors.constructor');
+    module('xs.class.preprocessors.namespace');
 
     test('namespace usage chain', function () {
         //setUp

@@ -25,7 +25,7 @@ require([
 
     'use strict';
 
-    module('xs.class.preprocessors.extend');
+    module('xs.class.preprocessors.extends');
 
     test('extend base', function () {
         //create Class

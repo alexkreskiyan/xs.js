@@ -25,22 +25,25 @@ require([
     'xs.class.preprocessors.prepareStaticMethods',
     'xs.class.preprocessors.prepareProperties',
     'xs.class.preprocessors.prepareMethods',
-    'xs.class.preprocessors.mixins',
-    'xs.class.preprocessors.singleton',
     'xs.class.Base'
 ], function () {
 
     'use strict';
 
-    module('xs.class.preprocessors.singleton');
+    module('xs.class.preprocessors.prepareMethods');
 
-    test('singleton chain', function () {
+    test('methods chain', function () {
         //setUp
+
         //Base
         var BaseName = 'my.Base';
 
         //define
         var Base = xs.Class.create(function () {
+            this.methods.a = function () {
+
+                return 1;
+            };
         });
 
         //save
@@ -56,7 +59,14 @@ require([
         //define
         var Parent = xs.Class.create(function () {
             this.extends = 'my.Base';
-            this.singleton = true;
+            this.methods.a = function () {
+
+                return 2;
+            };
+            this.methods.b = function () {
+
+                return 3;
+            };
         });
 
         //save
@@ -72,6 +82,10 @@ require([
         //define
         var Child = xs.Class.create(function () {
             this.extends = 'my.Parent';
+            this.methods.c = function () {
+
+                return 5;
+            };
         });
 
         //save
@@ -81,21 +95,24 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
-
-        //check chain
+        //check methods
         //Base
-        new my.Base;
+        var base = new my.Base;
+        strictEqual(base.a(), 1);
 
         //Parent
-        throws(function () {
-            new my.Parent;
-        });
+        var parent = new my.Parent;
+        strictEqual(parent.a(), 2);
+        strictEqual(parent.b(), 3);
 
         //Child
-        new my.Child;
-
+        var child = new my.Child;
+        strictEqual(child.a(), 2);
+        strictEqual(child.b(), 3);
+        strictEqual(child.c(), 5);
 
         //tearDown
+
         //Base
         xs.ClassManager.delete(BaseName);
         BaseSave && xs.ClassManager.add(BaseName, BaseSave);
