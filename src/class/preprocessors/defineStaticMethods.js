@@ -24,59 +24,13 @@
     xs.Class.preprocessors.add('defineStaticMethods', function () {
 
         return true;
-    }, function ( Class, descriptor ) {
-
-        //if static methods are specified not as object - throw respective error
-        if ( !xs.isObject(descriptor.static) || !xs.isObject(descriptor.static.methods) ) {
-            throw new StaticMethodError('incorrect static methods list');
-        }
-
-        //init methods reference
-        var methods = Class.descriptor.static.methods;
-
-
-        //inherited
-        //get inherited static methods from parent descriptor
-        var inherited = Class.parent.descriptor.static.methods;
-
-        //extend static methods with inherited
-        xs.extend(methods, inherited);
-
-
-        //own
-        //get own static methods from raw descriptor
-        var own = descriptor.static.methods;
-
-        //prepare them
-        xs.each(own, function ( value, name, list ) {
-            list[name] = xs.Attribute.method.prepare(name, value);
-        });
-
-        //extend methods with own ones
-        xs.extend(methods, own);
-
+    }, function ( Class ) {
 
         //apply
-        xs.each(methods, function ( value, name ) {
-            if ( !xs.isString(name) || !name ) {
-                throw new StaticMethodError('incorrect static method name');
-            }
-            xs.Attribute.method.define(Class, name, value);
+        xs.each(Class.descriptor.static.methods, function ( descriptor, name ) {
+
+            //save method to class
+            xs.Attribute.method.define(Class, name, descriptor);
         });
     }, 'after', 'defineStaticProperties');
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class StaticMethodError
-     */
-    function StaticMethodError ( message ) {
-        this.message = 'xs.class.preprocessors.staticMethods :: ' + message;
-    }
-
-    StaticMethodError.prototype = new Error();
 })(window, 'xs');
