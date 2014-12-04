@@ -14,14 +14,14 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor const
+     * Preprocessor defineConstants
      * Is used to process class constants
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('const', function () {
+    xs.Class.preprocessors.add('defineConstants', function () {
         return true;
     }, function ( Class, descriptor ) {
 

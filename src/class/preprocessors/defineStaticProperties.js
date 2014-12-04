@@ -14,14 +14,14 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor staticProperties
+     * Preprocessor defineStaticProperties
      * Is used to process class static properties
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('staticProperties', function () {
+    xs.Class.preprocessors.add('defineStaticProperties', function () {
 
         return true;
     }, function ( Class, descriptor ) {
@@ -66,7 +66,7 @@
             }
             xs.Attribute.property.define(Class, name, descriptor);
         });
-    }, 'after', 'const');
+    }, 'after', 'defineConstants');
 
     /**
      * Internal error class

@@ -14,14 +14,14 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor staticMethods
+     * Preprocessor defineStaticMethods
      * Is used to process class static methods
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('staticMethods', function () {
+    xs.Class.preprocessors.add('defineStaticMethods', function () {
 
         return true;
     }, function ( Class, descriptor ) {
@@ -63,7 +63,7 @@
             }
             xs.Attribute.method.define(Class, name, value);
         });
-    }, 'after', 'staticProperties');
+    }, 'after', 'defineStaticProperties');
 
     /**
      * Internal error class

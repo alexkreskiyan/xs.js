@@ -14,14 +14,14 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor methods
+     * Preprocessor prepareMethods
      * Is used to process class methods
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('methods', function () {
+    xs.Class.preprocessors.add('prepareMethods', function () {
 
         return true;
     }, function ( Class, descriptor ) {
@@ -65,7 +65,7 @@
 
             xs.Attribute.method.define(Class.prototype, name, value);
         });
-    }, 'after', 'properties');
+    }, 'after', 'prepareProperties');
 
     /**
      * Internal error class

@@ -14,14 +14,14 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor properties
+     * Preprocessor prepareProperties
      * Is used to process class properties
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('properties', function () {
+    xs.Class.preprocessors.add('prepareProperties', function () {
 
         return true;
     }, function ( Class, descriptor ) {
@@ -71,7 +71,7 @@
             //set undefined for assigned properties
             xs.hasKey(descriptor, 'value') && (prototype[name] = undefined);
         });
-    }, 'after', 'constructor');
+    }, 'after', 'prepareStaticMethods');
 
     /**
      * Internal error class

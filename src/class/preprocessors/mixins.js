@@ -94,7 +94,7 @@
 
         //return false to sign async processor
         return false;
-    }, 'after', 'extends');
+    }, 'after', 'prepareMethods');
 
     /**
      * Core mixins function. Performs mixins' verification and applies each mixin to target class
