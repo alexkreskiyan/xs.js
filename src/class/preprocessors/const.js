@@ -30,8 +30,8 @@
             throw new ConstError('incorrect constants list');
         }
 
-        //init constants as empty hash and save to Class.descriptor
-        var constants = Class.descriptor.const = {};
+        //init constants reference
+        var constants = Class.descriptor.const;
 
 
         //inherited
@@ -44,7 +44,7 @@
 
         //own
         //get own constants from raw descriptor and save to Class.descriptor
-        var own = Class.own.const = descriptor.const;
+        var own = descriptor.const;
 
         //extend constants with own
         xs.extend(constants, own);

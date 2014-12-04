@@ -31,8 +31,8 @@
             throw new PropertyError('incorrect properties list');
         }
 
-        //init properties as empty hash
-        var properties = {};
+        //init properties reference
+        var properties = Class.descriptor.properties;
 
 
         //inherited
@@ -44,7 +44,7 @@
 
 
         //own
-        var own = Class.own.properties = descriptor.properties;
+        var own = descriptor.properties;
 
         //get own properties from raw descriptor and apply
 
@@ -58,10 +58,6 @@
 
 
         //apply
-        //save properties to Class.descriptor
-        Class.descriptor.properties = properties;
-
-        //apply all accessed properties
         var prototype = Class.prototype;
 
         xs.each(properties, function ( descriptor, name ) {

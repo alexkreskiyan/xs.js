@@ -31,8 +31,8 @@
             throw new MethodError('incorrect methods list');
         }
 
-        //init methods as empty hash
-        var methods = {};
+        //init methods reference
+        var methods = Class.descriptor.methods;
 
 
         //inherited
@@ -45,7 +45,7 @@
 
         //own
         //get own methods from raw descriptor
-        var own = Class.own.methods = descriptor.methods;
+        var own = descriptor.methods;
 
         //apply if any
         //prepare them
@@ -58,10 +58,6 @@
 
 
         //apply
-        //save methods to Class.descriptor
-        Class.descriptor.methods = methods;
-
-        //apply all methods
         xs.each(methods, function ( value, name ) {
             if ( !xs.isString(name) || !name ) {
                 throw new MethodError('incorrect method name');

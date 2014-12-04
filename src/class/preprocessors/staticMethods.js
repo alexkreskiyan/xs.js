@@ -31,8 +31,8 @@
             throw new StaticMethodError('incorrect static methods list');
         }
 
-        //init methods as empty hash
-        var methods = {};
+        //init methods reference
+        var methods = Class.descriptor.static.methods;
 
 
         //inherited
@@ -45,7 +45,7 @@
 
         //own
         //get own static methods from raw descriptor
-        var own = Class.own.static.methods = descriptor.static.methods;
+        var own = descriptor.static.methods;
 
         //prepare them
         xs.each(own, function ( value, name, list ) {
@@ -57,10 +57,6 @@
 
 
         //apply
-        //save static methods to Class.descriptor
-        Class.descriptor.static.methods = methods;
-
-        //apply all methods
         xs.each(methods, function ( value, name ) {
             if ( !xs.isString(name) || !name ) {
                 throw new StaticMethodError('incorrect static method name');

@@ -48,6 +48,15 @@
 
         xs.log('xs.class.preprocessor.mixins. Mixins:', mixins);
         xs.each(mixins, function ( name, alias, list ) {
+            //verify mixed class name
+            if ( !xs.isString(name) || !name ) {
+                throw new ConstError('incorrect mixed class name');
+            }
+
+            //verify mixed class alias
+            if ( !alias ) {
+                throw new ConstError('incorrect mixed class alias');
+            }
 
             //resolve name with namespace and update list
             name = list[alias] = Class.descriptor.namespace.resolve(name);
@@ -88,7 +97,7 @@
     }, 'after', 'extends');
 
     /**
-     * Core mixins function. Defaults target descriptor parts with mix descriptor paths
+     * Core mixins function. Performs mixins' verification and applies each mixin to target class
      *
      * @ignore
      *
@@ -101,14 +110,14 @@
         //create mixins property in target.prototype
         target.prototype.mixins = {};
 
-        //apply each mix in reverse mode (last mentioned mix has advantage)
-        xs.eachReverse(mixins, function ( name, alias ) {
+        //apply each mixin
+        xs.each(mixins, function ( name, alias ) {
 
             //get reference for mixed class
             var mixed = xs.ClassManager.get(name);
 
             //mix mixed class descriptor into target descriptor
-            _mixin(mixed.descriptor, target.descriptor);
+            _mixinClass(target.descriptor, mixed.descriptor);
 
             //save mixed into target.prototype.mixins
             target.prototype.mixins[alias] = mixed;
@@ -120,27 +129,27 @@
      *
      * @ignore
      *
-     * @method mixin
+     * @method mixinClass
      *
-     * @param {Object} mix mixin class descriptor
      * @param {Object} target target class descriptor
+     * @param {Object} mix mixin class descriptor
      */
-    var _mixin = function ( mix, target ) {
+    var _mixinClass = function ( target, mix ) {
 
         //extend constants
-        _extend('constant', mix.const, target.const);
+        _mixinSection('constant', target.const, mix.const);
 
         //static properties
-        _extend('static property', mix.static.properties, target.static.properties);
+        _mixinSection('static property', target.static.properties, mix.static.properties);
 
         //static methods
-        _extend('static method', mix.static.methods, target.static.methods);
+        _mixinSection('static method', target.static.methods, mix.static.methods);
 
         //properties
-        _extend('property', mix.properties, target.properties);
+        _mixinSection('property', target.properties, mix.properties);
 
         //methods
-        _extend('method', mix.methods, target.methods);
+        _mixinSection('method', target.methods, mix.methods);
     };
 
     /**
@@ -148,28 +157,23 @@
      *
      * @ignore
      *
-     * @method mixin
+     * @method mixinSection
      *
      * @param {String} type type of extended data
-     * @param {Object} source source data
      * @param {Object} target target data
+     * @param {Object} mixin mixin data
      */
-    var _extend = function ( type, source, target ) {
-        //init declared variable, that contains name of already declared element
-        var declared;
-
-        //try to find declared
-        declared = xs.find(xs.keys(source), function ( key ) {
-            return xs.hasKey(target, key);
+    var _mixinSection = function ( type, target, mixin ) {
+        //find differing intersections
+        xs.each(target, function ( targetValue, targetName ) {
+            var mixinValue = mixin[targetName];
+            if ( xs.isDefined(mixinValue) && mixinValue !== targetValue ) {
+                throw new MixinError(type + ' "' + targetName + '" is already declared');
+            }
         });
 
-        //throw error if found declared
-        if ( declared ) {
-            throw new MixinError(type + ' "' + declared + '" is already declared');
-        }
-
-        //extend target with source
-        xs.extend(target, source);
+        //extend target with mixin
+        xs.extend(target, mixin);
     };
 
     /**

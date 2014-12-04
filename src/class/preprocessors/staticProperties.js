@@ -34,8 +34,8 @@
         //create privates storage in class
         Class.privates = {};
 
-        //init properties as empty hash
-        var properties = {};
+        //init properties reference
+        var properties = Class.descriptor.static.properties;
 
 
         //inherited
@@ -48,7 +48,7 @@
 
         //own
         //get own static properties from raw descriptor
-        var own = Class.own.static.properties = descriptor.static.properties;
+        var own = descriptor.static.properties;
 
         //prepare them
         xs.each(own, function ( value, name, list ) {
@@ -60,10 +60,6 @@
 
 
         //apply
-        //save static properties to Class.descriptor
-        Class.descriptor.static.properties = properties;
-
-        //apply all properties
         xs.each(properties, function ( descriptor, name ) {
             if ( !xs.isString(name) || !name ) {
                 throw new StaticPropertyError('incorrect static property name');
