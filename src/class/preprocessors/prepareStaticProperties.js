@@ -31,9 +31,6 @@
             throw new StaticPropertyError('incorrect static properties list');
         }
 
-        //create privates storage in class
-        Class.privates = {};
-
         //init properties reference
         var properties = Class.descriptor.static.properties;
 
@@ -50,22 +47,17 @@
         //get own static properties from raw descriptor
         var own = descriptor.static.properties;
 
-        //prepare them
+        //verify and prepare them
         xs.each(own, function ( value, name, list ) {
+            if ( !xs.isString(name) || !name ) {
+                throw new StaticPropertyError('incorrect static property name');
+            }
+
             list[name] = xs.Attribute.property.prepare(name, value);
         });
 
         //extend properties with own ones
         xs.extend(properties, own);
-
-
-        //apply
-        xs.each(properties, function ( descriptor, name ) {
-            if ( !xs.isString(name) || !name ) {
-                throw new StaticPropertyError('incorrect static property name');
-            }
-            xs.Attribute.property.define(Class, name, descriptor);
-        });
     }, 'after', 'prepareConstants');
 
     /**

@@ -46,18 +46,15 @@
         //get own constants from raw descriptor and save to Class.descriptor
         var own = descriptor.const;
 
-        //extend constants with own
-        xs.extend(constants, own);
-
-
-        //apply
-        //apply all constants
-        xs.each(constants, function ( value, name ) {
+        //verify own constants
+        xs.each(own, function ( value, name ) {
             if ( !xs.isString(name) || !name ) {
                 throw new ConstError('incorrect constant name');
             }
-            xs.const(Class, name, value);
         });
+
+        //extend constants with own
+        xs.extend(constants, own);
     }, 'after', 'extends');
 
     /**

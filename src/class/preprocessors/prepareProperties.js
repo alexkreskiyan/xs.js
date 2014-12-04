@@ -48,29 +48,17 @@
 
         //get own properties from raw descriptor and apply
 
-        //prepare them
+        //verify and prepare them
         xs.each(own, function ( value, name, list ) {
+            if ( !xs.isString(name) || !name ) {
+                throw new PropertyError('incorrect property name');
+            }
+
             list[name] = xs.Attribute.property.prepare(name, value);
         });
 
         //extend properties with own ones
         xs.extend(properties, own);
-
-
-        //apply
-        var prototype = Class.prototype;
-
-        xs.each(properties, function ( descriptor, name ) {
-            if ( !xs.isString(name) || !name ) {
-                throw new PropertyError('incorrect property name');
-            }
-
-            //save property to prototype
-            xs.Attribute.property.define(prototype, name, descriptor);
-
-            //set undefined for assigned properties
-            xs.hasKey(descriptor, 'value') && (prototype[name] = undefined);
-        });
     }, 'after', 'prepareStaticMethods');
 
     /**

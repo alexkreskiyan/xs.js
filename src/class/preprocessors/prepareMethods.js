@@ -47,24 +47,17 @@
         //get own methods from raw descriptor
         var own = descriptor.methods;
 
-        //apply if any
-        //prepare them
+        //verify and prepare them
         xs.each(own, function ( value, name, list ) {
+            if ( !xs.isString(name) || !name ) {
+                throw new MethodError('incorrect method name');
+            }
+
             list[name] = xs.Attribute.method.prepare(name, value);
         });
 
         //extend methods with own ones
         xs.extend(methods, own);
-
-
-        //apply
-        xs.each(methods, function ( value, name ) {
-            if ( !xs.isString(name) || !name ) {
-                throw new MethodError('incorrect method name');
-            }
-
-            xs.Attribute.method.define(Class.prototype, name, value);
-        });
     }, 'after', 'prepareProperties');
 
     /**
