@@ -109,7 +109,7 @@ require([
         //a
         strictEqual(methods.a.value, baseA);
         strictEqual(methods.a.writable, false);
-        strictEqual(methods.a.configurable, true);
+        strictEqual(methods.a.configurable, false);
         strictEqual(methods.a.enumerable, true);
 
         //Parent
@@ -117,12 +117,12 @@ require([
         //a
         strictEqual(methods.a.value, parentA);
         strictEqual(methods.a.writable, false);
-        strictEqual(methods.a.configurable, true);
+        strictEqual(methods.a.configurable, false);
         strictEqual(methods.a.enumerable, true);
         //b
         strictEqual(methods.b.value, parentB);
         strictEqual(methods.b.writable, false);
-        strictEqual(methods.b.configurable, true);
+        strictEqual(methods.b.configurable, false);
         strictEqual(methods.b.enumerable, true);
 
         //Child
@@ -130,17 +130,17 @@ require([
         //a
         strictEqual(methods.a.value, parentA);
         strictEqual(methods.a.writable, false);
-        strictEqual(methods.a.configurable, true);
+        strictEqual(methods.a.configurable, false);
         strictEqual(methods.a.enumerable, true);
         //b
         strictEqual(methods.b.value, parentB);
         strictEqual(methods.b.writable, false);
-        strictEqual(methods.b.configurable, true);
+        strictEqual(methods.b.configurable, false);
         strictEqual(methods.b.enumerable, true);
         //c
         strictEqual(methods.c.value, childC);
         strictEqual(methods.c.writable, false);
-        strictEqual(methods.c.configurable, true);
+        strictEqual(methods.c.configurable, false);
         strictEqual(methods.c.enumerable, true);
 
 

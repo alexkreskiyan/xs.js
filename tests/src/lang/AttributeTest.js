@@ -313,7 +313,7 @@ require([
         strictEqual(result.value, desc);
         strictEqual(result.writable, true);
         strictEqual(result.enumerable, true);
-        strictEqual(result.configurable, true);
+        strictEqual(result.configurable, false);
 
         //check for get|set descriptor
         desc = {
@@ -333,7 +333,7 @@ require([
         strictEqual(result.get, getter);
         strictEqual(result.set.toString(), 'function (value) { \'use strict\'; this.privates.x = value;}');
         strictEqual(result.default, 6);
-        strictEqual(result.configurable, true);
+        strictEqual(result.configurable, false);
         strictEqual(result.enumerable, true);
 
         //check for assigned descriptor
@@ -377,7 +377,7 @@ require([
             someProperty: null
         });
         strictEqual(xs.Attribute.isAssigned(obj, 'b'), true);
-        strictEqual(xs.Attribute.isConfigurable(obj, 'b'), true);
+        strictEqual(xs.Attribute.isConfigurable(obj, 'b'), false);
         strictEqual(xs.Attribute.isWritable(obj, 'b'), true);
         strictEqual(xs.Attribute.isEnumerable(obj, 'b'), true);
         strictEqual(obj.b, value);
@@ -388,7 +388,7 @@ require([
             set: setter
         });
         strictEqual(xs.Attribute.isAccessed(obj, 'c'), true);
-        strictEqual(xs.Attribute.isConfigurable(obj, 'c'), true);
+        strictEqual(xs.Attribute.isConfigurable(obj, 'c'), false);
         strictEqual(xs.Attribute.isEnumerable(obj, 'c'), true);
     });
 
@@ -437,7 +437,7 @@ require([
         //rights assignments are not writable, enumerable and not configurable
         xs.Attribute.method.define(obj, 'simple', {value: value});
         strictEqual(xs.Attribute.isWritable(obj, 'simple'), false);
-        strictEqual(xs.Attribute.isConfigurable(obj, 'simple'), true);
+        strictEqual(xs.Attribute.isConfigurable(obj, 'simple'), false);
         strictEqual(xs.Attribute.isEnumerable(obj, 'simple'), true);
     });
 });

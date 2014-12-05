@@ -93,31 +93,31 @@ require([
         //a
         strictEqual(my.Base.a, 1);
         strictEqual(xs.Attribute.isWritable(my.Base, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Base, 'a'), true);
+        strictEqual(xs.Attribute.isConfigurable(my.Base, 'a'), false);
 
         //Parent
         //a
         strictEqual(my.Parent.a, 2);
         strictEqual(xs.Attribute.isWritable(my.Parent, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Parent, 'a'), true);
+        strictEqual(xs.Attribute.isConfigurable(my.Parent, 'a'), false);
         //b
         strictEqual(my.Parent.b, 3);
         strictEqual(xs.Attribute.isWritable(my.Parent, 'b'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Parent, 'b'), true);
+        strictEqual(xs.Attribute.isConfigurable(my.Parent, 'b'), false);
 
         //Child
         //a
         strictEqual(my.Child.a, 2);
         strictEqual(xs.Attribute.isWritable(my.Child, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Child, 'a'), true);
+        strictEqual(xs.Attribute.isConfigurable(my.Child, 'a'), false);
         //b
         strictEqual(my.Child.b, 3);
         strictEqual(xs.Attribute.isWritable(my.Child, 'b'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Child, 'b'), true);
+        strictEqual(xs.Attribute.isConfigurable(my.Child, 'b'), false);
         //c
         strictEqual(my.Child.c, 5);
         strictEqual(xs.Attribute.isWritable(my.Child, 'c'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Child, 'c'), true);
+        strictEqual(xs.Attribute.isConfigurable(my.Child, 'c'), false);
 
 
         //tearDown

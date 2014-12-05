@@ -119,18 +119,18 @@ require([
         properties = my.Base.descriptor.static.properties;
         //a
         strictEqual(properties.a.get, baseAGet);
-        strictEqual(properties.a.configurable, true);
+        strictEqual(properties.a.configurable, false);
         strictEqual(properties.a.enumerable, true);
 
         //Parent
         properties = my.Parent.descriptor.static.properties;
         //a
         strictEqual(properties.a.get, parentAGet);
-        strictEqual(properties.a.configurable, true);
+        strictEqual(properties.a.configurable, false);
         strictEqual(properties.a.enumerable, true);
         //b
         strictEqual(properties.b.set, parentBSet);
-        strictEqual(properties.b.configurable, true);
+        strictEqual(properties.b.configurable, false);
         strictEqual(properties.b.enumerable, true);
 
         //Child
@@ -138,16 +138,16 @@ require([
         //a
         strictEqual(properties.a.value, 2);
         strictEqual(properties.a.writable, true);
-        strictEqual(properties.a.configurable, true);
+        strictEqual(properties.a.configurable, false);
         strictEqual(properties.a.enumerable, true);
         //b
         strictEqual(properties.b.set, parentBSet);
-        strictEqual(properties.b.configurable, true);
+        strictEqual(properties.b.configurable, false);
         strictEqual(properties.b.enumerable, true);
         //c
         strictEqual(properties.c.get, childCGet);
         strictEqual(properties.c.set, childCSet);
-        strictEqual(properties.c.configurable, true);
+        strictEqual(properties.c.configurable, false);
         strictEqual(properties.c.enumerable, true);
 
 
