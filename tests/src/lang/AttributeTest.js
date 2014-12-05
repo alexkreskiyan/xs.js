@@ -284,19 +284,19 @@ require([
         strictEqual(desc.enumerable, true);
     });
 
-    test('const', function () {
+    test('constant', function () {
         //init test objects
         var obj = {};
         var value = {x: 1};
 
         //define and test constant
-        xs.Attribute.const(obj, 'a', value);
+        xs.Attribute.constant(obj, 'a', value);
         strictEqual(obj.a, value);
 
-        //const is defined
+        //constant is defined
         strictEqual('a' in obj, true);
 
-        //const is immutable for change
+        //constant is immutable for change
         throws(function () {
             obj.a = 1;
         });
@@ -433,9 +433,6 @@ require([
         var value = function ( x ) {
             return x;
         };
-
-        //define sample const
-        xs.Attribute.const(obj, 'const', null);
 
         //rights assignments are not writable, enumerable and not configurable
         xs.Attribute.method.define(obj, 'simple', {value: value});

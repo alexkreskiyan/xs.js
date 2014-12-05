@@ -26,17 +26,17 @@
     }, function ( Class, descriptor ) {
 
         //if constants are specified not as object - throw respective error
-        if ( !xs.isObject(descriptor.const) ) {
+        if ( !xs.isObject(descriptor.constants) ) {
             throw new ConstError('incorrect constants list');
         }
 
         //init constants reference
-        var constants = Class.descriptor.const;
+        var constants = Class.descriptor.constants;
 
 
         //inherited
         //get inherited constants from parent descriptor
-        var inherited = Class.parent.descriptor.const;
+        var inherited = Class.parent.descriptor.constants;
 
         //extend constants with inherited
         xs.extend(constants, inherited);
@@ -44,7 +44,7 @@
 
         //own
         //get own constants from raw descriptor and save to Class.descriptor
-        var own = descriptor.const;
+        var own = descriptor.constants;
 
         //verify own constants
         xs.each(own, function ( value, name ) {
@@ -67,7 +67,7 @@
      * @class ConstError
      */
     function ConstError ( message ) {
-        this.message = 'xs.class.preprocessors.const :: ' + message;
+        this.message = 'xs.class.preprocessors.constants :: ' + message;
     }
 
     ConstError.prototype = new Error();

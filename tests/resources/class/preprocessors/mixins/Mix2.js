@@ -3,7 +3,7 @@
  */
 xs.define('tests.class.preprocessors.mixins.Mix2', function () {
     this.namespace = 'tests.class.preprocessors.mixins';
-    this.const.b = 1;
+    this.constants.b = 1;
     this.properties.b = 2;
     this.methods.printB = function () {
         return this.b;

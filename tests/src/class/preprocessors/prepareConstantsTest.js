@@ -28,14 +28,14 @@ require([
 
     module('xs.class.preprocessors.prepareConstants');
 
-    test('const chain', function () {
+    test('constants chain', function () {
         //setUp
         //Base
         var BaseName = 'my.Base';
 
         //define
         var Base = xs.Class.create(function () {
-            this.const.a = 1;
+            this.constants.a = 1;
         });
 
         //save
@@ -51,8 +51,8 @@ require([
         //define
         var Parent = xs.Class.create(function () {
             this.extends = 'my.Base';
-            this.const.a = 2;
-            this.const.b = 3;
+            this.constants.a = 2;
+            this.constants.b = 3;
         });
 
         //save
@@ -68,7 +68,7 @@ require([
         //define
         var Child = xs.Class.create(function () {
             this.extends = 'my.Parent';
-            this.const.c = 5;
+            this.constants.c = 5;
         });
 
         //save

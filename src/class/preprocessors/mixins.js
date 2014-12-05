@@ -137,7 +137,7 @@
     var _mixinClass = function ( target, mix ) {
 
         //extend constants
-        _mixinSection('constant', target.const, mix.const);
+        _mixinSection('constant', target.constants, mix.constants);
 
         //static properties
         _mixinSection('static property', target.static.properties, mix.static.properties);

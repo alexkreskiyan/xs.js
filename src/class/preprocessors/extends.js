@@ -106,7 +106,7 @@
         child.prototype.constructor = child;
 
         //save reference to parent
-        xs.const(child, 'parent', parent);
+        xs.constant(child, 'parent', parent);
     };
 
     /**

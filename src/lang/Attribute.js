@@ -253,25 +253,25 @@
          * For example:
          *
          *     var x = {};
-         *     console.log(xs.Attribute.const(x, 'a', 5)); //true
-         *     console.log(xs.Attribute.const(x, 'a', 5)); //false
+         *     console.log(xs.Attribute.constant(x, 'a', 5)); //true
+         *     console.log(xs.Attribute.constant(x, 'a', 5)); //false
          *     console.log(xs.Attribute.isAssigned(x, 'a')); //true
          *     console.log(xs.Attribute.isAccessed(x, 'a')); //false
          *     console.log(xs.Attribute.isWritable(x, 'a')); //false
          *     console.log(xs.Attribute.isConfigurable(x, 'a')); //true
          *     console.log(xs.Attribute.isEnumerable(x, 'a')); //true
          *
-         * @method const
+         * @method constant
          *
          * @param {Object} object used object
-         * @param {String} name const name
-         * @param {*} value const value
+         * @param {String} name constant name
+         * @param {*} value constant value
          *
          * @throws {Error} Error is thrown, when:
          *
          * - constant with given name is already defined
          */
-        me.const = function ( object, name, value ) {
+        me.constant = function ( object, name, value ) {
             if ( _defined(object, name) && !_isConfigurable(object, name) ) {
                 throw new AttributeError('constant "' + name + '" is already defined');
             }
@@ -612,7 +612,7 @@
     });
 
     xs.extend(xs, {
-        const: attribute.const,
+        constant: attribute.constant,
         property: attribute.property,
         method: attribute.method
     });

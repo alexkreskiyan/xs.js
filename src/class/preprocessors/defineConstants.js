@@ -26,9 +26,9 @@
     }, function ( Class ) {
 
         //define constants
-        xs.each(Class.descriptor.const, function ( value, name ) {
+        xs.each(Class.descriptor.constants, function ( value, name ) {
 
-            xs.const(Class, name, value);
+            xs.constant(Class, name, value);
         });
     }, 'after', 'singleton');
 })(window, 'xs');
