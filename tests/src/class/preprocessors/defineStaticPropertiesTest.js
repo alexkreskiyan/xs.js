@@ -112,37 +112,34 @@ require([
         xs.ClassManager.add(ChildName, Child);
 
 
-        //check methods
+        //test
         //Base
+        //a
         strictEqual(my.Base.a, 1);
-
-        //readonly
-        my.Base.a = 2;
+        my.Base.a = 2; //readonly
         strictEqual(my.Base.a, 1);
 
         //Parent
+        //a
         strictEqual(my.Parent.a, undefined);
-
-        //setter assigned
-        my.Parent.a = 2;
+        my.Parent.a = 2; //setter assigned
         strictEqual(my.Parent.a, 2);
         strictEqual(my.Parent.privates.a, 2);
+        //b
         strictEqual(my.Parent.b, undefined);
-
-        //getter assigned
-        my.Parent.b = 2;
+        my.Parent.b = 2; //getter assigned
         strictEqual(my.Parent.b, 3);
         strictEqual(my.Parent.privates.b, 3);
 
         //Child
+        //a
         strictEqual(my.Child.a, 2);
+        //b
         strictEqual(my.Child.b, undefined);
-
-        //getter assigned
-        my.Child.b = 2;
+        my.Child.b = 2; //getter assigned
         strictEqual(my.Child.b, 3);
         strictEqual(my.Child.privates.b, 3);
-
+        //c
         strictEqual(my.Child.c, 'undefined!');
         strictEqual(my.Child.privates.c, undefined);
         my.Child.c = 3;

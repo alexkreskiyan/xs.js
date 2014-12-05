@@ -100,9 +100,7 @@ require([
         xs.ClassManager.add(ChildName, Child);
 
 
-        //run test
-
-        //check methods
+        //test
         //Base
         strictEqual(my.Base.a(), 1);
 

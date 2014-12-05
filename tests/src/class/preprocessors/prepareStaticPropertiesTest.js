@@ -34,13 +34,14 @@ require([
         //Base
         var BaseName = 'my.Base';
 
+        var baseAGet = function () {
+
+            return 1;
+        };
         //define
         var Base = xs.Class.create(function () {
             this.static.properties.a = {
-                get: function () {
-
-                    return 1;
-                }
+                get: baseAGet
             };
         });
 
@@ -54,20 +55,22 @@ require([
         //Parent
         var ParentName = 'my.Parent';
 
+        var parentAGet = function () {
+
+            return this.privates.a;
+        };
+        var parentBSet = function ( b ) {
+
+            return this.privates.b = b + 1;
+        };
         //define
         var Parent = xs.Class.create(function () {
             this.extends = 'my.Base';
             this.static.properties.a = {
-                get: function () {
-
-                    return this.privates.a;
-                }
+                get: parentAGet
             };
             this.static.properties.b = {
-                set: function ( b ) {
-
-                    return this.privates.b = b + 1;
-                }
+                set: parentBSet
             };
         });
 
@@ -81,19 +84,21 @@ require([
         //Child
         var ChildName = 'my.Child';
 
+        var childCGet = function () {
+
+            return this.privates.c + '!';
+        };
+        var childCSet = function ( c ) {
+
+            return this.privates.c = '?' + c;
+        };
         //define
         var Child = xs.Class.create(function () {
             this.extends = 'my.Parent';
             this.static.properties.a = 2;
             this.static.properties.c = {
-                get: function () {
-
-                    return this.privates.c + '!';
-                },
-                set: function ( c ) {
-
-                    return this.privates.c = '?' + c;
-                }
+                get: childCGet,
+                set: childCSet
             };
         });
 
@@ -105,42 +110,45 @@ require([
         xs.ClassManager.add(ChildName, Child);
 
 
-        //check methods
-        //Base
-        strictEqual(my.Base.a, 1);
+        //test
+        //init properties (will be referred to descriptor.static.properties)
+        var properties;
 
-        //readonly
-        my.Base.a = 2;
-        strictEqual(my.Base.a, 1);
+        //check static properties definition
+        //Base
+        properties = my.Base.descriptor.static.properties;
+        //a
+        strictEqual(properties.a.get, baseAGet);
+        strictEqual(properties.a.configurable, true);
+        strictEqual(properties.a.enumerable, true);
 
         //Parent
-        strictEqual(my.Parent.a, undefined);
-
-        //setter assigned
-        my.Parent.a = 2;
-        strictEqual(my.Parent.a, 2);
-        strictEqual(my.Parent.privates.a, 2);
-        strictEqual(my.Parent.b, undefined);
-
-        //getter assigned
-        my.Parent.b = 2;
-        strictEqual(my.Parent.b, 3);
-        strictEqual(my.Parent.privates.b, 3);
+        properties = my.Parent.descriptor.static.properties;
+        //a
+        strictEqual(properties.a.get, parentAGet);
+        strictEqual(properties.a.configurable, true);
+        strictEqual(properties.a.enumerable, true);
+        //b
+        strictEqual(properties.b.set, parentBSet);
+        strictEqual(properties.b.configurable, true);
+        strictEqual(properties.b.enumerable, true);
 
         //Child
-        strictEqual(my.Child.a, 2);
-        strictEqual(my.Child.b, undefined);
-
-        //getter assigned
-        my.Child.b = 2;
-        strictEqual(my.Child.b, 3);
-        strictEqual(my.Child.privates.b, 3);
-
-        strictEqual(my.Child.c, 'undefined!');
-        strictEqual(my.Child.privates.c, undefined);
-        my.Child.c = 3;
-        strictEqual(my.Child.c, '?3!');
-        strictEqual(my.Child.privates.c, '?3');
+        properties = my.Child.descriptor.static.properties;
+        //a
+        strictEqual(properties.a.value, 2);
+        strictEqual(properties.a.writable, true);
+        strictEqual(properties.a.configurable, true);
+        strictEqual(properties.a.enumerable, true);
+        //b
+        strictEqual(properties.b.set, parentBSet);
+        strictEqual(properties.b.configurable, true);
+        strictEqual(properties.b.enumerable, true);
+        //c
+        strictEqual(properties.c.get, childCGet);
+        strictEqual(properties.c.set, childCSet);
+        strictEqual(properties.c.configurable, true);
+        strictEqual(properties.c.enumerable, true);
 
 
         //tearDown

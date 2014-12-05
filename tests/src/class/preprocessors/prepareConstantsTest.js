@@ -83,28 +83,16 @@ require([
 
         //check constants
         //Base
-        strictEqual(my.Base.a, 1);
-        strictEqual(xs.Attribute.isWritable(my.Base, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Base, 'a'), true);
+        strictEqual(my.Base.descriptor.constants.a, 1);
 
         //Parent
-        strictEqual(my.Parent.a, 2);
-        strictEqual(xs.Attribute.isWritable(my.Parent, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Parent, 'a'), true);
-        strictEqual(my.Parent.b, 3);
-        strictEqual(xs.Attribute.isWritable(my.Parent, 'b'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Parent, 'b'), true);
+        strictEqual(my.Parent.descriptor.constants.a, 2);
+        strictEqual(my.Parent.descriptor.constants.b, 3);
 
         //Child
-        strictEqual(my.Child.a, 2);
-        strictEqual(xs.Attribute.isWritable(my.Child, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Child, 'a'), true);
-        strictEqual(my.Child.b, 3);
-        strictEqual(xs.Attribute.isWritable(my.Child, 'b'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Child, 'b'), true);
-        strictEqual(my.Child.c, 5);
-        strictEqual(xs.Attribute.isWritable(my.Child, 'c'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Child, 'c'), true);
+        strictEqual(my.Child.descriptor.constants.a, 2);
+        strictEqual(my.Child.descriptor.constants.b, 3);
+        strictEqual(my.Child.descriptor.constants.c, 5);
 
 
         //tearDown

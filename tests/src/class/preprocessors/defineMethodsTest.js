@@ -103,7 +103,8 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
-        //check methods
+
+        //test
         //Base
         var base = new my.Base;
         strictEqual(base.a(), 1);

@@ -35,12 +35,14 @@ require([
         //Base
         var BaseName = 'my.Base';
 
+        var baseA = function () {
+
+            return 1;
+        };
+
         //define
         var Base = xs.Class.create(function () {
-            this.static.methods.a = function () {
-
-                return 1;
-            };
+            this.static.methods.a = baseA;
         });
 
         //save
@@ -53,17 +55,19 @@ require([
         //Parent
         var ParentName = 'my.Parent';
 
+        var parentA = function () {
+
+            return 2;
+        };
+        var parentB = function () {
+
+            return 3;
+        };
         //define
         var Parent = xs.Class.create(function () {
             this.extends = 'my.Base';
-            this.static.methods.a = function () {
-
-                return 2;
-            };
-            this.static.methods.b = function () {
-
-                return 3;
-            };
+            this.static.methods.a = parentA;
+            this.static.methods.b = parentB;
         });
 
         //save
@@ -76,13 +80,14 @@ require([
         //Child
         var ChildName = 'my.Child';
 
+        var childC = function () {
+
+            return 5;
+        };
         //define
         var Child = xs.Class.create(function () {
             this.extends = 'my.Parent';
-            this.static.methods.c = function () {
-
-                return 5;
-            };
+            this.static.methods.c = childC;
         });
 
         //save
@@ -93,20 +98,50 @@ require([
         xs.ClassManager.add(ChildName, Child);
 
 
-        //run test
+        //test
 
-        //check methods
+        //init methods (will be referred to descriptor.static.methods)
+        var methods;
+
+        //check static methods definition
         //Base
-        strictEqual(my.Base.a(), 1);
+        methods = my.Base.descriptor.static.methods;
+        //a
+        strictEqual(methods.a.value, baseA);
+        strictEqual(methods.a.writable, false);
+        strictEqual(methods.a.configurable, true);
+        strictEqual(methods.a.enumerable, true);
 
         //Parent
-        strictEqual(my.Parent.a(), 2);
-        strictEqual(my.Parent.b(), 3);
+        methods = my.Parent.descriptor.static.methods;
+        //a
+        strictEqual(methods.a.value, parentA);
+        strictEqual(methods.a.writable, false);
+        strictEqual(methods.a.configurable, true);
+        strictEqual(methods.a.enumerable, true);
+        //b
+        strictEqual(methods.b.value, parentB);
+        strictEqual(methods.b.writable, false);
+        strictEqual(methods.b.configurable, true);
+        strictEqual(methods.b.enumerable, true);
 
         //Child
-        strictEqual(my.Child.a(), 2);
-        strictEqual(my.Child.b(), 3);
-        strictEqual(my.Child.c(), 5);
+        methods = my.Child.descriptor.static.methods;
+        //a
+        strictEqual(methods.a.value, parentA);
+        strictEqual(methods.a.writable, false);
+        strictEqual(methods.a.configurable, true);
+        strictEqual(methods.a.enumerable, true);
+        //b
+        strictEqual(methods.b.value, parentB);
+        strictEqual(methods.b.writable, false);
+        strictEqual(methods.b.configurable, true);
+        strictEqual(methods.b.enumerable, true);
+        //c
+        strictEqual(methods.c.value, childC);
+        strictEqual(methods.c.writable, false);
+        strictEqual(methods.c.configurable, true);
+        strictEqual(methods.c.enumerable, true);
 
 
         //tearDown

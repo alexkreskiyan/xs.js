@@ -36,13 +36,14 @@ require([
         //Base
         var BaseName = 'my.Base';
 
+        var baseAGet = function () {
+
+            return 1;
+        };
         //define
         var Base = xs.Class.create(function () {
             this.properties.a = {
-                get: function () {
-
-                    return 1;
-                }
+                get: baseAGet
             };
         });
 
@@ -56,20 +57,22 @@ require([
         //Parent
         var ParentName = 'my.Parent';
 
+        var parentAGet = function () {
+
+            return this.privates.a;
+        };
+        var parentBSet = function ( b ) {
+
+            return this.privates.b = b + 1;
+        };
         //define
         var Parent = xs.Class.create(function () {
             this.extends = 'my.Base';
             this.properties.a = {
-                get: function () {
-
-                    return this.privates.a;
-                }
+                get: parentAGet
             };
             this.properties.b = {
-                set: function ( b ) {
-
-                    return this.privates.b = b + 1;
-                }
+                set: parentBSet
             };
         });
 
@@ -83,19 +86,22 @@ require([
         //Child
         var ChildName = 'my.Child';
 
+
+        var childCGet = function () {
+
+            return this.privates.c + '!';
+        };
+        var childCSet = function ( c ) {
+
+            return this.privates.c = '?' + c;
+        };
         //define
         var Child = xs.Class.create(function () {
             this.extends = 'my.Parent';
             this.properties.a = 2;
             this.properties.c = {
-                get: function () {
-
-                    return this.privates.c + '!';
-                },
-                set: function ( c ) {
-
-                    return this.privates.c = '?' + c;
-                }
+                get: childCGet,
+                set: childCSet
             };
         });
 
@@ -107,45 +113,44 @@ require([
         xs.ClassManager.add(ChildName, Child);
 
 
-        //check methods
-        //Base
-        var base = new my.Base;
-        strictEqual(base.a, 1);
+        //init properties (will be referred to descriptor.static.properties)
+        var properties;
 
-        //readonly
-        base.a = 2;
-        strictEqual(base.a, 1);
+        //check properties definition
+        //Base
+        properties = my.Base.descriptor.properties;
+        //a
+        strictEqual(properties.a.get, baseAGet);
+        strictEqual(properties.a.configurable, true);
+        strictEqual(properties.a.enumerable, true);
 
         //Parent
-        var parent = new my.Parent;
-        strictEqual(parent.a, undefined);
-
-        //setter assigned
-        parent.a = 2;
-        strictEqual(parent.a, 2);
-        strictEqual(parent.privates.a, 2);
-        strictEqual(parent.b, undefined);
-
-        //getter assigned
-        parent.b = 2;
-        strictEqual(parent.b, 3);
-        strictEqual(parent.privates.b, 3);
+        properties = my.Parent.descriptor.properties;
+        //a
+        strictEqual(properties.a.get, parentAGet);
+        strictEqual(properties.a.configurable, true);
+        strictEqual(properties.a.enumerable, true);
+        //b
+        strictEqual(properties.b.set, parentBSet);
+        strictEqual(properties.b.configurable, true);
+        strictEqual(properties.b.enumerable, true);
 
         //Child
-        var child = new my.Child;
-        strictEqual(child.a, 2);
-        strictEqual(child.b, undefined);
-
-        //getter assigned
-        child.b = 2;
-        strictEqual(child.b, 3);
-        strictEqual(child.privates.b, 3);
-
-        strictEqual(child.c, 'undefined!');
-        strictEqual(child.privates.c, undefined);
-        child.c = 3;
-        strictEqual(child.c, '?3!');
-        strictEqual(child.privates.c, '?3');
+        properties = my.Child.descriptor.properties;
+        //a
+        strictEqual(properties.a.value, 2);
+        strictEqual(properties.a.writable, true);
+        strictEqual(properties.a.configurable, true);
+        strictEqual(properties.a.enumerable, true);
+        //b
+        strictEqual(properties.b.set, parentBSet);
+        strictEqual(properties.b.configurable, true);
+        strictEqual(properties.b.enumerable, true);
+        //c
+        strictEqual(properties.c.get, childCGet);
+        strictEqual(properties.c.set, childCSet);
+        strictEqual(properties.c.configurable, true);
+        strictEqual(properties.c.enumerable, true);
 
 
         //tearDown
