@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -24,18 +24,18 @@
     xs.Class.preprocessors.add('extends', function () {
 
         return true;
-    }, function ( Class, descriptor, ns, ready ) {
+    }, function (Class, descriptor, ns, ready) {
         var extended = descriptor.extends;
 
         xs.log('xs.class.preprocessor.extends. Extended:', extended);
         //if no parent given - extend from xs.Base
-        if ( !xs.isDefined(extended) ) {
+        if (!xs.isDefined(extended)) {
             xs.log('xs.class.preprocessor.extends. Extending xs.Base');
             _extend(Class, xs.Base);
 
             return;
             //if extended is not string (empty string) - throw respective error
-        } else if ( !xs.isString(extended) || !extended ) {
+        } else if (!xs.isString(extended) || !extended) {
             throw new ExtendsError('incorrect extended name');
         }
 
@@ -43,7 +43,7 @@
 
         xs.log('xs.class.preprocessor.extends. Extending', extended);
         //extend from parent, if exists
-        if ( xs.ClassManager.has(extended) ) {
+        if (xs.ClassManager.has(extended)) {
             xs.log('xs.class.preprocessor.extends. Parent', extended, 'was in class manager, extending');
             //apply extends
             _applyExtends(Class, extended);
@@ -75,7 +75,7 @@
      * @param {Object} target target class
      * @param {Object} extended extended class name
      */
-    var _applyExtends = function ( target, extended ) {
+    var _applyExtends = function (target, extended) {
         //extend
         _extend(target, xs.ClassManager.get(extended));
 
@@ -91,7 +91,7 @@
      * @param {Function} child child class
      * @param {Function} parent parent class
      */
-    var _extend = function ( child, parent ) {
+    var _extend = function (child, parent) {
         //create fake constructor
         var fn = function () {
         };
@@ -118,7 +118,7 @@
      *
      * @class ExtendsError
      */
-    function ExtendsError ( message ) {
+    function ExtendsError(message) {
         this.message = 'xs.class.preprocessors.extends :: ' + message;
     }
 

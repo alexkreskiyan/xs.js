@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -21,13 +21,13 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('imports', function ( Class, descriptor ) {
+    xs.Class.preprocessors.add('imports', function (Class, descriptor) {
 
         return xs.isObject(descriptor.imports);
-    }, function ( Class, descriptor, ns, ready ) {
+    }, function (Class, descriptor, ns, ready) {
 
         //if imports are specified not as object - throw respective error
-        if ( !xs.isObject(descriptor.imports) ) {
+        if (!xs.isObject(descriptor.imports)) {
             throw new ImportsError('incorrect imports list');
         }
 
@@ -41,14 +41,14 @@
 
         //check imports to find not loaded ones
         xs.log('xs.class.preprocessor.imports. Imports:', imports);
-        xs.each(imports, function ( alias, name ) {
+        xs.each(imports, function (alias, name) {
 
             //resolve name with namespace
             name = Class.descriptor.namespace.resolve(name);
 
             xs.log('xs.class.preprocessor.imports. Importing:', name, 'as', alias);
             //if imported class is already loaded - continue to next item
-            if ( xs.ClassManager.has(name) ) {
+            if (xs.ClassManager.has(name)) {
 
                 return;
             }
@@ -59,7 +59,7 @@
         });
 
         //if no loads required - apply imports immediately and return
-        if ( !xs.size(loads) ) {
+        if (!xs.size(loads)) {
 
             //apply imports
             _applyImports(Class, imports);
@@ -91,13 +91,13 @@
      * @param {Object} target target class
      * @param {Object} imports mixins imports
      */
-    var _applyImports = function ( target, imports ) {
+    var _applyImports = function (target, imports) {
         //assign imports
-        xs.each(imports, function ( alias, name ) {
+        xs.each(imports, function (alias, name) {
             //if alias given -  save it in imports with alias
-            if ( xs.isString(alias) && alias ) {
+            if (xs.isString(alias) && alias) {
                 target.imports[alias] = xs.ClassManager.get(name);
-            } else if ( alias !== null ) {
+            } else if (alias !== null) {
                 throw new ImportsError('incorrect alias');
             }
         });
@@ -115,7 +115,7 @@
      *
      * @class ImportsError
      */
-    function ImportsError ( message ) {
+    function ImportsError(message) {
         this.message = 'xs.class.preprocessors.imports :: ' + message;
     }
 

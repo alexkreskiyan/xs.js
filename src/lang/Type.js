@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     'use strict';
 
@@ -40,12 +40,12 @@
          *
          * @return {String} value's type
          */
-        var getType = function ( value ) {
+        var getType = function (value) {
             var type = typeof value;
 
-            if ( value === null ) {
+            if (value === null) {
                 type = 'null';
-            } else if ( Array.isArray(value) ) {
+            } else if (Array.isArray(value)) {
                 type = 'array';
             }
 
@@ -66,7 +66,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isObject = function ( value ) {
+        me.isObject = function (value) {
 
             return getType(value) == 'object';
         };
@@ -85,7 +85,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isArray = function ( value ) {
+        me.isArray = function (value) {
 
             return Array.isArray(value);
         };
@@ -104,7 +104,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isFunction = function ( value ) {
+        me.isFunction = function (value) {
 
             return typeof value == 'function';
         };
@@ -123,7 +123,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isString = function ( value ) {
+        me.isString = function (value) {
 
             return typeof value == 'string';
         };
@@ -142,7 +142,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isNumber = function ( value ) {
+        me.isNumber = function (value) {
 
             return typeof value == 'number';
         };
@@ -161,7 +161,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isBoolean = function ( value ) {
+        me.isBoolean = function (value) {
 
             return typeof value == 'boolean';
         };
@@ -180,7 +180,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isRegExp = function ( value ) {
+        me.isRegExp = function (value) {
 
             return value instanceof RegExp;
         };
@@ -199,7 +199,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isError = function ( value ) {
+        me.isError = function (value) {
 
             return value instanceof Error;
         };
@@ -218,7 +218,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isNull = function ( value ) {
+        me.isNull = function (value) {
 
             return value === null;
         };
@@ -238,7 +238,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isIterable = function ( value ) {
+        me.isIterable = function (value) {
             var valueType = getType(value);
 
             return valueType == 'object' || valueType == 'array';
@@ -259,7 +259,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isPrimitive = function ( value ) {
+        me.isPrimitive = function (value) {
             var valueType = getType(value);
 
             return valueType !== 'object' && valueType !== 'array' && valueType !== 'function';
@@ -280,7 +280,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isNumeric = function ( value ) {
+        me.isNumeric = function (value) {
 
             return !isNaN(parseFloat(value)) && isFinite(value) && !Array.isArray(value);
         };
@@ -299,7 +299,7 @@
          *
          * @return {Boolean} verification result
          */
-        me.isDefined = function ( value ) {
+        me.isDefined = function (value) {
 
             return typeof value != 'undefined';
         };
@@ -328,19 +328,19 @@
          *
          * @return {Boolean} verification result
          */
-        me.isEmpty = function ( value ) {
+        me.isEmpty = function (value) {
             var type = getType(value);
 
-            if ( type == 'object' ) {
+            if (type == 'object') {
 
                 return !Object.keys(value).length;
-            } else if ( type == 'array' ) {
+            } else if (type == 'array') {
 
                 return !value.length;
-            } else if ( type == 'string' ) {
+            } else if (type == 'string') {
 
                 return !value.trim();
-            } else if ( type == 'number' ) {
+            } else if (type == 'number') {
 
                 return value == 0;
             }
@@ -350,7 +350,7 @@
     });
 
     //extend xs with type
-    Object.keys(type).forEach(function ( method ) {
+    Object.keys(type).forEach(function (method) {
         xs[method] = type[method];
     });
 })(window, 'xs');

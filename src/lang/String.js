@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     'use strict';
 
@@ -50,8 +50,8 @@
          *
          * @return {String} translated string
          */
-        me.translate = function ( string, replaces ) {
-            xs.each(replaces, function ( to, from ) {
+        me.translate = function (string, replaces) {
+            xs.each(replaces, function (to, from) {
                 string = string.split(from).join(to);
             });
 

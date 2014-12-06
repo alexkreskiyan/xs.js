@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -24,10 +24,10 @@
     xs.Class.preprocessors.add('prepareMethods', function () {
 
         return true;
-    }, function ( Class, descriptor ) {
+    }, function (Class, descriptor) {
 
         //if methods are specified not as object - throw respective error
-        if ( !xs.isObject(descriptor.properties) ) {
+        if (!xs.isObject(descriptor.properties)) {
             throw new MethodError('incorrect methods list');
         }
 
@@ -48,8 +48,8 @@
         var own = descriptor.methods;
 
         //verify and prepare them
-        xs.each(own, function ( value, name, list ) {
-            if ( !xs.isString(name) || !name ) {
+        xs.each(own, function (value, name, list) {
+            if (!xs.isString(name) || !name) {
                 throw new MethodError('incorrect method name');
             }
 
@@ -69,7 +69,7 @@
      *
      * @class MethodError
      */
-    function MethodError ( message ) {
+    function MethodError(message) {
         this.message = 'xs.class.preprocessors.methods :: ' + message;
     }
 

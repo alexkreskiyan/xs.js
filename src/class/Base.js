@@ -35,7 +35,7 @@ xs.define('xs.Base', function () {
      *
      * @return {Boolean} verification result
      */
-    me.static.methods.inherits = function ( parent ) {
+    me.static.methods.inherits = function (parent) {
         return this.prototype instanceof parent;
     };
 

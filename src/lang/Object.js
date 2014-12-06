@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     'use strict';
 
@@ -60,11 +60,11 @@
          *
          * @param {Object} object extended object
          */
-        me.extend = function ( object ) {
+        me.extend = function (object) {
             var adds = _slice(arguments, 1);
 
-            xs.each(adds, function ( source ) {
-                xs.isObject(source) && xs.each(source, function ( item, name ) {
+            xs.each(adds, function (source) {
+                xs.isObject(source) && xs.each(source, function (item, name) {
                     object[name] = item;
                 });
             });

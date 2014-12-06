@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -24,22 +24,22 @@
     xs.Class.preprocessors.add('namespace', function () {
 
         return true;
-    }, function ( Class, descriptor ) {
+    }, function (Class, descriptor) {
 
         //save namespace
         Class.descriptor.namespace = {
             path: (xs.isString(descriptor.namespace) && descriptor.namespace.length) ? descriptor.namespace : undefined,
-            resolve: function ( path ) {
+            resolve: function (path) {
                 var me = this;
 
                 //simply return path, if namespace is empty
-                if ( !me.path ) {
+                if (!me.path) {
 
                     return path;
                 }
 
                 //if name starts from namespace - resolve it
-                if ( path.substring(0, 3) == 'ns.' ) {
+                if (path.substring(0, 3) == 'ns.') {
 
                     return this.path + path.substring(2);
                 }

@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -49,7 +49,7 @@
          *
          * @return {Boolean} verification result
          */
-        var _has = me.has = function ( name ) {
+        var _has = me.has = function (name) {
 
             return xs.hasKey(registry, name);
         };
@@ -67,7 +67,7 @@
          *
          * @return {Function|undefined} class by name or undefined
          */
-        me.get = function ( name ) {
+        me.get = function (name) {
 
             return registry[name];
         };
@@ -99,19 +99,19 @@
          * - class is not function
          * - class is not extended from xs.Base
          */
-        var _add = me.add = function ( name, Class ) {
+        var _add = me.add = function (name, Class) {
             //throw error if trying to set defined
-            if ( _has(name) ) {
+            if (_has(name)) {
                 throw new ClassManagerError('class "' + name + '" is already defined');
             }
 
             //throw error if trying to add already added with other name
-            if ( xs.has(registry, Class) ) {
+            if (xs.has(registry, Class)) {
                 throw new ClassManagerError('class "' + Class.label + '" can not be added as "' + name + '"');
             }
 
             //throw error if Class is not function
-            if ( !xs.isFunction(Class) ) {
+            if (!xs.isFunction(Class)) {
                 throw new ClassManagerError('class "' + name + '" is not a function');
             }
 
@@ -156,9 +156,9 @@
          *
          * - class with given name is not registered
          */
-        me.delete = function ( name ) {
+        me.delete = function (name) {
             //throw error if trying to unset undefined
-            if ( !_has(name) ) {
+            if (!_has(name)) {
                 throw new ClassManagerError('class "' + name + '" is not defined');
             }
 
@@ -220,9 +220,9 @@
          *
          * - class with given name is already registered
          */
-        me.define = function ( name, descFn, createdFn ) {
+        me.define = function (name, descFn, createdFn) {
             //throw error if trying to redefine
-            if ( _has(name) ) {
+            if (_has(name)) {
                 throw new ClassManagerError('class "' + name + '" is already defined');
             }
 
@@ -250,7 +250,7 @@
          *
          * @return {String} short name
          */
-        var _getName = function ( name ) {
+        var _getName = function (name) {
 
             return name.split('.').slice(-1).join('.');
         };
@@ -270,7 +270,7 @@
          *
          * @return {String} class path
          */
-        var _getPath = function ( name ) {
+        var _getPath = function (name) {
 
             return name.split('.').slice(0, -1).join('.');
         };
@@ -291,9 +291,9 @@
          *
          * @return {Object|Function} namespace for given path
          */
-        var _namespace = function ( root, path ) {
+        var _namespace = function (root, path) {
             //use root if no path
-            if ( !path ) {
+            if (!path) {
                 return root;
             }
 
@@ -304,12 +304,12 @@
             var part = parts.shift();
 
             //create namespace if missing
-            if ( !xs.isFunction(root[part]) && !xs.isObject(root[part]) ) {
+            if (!xs.isFunction(root[part]) && !xs.isObject(root[part])) {
                 root[part] = {};
             }
 
             //process down or return
-            if ( parts.length ) {
+            if (parts.length) {
 
                 return _namespace(root[part], parts.join('.'));
             }
@@ -331,9 +331,9 @@
          * @param {Object|Function} root namespace relative root
          * @param {String} path relative path to root
          */
-        var _cleanNamespace = function ( root, path ) {
+        var _cleanNamespace = function (root, path) {
             //return if path is empty
-            if ( !path ) {
+            if (!path) {
                 return;
             }
 
@@ -350,7 +350,7 @@
             var namespace = _namespace(root, path);
 
             //remove namespace if empty
-            if ( xs.isEmpty(namespace[part]) ) {
+            if (xs.isEmpty(namespace[part])) {
 
                 //remove empty namespace
                 delete namespace[part];
@@ -375,29 +375,29 @@
          * @param {String} operation operation name
          * @param {String} name name of changed class
          */
-        var _syncNamespaces = function ( namespace, operation, name ) {
-            var classes = xs.findAll(namespace, function ( value ) {
+        var _syncNamespaces = function (namespace, operation, name) {
+            var classes = xs.findAll(namespace, function (value) {
                 return xs.isFunction(value) && xs.isObject(value.namespace);
             });
             var changedClass = classes[name];
 
             //add new class to all namespaces
-            if ( operation == 'add' ) {
+            if (operation == 'add') {
                 //add all classes to new class' namespace
-                xs.each(classes, function ( Class, name ) {
+                xs.each(classes, function (Class, name) {
                     changedClass.namespace[name] = Class;
                 });
 
                 //add new class to all namespaces
-                xs.each(classes, function ( Class ) {
+                xs.each(classes, function (Class) {
                     Class.namespace[name] = classes[name];
                 });
-            } else if ( operation == 'delete' ) {
+            } else if (operation == 'delete') {
                 //empty old class' namespace
                 xs.deleteAll(changedClass.namespace);
 
                 //delete old class from all namespaces
-                xs.each(classes, function ( Class ) {
+                xs.each(classes, function (Class) {
                     delete Class.namespace[name];
                 });
             }
@@ -413,7 +413,7 @@
      *
      * @class ClassManagerError
      */
-    function ClassManagerError ( message ) {
+    function ClassManagerError(message) {
         this.message = 'xs.ClassManager :: ' + message;
     }
 

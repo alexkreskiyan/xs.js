@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -117,10 +117,10 @@
          * - descFn is given not as function
          * - descFn doesn't return object
          */
-        me.create = function ( Descriptor, createdFn ) {
+        me.create = function (Descriptor, createdFn) {
 
             //Descriptor must be function
-            if ( !xs.isFunction(Descriptor) ) {
+            if (!xs.isFunction(Descriptor)) {
                 throw new ClassError('descriptor must be evaluated function');
             }
 
@@ -193,7 +193,7 @@
          * @return {Function} new xClass
          */
         var _create = function () {
-            var Class = function xClass () {
+            var Class = function xClass() {
                 var me = this;
 
                 //define class constructor
@@ -203,7 +203,7 @@
                 //singleton processing
 
                 //throw exception if Class is singleton
-                if ( descriptor.singleton ) {
+                if (descriptor.singleton) {
                     throw new ClassError('can not create instance of singleton class');
                 }
 
@@ -211,7 +211,7 @@
                 var constructor = descriptor.constructor != Object ? descriptor.constructor : undefined;
 
                 //if parent constructor - just call it
-                if ( me.self && me.self !== Class ) {
+                if (me.self && me.self !== Class) {
                     constructor && constructor.apply(me, arguments);
 
                     return;
@@ -227,12 +227,12 @@
                 me.privates = {};
 
                 //assign values
-                if ( xs.isObject(descriptor.properties) ) {
+                if (xs.isObject(descriptor.properties)) {
                     var properties = descriptor.properties;
                     var keys = Object.keys(properties);
                     var i, length = keys.length, name, property;
 
-                    for ( i = 0; i < length; i++ ) {
+                    for (i = 0; i < length; i++) {
                         name = keys[i];
                         property = properties[name];
                         property.hasOwnProperty('value') && (me[name] = property.value);
@@ -262,12 +262,12 @@
          *
          * @return {Function} factory for given Class
          */
-        var _createFactory = function ( Class ) {
+        var _createFactory = function (Class) {
             //this - current class
             //arguments - new instance arguments
 
             //create wrapper
-            var xClass = function ( args ) {
+            var xClass = function (args) {
                 return Class.apply(this, args);
             };
 
@@ -361,7 +361,7 @@
      *
      * @class xs.Class.Stack
      */
-    function Stack () {
+    function Stack() {
         var me = this;
 
         //items hash
@@ -381,13 +381,13 @@
          * - if incorrect position given
          * - relativeTo item is missing in stack
          */
-        var _apply = function ( name, position, relativeTo ) {
-            if ( !xs.has([
+        var _apply = function (name, position, relativeTo) {
+            if (!xs.has([
                 'first',
                 'last',
                 'before',
                 'after'
-            ], position) ) {
+            ], position)) {
                 throw new ClassError('incorrect position given');
             }
 
@@ -398,12 +398,12 @@
             xs.delete(keys, name);
 
             //insert to specified position
-            if ( position == 'first' || position == 'last' ) {
+            if (position == 'first' || position == 'last') {
                 position == 'first' ? keys.unshift(name) : keys.push(name);
             } else {
                 var relativeKey = xs.keyOf(keys, relativeTo);
 
-                if ( !xs.isDefined(relativeKey) ) {
+                if (!xs.isDefined(relativeKey)) {
                     throw new ClassError('relative item "' + relativeTo + '" missing in stack');
                 }
                 position == 'after' && relativeKey++;
@@ -457,11 +457,11 @@
          *
          * - processor with given name is already in stack
          */
-        me.add = function ( name, verifier, handler, position, relativeTo ) {
+        me.add = function (name, verifier, handler, position, relativeTo) {
             //position defaults to last
             position || (position = 'last');
 
-            if ( xs.hasKey(items, name) ) {
+            if (xs.hasKey(items, name)) {
                 throw new ClassError('processor "' + name + '" already in stack');
             }
 
@@ -492,7 +492,7 @@
          *
          * @param {String} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
          */
-        me.reorder = function ( name, position, relativeTo ) {
+        me.reorder = function (name, position, relativeTo) {
             _apply(name, position, relativeTo);
         };
 
@@ -511,8 +511,8 @@
          *
          * - processor with given name is not found in stack
          */
-        me.delete = function ( name ) {
-            if ( xs.hasKey(items, name) ) {
+        me.delete = function (name) {
+            if (xs.hasKey(items, name)) {
                 xs.deleteAt(items, name);
             } else {
                 throw new ClassError('processor "' + name + '" not found in stack');
@@ -534,7 +534,7 @@
          * @param {Array} handlerArgs arguments, passed to each stack item's handler
          * @param {Function} [callback] optional executed callback
          */
-        me.process = function ( verifierArgs, handlerArgs, callback ) {
+        me.process = function (verifierArgs, handlerArgs, callback) {
             _process(xs.values(items), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
         };
 
@@ -550,9 +550,9 @@
          * @param {Array} handlerArgs arguments for items' handlers
          * @param {Function} callback stack ready callback
          */
-        var _process = function ( items, verifierArgs, handlerArgs, callback ) {
+        var _process = function (items, verifierArgs, handlerArgs, callback) {
             var me = this;
-            if ( !items.length ) {
+            if (!items.length) {
                 callback();
 
                 return;
@@ -560,14 +560,14 @@
             var item = xs.shift(items);
 
             //if item.verifier allows handler execution, process next
-            if ( item.verifier.apply(me, verifierArgs) ) {
+            if (item.verifier.apply(me, verifierArgs)) {
 
                 var ready = function () {
                     _process(items, verifierArgs, handlerArgs, callback);
                 };
 
                 //if item.handler returns false, processing is async, stop processing, awaiting ready call
-                if ( item.handler.apply(me, xs.union(handlerArgs, ready)) === false ) {
+                if (item.handler.apply(me, xs.union(handlerArgs, ready)) === false) {
 
                     return;
                 }
@@ -585,7 +585,7 @@
          *
          * @class ClassError
          */
-        function ClassError ( message ) {
+        function ClassError(message) {
             this.message = 'xs.Class :: ' + message;
         }
 

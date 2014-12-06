@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -24,7 +24,7 @@
     xs.Class.preprocessors.add('constructor', function () {
 
         return true;
-    }, function ( Class, descriptor ) {
+    }, function (Class, descriptor) {
 
         //inherited
         //get inherited constructor from parent descriptor
@@ -36,14 +36,14 @@
         var own = xs.hasKey(descriptor, 'constructor') ? descriptor.constructor : undefined;
 
         //verify, that own constructor is function
-        if ( xs.isDefined(own) && !xs.isFunction(own) ) {
+        if (xs.isDefined(own) && !xs.isFunction(own)) {
             throw new ConstructorError('incorrect constructor');
         }
 
         //apply (comparison to Object guarantees, that constructor was really assigned)
-        if ( own ) {
+        if (own) {
             Class.descriptor.constructor = own;
-        } else if ( inherited ) {
+        } else if (inherited) {
             Class.descriptor.constructor = inherited;
         }
 
@@ -58,7 +58,7 @@
      *
      * @class ConstructorError
      */
-    function ConstructorError ( message ) {
+    function ConstructorError(message) {
         this.message = 'xs.class.preprocessors.constructor :: ' + message;
     }
 

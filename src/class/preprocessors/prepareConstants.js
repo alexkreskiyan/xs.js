@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -23,10 +23,10 @@
      */
     xs.Class.preprocessors.add('prepareConstants', function () {
         return true;
-    }, function ( Class, descriptor ) {
+    }, function (Class, descriptor) {
 
         //if constants are specified not as object - throw respective error
-        if ( !xs.isObject(descriptor.constants) ) {
+        if (!xs.isObject(descriptor.constants)) {
             throw new ConstError('incorrect constants list');
         }
 
@@ -47,8 +47,8 @@
         var own = descriptor.constants;
 
         //verify own constants
-        xs.each(own, function ( value, name ) {
-            if ( !xs.isString(name) || !name ) {
+        xs.each(own, function (value, name) {
+            if (!xs.isString(name) || !name) {
                 throw new ConstError('incorrect constant name');
             }
         });
@@ -66,7 +66,7 @@
      *
      * @class ConstError
      */
-    function ConstError ( message ) {
+    function ConstError(message) {
         this.message = 'xs.class.preprocessors.constants :: ' + message;
     }
 

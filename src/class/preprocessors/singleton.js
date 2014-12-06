@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -24,7 +24,7 @@
     xs.Class.preprocessors.add('singleton', function () {
 
         return true;
-    }, function ( Class, descriptor ) {
+    }, function (Class, descriptor) {
         Class.descriptor.singleton = !!descriptor.singleton;
     }, 'after', 'mixins');
 })(window, 'xs');

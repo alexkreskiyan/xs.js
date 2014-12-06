@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -24,10 +24,10 @@
     xs.Class.preprocessors.add('prepareStaticProperties', function () {
 
         return true;
-    }, function ( Class, descriptor ) {
+    }, function (Class, descriptor) {
 
         //if static properties are specified not as object - throw respective error
-        if ( !xs.isObject(descriptor.static) || !xs.isObject(descriptor.static.properties) ) {
+        if (!xs.isObject(descriptor.static) || !xs.isObject(descriptor.static.properties)) {
             throw new StaticPropertyError('incorrect static properties list');
         }
 
@@ -48,8 +48,8 @@
         var own = descriptor.static.properties;
 
         //verify and prepare them
-        xs.each(own, function ( value, name, list ) {
-            if ( !xs.isString(name) || !name ) {
+        xs.each(own, function (value, name, list) {
+            if (!xs.isString(name) || !name) {
                 throw new StaticPropertyError('incorrect static property name');
             }
 
@@ -69,7 +69,7 @@
      *
      * @class StaticPropertyError
      */
-    function StaticPropertyError ( message ) {
+    function StaticPropertyError(message) {
         this.message = 'xs.class.preprocessors.staticProperties :: ' + message;
     }
 

@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -23,10 +23,10 @@
      */
     xs.Class.preprocessors.add('defineConstants', function () {
         return true;
-    }, function ( Class ) {
+    }, function (Class) {
 
         //define constants
-        xs.each(Class.descriptor.constants, function ( value, name ) {
+        xs.each(Class.descriptor.constants, function (value, name) {
 
             xs.constant(Class, name, value);
         });

@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -24,10 +24,10 @@
     xs.Class.preprocessors.add('mixins', function () {
 
         return true;
-    }, function ( Class, descriptor, ns, ready ) {
+    }, function (Class, descriptor, ns, ready) {
 
         //if mixins are specified not as object - throw respective error
-        if ( !xs.isObject(descriptor.mixins) ) {
+        if (!xs.isObject(descriptor.mixins)) {
             throw new MixinError('incorrect mixins list');
         }
 
@@ -47,14 +47,14 @@
         var loads = [];
 
         xs.log('xs.class.preprocessor.mixins. Mixins:', mixins);
-        xs.each(mixins, function ( name, alias, list ) {
+        xs.each(mixins, function (name, alias, list) {
             //verify mixed class name
-            if ( !xs.isString(name) || !name ) {
+            if (!xs.isString(name) || !name) {
                 throw new ConstError('incorrect mixed class name');
             }
 
             //verify mixed class alias
-            if ( !alias ) {
+            if (!alias) {
                 throw new ConstError('incorrect mixed class alias');
             }
 
@@ -63,7 +63,7 @@
 
             xs.log('xs.class.preprocessor.mixins. Mixing in:', name, 'as', alias);
             //if mixed class is already loaded - go to next mixin
-            if ( xs.ClassManager.has(name) ) {
+            if (xs.ClassManager.has(name)) {
                 xs.log('xs.class.preprocessor.mixins. Mixed', name, 'already loaded');
 
                 return;
@@ -75,7 +75,7 @@
         });
 
         //if no loads required, apply mixes and return
-        if ( !xs.size(loads) ) {
+        if (!xs.size(loads)) {
             //apply mixins to Class.descriptor
             _applyMixins(Class, mixins);
 
@@ -106,12 +106,12 @@
      * @param {Object} target target class
      * @param {Object} mixins mixins list
      */
-    var _applyMixins = function ( target, mixins ) {
+    var _applyMixins = function (target, mixins) {
         //create mixins property in target.prototype
         target.prototype.mixins = {};
 
         //apply each mixin
-        xs.each(mixins, function ( name, alias ) {
+        xs.each(mixins, function (name, alias) {
 
             //get reference for mixed class
             var mixed = xs.ClassManager.get(name);
@@ -134,7 +134,7 @@
      * @param {Object} target target class descriptor
      * @param {Object} mix mixin class descriptor
      */
-    var _mixinClass = function ( target, mix ) {
+    var _mixinClass = function (target, mix) {
 
         //extend constants
         _mixinSection('constant', target.constants, mix.constants);
@@ -163,11 +163,11 @@
      * @param {Object} target target data
      * @param {Object} mixin mixin data
      */
-    var _mixinSection = function ( type, target, mixin ) {
+    var _mixinSection = function (type, target, mixin) {
         //find differing intersections
-        xs.each(target, function ( targetValue, targetName ) {
+        xs.each(target, function (targetValue, targetName) {
             var mixinValue = mixin[targetName];
-            if ( xs.isDefined(mixinValue) && mixinValue !== targetValue ) {
+            if (xs.isDefined(mixinValue) && mixinValue !== targetValue) {
                 throw new MixinError(type + ' "' + targetName + '" is already declared');
             }
         });
@@ -185,7 +185,7 @@
      *
      * @class MixinError
      */
-    function MixinError ( message ) {
+    function MixinError(message) {
         this.message = 'xs.class.preprocessors.mixin :: ' + message;
     }
 

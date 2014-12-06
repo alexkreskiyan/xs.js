@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -24,13 +24,13 @@
     xs.Class.preprocessors.add('defineStaticProperties', function () {
 
         return true;
-    }, function ( Class ) {
+    }, function (Class) {
 
         //create privates storage in class
         Class.privates = {};
 
         //apply
-        xs.each(Class.descriptor.static.properties, function ( descriptor, name ) {
+        xs.each(Class.descriptor.static.properties, function (descriptor, name) {
 
             //save property to class
             xs.Attribute.property.define(Class, name, descriptor);

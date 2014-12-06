@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -24,10 +24,10 @@
     xs.Class.preprocessors.add('prepareProperties', function () {
 
         return true;
-    }, function ( Class, descriptor ) {
+    }, function (Class, descriptor) {
 
         //if properties are specified not as object - throw respective error
-        if ( !xs.isObject(descriptor.properties) ) {
+        if (!xs.isObject(descriptor.properties)) {
             throw new PropertyError('incorrect properties list');
         }
 
@@ -49,8 +49,8 @@
         //get own properties from raw descriptor and apply
 
         //verify and prepare them
-        xs.each(own, function ( value, name, list ) {
-            if ( !xs.isString(name) || !name ) {
+        xs.each(own, function (value, name, list) {
+            if (!xs.isString(name) || !name) {
                 throw new PropertyError('incorrect property name');
             }
 
@@ -70,7 +70,7 @@
      *
      * @class PropertyError
      */
-    function PropertyError ( message ) {
+    function PropertyError(message) {
         this.message = 'xs.class.preprocessors.properties :: ' + message;
     }
 

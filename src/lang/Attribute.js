@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     'use strict';
 
@@ -47,7 +47,7 @@
          *
          * @return {Boolean} verification result
          */
-        var _defined = me.defined = function ( object, name ) {
+        var _defined = me.defined = function (object, name) {
             return object.hasOwnProperty(name);
         };
 
@@ -86,7 +86,7 @@
          * @param {Object|string} name new property's name of list of new properties
          * @param {Object} descriptor descriptor of new property
          */
-        var _define = me.define = function ( object, name, descriptor ) {
+        var _define = me.define = function (object, name, descriptor) {
             descriptor ? Object.defineProperty(object, name, descriptor) : Object.defineProperties(object, name);
         };
 
@@ -104,7 +104,7 @@
          *
          * @return {Object} property descriptor
          */
-        var _getDescriptor = me.getDescriptor = function ( object, name ) {
+        var _getDescriptor = me.getDescriptor = function (object, name) {
             return Object.getOwnPropertyDescriptor(object, name);
         };
 
@@ -126,7 +126,7 @@
          *
          * @return {Boolean} whether property is assigned
          */
-        me.isAssigned = function ( object, name ) {
+        me.isAssigned = function (object, name) {
             var descriptor = _getDescriptor(object, name);
             return !!descriptor && descriptor.hasOwnProperty('value');
         };
@@ -149,7 +149,7 @@
          *
          * @return {Boolean} whether property is accessed
          */
-        me.isAccessed = function ( object, name ) {
+        me.isAccessed = function (object, name) {
             var descriptor = _getDescriptor(object, name);
             return !!descriptor && (descriptor.hasOwnProperty('get') || descriptor.hasOwnProperty('set'));
         };
@@ -172,7 +172,7 @@
          *
          * @return {Boolean} whether property is writable
          */
-        me.isWritable = function ( object, name ) {
+        me.isWritable = function (object, name) {
             var descriptor = _getDescriptor(object, name);
             return !!descriptor && !!descriptor.writable;
         };
@@ -195,7 +195,7 @@
          *
          * @return {Boolean} whether property is configurable
          */
-        var _isConfigurable = me.isConfigurable = function ( object, name ) {
+        var _isConfigurable = me.isConfigurable = function (object, name) {
             var descriptor = _getDescriptor(object, name);
             return !!descriptor && !!descriptor.configurable;
         };
@@ -218,7 +218,7 @@
          *
          * @return {Boolean} whether property is enumerable
          */
-        me.isEnumerable = function ( object, name ) {
+        me.isEnumerable = function (object, name) {
             var descriptor = _getDescriptor(object, name);
             return !!descriptor && !!descriptor.enumerable;
         };
@@ -237,9 +237,9 @@
          *
          * @return {Boolean} whether descriptor given
          */
-        var _isDescriptor = me.isDescriptor = function ( descriptor ) {
+        var _isDescriptor = me.isDescriptor = function (descriptor) {
             //false if descriptor is not object
-            if ( !xs.isObject(descriptor) ) {
+            if (!xs.isObject(descriptor)) {
                 return false;
             }
 
@@ -271,8 +271,8 @@
          *
          * - constant with given name is already defined
          */
-        me.constant = function ( object, name, value ) {
-            if ( _defined(object, name) && !_isConfigurable(object, name) ) {
+        me.constant = function (object, name, value) {
+            if (_defined(object, name) && !_isConfigurable(object, name)) {
                 throw new AttributeError('constant "' + name + '" is already defined');
             }
             _define(object, name, {
@@ -326,18 +326,18 @@
          *
          * @return {Object} corrected descriptor copy
          */
-        var _prepareDescriptor = me.prepareDescriptor = function ( descriptor ) {
+        var _prepareDescriptor = me.prepareDescriptor = function (descriptor) {
             descriptor = xs.clone(descriptor);
             //non-function get|set are removed
-            if ( _defined(descriptor, 'get') && !xs.isFunction(descriptor.get) ) {
+            if (_defined(descriptor, 'get') && !xs.isFunction(descriptor.get)) {
                 delete descriptor.get;
             }
-            if ( _defined(descriptor, 'set') && !xs.isFunction(descriptor.set) ) {
+            if (_defined(descriptor, 'set') && !xs.isFunction(descriptor.set)) {
                 delete descriptor.set;
             }
 
             //get|set are preferred to value: value and writable are removed
-            if ( descriptor.get || descriptor.set ) {
+            if (descriptor.get || descriptor.set) {
                 delete descriptor.value;
                 delete descriptor.writable;
             }
@@ -394,9 +394,9 @@
              *
              * @return {Object} prepared descriptor
              */
-            me.prepare = function ( name, descriptor ) {
+            me.prepare = function (name, descriptor) {
                 //if not descriptor - returns generated one
-                if ( !_isDescriptor(descriptor) ) {
+                if (!_isDescriptor(descriptor)) {
 
                     return {
                         value: descriptor,
@@ -410,7 +410,7 @@
                 descriptor = _prepareDescriptor(descriptor);
 
                 //get|set priority
-                if ( descriptor.get || descriptor.set ) {
+                if (descriptor.get || descriptor.set) {
                     descriptor.get || eval('descriptor.get = function () { \'use strict\'; return this.privates.' + name + ';}');
                     descriptor.set || eval('descriptor.set = function (value) { \'use strict\'; this.privates.' + name + ' = value;}');
                 } else {
@@ -462,8 +462,8 @@
              *
              * - property with given name is already defined
              */
-            me.define = function ( object, name, descriptor ) {
-                if ( _defined(object, name) && !_isConfigurable(object, name) ) {
+            me.define = function (object, name, descriptor) {
+                if (_defined(object, name) && !_isConfigurable(object, name)) {
                     throw new AttributeError('property "' + name + '" is already defined');
                 }
 
@@ -472,7 +472,7 @@
                     enumerable: true,
                     configurable: false
                 });
-                if ( !descriptor.get && !descriptor.set ) {
+                if (!descriptor.get && !descriptor.set) {
                     descriptor.writable = true;
                 }
 
@@ -520,10 +520,10 @@
              *
              * - method descriptor is incorrect
              */
-            me.prepare = function ( name, descriptor ) {
+            me.prepare = function (name, descriptor) {
 
                 //simple function
-                if ( xs.isFunction(descriptor) ) {
+                if (xs.isFunction(descriptor)) {
 
                     return {
                         value: descriptor,
@@ -533,7 +533,7 @@
                     };
 
                     //or complex object descriptor with fn in descriptor.value
-                } else if ( !xs.isObject(descriptor) || !xs.isFunction(descriptor.value) ) {
+                } else if (!xs.isObject(descriptor) || !xs.isFunction(descriptor.value)) {
                     throw new AttributeError('Incorrect method descriptor');
                 }
 
@@ -582,8 +582,8 @@
              *
              * - method with given name is already defined
              */
-            me.define = function ( object, name, descriptor ) {
-                if ( _defined(object, name) && !_isConfigurable(object, name) ) {
+            me.define = function (object, name, descriptor) {
+                if (_defined(object, name) && !_isConfigurable(object, name)) {
                     throw new AttributeError('Method "' + name + '" is already defined');
                 }
                 _define(object, name, {
@@ -604,7 +604,7 @@
          *
          * @class AttributeError
          */
-        function AttributeError ( message ) {
+        function AttributeError(message) {
             this.message = 'xs.Attribute :: ' + message;
         }
 

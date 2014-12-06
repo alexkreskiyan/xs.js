@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -24,10 +24,10 @@
     xs.Class.preprocessors.add('defineMethods', function () {
 
         return true;
-    }, function ( Class, descriptor ) {
+    }, function (Class, descriptor) {
 
         //apply
-        xs.each(Class.descriptor.methods, function ( value, name ) {
+        xs.each(Class.descriptor.methods, function (value, name) {
 
             //save method to prototype
             xs.Attribute.method.define(Class.prototype, name, value);

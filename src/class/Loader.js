@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -92,7 +92,7 @@
          * When called, 3 lists are passed as arguments: failed, loaded and unresolved classes.
          * Unresolved means, that those were not loaded yet before fail
          */
-        me.require = function ( name, handleLoad, handleFail ) {
+        me.require = function (name, handleLoad, handleFail) {
             xs.log('xs.Loader::require. Acquired:', name);
 
             //init loaded classes list
@@ -100,16 +100,16 @@
             xs.log('xs.Loader::require. LoadList:', loadList);
 
             //if failed section is not empty - handle fail
-            if ( xs.size(loadList.failed) ) {
+            if (xs.size(loadList.failed)) {
                 xs.log('xs.Loader::require. LoadList has failed classes. Handle fail');
                 //use handleFail method if given
-                if ( handleFail ) {
+                if (handleFail) {
                     xs.nextTick(function () {
                         handleFail(loadList.failed, loadList.loaded, loadList.unresolved);
                     });
                 } else {
                     var failed = [];
-                    xs.each(loadList.failed, function ( path, name ) {
+                    xs.each(loadList.failed, function (path, name) {
                         failed.push(name + ' (' + path + ')');
                     });
                     throw new LoaderError('failed loading classes: ' + failed.join(', '));
@@ -119,7 +119,7 @@
             }
 
             //if new section is empty - handle load - all classes are in loaded section
-            if ( !xs.size(loadList.unresolved) ) {
+            if (!xs.size(loadList.unresolved)) {
                 xs.log('xs.Loader::require. LoadList has only loaded classes. Handle load');
                 xs.nextTick(function () {
                     handleLoad(loadList.loaded);
@@ -134,7 +134,7 @@
 
             xs.log('xs.Loader::require. Add each of loadList to loader');
             //add each of loadList.unresolved to loader
-            xs.each(loadList.unresolved, function ( path ) {
+            xs.each(loadList.unresolved, function (path) {
                 loader.has(path) || loader.add(path);
             });
         };
@@ -156,7 +156,7 @@
          * - class name has incorrect format
          * - class was already attempted to load, but load failed - error occurred
          */
-        function _getLoadList ( classes ) {
+        function _getLoadList(classes) {
 
             /**
              * Load list
@@ -173,14 +173,14 @@
 
             xs.log('xs.Loader::getLoadList. Processing classes', classes);
             //process loaded and missing classes
-            xs.each(classes, function ( name ) {
+            xs.each(classes, function (name) {
                 //check, that name is string
-                if ( !xs.isString(name) ) {
+                if (!xs.isString(name)) {
                     throw new LoaderError('loaded class name must be a string');
                 }
 
                 //check, that name matches regular expression
-                if ( !nameRe.test(name) ) {
+                if (!nameRe.test(name)) {
                     throw new LoaderError('loaded class name has incorrect format');
                 }
 
@@ -190,12 +190,12 @@
                 xs.log('xs.Loader::getLoadList. Resolved class "' + name + '" as path"' + path + '"');
                 xs.log('xs.Loader::getLoadList. Check path "' + path + '"');
                 //if the class is already loaded - add it to loaded section
-                if ( loaded.has(path) ) {
+                if (loaded.has(path)) {
                     xs.log('xs.Loader::getLoadList. Path "' + path + '" is already loaded');
                     loadList.loaded[name] = path;
 
                     //if the class was already attempted to load, but load failed - add it to failed section
-                } else if ( failed.has(path) ) {
+                } else if (failed.has(path)) {
                     loadList.failed[name] = path;
 
                     //else - the class was not attempted to load yet - add it to unresolved section
@@ -219,7 +219,7 @@
          *
          * @param {String} path
          */
-        function _handleLoad ( path ) {
+        function _handleLoad(path) {
             xs.log('xs.Loader::handleLoad. Path "' + path + '" loaded');
             //add loaded path
             loaded.add(path);
@@ -241,7 +241,7 @@
          *
          * - failed loading url
          */
-        function _handleFail ( path ) {
+        function _handleFail(path) {
             xs.log('xs.Loader::handleFail. Path "' + path + '" failed');
             //add failed path
             failed.add(path);
@@ -296,17 +296,17 @@
              * - if given alias is already registered
              * - if given path is not a string
              */
-            me.add = function ( alias, path ) {
+            me.add = function (alias, path) {
                 //single alias style
-                if ( arguments.length > 1 ) {
+                if (arguments.length > 1) {
 
                     //check that alias was not defined yet
-                    if ( me.has(alias) ) {
+                    if (me.has(alias)) {
                         throw new LoaderError('alias "' + alias + '" is already registered');
                     }
 
                     //check that path is string
-                    if ( !xs.isString(path) ) {
+                    if (!xs.isString(path)) {
                         throw new LoaderError('path must be a string');
                     }
 
@@ -317,12 +317,12 @@
                 }
 
                 //check that pairs are given as list
-                if ( !xs.isObject(alias) ) {
+                if (!xs.isObject(alias)) {
                     throw new LoaderError('aliases list has incorrect format');
                 }
 
                 //add each path
-                xs.each(alias, function ( path, alias ) {
+                xs.each(alias, function (path, alias) {
                     me.add(alias, path);
                 });
 
@@ -349,14 +349,14 @@
              *
              * - if given alias is not a string
              */
-            me.has = function ( alias ) {
+            me.has = function (alias) {
                 //check, that alias is string
-                if ( !xs.isString(alias) ) {
+                if (!xs.isString(alias)) {
                     throw new LoaderError('alias must be a string');
                 }
 
                 //check, that alias matches regular expression
-                if ( !nameRe.test(alias) ) {
+                if (!nameRe.test(alias)) {
                     throw new LoaderError('alias is given incorrectly');
                 }
 
@@ -387,12 +387,12 @@
              *
              * - if given alias is not registered
              */
-            me.delete = function ( alias ) {
+            me.delete = function (alias) {
                 //single alias style
-                if ( !xs.isArray(alias) ) {
+                if (!xs.isArray(alias)) {
 
                     //check that alias is registered
-                    if ( !me.has(alias) ) {
+                    if (!me.has(alias)) {
                         throw new LoaderError('alias "' + alias + '" is not registered');
                     }
 
@@ -446,14 +446,14 @@
              *
              * - if given class name is not a string
              */
-            me.resolve = function ( name ) {
+            me.resolve = function (name) {
                 //throw LoaderError if name is not string
-                if ( !xs.isString(name) ) {
+                if (!xs.isString(name)) {
                     throw new LoaderError('class name must be a string');
                 }
 
                 //check that name matches regular expression
-                if ( !nameRe.test(name) ) {
+                if (!nameRe.test(name)) {
                     throw new LoaderError('class name has incorrect format');
                 }
 
@@ -463,16 +463,16 @@
                 var namePath = '';
 
                 //iterate over all paths to find most suitable alias
-                xs.each(paths, function ( path, alias ) {
+                xs.each(paths, function (path, alias) {
                     //update current, if name starts from alias + dot and alias length if longer, than current
-                    if ( name.indexOf(alias + '.') === 0 && alias.length > nameAlias.length ) {
+                    if (name.indexOf(alias + '.') === 0 && alias.length > nameAlias.length) {
                         nameAlias = alias;
                         namePath = path;
                     }
                 });
 
                 //if alias not found - return name, where dots are replaced with slashes
-                if ( !nameAlias ) {
+                if (!nameAlias) {
 
                     return name.split('.').join('/') + ext;
                 }
@@ -513,7 +513,7 @@
              * @param {Function} handleLoad successful classes' load  handler.
              * @param {Function} [handleFail] handler for one of files failed.
              */
-            me.add = function ( list, handleLoad, handleFail ) {
+            me.add = function (list, handleLoad, handleFail) {
                 xs.log('xs.Loader::resolver::add. Add list ', list);
                 awaiting.push({
                     list: list,
@@ -532,14 +532,14 @@
              *
              * @param {String} path
              */
-            me.resolve = function ( path ) {
+            me.resolve = function (path) {
                 //find resolved items
                 xs.log('xs.Loader::resolver::resolve. Handle path "' + path + '"');
-                var resolved = xs.findAll(awaiting, function ( item ) {
+                var resolved = xs.findAll(awaiting, function (item) {
                     xs.log('xs.Loader::resolver::handler. Clean up item.pending', item.pending);
 
                     //item is resolved, if path delete succeeds (path was deleted) and pending is empty
-                    if ( xs.delete(item.pending, path) ) {
+                    if (xs.delete(item.pending, path)) {
 
                         //update item list
                         var name = xs.keyOf(item.list.unresolved, path);
@@ -555,7 +555,7 @@
                 xs.log('xs.Loader::resolver::resolve. Handling items', resolved);
 
                 //handle each resolved item
-                xs.each(resolved, function ( item ) {
+                xs.each(resolved, function (item) {
                     xs.delete(awaiting, item);
                     item.handleLoad(xs.union(item.list.loaded, item.list.unresolved));
                 });
@@ -568,10 +568,10 @@
              *
              * @param {String} path
              */
-            me.reject = function ( path ) {
+            me.reject = function (path) {
                 //find rejected items
                 xs.log('xs.Loader::resolver::reject. Handle path "' + path + '"');
-                var rejected = xs.findAll(awaiting, function ( item ) {
+                var rejected = xs.findAll(awaiting, function (item) {
                     xs.log('xs.Loader::resolver::reject. Check item.pending', item.pending);
                     //item is rejected, if pending has path
                     return xs.has(item.pending, path);
@@ -580,7 +580,7 @@
                 xs.log('xs.Loader::resolver::reject. Handling items', rejected);
 
                 //handle each rejected item
-                xs.each(rejected, function ( item ) {
+                xs.each(rejected, function (item) {
                     //delete item from awaiting list
                     xs.delete(awaiting, item);
 
@@ -590,7 +590,7 @@
                     item.list.failed[name] = path;
 
                     //handle fail if handler given, or throw error
-                    if ( item.handleFail ) {
+                    if (item.handleFail) {
                         item.handleFail(item.list.failed, item.list.loaded, item.list.unresolved);
                     } else {
                         throw new LoaderError('failed loading classes: ' + name + ' (' + path + ')');
@@ -610,7 +610,7 @@
          *
          * @singleton
          */
-        var loader = new (function ( handleLoad, handleFail ) {
+        var loader = new (function (handleLoad, handleFail) {
             var me = this;
 
             /**
@@ -633,12 +633,12 @@
              *
              * - if given path is already registered in loader
              */
-            me.add = function ( path ) {
+            me.add = function (path) {
                 var me = this;
 
                 xs.log('xs.Loader::loader::add. Add path "' + path + '"');
                 //check that path was not added yet
-                if ( me.has(path) ) {
+                if (me.has(path)) {
                     throw new LoaderError('path "' + path + '" is already loading');
                 }
 
@@ -658,7 +658,7 @@
              *
              * @returns {Boolean} whether loader is loading that path
              */
-            me.has = function ( path ) {
+            me.has = function (path) {
                 return xs.has(loading, path);
             };
 
@@ -671,7 +671,7 @@
              *
              * @param {String} path loaded path
              */
-            var _load = function ( path ) {
+            var _load = function (path) {
                 //create script element
                 var script = document.createElement('script');
 
@@ -734,7 +734,7 @@
          *
          * @class List
          */
-        function List ( name ) {
+        function List(name) {
             var me = this;
 
             /**
@@ -760,12 +760,12 @@
              *
              * @chainable
              */
-            me.add = function ( path ) {
+            me.add = function (path) {
                 var me = this;
 
                 xs.log('xs.Loader::' + name + '::add. Add path "' + path + '"');
                 //check that path is not in list
-                if ( me.has(path) ) {
+                if (me.has(path)) {
                     throw new LoaderError('class "' + path + '" is already in ' + listName + ' list');
                 }
 
@@ -782,7 +782,7 @@
              *
              * @returns {Boolean}
              */
-            me.has = function ( path ) {
+            me.has = function (path) {
 
                 return xs.has(list, path);
             };
@@ -796,12 +796,12 @@
              *
              * @chainable
              */
-            me.delete = function ( path ) {
+            me.delete = function (path) {
                 var me = this;
 
                 xs.log('xs.Loader::' + name + '::delete. Delete path "' + path + '"');
                 //check that path is in list
-                if ( !me.has(path) ) {
+                if (!me.has(path)) {
                     throw new LoaderError('class "' + path + '" is not in ' + listName + ' list');
                 }
 
@@ -821,7 +821,7 @@
          *
          * @class LoaderError
          */
-        function LoaderError ( message ) {
+        function LoaderError(message) {
             this.message = 'xs.Loader :: ' + message;
         }
 
