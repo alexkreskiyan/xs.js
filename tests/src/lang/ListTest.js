@@ -107,7 +107,7 @@ require([
     test('has', function () {
         //init test variables
         var x;
-        var item = {a: 1};
+        var item = { a: 1 };
 
         //test array list
         x = [
@@ -144,7 +144,7 @@ require([
     test('keyOf', function () {
         //init test variables
         var x;
-        var item = {a: 1};
+        var item = { a: 1 };
 
         //test array list
         x = [
@@ -187,7 +187,7 @@ require([
     test('lastKeyOf', function () {
         //init test variables
         var x;
-        var item = {a: 1};
+        var item = { a: 1 };
 
         //test array list
         x = [
@@ -258,7 +258,7 @@ require([
             2
         ];
         sum = '';
-        xs.each(x, function ( value ) {
+        xs.each(x, function (value) {
             sum += value;
         });
         strictEqual(sum, '12');
@@ -266,7 +266,7 @@ require([
         //test empty array list
         x = [];
         sum = '';
-        xs.each(x, function ( value ) {
+        xs.each(x, function (value) {
             sum += value;
         });
         strictEqual(sum, '');
@@ -277,7 +277,7 @@ require([
             b: 2
         };
         sum = '';
-        xs.each(x, function ( value ) {
+        xs.each(x, function (value) {
             sum += value;
         });
         strictEqual(sum, '12');
@@ -285,7 +285,7 @@ require([
         //test empty object list
         x = {};
         sum = '';
-        xs.each(x, function ( value ) {
+        xs.each(x, function (value) {
             sum += value;
         });
         strictEqual(sum, '');
@@ -301,7 +301,7 @@ require([
             2
         ];
         sum = '';
-        xs.eachReverse(x, function ( value ) {
+        xs.eachReverse(x, function (value) {
             sum += value;
         });
         strictEqual(sum, '21');
@@ -309,7 +309,7 @@ require([
         //test empty array list
         x = [];
         sum = '';
-        xs.eachReverse(x, function ( value ) {
+        xs.eachReverse(x, function (value) {
             sum += value;
         });
         strictEqual(sum, '');
@@ -320,7 +320,7 @@ require([
             b: 2
         };
         sum = '';
-        xs.eachReverse(x, function ( value ) {
+        xs.eachReverse(x, function (value) {
             sum += value;
         });
         strictEqual(sum, '21');
@@ -328,7 +328,7 @@ require([
         //test empty object list
         x = {};
         sum = '';
-        xs.eachReverse(x, function ( value ) {
+        xs.eachReverse(x, function (value) {
             sum += value;
         });
         strictEqual(sum, '');
@@ -343,14 +343,14 @@ require([
             4,
             3
         ];
-        x = xs.map(x, function ( value, name ) {
+        x = xs.map(x, function (value, name) {
             return value * 2 + name;
         });
         strictEqual(JSON.stringify(x), '[8,7]');
 
         //test empty array list
         x = [];
-        x = xs.map(x, function ( value, name ) {
+        x = xs.map(x, function (value, name) {
             return value * 2 + name;
         });
         strictEqual(JSON.stringify(x), '[]');
@@ -360,14 +360,14 @@ require([
             x: 1,
             b: 2
         };
-        x = xs.map(x, function ( value, name ) {
+        x = xs.map(x, function (value, name) {
             return value * 2 + name;
         });
         strictEqual(JSON.stringify(x), '{"x":"2x","b":"4b"}');
 
         //test empty object list
         x = {};
-        x = xs.map(x, function ( value, name ) {
+        x = xs.map(x, function (value, name) {
             return value * 2 + name;
         });
         strictEqual(JSON.stringify(x), '{}');
@@ -383,16 +383,16 @@ require([
             5,
             4
         ];
-        strictEqual(xs.reduce(x, function ( memo, value, name ) {
+        strictEqual(xs.reduce(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }), 25);
-        strictEqual(xs.reduce(x, function ( memo, value, name ) {
+        strictEqual(xs.reduce(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }, -3), 30);
 
         //test empty array list
         x = [];
-        strictEqual(xs.reduce(x, function ( memo, value, name ) {
+        strictEqual(xs.reduce(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }, -3), -3);
 
@@ -402,19 +402,19 @@ require([
             b: 2,
             a: 3
         };
-        strictEqual(xs.reduce(x, function ( memo, value, name ) {
+        strictEqual(xs.reduce(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }), '5b6a');
-        strictEqual(xs.reduce(x, function ( memo, value, name ) {
+        strictEqual(xs.reduce(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }, -3), '-1x4b6a');
 
         //test empty object list
         x = {};
-        strictEqual(xs.reduce(x, function ( memo, value, name ) {
+        strictEqual(xs.reduce(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }), undefined);
-        strictEqual(xs.reduce(x, function ( memo, value, name ) {
+        strictEqual(xs.reduce(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }, -3), -3);
     });
@@ -429,16 +429,16 @@ require([
             5,
             4
         ];
-        strictEqual(xs.reduceRight(x, function ( memo, value, name ) {
+        strictEqual(xs.reduceRight(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }), 27);
-        strictEqual(xs.reduceRight(x, function ( memo, value, name ) {
+        strictEqual(xs.reduceRight(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }, -3), 30);
 
         //test empty array list
         x = [];
-        strictEqual(xs.reduce(x, function ( memo, value, name ) {
+        strictEqual(xs.reduce(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }, -3), -3);
 
@@ -448,19 +448,19 @@ require([
             b: 2,
             a: 3
         };
-        strictEqual(xs.reduceRight(x, function ( memo, value, name ) {
+        strictEqual(xs.reduceRight(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }), '7b2x');
-        strictEqual(xs.reduceRight(x, function ( memo, value, name ) {
+        strictEqual(xs.reduceRight(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }, -3), '3a4b2x');
 
         //test empty object list
         x = {};
-        strictEqual(xs.reduce(x, function ( memo, value, name ) {
+        strictEqual(xs.reduce(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }), undefined);
-        strictEqual(xs.reduce(x, function ( memo, value, name ) {
+        strictEqual(xs.reduce(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }, -3), -3);
     });
@@ -489,17 +489,17 @@ require([
             }
         ];
 
-        strictEqual(xs.find(x, function ( value ) {
+        strictEqual(xs.find(x, function (value) {
             return value.y == 1;
         }), x[2]);
 
-        strictEqual(xs.find(x, function ( value ) {
+        strictEqual(xs.find(x, function (value) {
             return value.y == 3;
         }), undefined);
 
         //test empty array list
         x = [];
-        strictEqual(xs.find(x, function ( value ) {
+        strictEqual(xs.find(x, function (value) {
             return value.y == 1;
         }), undefined);
 
@@ -522,17 +522,17 @@ require([
                 y: 1
             }
         };
-        strictEqual(xs.find(x, function ( value ) {
+        strictEqual(xs.find(x, function (value) {
             return value.y == 1;
         }), x.c);
 
-        strictEqual(xs.find(x, function ( value ) {
+        strictEqual(xs.find(x, function (value) {
             return value.y == 3;
         }), undefined);
 
         //test empty object list
         x = {};
-        strictEqual(xs.find(x, function ( value ) {
+        strictEqual(xs.find(x, function (value) {
             return value.y == 1;
         }), undefined);
 
@@ -561,16 +561,16 @@ require([
                 y: 1
             }
         ];
-        strictEqual(xs.findLast(x, function ( value ) {
+        strictEqual(xs.findLast(x, function (value) {
             return value.y == 1;
         }), x[3]);
-        strictEqual(xs.findLast(x, function ( value ) {
+        strictEqual(xs.findLast(x, function (value) {
             return value.y == 3;
         }), undefined);
 
         //test empty array list
         x = [];
-        strictEqual(xs.findLast(x, function ( value ) {
+        strictEqual(xs.findLast(x, function (value) {
             return value.y == 3;
         }), undefined);
 
@@ -593,17 +593,17 @@ require([
                 y: 1
             }
         };
-        strictEqual(xs.findLast(x, function ( value ) {
+        strictEqual(xs.findLast(x, function (value) {
             return value.y == 1;
         }), x.d);
 
-        strictEqual(xs.findLast(x, function ( value ) {
+        strictEqual(xs.findLast(x, function (value) {
             return value.y == 3;
         }), undefined);
 
         //test empty object list
         x = {};
-        strictEqual(xs.findLast(x, function ( value ) {
+        strictEqual(xs.findLast(x, function (value) {
             return value.y == 3;
         }), undefined);
     });
@@ -632,7 +632,7 @@ require([
                 y: 1
             }
         ];
-        results = xs.findAll(x, function ( value ) {
+        results = xs.findAll(x, function (value) {
             return value.y == 1;
         });
         strictEqual(JSON.stringify(results), JSON.stringify([
@@ -640,14 +640,14 @@ require([
             x[3]
         ]));
 
-        results = xs.findAll(x, function ( value ) {
+        results = xs.findAll(x, function (value) {
             return value.y == 3;
         });
         strictEqual(JSON.stringify(results), JSON.stringify([]));
 
         //test empty array list
         x = [];
-        results = xs.findAll(x, function ( value ) {
+        results = xs.findAll(x, function (value) {
             return value.a = 'aa';
         });
         strictEqual(JSON.stringify(results), JSON.stringify([]));
@@ -672,7 +672,7 @@ require([
             }
         };
 
-        results = xs.findAll(x, function ( value ) {
+        results = xs.findAll(x, function (value) {
             return value.y == 1;
         });
         strictEqual(JSON.stringify(results), JSON.stringify({
@@ -680,14 +680,14 @@ require([
             d: x.d
         }));
 
-        results = xs.findAll(x, function ( value ) {
+        results = xs.findAll(x, function (value) {
             return value.y == 3;
         });
         strictEqual(JSON.stringify(results), JSON.stringify({}));
 
         //test empty object list
         x = {};
-        results = xs.findAll(x, function ( value ) {
+        results = xs.findAll(x, function (value) {
             return value.y == 3;
         });
         strictEqual(JSON.stringify(results), JSON.stringify({}));
@@ -961,17 +961,17 @@ require([
             }
         ];
 
-        strictEqual(xs.every(x, function ( value ) {
+        strictEqual(xs.every(x, function (value) {
             return value.hasOwnProperty('y');
         }), true);
 
-        strictEqual(xs.every(x, function ( value ) {
+        strictEqual(xs.every(x, function (value) {
             return value.x === 1;
         }), false);
 
         //test empty array list
         x = [];
-        strictEqual(xs.every(x, function ( value ) {
+        strictEqual(xs.every(x, function (value) {
             return !value.hasOwnProperty('y');
         }), true);
 
@@ -995,17 +995,17 @@ require([
             }
         };
 
-        strictEqual(xs.every(x, function ( value ) {
+        strictEqual(xs.every(x, function (value) {
             return xs.hasKey(value, 'y');
         }), true);
 
-        strictEqual(xs.every(x, function ( value ) {
+        strictEqual(xs.every(x, function (value) {
             return value.x === 1;
         }), false);
 
         //test empty object list
         x = {};
-        strictEqual(xs.every(x, function ( value ) {
+        strictEqual(xs.every(x, function (value) {
             return value.x === 1;
         }), true);
     });
@@ -1034,29 +1034,29 @@ require([
             }
         ];
 
-        strictEqual(xs.some(x, function ( value ) {
+        strictEqual(xs.some(x, function (value) {
             return value.x == 1 && value.y == 1;
         }, -1), true, 'some method runs ok when result succeeds with given count less than 0');
 
-        strictEqual(xs.some(x, function ( value ) {
+        strictEqual(xs.some(x, function (value) {
             return value.x == 1 && value.y == 1;
         }, 0), true, 'some method runs ok when result succeeds with given count equal to 0');
 
-        strictEqual(xs.some(x, function ( value ) {
+        strictEqual(xs.some(x, function (value) {
             return value.x == 1 && value.y == 1;
         }), true);
 
-        strictEqual(xs.some(x, function ( value ) {
+        strictEqual(xs.some(x, function (value) {
             return value.x == 1 && value.y == 1;
         }, 2), false, 'some method runs ok when result succeeds with given count greater then 0');
 
-        strictEqual(xs.some(x, function ( value ) {
+        strictEqual(xs.some(x, function (value) {
             return value.x == 1 && value.y == 3;
         }), false);
 
         //test empty array list
         x = [];
-        strictEqual(xs.some(x, function ( value ) {
+        strictEqual(xs.some(x, function (value) {
             return value.x == 1 && value.y == 1;
         }), false);
 
@@ -1080,29 +1080,29 @@ require([
             }
         };
 
-        strictEqual(xs.some(x, function ( value ) {
+        strictEqual(xs.some(x, function (value) {
             return value.x == 1 && value.y == 1;
         }, -1), true, 'some method runs ok when result succeeds with given count less than 0');
 
-        strictEqual(xs.some(x, function ( value ) {
+        strictEqual(xs.some(x, function (value) {
             return value.x == 1 && value.y == 1;
         }, 0), true, 'some method runs ok when result succeeds with given count equal to 0');
 
-        strictEqual(xs.some(x, function ( value ) {
+        strictEqual(xs.some(x, function (value) {
             return value.x == 1 && value.y == 1;
         }), true);
 
-        strictEqual(xs.some(x, function ( value ) {
+        strictEqual(xs.some(x, function (value) {
             return value.x == 1 && value.y == 1;
         }, 2), false, 'some method runs ok when result succeeds with given count greater then 0');
 
-        strictEqual(xs.some(x, function ( value ) {
+        strictEqual(xs.some(x, function (value) {
             return value.x == 1 && value.y == 3;
         }), false);
 
         //test empty object list
         x = {};
-        strictEqual(xs.some(x, function ( value ) {
+        strictEqual(xs.some(x, function (value) {
             return value.x == 1 && value.y == 1;
         }), false);
     });
@@ -1131,17 +1131,17 @@ require([
             }
         ];
 
-        strictEqual(xs.none(x, function ( value ) {
+        strictEqual(xs.none(x, function (value) {
             return value.hasOwnProperty('y');
         }), false);
 
-        strictEqual(xs.none(x, function ( value ) {
+        strictEqual(xs.none(x, function (value) {
             return value.x === 3;
         }), true);
 
         //test empty array list
         x = [];
-        strictEqual(xs.none(x, function ( value ) {
+        strictEqual(xs.none(x, function (value) {
             return !value.hasOwnProperty('y');
         }), true);
 
@@ -1165,17 +1165,17 @@ require([
             }
         };
 
-        strictEqual(xs.none(x, function ( value ) {
+        strictEqual(xs.none(x, function (value) {
             return xs.hasKey(value, 'y');
         }), false);
 
-        strictEqual(xs.none(x, function ( value ) {
+        strictEqual(xs.none(x, function (value) {
             return value.x === 3;
         }), true);
 
         //test empty object list
         x = {};
-        strictEqual(xs.none(x, function ( value ) {
+        strictEqual(xs.none(x, function (value) {
             return value.x === 1;
         }), true);
     });
@@ -1450,7 +1450,7 @@ require([
 
     test('delete', function () {
         //init test variables
-        var item = {x: 1};
+        var item = { x: 1 };
         var itemString = JSON.stringify(item);
         var x;
 
@@ -1492,7 +1492,7 @@ require([
 
     test('deleteLast', function () {
         //init test variables
-        var item = {x: 1};
+        var item = { x: 1 };
         var itemString = JSON.stringify(item);
         var x;
 
@@ -1535,7 +1535,7 @@ require([
 
     test('deleteAll', function () {
         //init test variables
-        var item = {x: 1};
+        var item = { x: 1 };
         var itemString = JSON.stringify(item);
         var x;
 
@@ -1594,7 +1594,7 @@ require([
 
     test('clone', function () {
         //init test variables
-        var item = {x: 1};
+        var item = { x: 1 };
         var x, clone;
 
         //test array list
@@ -1607,7 +1607,7 @@ require([
         //keys are equal
         strictEqual(JSON.stringify(xs.keys(clone)), JSON.stringify(xs.keys(x)));
         //values are equal
-        strictEqual(xs.every(x, function ( value, key ) {
+        strictEqual(xs.every(x, function (value, key) {
             return clone[key] === x[key];
         }), true);
         //links are saved
@@ -1623,7 +1623,7 @@ require([
         //keys are equal
         strictEqual(JSON.stringify(xs.keys(clone)), JSON.stringify(xs.keys(x)));
         //values are equal
-        strictEqual(xs.every(x, function ( value, key ) {
+        strictEqual(xs.every(x, function (value, key) {
             return clone[key] === x[key];
         }), true);
         //links are saved
@@ -1843,17 +1843,17 @@ require([
 
         //test object list
         x = [
-            {a: 1},
-            {b: 2},
+            { a: 1 },
+            { b: 2 },
             [
-                {c: 3}
+                { c: 3 }
             ],
             [
-                {d: 4}
+                { d: 4 }
             ],
             [
-                {e: 5},
-                {f: 6}
+                { e: 5 },
+                { f: 6 }
             ]
         ];
         strictEqual(JSON.stringify(xs.union.apply(xs, x)), '{"a":1,"b":2,"c":3,"d":4,"e":5,"f":6}');
@@ -1941,23 +1941,23 @@ require([
         strictEqual(JSON.stringify(intersection), '{}');
 
         //test object list
-        var a = {a: 1};
-        var b = {b: 2};
+        var a = { a: 1 };
+        var b = { b: 2 };
         var c = [
-            {c: 3}
+            { c: 3 }
         ];
         var d = [
-            {d: 4}
+            { d: 4 }
         ];
         var e = [
-            {e: 5},
-            {f: 6}
+            { e: 5 },
+            { f: 6 }
         ];
 
         x = [
-            {a: a, b: b, c: c, d: d, e: e, f: null, g: true, h: false, i: '', j: obj, k: arr},
-            {b: b, c: c, d: d, e: e, f: null, g: false, h: obj, i: arr},
-            {a: a, c: c, d: d, e: e, f: null, g: true, h: false, i: '', j: obj, k: arr}
+            { a: a, b: b, c: c, d: d, e: e, f: null, g: true, h: false, i: '', j: obj, k: arr },
+            { b: b, c: c, d: d, e: e, f: null, g: false, h: obj, i: arr },
+            { a: a, c: c, d: d, e: e, f: null, g: true, h: false, i: '', j: obj, k: arr }
         ];
         intersection = xs.intersection(x[0], x[1], x[2]);
         var correct = '{"c":[{"c":3}],"d":[{"d":4}],"e":[{"e":5},{"f":6}],"f":null,"h":false,"j":{},"k":[]}';
@@ -1968,7 +1968,7 @@ require([
         strictEqual(xs.has(intersection, d), true);
         strictEqual(xs.has(intersection, e), true);
 
-        intersection = xs.intersection({a: a}, {a: a});
+        intersection = xs.intersection({ a: a }, { a: a });
         strictEqual(JSON.stringify(intersection), '{"a":{"a":1}}');
 
         intersection = xs.intersection();
@@ -2046,23 +2046,23 @@ require([
         strictEqual(JSON.stringify(diff), JSON.stringify([]));
 
         //test object list
-        var a = {a: 1};
-        var b = {b: 2};
+        var a = { a: 1 };
+        var b = { b: 2 };
         var c = [
-            {c: 3}
+            { c: 3 }
         ];
         var d = [
-            {d: 4}
+            { d: 4 }
         ];
         var e = [
-            {e: 5},
-            {f: 6}
+            { e: 5 },
+            { f: 6 }
         ];
 
         x = [
-            {a: a, b: b, c: c, d: d, e: e, f: null, g: true, h: false, i: '', j: obj, k: arr},
-            {b: b, c: c, d: d, f: null, g: true, j: obj, k: arr},
-            {c: c, d: d, f: null, g: true}
+            { a: a, b: b, c: c, d: d, e: e, f: null, g: true, h: false, i: '', j: obj, k: arr },
+            { b: b, c: c, d: d, f: null, g: true, j: obj, k: arr },
+            { c: c, d: d, f: null, g: true }
         ];
 
         diff = xs.difference(x[0], x[1], x[2]);

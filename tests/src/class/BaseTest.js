@@ -111,7 +111,7 @@ require([
         strictEqual(JSON.stringify(xs.keys(clone)), JSON.stringify(xs.keys(sample)));
 
         //values are equal
-        xs.each(sample, function ( value, key ) {
+        xs.each(sample, function (value, key) {
             strictEqual(clone[key], value);
         });
 

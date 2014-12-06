@@ -21,12 +21,12 @@ require([
 
     test('bind', function () {
         //init test function
-        var fn = function ( a, b, c ) {
+        var fn = function (a, b, c) {
             return this.x + (a - b) * c;
         };
 
         //get bind
-        var binded = xs.bind(fn, {x: 5}, [
+        var binded = xs.bind(fn, { x: 5 }, [
             2,
             3
         ]);
@@ -37,7 +37,7 @@ require([
 
     test('prefill', function () {
         //init test function
-        var fn = function ( a, b, c ) {
+        var fn = function (a, b, c) {
             return this.x + (a - b) * c;
         };
 
@@ -46,7 +46,7 @@ require([
             1,
             2,
             3
-        ], {x: 5});
+        ], { x: 5 });
 
         //check prefill
         strictEqual(filled(4), 5 + (4 - 2) * 3);
@@ -54,11 +54,11 @@ require([
 
     test('memorize', function () {
         //init memorized function
-        var fn = function ( obj ) {
+        var fn = function (obj) {
             obj.x++;
         };
         //init scope
-        var obj = {x: 1};
+        var obj = { x: 1 };
 
         //get memorized function
         var one = xs.memorize(fn);
@@ -72,14 +72,14 @@ require([
 
     test('wrap', function () {
         //init wrapped function
-        var fn = function ( val ) {
+        var fn = function (val) {
             return 2 * val;
         };
 
         //get wrapped
-        var wrapped = xs.wrap(fn, function ( func, a, b, c ) {
+        var wrapped = xs.wrap(fn, function (func, a, b, c) {
             return this.x + a + func(b) + c;
-        }, {x: 1});
+        }, { x: 1 });
 
         //test wrapped
         strictEqual(wrapped(1, 2, 3), 9);
@@ -91,7 +91,7 @@ require([
         }), '');
 
         //test named function
-        strictEqual(xs.Function.getName(function demo123_Asd () {
+        strictEqual(xs.Function.getName(function demo123_Asd() {
         }), 'demo123_Asd');
     });
 
@@ -101,7 +101,7 @@ require([
         })), '[]');
 
         //test arguments
-        strictEqual(JSON.stringify(xs.Function.getArguments(function demo123_Asd ( demo123_Asd, asd_123_ASD ) {
+        strictEqual(JSON.stringify(xs.Function.getArguments(function demo123_Asd(demo123_Asd, asd_123_ASD) {
         })), '["demo123_Asd","asd_123_ASD"]');
     });
 
@@ -111,14 +111,14 @@ require([
         }).trim(), '');
 
         //test named function
-        strictEqual(xs.Function.getBody(function demo123_Asd ( demo123_Asd, asd_123_ASD ) {
+        strictEqual(xs.Function.getBody(function demo123_Asd(demo123_Asd, asd_123_ASD) {
             return demo123_Asd + asd_123_ASD + "";
         }).trim(), 'return demo123_Asd + asd_123_ASD + "";');
     });
 
     test('parse', function () {
         //get parse data
-        var data = xs.Function.parse(function demo123_Asd ( demo123_Asd, asd_123_ASD ) {
+        var data = xs.Function.parse(function demo123_Asd(demo123_Asd, asd_123_ASD) {
             return demo123_Asd + asd_123_ASD + "";
         });
 

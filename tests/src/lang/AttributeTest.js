@@ -29,7 +29,7 @@ require([
 
         strictEqual(xs.Attribute.defined(obj, 'a'), false);
 
-        xs.Attribute.define(obj, 'a', {value: {x: 1}});
+        xs.Attribute.define(obj, 'a', { value: { x: 1 } });
 
         strictEqual(xs.Attribute.defined(obj, 'a'), true);
     });
@@ -40,10 +40,10 @@ require([
         var getter = function () {
             return 1;
         };
-        var setter = function ( value ) {
+        var setter = function (value) {
             this.value = value;
         };
-        var value = {x: 1};
+        var value = { x: 1 };
 
         //define assignable test property
         xs.Attribute.define(obj, 'a', {
@@ -86,10 +86,10 @@ require([
         var getter = function () {
             return 1;
         };
-        var setter = function ( value ) {
+        var setter = function (value) {
             this.value = value;
         };
-        var value = {x: 1};
+        var value = { x: 1 };
 
         //define assigned property
         xs.Attribute.define(obj, 'a', {
@@ -118,10 +118,10 @@ require([
         var getter = function () {
             return 1;
         };
-        var setter = function ( value ) {
+        var setter = function (value) {
             this.value = value;
         };
-        var value = {x: 1};
+        var value = { x: 1 };
 
         //define assigned property
         xs.Attribute.define(obj, 'a', {
@@ -150,10 +150,10 @@ require([
         var getter = function () {
             return 1;
         };
-        var setter = function ( value ) {
+        var setter = function (value) {
             this.value = value;
         };
-        var value = {x: 1};
+        var value = { x: 1 };
 
         //define writable property
         xs.Attribute.define(obj, 'a', {
@@ -188,7 +188,7 @@ require([
     test('isConfigurable', function () {
         //init test objects
         var obj = {};
-        var value = {x: 1};
+        var value = { x: 1 };
 
         //define configurable property
         xs.Attribute.define(obj, 'a', {
@@ -213,7 +213,7 @@ require([
     test('isEnumerable', function () {
         //init test objects
         var obj = {};
-        var value = {x: 1};
+        var value = { x: 1 };
 
         //define enumerable property
         xs.Attribute.define(obj, 'a', {
@@ -241,10 +241,10 @@ require([
         strictEqual(xs.Attribute.isDescriptor([]), false);
 
         //object desc without any properties
-        strictEqual(xs.Attribute.isDescriptor({a: 1}), false);
+        strictEqual(xs.Attribute.isDescriptor({ a: 1 }), false);
 
         //object desc with any property
-        strictEqual(xs.Attribute.isDescriptor({a: 1, value: true}), true);
+        strictEqual(xs.Attribute.isDescriptor({ a: 1, value: true }), true);
     });
 
     test('prepareDescriptor', function () {
@@ -287,7 +287,7 @@ require([
     test('constant', function () {
         //init test objects
         var obj = {};
-        var value = {x: 1};
+        var value = { x: 1 };
 
         //define and test constant
         xs.Attribute.constant(obj, 'a', value);
@@ -357,10 +357,10 @@ require([
         var getter = function () {
             return 1;
         };
-        var setter = function ( value ) {
+        var setter = function (value) {
             this.value = value;
         };
-        var value = {x: 1};
+        var value = { x: 1 };
 
         //try to define incorrect descriptor
         xs.Attribute.property.define(obj, 'a', value);
@@ -430,12 +430,12 @@ require([
     test('method.define', function () {
         //init test objects
         var obj = {};
-        var value = function ( x ) {
+        var value = function (x) {
             return x;
         };
 
         //rights assignments are not writable, enumerable and not configurable
-        xs.Attribute.method.define(obj, 'simple', {value: value});
+        xs.Attribute.method.define(obj, 'simple', { value: value });
         strictEqual(xs.Attribute.isWritable(obj, 'simple'), false);
         strictEqual(xs.Attribute.isConfigurable(obj, 'simple'), false);
         strictEqual(xs.Attribute.isEnumerable(obj, 'simple'), true);

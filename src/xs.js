@@ -17,7 +17,7 @@
  at http://annium.com/contact.
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     /**
      * Framework entry point

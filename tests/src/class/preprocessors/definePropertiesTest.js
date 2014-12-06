@@ -74,7 +74,7 @@ require([
                 }
             };
             this.properties.b = {
-                set: function ( b ) {
+                set: function (b) {
 
                     return this.privates.b = b + 1;
                 }
@@ -100,7 +100,7 @@ require([
 
                     return this.privates.c + '!';
                 },
-                set: function ( c ) {
+                set: function (c) {
 
                     return this.privates.c = '?' + c;
                 }

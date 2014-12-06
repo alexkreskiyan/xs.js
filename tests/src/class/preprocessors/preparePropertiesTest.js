@@ -61,7 +61,7 @@ require([
 
             return this.privates.a;
         };
-        var parentBSet = function ( b ) {
+        var parentBSet = function (b) {
 
             return this.privates.b = b + 1;
         };
@@ -91,7 +91,7 @@ require([
 
             return this.privates.c + '!';
         };
-        var childCSet = function ( c ) {
+        var childCSet = function (c) {
 
             return this.privates.c = '?' + c;
         };

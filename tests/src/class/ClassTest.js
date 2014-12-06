@@ -25,7 +25,7 @@ require([
         //test create without descriptor fails
         throws(xs.Class.create);
 
-        var Class = xs.Class.create(function ( self, ns ) {
+        var Class = xs.Class.create(function (self, ns) {
         });
 
         //class is function
@@ -34,11 +34,11 @@ require([
 
     test('factory', function () {
         //create simple class
-        var Class = xs.Class.create(function ( self, ns ) {
+        var Class = xs.Class.create(function (self, ns) {
         });
 
         //assign some constructor
-        Class.descriptor.constructor = function ( a, b ) {
+        Class.descriptor.constructor = function (a, b) {
             this.a = a;
             this.b = b;
         };
@@ -73,7 +73,7 @@ require([
         var save = stack.get();
 
         //clear stack
-        xs.each(save, function ( item, name ) {
+        xs.each(save, function (item, name) {
             stack.delete(name);
         });
 
@@ -113,7 +113,7 @@ require([
         strictEqual(JSON.stringify(xs.keys(stack.get())), '["three","six","two","four","one","five"]');
 
         //check verifiers and handlers
-        xs.each(stack.get(), function ( item ) {
+        xs.each(stack.get(), function (item) {
             //verifier assigned
             strictEqual(item.verifier, verifier);
 
@@ -125,12 +125,12 @@ require([
         //tearDown
 
         //clear stack
-        xs.each(stack.get(), function ( item, name ) {
+        xs.each(stack.get(), function (item, name) {
             stack.delete(name);
         });
 
         //reset stack
-        xs.each(save, function ( item, name ) {
+        xs.each(save, function (item, name) {
             stack.add(name, item.verifier, item.handler);
         });
     });
@@ -143,7 +143,7 @@ require([
         var save = stack.get();
 
         //clear stack
-        xs.each(save, function ( item, name ) {
+        xs.each(save, function (item, name) {
             stack.delete(name);
         });
 
@@ -195,12 +195,12 @@ require([
         //tearDown
 
         //clear stack
-        xs.each(stack.get(), function ( item, name ) {
+        xs.each(stack.get(), function (item, name) {
             stack.delete(name);
         });
 
         //reset stack
-        xs.each(save, function ( item, name ) {
+        xs.each(save, function (item, name) {
             stack.add(name, item.verifier, item.handler);
         });
     });
@@ -213,7 +213,7 @@ require([
         var save = stack.get();
 
         //clear stack
-        xs.each(save, function ( item, name ) {
+        xs.each(save, function (item, name) {
             stack.delete(name);
         });
 
@@ -256,12 +256,12 @@ require([
         //tearDown
 
         //clear stack
-        xs.each(stack.get(), function ( item, name ) {
+        xs.each(stack.get(), function (item, name) {
             stack.delete(name);
         });
 
         //reset stack
-        xs.each(save, function ( item, name ) {
+        xs.each(save, function (item, name) {
             stack.add(name, item.verifier, item.handler);
         });
     });
@@ -274,7 +274,7 @@ require([
         var save = stack.get();
 
         //clear stack
-        xs.each(save, function ( item, name ) {
+        xs.each(save, function (item, name) {
             stack.delete(name);
         });
 
@@ -287,16 +287,16 @@ require([
         //run test
 
         //add processors
-        stack.add('one', verifier, function ( self ) {
+        stack.add('one', verifier, function (self) {
             self.descriptor.chain = 'one';
         });
-        stack.add('two', verifier, function ( self, descriptor, ns, ready ) {
+        stack.add('two', verifier, function (self, descriptor, ns, ready) {
             self.descriptor.chain += 'two';
             setTimeout(ready, 100);
 
             return false;
         });
-        stack.add('three', verifier, function ( self, descriptor, ns, ready ) {
+        stack.add('three', verifier, function (self, descriptor, ns, ready) {
             self.descriptor.chain += 'three';
             setTimeout(ready, 100);
 
@@ -306,7 +306,7 @@ require([
         xs.Class.create(function () {
 
             return {};
-        }, function ( Class ) {
+        }, function (Class) {
             start();
 
             strictEqual(Class.descriptor.chain, 'onetwothree');
@@ -315,12 +315,12 @@ require([
             //tearDown
 
             //clear stack
-            xs.each(stack.get(), function ( item, name ) {
+            xs.each(stack.get(), function (item, name) {
                 stack.delete(name);
             });
 
             //reset stack
-            xs.each(save, function ( item, name ) {
+            xs.each(save, function (item, name) {
                 stack.add(name, item.verifier, item.handler);
             });
         });

@@ -20,9 +20,9 @@ require([
 
     test('extend', function () {
         //init test data
-        var a = {a: 1};
-        var b = {b: 1};
-        var c = {c: 1};
+        var a = { a: 1 };
+        var b = { b: 1 };
+        var c = { c: 1 };
         var x = {
             a: a,
             b: b,
@@ -32,10 +32,10 @@ require([
         };
 
         //extend
-        xs.extend(x, {a: b}, 3, [
+        xs.extend(x, { a: b }, 3, [
             4,
             5
-        ], {b: 1}, {e: a});
+        ], { b: 1 }, { e: a });
 
         //check replacements
         strictEqual(x.a, b);

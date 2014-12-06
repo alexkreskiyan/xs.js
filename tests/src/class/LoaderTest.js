@@ -261,7 +261,7 @@ require([
         xs.Loader.require([
             'demo.loader.Demo',
             'demo.loader.Sample'
-        ], function ( loaded ) {
+        ], function (loaded) {
             //continue async test
             start();
 
@@ -283,8 +283,8 @@ require([
             xs.Loader.require([
                 'demo.loader.Demo',
                 'demo.loader.Sample2'
-            ], function ( loaded ) {
-            }, function ( failed, loaded ) {
+            ], function (loaded) {
+            }, function (failed, loaded) {
                 //continue async test
                 start();
 
