@@ -147,35 +147,37 @@
             //save Class descriptor
             xs.constant(Class, 'descriptor', _createDescriptorPrototype());
 
-//            //set class not ready yet (until preprocessors done)
-//            Class.isReady = false;
-//TODO make more pretty
+            //mark class as not ready yet (until preprocessors done)
+            Class.isProcessed = true;
             //process preprocessors stack before createdFn called
-            preprocessors.process([
-                Class,
-                descriptor,
-                namespace
-            ], [
-                Class,
-                descriptor,
-                namespace
-            ], function () {
-//                //set class ready
-//                Class.isReady = true;
-//TODO make more pretty
-                //call createdFn
-                createdFn(Class);
-
-                //process postprocessors stack after createdFn called
-                postprocessors.process([
+            xs.nextTick(function () {
+                preprocessors.process([
                     Class,
                     descriptor,
                     namespace
                 ], [
                     Class,
                     descriptor,
-                    namespace
-                ]);
+                    namespace,
+                    dependencies
+                ], function () {
+                    //remove isProcessed mark
+                    delete Class.isProcessed;
+
+                    //call createdFn
+                    createdFn(Class);
+
+                    //process postprocessors stack after createdFn called
+                    postprocessors.process([
+                        Class,
+                        descriptor,
+                        namespace
+                    ], [
+                        Class,
+                        descriptor,
+                        namespace
+                    ]);
+                });
             });
 
             return Class;
@@ -340,6 +342,13 @@
     //define prototype of xs.Base
     xs.Base = xs.Class.create(function () {
     }, xs.emptyFn);
+
+    var dependencies = new (function () {
+        var me = this;
+
+        var dependencies = [];
+
+    });
 
     /**
      * Private internal stack class
