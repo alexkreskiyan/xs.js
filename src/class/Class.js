@@ -343,11 +343,78 @@
     xs.Base = xs.Class.create(function () {
     }, xs.emptyFn);
 
-    var dependencies = new (function () {
+    /**
+     * Private dependencies manager
+     * 
+     * It's aim is storing of cross-classes processing dependencies. 
+     * Using dependencies manager allows to prevent dead locks and regulate classes processing
+     * 
+     * @ignore
+     * 
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     * 
+     * @private
+     * 
+     * @class dependencies
+     */
+    var dependencies = xs.Class.dependencies = new (function () {
         var me = this;
 
+        /**
+         * Internal handlers storage
+         */
+        var handlers = [];
+
+        /**
+         * Internal dependencies storage
+         */
         var dependencies = [];
 
+        /**
+         * Adds dependency from dependent Class to array of processed Classes.
+         * When all processed Classes will be done, handler is called
+         * 
+         * @method add
+         * 
+         * @param {String} dependent dependent Class name
+         * @param {String[]} waiting array of processed classes' names, dependent class is waiting for
+         * @param {Function} handleReady callback, called when all waited classes were processed
+         */
+        me.add = function (dependent, waiting, handleReady) {
+
+            //try to find dead lock
+            var deadLock = _findDeadLock(dependent, waiting);
+
+            //throw respective ClassError if dead lock found
+            if (deadLock) {
+                throw new ClassError('dead lock detected: ' + deadLock);
+            }
+
+            //save handler
+            handlers.push({
+                waiting: waiting,
+                handleReady: handleReady
+            });
+
+            //dependencies are linear - that makes dead lock lookup easier
+        };
+
+        me.resolve = function (processed) {
+
+        };
+
+        /**
+         * Try's to find dead locks, that may occur if added dependency from dependent class to waiting one
+         * 
+         * @method add
+         * 
+         * @param {String} dependent dependent Class name
+         * @param {String[]} waiting array of processed classes' names, dependent class is waiting for
+         * 
+         * @return {String} first found dead lock
+         */
+        var _findDeadLock = function (dependent, waiting) {
+        };
     });
 
     /**
