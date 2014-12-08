@@ -24,7 +24,7 @@
     xs.Class.preprocessors.add('mixins', function () {
 
         return true;
-    }, function (Class, descriptor, ns, ready) {
+    }, function (Class, descriptor, ns, dependencies, ready) {
 
         //if mixins are specified not as object - throw respective error
         if (!xs.isObject(descriptor.mixins)) {
@@ -82,14 +82,21 @@
             return;
         }
 
+        xs.log('xs.class.preprocessor.mixins. Loading mixins', mixins);
         //require async
-        xs.require(loads, function () {
+        xs.require(loads, function (classes) {
 
-            //apply mixins to Class.descriptor
-            _applyMixins(Class, mixins);
+            xs.log('xs.class.preprocessor.extends. Mixins', loads, 'loaded, applying dependency');
+            //create new dependency
+            dependencies.add(Class, xs.values(classes), function(){
 
-            //call ready to notify processor stack, that import succeed
-            ready();
+                xs.log('xs.class.preprocessor.extends. Mixins', loads, 'processed, applying mixins');
+                //apply mixins to Class.descriptor
+                _applyMixins(Class, mixins);
+
+                //call ready to notify processor stack, that mixins succeed
+                ready();
+            });
         });
 
         //return false to sign async processor

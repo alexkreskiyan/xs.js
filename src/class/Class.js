@@ -372,10 +372,13 @@
          * @method add
          *
          * @param {Object} dependent dependent Class
-         * @param {Object[]} waiting array of processed classes, dependent class is waiting for
+         * @param {Object|Object[]} waiting array of processed classes, dependent class is waiting for
          * @param {Function} handleReady callback, called when all waited classes were processed
          */
         me.add = function ( dependent, waiting, handleReady ) {
+
+            //convert waiting to array
+            xs.isArray(waiting) || (waiting=[waiting]);
 
             xs.log('xs.Class::dependencies::add. Adding dependency for ', dependent.label, 'from', xs.map(waiting, function ( Class ) {
                 return Class.label;

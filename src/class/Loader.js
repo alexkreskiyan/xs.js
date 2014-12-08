@@ -557,7 +557,7 @@
                 //handle each resolved item
                 xs.each(resolved, function (item) {
                     xs.delete(awaiting, item);
-                    item.handleLoad(xs.union(item.list.loaded, item.list.unresolved));
+                    item.handleLoad(item.list.loaded);
                 });
             };
 
