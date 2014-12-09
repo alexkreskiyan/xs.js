@@ -88,7 +88,7 @@
 
             xs.log('xs.class.preprocessor.extends. Mixins', loads, 'loaded, applying dependency');
             //create new dependency
-            dependencies.add(Class, xs.values(classes), function(){
+            dependencies.add(Class, xs.values(classes), function () {
 
                 xs.log('xs.class.preprocessor.extends. Mixins', loads, 'processed, applying mixins');
                 //apply mixins to Class.descriptor
