@@ -3,6 +3,10 @@
 *.iml
 *.sln
 *.suo
+/Properties
+/Web*
+/bin
+/obj
 .sass-cache
 .DS*
 .htaccess
