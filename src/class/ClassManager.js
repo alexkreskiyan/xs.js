@@ -221,13 +221,16 @@
          * - class with given name is already registered
          */
         me.define = function (name, descFn, createdFn) {
+            //create Class and start it's processing
+            var Class = xs.Class.create(descFn, createdFn);
+
+            //here class namespace is evaluated. Evaluate real name of class
+            name = Class.descriptor.namespace.resolve(name);
+
             //throw error if trying to redefine
             if (_has(name)) {
                 throw new ClassManagerError('class "' + name + '" is already defined');
             }
-
-            //create Class and save it to registry
-            var Class = xs.Class.create(descFn, createdFn);
 
             //save Class in registry by name
             _add(name, Class);

@@ -1,7 +1,7 @@
 /**
  * Created by alex on 12/2/14.
  */
-xs.define('tests.class.preprocessors.mixins.Mix1', function () {
+xs.define('ns.Mix1', function () {
     this.namespace = 'tests.class.preprocessors.mixins';
     this.constants.a = 1;
     this.properties.a = 2;

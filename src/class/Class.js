@@ -36,7 +36,7 @@
      *
      * @singleton
      */
-    xs.Class = new (function () {
+    xs.Class = new (function (dependencies) {
         var me = this;
 
         /**
@@ -149,36 +149,36 @@
 
             //mark class as not ready yet (until preprocessors done)
             Class.isProcessing = true;
-            //process preprocessors stack before createdFn called
-            xs.nextTick(function () {
-                preprocessors.process([
+
+            //process preprocessors stack before createdFn called.
+            //Normally, only namespace is processed on this tick - imports is unambiguously async
+            preprocessors.process([
+                Class,
+                descriptor,
+                namespace
+            ], [
+                Class,
+                descriptor,
+                namespace,
+                dependencies
+            ], function () {
+                //remove isProcessing mark
+                delete Class.isProcessing;
+
+                dependencies.resolve(Class);
+                //call createdFn
+                createdFn(Class);
+
+                //process postprocessors stack after createdFn called
+                postprocessors.process([
                     Class,
                     descriptor,
                     namespace
                 ], [
                     Class,
                     descriptor,
-                    namespace,
-                    dependencies
-                ], function () {
-                    //remove isProcessing mark
-                    delete Class.isProcessing;
-
-                    dependencies.resolve(Class);
-                    //call createdFn
-                    createdFn(Class);
-
-                    //process postprocessors stack after createdFn called
-                    postprocessors.process([
-                        Class,
-                        descriptor,
-                        namespace
-                    ], [
-                        Class,
-                        descriptor,
-                        namespace
-                    ]);
-                });
+                    namespace
+                ]);
             });
 
             return Class;
@@ -338,27 +338,22 @@
                 properties: {}
             };
         };
-    });
 
-    //define prototype of xs.Base
-    xs.Base = xs.Class.create(function () {
-    }, xs.emptyFn);
-
-    /**
-     * Private dependencies manager
-     *
-     * It's aim is storing of cross-classes processing dependencies.
-     * Using dependencies manager allows to prevent dead locks and regulate classes processing
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @private
-     *
-     * @class dependencies
-     */
-    var dependencies = xs.Class.dependencies = new (function () {
+        /**
+         * Private dependencies manager
+         *
+         * It's aim is storing of cross-classes processing dependencies.
+         * Using dependencies manager allows to prevent dead locks and regulate classes processing
+         *
+         * @ignore
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @private
+         *
+         * @class dependencies
+         */
+    })(new (function () {
         var me = this;
 
         /**
@@ -687,7 +682,11 @@
                 });
             };
         });
-    });
+    }));
+
+    //define prototype of xs.Base
+    xs.Base = xs.Class.create(function () {
+    }, xs.emptyFn);
 
     /**
      * Private internal stack class

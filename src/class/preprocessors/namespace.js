@@ -24,9 +24,9 @@
     xs.Class.preprocessors.add('namespace', function () {
 
         return true;
-    }, function (Class, descriptor) {
+    }, function (Class, descriptor, ns, dependencies, ready) {
 
-        xs.log('xs.class.preprocessor.namespace[', Class.label, ']');
+        xs.log('xs.class.preprocessor.namespace');
         //save namespace
         Class.descriptor.namespace = {
             path: (xs.isString(descriptor.namespace) && descriptor.namespace.length) ? descriptor.namespace : undefined,
@@ -49,5 +49,11 @@
                 return path;
             }
         };
+
+        //continue on next tick to allow ClassManager check class name
+        xs.nextTick(ready);
+
+        //return false to sign async processor
+        return false;
     }, 'first');
 })(window, 'xs');
