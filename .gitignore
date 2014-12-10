@@ -1,5 +1,9 @@
 /.idea
-/xs.js*
+/Properties
+/Web*
+/bin
+/obj
+/*.csproj*
 *.iml
 *.sln
 *.suo
