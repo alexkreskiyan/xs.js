@@ -21,7 +21,7 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('imports', function (Class, descriptor) {
+    xs.Class.preprocessors.add('imports', function () {
 
         return true;
     }, function (Class, descriptor, ns, dependencies, ready) {
@@ -34,8 +34,8 @@
 
 
         //init
-        //init loads list
-        var loads = [];
+        //init requires list
+        var requires = [];
         //init imports list
         var imports = {};
 
@@ -48,7 +48,7 @@
 
             //if imported is string - it's simply className without alias, added only to loads list
             if (xs.isString(imported)) {
-                loads.push(namespace.resolve(imported));
+                requires.push(namespace.resolve(imported));
 
                 //or imported my be used class - then it is specified as object
             } else if (xs.isObject(imported) && xs.size(imported) == 1) {
@@ -60,7 +60,7 @@
                 //if alias is non-empty string - add it to both loads and imports
                 if (xs.isString(alias) && alias) {
                     name = namespace.resolve(name);
-                    loads.push(name);
+                    requires.push(name);
                     imports[name] = alias;
 
                     //otherwise - incorrect alias error
@@ -74,15 +74,19 @@
             }
         });
 
+        //filter loads to find out already loaded ones
+        var loads = xs.findAll(requires, function (name) {
+            return !xs.ClassManager.has(name);
+        });
 
-        //load imported class and add dependency on them
+        //load imported classes and add dependency on them
         xs.log('xs.class.preprocessor.imports[', Class.label, ']. Loading', loads);
         //require async
         xs.require(loads, function (loaded) {
 
-            var waiting = xs.values(xs.map(loaded, function (path, name) {
+            var waiting = xs.map(requires, function (name) {
                 return xs.ClassManager.get(name);
-            }));
+            });
 
             xs.log('xs.class.preprocessor.imports[', Class.label, ']. Imports', loads, 'loaded, applying dependency');
             //create new dependency
