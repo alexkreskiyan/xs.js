@@ -28,7 +28,7 @@
         xs.log('xs.class.preprocessor.prepareConstants[', Class.label, ']');
         //if constants are specified not as object - throw respective error
         if (!xs.isObject(descriptor.constants)) {
-            throw new ConstError('[', Class.label, ']: incorrect constants list');
+            throw new ConstError('[' + Class.label + ']: incorrect constants list');
         }
 
         //init constants reference
@@ -50,7 +50,7 @@
         //verify own constants
         xs.each(own, function (value, name) {
             if (!xs.isString(name) || !name) {
-                throw new ConstError('[', Class.label, ']: incorrect constant name');
+                throw new ConstError('[' + Class.label + ']: incorrect constant name');
             }
         });
 

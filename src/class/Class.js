@@ -148,7 +148,7 @@
             xs.constant(Class, 'descriptor', _createDescriptorPrototype());
 
             //mark class as not ready yet (until preprocessors done)
-            Class.isProcessed = true;
+            Class.isProcessing = true;
             //process preprocessors stack before createdFn called
             xs.nextTick(function () {
                 preprocessors.process([
@@ -161,8 +161,8 @@
                     namespace,
                     dependencies
                 ], function () {
-                    //remove isProcessed mark
-                    delete Class.isProcessed;
+                    //remove isProcessing mark
+                    delete Class.isProcessing;
 
                     dependencies.resolve(Class);
                     //call createdFn
@@ -299,7 +299,7 @@
                 namespace: undefined,
 
                 //class imports list
-                imports: {},
+                imports: [],
 
                 //class parent
                 extends: undefined,
@@ -381,7 +381,7 @@
             //convert waiting to array
             xs.isArray(waiting) || (waiting = [waiting]);
 
-            xs.log('xs.Class::dependencies::add. Adding dependency for ', dependent.label, 'from', xs.map(waiting, function (Class) {
+            xs.log('xs.Class::dependencies::add. Adding dependency for', dependent.label, 'from', xs.map(waiting, function (Class) {
                 return Class.label;
             }));
             //filter waiting classes to exclude processed ones
@@ -400,13 +400,15 @@
 
             xs.log('xs.Class::dependencies::add. Try to find lock');
             //try to find dead lock
-            var deadLock = chains.getLock(dependent);
+            xs.each(waiting, function (Class) {
+                var deadLock = chains.getLock(Class);
 
-            //throw respective ClassError if dead lock found
-            if (deadLock) {
-                xs.log('xs.Class::dependencies::add. Lock detected');
-                throw new ClassError('dead lock detected: ' + deadLock);
-            }
+                //throw respective ClassError if dead lock found
+                if (deadLock) {
+                    xs.log('xs.Class::dependencies::add. Lock detected');
+                    throw new ClassError('dead lock detected: ' + _showDeadLock(deadLock));
+                }
+            });
 
             xs.log('xs.Class::dependencies::add. No lock found. Adding dependency');
             //save dependency
@@ -462,19 +464,33 @@
                 //get Class reference at i position
                 Class = waiting[i];
 
-                //if class is processed - remove it from waiting
-                if (Class.isProcessed) {
+                //if class is processing - go to next
+                if (Class.isProcessing) {
+                    i++;
+
+                    //else - delete class from waiting
+                } else {
                     xs.log('xs.Class::dependencies::filterWaiting. Class:', Class.label, 'is already processed, removing it from waiting');
                     xs.deleteAt(waiting, i);
-
-                    //else - increment i to go to next
-                } else {
-                    i++;
                 }
             }
             xs.log('xs.Class::dependencies::filterWaiting. Filtered list:', xs.map(waiting, function (Class) {
                 return Class.label;
             }));
+        };
+
+        var _showDeadLock = function (deadLock) {
+            //self lock
+            if (deadLock.length == 1) {
+                return 'Class "' + deadLock[0].label + '" imports itself';
+            }
+
+            //chain lock
+            var first = deadLock.shift();
+            var names = xs.map(deadLock, function (Class) {
+                return Class.label;
+            });
+            return 'Class "' + first.label + '" imports "' + names.join('", which imports "') + '", which, in it\'s turn, imports "' + first.label + '"';
         };
 
         /**
@@ -498,7 +514,7 @@
              *
              * @type {Array}
              */
-            var chains = [];
+            var chains = me.chains = [];
 
             /**
              * Adds dependent class with it waiting list to manager
@@ -508,7 +524,7 @@
              */
             me.add = function (dependent, waiting) {
 
-                xs.log('xs.Class::dependencies::chains::add. Adding dependency chain for ', dependent.label, 'from', xs.map(waiting, function (Class) {
+                xs.log('xs.Class::dependencies::chains::add. Adding dependency chain for', dependent.label, 'from', xs.map(waiting, function (Class) {
                     return Class.label;
                 }));
                 //get existing chains, where dependent class was in waiting list
@@ -516,7 +532,7 @@
 
                 xs.log('xs.Class::dependencies::chains::add. Work chains:');
                 xs.each(workChains, function (chain) {
-                    xs.log('xs.Class::dependencies::chains::add. ', xs.map(chain, function (Class) {
+                    xs.log('xs.Class::dependencies::chains::add.', xs.map(chain, function (Class) {
                         return Class.label;
                     }));
                 });
@@ -536,7 +552,7 @@
 
                 xs.log('xs.Class::dependencies::chains::add. Chains after add:');
                 xs.each(chains, function (chain) {
-                    xs.log('xs.Class::dependencies::chains::add. ', xs.map(chain, function (Class) {
+                    xs.log('xs.Class::dependencies::chains::add.', xs.map(chain, function (Class) {
                         return Class.label;
                     }));
                 });
@@ -549,13 +565,13 @@
              */
             me.delete = function (processed) {
 
-                xs.log('xs.Class::dependencies::chains::delete. ', processed.label, 'resolved');
+                xs.log('xs.Class::dependencies::chains::delete.', processed.label, 'resolved');
 
                 //get work chains, that contain processed class
                 var workChains = _getChains(processed);
                 xs.log('xs.Class::dependencies::chains::delete. Work chains:');
                 xs.each(workChains, function (chain) {
-                    xs.log('xs.Class::dependencies::chains::delete. ', xs.map(chain, function (Class) {
+                    xs.log('xs.Class::dependencies::chains::delete.', xs.map(chain, function (Class) {
                         return Class.label;
                     }));
                 });
@@ -573,7 +589,7 @@
                 });
                 xs.log('xs.Class::dependencies::chains::delete. Chains left:');
                 xs.each(chains, function (chain) {
-                    xs.log('xs.Class::dependencies::chains::delete. ', xs.map(chain, function (Class) {
+                    xs.log('xs.Class::dependencies::chains::delete.', xs.map(chain, function (Class) {
                         return Class.label;
                     }));
                 });
@@ -589,7 +605,7 @@
              * @return {String} first found dead lock
              */
             me.getLock = function (dependent) {
-                xs.log('xs.Class::dependencies::chains::getLock. Get lock for ', dependent.label);
+                xs.log('xs.Class::dependencies::chains::getLock. Get lock for', dependent.label);
                 //first and last dependent occurrences indices
                 var first = 0, last = 0;
 
@@ -606,7 +622,7 @@
                 });
 
                 //if locked chain found - return locked subset
-                return lockedChain ? lockedChain.slice(first, last + 1) : undefined;
+                return lockedChain ? lockedChain.slice(first, last) : undefined;
             };
 
             /**
@@ -898,20 +914,20 @@
 
             _process(items, verifierArgs, handlerArgs, callback);
         };
-
-        /**
-         * Internal error class
-         *
-         * @ignore
-         *
-         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-         *
-         * @class ClassError
-         */
-        function ClassError(message) {
-            this.message = 'xs.Class :: ' + message;
-        }
-
-        ClassError.prototype = new Error();
     }
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class ClassError
+     */
+    function ClassError(message) {
+        this.message = 'xs.Class :: ' + message;
+    }
+
+    ClassError.prototype = new Error();
 })(window, 'xs');

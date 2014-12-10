@@ -536,7 +536,7 @@
                 //find resolved items
                 xs.log('xs.Loader::resolver::resolve. Handle path "' + path + '"');
                 var resolved = xs.findAll(awaiting, function (item) {
-                    xs.log('xs.Loader::resolver::handler. Clean up item.pending', item.pending);
+                    xs.log('xs.Loader::resolver::resolve. Clean up item.pending', item.pending);
 
                     //item is resolved, if path delete succeeds (path was deleted) and pending is empty
                     if (xs.delete(item.pending, path)) {

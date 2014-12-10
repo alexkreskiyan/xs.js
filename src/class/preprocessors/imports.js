@@ -23,33 +23,72 @@
      */
     xs.Class.preprocessors.add('imports', function (Class, descriptor) {
 
-        return xs.isObject(descriptor.imports);
+        return true;
     }, function (Class, descriptor, ns, dependencies, ready) {
 
         xs.log('xs.class.preprocessor.imports[', Class.label, ']');
         //if imports are specified not as object - throw respective error
-        if (!xs.isObject(descriptor.imports)) {
-            throw new ImportsError('[', Class.label, ']: incorrect imports list');
+        if (!xs.isArray(descriptor.imports)) {
+            throw new ImportsError('[' + Class.label + ']: incorrect imports list');
         }
 
 
         //init
-        //get imports list
+        //init loads list
+        var loads = [];
+        //init imports list
         var imports = {};
-        xs.each(descriptor.imports, function (alias, name) {
-            imports[Class.descriptor.namespace.resolve(name)] = alias;
+
+
+        //process imports list
+        //namespace shortcut
+        var namespace = Class.descriptor.namespace;
+        //fill imports
+        xs.each(descriptor.imports, function (imported) {
+
+            //if imported is string - it's simply className without alias, added only to loads list
+            if (xs.isString(imported)) {
+                loads.push(namespace.resolve(imported));
+
+                //or imported my be used class - then it is specified as object
+            } else if (xs.isObject(imported) && xs.size(imported) == 1) {
+
+                //get name and alias
+                var name = xs.keys(imported)[0];
+                var alias = imported[name];
+
+                //if alias is non-empty string - add it to both loads and imports
+                if (xs.isString(alias) && alias) {
+                    name = namespace.resolve(name);
+                    loads.push(name);
+                    imports[name] = alias;
+
+                    //otherwise - incorrect alias error
+                } else {
+                    throw new ImportsError('[' + Class.label + ']: imported class "' + name + '" has incorrect alias - ' + alias);
+                }
+
+                //otherwise - incorrect imported value
+            } else {
+                throw new ImportsError('[' + Class.label + ']: incorrect imported item - ' + imported);
+            }
         });
 
-        var loads = xs.keys(imports);
+
+        //load imported class and add dependency on them
         xs.log('xs.class.preprocessor.imports[', Class.label, ']. Loading', loads);
         //require async
-        xs.require(loads, function (classes) {
+        xs.require(loads, function (loaded) {
+
+            var waiting = xs.values(xs.map(loaded, function (path, name) {
+                return xs.ClassManager.get(name);
+            }));
 
             xs.log('xs.class.preprocessor.imports[', Class.label, ']. Imports', loads, 'loaded, applying dependency');
             //create new dependency
-            dependencies.add(Class, xs.values(classes), function () {
+            dependencies.add(Class, waiting, function () {
 
-                xs.log('xs.class.preprocessor.imports[', Class.label, ']. Imports', loads, 'processed, applying imports');
+                xs.log('xs.class.preprocessor.imports[', Class.label, ']. Imports', loads, 'processed, applying imports:', imports);
                 //apply imports
                 _applyImports(Class, imports);
 
@@ -75,12 +114,8 @@
     var _applyImports = function (target, imports) {
         //assign imports
         xs.each(imports, function (alias, name) {
-            //if alias given -  save it in imports with alias
-            if (xs.isString(alias) && alias) {
-                target.imports[alias] = xs.ClassManager.get(name);
-            } else if (alias !== null) {
-                throw new ImportsError('incorrect alias');
-            }
+            //save class by alias in imports list
+            target.imports[alias] = xs.ClassManager.get(name);
         });
 
         //remove imports from Class

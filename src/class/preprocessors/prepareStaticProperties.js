@@ -29,7 +29,7 @@
         xs.log('xs.class.preprocessor.prepareStaticProperties[', Class.label, ']');
         //if static properties are specified not as object - throw respective error
         if (!xs.isObject(descriptor.static) || !xs.isObject(descriptor.static.properties)) {
-            throw new StaticPropertyError('[', Class.label, ']: incorrect static properties list');
+            throw new StaticPropertyError('[' + Class.label + ']: incorrect static properties list');
         }
 
         //init properties reference
@@ -51,7 +51,7 @@
         //verify and prepare them
         xs.each(own, function (value, name, list) {
             if (!xs.isString(name) || !name) {
-                throw new StaticPropertyError('[', Class.label, ']: incorrect static property name');
+                throw new StaticPropertyError('[' + Class.label + ']: incorrect static property name');
             }
 
             list[name] = xs.Attribute.property.prepare(name, value);

@@ -46,6 +46,10 @@ require([
         xs.Loader.paths.add('tests', '/tests/resources');
         xs.define('tests.class.preprocessors.mixins.Child', function () {
             this.namespace = 'tests.class.preprocessors.mixins';
+            this.imports = [
+                'ns.Base',
+                'ns.Mix2'
+            ];
             this.extends = 'ns.Base';
             this.mixins.mix2 = 'ns.Mix2';
         });

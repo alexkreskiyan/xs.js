@@ -29,7 +29,7 @@
         xs.log('xs.class.preprocessor.prepareStaticMethods[', Class.label, ']');
         //if static methods are specified not as object - throw respective error
         if (!xs.isObject(descriptor.static) || !xs.isObject(descriptor.static.methods)) {
-            throw new StaticMethodError('[', Class.label, ']: incorrect static methods list');
+            throw new StaticMethodError('[' + Class.label + ']: incorrect static methods list');
         }
 
         //init methods reference
@@ -51,7 +51,7 @@
         //verify and prepare them
         xs.each(own, function (value, name, list) {
             if (!xs.isString(name) || !name) {
-                throw new StaticMethodError('[', Class.label, ']: incorrect static method name');
+                throw new StaticMethodError('[' + Class.label + ']: incorrect static method name');
             }
 
             list[name] = xs.Attribute.method.prepare(name, value);

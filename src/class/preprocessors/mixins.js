@@ -24,12 +24,12 @@
     xs.Class.preprocessors.add('mixins', function () {
 
         return true;
-    }, function (Class, descriptor, ns, dependencies, ready) {
+    }, function (Class, descriptor) {
 
         xs.log('xs.class.preprocessor.mixins[', Class.label, ']');
         //if mixins are specified not as object - throw respective error
         if (!xs.isObject(descriptor.mixins)) {
-            throw new MixinError('[', Class.label, ']: incorrect mixins list');
+            throw new MixinError('[' + Class.label + ']: incorrect mixins list');
         }
 
 
@@ -44,49 +44,37 @@
         xs.extend(mixins, descriptor.mixins);
 
 
-        //load
-        //init loads list
-        var loads = [];
-
+        //process mixins list
         xs.log('xs.class.preprocessor.mixins[', Class.label, ']. Mixins:', mixins);
+        //namespace shortcut
+        var namespace = Class.descriptor.namespace;
         xs.each(mixins, function (name, alias, list) {
             //verify mixed class name
             if (!xs.isString(name) || !name) {
-                throw new ConstError('[', Class.label, ']: incorrect mixed class name');
+                throw new MixinError('[' + Class.label + ']: incorrect mixed class name');
             }
 
             //verify mixed class alias
             if (!alias) {
-                throw new ConstError('[', Class.label, ']: incorrect mixed class alias');
+                throw new MixinError('[' + Class.label + ']: incorrect mixed class alias');
             }
 
             //resolve name with namespace and update list
-            name = list[alias] = Class.descriptor.namespace.resolve(name);
+            name = list[alias] = namespace.resolve(name);
 
-            xs.log('xs.class.preprocessor.mixins[', Class.label, ']. Mixing in:', name, 'as', alias);
-            //add class to load list
-            loads.push(name);
+            //get Mixin reference
+            var Mixin = xs.ClassManager.get(name);
+
+            //if Mixin is not defined or is processing - throw errors
+            if (!Mixin) {
+                throw new MixinError('[' + Class.label + ']: parent class "' + name + '" is not defined');
+            } else if (Mixin.isProcessing) {
+                throw new MixinError('[' + Class.label + ']: parent class "' + Mixin.label + '" is not processed yet. Move it to imports section, please');
+            }
         });
 
-        xs.log('xs.class.preprocessor.mixins[', Class.label, ']. Loading mixins', mixins);
-        //require async
-        xs.require(loads, function (classes) {
-
-            xs.log('xs.class.preprocessor.extends[', Class.label, ']. Mixins', loads, 'loaded, applying dependency');
-            //create new dependency
-            dependencies.add(Class, xs.values(classes), function () {
-
-                xs.log('xs.class.preprocessor.extends[', Class.label, ']. Mixins', loads, 'processed, applying mixins');
-                //apply mixins to Class.descriptor
-                _applyMixins(Class, mixins);
-
-                //call ready to notify processor stack, that mixins succeed
-                ready();
-            });
-        });
-
-        //return false to sign async processor
-        return false;
+        //apply mixins to Class.descriptor
+        _applyMixins(Class, mixins);
     }, 'after', 'prepareMethods');
 
     /**
@@ -106,14 +94,14 @@
         //apply each mixin
         xs.each(mixins, function (name, alias) {
 
-            //get reference for mixed class
-            var mixed = xs.ClassManager.get(name);
+            var Mixin = xs.ClassManager.get(name);
 
+            xs.log('xs.class.preprocessor.mixins[', target.label, ']. Mixing in:', Mixin.label, 'as', alias);
             //mix mixed class descriptor into target descriptor
-            _mixinClass(target.descriptor, mixed.descriptor);
+            _mixinClass(target.descriptor, Mixin.descriptor);
 
             //save mixed into target.prototype.mixins
-            target.prototype.mixins[alias] = mixed;
+            target.prototype.mixins[alias] = Mixin;
         });
     };
 

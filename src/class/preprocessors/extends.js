@@ -24,7 +24,7 @@
     xs.Class.preprocessors.add('extends', function () {
 
         return true;
-    }, function (Class, descriptor, ns, dependencies, ready) {
+    }, function (Class, descriptor) {
         var extended = descriptor.extends;
 
         xs.log('xs.class.preprocessor.extends[', Class.label, ']');
@@ -35,34 +35,31 @@
             _extend(Class, xs.Base);
 
             return;
+
+            //if extended is non-empty string - resolve parent name
+        } else if (xs.isString(extended) && extended) {
+
+            //resolve parent name
+            extended = Class.descriptor.namespace.resolve(extended);
+        } else {
+
             //if extended is not string (empty string) - throw respective error
-        } else if (!xs.isString(extended) || !extended) {
             throw new ExtendsError('[' + Class.label + ']: incorrect extended name');
         }
 
-        extended = Class.descriptor.namespace.resolve(extended);
+        //get parent reference
+        var Parent = xs.ClassManager.get(extended);
 
-        xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extending', extended);
-        xs.log('xs.class.preprocessor.extends[', Class.label, ']. Loading parent class', extended);
-        //require async
-        xs.require(extended, function (classes) {
+        //if parent is not defined or is processing - throw errors
+        if (!Parent) {
+            throw new ExtendsError('[' + Class.label + ']: parent class "' + extended + '" is not defined');
+        } else if (Parent.isProcessing) {
+            throw new ExtendsError('[' + Class.label + ']: parent class "' + Parent.label + '" is not processed yet. Move it to imports section, please');
+        }
 
-            var Parent = xs.ClassManager.get(extended);
-            xs.log('xs.class.preprocessor.extends[', Class.label, ']. Parent', Parent.label, 'loaded, applying dependency');
-            //create new dependency
-            dependencies.add(Class, Parent, function () {
-
-                xs.log('xs.class.preprocessor.extends[', Class.label, ']. Parent', Parent.label, 'processed, extending');
-                //apply extends
-                _applyExtends(Class, Parent);
-
-                //call ready to notify processor stack, that import succeed
-                ready();
-            });
-        });
-
-        //return false to sign async processor
-        return false;
+        xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extending', Parent.label);
+        //apply extends
+        _applyExtends(Class, Parent);
     }, 'after', 'imports');
 
     /**
@@ -72,8 +69,8 @@
      *
      * @method applyImports
      *
-     * @param {Object} target target class
-     * @param {Object} parent extended class
+     * @param {Function} target target class
+     * @param {Function} parent extended class
      */
     var _applyExtends = function (target, parent) {
         //extend
