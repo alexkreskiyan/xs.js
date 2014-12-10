@@ -23,7 +23,7 @@
  * @private
  */
 'use strict';
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
@@ -35,7 +35,7 @@
          * @param {Function} type
          * @throws {Error|*}
          */
-        var raise = function ( message, type ) {
+        var raise = function (message, type) {
             message = message || 'error';
             type = type || Error;
             throw new type(message);
@@ -50,7 +50,7 @@
          * @param message
          * @throws {ReferenceError}
          */
-        this.raiseReference = function ( message ) {
+        this.raiseReference = function (message) {
             raise(message, ReferenceError);
         };
         /**
@@ -58,7 +58,7 @@
          * @param message
          * @throws {SyntaxError}
          */
-        this.raiseSyntax = function ( message ) {
+        this.raiseSyntax = function (message) {
             raise(message, SyntaxError);
         };
         /**
@@ -66,7 +66,7 @@
          * @param message
          * @throws {TypeError}
          */
-        this.raiseType = function ( message ) {
+        this.raiseType = function (message) {
             raise(message, TypeError);
         };
     });

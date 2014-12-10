@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-(function ( root, ns ) {
+(function (root, ns) {
 
     'use strict';
 
@@ -49,8 +49,8 @@
          *
          * @param {String...} message Messages, being logged
          */
-        me.log = function ( message ) {
-            if ( !xs.Debug.active ) {
+        me.log = function (message) {
+            if (!xs.Debug.active) {
                 return;
             }
             console.log.apply(console, arguments);
@@ -62,7 +62,7 @@
         get: function () {
             return xs.Debug.active;
         },
-        set: function ( value ) {
+        set: function (value) {
             xs.Debug.active = value;
         },
         configurable: false

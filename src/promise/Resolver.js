@@ -40,12 +40,12 @@
  */
 
 xs.define('xs.promise.Resolver', {
-    constructor: function ( onResolved, onRejected, onProgress ) {
+    constructor: function (onResolved, onRejected, onProgress) {
         //create promise object
         this.promise = xs.create('xs.promise.Promise', this);
         //prepare callbacks
         this.onResolved = onResolved;
-        this.onRejected = xs.isFunction(onRejected) ? onRejected : function ( error ) {
+        this.onRejected = xs.isFunction(onRejected) ? onRejected : function (error) {
             throw error;
         };
         this.onProgress = onProgress;
@@ -73,7 +73,7 @@ xs.define('xs.promise.Resolver', {
          * private method to execute action in resolvers
          */
         propagate: function () {
-            this.pendingResolvers.forEach(function ( resolver ) {
+            this.pendingResolvers.forEach(function (resolver) {
                 resolver[this.completionAction](this.completionValue);
             }, this);
             this.pendingResolvers = [];
@@ -82,7 +82,7 @@ xs.define('xs.promise.Resolver', {
          * private function to schedule resolver
          * @param pendingResolver
          */
-        schedule: function ( pendingResolver ) {
+        schedule: function (pendingResolver) {
             this.pendingResolvers.push(pendingResolver);
             this.completed && this.propagate();
         },
@@ -91,7 +91,7 @@ xs.define('xs.promise.Resolver', {
          * @param action
          * @param value
          */
-        complete: function ( action, value ) {
+        complete: function (action, value) {
             this.onResolved = this.onRejected = this.onProgress = null;
             this.completionAction = action;
             this.completionValue = value;
@@ -102,14 +102,14 @@ xs.define('xs.promise.Resolver', {
          * shortcut function to complete resolved
          * @param value
          */
-        completeResolved: function ( value ) {
+        completeResolved: function (value) {
             this.complete('resolve', value);
         },
         /**
          * shortcut function to complete rejected
          * @param reason
          */
-        completeRejected: function ( reason ) {
+        completeRejected: function (reason) {
             this.complete('reject', reason);
         },
         /**
@@ -117,18 +117,18 @@ xs.define('xs.promise.Resolver', {
          * @param callback
          * @param value
          */
-        process: function ( callback, value ) {
+        process: function (callback, value) {
             this.processed = true;
             try {
-                if ( xs.isFunction(callback) ) {
+                if (xs.isFunction(callback)) {
                     value = callback(value);
                 }
-                if ( value && xs.isFunction(value.then) ) {
+                if (value && xs.isFunction(value.then)) {
                     value.then(this.completeResolved, this.completeRejected);
                 } else {
                     this.completeResolved(value);
                 }
-            } catch ( error ) {
+            } catch (error) {
                 this.completeRejected(error);
             }
         },
@@ -136,8 +136,8 @@ xs.define('xs.promise.Resolver', {
          * Resolves this Resolver with the specified value, triggering it to execute the 'onResolved' callback and propagate the resulting resolution value or rejection reason to Resolvers that originate from this Resolver.
          * @param {*} value The resolved future value.
          */
-        resolve: function ( value ) {
-            if ( !this.processed ) {
+        resolve: function (value) {
+            if (!this.processed) {
                 this.process(this.onResolved, value);
             }
         },
@@ -145,8 +145,8 @@ xs.define('xs.promise.Resolver', {
          * Rejects this Resolver with the specified reason, triggering it to execute the 'onRejected' callback and propagate the resulting resolution value or rejection reason to Resolvers that originate from this Resolver.
          * @param {Error} reason The rejection reason.
          */
-        reject: function ( reason ) {
-            if ( !this.processed ) {
+        reject: function (reason) {
+            if (!this.processed) {
                 this.process(this.onRejected, reason);
             }
         },
@@ -154,15 +154,15 @@ xs.define('xs.promise.Resolver', {
          * Updates progress for this Resolver, if it is still pending, triggering it to execute the 'onProgress' callback and propagate the resulting transformed progress value to Resolvers that originate from this Resolver.
          * @param {*} progress The progress value.
          */
-        progress: function ( progress ) {
+        progress: function (progress) {
             var pendingResolver, index;
-            if ( this.completed ) {
+            if (this.completed) {
                 return;
             }
-            if ( xs.isFunction(this.onProgress) ) {
+            if (xs.isFunction(this.onProgress)) {
                 progress = this.onProgress(progress);
             }
-            for ( index = 0; index < this.pendingResolvers.length; index++ ) {
+            for (index = 0; index < this.pendingResolvers.length; index++) {
                 pendingResolver = this.pendingResolvers[index];
                 pendingResolver.progress(progress);
             }
@@ -175,9 +175,9 @@ xs.define('xs.promise.Resolver', {
          * @param {Function} onProgress Callback function to be called with progress updates.
          * @return {xs.promise.Promise} A Promise of the transformed future value.
          */
-        then: function ( onResolved, onRejected, onProgress ) {
+        then: function (onResolved, onRejected, onProgress) {
             var me = this;
-            if ( !xs.isFunction(onResolved) && !xs.isFunction(onRejected) && !xs.isFunction(onProgress) ) {
+            if (!xs.isFunction(onResolved) && !xs.isFunction(onRejected) && !xs.isFunction(onProgress)) {
                 return me.promise;
             }
             var pendingResolver = xs.create('xs.promise.Resolver', onResolved, onRejected, onProgress);

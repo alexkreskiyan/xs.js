@@ -1,6 +1,6 @@
-function speed ( fn, n ) {
+function speed(fn, n) {
     var start = Date.now();
-    for ( var i = 0; i < n; i++ ) {
+    for (var i = 0; i < n; i++) {
         fn();
     }
     var duration = Date.now() - start;
@@ -551,7 +551,7 @@ var userAgents = [
         }
     ]
 ];
-xs.Array.each(userAgents, function ( testCase ) {
+xs.Array.each(userAgents, function (testCase) {
     test('env detection for ' + testCase[0], function () {
         var userAgent = testCase[0];
         var std = testCase[1];

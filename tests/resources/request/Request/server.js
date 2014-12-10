@@ -2,8 +2,8 @@ var http = require('http');
 var fs = require('fs');
 var path = require('path');
 
-var server = http.createServer(function ( request, response ) {
-    switch ( request.url ) {
+var server = http.createServer(function (request, response) {
+    switch (request.url) {
         case '/':
             display_form(request, response);
             break;
@@ -17,13 +17,13 @@ var server = http.createServer(function ( request, response ) {
 });
 server.listen(3001);
 
-function display_form ( request, response ) {
+function display_form(request, response) {
     response.writeHead(200, {'Content-Type': 'text/html'});
     response.write('<form action="/upload" method="post" enctype="multipart/form-data">' + '<input type="file" name="upload-file">' + '<input type="submit" value="Upload">' + '</form>');
     response.end();
 }
 
-function upload_file ( request, response ) {
+function upload_file(request, response) {
     console.log('starting upload');
     var filePath = path.join(__dirname, 'uploadFile');
     var file = fs.createWriteStream(filePath);
@@ -38,7 +38,7 @@ function upload_file ( request, response ) {
     };
     var body = '';
 
-    request.on('data', function ( data ) {
+    request.on('data', function (data) {
         body += data;
         uploaded.b += data.length;
         uploaded.mb = (uploaded.b / (1024 * 1024)).toFixed(2);
@@ -54,7 +54,7 @@ function upload_file ( request, response ) {
     });
 }
 
-function send_file ( filePath, response ) {
+function send_file(filePath, response) {
     var stat = fs.statSync(filePath);
 
     response.writeHead(200, {
@@ -73,7 +73,7 @@ function send_file ( filePath, response ) {
         mb: 0
     };
 
-    readStream.on('data', function ( data ) {
+    readStream.on('data', function (data) {
         response.write(data);
         downloaded.b += data.length;
         downloaded.mb = (downloaded.b / (1024 * 1024)).toFixed(2);
@@ -89,7 +89,7 @@ function send_file ( filePath, response ) {
     });
 }
 
-function show_404 ( request, response ) {
+function show_404(request, response) {
     response.writeHead(404, {'Content-Type': 'text/plain'});
     response.write('You are doing it wrong!');
     response.end();

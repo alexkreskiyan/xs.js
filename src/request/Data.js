@@ -29,7 +29,7 @@ xs.define('xs.request.Data', function () {
             me.__set('raw', {});
             //Check if browser supports FormData API and set data
             var version = xs.browser.major;
-            if ( (xs.isChrome && version >= 7) || (xs.isFirefox && version >= 4) || (xs.isIE && version >= 10) || (xs.isOpera && version >= 12) || (xs.isSafari && version >= 5) ) {
+            if ((xs.isChrome && version >= 7) || (xs.isFirefox && version >= 4) || (xs.isIE && version >= 10) || (xs.isOpera && version >= 12) || (xs.isSafari && version >= 5)) {
                 me.__set('data', new FormData);
             }
         },
@@ -56,15 +56,15 @@ xs.define('xs.request.Data', function () {
             }
         },
         methods: {
-            add: function ( name, value ) {
+            add: function (name, value) {
                 var me = this;
                 me.__get('raw')[name] = value;
-                if ( me.isFormData ) {
+                if (me.isFormData) {
                     me.__get('data').append[name] = value;
                 }
                 console.log(params);
             },
-            get: function ( name ) {
+            get: function (name) {
                 var me = this;
                 console.log('get', name);
             },

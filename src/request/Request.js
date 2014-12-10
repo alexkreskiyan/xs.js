@@ -33,7 +33,7 @@ xs.define('xs.request.Request', function () {
      * @param index
      * @return {Array}
      */
-    var removeIndexBrackets = function ( index ) {
+    var removeIndexBrackets = function (index) {
         return index.slice(1, index.length - 1)
     };
     /**
@@ -41,17 +41,17 @@ xs.define('xs.request.Request', function () {
      * @param {String} str
      * @return {Object}
      */
-    var fromQueryString = function ( str ) {
+    var fromQueryString = function (str) {
         str || (str = '');
         var params = {}, rawParams = str.split('&');
 
-        xs.Array.each(rawParams, function ( param ) {
+        xs.Array.each(rawParams, function (param) {
             //split name and value
             var pair = param.split('=');
 
             //try to get name
             var name = pair[0].match(queryParamNameRe);
-            if ( !name ) {
+            if (!name) {
                 return;
             } else {
                 name = name[0];
@@ -74,12 +74,12 @@ xs.define('xs.request.Request', function () {
      * @param {Array|Object} params
      * @return {Integer}
      */
-    var getNextIndex = function ( params ) {
-        if ( xs.isArray(params) ) {
+    var getNextIndex = function (params) {
+        if (xs.isArray(params)) {
             return params.length;
         }
         var index = 0;
-        while ( xs.Object.hasKey(params, index) ) {
+        while (xs.Object.hasKey(params, index)) {
             index++;
         }
         return index;
@@ -92,13 +92,13 @@ xs.define('xs.request.Request', function () {
      * @param indexes
      * @return {undefined}
      */
-    var fromQueryObjects = function ( params, name, value, indexes ) {
+    var fromQueryObjects = function (params, name, value, indexes) {
         //assign value if no indexes
-        if ( !indexes || !indexes.length ) {
+        if (!indexes || !indexes.length) {
             value = decodeURIComponent(value);
             try {
                 params[name] = JSON.parse(value);
-            } catch ( e ) {
+            } catch (e) {
                 params[name] = value;
             }
             return;
@@ -113,12 +113,12 @@ xs.define('xs.request.Request', function () {
         //shortcut
         var param = params[name];
 
-        if ( index ) {
+        if (index) {
             xs.isNumeric(index) && (index = Number(index));
         } else {
             index = getNextIndex(param);
         }
-        if ( xs.isArray(param) && xs.isString(index) ) {
+        if (xs.isArray(param) && xs.isString(index)) {
             params[name] = xs.Array.toObject(param);
         }
         fromQueryObjects(params[name], index, value, indexes.slice(1));
@@ -129,21 +129,21 @@ xs.define('xs.request.Request', function () {
      * @param {Boolean} encode
      * @return {String}
      */
-    var toQueryString = function ( object, encode ) {
+    var toQueryString = function (object, encode) {
         object || (object = {});
         var paramObjects = [], params = [];
 
-        if ( encode ) {
-            xs.each(object, function ( value, name ) {
+        if (encode) {
+            xs.each(object, function (value, name) {
                 paramObjects = paramObjects.concat(toQueryObjects(encodeURIComponent(name), value, encode));
             }, this);
         } else {
-            xs.each(object, function ( value, name ) {
+            xs.each(object, function (value, name) {
                 paramObjects = paramObjects.concat(toQueryObjects(name, value, encode));
             }, this);
 
         }
-        xs.Array.each(paramObjects, function ( paramObject ) {
+        xs.Array.each(paramObjects, function (paramObject) {
             params.push(paramObject.name + '=' + String(paramObject.value));
         });
 
@@ -156,21 +156,21 @@ xs.define('xs.request.Request', function () {
      * @param encode
      * @return {Array}
      */
-    var toQueryObjects = function ( name, object, encode ) {
+    var toQueryObjects = function (name, object, encode) {
         var self = toQueryObjects, objects = [];
 
-        if ( xs.isIterable(object) && xs.size(object) ) {
-            if ( encode ) {
-                xs.each(object, function ( value, param ) {
+        if (xs.isIterable(object) && xs.size(object)) {
+            if (encode) {
+                xs.each(object, function (value, param) {
                     objects = objects.concat(self(name + '[' + encodeURIComponent(param) + ']', value, encode));
                 });
             } else {
-                xs.each(object, function ( value, param ) {
+                xs.each(object, function (value, param) {
                     objects = objects.concat(self(name + '[' + param + ']', value));
                 });
             }
         } else {
-            if ( encode ) {
+            if (encode) {
                 objects.push({
                     name: name,
                     value: encodeURIComponent(object)
@@ -201,11 +201,11 @@ xs.define('xs.request.Request', function () {
      * @param {xs.request.Request} me
      * @param {String} from
      */
-    var syncParams = function ( me, from ) {
+    var syncParams = function (me, from) {
         //switch change source
-        switch ( from ) {
+        switch (from) {
             case 'method':
-                if ( me.method == 'get' ) {
+                if (me.method == 'get') {
                     //fetch url.params from me.params
                     me.url.params = me.params;
                 } else {
@@ -214,8 +214,8 @@ xs.define('xs.request.Request', function () {
                 }
                 break;
             case 'url':
-                if ( me.method == 'get' ) {
-                    if ( xs.Object.size(me.url.params) ) {
+                if (me.method == 'get') {
+                    if (xs.Object.size(me.url.params)) {
                         //if any params in url - assign them to request
                         me.params = me.url.params; //because of Object bylink passing - we achieve direct sync
                     } else {
@@ -223,7 +223,7 @@ xs.define('xs.request.Request', function () {
                         me.url.params = me.params; //because of Object bylink passing - we achieve direct sync
                     }
                 } else {
-                    if ( xs.Object.size(me.url.params) ) {
+                    if (xs.Object.size(me.url.params)) {
                         //if any params in url - assign them to request
                         me.params = me.url.params; //because of Object bylink passing - we achieve direct sync
                     }
@@ -232,7 +232,7 @@ xs.define('xs.request.Request', function () {
                 }
                 break;
             case 'params':
-                if ( me.method == 'get' ) {
+                if (me.method == 'get') {
                     //url.params are assigned from me.params
                     me.url.params = me.params; //because of Object bylink passing - we achieve direct sync
                 }
@@ -240,10 +240,10 @@ xs.define('xs.request.Request', function () {
         }
     };
 
-    var setRequest = function ( me ) {
+    var setRequest = function (me) {
         //request object
         me.__set('isCrossDomain', me.url.host !== xs.location.host);
-        if ( me.isCrossDomain && xs.isIE && xs.browser.major <= 9 ) {
+        if (me.isCrossDomain && xs.isIE && xs.browser.major <= 9) {
             me.__set('xhr', new XDomainRequest());
             me.__set('isXhr', false);
         } else {
@@ -252,44 +252,44 @@ xs.define('xs.request.Request', function () {
         }
     };
 
-    var open = function ( me ) {
+    var open = function (me) {
         var xhr = me.xhr, method = me.method.toUpperCase(), url = me.url.toUri();
 
-        if ( me.isXhr ) {
+        if (me.isXhr) {
             xhr.open(method, url, me.async, me.user, me.password);
         } else {
             xhr.open(method, url);
         }
     };
 
-    var setHeaders = function ( me ) {
+    var setHeaders = function (me) {
         //no headers setup is available for XDomainRequest
-        if ( !me.isXhr ) {
+        if (!me.isXhr) {
             return;
         }
 
         var headers = me.headers, xhr = me.xhr;
 
         //if no content type specified, method is not GET and some data is going to be sent - specify
-        if ( !headers['Content-Type'] && me.method !== 'get' && xs.Object.size(me.params) ) {
+        if (!headers['Content-Type'] && me.method !== 'get' && xs.Object.size(me.params)) {
             headers['Content-Type'] = me.postContentType;
         }
 
         //if default XHR header not specified - specify it
-        if ( !headers['X-Requested-With'] ) {
+        if (!headers['X-Requested-With']) {
             headers['X-Requested-With'] = 'XMLHttpRequest';
         }
 
-        xs.each(headers, function ( header, name ) {
+        xs.each(headers, function (header, name) {
             xhr.setRequestHeader(name, header);
         });
     };
 
-    var setEventHandlers = function ( me ) {
+    var setEventHandlers = function (me) {
         var xhr = me.xhr;
-        xhr.onprogress = function ( event ) {
+        xhr.onprogress = function (event) {
             console.log('PROGRESS', 'request', me, 'event', event);
-            if ( me.isXhr && event.lengthComputable ) {
+            if (me.isXhr && event.lengthComputable) {
                 me.deferred.progress(event.loaded / event.total);
             }
         };
@@ -307,7 +307,7 @@ xs.define('xs.request.Request', function () {
         };
     };
 
-    var complete = function ( me ) {
+    var complete = function (me) {
         console.log('Request completed');
     };
 
@@ -329,7 +329,7 @@ xs.define('xs.request.Request', function () {
                 toQueryString: toQueryString
             }
         },
-        constructor: function ( config ) {
+        constructor: function (config) {
             var me = this;
 
             xs.isObject(config) || (config = {});
@@ -338,10 +338,10 @@ xs.define('xs.request.Request', function () {
             me.method = config.method;
             me.url = config.url;
             //set params if given
-            if ( xs.isObject(config.params) ) {
+            if (xs.isObject(config.params)) {
                 me.params = config.params;
                 //or default to empty ones, if not defined yet via url
-            } else if ( !me.params ) {
+            } else if (!me.params) {
                 me.params = {};
             }
             me.user = config.user;
@@ -361,10 +361,10 @@ xs.define('xs.request.Request', function () {
         },
         properties: {
             method: {
-                set: function ( method ) {
+                set: function (method) {
                     var me = this;
 
-                    if ( !xs.isString(method) ) {
+                    if (!xs.isString(method)) {
                         return;
                     }
 
@@ -376,14 +376,14 @@ xs.define('xs.request.Request', function () {
                 default: 'get'
             },
             url: {
-                set: function ( url ) {
+                set: function (url) {
                     var me = this;
 
-                    if ( xs.isString(url) ) {
+                    if (xs.isString(url)) {
                         url = xs.create('xs.uri.Url', {url: url});
-                    } else if ( xs.isObject(url) ) {
+                    } else if (xs.isObject(url)) {
                         url = xs.create('xs.uri.Url', url);
-                    } else if ( !xs.is(url, xs.uri.Url) ) {
+                    } else if (!xs.is(url, xs.uri.Url)) {
                         var loc = xs.location;
                         url = xs.create('xs.uri.Url', {
                             url: loc.protocol + '//' + loc.host + (loc.port ? ':' + loc.port : '') + loc.pathname + loc.search + loc.hash
@@ -397,10 +397,10 @@ xs.define('xs.request.Request', function () {
                 }
             },
             params: {
-                set: function ( params ) {
+                set: function (params) {
                     var me = this;
 
-                    if ( !xs.isObject(params) ) {
+                    if (!xs.isObject(params)) {
                         return;
                     }
 
@@ -409,44 +409,44 @@ xs.define('xs.request.Request', function () {
                 }
             },
             user: {
-                set: function ( user ) {
+                set: function (user) {
                     var me = this;
-                    if ( xs.isString(user) ) {
+                    if (xs.isString(user)) {
                         me.__set('user', user);
-                    } else if ( !user ) {
+                    } else if (!user) {
                         me.__set('user', null);
                     }
                 }
             },
             password: {
-                set: function ( password ) {
+                set: function (password) {
                     var me = this;
-                    if ( xs.isString(password) ) {
+                    if (xs.isString(password)) {
                         me.__set('password', password);
-                    } else if ( !password ) {
+                    } else if (!password) {
                         me.__set('password', null);
                     }
                 }
             },
             async: {
-                set: function ( async ) {
+                set: function (async) {
                     xs.isDefined(async) && this.__set('async', Boolean(async));
                 },
                 default: true
             },
             credentials: {
-                set: function ( credentials ) {
+                set: function (credentials) {
                     xs.isDefined(credentials) && this.__set('credentials', Boolean(credentials));
                 },
                 default: false
             },
             headers: {
-                set: function ( headers ) {
+                set: function (headers) {
                     xs.isObject(headers) && this.__set('headers', headers);
                 }
             },
             timeout: {
-                set: function ( timeout ) {
+                set: function (timeout) {
                     var me = this;
                     xs.isNumeric(timeout) && me.__set('timeout', Number(timeout));
                     me.xhr && (me.xhr.timeout = me.__get('timeout'));
@@ -467,7 +467,7 @@ xs.define('xs.request.Request', function () {
                 set: xs.emptyFn
             },
             postContentType: {
-                set: function ( postContentType ) {
+                set: function (postContentType) {
                     xs.isString(postContentType) && this.__set('postContentType', postContentType);
                 },
                 default: 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -492,7 +492,7 @@ xs.define('xs.request.Request', function () {
 
                 return me.deferred.promise;
             },
-            abort: function ( timedOut ) {
+            abort: function (timedOut) {
                 var me = this;
                 me.deferred.reject(Boolean(timedOut));
             }

@@ -13,14 +13,14 @@
     var handlers = [];
 
     //resolves source File
-    var resolveSourceFile = function ( name ) {
+    var resolveSourceFile = function (name) {
         return '/src/' + name.split('.').slice(1).join('/') + '.js';
     };
-    var resolveTestFile = function ( name ) {
+    var resolveTestFile = function (name) {
         return '/tests/src/' + name.split('.').slice(1).join('/') + 'Test.js';
     };
 
-    var request = function ( url, callback ) {
+    var request = function (url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url);
         xhr.send();
@@ -32,8 +32,8 @@
     };
 
     //adds script to container
-    var addScript = function ( container, src, onLoad, cover ) {
-        if ( scripts.indexOf(src) >= 0 ) {
+    var addScript = function (container, src, onLoad, cover) {
+        if (scripts.indexOf(src) >= 0) {
             onLoad && onLoad();
             return;
         }
@@ -44,7 +44,7 @@
         script.src = src;
         cover && script.setAttribute('data-cover', '');
         container.appendChild(script);
-        if ( !onLoad ) {
+        if (!onLoad) {
             return;
         }
         var loadHandler = function () {
@@ -54,11 +54,11 @@
         script.addEventListener('load', loadHandler);
     };
 
-    var getTests = function ( sources, tests ) {
+    var getTests = function (sources, tests) {
         var list = [];
-        sources.forEach(function ( source ) {
-            tests.forEach(function ( test ) {
-                if ( source === test || source.indexOf(test + '.') == 0 ) { //either strict or namespace match
+        sources.forEach(function (source) {
+            tests.forEach(function (test) {
+                if (source === test || source.indexOf(test + '.') == 0) { //either strict or namespace match
                     list.indexOf(source) < 0 && list.push(source);
                 }
             });
@@ -66,12 +66,12 @@
         return list;
     };
 
-    var load = function ( files, callback ) {
-        if ( !files.length ) {
+    var load = function (files, callback) {
+        if (!files.length) {
             return;
         }
         var file = files.shift();
-        if ( files.length ) {
+        if (files.length) {
             addScript(head, file, function () {
                 load(files, callback, true);
             });
@@ -80,59 +80,59 @@
         }
     };
 
-    var addItems = function ( list, items ) {
-        for ( var idx = 0; idx < items.length; idx++ ) {
+    var addItems = function (list, items) {
+        for (var idx = 0; idx < items.length; idx++) {
             var item = items[idx];
             list.indexOf(item) < 0 && list.push(item);
         }
     };
 
     // Adds sources to pending list and callback to handlers
-    me.require = function ( components, callback ) {
+    me.require = function (components, callback) {
         addItems(pendingSources, components);
         handlers.push(callback);
     };
 
-    var testsList = (function ( key ) {
+    var testsList = (function (key) {
         var result = /\?([^#\?]+)/.exec(me.location.search);
-        if ( !result ) {
+        if (!result) {
             return [];
         }
         var paramsPairs = result.slice(1).shift().split('&');
         var pair;
-        for ( var idx = 0; idx < paramsPairs.length; idx++ ) {
+        for (var idx = 0; idx < paramsPairs.length; idx++) {
             pair = paramsPairs[idx].split('=');
-            if ( pair[0] == key ) {
+            if (pair[0] == key) {
                 return pair[1].split(',');
             }
         }
     }).call(me, 'tests');
 
     var runTests = function () {
-        for ( var idx = 0; idx < handlers.length; idx++ ) {
+        for (var idx = 0; idx < handlers.length; idx++) {
             var handler = handlers[idx];
             handler();
         }
     };
 
-    request('/src/src.json', function ( src ) {
+    request('/src/src.json', function (src) {
         sources = src;
         tests = getTests(src, testsList);
-        tests.forEach(function ( test ) {
+        tests.forEach(function (test) {
             var name = test;
             pendingTests.push(name);
             addScript(head, resolveTestFile(name), function () {
                 pendingTests.splice(pendingTests.indexOf(name), 1);
-                pendingTests.length || load(pendingSources.map(function ( source ) {
+                pendingTests.length || load(pendingSources.map(function (source) {
                     return resolveSourceFile(source);
                 }), runTests);
             });
         });
     });
 }).call(window);
-function benchmark ( fn, n ) {
+function benchmark(fn, n) {
     var start = Date.now();
-    for ( var i = 0; i < n; i++ ) {
+    for (var i = 0; i < n; i++) {
         fn();
     }
     var duration = Date.now() - start;

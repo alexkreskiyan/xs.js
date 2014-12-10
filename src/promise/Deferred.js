@@ -42,7 +42,7 @@ xs.define('xs.promise.Deferred', {
              * @param {*} value The resolved future value.
              * @return {xs.promise.Promise} Promise resolved with the specified value.
              */
-            resolve: function ( value ) {
+            resolve: function (value) {
                 var deferred;
                 deferred = xs.create('xs.promise.Deferred');
                 deferred.resolve(value);
@@ -54,7 +54,7 @@ xs.define('xs.promise.Deferred', {
              * @param {Error} reason The rejection reason.
              * @return {xs.promise.Promise} Promise rejected with the specified reason.
              */
-            reject: function ( reason ) {
+            reject: function (reason) {
                 var deferred;
                 deferred = xs.create('xs.promise.Deferred');
                 deferred.reject(reason);
@@ -84,7 +84,7 @@ xs.define('xs.promise.Deferred', {
          *
          * @param {*} value The resolved future value.
          */
-        resolve: function ( value ) {
+        resolve: function (value) {
             return this.resolver.resolve(value);
         },
         /**
@@ -92,7 +92,7 @@ xs.define('xs.promise.Deferred', {
          *
          * @param {Error} reason The rejection reason.
          */
-        reject: function ( reason ) {
+        reject: function (reason) {
             return this.resolver.reject(reason);
         },
         /**
@@ -100,7 +100,7 @@ xs.define('xs.promise.Deferred', {
          *
          * @param {*} progress The progress value.
          */
-        progress: function ( progress ) {
+        progress: function (progress) {
             return this.resolver.progress(progress);
         }
     }

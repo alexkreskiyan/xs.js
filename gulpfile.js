@@ -40,7 +40,7 @@ var paths = {
     ]
 };
 
-gulp.task('debug', function ( done ) {
+gulp.task('debug', function (done) {
     //scripts processing
     var buildScripts = function () {
         del(['build/debug/*.js']);
@@ -56,7 +56,7 @@ gulp.task('debug', function ( done ) {
     }, buildScripts);
 });
 
-gulp.task('test', function ( done ) {
+gulp.task('test', function (done) {
     karma.start({
         configFile: __dirname + '/karma.js',
         singleRun: true

@@ -39,7 +39,7 @@ xs.define('xs.uri.Url', function () {
     var paramsRe = /\?([^#\?]+)/;
     var hashRe = /#(.+)/;
 
-    var parse = function ( raw ) {
+    var parse = function (raw) {
         //define basic data value to return
         var data = {
             protocol: null,
@@ -51,7 +51,7 @@ xs.define('xs.uri.Url', function () {
         };
 
         //return data if raw is not string
-        if ( !xs.isString(raw) ) {
+        if (!xs.isString(raw)) {
             return data;
         }
         //decode raw string
@@ -59,7 +59,7 @@ xs.define('xs.uri.Url', function () {
 
         //detect protocol
         var protocol = protocolRe.exec(raw);
-        if ( xs.isArray(protocol) ) {
+        if (xs.isArray(protocol)) {
             data.protocol = protocol[1];
         } else {
             data.protocol = xs.location.protocol.substr(0, xs.location.protocol.length - 1);
@@ -67,7 +67,7 @@ xs.define('xs.uri.Url', function () {
 
         //detect host
         var host = hostRe.exec(raw);
-        if ( xs.isArray(host) ) {
+        if (xs.isArray(host)) {
             data.host = host[1];
         } else {
             data.host = xs.location.host;
@@ -75,7 +75,7 @@ xs.define('xs.uri.Url', function () {
 
         //detect port
         var port = portRe.exec(raw);
-        if ( xs.isArray(port) ) {
+        if (xs.isArray(port)) {
             data.port = port[1];
         } else {
             data.port = xs.location.port;
@@ -83,9 +83,9 @@ xs.define('xs.uri.Url', function () {
 
         //detect path
         var path;
-        if ( xs.isArray(path = pathReFull.exec(raw)) ) {
+        if (xs.isArray(path = pathReFull.exec(raw))) {
             data.path = path[1];
-        } else if ( !protocol && !host && xs.isArray(path = pathReRelative.exec(raw)) ) {
+        } else if (!protocol && !host && xs.isArray(path = pathReRelative.exec(raw))) {
             data.path = path[1];
         }
 
@@ -102,10 +102,10 @@ xs.define('xs.uri.Url', function () {
         return data;
     };
     return {
-        constructor: function ( config ) {
+        constructor: function (config) {
             var me = this, data;
             xs.isObject(config) || (config = {});
-            if ( xs.isString(config.url) ) {
+            if (xs.isString(config.url)) {
                 data = parse(config.url);
             } else {
                 data = config;
@@ -119,65 +119,65 @@ xs.define('xs.uri.Url', function () {
         },
         properties: {
             protocol: {
-                set: function ( protocol ) {
-                    if ( !protocol ) {
+                set: function (protocol) {
+                    if (!protocol) {
                         this.__set('protocol', null);
-                    } else if ( xs.isString(protocol) && xs.Array.has(protocols, protocol) ) {
+                    } else if (xs.isString(protocol) && xs.Array.has(protocols, protocol)) {
                         this.__set('protocol', protocol);
                     }
                 }
             },
             host: {
-                set: function ( host ) {
+                set: function (host) {
                     var me = this;
-                    if ( !host ) {
+                    if (!host) {
                         me.__set('host', '');
                         return;
-                    } else if ( !xs.isString(host) ) {
+                    } else if (!xs.isString(host)) {
                         return;
                     }
                     me.__set('host', host);
                 }
             },
             port: {
-                set: function ( port ) {
-                    if ( !port ) {
+                set: function (port) {
+                    if (!port) {
                         this.__set('port', null);
-                    } else if ( xs.isNumeric(port) ) {
+                    } else if (xs.isNumeric(port)) {
                         this.__set('port', Number(port));
                     }
                 }
             },
             path: {
-                set: function ( path ) {
-                    if ( !path ) {
+                set: function (path) {
+                    if (!path) {
                         this.__set('path', '');
-                    } else if ( xs.isString(path) ) {
+                    } else if (xs.isString(path)) {
                         this.__set('path', path);
                     }
                 }
             },
             params: {
-                set: function ( params ) {
-                    if ( !params ) {
+                set: function (params) {
+                    if (!params) {
                         this.__set('params', {});
-                    } else if ( xs.isObject(params) ) {
+                    } else if (xs.isObject(params)) {
                         this.__set('params', params);
                     }
                 }
             },
             hash: {
-                set: function ( hash ) {
-                    if ( !hash ) {
+                set: function (hash) {
+                    if (!hash) {
                         this.__set('hash', '');
-                    } else if ( xs.isString(hash) ) {
+                    } else if (xs.isString(hash)) {
                         this.__set('hash', hash);
                     }
                 }
             }
         },
         methods: {
-            fromString: function ( raw ) {
+            fromString: function (raw) {
                 xs.isString(raw) || (raw = '');
 
                 var me = this, data = parse(raw);
@@ -191,7 +191,7 @@ xs.define('xs.uri.Url', function () {
             },
             toString: function () {
                 var me = this, str = '';
-                if ( me.host ) {
+                if (me.host) {
                     me.protocol && (str += me.protocol + '://');
                     str += me.host;
                     me.port && (str += ':' + me.port);

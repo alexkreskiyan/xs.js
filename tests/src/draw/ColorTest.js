@@ -1,6 +1,6 @@
-function speed ( fn, n ) {
+function speed(fn, n) {
     var start = Date.now();
-    for ( var i = 0; i < n; i++ ) {
+    for (var i = 0; i < n; i++) {
         fn();
     }
     var duration = Date.now() - start;
@@ -9,7 +9,7 @@ function speed ( fn, n ) {
     console.log('mark: about', n / duration, 'operation per ms');
 }
 'use strict';
-function xsDrawColorColors () {
+function xsDrawColorColors() {
     return [
         {
             name: 'white',
@@ -102,7 +102,7 @@ module('xs.draw.Color');
 test('conversion', function () {
     var tests = xsDrawColorColors();
     var Color = xs.draw.Color;
-    xs.Array.each(tests, function ( test ) {
+    xs.Array.each(tests, function (test) {
         var rgb = xs.Object.clone(test.rgb);
         var hsl = xs.Object.clone(test.hsl);
         strictEqual(JSON.stringify(xs.Object.pick(Color.toHsl(rgb), 'hue', 'saturation', 'lightness')), JSON.stringify(test.hsl), 'test convertion to HSL for ' + test.name);
@@ -303,7 +303,7 @@ test('fromCss factory', function () {
         }
     };
 
-    xs.Object.each(successTests, function ( test, css ) {
+    xs.Object.each(successTests, function (test, css) {
         strictEqual(JSON.stringify(xs.Object.pick(Color.fromCSS(css), test.fields)), JSON.stringify(test.value), 'test css factory for ' + css);
     });
 
@@ -326,7 +326,7 @@ test('fromCss factory', function () {
         'hsla(360,10%,10%,112.3)' //wrong alpha format
     ];
 
-    xs.Object.each(failedTests, function ( test ) {
+    xs.Object.each(failedTests, function (test) {
         strictEqual(Color.fromCSS(test), false, 'test css factory for ' + test);
     });
 });
@@ -522,7 +522,7 @@ test('factory', function () {
         }
     };
 
-    xs.Object.each(successTests, function ( test, css ) {
+    xs.Object.each(successTests, function (test, css) {
         strictEqual(JSON.stringify(xs.Object.pick(Color.from(css), test.fields)), JSON.stringify(test.value), 'test css factory for ' + css);
     });
 
@@ -545,7 +545,7 @@ test('factory', function () {
         'hsla(360,10%,10%,112.3)' //wrong alpha format
     ];
 
-    xs.Object.each(failedTests, function ( test ) {
+    xs.Object.each(failedTests, function (test) {
         strictEqual(Color.from(test), false, 'test css factory for ' + test);
     });
 });
@@ -757,7 +757,7 @@ test('toCss formatting', function () {
         }
     ];
 
-    xs.each(tests, function ( test ) {
+    xs.each(tests, function (test) {
         strictEqual(color.toCss(test.options), test.value, 'toCss format ok');
     });
 });

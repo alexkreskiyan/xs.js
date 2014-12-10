@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Sun Nov 02 2014 21:57:39 GMT+0300 (MSK)
 
-module.exports = function ( config ) {
+module.exports = function (config) {
     config.set({
 
         // start these browsers

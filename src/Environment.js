@@ -22,43 +22,43 @@
  * @type {Object}
  */
 'use strict';
-(function ( root, ns ) {
+(function (root, ns) {
 
     //framework shorthand
     var xs = root[ns];
 
     xs.env = new (function () {
         var me = this;
-        var parse = function ( userAgent, rules, params ) {
+        var parse = function (userAgent, rules, params) {
             var result = {};
-            xs.Array.find(rules, function ( rule ) {
+            xs.Array.find(rules, function (rule) {
                 var defaults = xs.Array.clone(rule[0]), negativeRegExps = rule[1], positiveRegExps = rule[2], data = [], match;
 
                 //check if userAgent doesn't match any one of negativeRegExps given in rule
-                match = xs.Array.some(negativeRegExps, function ( regExp ) {
+                match = xs.Array.some(negativeRegExps, function (regExp) {
                     //check if userAgent matches given regExp
                     return regExp.test(userAgent);
                 });
 
                 //return false if at least one of negativeRegExps matched
-                if ( match ) {
+                if (match) {
                     return false;
                 }
 
                 //check if userAgent matches all positiveRegExps given in rule
-                match = xs.Array.every(positiveRegExps, function ( regExp ) {
+                match = xs.Array.every(positiveRegExps, function (regExp) {
                     //check if userAgent matches given regExp
                     var result = regExp.exec(userAgent);
 
                     //if no match - return false, that will cause xs.Array.every loop break
-                    if ( !result ) {
+                    if (!result) {
                         return false;
                     }
 
                     //shift first element - that means whole match data to gain only selected ones
                     result.shift();
                     //if data not empty - union data with result, saving order
-                    if ( result.length ) {
+                    if (result.length) {
                         data = xs.Array.union(data, result);
                     }
                     //sign, that userAgent matched this regExp
@@ -66,16 +66,16 @@
                 });
 
                 //return false if no match established and search will be continues
-                if ( !match ) {
+                if (!match) {
                     return false;
                 }
 
                 //iterate result and fill it
-                xs.Array.each(params, function ( param ) {
+                xs.Array.each(params, function (param) {
                     //if default value given - use it, else - fetch value from data
-                    if ( xs.isString(defaults[0]) ) {
+                    if (xs.isString(defaults[0])) {
                         result[param] = defaults.shift();
-                    } else if ( xs.isArray(defaults[0]) ) {
+                    } else if (xs.isArray(defaults[0])) {
                         //defaults item contains parser rules for parsing obtained result
                         var raw = data.shift();
                         var parser = defaults.shift();
