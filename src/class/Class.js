@@ -169,7 +169,7 @@
                 dependencies.delete(Class);
 
                 //delete from queue
-                queue.delete(Class);
+                queue.delete(Class.label);
 
                 //call createdFn
                 createdFn(Class);
@@ -420,13 +420,13 @@
 
         /**
          * Cleans up dependencies and chains after class was processed
-         * 
+         *
          * @method delete
-         * 
+         *
          * @param {Object} processed processed class
          */
         me.delete = function (processed) {
-            xs.log('xs.Class::dependencies::resolve. Resolving dependencies, because', processed.label, 'has been processed');
+            xs.log('xs.Class::dependencies::delete. Resolving dependencies, because', processed.label, 'has been processed');
             //remove processed from chains
             chains.delete(processed);
 
@@ -441,7 +441,7 @@
                 return false;
             });
 
-            xs.log('xs.Class::dependencies::resolve. Resolved dependencies', resolved);
+            xs.log('xs.Class::dependencies::delete. Resolved dependencies', resolved);
             //process resolved dependencies to remove them from stack
             xs.each(resolved, function (dependency) {
                 xs.delete(storage, dependency);
@@ -486,11 +486,11 @@
 
         /**
          * Return deadLock string representation
-         * 
+         *
          * @method showDeadLock
-         * 
+         *
          * @param {Object[]} deadLock dead lock
-         * 
+         *
          * @return {String} deadLock string representation
          */
         var _showDeadLock = function (deadLock) {
@@ -534,7 +534,7 @@
              * Adds dependent class with it waiting list to manager
              *
              * @method add
-             * 
+             *
              * @param {Object} dependent dependent class
              * @param {Object[]} waiting waiting classes list
              */
@@ -593,7 +593,7 @@
              * Deletes processed class from all chains
              *
              * @method delete
-             * 
+             *
              * @param {Object} processed processed class
              */
             me.delete = function (processed) {
@@ -685,10 +685,10 @@
              * Creates chains with given dependent and waiting classes
              *
              * @method createChains
-             * 
+             *
              * @param {Object} dependent dependent class
              * @param {Object[]} waiting waiting classes
-             * 
+             *
              * @return {Array} created chains
              */
             var _createChains = function (dependent, waiting) {
@@ -745,7 +745,7 @@
              * Updates chain with each class in waiting
              *
              * @method updateChains
-             * 
+             *
              * @param {Object[]} chain
              * @param {Object[]} waiting
              */
@@ -810,11 +810,11 @@
 
             /**
              * Returns copies of given chains, merged with tail of each chain in storage, where last item of given chain exists
-             * 
+             *
              * @method getMergedChains
-             * 
+             *
              * @param {Object[]} chain raw merged chain
-             * 
+             *
              * @return {Array} merged chains array
              */
             var _getMergedChains = function (chain) {
@@ -896,9 +896,11 @@
                 throw new ClassError('incorrect onReady parameters');
             }
 
+            xs.log('xs.Class::queue::add. Waiting', waiting);
             //empty waiting means, that all classes must be loaded
             if (!waiting.length) {
 
+                xs.log('xs.Class::queue::add. Waiting is empty. Wait for all');
                 //add item to storage
                 storage.push({
                     waiting: null,
@@ -908,9 +910,11 @@
                 return;
             }
 
+            xs.log('xs.Class::queue::add. Waiting is not empty - filter');
             //filter waiting classes
             _filterWaiting(waiting);
 
+            xs.log('xs.Class::queue::add. Wait for filtered:', waiting);
             //add item to storage
             storage.push({
                 waiting: waiting,
@@ -918,8 +922,29 @@
             });
         };
 
-        me.delete = function (Class) {
+        me.delete = function (processed) {
+            xs.log('xs.Class::queue::delete. Resolve:', processed);
+            //get resolved queue lists
+            var resolved = xs.findAll(storage, function (item) {
+                //if waiting all - another variant //TODO workaround needed
+                if (item.waiting) {
+                    return
+                }
+                //item is resolved, if processed delete succeeds (processed was deleted) and waiting is empty
+                if (xs.delete(item.waiting, processed)) {
 
+                    return !item.waiting.length;
+                }
+
+                return false;
+            });
+
+            xs.log('xs.Class::queue::delete. Resolved dependencies', resolved);
+            //process resolved dependencies to remove them from stack
+            xs.each(resolved, function (item) {
+                xs.delete(storage, item);
+                item.handleReady();
+            });
         };
 
         /**
