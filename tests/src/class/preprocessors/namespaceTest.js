@@ -18,8 +18,10 @@ require([
     'xs.class.Class',
     'xs.class.ClassManager',
     'xs.class.preprocessors.namespace',
+    'xs.class.preprocessors.prepareExtends',
+    'xs.class.preprocessors.prepareMixins',
     'xs.class.preprocessors.imports',
-    'xs.class.preprocessors.extends',
+    'xs.class.preprocessors.processExtends',
     'xs.class.Base'
 ], function () {
 
