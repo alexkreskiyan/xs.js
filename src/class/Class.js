@@ -664,7 +664,7 @@
              * @method getChains
              *
              * @param {Object} dependent dependent class
-             * @param {Boolean} lastOnly whether to look for dependent class at the chain last entry only
+             * @param {Boolean} [lastOnly] whether to look for dependent class at the chain last entry only
              *
              * @return {Array} found working chains
              */
@@ -886,8 +886,6 @@
         var storage = [];
 
         me.add = function (waiting, handleReady) {
-            var me = this;
-
             //if waiting if function - it's handleReady and empty waiting
             if (xs.isFunction(waiting)) {
                 handleReady = waiting;
@@ -1173,7 +1171,7 @@
                 };
 
                 //if item.handler returns false, processing is async, stop processing, awaiting ready call
-                if (item.handler.apply(me, xs.union(handlerArgs, ready)) === false) {
+                if (item.handler.apply(me, handlerArgs.concat(ready)) === false) {
 
                     return;
                 }

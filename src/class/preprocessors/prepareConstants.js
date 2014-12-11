@@ -56,7 +56,7 @@
 
         //extend constants with own
         xs.extend(constants, own);
-    }, 'after', 'extends');
+    }, 'after', 'processExtends');
 
     /**
      * Internal error class

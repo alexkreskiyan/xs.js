@@ -108,11 +108,11 @@
                 //call ready to notify processor stack, that import succeed
                 ready();
             });
-        };
+        }
 
         //return false to sign async processor
         return false;
-    }, 'after', 'namespace');
+    }, 'after', 'prepareMixins');
 
     /**
      * Core imports function. Saves imported classes by aliases

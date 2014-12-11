@@ -14,97 +14,32 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor extends
-     * Is used to extend child class from parent class
+     * Preprocessor prepareExtends
+     * Is used to get extended class name and add it to imports
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('extends', function () {
+    xs.Class.preprocessors.add('prepareExtends', function (Class, descriptor) {
 
-        return true;
+        //is executed only if imports is given correctly
+        return xs.isArray(descriptor.imports);
     }, function (Class, descriptor) {
         var extended = descriptor.extends;
 
-        xs.log('xs.class.preprocessor.extends[', Class.label, ']');
-        xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extended:', extended);
-        //if no parent given - extend from xs.Base
-        if (!xs.isDefined(extended)) {
-            xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extending xs.Base');
-            _extend(Class, xs.Base);
+        xs.log('xs.class.preprocessor.prepareExtends[', Class.label, ']. Extended:', extended);
+        //if extended is non-empty string - resolve parent name
+        if (xs.isString(extended) && extended) {
+            descriptor.imports.push(extended);
 
-            return;
-
-            //if extended is non-empty string - resolve parent name
-        } else if (xs.isString(extended) && extended) {
-
-            //resolve parent name
-            extended = Class.descriptor.resolveName(extended);
-        } else {
+            //if no parent given - extend from xs.Base
+        } else if (xs.isDefined(extended)) {
 
             //if extended is not string (empty string) - throw respective error
-            throw new ExtendsError('[' + Class.label + ']: incorrect extended name');
+            throw new PrepareExtendsError('[' + Class.label + ']: incorrect extended name');
         }
-
-        //get parent reference
-        var Parent = xs.ClassManager.get(extended);
-
-        //if parent is not defined or is processing - throw errors
-        if (!Parent) {
-            throw new ExtendsError('[' + Class.label + ']: parent class "' + extended + '" is not defined');
-        } else if (Parent.isProcessing) {
-            throw new ExtendsError('[' + Class.label + ']: parent class "' + Parent.label + '" is not processed yet. Move it to imports section, please');
-        }
-
-        xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extending', Parent.label);
-        //apply extends
-        _applyExtends(Class, Parent);
-    }, 'after', 'imports');
-
-    /**
-     * Core extends function. Saves imported classes by aliases
-     *
-     * @ignore
-     *
-     * @method applyImports
-     *
-     * @param {Function} target target class
-     * @param {Function} parent extended class
-     */
-    var _applyExtends = function (target, parent) {
-        //extend
-        _extend(target, parent);
-
-        //save extends to descriptor
-        target.descriptor.extends = parent.label;
-    };
-
-    /**
-     * Core extend function
-     *
-     * @ignore
-     *
-     * @param {Function} child child class
-     * @param {Function} parent parent class
-     */
-    var _extend = function (child, parent) {
-        //create fake constructor
-        var fn = function () {
-        };
-
-        //assign prototype for fake constructor
-        fn.prototype = parent.prototype;
-
-        //assign new fake constructor's instance as child prototype, establishing correct prototype chain
-        child.prototype = new fn();
-
-        //assign correct constructor instead fake constructor
-        child.prototype.constructor = child;
-
-        //save reference to parent
-        xs.constant(child, 'parent', parent);
-    };
+    }, 'after', 'namespace');
 
     /**
      * Internal error class
@@ -113,11 +48,11 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class ExtendsError
+     * @class PrepareExtendsError
      */
-    function ExtendsError(message) {
-        this.message = 'xs.class.preprocessors.extends :: ' + message;
+    function PrepareExtendsError(message) {
+        this.message = 'xs.class.preprocessors.prepareExtends :: ' + message;
     }
 
-    ExtendsError.prototype = new Error();
+    PrepareExtendsError.prototype = new Error();
 })(window, 'xs');

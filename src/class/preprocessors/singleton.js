@@ -27,5 +27,5 @@
     }, function (Class, descriptor) {
         xs.log('xs.class.preprocessor.singleton[', Class.label, ']');
         Class.descriptor.singleton = !!descriptor.singleton;
-    }, 'after', 'mixins');
+    }, 'after', 'processMixins');
 })(window, 'xs');

@@ -14,50 +14,32 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor mixins
+     * Preprocessor processMixins
      * Is used to process class mixins
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('mixins', function () {
+    xs.Class.preprocessors.add('processMixins', function (Class, descriptor) {
 
-        return true;
-    }, function (Class, descriptor) {
+        return xs.size(descriptor.mixins) > 0;
+    }, function (Class) {
 
         xs.log('xs.class.preprocessor.mixins[', Class.label, ']');
-        //if mixins are specified not as object - throw respective error
-        if (!xs.isObject(descriptor.mixins)) {
-            throw new MixinError('[' + Class.label + ']: incorrect mixins list');
-        }
-
 
         //init
-        //init mixins list
-        var mixins = Class.descriptor.mixins = {};
+        //get mixins list
+        var mixins = Class.descriptor.mixins;
 
         //extend mixins with inherited mixins
         xs.extend(mixins, Class.parent.descriptor.mixins);
-
-        //extend mixins with own mixins
-        xs.extend(mixins, descriptor.mixins);
-
 
         //process mixins list
         xs.log('xs.class.preprocessor.mixins[', Class.label, ']. Mixins:', mixins);
         //namespace shortcut
         var resolveName = Class.descriptor.resolveName;
         xs.each(mixins, function (name, alias, list) {
-            //verify mixed class name
-            if (!xs.isString(name) || !name) {
-                throw new MixinError('[' + Class.label + ']: incorrect mixed class name');
-            }
-
-            //verify mixed class alias
-            if (!alias) {
-                throw new MixinError('[' + Class.label + ']: incorrect mixed class alias');
-            }
 
             //resolve name with namespace and update list
             name = list[alias] = resolveName(name);

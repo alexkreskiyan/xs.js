@@ -14,21 +14,20 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor extends
+     * Preprocessor processExtends
      * Is used to extend child class from parent class
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('extends', function () {
+    xs.Class.preprocessors.add('processExtends', function () {
 
         return true;
     }, function (Class, descriptor) {
         var extended = descriptor.extends;
 
-        xs.log('xs.class.preprocessor.extends[', Class.label, ']');
-        xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extended:', extended);
+        xs.log('xs.class.preprocessor.processExtends[', Class.label, ']. Extended:', extended);
         //if no parent given - extend from xs.Base
         if (!xs.isDefined(extended)) {
             xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extending xs.Base');
@@ -36,15 +35,11 @@
 
             return;
 
-            //if extended is non-empty string - resolve parent name
-        } else if (xs.isString(extended) && extended) {
+            //else - extended is specified
+        } else {
 
             //resolve parent name
             extended = Class.descriptor.resolveName(extended);
-        } else {
-
-            //if extended is not string (empty string) - throw respective error
-            throw new ExtendsError('[' + Class.label + ']: incorrect extended name');
         }
 
         //get parent reference
@@ -52,9 +47,9 @@
 
         //if parent is not defined or is processing - throw errors
         if (!Parent) {
-            throw new ExtendsError('[' + Class.label + ']: parent class "' + extended + '" is not defined');
+            throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + extended + '" is not defined. Move it to imports section, please');
         } else if (Parent.isProcessing) {
-            throw new ExtendsError('[' + Class.label + ']: parent class "' + Parent.label + '" is not processed yet. Move it to imports section, please');
+            throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + Parent.label + '" is not processed yet. Move it to imports section, please');
         }
 
         xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extending', Parent.label);
@@ -113,11 +108,11 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class ExtendsError
+     * @class ProcessExtendsError
      */
-    function ExtendsError(message) {
-        this.message = 'xs.class.preprocessors.extends :: ' + message;
+    function ProcessExtendsError(message) {
+        this.message = 'xs.class.preprocessors.processExtends :: ' + message;
     }
 
-    ExtendsError.prototype = new Error();
+    ProcessExtendsError.prototype = new Error();
 })(window, 'xs');
