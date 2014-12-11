@@ -26,9 +26,10 @@
         return true;
     }, function (Class, descriptor) {
 
+        xs.log('xs.class.preprocessor.prepareMethods[', Class.label, ']');
         //if methods are specified not as object - throw respective error
         if (!xs.isObject(descriptor.properties)) {
-            throw new MethodError('incorrect methods list');
+            throw new MethodError('[', Class.label, ']: incorrect methods list');
         }
 
         //init methods reference
@@ -50,7 +51,7 @@
         //verify and prepare them
         xs.each(own, function (value, name, list) {
             if (!xs.isString(name) || !name) {
-                throw new MethodError('incorrect method name');
+                throw new MethodError('[', Class.label, ']: incorrect method name');
             }
 
             list[name] = xs.Attribute.method.prepare(name, value);

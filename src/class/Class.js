@@ -164,6 +164,7 @@
                     //remove isProcessed mark
                     delete Class.isProcessed;
 
+                    dependencies.resolve(Class);
                     //call createdFn
                     createdFn(Class);
 
@@ -386,6 +387,14 @@
             //filter waiting classes to exclude processed ones
             _filterWaiting(waiting);
 
+            //if empty waiting list - apply handleReady immediately
+            if (!waiting.length) {
+                xs.log('xs.Class::dependencies::add. Filtered list is empty. Handling');
+                handleReady();
+
+                return;
+            }
+
             //add dependency to chains
             chains.add(dependent, waiting);
 
@@ -481,7 +490,7 @@
          *
          * @class dependencies.chains
          */
-        var chains = xs.Class.dependencies.chains = new (function () {
+        var chains = me.chains = new (function () {
             var me = this;
 
             /**

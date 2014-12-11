@@ -97,7 +97,7 @@
 
             //init loaded classes list
             var loadList = _getLoadList(xs.isArray(name) ? name : [name]);
-            xs.log('xs.Loader::require. LoadList:', loadList);
+            xs.log('xs.Loader::require. LoadList: loaded:', loadList.loaded, ', failed:', loadList.failed, ', unresolved:', loadList.unresolved);
 
             //if failed section is not empty - handle fail
             if (xs.size(loadList.failed)) {
@@ -204,7 +204,7 @@
                 }
             });
 
-            xs.log('xs.Loader::getLoadList. Result loadList:', loadList);
+            xs.log('xs.Loader::getLoadList. Result loadList: loaded:', loadList.loaded, ', failed:', loadList.failed, ', unresolved:', loadList.unresolved);
 
             //return loadList
             return loadList;
@@ -514,7 +514,7 @@
              * @param {Function} [handleFail] handler for one of files failed.
              */
             me.add = function (list, handleLoad, handleFail) {
-                xs.log('xs.Loader::resolver::add. Add list ', list);
+                xs.log('xs.Loader::resolver::add. Add list loaded:', list.loaded, ', failed:', list.failed, ', unresolved:', list.unresolved);
                 awaiting.push({
                     list: list,
                     pending: xs.values(list.unresolved),
@@ -552,7 +552,10 @@
                     return false;
                 });
 
-                xs.log('xs.Loader::resolver::resolve. Handling items', resolved);
+                xs.log('xs.Loader::resolver::resolve. Handling items:');
+                xs.each(resolved, function (item) {
+                    xs.log('xs.Loader::resolver::resolve. loaded:', item.list.loaded, ', failed:', item.list.failed, ', unresolved:', item.list.unresolved);
+                });
 
                 //handle each resolved item
                 xs.each(resolved, function (item) {
@@ -578,6 +581,9 @@
                 });
 
                 xs.log('xs.Loader::resolver::reject. Handling items', rejected);
+                xs.each(rejected, function (item) {
+                    xs.log('xs.Loader::resolver::reject. Rejected: loaded:', item.list.loaded, ', failed:', item.list.failed, ', unresolved:', item.list.unresolved);
+                });
 
                 //handle each rejected item
                 xs.each(rejected, function (item) {

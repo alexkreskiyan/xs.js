@@ -22,9 +22,11 @@
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
     xs.Class.preprocessors.add('defineConstants', function () {
+
         return true;
     }, function (Class) {
 
+        xs.log('xs.class.preprocessor.defineConstants[', Class.label, ']');
         //define constants
         xs.each(Class.descriptor.constants, function (value, name) {
 

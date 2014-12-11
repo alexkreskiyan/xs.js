@@ -26,6 +26,7 @@
         return true;
     }, function (Class, descriptor) {
 
+        xs.log('xs.class.preprocessor.namespace[', Class.label, ']');
         //save namespace
         Class.descriptor.namespace = {
             path: (xs.isString(descriptor.namespace) && descriptor.namespace.length) ? descriptor.namespace : undefined,

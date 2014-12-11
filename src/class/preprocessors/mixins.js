@@ -26,10 +26,12 @@
         return true;
     }, function (Class, descriptor, ns, dependencies, ready) {
 
+        xs.log('xs.class.preprocessor.mixins[', Class.label, ']');
         //if mixins are specified not as object - throw respective error
         if (!xs.isObject(descriptor.mixins)) {
-            throw new MixinError('incorrect mixins list');
+            throw new MixinError('[', Class.label, ']: incorrect mixins list');
         }
+
 
         //init
         //init mixins list
@@ -46,51 +48,35 @@
         //init loads list
         var loads = [];
 
-        xs.log('xs.class.preprocessor.mixins. Mixins:', mixins);
+        xs.log('xs.class.preprocessor.mixins[', Class.label, ']. Mixins:', mixins);
         xs.each(mixins, function (name, alias, list) {
             //verify mixed class name
             if (!xs.isString(name) || !name) {
-                throw new ConstError('incorrect mixed class name');
+                throw new ConstError('[', Class.label, ']: incorrect mixed class name');
             }
 
             //verify mixed class alias
             if (!alias) {
-                throw new ConstError('incorrect mixed class alias');
+                throw new ConstError('[', Class.label, ']: incorrect mixed class alias');
             }
 
             //resolve name with namespace and update list
             name = list[alias] = Class.descriptor.namespace.resolve(name);
 
-            xs.log('xs.class.preprocessor.mixins. Mixing in:', name, 'as', alias);
-            //if mixed class is already loaded - go to next mixin
-            if (xs.ClassManager.has(name)) {
-                xs.log('xs.class.preprocessor.mixins. Mixed', name, 'already loaded');
-
-                return;
-            }
-
-            xs.log('xs.class.preprocessor.mixins. Mixed', name, 'not loaded yet, loading');
+            xs.log('xs.class.preprocessor.mixins[', Class.label, ']. Mixing in:', name, 'as', alias);
             //add class to load list
             loads.push(name);
         });
 
-        //if no loads required, apply mixes and return
-        if (!xs.size(loads)) {
-            //apply mixins to Class.descriptor
-            _applyMixins(Class, mixins);
-
-            return;
-        }
-
-        xs.log('xs.class.preprocessor.mixins. Loading mixins', mixins);
+        xs.log('xs.class.preprocessor.mixins[', Class.label, ']. Loading mixins', mixins);
         //require async
         xs.require(loads, function (classes) {
 
-            xs.log('xs.class.preprocessor.extends. Mixins', loads, 'loaded, applying dependency');
+            xs.log('xs.class.preprocessor.extends[', Class.label, ']. Mixins', loads, 'loaded, applying dependency');
             //create new dependency
             dependencies.add(Class, xs.values(classes), function () {
 
-                xs.log('xs.class.preprocessor.extends. Mixins', loads, 'processed, applying mixins');
+                xs.log('xs.class.preprocessor.extends[', Class.label, ']. Mixins', loads, 'processed, applying mixins');
                 //apply mixins to Class.descriptor
                 _applyMixins(Class, mixins);
 

@@ -26,6 +26,7 @@
         return true;
     }, function (Class) {
 
+        xs.log('xs.class.preprocessor.defineProperties[', Class.label, ']');
         //apply
         var prototype = Class.prototype;
 

@@ -26,9 +26,10 @@
         return true;
     }, function (Class, descriptor) {
 
+        xs.log('xs.class.preprocessor.prepareProperties[', Class.label, ']');
         //if properties are specified not as object - throw respective error
         if (!xs.isObject(descriptor.properties)) {
-            throw new PropertyError('incorrect properties list');
+            throw new PropertyError('[', Class.label, ']: incorrect properties list');
         }
 
         //init properties reference
@@ -51,7 +52,7 @@
         //verify and prepare them
         xs.each(own, function (value, name, list) {
             if (!xs.isString(name) || !name) {
-                throw new PropertyError('incorrect property name');
+                throw new PropertyError('[', Class.label, ']: incorrect property name');
             }
 
             list[name] = xs.Attribute.property.prepare(name, value);

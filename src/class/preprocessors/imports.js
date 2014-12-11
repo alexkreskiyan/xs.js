@@ -26,59 +26,30 @@
         return xs.isObject(descriptor.imports);
     }, function (Class, descriptor, ns, dependencies, ready) {
 
+        xs.log('xs.class.preprocessor.imports[', Class.label, ']');
         //if imports are specified not as object - throw respective error
         if (!xs.isObject(descriptor.imports)) {
-            throw new ImportsError('incorrect imports list');
+            throw new ImportsError('[', Class.label, ']: incorrect imports list');
         }
+
 
         //init
         //get imports list
-        var imports = descriptor.imports;
-
-        //init loads list
-        var loads = [];
-
-        //init unprocessed list
-        var unprocessed = [];
-
-
-        //check imports to find not loaded ones
-        xs.log('xs.class.preprocessor.imports. Imports:', imports);
-        xs.each(imports, function (alias, name) {
-
-            //resolve name with namespace
-            name = Class.descriptor.namespace.resolve(name);
-
-            xs.log('xs.class.preprocessor.imports. Importing:', name, 'as', alias);
-            //if imported class is already loaded - continue to next item
-            if (xs.ClassManager.has(name)) {
-
-                return;
-            }
-
-            xs.log('xs.class.preprocessor.imports. Imported', name, 'not loaded yet, loading');
-            //add class to load list
-            loads.push(name);
+        var imports = {};
+        xs.each(descriptor.imports, function (alias, name) {
+            imports[Class.descriptor.namespace.resolve(name)] = alias;
         });
 
-        //if no loads required - apply imports immediately and return
-        if (!xs.size(loads)) {
-
-            //apply imports
-            _applyImports(Class, imports);
-
-            return;
-        }
-
-        xs.log('xs.class.preprocessor.imports. Loading', loads);
+        var loads = xs.keys(imports);
+        xs.log('xs.class.preprocessor.imports[', Class.label, ']. Loading', loads);
         //require async
         xs.require(loads, function (classes) {
 
-            xs.log('xs.class.preprocessor.imports. Imports', loads, 'loaded, applying dependency');
+            xs.log('xs.class.preprocessor.imports[', Class.label, ']. Imports', loads, 'loaded, applying dependency');
             //create new dependency
             dependencies.add(Class, xs.values(classes), function () {
 
-                xs.log('xs.class.preprocessor.imports. Imports', loads, 'processed, applying imports');
+                xs.log('xs.class.preprocessor.imports[', Class.label, ']. Imports', loads, 'processed, applying imports');
                 //apply imports
                 _applyImports(Class, imports);
 

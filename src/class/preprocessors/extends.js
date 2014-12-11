@@ -27,41 +27,34 @@
     }, function (Class, descriptor, ns, dependencies, ready) {
         var extended = descriptor.extends;
 
-        xs.log('xs.class.preprocessor.extends. Extended:', extended);
+        xs.log('xs.class.preprocessor.extends[', Class.label, ']');
+        xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extended:', extended);
         //if no parent given - extend from xs.Base
         if (!xs.isDefined(extended)) {
-            xs.log('xs.class.preprocessor.extends. Extending xs.Base');
+            xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extending xs.Base');
             _extend(Class, xs.Base);
 
             return;
             //if extended is not string (empty string) - throw respective error
         } else if (!xs.isString(extended) || !extended) {
-            throw new ExtendsError('incorrect extended name');
+            throw new ExtendsError('[' + Class.label + ']: incorrect extended name');
         }
 
         extended = Class.descriptor.namespace.resolve(extended);
 
-        xs.log('xs.class.preprocessor.extends. Extending', extended);
-        //extend from parent, if exists
-        if (xs.ClassManager.has(extended)) {
-            xs.log('xs.class.preprocessor.extends. Parent', extended, 'was in class manager, extending');
-            //apply extends
-            _applyExtends(Class, extended);
-
-            return;
-        }
-
-        xs.log('xs.class.preprocessor.extends. Loading parent class', extended);
+        xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extending', extended);
+        xs.log('xs.class.preprocessor.extends[', Class.label, ']. Loading parent class', extended);
         //require async
-        xs.require(extended, function () {
+        xs.require(extended, function (classes) {
 
-            xs.log('xs.class.preprocessor.extends. Parent', extended, 'loaded, applying dependency');
+            var Parent = xs.ClassManager.get(extended);
+            xs.log('xs.class.preprocessor.extends[', Class.label, ']. Parent', Parent.label, 'loaded, applying dependency');
             //create new dependency
-            dependencies.add(Class, [extended], function () {
+            dependencies.add(Class, Parent, function () {
 
-                xs.log('xs.class.preprocessor.extends. Parent', extended, 'processed, extending');
+                xs.log('xs.class.preprocessor.extends[', Class.label, ']. Parent', Parent.label, 'processed, extending');
                 //apply extends
-                _applyExtends(Class, extended);
+                _applyExtends(Class, Parent);
 
                 //call ready to notify processor stack, that import succeed
                 ready();
@@ -80,14 +73,14 @@
      * @method applyImports
      *
      * @param {Object} target target class
-     * @param {Object} extended extended class name
+     * @param {Object} parent extended class
      */
-    var _applyExtends = function (target, extended) {
+    var _applyExtends = function (target, parent) {
         //extend
-        _extend(target, xs.ClassManager.get(extended));
+        _extend(target, parent);
 
         //save extends to descriptor
-        target.descriptor.extends = extended;
+        target.descriptor.extends = parent.label;
     };
 
     /**

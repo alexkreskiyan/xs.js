@@ -26,6 +26,7 @@
         return true;
     }, function (Class) {
 
+        xs.log('xs.class.preprocessor.defineStaticProperties[', Class.label, ']');
         //create privates storage in class
         Class.privates = {};
 

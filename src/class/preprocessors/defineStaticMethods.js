@@ -26,6 +26,7 @@
         return true;
     }, function (Class) {
 
+        xs.log('xs.class.preprocessor.defineStaticMethods[', Class.label, ']');
         //apply
         xs.each(Class.descriptor.static.methods, function (descriptor, name) {
 
