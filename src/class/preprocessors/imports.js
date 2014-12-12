@@ -82,7 +82,7 @@
         //load imported classes and add dependency on them
         xs.log('xs.class.preprocessor.imports[', Class.label, ']. Loading', loads);
         //require async
-        xs.require(loads, function (loaded) {
+        xs.require(loads, function () {
 
             var waiting = xs.map(requires, function (name) {
                 return xs.ClassManager.get(name);

@@ -38,7 +38,7 @@
      */
     xs.Class = new (function (dependencies) {
         var me = this;
-
+        me.dependencies = dependencies; //TODO - remove
         /**
          * Stack of processors, processing class before it's considered to be created (before createdFn is called)
          *
@@ -359,7 +359,7 @@
         /**
          * Internal dependencies storage
          */
-        var dependencies = [];
+        var storage = me.storage = [];
 
         /**
          * Adds dependency from dependent Class to array of processed Classes.
@@ -407,7 +407,7 @@
 
             xs.log('xs.Class::dependencies::add. No lock found. Adding dependency');
             //save dependency
-            dependencies.push({
+            storage.push({
                 waiting: waiting,
                 handleReady: handleReady
             });
@@ -415,13 +415,18 @@
 
         /**
          * Cleans up dependencies and chains after class was processed
-         *
+         * 
+         * @method resolve
+         * 
          * @param {Object} processed processed class
          */
         me.resolve = function (processed) {
             xs.log('xs.Class::dependencies::resolve. Resolving dependencies, because', processed.label, 'has been processed');
+            //remove processed from chains
+            chains.delete(processed);
+
             //get resolved dependencies list
-            var resolved = xs.findAll(dependencies, function (dependency) {
+            var resolved = xs.findAll(storage, function (dependency) {
                 //dependency is resolved, if processed delete succeeds (processed was deleted) and waiting is empty
                 if (xs.delete(dependency.waiting, processed)) {
 
@@ -434,7 +439,7 @@
             xs.log('xs.Class::dependencies::resolve. Resolved dependencies', resolved);
             //process resolved dependencies to remove them from stack
             xs.each(resolved, function (dependency) {
-                xs.delete(dependencies, dependency);
+                xs.delete(storage, dependency);
                 dependency.handleReady();
             });
         };
@@ -474,6 +479,15 @@
             }));
         };
 
+        /**
+         * Return deadLock string representation
+         * 
+         * @method showDeadLock
+         * 
+         * @param {Object[]} deadLock dead lock
+         * 
+         * @return {String} deadLock string representation
+         */
         var _showDeadLock = function (deadLock) {
             //self lock
             if (deadLock.length == 1) {
@@ -509,11 +523,13 @@
              *
              * @type {Array}
              */
-            var chains = me.chains = [];
+            var storage = me.storage = [];
 
             /**
              * Adds dependent class with it waiting list to manager
              *
+             * @method add
+             * 
              * @param {Object} dependent dependent class
              * @param {Object[]} waiting waiting classes list
              */
@@ -523,30 +539,45 @@
                     return Class.label;
                 }));
                 //get existing chains, where dependent class was in waiting list
-                var workChains = _getChains(dependent, true);
+                var chains = _getChains(dependent, true);
 
                 xs.log('xs.Class::dependencies::chains::add. Work chains:');
-                xs.each(workChains, function (chain) {
+                xs.each(chains, function (chain) {
                     xs.log('xs.Class::dependencies::chains::add.', xs.map(chain, function (Class) {
                         return Class.label;
                     }));
                 });
 
                 //if working chains found - split each to include waiting
-                if (workChains.length) {
+                if (chains.length) {
                     xs.log('xs.Class::dependencies::chains::add. Work chains exist. Updating...');
-                    xs.each(workChains, function (chain) {
-                        _updateChains(chain, waiting);
+                    //init updated chains list
+                    var updated = [];
+
+                    //get updated chains
+                    xs.each(chains, function (chain) {
+                        updated = updated.concat(_updateChains(chain, waiting));
+                    });
+
+                    //add updated chains to storage
+                    xs.each(updated, function (chain) {
+                        storage.push(chain);
                     });
 
                     //else - create chain for each waiting
                 } else {
                     xs.log('xs.Class::dependencies::chains::add. No work chains found. Creating...');
-                    _createChains(dependent, waiting);
+                    //get created chains
+                    var created = _createChains(dependent, waiting);
+
+                    //add created chains to storage
+                    xs.each(created, function (chain) {
+                        storage.push(chain);
+                    });
                 }
 
                 xs.log('xs.Class::dependencies::chains::add. Chains after add:');
-                xs.each(chains, function (chain) {
+                xs.each(storage, function (chain) {
                     xs.log('xs.Class::dependencies::chains::add.', xs.map(chain, function (Class) {
                         return Class.label;
                     }));
@@ -556,6 +587,8 @@
             /**
              * Deletes processed class from all chains
              *
+             * @method delete
+             * 
              * @param {Object} processed processed class
              */
             me.delete = function (processed) {
@@ -563,27 +596,27 @@
                 xs.log('xs.Class::dependencies::chains::delete.', processed.label, 'resolved');
 
                 //get work chains, that contain processed class
-                var workChains = _getChains(processed);
+                var chains = _getChains(processed);
                 xs.log('xs.Class::dependencies::chains::delete. Work chains:');
-                xs.each(workChains, function (chain) {
+                xs.each(chains, function (chain) {
                     xs.log('xs.Class::dependencies::chains::delete.', xs.map(chain, function (Class) {
                         return Class.label;
                     }));
                 });
 
-                //remove processed class from each workChain
-                xs.each(workChains, function (chain) {
+                //remove processed class from each work chain
+                xs.each(chains, function (chain) {
                     //if chain is more than 2 items long - delete item from it
                     if (chain.length > 2) {
                         xs.delete(chain, processed);
 
-                        //else - delete chain from chains
+                        //else - delete chain from storage
                     } else {
-                        xs.delete(chains, chain);
+                        xs.delete(storage, chain);
                     }
                 });
                 xs.log('xs.Class::dependencies::chains::delete. Chains left:');
-                xs.each(chains, function (chain) {
+                xs.each(storage, function (chain) {
                     xs.log('xs.Class::dependencies::chains::delete.', xs.map(chain, function (Class) {
                         return Class.label;
                     }));
@@ -593,11 +626,11 @@
             /**
              * Tries to find dead locks, that may occur if added dependency from dependent class to waiting one
              *
-             * @method add
+             * @method getLock
              *
-             * @param {String} dependent dependent class name
+             * @param {Object} dependent dependent class
              *
-             * @return {String} first found dead lock
+             * @return {Object[]} first found dead lock
              */
             me.getLock = function (dependent) {
                 xs.log('xs.Class::dependencies::chains::getLock. Get lock for', dependent.label);
@@ -605,7 +638,7 @@
                 var first = 0, last = 0;
 
                 //try to find locked chain
-                var lockedChain = xs.find(chains, function (chain) {
+                var lockedChain = xs.find(storage, function (chain) {
 
                     //first occurrence key
                     first = xs.keyOf(chain, dependent);
@@ -628,17 +661,17 @@
              * @param {Object} dependent dependent class
              * @param {Boolean} lastOnly whether to look for dependent class at the chain last entry only
              *
-             * @returns {Array} found working chains
+             * @return {Array} found working chains
              */
             var _getChains = function (dependent, lastOnly) {
                 if (lastOnly) {
 
-                    return xs.findAll(chains, function (chain) {
+                    return xs.findAll(storage, function (chain) {
                         return xs.last(chain) === dependent;
                     });
                 }
 
-                return xs.findAll(chains, function (chain) {
+                return xs.findAll(storage, function (chain) {
                     return xs.has(chain, dependent);
                 });
             };
@@ -646,27 +679,77 @@
             /**
              * Creates chains with given dependent and waiting classes
              *
+             * @method createChains
+             * 
              * @param {Object} dependent dependent class
              * @param {Object[]} waiting waiting classes
+             * 
+             * @return {Array} created chains
              */
             var _createChains = function (dependent, waiting) {
+                //init created chains list
+                var created = [];
+
+                //create chain for each waiting
                 xs.each(waiting, function (Class) {
-                    chains.push([
+                    //init empty chain
+                    var chain = [
                         dependent,
                         Class
-                    ]);
+                    ];
+
+                    xs.log('xs.Class::dependencies::chains::createChains. Try to find merges for:');
+                    xs.log('xs.Class::dependencies::chains::createChains.', [dependent.label], '->', Class.label);
+                    //get merged chains
+                    var merged = _getMergedChains(chain);
+
+                    //if any merged chains - add them to storage
+                    if (merged.length) {
+                        xs.log('xs.Class::dependencies::chains::createChains. Adding merged:');
+                        xs.each(merged, function (chain) {
+                            xs.log('xs.Class::dependencies::chains::createChains.', xs.map(chain, function (Class) {
+                                return Class.label;
+                            }));
+                        });
+                        xs.each(merged, function (chain) {
+                            created.push(chain);
+                        });
+
+                        //else - add chain
+                    } else {
+                        xs.log('xs.Class::dependencies::chains::createChains. Adding single:');
+                        xs.log('xs.Class::dependencies::chains::createChains.', xs.map(chain, function (Class) {
+                            return Class.label;
+                        }));
+                        created.push(chain);
+                    }
                 });
+
+                xs.log('xs.Class::dependencies::chains::createChains. ', dependent.label, ' created chains:');
+                xs.each(created, function (chain) {
+                    xs.log('xs.Class::dependencies::chains::createChains.', xs.map(chain, function (Class) {
+                        return Class.label;
+                    }));
+                });
+
+                //return created chains array
+                return created;
             };
 
             /**
              * Updates chain with each class in waiting
              *
+             * @method updateChains
+             * 
              * @param {Object[]} chain
              * @param {Object[]} waiting
              */
             var _updateChains = function (chain, waiting) {
-                //remove chain from chains
-                xs.delete(chains, chain);
+                //init updated chains list
+                var updated = [];
+
+                //remove chain from storage
+                xs.delete(storage, chain);
 
                 //for each waiting class add it chain copy
                 xs.each(waiting, function (Class) {
@@ -677,9 +760,104 @@
                     //push Class to chain
                     copy.push(Class);
 
-                    //add copy to chains
-                    chains.push(copy);
+                    xs.log('xs.Class::dependencies::chains::updateChains. Try to find merges for:');
+                    xs.log('xs.Class::dependencies::chains::updateChains.', xs.map(chain, function (Class) {
+                        return Class.label;
+                    }), '->', Class.label);
+                    //get merged chains
+                    var merged = _getMergedChains(copy);
+
+                    //if any merged chains - add them to storage
+                    if (merged.length) {
+                        xs.log('xs.Class::dependencies::chains::updateChains. Adding merged:');
+                        xs.each(merged, function (chain) {
+                            xs.log('xs.Class::dependencies::chains::updateChains.', xs.map(chain, function (Class) {
+                                return Class.label;
+                            }));
+                        });
+                        xs.each(merged, function (chain) {
+                            updated.push(chain);
+                        });
+
+                        //else - add chain
+                    } else {
+                        xs.log('xs.Class::dependencies::chains::updateChains. Adding single:');
+                        xs.log('xs.Class::dependencies::chains::updateChains.', xs.map(copy, function (Class) {
+                            return Class.label;
+                        }));
+                        updated.push(copy);
+                    }
                 });
+
+                //get junction
+                var junction = xs.last(chain);
+
+                xs.log('xs.Class::dependencies::chains::updateChains. ', junction.label, ' updated chains:');
+                xs.each(updated, function (chain) {
+                    xs.log('xs.Class::dependencies::chains::updateChains.', xs.map(chain, function (Class) {
+                        return Class.label;
+                    }));
+                });
+
+                //return updated chains array
+                return updated;
+            };
+
+            /**
+             * Returns copies of given chains, merged with tail of each chain in storage, where last item of given chain exists
+             * 
+             * @method getMergedChains
+             * 
+             * @param {Object[]} chain raw merged chain
+             * 
+             * @return {Array} merged chains array
+             */
+            var _getMergedChains = function (chain) {
+
+                xs.log('xs.Class::dependencies::chains::getMergedChains. For ', xs.map(chain, function (Class) {
+                    return Class.label;
+                }));
+                //init merged array
+                var merged = [];
+
+                //get junction
+                var junction = xs.last(chain);
+                xs.log('xs.Class::dependencies::chains::getMergedChains. Junction: ', junction.label);
+
+                //get work chains for junction
+                var chains = _getChains(junction);
+
+                //merge if any chains found
+                if (chains.length) {
+                    xs.log('xs.Class::dependencies::chains::getMergedChains. Merging...');
+                    //fill merged list
+                    xs.each(chains, function (source) {
+                        //get sliced part
+                        var slice = source.slice(source.indexOf(junction) + 1);
+
+                        //get merge
+                        var merge = chain.concat(slice);
+
+                        xs.log('xs.Class::dependencies::chains::getMergedChains. Source:', xs.map(source, function (Class) {
+                            return Class.label;
+                        }));
+
+                        xs.log('xs.Class::dependencies::chains::getMergedChains. Slice:', xs.map(slice, function (Class) {
+                            return Class.label;
+                        }));
+
+                        xs.log('xs.Class::dependencies::chains::getMergedChains. Merge:', xs.map(merge, function (Class) {
+                            return Class.label;
+                        }));
+
+                        //push merged to list
+                        merged.push(merge);
+                    });
+                } else {
+                    xs.log('xs.Class::dependencies::chains::getMergedChains. Nothing to merge with');
+                }
+
+                return merged;
             };
         });
     }));
