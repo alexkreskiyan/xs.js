@@ -86,15 +86,15 @@
         var postprocessors = me.postprocessors = new Stack();
 
         /**
-         * Currently processed classes' list
-         * 
+         * Currently processing classes' list
+         *
          * @ignore
-         * 
-         * @property processed
-         * 
+         *
+         * @property processing
+         *
          * @type {String[]}
          */
-        var processed = [];
+        var processing = [];
 
         //save queue add method as xs.Class.onReady
         me.onReady = queue.add;
@@ -131,8 +131,6 @@
          * - descFn is given not as function
          * - descFn doesn't return object
          */
-        var ID = 0;
-        me.created = [];
         me.create = function (Descriptor, createdFn) {
 
             //Descriptor must be function
@@ -145,8 +143,6 @@
             //create class
             var Class = _create();
 
-            Class.ID = ID++;
-            me.created.push(Class);
             //assign factory for class
             Class.factory = _createFactory(Class);
 
@@ -169,8 +165,7 @@
             Class.isProcessing = true;
 
             //push class to processed list
-            processed.push(Class);
-            xs.log('Added', Class.label, 'to', processed);
+            processing.push(Class);
 
             //process preprocessors stack before createdFn called.
             //Normally, only namespace is processed on this tick - imports is unambiguously async
@@ -187,12 +182,8 @@
                 //remove isProcessing mark
                 delete Class.isProcessing;
 
-                xs.log('Deleting', Class.label, 'from', processed);
-                if (!Class.label) {
-                    xs.HiddenBase = Class;
-                }
-                //remove class from processed list
-                xs.delete(processed, Class);
+                //remove class from processing list
+                xs.delete(processing, Class);
 
                 //delete from dependencies
                 dependencies.delete(Class);
@@ -201,9 +192,10 @@
                 queue.delete(Class.label);
 
                 //if dependencies empty - all classes processed
-                if (!processed.length) {
+                if (!processing.length) {
+
                     //delete from queue
-                    queue.delete();
+                    queue.delete(null);
                 }
 
                 //call createdFn
@@ -961,12 +953,18 @@
             xs.log('xs.Class::queue::delete. Resolve:', processed);
             //get resolved queue lists. If processed given - with non-null waiting list. If no processed given - with null lists only
             var resolved;
-            if (processed) {
+            if (processed === null) {
+                resolved = xs.findAll(storage, function (item) {
+                    //item is resolved, if waiting list is null
+
+                    return item.waiting === null;
+                });
+            } else {
                 resolved = xs.findAll(storage, function (item) {
                     //items with waiting null are not resolved
                     if (item.waiting === null) {
 
-                        return;
+                        return false;
                     }
 
                     //item is resolved, if processed delete succeeds (processed was deleted) and waiting is empty
@@ -976,12 +974,6 @@
                     }
 
                     return false;
-                });
-            } else {
-                resolved = xs.findAll(storage, function (item) {
-                    //item is resolved, if waiting list is null
-
-                    return item.waiting === null;
                 });
             }
 
