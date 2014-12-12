@@ -19,15 +19,14 @@ require([
     'xs.class.ClassManager',
     'xs.class.preprocessors.namespace',
     'xs.class.preprocessors.imports',
-    'xs.class.preprocessors.extends',
     'xs.class.Base'
 ], function () {
 
     'use strict';
 
-    module('xs.class.preprocessors.constructor');
+    module('xs.class.preprocessors.imports');
 
-    test('namespace usage chain', function () {
+    test('imports usage chain', function () {
         //setUp
         //Base
         var BaseName = 'my.base.Base';

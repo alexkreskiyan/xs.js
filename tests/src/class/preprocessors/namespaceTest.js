@@ -27,7 +27,7 @@ require([
 
     module('xs.class.preprocessors.namespace');
 
-    test('namespace usage chain', function () {
+    asyncTest('namespace usage chain', function () {
         //setUp
         //Base
         var BaseName = 'my.base.Base';
@@ -75,26 +75,29 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
+        setTimeout(function () {
+            //continue async test
+            start();
+            //check chain
+            //Parent
+            strictEqual(my.base.Parent.parent, my.base.Base);
 
-        //check chain
-        //Parent
-        strictEqual(my.base.Parent.parent, my.base.Base);
-
-        //Child
-        strictEqual(my.demo.Child.parent, my.base.Parent);
+            //Child
+            strictEqual(my.demo.Child.parent, my.base.Parent);
 
 
-        //tearDown
-        //Base
-        xs.ClassManager.delete(BaseName);
-        BaseSave && xs.ClassManager.add(BaseName, BaseSave);
+            //tearDown
+            //Base
+            xs.ClassManager.delete(BaseName);
+            BaseSave && xs.ClassManager.add(BaseName, BaseSave);
 
-        //Parent
-        xs.ClassManager.delete(ParentName);
-        ParentSave && xs.ClassManager.add(ParentName, ParentSave);
+            //Parent
+            xs.ClassManager.delete(ParentName);
+            ParentSave && xs.ClassManager.add(ParentName, ParentSave);
 
-        //Child
-        xs.ClassManager.delete(ChildName);
-        ChildSave && xs.ClassManager.add(ChildName, ChildSave);
+            //Child
+            xs.ClassManager.delete(ChildName);
+            ChildSave && xs.ClassManager.add(ChildName, ChildSave);
+        }, 20);
     });
 });

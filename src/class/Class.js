@@ -36,7 +36,7 @@
      *
      * @singleton
      */
-    xs.Class = new (function (dependencies) {
+    xs.Class = new (function (dependencies, queue) {
         var me = this;
 
         /**
@@ -165,8 +165,11 @@
                 //remove isProcessing mark
                 delete Class.isProcessing;
 
-                //resolve dependencies
-                dependencies.resolve(Class);
+                //delete from dependencies
+                dependencies.delete(Class);
+
+                //delete from queue
+                queue.delete(Class);
 
                 //call createdFn
                 createdFn(Class);
@@ -418,11 +421,11 @@
         /**
          * Cleans up dependencies and chains after class was processed
          * 
-         * @method resolve
+         * @method delete
          * 
          * @param {Object} processed processed class
          */
-        me.resolve = function (processed) {
+        me.delete = function (processed) {
             xs.log('xs.Class::dependencies::resolve. Resolving dependencies, because', processed.label, 'has been processed');
             //remove processed from chains
             chains.delete(processed);
@@ -882,6 +885,71 @@
 
         var storage = [];
 
+        me.add = function (waiting, handleReady) {
+            var me = this;
+
+            //if waiting if function - it's handleReady and empty waiting
+            if (xs.isFunction(waiting)) {
+                handleReady = waiting;
+                waiting = [];
+
+                //else - waiting must be array, handleReady - function. Otherwise it's error
+            } else if (!xs.isArray(waiting) || !xs.isFunction(handleReady)) {
+                throw new ClassError('incorrect onReady parameters');
+            }
+
+            //empty waiting means, that all classes must be loaded
+            if (!waiting.length) {
+
+                //add item to storage
+                storage.push({
+                    waiting: null,
+                    handleReady: handleReady
+                });
+
+                return;
+            }
+
+            //filter waiting classes
+            _filterWaiting(waiting);
+
+            //add item to storage
+            storage.push({
+                waiting: waiting,
+                handleReady: handleReady
+            });
+        };
+
+        me.delete = function (Class) {
+
+        };
+
+        /**
+         * Filter waiting classes to exclude those ones which are already processed
+         *
+         * @method filterWaiting
+         *
+         * @param {String[]} waiting array of waiting classes' names
+         */
+        var _filterWaiting = function (waiting) {
+            var Class, i = 0;
+
+            //iterate over waiting
+            while (i < waiting.length) {
+
+                //get class at i position
+                Class = xs.ClassManager.get(waiting[i]);
+
+                //if class is missing or is processing - go to next
+                if (!Class || Class.isProcessing) {
+                    i++;
+
+                    //else - delete class from waiting
+                } else {
+                    xs.deleteAt(waiting, i);
+                }
+            }
+        };
     }));
 
     //define prototype of xs.Base
