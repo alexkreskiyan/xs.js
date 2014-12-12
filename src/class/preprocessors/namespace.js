@@ -30,7 +30,6 @@
         var namespace = (xs.isString(descriptor.namespace) && descriptor.namespace.length) ? descriptor.namespace : undefined;
         //save namespace
         Class.descriptor.resolveName = function (path) {
-            var me = this;
 
             //simply return path, if namespace is empty
             if (!namespace) {
