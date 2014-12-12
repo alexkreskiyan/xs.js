@@ -28,7 +28,7 @@ require([
     'use strict';
     module('xs.Base');
 
-    test('chain', function () {
+    asyncTest('chain', function () {
         //setUp
         //Base
         var BaseName = 'my.Base';
@@ -75,28 +75,32 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
+        setTimeout(function () {
+            //continue async test
+            start();
 
-        //check inherits
-        strictEqual(Child.inherits(Parent), true);
-        strictEqual(Parent.inherits(Base), true);
-        strictEqual(Child.inherits(Base), true);
+            //check inherits
+            strictEqual(Child.inherits(Parent), true);
+            strictEqual(Parent.inherits(Base), true);
+            strictEqual(Child.inherits(Base), true);
 
-        strictEqual(Base.inherits(Parent), false);
-        strictEqual(Parent.inherits(Child), false);
-        strictEqual(Base.inherits(Child), false);
+            strictEqual(Base.inherits(Parent), false);
+            strictEqual(Parent.inherits(Child), false);
+            strictEqual(Base.inherits(Child), false);
 
-        //tearDown
-        //Base
-        xs.ClassManager.delete(BaseName);
-        BaseSave && xs.ClassManager.add(BaseName, BaseSave);
+            //tearDown
+            //Base
+            xs.ClassManager.delete(BaseName);
+            BaseSave && xs.ClassManager.add(BaseName, BaseSave);
 
-        //Parent
-        xs.ClassManager.delete(ParentName);
-        ParentSave && xs.ClassManager.add(ParentName, ParentSave);
+            //Parent
+            xs.ClassManager.delete(ParentName);
+            ParentSave && xs.ClassManager.add(ParentName, ParentSave);
 
-        //Child
-        xs.ClassManager.delete(ChildName);
-        ChildSave && xs.ClassManager.add(ChildName, ChildSave);
+            //Child
+            xs.ClassManager.delete(ChildName);
+            ChildSave && xs.ClassManager.add(ChildName, ChildSave);
+        }, 20);
     });
 
     test('clone', function () {

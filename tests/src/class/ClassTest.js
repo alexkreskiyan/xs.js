@@ -14,6 +14,7 @@ require([
     'xs.lang.Object',
     'xs.lang.Attribute',
     'xs.lang.Function',
+    'xs.core.Debug',
     'xs.class.Class'
 ], function () {
 
@@ -290,13 +291,13 @@ require([
         stack.add('one', verifier, function (self) {
             self.descriptor.chain = 'one';
         });
-        stack.add('two', verifier, function (self, descriptor, ns, ready) {
+        stack.add('two', verifier, function (self, descriptor, ns, dependencies, ready) {
             self.descriptor.chain += 'two';
             setTimeout(ready, 100);
 
             return false;
         });
-        stack.add('three', verifier, function (self, descriptor, ns, ready) {
+        stack.add('three', verifier, function (self, descriptor, ns, dependencies, ready) {
             self.descriptor.chain += 'three';
             setTimeout(ready, 100);
 
@@ -305,7 +306,6 @@ require([
 
         xs.Class.create(function () {
 
-            return {};
         }, function (Class) {
             start();
 

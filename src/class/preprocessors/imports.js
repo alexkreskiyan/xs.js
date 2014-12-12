@@ -79,10 +79,19 @@
             return !xs.ClassManager.has(name);
         });
 
-        //load imported classes and add dependency on them
-        xs.log('xs.class.preprocessor.imports[', Class.label, ']. Loading', loads);
-        //require async
-        xs.require(loads, function () {
+        if (loads.length) {
+            //load imported classes
+            xs.log('xs.class.preprocessor.imports[', Class.label, ']. Loading', loads);
+            //require async
+            xs.require(loads, _process);
+        } else {
+            //nothing to load
+            xs.log('xs.class.preprocessor.imports[', Class.label, ']. Nothing to load');
+            _process();
+        }
+
+        //define process function
+        function _process() {
 
             var waiting = xs.map(requires, function (name) {
                 return xs.ClassManager.get(name);
@@ -99,7 +108,7 @@
                 //call ready to notify processor stack, that import succeed
                 ready();
             });
-        });
+        };
 
         //return false to sign async processor
         return false;

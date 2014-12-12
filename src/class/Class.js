@@ -38,7 +38,7 @@
      */
     xs.Class = new (function (dependencies) {
         var me = this;
-        me.dependencies = dependencies; //TODO - remove
+
         /**
          * Stack of processors, processing class before it's considered to be created (before createdFn is called)
          *
@@ -359,7 +359,7 @@
         /**
          * Internal dependencies storage
          */
-        var storage = me.storage = [];
+        var storage = [];
 
         /**
          * Adds dependency from dependent Class to array of processed Classes.
@@ -515,7 +515,7 @@
          *
          * @class dependencies.chains
          */
-        var chains = me.chains = new (function () {
+        var chains = new (function () {
             var me = this;
 
             /**
@@ -523,7 +523,7 @@
              *
              * @type {Array}
              */
-            var storage = me.storage = [];
+            var storage = [];
 
             /**
              * Adds dependent class with it waiting list to manager
