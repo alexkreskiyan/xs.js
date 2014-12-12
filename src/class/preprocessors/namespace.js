@@ -27,27 +27,25 @@
     }, function (Class, descriptor, ns, dependencies, ready) {
 
         xs.log('xs.class.preprocessor.namespace');
+        var namespace = (xs.isString(descriptor.namespace) && descriptor.namespace.length) ? descriptor.namespace : undefined;
         //save namespace
-        Class.descriptor.namespace = {
-            path: (xs.isString(descriptor.namespace) && descriptor.namespace.length) ? descriptor.namespace : undefined,
-            resolve: function (path) {
-                var me = this;
+        Class.descriptor.resolveName = function (path) {
+            var me = this;
 
-                //simply return path, if namespace is empty
-                if (!me.path) {
+            //simply return path, if namespace is empty
+            if (!namespace) {
 
-                    return path;
-                }
-
-                //if name starts from namespace - resolve it
-                if (path.substring(0, 3) == 'ns.') {
-
-                    return this.path + path.substring(2);
-                }
-
-                //else - simply return path
                 return path;
             }
+
+            //if name starts from namespace - resolve it
+            if (path.substring(0, 3) == 'ns.') {
+
+                return namespace + path.substring(2);
+            }
+
+            //else - simply return path
+            return path;
         };
 
         //continue on next tick to allow ClassManager check class name

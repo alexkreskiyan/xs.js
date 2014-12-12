@@ -40,7 +40,7 @@
         } else if (xs.isString(extended) && extended) {
 
             //resolve parent name
-            extended = Class.descriptor.namespace.resolve(extended);
+            extended = Class.descriptor.resolveName(extended);
         } else {
 
             //if extended is not string (empty string) - throw respective error

@@ -165,7 +165,9 @@
                 //remove isProcessing mark
                 delete Class.isProcessing;
 
+                //resolve dependencies
                 dependencies.resolve(Class);
+
                 //call createdFn
                 createdFn(Class);
 
@@ -860,6 +862,26 @@
                 return merged;
             };
         });
+
+        /**
+         * Public onReady manager
+         *
+         * It's aim is storing of cross-classes processing dependencies.
+         * Using dependencies manager allows to prevent dead locks and regulate classes processing
+         *
+         * @ignore
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @private
+         *
+         * @class dependencies
+         */
+    }), new (function () {
+        var me = this;
+
+        var storage = [];
+
     }));
 
     //define prototype of xs.Base

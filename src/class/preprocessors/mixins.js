@@ -47,7 +47,7 @@
         //process mixins list
         xs.log('xs.class.preprocessor.mixins[', Class.label, ']. Mixins:', mixins);
         //namespace shortcut
-        var namespace = Class.descriptor.namespace;
+        var resolveName = Class.descriptor.resolveName;
         xs.each(mixins, function (name, alias, list) {
             //verify mixed class name
             if (!xs.isString(name) || !name) {
@@ -60,7 +60,7 @@
             }
 
             //resolve name with namespace and update list
-            name = list[alias] = namespace.resolve(name);
+            name = list[alias] = resolveName(name);
 
             //get Mixin reference
             var Mixin = xs.ClassManager.get(name);

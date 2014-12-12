@@ -225,7 +225,7 @@
             var Class = xs.Class.create(descFn, createdFn);
 
             //here class namespace is evaluated. Evaluate real name of class
-            name = Class.descriptor.namespace.resolve(name);
+            name = Class.descriptor.resolveName(name);
 
             //throw error if trying to redefine
             if (_has(name)) {
