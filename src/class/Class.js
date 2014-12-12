@@ -86,6 +86,20 @@
         var postprocessors = me.postprocessors = new Stack();
 
         /**
+         * Currently processed classes' list
+         * 
+         * @ignore
+         * 
+         * @property processed
+         * 
+         * @type {String[]}
+         */
+        var processed = [];
+
+        //save queue add method as xs.Class.onReady
+        me.onReady = queue.add;
+
+        /**
          * Creates class sample and starts processors applying
          *
          * For example:
@@ -150,6 +164,9 @@
             //mark class as not ready yet (until preprocessors done)
             Class.isProcessing = true;
 
+            //push class to processed list
+            processed.push(Class);
+
             //process preprocessors stack before createdFn called.
             //Normally, only namespace is processed on this tick - imports is unambiguously async
             preprocessors.process([
@@ -165,11 +182,20 @@
                 //remove isProcessing mark
                 delete Class.isProcessing;
 
+                //remove class from processed list
+                xs.delete(processed, Class);
+
                 //delete from dependencies
                 dependencies.delete(Class);
 
                 //delete from queue
                 queue.delete(Class.label);
+
+                //if dependencies empty - all classes processed
+                if (!processed.length) {
+                    //delete from queue
+                    queue.delete();
+                }
 
                 //call createdFn
                 createdFn(Class);
@@ -565,9 +591,7 @@
                     });
 
                     //add updated chains to storage
-                    xs.each(updated, function (chain) {
-                        storage.push(chain);
-                    });
+                    xs.each(updated, storage.push, storage);
 
                     //else - create chain for each waiting
                 } else {
@@ -576,9 +600,7 @@
                     var created = _createChains(dependent, waiting);
 
                     //add created chains to storage
-                    xs.each(created, function (chain) {
-                        storage.push(chain);
-                    });
+                    xs.each(created, storage.push, storage);
                 }
 
                 xs.log('xs.Class::dependencies::chains::add. Chains after add:');
@@ -716,9 +738,7 @@
                                 return Class.label;
                             }));
                         });
-                        xs.each(merged, function (chain) {
-                            created.push(chain);
-                        });
+                        xs.each(merged, created.push, created);
 
                         //else - add chain
                     } else {
@@ -780,9 +800,7 @@
                                 return Class.label;
                             }));
                         });
-                        xs.each(merged, function (chain) {
-                            updated.push(chain);
-                        });
+                        xs.each(merged, updated.push, updated);
 
                         //else - add chain
                     } else {
@@ -924,22 +942,33 @@
 
         me.delete = function (processed) {
             xs.log('xs.Class::queue::delete. Resolve:', processed);
-            //get resolved queue lists
-            var resolved = xs.findAll(storage, function (item) {
-                //if waiting all - another variant //TODO workaround needed
-                if (item.waiting) {
-                    return
-                }
-                //item is resolved, if processed delete succeeds (processed was deleted) and waiting is empty
-                if (xs.delete(item.waiting, processed)) {
+            //get resolved queue lists. If processed given - with non-null waiting list. If no processed given - with null lists only
+            var resolved;
+            if (processed) {
+                resolved = xs.findAll(storage, function (item) {
+                    //items with waiting null are not resolved
+                    if (item.waiting === null) {
 
-                    return !item.waiting.length;
-                }
+                        return;
+                    }
 
-                return false;
-            });
+                    //item is resolved, if processed delete succeeds (processed was deleted) and waiting is empty
+                    if (xs.delete(item.waiting, processed)) {
 
-            xs.log('xs.Class::queue::delete. Resolved dependencies', resolved);
+                        return !item.waiting.length;
+                    }
+
+                    return false;
+                });
+            } else {
+                resolved = xs.findAll(storage, function (item) {
+                    //item is resolved, if waiting list is null
+
+                    return item.waiting === null;
+                });
+            }
+
+            xs.log('xs.Class::queue::delete. Resolved items', resolved);
             //process resolved dependencies to remove them from stack
             xs.each(resolved, function (item) {
                 xs.delete(storage, item);
@@ -974,6 +1003,10 @@
             }
         };
     }));
+
+    //move xs.Class.onReady as xs.onReady
+    xs.onReady = xs.Class.onReady;
+    delete xs.Class.onReady;
 
     //define prototype of xs.Base
     xs.Base = xs.Class.create(function () {
