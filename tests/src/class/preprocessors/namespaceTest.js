@@ -77,7 +77,7 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
-        setTimeout(function () {
+        xs.onReady(function () {
             //continue async test
             start();
             //check chain
@@ -100,6 +100,6 @@ require([
             //Child
             xs.ClassManager.delete(ChildName);
             ChildSave && xs.ClassManager.add(ChildName, ChildSave);
-        }, 20);
+        });
     });
 });
