@@ -7,7 +7,6 @@
     "xs.lang.Function",
     "xs.lang.String",
     "xs.core.Debug",
-    "xs.class.Base",
     "xs.class.Class",
     "xs.class.ClassManager",
     "xs.class.Loader",
@@ -28,5 +27,6 @@
     "xs.class.preprocessors.defineStaticMethods",
     "xs.class.preprocessors.constructor",
     "xs.class.preprocessors.defineProperties",
-    "xs.class.preprocessors.defineMethods"
+    "xs.class.preprocessors.defineMethods",
+    "xs.class.Base"
 ]

@@ -4,57 +4,105 @@
 
     var scripts = []; //all scripts sources
 
-    var sources = []; //all sources
-    var pendingSources = []; //pending sources
-
-    var tests = []; //all acquired tests files
-    var pendingTests = []; //pending tests loaded
-
     var handlers = [];
 
-    //resolves source File
-    var resolveSourceFile = function (name) {
-        return '/src/' + name.split('.').slice(1).join('/') + '.js';
-    };
-    var resolveTestFile = function (name) {
-        return '/tests/src/' + name.split('.').slice(1).join('/') + 'Test.js';
+    //get src file
+    request('/src/src.json', function (sources) {
+        //get
+        var tests = getTests(sources, testsList);
+
+        load(sources.map(function (name) {
+            return resolveSourceFile(name);
+        }), function () {
+            load(tests.map(function (name) {
+                return resolveTestFile(name);
+            }), runTests);
+        });
+    });
+
+    //save Qunit module method
+    var module = me.module;
+
+    //adds test module
+    me.module = function (name, run) {
+        //add module handler
+        handlers.push(function () {
+            //define module
+            module(name);
+
+            //set active module
+            me.activeModule = name;
+
+            //run tests
+            run();
+
+            //unset active module
+            delete me.activeModule;
+        });
     };
 
-    var request = function (url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url);
-        xhr.send();
-        var handleLoad = function () {
-            callback(JSON.parse(xhr.response));
-            xhr.removeEventListener('load', handleLoad);
-        };
-        xhr.addEventListener('load', handleLoad);
-    };
+    //save Qunit test method
+    var test = me.test;
 
-    //adds script to container
-    var addScript = function (container, src, onLoad, cover) {
-        if (scripts.indexOf(src) >= 0) {
-            onLoad && onLoad();
-            return;
+    //adds test case
+    me.test = function (name, setUp, run, tearDown) {
+        //if 2 arguments - setUp is missing
+        if (arguments.length == 2) {
+            run = setUp;
+            setUp = function () {
+            };
+            tearDown = function () {
+            };
+        } else if (arguments.length == 3) {
+            tearDown = function () {
+            };
+            //else if incorrect arguments count
+        } else if (arguments.length == 1 || arguments.length > 4) {
+            throw new Error('Incorrect test case');
         }
-        scripts.push(src);
 
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = src;
-        cover && script.setAttribute('data-cover', '');
-        container.appendChild(script);
-        if (!onLoad) {
-            return;
-        }
-        var loadHandler = function () {
-            script.removeEventListener('load', loadHandler);
-            onLoad();
-        };
-        script.addEventListener('load', loadHandler);
+        //get activeModule from window
+        var module = me.activeModule;
+
+        asyncTest(name, function () {
+            var scope = {};
+
+            var handleSetUp = function () {
+                if (setUp.call(scope) !== false) {
+                    handleRun();
+                } else {
+                    scope.done = handleRun;
+                }
+            };
+
+            var handleRun = function () {
+                if (run.call(scope) !== false) {
+                    handleTearDown();
+                } else {
+                    scope.done = handleTearDown;
+                }
+            };
+
+            var handleTearDown = function () {
+                if (tearDown.call(scope) !== false) {
+                    handleEnd();
+                } else {
+                    scope.done = handleEnd;
+                }
+            };
+
+            var handleEnd = function () {
+                console.timeEnd(module + '::' + name);
+                start();
+            };
+
+            console.time(module + '::' + name);
+            handleSetUp();
+        });
     };
 
-    var getTests = function (sources, tests) {
+    //get tested components
+    function getTests(sources, tests) {
         var list = [];
         sources.forEach(function (source) {
             tests.forEach(function (test) {
@@ -64,42 +112,91 @@
             });
         });
         return list;
-    };
+    }
 
-    var load = function (files, callback) {
+    //resolves source file name from class name
+    function resolveSourceFile(name) {
+        return '/src/' + name.split('.').slice(1).join('/') + '.js';
+    }
+
+    //resolves test file name from class name
+    function resolveTestFile(name) {
+        return '/tests/src/' + name.split('.').slice(1).join('/') + 'Test.js';
+    }
+
+    function request(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.send();
+        var handleLoad = function () {
+            callback(JSON.parse(xhr.response));
+            xhr.removeEventListener('load', handleLoad);
+        };
+        xhr.addEventListener('load', handleLoad);
+    }
+
+    //adds script to container
+    function addScript(container, src, onLoad) {
+        //throw error if script was already added
+        if (scripts.indexOf(src) >= 0) {
+            throw new Error('Script "' + src + '" is already added');
+        }
+
+        //add src to scripts list
+        scripts.push(src);
+
+        //create script element
+        var script = document.createElement('script');
+
+        //assign type
+        script.type = 'text/javascript';
+
+        //assign src attribute
+        script.src = src;
+
+        //append script to head
+        container.appendChild(script);
+
+        //create loadHandler, that will be called once
+        var loadHandler = function () {
+            script.removeEventListener('load', loadHandler);
+            onLoad();
+        };
+
+        //add load handler as event listener for script
+        script.addEventListener('load', loadHandler);
+    }
+
+    //loads given files list in order
+    function load(files, callback) {
+        //if files list empty - return
         if (!files.length) {
+
             return;
         }
+
+        //get first file from files list
         var file = files.shift();
+
+        //if any files left
         if (files.length) {
             addScript(head, file, function () {
                 load(files, callback, true);
             });
+
+            //if it is last file
         } else {
-            addScript(head, file, callback, true);
+            addScript(head, file, callback);
         }
+    }
+
+    var runTests = function () {
+        handlers.forEach(function (handler) {
+            handler();
+        });
     };
 
-    var addItems = function (list, items) {
-        for (var idx = 0; idx < items.length; idx++) {
-            var item = items[idx];
-            list.indexOf(item) < 0 && list.push(item);
-        }
-    };
-
-    var module = me.module;
-
-    // Adds test module
-    me.module = function (components, callback) {
-        addItems(pendingSources, components);
-        handlers.push(callback);
-    };
-
-    var test = me.test;
-    me.test = function (name, setUp, run, tearDown) {
-
-    };
-
+    //fetches tests list from specified query param
     var testsList = (function (key) {
         var result = /\?([^#\?]+)/.exec(me.location.search);
         if (!result) {
@@ -115,27 +212,6 @@
         }
     }).call(me, 'tests');
 
-    var runTests = function () {
-        for (var idx = 0; idx < handlers.length; idx++) {
-            var handler = handlers[idx];
-            handler();
-        }
-    };
-
-    request('/src/src.json', function (src) {
-        sources = src;
-        tests = getTests(src, testsList);
-        tests.forEach(function (test) {
-            var name = test;
-            pendingTests.push(name);
-            addScript(head, resolveTestFile(name), function () {
-                pendingTests.splice(pendingTests.indexOf(name), 1);
-                pendingTests.length || load(pendingSources.map(function (source) {
-                    return resolveSourceFile(source);
-                }), runTests);
-            });
-        });
-    });
 }).call(window);
 function benchmark(fn, n) {
     var start = Date.now();
