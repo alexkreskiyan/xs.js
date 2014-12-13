@@ -8,29 +8,9 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.core.Debug',
-    'xs.class.Class',
-    'xs.class.ClassManager',
-    'xs.class.preprocessors.namespace',
-    'xs.class.preprocessors.prepareExtends',
-    'xs.class.preprocessors.prepareMixins',
-    'xs.class.preprocessors.imports',
-    'xs.class.preprocessors.processExtends',
-    'xs.class.Base'
-], function () {
+module('xs.class.preprocessors.namespace', function () {
 
-    'use strict';
-
-    module('xs.class.preprocessors.namespace');
-
-    asyncTest('namespace usage chain', function () {
-        //setUp
+    test('namespace usage chain', function (done) {
         //Base
         var BaseName = 'my.base.Base';
 
@@ -77,29 +57,27 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
-        xs.onReady(function () {
-            //continue async test
-            start();
-            //check chain
-            //Parent
-            strictEqual(my.base.Parent.parent, my.base.Base);
+        //call done, when classes ready to continue test
+        xs.onReady(done);
 
-            //Child
-            strictEqual(my.demo.Child.parent, my.base.Parent);
+        return false;
+    }, function () {
+        //Parent
+        strictEqual(my.base.Parent.parent, my.base.Base);
 
+        //Child
+        strictEqual(my.demo.Child.parent, my.base.Parent);
+    }, function () {
+        //Base
+        xs.ClassManager.delete(BaseName);
+        BaseSave && xs.ClassManager.add(BaseName, BaseSave);
 
-            //tearDown
-            //Base
-            xs.ClassManager.delete(BaseName);
-            BaseSave && xs.ClassManager.add(BaseName, BaseSave);
+        //Parent
+        xs.ClassManager.delete(ParentName);
+        ParentSave && xs.ClassManager.add(ParentName, ParentSave);
 
-            //Parent
-            xs.ClassManager.delete(ParentName);
-            ParentSave && xs.ClassManager.add(ParentName, ParentSave);
-
-            //Child
-            xs.ClassManager.delete(ChildName);
-            ChildSave && xs.ClassManager.add(ChildName, ChildSave);
-        });
+        //Child
+        xs.ClassManager.delete(ChildName);
+        ChildSave && xs.ClassManager.add(ChildName, ChildSave);
     });
 });

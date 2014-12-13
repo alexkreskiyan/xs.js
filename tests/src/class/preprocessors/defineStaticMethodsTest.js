@@ -8,34 +8,7 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.core.Debug',
-    'xs.class.Class',
-    'xs.class.ClassManager',
-    'xs.class.preprocessors.namespace',
-    'xs.class.preprocessors.imports',
-    'xs.class.preprocessors.extends',
-    'xs.class.preprocessors.prepareConstants',
-    'xs.class.preprocessors.prepareStaticProperties',
-    'xs.class.preprocessors.prepareStaticMethods',
-    'xs.class.preprocessors.prepareProperties',
-    'xs.class.preprocessors.prepareMethods',
-    'xs.class.preprocessors.mixins',
-    'xs.class.preprocessors.singleton',
-    'xs.class.preprocessors.defineConstants',
-    'xs.class.preprocessors.defineStaticProperties',
-    'xs.class.preprocessors.defineStaticMethods',
-    'xs.class.Base'
-], function () {
-
-    'use strict';
-
-    module('xs.class.preprocessors.defineStaticMethods');
+suite('xs.class.preprocessors.defineStaticMethods', function () {
 
     test('static methods chain', function () {
         //setUp

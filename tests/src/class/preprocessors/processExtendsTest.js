@@ -8,24 +8,7 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.core.Debug',
-    'xs.class.Class',
-    'xs.class.ClassManager',
-    'xs.class.preprocessors.namespace',
-    'xs.class.preprocessors.imports',
-    'xs.class.preprocessors.extends',
-    'xs.class.Base'
-], function () {
-
-    'use strict';
-
-    module('xs.class.preprocessors.extends');
+module('xs.class.preprocessors.extends', function () {
 
     test('extend base', function () {
         //create Class
@@ -37,8 +20,6 @@ require([
     });
 
     test('extend chain', function () {
-        //setUp
-
         //Base
         var BaseName = 'my.Base';
 
@@ -83,13 +64,13 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
+    }, function () {
         //check chain
         strictEqual(my.Base.parent, xs.Base);
         strictEqual(my.Parent.parent, my.Base);
         strictEqual(my.Child.parent, my.Parent);
 
-        //tearDown
-
+    }, function () {
         //Base
         xs.ClassManager.delete(BaseName);
         BaseSave && xs.ClassManager.add(BaseName, BaseSave);

@@ -8,24 +8,10 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.core.Debug',
-    'xs.class.Class',
-    'xs.class.preprocessors.namespace',
-    'xs.class.ClassManager'
-], function () {
-
-    'use strict';
-
-    module('xs.ClassManager');
+module('xs.ClassManager', function () {
 
     test('has', function () {
-        var Class = xs.Class.create(function () {
+        xs.Class.create(function () {
         });
 
         var className = 'xs.myClass';
@@ -34,6 +20,7 @@ require([
         var save = xs.ClassManager.get(className);
         save && xs.ClassManager.delete(className);
 
+    }, function () {
 
         //class is not in manager
         strictEqual(xs.ClassManager.has(className), false);
@@ -48,6 +35,7 @@ require([
         //delete class
         xs.ClassManager.delete(className);
 
+    }, function () {
 
         //restore save
         save && xs.ClassManager.add(className, save);
@@ -63,13 +51,13 @@ require([
         var save = xs.ClassManager.get(className);
         save && xs.ClassManager.delete(className);
 
-
         //add class
         xs.ClassManager.add(className, Class);
 
+    }, function () {
+
         //class is in manager
         strictEqual(xs.ClassManager.get(className), Class);
-
 
         //delete class
         xs.ClassManager.delete(className);
@@ -77,13 +65,13 @@ require([
         //class is not in manager
         strictEqual(xs.ClassManager.get(className), undefined);
 
+    }, function () {
 
         //restore save
         save && xs.ClassManager.add(className, save);
     });
 
     test('add', function () {
-        //setUp
         //define names
         var classOneName = 'my.demo.first.ClassOne';
         var classTwoName = 'my.demo.first.ClassTwo';
@@ -96,9 +84,6 @@ require([
         saveTwo && xs.ClassManager.delete(classTwoName);
         var saveThree = xs.ClassManager.get(classThreeName);
         saveThree && xs.ClassManager.delete(classThreeName);
-
-
-        //run test
 
         //create ClassOne
         var ClassOne = xs.Class.create(function () {
@@ -115,6 +100,7 @@ require([
         //add class one
         xs.ClassManager.add(classOneName, ClassOne);
 
+    }, function () {
         //not added again with same name
         throws(function () {
             xs.ClassManager.add(classOneName, ClassOne);
@@ -190,9 +176,7 @@ require([
         strictEqual(xs.keys(window.ClassThree.namespace).toString(), 'ClassThree');
         strictEqual(window.ClassThree.namespace.ClassThree, ClassThree);
 
-
-        //tearDown
-
+    }, function () {
         //remove defined
         xs.ClassManager.delete(classOneName);
         xs.ClassManager.delete(classTwoName);
@@ -219,9 +203,6 @@ require([
         var saveThree = xs.ClassManager.get(classThreeName);
         saveThree && xs.ClassManager.delete(classThreeName);
 
-
-        //run test
-
         //create ClassOne
         var ClassOne = xs.Class.create(function () {
         });
@@ -241,6 +222,7 @@ require([
         //add classThree
         xs.ClassManager.add(classThreeName, ClassThree);
 
+    }, function () {
         //test namespaces
         strictEqual(xs.keys(my.demo.first).toString(), 'ClassOne,ClassTwo');
         strictEqual(my.demo.first.ClassTwo, ClassTwo);
@@ -307,9 +289,7 @@ require([
         //namespace is cleaned
         strictEqual(xs.Attribute.defined(window, classThreeName), false);
 
-
-        //tearDown
-
+    }, function () {
         //restore save
         saveOne && xs.ClassManager.add(classOneName, saveOne);
         saveTwo && xs.ClassManager.add(classTwoName, saveTwo);
@@ -328,6 +308,7 @@ require([
         var Class = xs.define(className, function () {
         });
 
+    }, function () {
         //not defined again
         throws(function () {
             xs.define(className, function () {
@@ -347,7 +328,7 @@ require([
         //delete class
         xs.ClassManager.delete(className);
 
-
+    }, function () {
         //restore save
         save && xs.ClassManager.add(className, save);
     });

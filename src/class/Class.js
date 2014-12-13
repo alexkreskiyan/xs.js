@@ -121,7 +121,7 @@
          * - ns. namespace object, where namespace references are placed
          * - imports. namespace object, where namespace references are placed
          *
-         * @param {Function} createdFn class creation callback. Is called after
+         * @param {Function} [createdFn] class creation callback. Is called after
          * {@link xs.Class#preprocessors preprocessors} stack is processed. When called, created class is passed as param
          *
          * @return {Function} created Class

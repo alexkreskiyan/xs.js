@@ -8,26 +8,9 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.core.Debug',
-    'xs.class.Class',
-    'xs.class.ClassManager',
-    'xs.class.preprocessors.namespace',
-    'xs.class.preprocessors.imports',
-    'xs.class.Base'
-], function () {
-
-    'use strict';
-
-    module('xs.class.preprocessors.imports');
+module('xs.class.preprocessors.imports', function () {
 
     test('imports usage chain', function () {
-        //setUp
         //Base
         var BaseName = 'my.base.Base';
 
@@ -73,17 +56,13 @@ require([
 
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
-
-
-        //check chain
+    }, function () {
         //Parent
         strictEqual(my.base.Parent.parent, my.base.Base);
 
         //Child
         strictEqual(my.demo.Child.parent, my.base.Parent);
-
-
-        //tearDown
+    }, function () {
         //Base
         xs.ClassManager.delete(BaseName);
         BaseSave && xs.ClassManager.add(BaseName, BaseSave);

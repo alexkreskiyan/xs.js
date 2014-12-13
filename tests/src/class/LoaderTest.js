@@ -8,32 +8,14 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.core.Debug',
-    'xs.class.Class',
-    'xs.class.ClassManager',
-    'xs.class.preprocessors.namespace',
-    'xs.class.preprocessors.imports',
-    'xs.class.preprocessors.extends',
-    'xs.class.Loader'
-], function () {
-
-    'use strict';
-
-    module('xs.Loader');
+module('xs.Loader', function () {
 
     test('paths add', function () {
-        //setUp
         //backup all paths
         var paths = xs.Loader.paths.get();
         xs.Loader.paths.delete(xs.keys(paths));
 
-
+    }, function () {
         //single mode
         //non-string alias
         throws(function () {
@@ -78,8 +60,7 @@ require([
         strictEqual(xs.Loader.paths.has('b.a'), true);
         strictEqual(xs.Loader.paths.has('b.b'), true);
 
-
-        //tearDown
+    }, function () {
         //remove current paths
         xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
@@ -87,12 +68,11 @@ require([
     });
 
     test('paths has', function () {
-        //setUp
         //backup all paths
         var paths = xs.Loader.paths.get();
         xs.Loader.paths.delete(xs.keys(paths));
 
-        //test
+    }, function () {
         //non-string alias
         throws(function () {
             xs.Loader.paths.has(1);
@@ -115,8 +95,7 @@ require([
         xs.Loader.paths.add('a', 'a');
         strictEqual(xs.Loader.paths.has('a'), true);
 
-
-        //tearDown
+    }, function () {
         //remove current paths
         xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
@@ -124,11 +103,11 @@ require([
     });
 
     test('paths delete', function () {
-        //setUp
         //backup all paths
         var paths = xs.Loader.paths.get();
         xs.Loader.paths.delete(xs.keys(paths));
 
+    }, function () {
         //single mode
         //non-string alias
         throws(function () {
@@ -171,8 +150,7 @@ require([
         strictEqual(xs.Loader.paths.has('a'), false);
         strictEqual(xs.Loader.paths.has('b'), false);
 
-
-        //tearDown
+    }, function () {
         //remove current paths
         xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
@@ -180,13 +158,11 @@ require([
     });
 
     test('paths get', function () {
-        //setUp
         //backup all paths
         var paths = xs.Loader.paths.get();
         xs.Loader.paths.delete(xs.keys(paths));
 
-
-        //test
+    }, function () {
         strictEqual(JSON.stringify(xs.Loader.paths.get()), '{}');
         xs.Loader.paths.add({
             a: 'path1',
@@ -199,8 +175,7 @@ require([
         ]);
         strictEqual(JSON.stringify(xs.Loader.paths.get()), '{}');
 
-
-        //tearDown
+    }, function () {
         //remove current paths
         xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
@@ -208,12 +183,11 @@ require([
     });
 
     test('paths resolve', function () {
-        //setUp
         //backup all paths
         var paths = xs.Loader.paths.get();
         xs.Loader.paths.delete(xs.keys(paths));
 
-        //test
+    }, function () {
         //non-string name
         throws(function () {
             xs.Loader.paths.resolve(1);
@@ -241,17 +215,16 @@ require([
         xs.Loader.paths.add('my.demo.first', 'mydemofirst');
         strictEqual(xs.Loader.paths.resolve('my.demo.first.Class'), 'mydemofirst/Class.js');
 
-
-        //tearDown
+    }, function () {
         //remove current paths
         xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
         xs.Loader.paths.add(paths);
     });
 
-    asyncTest('require', function () {
-        //setUp
+    test('require', function () {
         xs.Loader.paths.add('demo.loader', '/tests/resources/class/Loader');
+    }, function () {
 
         //assert classes were not loaded yet
         strictEqual(xs.ClassManager.has('demo.loader.Demo'), false);
@@ -297,5 +270,7 @@ require([
                 strictEqual(xs.ClassManager.has('demo.loader.Sample'), false);
             });
         });
+    }, function () {
+        xs.Loader.paths.delete('demo.loader');
     });
 });

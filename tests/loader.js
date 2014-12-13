@@ -87,10 +87,17 @@
         }
     };
 
-    // Adds sources to pending list and callback to handlers
-    me.require = function (components, callback) {
+    var module = me.module;
+
+    // Adds test module
+    me.module = function (components, callback) {
         addItems(pendingSources, components);
         handlers.push(callback);
+    };
+
+    var test = me.test;
+    me.test = function (name, setUp, run, tearDown) {
+
     };
 
     var testsList = (function (key) {

@@ -8,33 +8,9 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.core.Debug',
-    'xs.class.Class',
-    'xs.class.ClassManager',
-    'xs.class.preprocessors.namespace',
-    'xs.class.preprocessors.imports',
-    'xs.class.preprocessors.extends',
-    'xs.class.preprocessors.prepareConstants',
-    'xs.class.preprocessors.prepareStaticProperties',
-    'xs.class.preprocessors.prepareStaticMethods',
-    'xs.class.preprocessors.prepareProperties',
-    'xs.class.preprocessors.prepareMethods',
-    'xs.class.Base'
-], function () {
-
-    'use strict';
-
-    module('xs.class.preprocessors.prepareMethods');
+module('xs.class.preprocessors.prepareMethods', function () {
 
     test('methods chain', function () {
-        //setUp
-
         //Base
         var BaseName = 'my.Base';
 
@@ -100,8 +76,7 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
-
-        //test
+    }, function () {
 
         //init methods (will be referred to descriptor.methods)
         var methods;
@@ -146,8 +121,7 @@ require([
         strictEqual(methods.c.configurable, false);
         strictEqual(methods.c.enumerable, true);
 
-        //tearDown
-
+    }, function () {
         //Base
         xs.ClassManager.delete(BaseName);
         BaseSave && xs.ClassManager.add(BaseName, BaseSave);

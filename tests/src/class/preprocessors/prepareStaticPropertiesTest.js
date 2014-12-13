@@ -8,29 +8,9 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.core.Debug',
-    'xs.class.Class',
-    'xs.class.ClassManager',
-    'xs.class.preprocessors.namespace',
-    'xs.class.preprocessors.imports',
-    'xs.class.preprocessors.extends',
-    'xs.class.preprocessors.prepareConstants',
-    'xs.class.preprocessors.prepareStaticProperties',
-    'xs.class.Base'
-], function () {
-
-    'use strict';
-
-    module('xs.class.preprocessors.prepareStaticProperties');
+module('xs.class.preprocessors.prepareStaticProperties', function () {
 
     test('static properties chain', function () {
-        //setUp
         //Base
         var BaseName = 'my.Base';
 
@@ -109,8 +89,7 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
-
-        //test
+    }, function () {
         //init properties (will be referred to descriptor.static.properties)
         var properties;
 
@@ -150,8 +129,7 @@ require([
         strictEqual(properties.c.configurable, false);
         strictEqual(properties.c.enumerable, true);
 
-
-        //tearDown
+    }, function () {
         //Base
         xs.ClassManager.delete(BaseName);
         BaseSave && xs.ClassManager.add(BaseName, BaseSave);

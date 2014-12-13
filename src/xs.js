@@ -17,6 +17,8 @@
  at http://annium.com/contact.
 
  */
+'use strict';
+
 (function (root, ns) {
 
     /**

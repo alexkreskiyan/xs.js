@@ -8,19 +8,7 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.core.Debug',
-    'xs.class.Class'
-], function () {
-
-    'use strict';
-
-    module('xs.Class');
+module('xs.Class', function () {
 
     test('create', function () {
         //test create without descriptor fails
@@ -50,7 +38,7 @@ require([
         //get instances
         var sampleNew = new Class(1, 2);
         var sampleFactory = Class.factory(1, 2);
-
+    },function(){
         //constructor is Class
         strictEqual(sampleNew.constructor, Class);
         strictEqual(sampleFactory.constructor, Class);
@@ -86,9 +74,7 @@ require([
 
         };
 
-
-        //run test
-
+    },function(){
         //add processor to last
         stack.add('one', verifier, handler);
         strictEqual(JSON.stringify(xs.keys(stack.get())), '["one"]');
@@ -122,9 +108,7 @@ require([
             strictEqual(item.handler, handler);
         });
 
-
-        //tearDown
-
+    },function(){
         //clear stack
         xs.each(stack.get(), function (item, name) {
             stack.delete(name);
@@ -137,7 +121,6 @@ require([
     });
 
     test('processors reorder', function () {
-        //setUp
         var stack = xs.Class.preprocessors;
 
         //save stack items
@@ -155,9 +138,7 @@ require([
         var handler = function () {
 
         };
-
-
-        //run test
+    },function(){
 
         //add processors
         stack.add('one', verifier, handler);
@@ -192,8 +173,7 @@ require([
         stack.reorder('three', 'after', 'one');
         strictEqual(JSON.stringify(xs.keys(stack.get())), '["two","one","three","four"]');
 
-
-        //tearDown
+    },function(){
 
         //clear stack
         xs.each(stack.get(), function (item, name) {
@@ -226,15 +206,14 @@ require([
 
         };
 
-
-        //run test
-
         //add processors
         stack.add('one', verifier, handler);
         stack.add('two', verifier, handler);
         stack.add('three', verifier, handler);
         stack.add('four', verifier, handler);
         stack.add('five', verifier, handler);
+
+    },function(){
 
         //delete undefined
         throws(function () {
@@ -253,8 +232,7 @@ require([
         stack.delete('three');
         strictEqual(JSON.stringify(xs.keys(stack.get())), '["two","four"]');
 
-
-        //tearDown
+    },function(){
 
         //clear stack
         xs.each(stack.get(), function (item, name) {
@@ -267,8 +245,7 @@ require([
         });
     });
 
-    asyncTest('process class', function () {
-        //setUp
+    test('process class', function () {
         var stack = xs.Class.preprocessors;
 
         //save stack items
@@ -283,9 +260,6 @@ require([
 
             return true;
         };
-
-
-        //run test
 
         //add processors
         stack.add('one', verifier, function (self) {
@@ -304,25 +278,24 @@ require([
             return false;
         });
 
+    },function(){
         xs.Class.create(function () {
 
         }, function (Class) {
             start();
 
             strictEqual(Class.descriptor.chain, 'onetwothree');
+        });
+    },function(){
 
+        //clear stack
+        xs.each(stack.get(), function (item, name) {
+            stack.delete(name);
+        });
 
-            //tearDown
-
-            //clear stack
-            xs.each(stack.get(), function (item, name) {
-                stack.delete(name);
-            });
-
-            //reset stack
-            xs.each(save, function (item, name) {
-                stack.add(name, item.verifier, item.handler);
-            });
+        //reset stack
+        xs.each(save, function (item, name) {
+            stack.add(name, item.verifier, item.handler);
         });
     });
 });

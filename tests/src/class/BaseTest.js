@@ -1,35 +1,15 @@
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.core.Debug',
-    'xs.class.Class',
-    'xs.class.ClassManager',
-    'xs.class.preprocessors.namespace',
-    'xs.class.preprocessors.imports',
-    'xs.class.preprocessors.extends',
-    'xs.class.preprocessors.prepareConstants',
-    'xs.class.preprocessors.prepareStaticProperties',
-    'xs.class.preprocessors.prepareStaticMethods',
-    'xs.class.preprocessors.prepareProperties',
-    'xs.class.preprocessors.prepareMethods',
-    'xs.class.preprocessors.mixins',
-    'xs.class.preprocessors.singleton',
-    'xs.class.preprocessors.defineConstants',
-    'xs.class.preprocessors.defineStaticProperties',
-    'xs.class.preprocessors.defineStaticMethods',
-    'xs.class.preprocessors.constructor',
-    'xs.class.preprocessors.defineProperties',
-    'xs.class.preprocessors.defineMethods',
-    'xs.class.Base'
-], function () {
-    'use strict';
-    module('xs.Base');
+/*
+ This file is core of xs.js
 
-    asyncTest('chain', function () {
-        //setUp
+ Copyright (c) 2013-2014, Annium Inc
+
+ Contact: http://annium.com/contact
+
+ License: http://annium.com/contact
+
+ */
+module('xs.Base', function () {
+    test('chain', function () {
         //Base
         var BaseName = 'my.Base';
 
@@ -75,32 +55,28 @@ require([
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
 
-        setTimeout(function () {
-            //continue async test
-            start();
+    }, function () {
+        //check inherits
+        strictEqual(Child.inherits(Parent), true);
+        strictEqual(Parent.inherits(Base), true);
+        strictEqual(Child.inherits(Base), true);
 
-            //check inherits
-            strictEqual(Child.inherits(Parent), true);
-            strictEqual(Parent.inherits(Base), true);
-            strictEqual(Child.inherits(Base), true);
+        strictEqual(Base.inherits(Parent), false);
+        strictEqual(Parent.inherits(Child), false);
+        strictEqual(Base.inherits(Child), false);
 
-            strictEqual(Base.inherits(Parent), false);
-            strictEqual(Parent.inherits(Child), false);
-            strictEqual(Base.inherits(Child), false);
+    }, function () {
+        //Base
+        xs.ClassManager.delete(BaseName);
+        BaseSave && xs.ClassManager.add(BaseName, BaseSave);
 
-            //tearDown
-            //Base
-            xs.ClassManager.delete(BaseName);
-            BaseSave && xs.ClassManager.add(BaseName, BaseSave);
+        //Parent
+        xs.ClassManager.delete(ParentName);
+        ParentSave && xs.ClassManager.add(ParentName, ParentSave);
 
-            //Parent
-            xs.ClassManager.delete(ParentName);
-            ParentSave && xs.ClassManager.add(ParentName, ParentSave);
-
-            //Child
-            xs.ClassManager.delete(ChildName);
-            ChildSave && xs.ClassManager.add(ChildName, ChildSave);
-        }, 20);
+        //Child
+        xs.ClassManager.delete(ChildName);
+        ChildSave && xs.ClassManager.add(ChildName, ChildSave);
     });
 
     test('clone', function () {

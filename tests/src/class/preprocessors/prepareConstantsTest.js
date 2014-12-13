@@ -8,28 +8,9 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.core.Debug',
-    'xs.class.Class',
-    'xs.class.ClassManager',
-    'xs.class.preprocessors.namespace',
-    'xs.class.preprocessors.imports',
-    'xs.class.preprocessors.extends',
-    'xs.class.preprocessors.prepareConstants',
-    'xs.class.Base'
-], function () {
-
-    'use strict';
-
-    module('xs.class.preprocessors.prepareConstants');
+module('xs.class.preprocessors.prepareConstants', function () {
 
     test('constants chain', function () {
-        //setUp
         //Base
         var BaseName = 'my.Base';
 
@@ -77,11 +58,7 @@ require([
 
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
-
-
-        //run test
-
-        //check constants
+    }, function () {
         //Base
         strictEqual(my.Base.descriptor.constants.a, 1);
 
@@ -93,10 +70,7 @@ require([
         strictEqual(my.Child.descriptor.constants.a, 2);
         strictEqual(my.Child.descriptor.constants.b, 3);
         strictEqual(my.Child.descriptor.constants.c, 5);
-
-
-        //tearDown
-
+    }, function () {
         //Base
         xs.ClassManager.delete(BaseName);
         BaseSave && xs.ClassManager.add(BaseName, BaseSave);

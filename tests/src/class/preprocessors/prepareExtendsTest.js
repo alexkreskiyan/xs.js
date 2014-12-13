@@ -8,26 +8,7 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.core.Debug',
-    'xs.class.Class',
-    'xs.class.ClassManager',
-    'xs.class.preprocessors.namespace',
-    'xs.class.preprocessors.prepareExtends',
-    'xs.class.preprocessors.prepareMixins',
-    'xs.class.preprocessors.imports',
-    'xs.class.preprocessors.processExtends',
-    'xs.class.Base'
-], function () {
-
-    'use strict';
-
-    module('xs.class.preprocessors.prepareExtends');
+module('xs.class.preprocessors.prepareExtends', function () {
 
     test('extend base', function () {
         //create Class
@@ -38,9 +19,7 @@ require([
         strictEqual(Class.descriptor.extends, undefined);
     });
 
-    asyncTest('extend chain', function () {
-        //setUp
-
+    test('extend chain', function (done) {
         //Base
         var BaseName = 'my.Base';
 
@@ -54,7 +33,6 @@ require([
 
         //add to ClassManager
         xs.ClassManager.add(BaseName, Base);
-        xs.log(Base.label, 'added to ClassManager');
 
         //Parent
         var ParentName = 'my.Parent';
@@ -70,7 +48,6 @@ require([
 
         //add to ClassManager
         xs.ClassManager.add(ParentName, Parent);
-        xs.log(Parent.label, 'added to ClassManager');
 
         //Child
         var ChildName = 'my.Child';
@@ -86,30 +63,26 @@ require([
 
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
-        xs.log(Child.label, 'added to ClassManager');
+        xs.onReady(done);
 
-        xs.onReady(function () {
-            //continue async test
-            start();
+        return false;
+    }, function () {
+        //check chain
+        strictEqual(my.Base.parent, xs.Base);
+        strictEqual(my.Parent.parent, my.Base);
+        strictEqual(my.Child.parent, my.Parent);
 
-            //check chain
-            strictEqual(my.Base.parent, xs.Base);
-            strictEqual(my.Parent.parent, my.Base);
-            strictEqual(my.Child.parent, my.Parent);
+    }, function () {
+        //Base
+        xs.ClassManager.delete(BaseName);
+        BaseSave && xs.ClassManager.add(BaseName, BaseSave);
 
-            //tearDown
+        //Parent
+        xs.ClassManager.delete(ParentName);
+        ParentSave && xs.ClassManager.add(ParentName, ParentSave);
 
-            //Base
-            xs.ClassManager.delete(BaseName);
-            BaseSave && xs.ClassManager.add(BaseName, BaseSave);
-
-            //Parent
-            xs.ClassManager.delete(ParentName);
-            ParentSave && xs.ClassManager.add(ParentName, ParentSave);
-
-            //Child
-            xs.ClassManager.delete(ChildName);
-            ChildSave && xs.ClassManager.add(ChildName, ChildSave);
-        });
+        //Child
+        xs.ClassManager.delete(ChildName);
+        ChildSave && xs.ClassManager.add(ChildName, ChildSave);
     });
 });
