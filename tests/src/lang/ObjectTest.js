@@ -8,15 +8,7 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object'
-], function () {
-
-    'use strict';
-
-    module('xs.lang.Object');
+module('xs.lang.Object', function () {
 
     test('extend', function () {
         //init test data
@@ -30,7 +22,7 @@ require([
             d: 1,
             e: xs.clone(a)
         };
-
+    }, function () {
         //extend
         xs.extend(x, { a: b }, 3, [
             4,

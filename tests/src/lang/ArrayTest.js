@@ -8,16 +8,7 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Array'
-], function () {
-
-    'use strict';
-
-    module('xs.lang.Array');
+module('xs.lang.Array', function () {
 
     test('shuffle', function () {
         //init sample

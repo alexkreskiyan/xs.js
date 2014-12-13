@@ -8,16 +8,7 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute'
-], function () {
-
-    'use strict';
-
-    module('xs.lang.Attribute');
+module('xs.lang.Attribute', function () {
 
     test('defined', function () {
         strictEqual(xs.Attribute.defined({}, 'a'), false);
@@ -44,7 +35,7 @@ require([
             this.value = value;
         };
         var value = { x: 1 };
-
+    }, function () {
         //define assignable test property
         xs.Attribute.define(obj, 'a', {
             value: value,
@@ -91,6 +82,7 @@ require([
         };
         var value = { x: 1 };
 
+    }, function () {
         //define assigned property
         xs.Attribute.define(obj, 'a', {
             value: value,
@@ -123,6 +115,7 @@ require([
         };
         var value = { x: 1 };
 
+    }, function () {
         //define assigned property
         xs.Attribute.define(obj, 'a', {
             value: value,
@@ -155,6 +148,7 @@ require([
         };
         var value = { x: 1 };
 
+    }, function () {
         //define writable property
         xs.Attribute.define(obj, 'a', {
             value: value,
@@ -190,6 +184,7 @@ require([
         var obj = {};
         var value = { x: 1 };
 
+    }, function () {
         //define configurable property
         xs.Attribute.define(obj, 'a', {
             value: value,
@@ -215,6 +210,7 @@ require([
         var obj = {};
         var value = { x: 1 };
 
+    }, function () {
         //define enumerable property
         xs.Attribute.define(obj, 'a', {
             value: value,
@@ -289,6 +285,7 @@ require([
         var obj = {};
         var value = { x: 1 };
 
+    }, function () {
         //define and test constant
         xs.Attribute.constant(obj, 'a', value);
         strictEqual(obj.a, value);
@@ -349,9 +346,6 @@ require([
     });
 
     test('property.define', function () {
-        //check for defined and not configurable property
-        //check defaults mechanism
-
         //init test objects
         var obj = {};
         var getter = function () {
@@ -362,6 +356,7 @@ require([
         };
         var value = { x: 1 };
 
+    }, function () {
         //try to define incorrect descriptor
         xs.Attribute.property.define(obj, 'a', value);
 

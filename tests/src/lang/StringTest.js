@@ -8,16 +8,7 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.String'
-], function () {
-
-    'use strict';
-
-    module('xs.lang.String');
+module('xs.lang.String', function () {
 
     test('translate', function () {
         //get translated version
@@ -27,6 +18,7 @@ require([
             fox: 'bear'
         });
 
+    }, function () {
         //check translation
         strictEqual(str, 'My bear is big and black. I love my big black bear');
     });

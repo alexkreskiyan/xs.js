@@ -8,14 +8,7 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List'
-], function () {
-
-    'use strict';
-
-    module('xs.lang.List');
+module('xs.lang.List', function () {
 
     test('keys', function () {
         //init test variables
