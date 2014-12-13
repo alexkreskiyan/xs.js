@@ -131,6 +131,8 @@
          * - descFn is given not as function
          * - descFn doesn't return object
          */
+        var ID = 0;
+        me.created = [];
         me.create = function (Descriptor, createdFn) {
 
             //Descriptor must be function
@@ -143,6 +145,8 @@
             //create class
             var Class = _create();
 
+            Class.ID = ID++;
+            me.created.push(Class);
             //assign factory for class
             Class.factory = _createFactory(Class);
 
@@ -166,6 +170,7 @@
 
             //push class to processed list
             processed.push(Class);
+            xs.log('Added', Class.label, 'to', processed);
 
             //process preprocessors stack before createdFn called.
             //Normally, only namespace is processed on this tick - imports is unambiguously async
@@ -182,6 +187,10 @@
                 //remove isProcessing mark
                 delete Class.isProcessing;
 
+                xs.log('Deleting', Class.label, 'from', processed);
+                if (!Class.label) {
+                    xs.HiddenBase = Class;
+                }
                 //remove class from processed list
                 xs.delete(processed, Class);
 
@@ -591,7 +600,9 @@
                     });
 
                     //add updated chains to storage
-                    xs.each(updated, storage.push, storage);
+                    xs.each(updated, function (chain) {
+                        storage.push(chain);
+                    });
 
                     //else - create chain for each waiting
                 } else {
@@ -600,7 +611,9 @@
                     var created = _createChains(dependent, waiting);
 
                     //add created chains to storage
-                    xs.each(created, storage.push, storage);
+                    xs.each(created, function (chain) {
+                        storage.push(chain);
+                    });
                 }
 
                 xs.log('xs.Class::dependencies::chains::add. Chains after add:');
@@ -738,7 +751,9 @@
                                 return Class.label;
                             }));
                         });
-                        xs.each(merged, created.push, created);
+                        xs.each(merged, function (chain) {
+                            created.push(chain);
+                        });
 
                         //else - add chain
                     } else {
@@ -800,7 +815,9 @@
                                 return Class.label;
                             }));
                         });
-                        xs.each(merged, updated.push, updated);
+                        xs.each(merged, function (chain) {
+                            updated.push(chain);
+                        });
 
                         //else - add chain
                     } else {
@@ -1009,7 +1026,7 @@
     delete xs.Class.onReady;
 
     //define prototype of xs.Base
-    xs.Base = xs.Class.create(function () {
+    xs.Base = xs.SuperBase = xs.Class.create(function () {
     }, xs.emptyFn);
 
     /**

@@ -18,14 +18,16 @@ require([
     'xs.class.Class',
     'xs.class.ClassManager',
     'xs.class.preprocessors.namespace',
+    'xs.class.preprocessors.prepareExtends',
+    'xs.class.preprocessors.prepareMixins',
     'xs.class.preprocessors.imports',
-    'xs.class.preprocessors.extends',
+    'xs.class.preprocessors.processExtends',
     'xs.class.Base'
 ], function () {
 
     'use strict';
 
-    module('xs.class.preprocessors.extends');
+    module('xs.class.preprocessors.prepareExtends');
 
     test('extend base', function () {
         //create Class
@@ -33,10 +35,10 @@ require([
         });
 
         //Class extends xs.Base
-        strictEqual(Class.parent, xs.Base);
+        strictEqual(Class.descriptor.extends, undefined);
     });
 
-    test('extend chain', function () {
+    asyncTest('extend chain', function () {
         //setUp
 
         //Base
@@ -52,6 +54,7 @@ require([
 
         //add to ClassManager
         xs.ClassManager.add(BaseName, Base);
+        xs.log(Base.label, 'added to ClassManager');
 
         //Parent
         var ParentName = 'my.Parent';
@@ -67,6 +70,7 @@ require([
 
         //add to ClassManager
         xs.ClassManager.add(ParentName, Parent);
+        xs.log(Parent.label, 'added to ClassManager');
 
         //Child
         var ChildName = 'my.Child';
@@ -82,25 +86,30 @@ require([
 
         //add to ClassManager
         xs.ClassManager.add(ChildName, Child);
+        xs.log(Child.label, 'added to ClassManager');
 
-        //check chain
-        strictEqual(my.Base.parent, xs.Base);
-        strictEqual(my.Parent.parent, my.Base);
-        strictEqual(my.Child.parent, my.Parent);
+        xs.onReady(function () {
+            //continue async test
+            start();
 
-        //tearDown
+            //check chain
+            strictEqual(my.Base.parent, xs.Base);
+            strictEqual(my.Parent.parent, my.Base);
+            strictEqual(my.Child.parent, my.Parent);
 
-        //Base
-        xs.ClassManager.delete(BaseName);
-        BaseSave && xs.ClassManager.add(BaseName, BaseSave);
+            //tearDown
 
-        //Parent
-        xs.ClassManager.delete(ParentName);
-        ParentSave && xs.ClassManager.add(ParentName, ParentSave);
+            //Base
+            xs.ClassManager.delete(BaseName);
+            BaseSave && xs.ClassManager.add(BaseName, BaseSave);
 
-        //Child
-        xs.ClassManager.delete(ChildName);
-        ChildSave && xs.ClassManager.add(ChildName, ChildSave);
+            //Parent
+            xs.ClassManager.delete(ParentName);
+            ParentSave && xs.ClassManager.add(ParentName, ParentSave);
+
+            //Child
+            xs.ClassManager.delete(ChildName);
+            ChildSave && xs.ClassManager.add(ChildName, ChildSave);
+        });
     });
-    //TODO test async extend with using xs.Loader
 });
