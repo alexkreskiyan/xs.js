@@ -39,7 +39,7 @@
             //if extended is not string (empty string) - throw respective error
             throw new PrepareExtendsError('[' + Class.label + ']: incorrect extended name');
         }
-    }, 'after', 'namespace');
+    });
 
     /**
      * Internal error class

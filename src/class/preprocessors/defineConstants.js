@@ -32,5 +32,5 @@
 
             xs.constant(Class, name, value);
         });
-    }, 'after', 'singleton');
+    });
 })(window, 'xs');

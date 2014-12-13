@@ -33,5 +33,5 @@
             //save method to class
             xs.Attribute.method.define(Class, name, descriptor);
         });
-    }, 'after', 'defineStaticProperties');
+    });
 })(window, 'xs');

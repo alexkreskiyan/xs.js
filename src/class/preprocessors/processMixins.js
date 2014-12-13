@@ -57,7 +57,7 @@
 
         //apply mixins to Class.descriptor
         _applyMixins(Class, mixins);
-    }, 'after', 'prepareMethods');
+    });
 
     /**
      * Core mixins function. Performs mixins' verification and applies each mixin to target class

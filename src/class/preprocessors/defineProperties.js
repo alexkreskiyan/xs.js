@@ -38,5 +38,5 @@
             //set undefined for assigned properties
             xs.hasKey(descriptor, 'value') && (prototype[name] = undefined);
         });
-    }, 'after', 'constructor');
+    });
 })(window, 'xs');

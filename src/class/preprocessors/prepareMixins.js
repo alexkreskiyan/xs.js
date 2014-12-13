@@ -52,7 +52,7 @@
                 throw new PrepareMixinsError('[' + Class.label + ']: incorrect mixed class alias');
             }
         });
-    }, 'after', 'prepareExtends');
+    });
 
     /**
      * Internal error class

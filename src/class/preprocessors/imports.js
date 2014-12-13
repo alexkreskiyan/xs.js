@@ -112,7 +112,7 @@
 
         //return false to sign async processor
         return false;
-    }, 'after', 'prepareMixins');
+    });
 
     /**
      * Core imports function. Saves imported classes by aliases

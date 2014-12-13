@@ -59,7 +59,7 @@
 
         //extend properties with own ones
         xs.extend(properties, own);
-    }, 'after', 'prepareConstants');
+    });
 
     /**
      * Internal error class

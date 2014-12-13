@@ -33,5 +33,5 @@
             //save method to prototype
             xs.Attribute.method.define(Class.prototype, name, value);
         });
-    }, 'after', 'defineProperties');
+    });
 })(window, 'xs');

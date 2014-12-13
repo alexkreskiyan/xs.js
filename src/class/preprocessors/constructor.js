@@ -48,7 +48,7 @@
             Class.descriptor.constructor = inherited;
         }
 
-    }, 'after', 'defineStaticMethods');
+    });
 
     /**
      * Internal error class

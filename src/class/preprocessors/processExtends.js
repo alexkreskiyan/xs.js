@@ -55,7 +55,7 @@
         xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extending', Parent.label);
         //apply extends
         _applyExtends(Class, Parent);
-    }, 'after', 'imports');
+    });
 
     /**
      * Core extends function. Saves imported classes by aliases

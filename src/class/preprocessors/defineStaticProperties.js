@@ -36,5 +36,5 @@
             //save property to class
             xs.Attribute.property.define(Class, name, descriptor);
         });
-    }, 'after', 'defineConstants');
+    });
 })(window, 'xs');

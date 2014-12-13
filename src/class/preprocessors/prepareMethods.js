@@ -59,7 +59,7 @@
 
         //extend methods with own ones
         xs.extend(methods, own);
-    }, 'after', 'prepareProperties');
+    });
 
     /**
      * Internal error class
