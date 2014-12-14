@@ -11,80 +11,94 @@
 module('xs.class.preprocessors.constructor', function () {
 
     test('constructor chain', function () {
-        //Base
-        var BaseName = 'my.Base';
+        var me = this;
 
-        var constructor = function () {
+        //Base
+        me.BaseName = 'my.Base';
+
+        me.constructor = function () {
 
         };
 
-        var constructor2 = function () {
+        me.constructor2 = function () {
 
         };
 
         //define
-        var Base = xs.Class.create(function () {
-            this.constructor = constructor;
+        me.Base = xs.Class.create(function () {
+            this.constructor = me.constructor;
         });
 
         //save
-        var BaseSave = xs.ClassManager.get(BaseName);
-        BaseSave && xs.ClassManager.delete(BaseName);
+        me.BaseSave = xs.ClassManager.get(me.BaseName);
+        me.BaseSave && xs.ClassManager.delete(me.BaseName);
 
         //add to ClassManager
-        xs.ClassManager.add(BaseName, Base);
+        xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        var ParentName = 'my.Parent';
+        me.ParentName = 'my.Parent';
 
         //define
-        var Parent = xs.Class.create(function () {
+        me.Parent = xs.Class.create(function () {
             this.extends = 'my.Base';
         });
 
         //save
-        var ParentSave = xs.ClassManager.get(ParentName);
-        ParentSave && xs.ClassManager.delete(ParentName);
+        me.ParentSave = xs.ClassManager.get(me.ParentName);
+        me.ParentSave && xs.ClassManager.delete(me.ParentName);
 
         //add to ClassManager
-        xs.ClassManager.add(ParentName, Parent);
+        xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        var ChildName = 'my.Child';
+        me.ChildName = 'my.Child';
 
         //define
-        var Child = xs.Class.create(function () {
+        me.Child = xs.Class.create(function () {
             this.extends = 'my.Parent';
-            this.constructor = constructor2;
+            this.constructor = me.constructor2;
         });
 
         //save
-        var ChildSave = xs.ClassManager.get(ChildName);
-        ChildSave && xs.ClassManager.delete(ChildName);
+        me.ChildSave = xs.ClassManager.get(me.ChildName);
+        me.ChildSave && xs.ClassManager.delete(me.ChildName);
 
         //add to ClassManager
-        xs.ClassManager.add(ChildName, Child);
+        xs.ClassManager.add(me.ChildName, me.Child);
+
+        xs.onReady([
+            me.BaseName,
+            me.ParentName,
+            me.ChildName
+        ], me.done);
+
+        return false;
     }, function () {
+        var me = this;
+
         //check chain
         //Base
-        strictEqual(my.Base.descriptor.constructor, constructor);
+        strictEqual(my.Base.descriptor.constructor, me.constructor);
 
         //Parent
-        strictEqual(my.Parent.descriptor.constructor, constructor);
+        strictEqual(my.Parent.descriptor.constructor, me.constructor);
 
         //Child
-        strictEqual(my.Child.descriptor.constructor, constructor2);
+        strictEqual(my.Child.descriptor.constructor, me.constructor2);
     }, function () {
+        var me = this;
+
         //Base
-        xs.ClassManager.delete(BaseName);
-        BaseSave && xs.ClassManager.add(BaseName, BaseSave);
+        xs.ClassManager.delete(me.BaseName);
+        me.BaseSave && xs.ClassManager.add(me.BaseName, me.BaseSave);
 
         //Parent
-        xs.ClassManager.delete(ParentName);
-        ParentSave && xs.ClassManager.add(ParentName, ParentSave);
+        xs.ClassManager.delete(me.ParentName);
+        me.ParentSave && xs.ClassManager.add(me.ParentName, me.ParentSave);
 
         //Child
-        xs.ClassManager.delete(ChildName);
-        ChildSave && xs.ClassManager.add(ChildName, ChildSave);
+        xs.ClassManager.delete(me.ChildName);
+        me.ChildSave && xs.ClassManager.add(me.ChildName, me.ChildSave);
     });
 });
