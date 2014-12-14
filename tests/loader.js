@@ -104,8 +104,8 @@
     //get tested components
     function getTests(sources, tests) {
         var list = [];
-        sources.forEach(function (source) {
-            tests.forEach(function (test) {
+        tests.forEach(function (test) {
+            sources.forEach(function (source) {
                 if (source === test || source.indexOf(test + '.') == 0) { //either strict or namespace match
                     list.indexOf(source) < 0 && list.push(source);
                 }
