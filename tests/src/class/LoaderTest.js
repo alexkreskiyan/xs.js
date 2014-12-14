@@ -11,9 +11,11 @@
 module('xs.Loader', function () {
 
     test('paths add', function () {
+        var me = this;
+
         //backup all paths
-        var paths = xs.Loader.paths.get();
-        xs.Loader.paths.delete(xs.keys(paths));
+        me.paths = xs.Loader.paths.get();
+        xs.Loader.paths.delete(xs.keys(me.paths));
 
     }, function () {
         //single mode
@@ -61,16 +63,20 @@ module('xs.Loader', function () {
         strictEqual(xs.Loader.paths.has('b.b'), true);
 
     }, function () {
+        var me = this;
+
         //remove current paths
         xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
-        xs.Loader.paths.add(paths);
+        xs.Loader.paths.add(me.paths);
     });
 
     test('paths has', function () {
+        var me = this;
+
         //backup all paths
-        var paths = xs.Loader.paths.get();
-        xs.Loader.paths.delete(xs.keys(paths));
+        me.paths = xs.Loader.paths.get();
+        xs.Loader.paths.delete(xs.keys(me.paths));
 
     }, function () {
         //non-string alias
@@ -96,16 +102,20 @@ module('xs.Loader', function () {
         strictEqual(xs.Loader.paths.has('a'), true);
 
     }, function () {
+        var me = this;
+
         //remove current paths
         xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
-        xs.Loader.paths.add(paths);
+        xs.Loader.paths.add(me.paths);
     });
 
     test('paths delete', function () {
+        var me = this;
+
         //backup all paths
-        var paths = xs.Loader.paths.get();
-        xs.Loader.paths.delete(xs.keys(paths));
+        me.paths = xs.Loader.paths.get();
+        xs.Loader.paths.delete(xs.keys(me.paths));
 
     }, function () {
         //single mode
@@ -151,18 +161,23 @@ module('xs.Loader', function () {
         strictEqual(xs.Loader.paths.has('b'), false);
 
     }, function () {
+        var me = this;
+
         //remove current paths
         xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
-        xs.Loader.paths.add(paths);
+        xs.Loader.paths.add(me.paths);
     });
 
     test('paths get', function () {
+        var me = this;
+
         //backup all paths
-        var paths = xs.Loader.paths.get();
-        xs.Loader.paths.delete(xs.keys(paths));
+        me.paths = xs.Loader.paths.get();
+        xs.Loader.paths.delete(xs.keys(me.paths));
 
     }, function () {
+
         strictEqual(JSON.stringify(xs.Loader.paths.get()), '{}');
         xs.Loader.paths.add({
             a: 'path1',
@@ -176,16 +191,20 @@ module('xs.Loader', function () {
         strictEqual(JSON.stringify(xs.Loader.paths.get()), '{}');
 
     }, function () {
+        var me = this;
+
         //remove current paths
         xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
-        xs.Loader.paths.add(paths);
+        xs.Loader.paths.add(me.paths);
     });
 
     test('paths resolve', function () {
+        var me = this;
+
         //backup all paths
-        var paths = xs.Loader.paths.get();
-        xs.Loader.paths.delete(xs.keys(paths));
+        me.paths = xs.Loader.paths.get();
+        xs.Loader.paths.delete(xs.keys(me.paths));
 
     }, function () {
         //non-string name
@@ -216,15 +235,19 @@ module('xs.Loader', function () {
         strictEqual(xs.Loader.paths.resolve('my.demo.first.Class'), 'mydemofirst/Class.js');
 
     }, function () {
+        var me = this;
+
         //remove current paths
         xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
-        xs.Loader.paths.add(paths);
+        xs.Loader.paths.add(me.paths);
     });
 
     test('require', function () {
+
         xs.Loader.paths.add('demo.loader', '/tests/resources/class/Loader');
     }, function () {
+        var me = this;
 
         //assert classes were not loaded yet
         strictEqual(xs.ClassManager.has('demo.loader.Demo'), false);
@@ -235,8 +258,6 @@ module('xs.Loader', function () {
             'demo.loader.Demo',
             'demo.loader.Sample'
         ], function (loaded) {
-            //continue async test
-            start();
 
             //assert all was loaded nicely
             strictEqual(JSON.stringify(loaded), '{"demo.loader.Demo":"/tests/resources/class/Loader/Demo.js","demo.loader.Sample":"/tests/resources/class/Loader/Sample.js"}');
@@ -249,17 +270,12 @@ module('xs.Loader', function () {
             xs.ClassManager.delete('demo.loader.Demo');
             xs.ClassManager.delete('demo.loader.Sample');
 
-            //stop async test
-            stop();
-
             //require loaded and failed classes
             xs.Loader.require([
                 'demo.loader.Demo',
                 'demo.loader.Sample2'
             ], function (loaded) {
             }, function (failed, loaded) {
-                //continue async test
-                start();
 
                 //assert require results are correct
                 strictEqual(JSON.stringify(failed), '{"demo.loader.Sample2":"/tests/resources/class/Loader/Sample2.js"}');
@@ -268,8 +284,12 @@ module('xs.Loader', function () {
                 //assert classes not loaded
                 strictEqual(xs.ClassManager.has('demo.loader.Demo'), false);
                 strictEqual(xs.ClassManager.has('demo.loader.Sample'), false);
+
+                me.done();
             });
         });
+
+        return false;
     }, function () {
         xs.Loader.paths.delete('demo.loader');
     });
