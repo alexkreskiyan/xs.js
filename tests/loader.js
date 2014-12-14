@@ -64,36 +64,35 @@
         //get activeModule from window
         var module = me.activeModule;
 
-        asyncTest(name, function () {
+        test(name, function (assert) {
             var scope = {};
 
+            var done = assert.async();
+
             var handleSetUp = function () {
+                scope.done = handleRun;
                 if (setUp.call(scope) !== false) {
                     handleRun();
-                } else {
-                    scope.done = handleRun;
                 }
             };
 
             var handleRun = function () {
+                scope.done = handleTearDown;
                 if (run.call(scope) !== false) {
                     handleTearDown();
-                } else {
-                    scope.done = handleTearDown;
                 }
             };
 
             var handleTearDown = function () {
+                scope.done = handleEnd;
                 if (tearDown.call(scope) !== false) {
                     handleEnd();
-                } else {
-                    scope.done = handleEnd;
                 }
             };
 
             var handleEnd = function () {
                 console.timeEnd(module + '::' + name);
-                start();
+                done();
             };
 
             console.time(module + '::' + name);
