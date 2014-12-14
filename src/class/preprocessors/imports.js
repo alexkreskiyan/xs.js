@@ -45,21 +45,24 @@
         var resolveName = Class.descriptor.resolveName;
         //fill imports
         xs.each(descriptor.imports, function (imported) {
+            var name;
 
             //if imported is string - it's simply className without alias, added only to loads list
             if (xs.isString(imported)) {
-                requires.push(resolveName(imported));
+                name = resolveName(imported);
+                requires.indexOf(name) < 0 && requires.push(name);
 
                 //or imported my be used class - then it is specified as object
             } else if (xs.isObject(imported) && xs.size(imported) == 1) {
 
                 //get name and alias
                 var alias = xs.keys(imported)[0];
-                var name = imported[alias];
+                name = imported[alias];
 
                 //if name is non-empty string - add it to both loads and imports
                 if (xs.isString(name) && name) {
                     name = resolveName(name);
+                    requires.indexOf(name) < 0 && requires.push(name);
                     requires.push(name);
                     imports[name] = alias;
 
