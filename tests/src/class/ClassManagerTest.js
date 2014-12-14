@@ -11,325 +11,349 @@
 module('xs.ClassManager', function () {
 
     test('has', function () {
-        xs.Class.create(function () {
+        var me = this;
+
+        me.Class = xs.Class.create(function () {
         });
 
-        var className = 'xs.myClass';
+        me.className = 'xs.myClass';
 
         //save class, if defined
-        var save = xs.ClassManager.get(className);
-        save && xs.ClassManager.delete(className);
+        me.save = xs.ClassManager.get(me.className);
+        me.save && xs.ClassManager.delete(me.className);
 
     }, function () {
+        var me = this;
 
         //class is not in manager
-        strictEqual(xs.ClassManager.has(className), false);
+        strictEqual(xs.ClassManager.has(me.className), false);
 
         //add class
-        xs.ClassManager.add(className, Class);
+        xs.ClassManager.add(me.className, me.Class);
 
         //class is in manager
-        strictEqual(xs.ClassManager.has(className), true);
+        strictEqual(xs.ClassManager.has(me.className), true);
 
 
         //delete class
-        xs.ClassManager.delete(className);
+        xs.ClassManager.delete(me.className);
 
     }, function () {
+        var me = this;
 
         //restore save
-        save && xs.ClassManager.add(className, save);
+        me.save && xs.ClassManager.add(me.className, me.save);
     });
 
     test('get', function () {
-        var Class = xs.Class.create(function () {
+        var me = this;
+
+        me.Class = xs.Class.create(function () {
         });
 
-        var className = 'xs.myClass';
+        me.className = 'xs.myClass';
 
         //save class, if defined
-        var save = xs.ClassManager.get(className);
-        save && xs.ClassManager.delete(className);
+        me.save = xs.ClassManager.get(me.className);
+        me.save && xs.ClassManager.delete(me.className);
 
         //add class
-        xs.ClassManager.add(className, Class);
+        xs.ClassManager.add(me.className, me.Class);
 
     }, function () {
+        var me = this;
 
         //class is in manager
-        strictEqual(xs.ClassManager.get(className), Class);
+        strictEqual(xs.ClassManager.get(me.className), me.Class);
 
         //delete class
-        xs.ClassManager.delete(className);
+        xs.ClassManager.delete(me.className);
 
         //class is not in manager
-        strictEqual(xs.ClassManager.get(className), undefined);
+        strictEqual(xs.ClassManager.get(me.className), undefined);
 
     }, function () {
+        var me = this;
 
         //restore save
-        save && xs.ClassManager.add(className, save);
+        me.save && xs.ClassManager.add(me.className, me.save);
     });
 
     test('add', function () {
+        var me = this;
+
         //define names
-        var classOneName = 'my.demo.first.ClassOne';
-        var classTwoName = 'my.demo.first.ClassTwo';
-        var classThreeName = 'ClassThree';
+        me.classOneName = 'my.demo.first.ClassOne';
+        me.classTwoName = 'my.demo.first.ClassTwo';
+        me.classThreeName = 'ClassThree';
 
         //save classes, if defined
-        var saveOne = xs.ClassManager.get(classOneName);
-        saveOne && xs.ClassManager.delete(classOneName);
-        var saveTwo = xs.ClassManager.get(classTwoName);
-        saveTwo && xs.ClassManager.delete(classTwoName);
-        var saveThree = xs.ClassManager.get(classThreeName);
-        saveThree && xs.ClassManager.delete(classThreeName);
+        me.saveOne = xs.ClassManager.get(me.classOneName);
+        me.saveOne && xs.ClassManager.delete(me.classOneName);
+        me.saveTwo = xs.ClassManager.get(me.classTwoName);
+        me.saveTwo && xs.ClassManager.delete(me.classTwoName);
+        me.saveThree = xs.ClassManager.get(me.classThreeName);
+        me.saveThree && xs.ClassManager.delete(me.classThreeName);
 
         //create ClassOne
-        var ClassOne = xs.Class.create(function () {
+        me.ClassOne = xs.Class.create(function () {
         });
 
         //create ClassTwo
-        var ClassTwo = xs.Class.create(function () {
+        me.ClassTwo = xs.Class.create(function () {
         });
 
         //create ClassThree
-        var ClassThree = xs.Class.create(function () {
+        me.ClassThree = xs.Class.create(function () {
         });
 
         //add class one
-        xs.ClassManager.add(classOneName, ClassOne);
+        xs.ClassManager.add(me.classOneName, me.ClassOne);
 
     }, function () {
+        var me = this;
+
         //not added again with same name
         throws(function () {
-            xs.ClassManager.add(classOneName, ClassOne);
+            xs.ClassManager.add(me.classOneName, me.ClassOne);
         });
 
         //not added again with other name
         throws(function () {
-            xs.ClassManager.add(classOneName + '_', ClassOne);
+            xs.ClassManager.add(me.classOneName + '_', me.ClassOne);
         });
 
         //class is in manager
-        strictEqual(xs.ClassManager.get(classOneName), ClassOne);
+        strictEqual(xs.ClassManager.get(me.classOneName), me.ClassOne);
 
         //label is assigned correctly
-        strictEqual(ClassOne.label, classOneName);
+        strictEqual(me.ClassOne.label, me.classOneName);
 
         //namespace ok
         strictEqual(xs.keys(my.demo.first).toString(), 'ClassOne');
-        strictEqual(my.demo.first.ClassOne, ClassOne);
+        strictEqual(my.demo.first.ClassOne, me.ClassOne);
         strictEqual(xs.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne');
-        strictEqual(my.demo.first.ClassOne.namespace.ClassOne, ClassOne);
+        strictEqual(my.demo.first.ClassOne.namespace.ClassOne, me.ClassOne);
 
         //add class two
-        xs.ClassManager.add(classTwoName, ClassTwo);
+        xs.ClassManager.add(me.classTwoName, me.ClassTwo);
 
         //not added again with same name
         throws(function () {
-            xs.ClassManager.add(classTwoName, ClassTwo);
+            xs.ClassManager.add(me.classTwoName, me.ClassTwo);
         });
 
         //not added again with other name
         throws(function () {
-            xs.ClassManager.add(classTwoName + '_', ClassTwo);
+            xs.ClassManager.add(me.classTwoName + '_', me.ClassTwo);
         });
 
         //class is in manager
-        strictEqual(xs.ClassManager.get(classTwoName), ClassTwo);
+        strictEqual(xs.ClassManager.get(me.classTwoName), me.ClassTwo);
 
         //label is assigned correctly
-        strictEqual(ClassTwo.label, classTwoName);
+        strictEqual(me.ClassTwo.label, me.classTwoName);
 
         //namespace ok
         strictEqual(xs.keys(my.demo.first).toString(), 'ClassOne,ClassTwo');
-        strictEqual(my.demo.first.ClassTwo, ClassTwo);
+        strictEqual(my.demo.first.ClassTwo, me.ClassTwo);
         strictEqual(xs.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne,ClassTwo');
-        strictEqual(my.demo.first.ClassOne.namespace.ClassOne, ClassOne);
-        strictEqual(my.demo.first.ClassOne.namespace.ClassTwo, ClassTwo);
+        strictEqual(my.demo.first.ClassOne.namespace.ClassOne, me.ClassOne);
+        strictEqual(my.demo.first.ClassOne.namespace.ClassTwo, me.ClassTwo);
         strictEqual(xs.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassOne,ClassTwo');
-        strictEqual(my.demo.first.ClassTwo.namespace.ClassOne, ClassOne);
-        strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, ClassTwo);
+        strictEqual(my.demo.first.ClassTwo.namespace.ClassOne, me.ClassOne);
+        strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
 
         //add class three
-        xs.ClassManager.add(classThreeName, ClassThree);
+        xs.ClassManager.add(me.classThreeName, me.ClassThree);
 
         //not added again with same name
         throws(function () {
-            xs.ClassManager.add(classThreeName, ClassThree);
+            xs.ClassManager.add(me.classThreeName, me.ClassThree);
         });
 
         //not added again with other name
         throws(function () {
-            xs.ClassManager.add(classThreeName + '_', ClassThree);
+            xs.ClassManager.add(me.classThreeName + '_', me.ClassThree);
         });
 
         //class is in manager
-        strictEqual(xs.ClassManager.get(classThreeName), ClassThree);
+        strictEqual(xs.ClassManager.get(me.classThreeName), me.ClassThree);
 
         //label is assigned correctly
-        strictEqual(ClassThree.label, classThreeName);
+        strictEqual(me.ClassThree.label, me.classThreeName);
 
         //namespace ok
-        strictEqual(window.ClassThree, ClassThree);
+        strictEqual(window.ClassThree, me.ClassThree);
         strictEqual(xs.keys(window.ClassThree.namespace).toString(), 'ClassThree');
-        strictEqual(window.ClassThree.namespace.ClassThree, ClassThree);
+        strictEqual(window.ClassThree.namespace.ClassThree, me.ClassThree);
 
     }, function () {
+        var me = this;
+
         //remove defined
-        xs.ClassManager.delete(classOneName);
-        xs.ClassManager.delete(classTwoName);
-        xs.ClassManager.delete(classThreeName);
+        xs.ClassManager.delete(me.classOneName);
+        xs.ClassManager.delete(me.classTwoName);
+        xs.ClassManager.delete(me.classThreeName);
 
         //restore save
-        saveOne && xs.ClassManager.add(classOneName, saveOne);
-        saveTwo && xs.ClassManager.add(classTwoName, saveTwo);
-        saveThree && xs.ClassManager.add(classThreeName, saveThree);
+        me.saveOne && xs.ClassManager.add(me.classOneName, me.saveOne);
+        me.saveTwo && xs.ClassManager.add(me.classTwoName, me.saveTwo);
+        me.saveThree && xs.ClassManager.add(me.classThreeName, me.saveThree);
     });
 
     test('delete', function () {
-        //setUp
+        var me = this;
+
         //define names
-        var classOneName = 'my.demo.first.ClassOne';
-        var classTwoName = 'my.demo.first.ClassTwo';
-        var classThreeName = 'ClassThree';
+        me.classOneName = 'my.demo.first.ClassOne';
+        me.classTwoName = 'my.demo.first.ClassTwo';
+        me.classThreeName = 'ClassThree';
 
         //save classes, if defined
-        var saveOne = xs.ClassManager.get(classOneName);
-        saveOne && xs.ClassManager.delete(classOneName);
-        var saveTwo = xs.ClassManager.get(classTwoName);
-        saveTwo && xs.ClassManager.delete(classTwoName);
-        var saveThree = xs.ClassManager.get(classThreeName);
-        saveThree && xs.ClassManager.delete(classThreeName);
+        me.saveOne = xs.ClassManager.get(me.classOneName);
+        me.saveOne && xs.ClassManager.delete(me.classOneName);
+        me.saveTwo = xs.ClassManager.get(me.classTwoName);
+        me.saveTwo && xs.ClassManager.delete(me.classTwoName);
+        me.saveThree = xs.ClassManager.get(me.classThreeName);
+        me.saveThree && xs.ClassManager.delete(me.classThreeName);
 
         //create ClassOne
-        var ClassOne = xs.Class.create(function () {
+        me.ClassOne = xs.Class.create(function () {
         });
 
         //create ClassTwo
-        var ClassTwo = xs.Class.create(function () {
+        me.ClassTwo = xs.Class.create(function () {
         });
 
         //create ClassThree
-        var ClassThree = xs.Class.create(function () {
+        me.ClassThree = xs.Class.create(function () {
         });
 
         //add classOne
-        xs.ClassManager.add(classOneName, ClassOne);
+        xs.ClassManager.add(me.classOneName, me.ClassOne);
         //add classTwo
-        xs.ClassManager.add(classTwoName, ClassTwo);
+        xs.ClassManager.add(me.classTwoName, me.ClassTwo);
         //add classThree
-        xs.ClassManager.add(classThreeName, ClassThree);
+        xs.ClassManager.add(me.classThreeName, me.ClassThree);
 
     }, function () {
+        var me = this;
+
         //test namespaces
         strictEqual(xs.keys(my.demo.first).toString(), 'ClassOne,ClassTwo');
-        strictEqual(my.demo.first.ClassTwo, ClassTwo);
+        strictEqual(my.demo.first.ClassTwo, me.ClassTwo);
         strictEqual(xs.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne,ClassTwo');
-        strictEqual(my.demo.first.ClassOne.namespace.ClassOne, ClassOne);
-        strictEqual(my.demo.first.ClassOne.namespace.ClassTwo, ClassTwo);
+        strictEqual(my.demo.first.ClassOne.namespace.ClassOne, me.ClassOne);
+        strictEqual(my.demo.first.ClassOne.namespace.ClassTwo, me.ClassTwo);
         strictEqual(xs.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassOne,ClassTwo');
-        strictEqual(my.demo.first.ClassTwo.namespace.ClassOne, ClassOne);
-        strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, ClassTwo);
+        strictEqual(my.demo.first.ClassTwo.namespace.ClassOne, me.ClassOne);
+        strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
 
         //delete classOne
-        xs.ClassManager.delete(classOneName);
+        xs.ClassManager.delete(me.classOneName);
 
         //not deleted again
         throws(function () {
-            xs.ClassManager.delete(classOneName);
+            xs.ClassManager.delete(me.classOneName);
         });
 
         //class is not in manager
-        strictEqual(xs.ClassManager.get(classOneName), undefined);
+        strictEqual(xs.ClassManager.get(me.classOneName), undefined);
 
         //label is removed
-        strictEqual(xs.Attribute.defined(ClassOne, 'label'), false);
+        strictEqual(xs.Attribute.defined(me.ClassOne, 'label'), false);
 
         //namespace is cleaned
         strictEqual(xs.Attribute.defined(my.demo.first, 'ClassOne'), false);
         strictEqual(xs.keys(my.demo.first).toString(), 'ClassTwo');
-        strictEqual(my.demo.first.ClassTwo, ClassTwo);
+        strictEqual(my.demo.first.ClassTwo, me.ClassTwo);
         strictEqual(xs.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassTwo');
-        strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, ClassTwo);
+        strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
 
         //delete classTwo
-        xs.ClassManager.delete(classTwoName);
+        xs.ClassManager.delete(me.classTwoName);
 
         //not deleted again
         throws(function () {
-            xs.ClassManager.delete(classTwoName);
+            xs.ClassManager.delete(me.classTwoName);
         });
 
         //class is not in manager
-        strictEqual(xs.ClassManager.get(classTwoName), undefined);
+        strictEqual(xs.ClassManager.get(me.classTwoName), undefined);
 
         //label is removed
-        strictEqual(xs.Attribute.defined(ClassTwo, 'label'), false);
+        strictEqual(xs.Attribute.defined(me.ClassTwo, 'label'), false);
 
         //namespace is cleaned
         strictEqual(xs.Attribute.defined(window, 'my'), false);
-        strictEqual(xs.keys(ClassTwo.namespace).toString(), '');
+        strictEqual(xs.keys(me.ClassTwo.namespace).toString(), '');
 
         //delete classThree
-        xs.ClassManager.delete(classThreeName);
+        xs.ClassManager.delete(me.classThreeName);
 
         //not deleted again
         throws(function () {
-            xs.ClassManager.delete(classThreeName);
+            xs.ClassManager.delete(me.classThreeName);
         });
 
         //class is not in manager
-        strictEqual(xs.ClassManager.get(classThreeName), undefined);
+        strictEqual(xs.ClassManager.get(me.classThreeName), undefined);
 
         //label is removed
-        strictEqual(xs.Attribute.defined(ClassThree, 'label'), false);
+        strictEqual(xs.Attribute.defined(me.ClassThree, 'label'), false);
 
         //namespace is cleaned
-        strictEqual(xs.Attribute.defined(window, classThreeName), false);
+        strictEqual(xs.Attribute.defined(window, me.classThreeName), false);
 
     }, function () {
+        var me = this;
+
         //restore save
-        saveOne && xs.ClassManager.add(classOneName, saveOne);
-        saveTwo && xs.ClassManager.add(classTwoName, saveTwo);
-        saveThree && xs.ClassManager.add(classThreeName, saveThree);
+        me.saveOne && xs.ClassManager.add(me.classOneName, me.saveOne);
+        me.saveTwo && xs.ClassManager.add(me.classTwoName, me.saveTwo);
+        me.saveThree && xs.ClassManager.add(me.classThreeName, me.saveThree);
     });
 
     test('define', function () {
-        var className = 'xs.myClass';
+        var me = this;
+
+        me.className = 'xs.myClass';
 
         //save class, if defined
-        var save = xs.ClassManager.get(className);
-        save && xs.ClassManager.delete(className);
+        me.save = xs.ClassManager.get(me.className);
+        me.save && xs.ClassManager.delete(me.className);
 
 
         //define class
-        var Class = xs.define(className, function () {
+        me.Class = xs.define(me.className, function () {
         });
 
     }, function () {
+        var me = this;
+
         //not defined again
         throws(function () {
-            xs.define(className, function () {
+            xs.define(me.className, function () {
             })
         });
 
         //class is in manager
-        strictEqual(xs.ClassManager.get(className), Class);
+        strictEqual(xs.ClassManager.get(me.className), me.Class);
 
         //label is assigned correctly
-        strictEqual(Class.label, className);
+        strictEqual(me.Class.label, me.className);
 
         //namespace ok
-        strictEqual(xs.myClass, Class);
+        strictEqual(xs.myClass, me.Class);
 
 
         //delete class
-        xs.ClassManager.delete(className);
+        xs.ClassManager.delete(me.className);
 
     }, function () {
+        var me = this;
         //restore save
-        save && xs.ClassManager.add(className, save);
+        me.save && xs.ClassManager.add(me.className, me.save);
     });
 });
