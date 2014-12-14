@@ -39,6 +39,10 @@
         var mixins = Class.descriptor.mixins = descriptor.mixins;
 
 
+        //process
+        //get imports reference
+        var imports = descriptor.imports;
+
         //process mixins list
         xs.log('xs.class.preprocessor.mixins[', Class.label, ']. Mixins:', mixins);
         xs.each(mixins, function (name, alias) {
@@ -51,6 +55,8 @@
             if (!alias) {
                 throw new PrepareMixinsError('[' + Class.label + ']: incorrect mixed class alias');
             }
+
+            imports.push(name);
         });
     });
 
