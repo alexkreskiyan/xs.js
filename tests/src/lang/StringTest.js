@@ -11,15 +11,17 @@
 module('xs.lang.String', function () {
 
     test('translate', function () {
+        var me = this;
         //get translated version
-        var str = xs.translate('My fox is small and brown. I love my small brown fox', {
+        me.str = xs.translate('My fox is small and brown. I love my small brown fox', {
             small: 'big',
             brown: 'black',
             fox: 'bear'
         });
 
     }, function () {
+        var me = this;
         //check translation
-        strictEqual(str, 'My bear is big and black. I love my big black bear');
+        strictEqual(me.str, 'My bear is big and black. I love my big black bear');
     });
 });
