@@ -11,29 +11,31 @@
 module('xs.lang.Object', function () {
 
     test('extend', function () {
+        var me = this;
         //init test data
-        var a = { a: 1 };
-        var b = { b: 1 };
-        var c = { c: 1 };
-        var x = {
-            a: a,
-            b: b,
-            c: c,
+        me.a = { a: 1 };
+        me.b = { b: 1 };
+        me.c = { c: 1 };
+        me.x = {
+            a: me.a,
+            b: me.b,
+            c: me.c,
             d: 1,
-            e: xs.clone(a)
+            e: xs.clone(me.a)
         };
     }, function () {
+        var me = this;
         //extend
-        xs.extend(x, { a: b }, 3, [
+        xs.extend(me.x, { a: me.b }, 3, [
             4,
             5
-        ], { b: 1 }, { e: a });
+        ], { b: 1 }, { e: me.a });
 
         //check replacements
-        strictEqual(x.a, b);
-        strictEqual(x.b, 1);
-        strictEqual(x.c, c);
-        strictEqual(x.d, 1);
-        strictEqual(x.e, a);
+        strictEqual(me.x.a, me.b);
+        strictEqual(me.x.b, 1);
+        strictEqual(me.x.c, me.c);
+        strictEqual(me.x.d, 1);
+        strictEqual(me.x.e, me.a);
     });
 });
