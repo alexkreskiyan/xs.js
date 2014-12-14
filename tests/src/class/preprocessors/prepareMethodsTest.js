@@ -11,72 +11,78 @@
 module('xs.class.preprocessors.prepareMethods', function () {
 
     test('methods chain', function () {
-        //Base
-        var BaseName = 'my.Base';
+        var me = this;
 
-        var baseA = function () {
+        //Base
+        me.BaseName = 'my.Base';
+
+        me.baseA = function () {
 
             return 1;
         };
 
         //define
-        var Base = xs.Class.create(function () {
-            this.methods.a = baseA;
+        me.Base = xs.Class.create(function () {
+            this.methods.a = me.baseA;
         });
 
         //save
-        var BaseSave = xs.ClassManager.get(BaseName);
-        BaseSave && xs.ClassManager.delete(BaseName);
+        me.BaseSave = xs.ClassManager.get(me.BaseName);
+        me.BaseSave && xs.ClassManager.delete(me.BaseName);
 
         //add to ClassManager
-        xs.ClassManager.add(BaseName, Base);
+        xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        var ParentName = 'my.Parent';
+        me.ParentName = 'my.Parent';
 
-        var parentA = function () {
+        me.parentA = function () {
 
             return 2;
         };
-        var parentB = function () {
+        me.parentB = function () {
 
             return 3;
         };
         //define
-        var Parent = xs.Class.create(function () {
+        me.Parent = xs.Class.create(function () {
             this.extends = 'my.Base';
-            this.methods.a = parentA;
-            this.methods.b = parentB;
+            this.methods.a = me.parentA;
+            this.methods.b = me.parentB;
         });
 
         //save
-        var ParentSave = xs.ClassManager.get(ParentName);
-        ParentSave && xs.ClassManager.delete(ParentName);
+        me.ParentSave = xs.ClassManager.get(me.ParentName);
+        me.ParentSave && xs.ClassManager.delete(me.ParentName);
 
         //add to ClassManager
-        xs.ClassManager.add(ParentName, Parent);
+        xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        var ChildName = 'my.Child';
+        me.ChildName = 'my.Child';
 
-        var childC = function () {
+        me.childC = function () {
 
             return 5;
         };
         //define
-        var Child = xs.Class.create(function () {
+        me.Child = xs.Class.create(function () {
             this.extends = 'my.Parent';
-            this.methods.c = childC;
+            this.methods.c = me.childC;
         });
 
         //save
-        var ChildSave = xs.ClassManager.get(ChildName);
-        ChildSave && xs.ClassManager.delete(ChildName);
+        me.ChildSave = xs.ClassManager.get(me.ChildName);
+        me.ChildSave && xs.ClassManager.delete(me.ChildName);
 
         //add to ClassManager
-        xs.ClassManager.add(ChildName, Child);
+        xs.ClassManager.add(me.ChildName, me.Child);
 
+        xs.onReady(me.done);
+
+        return false;
     }, function () {
+        var me = this;
 
         //init methods (will be referred to descriptor.methods)
         var methods;
@@ -85,7 +91,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         //Base
         methods = my.Base.descriptor.methods;
         //a
-        strictEqual(methods.a.value, baseA);
+        strictEqual(methods.a.value, me.baseA);
         strictEqual(methods.a.writable, false);
         strictEqual(methods.a.configurable, false);
         strictEqual(methods.a.enumerable, true);
@@ -93,12 +99,12 @@ module('xs.class.preprocessors.prepareMethods', function () {
         //Parent
         methods = my.Parent.descriptor.methods;
         //a
-        strictEqual(methods.a.value, parentA);
+        strictEqual(methods.a.value, me.parentA);
         strictEqual(methods.a.writable, false);
         strictEqual(methods.a.configurable, false);
         strictEqual(methods.a.enumerable, true);
         //b
-        strictEqual(methods.b.value, parentB);
+        strictEqual(methods.b.value, me.parentB);
         strictEqual(methods.b.writable, false);
         strictEqual(methods.b.configurable, false);
         strictEqual(methods.b.enumerable, true);
@@ -106,32 +112,34 @@ module('xs.class.preprocessors.prepareMethods', function () {
         //Child
         methods = my.Child.descriptor.methods;
         //a
-        strictEqual(methods.a.value, parentA);
+        strictEqual(methods.a.value, me.parentA);
         strictEqual(methods.a.writable, false);
         strictEqual(methods.a.configurable, false);
         strictEqual(methods.a.enumerable, true);
         //b
-        strictEqual(methods.b.value, parentB);
+        strictEqual(methods.b.value, me.parentB);
         strictEqual(methods.b.writable, false);
         strictEqual(methods.b.configurable, false);
         strictEqual(methods.b.enumerable, true);
         //c
-        strictEqual(methods.c.value, childC);
+        strictEqual(methods.c.value, me.childC);
         strictEqual(methods.c.writable, false);
         strictEqual(methods.c.configurable, false);
         strictEqual(methods.c.enumerable, true);
 
     }, function () {
+        var me = this;
+
         //Base
-        xs.ClassManager.delete(BaseName);
-        BaseSave && xs.ClassManager.add(BaseName, BaseSave);
+        xs.ClassManager.delete(me.BaseName);
+        me.BaseSave && xs.ClassManager.add(me.BaseName, me.BaseSave);
 
         //Parent
-        xs.ClassManager.delete(ParentName);
-        ParentSave && xs.ClassManager.add(ParentName, ParentSave);
+        xs.ClassManager.delete(me.ParentName);
+        me.ParentSave && xs.ClassManager.add(me.ParentName, me.ParentSave);
 
         //Child
-        xs.ClassManager.delete(ChildName);
-        ChildSave && xs.ClassManager.add(ChildName, ChildSave);
+        xs.ClassManager.delete(me.ChildName);
+        me.ChildSave && xs.ClassManager.add(me.ChildName, me.ChildSave);
     });
 });
