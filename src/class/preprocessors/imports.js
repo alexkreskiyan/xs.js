@@ -54,11 +54,11 @@
             } else if (xs.isObject(imported) && xs.size(imported) == 1) {
 
                 //get name and alias
-                var name = xs.keys(imported)[0];
-                var alias = imported[name];
+                var alias = xs.keys(imported)[0];
+                var name = imported[alias];
 
-                //if alias is non-empty string - add it to both loads and imports
-                if (xs.isString(alias) && alias) {
+                //if name is non-empty string - add it to both loads and imports
+                if (xs.isString(name) && name) {
                     name = resolveName(name);
                     requires.push(name);
                     imports[name] = alias;

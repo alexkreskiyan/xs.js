@@ -11,68 +11,55 @@
 module('xs.class.preprocessors.imports', function () {
 
     test('imports usage chain', function () {
-        //Base
-        var BaseName = 'my.base.Base';
+        var me = this;
 
-        //define
-        var Base = xs.Class.create(function () {
-        });
+        //backup all paths
+        me.paths = xs.Loader.paths.get();
+        xs.Loader.paths.delete(xs.keys(me.paths));
 
-        //save
-        var BaseSave = xs.ClassManager.get(BaseName);
-        BaseSave && xs.ClassManager.delete(BaseName);
+        //add tests path
+        xs.Loader.paths.add('tests', '/tests/resources');
 
-        //add to ClassManager
-        xs.ClassManager.add(BaseName, Base);
-
-        //Parent
-        var ParentName = 'my.base.Parent';
-
-        //define
-        var Parent = xs.Class.create(function () {
-            this.namespace = 'my.base';
+        xs.define('ns.Child', function (Class, ns, imports) {
+            this.namespace = 'tests.class.preprocessors.imports';
             this.extends = 'ns.Base';
+            this.imports = [
+                {one: 'ns.One'},
+                'ns.Two',
+                {three: 'ns.Three'}
+            ];
+
+            //save imports reference
+            me.imports = imports;
         });
 
-        //save
-        var ParentSave = xs.ClassManager.get(ParentName);
-        ParentSave && xs.ClassManager.delete(ParentName);
+        xs.onReady(me.done);
 
-        //add to ClassManager
-        xs.ClassManager.add(ParentName, Parent);
-
-        //Child
-        var ChildName = 'my.demo.Child';
-
-        //define
-        var Child = xs.Class.create(function () {
-            this.namespace = 'my.demo';
-            this.extends = 'my.base.Parent';
-        });
-
-        //save
-        var ChildSave = xs.ClassManager.get(ChildName);
-        ChildSave && xs.ClassManager.delete(ChildName);
-
-        //add to ClassManager
-        xs.ClassManager.add(ChildName, Child);
+        return false;
     }, function () {
-        //Parent
-        strictEqual(my.base.Parent.parent, my.base.Base);
+        var me = this;
+        var ns = tests.class.preprocessors.imports;
 
-        //Child
-        strictEqual(my.demo.Child.parent, my.base.Parent);
+        //check imports
+        strictEqual(xs.keys(me.imports).toString(), 'one,three');
+        strictEqual(me.imports.one, ns.One);
+        strictEqual(me.imports.three, ns.Three);
+
     }, function () {
-        //Base
-        xs.ClassManager.delete(BaseName);
-        BaseSave && xs.ClassManager.add(BaseName, BaseSave);
+        var me = this;
 
-        //Parent
-        xs.ClassManager.delete(ParentName);
-        ParentSave && xs.ClassManager.add(ParentName, ParentSave);
+        //remove current paths
+        xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
+        //restore saved paths
+        xs.Loader.paths.add(me.paths);
 
-        //Child
-        xs.ClassManager.delete(ChildName);
-        ChildSave && xs.ClassManager.add(ChildName, ChildSave);
+        var ns = tests.class.preprocessors.imports;
+
+        //delete created classes
+        xs.ClassManager.delete(ns.One.label);
+        xs.ClassManager.delete(ns.Two.label);
+        xs.ClassManager.delete(ns.Three.label);
+        xs.ClassManager.delete(ns.Base.label);
+        xs.ClassManager.delete(ns.Child.label);
     });
 });
