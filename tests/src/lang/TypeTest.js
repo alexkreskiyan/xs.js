@@ -8,18 +8,12 @@
  License: http://annium.com/contact
 
  */
-require([
-    'xs.lang.Type',
-    'xs.lang.List'
-], function () {
-
-    'use strict';
-
-    module('xs.Type');
+module('xs.lang.Type', function () {
 
     test('isObject', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: false
@@ -82,15 +76,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isObject(test.data), test.ok);
         });
     });
 
     test('isArray', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: false
@@ -153,15 +149,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isArray(test.data), test.ok);
         });
     });
 
     test('isFunction', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: false
@@ -224,15 +222,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isFunction(test.data), test.ok);
         });
     });
 
     test('isString', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: false
@@ -295,15 +295,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isString(test.data), test.ok);
         });
     });
 
     test('isNumber', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: false
@@ -366,15 +368,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isNumber(test.data), test.ok);
         });
     });
 
     test('isBoolean', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: false
@@ -437,15 +441,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isBoolean(test.data), test.ok);
         });
     });
 
     test('isRegExp', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: false
@@ -512,15 +518,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isRegExp(test.data), test.ok);
         });
     });
 
     test('isError', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: false
@@ -587,15 +595,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isError(test.data), test.ok);
         });
     });
 
     test('isNull', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: true
@@ -658,15 +668,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isNull(test.data), test.ok);
         });
     });
 
     test('isIterable', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: false
@@ -729,15 +741,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isIterable(test.data), test.ok);
         });
     });
 
     test('isPrimitive', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: true
@@ -800,15 +814,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isPrimitive(test.data), test.ok);
         });
     });
 
     test('isNumeric', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: false
@@ -871,15 +887,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isNumeric(test.data), test.ok);
         });
     });
 
     test('isDefined', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: true
@@ -942,15 +960,17 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isDefined(test.data), test.ok);
         });
     });
 
     test('isEmpty', function () {
+        var me = this;
         //init test cases
-        var tests = [
+        me.tests = [
             {
                 data: null,
                 ok: true
@@ -1009,8 +1029,9 @@ require([
         ];
 
     }, function () {
+        var me = this;
         //run test cases
-        xs.each(tests, function (test) {
+        xs.each(me.tests, function (test) {
             strictEqual(xs.isEmpty(test.data), test.ok);
         });
     });
