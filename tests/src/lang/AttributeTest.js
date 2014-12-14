@@ -26,209 +26,221 @@ module('xs.lang.Attribute', function () {
     });
 
     test('getDescriptor', function () {
+        var me = this;
         //init test object
-        var obj = {};
-        var getter = function () {
+        me.obj = {};
+        me.getter = function () {
             return 1;
         };
-        var setter = function (value) {
+        me.setter = function (value) {
             this.value = value;
         };
-        var value = { x: 1 };
+        me.value = { x: 1 };
     }, function () {
+        var me = this;
         //define assignable test property
-        xs.Attribute.define(obj, 'a', {
-            value: value,
+        xs.Attribute.define(me.obj, 'a', {
+            value: me.value,
             writable: true,
             configurable: true,
             enumerable: true
         });
 
         //get descriptor
-        var descriptor = xs.Attribute.getDescriptor(obj, 'a');
+        var descriptor = xs.Attribute.getDescriptor(me.obj, 'a');
 
         //check descriptor was applied correctly
         strictEqual(Object.keys(descriptor).length, 4);
-        strictEqual(descriptor.value, value);
+        strictEqual(descriptor.value, me.value);
         strictEqual(descriptor.writable, true);
         strictEqual(descriptor.configurable, true);
         strictEqual(descriptor.enumerable, true);
 
         //define accessed test property
-        xs.Attribute.define(obj, 'a', {
-            get: getter,
-            set: setter
+        xs.Attribute.define(me.obj, 'a', {
+            get: me.getter,
+            set: me.setter
         });
 
         //get descriptor
-        descriptor = xs.Attribute.getDescriptor(obj, 'a');
+        descriptor = xs.Attribute.getDescriptor(me.obj, 'a');
 
         //check descriptor was applied correctly
         strictEqual(Object.keys(descriptor).length, 4);
-        strictEqual(descriptor.get, getter);
-        strictEqual(descriptor.set, setter);
+        strictEqual(descriptor.get, me.getter);
+        strictEqual(descriptor.set, me.setter);
         strictEqual(descriptor.configurable, true);
         strictEqual(descriptor.enumerable, true);
     });
 
     test('isAssigned', function () {
+        var me = this;
         //init test object
-        var obj = {};
-        var getter = function () {
+        me.obj = {};
+        me.getter = function () {
             return 1;
         };
-        var setter = function (value) {
+        me.setter = function (value) {
             this.value = value;
         };
-        var value = { x: 1 };
+        me.value = { x: 1 };
 
     }, function () {
+        var me = this;
         //define assigned property
-        xs.Attribute.define(obj, 'a', {
-            value: value,
+        xs.Attribute.define(me.obj, 'a', {
+            value: me.value,
             writable: true,
             configurable: true,
             enumerable: true
         });
 
         //test that it is assigned
-        strictEqual(xs.Attribute.isAssigned(obj, 'a'), true);
+        strictEqual(xs.Attribute.isAssigned(me.obj, 'a'), true);
 
         //define accessed property
-        xs.Attribute.define(obj, 'a', {
-            get: getter,
-            set: setter
+        xs.Attribute.define(me.obj, 'a', {
+            get: me.getter,
+            set: me.setter
         });
 
         //test that it is not assigned
-        strictEqual(xs.Attribute.isAssigned(obj, 'a'), false);
+        strictEqual(xs.Attribute.isAssigned(me.obj, 'a'), false);
     });
 
     test('isAccessed', function () {
+        var me = this;
         //init test object
-        var obj = {};
-        var getter = function () {
+        me.obj = {};
+        me.getter = function () {
             return 1;
         };
-        var setter = function (value) {
+        me.setter = function (value) {
             this.value = value;
         };
-        var value = { x: 1 };
+        me.value = { x: 1 };
 
     }, function () {
+        var me = this;
         //define assigned property
-        xs.Attribute.define(obj, 'a', {
-            value: value,
+        xs.Attribute.define(me.obj, 'a', {
+            value: me.value,
             writable: true,
             configurable: true,
             enumerable: true
         });
 
         //test that it is not accessed
-        strictEqual(xs.Attribute.isAccessed(obj, 'a'), false);
+        strictEqual(xs.Attribute.isAccessed(me.obj, 'a'), false);
 
         //define accessed property
-        xs.Attribute.define(obj, 'a', {
-            get: getter,
-            set: setter
+        xs.Attribute.define(me.obj, 'a', {
+            get: me.getter,
+            set: me.setter
         });
 
         //test that is accessed
-        strictEqual(xs.Attribute.isAccessed(obj, 'a'), true);
+        strictEqual(xs.Attribute.isAccessed(me.obj, 'a'), true);
     });
 
     test('isWritable', function () {
+        var me = this;
         //init test object
-        var obj = {};
-        var getter = function () {
+        me.obj = {};
+        me.getter = function () {
             return 1;
         };
-        var setter = function (value) {
+        me.setter = function (value) {
             this.value = value;
         };
-        var value = { x: 1 };
+        me.value = { x: 1 };
 
     }, function () {
+        var me = this;
         //define writable property
-        xs.Attribute.define(obj, 'a', {
-            value: value,
+        xs.Attribute.define(me.obj, 'a', {
+            value: me.value,
             writable: true,
             configurable: true,
             enumerable: true
         });
 
         //test that it is writable
-        strictEqual(xs.Attribute.isWritable(obj, 'a'), true);
+        strictEqual(xs.Attribute.isWritable(me.obj, 'a'), true);
 
         //define non-writable property
-        xs.Attribute.define(obj, 'a', {
-            value: value,
+        xs.Attribute.define(me.obj, 'a', {
+            value: me.value,
             writable: false
         });
 
         //test that it is not writable
-        strictEqual(xs.Attribute.isWritable(obj, 'a'), false);
+        strictEqual(xs.Attribute.isWritable(me.obj, 'a'), false);
 
         //define accessed property
-        xs.Attribute.define(obj, 'a', {
-            get: getter,
-            set: setter
+        xs.Attribute.define(me.obj, 'a', {
+            get: me.getter,
+            set: me.setter
         });
 
         //test that it is not writable
-        strictEqual(xs.Attribute.isWritable(obj, 'a'), false);
+        strictEqual(xs.Attribute.isWritable(me.obj, 'a'), false);
     });
 
     test('isConfigurable', function () {
+        var me = this;
         //init test objects
-        var obj = {};
-        var value = { x: 1 };
+        me.obj = {};
+        me.value = { x: 1 };
 
     }, function () {
+        var me = this;
         //define configurable property
-        xs.Attribute.define(obj, 'a', {
-            value: value,
+        xs.Attribute.define(me.obj, 'a', {
+            value: me.value,
             writable: true,
             configurable: true,
             enumerable: true
         });
 
         //test that it is configurable
-        strictEqual(xs.Attribute.isConfigurable(obj, 'a'), true);
+        strictEqual(xs.Attribute.isConfigurable(me.obj, 'a'), true);
 
         //define non-configurable property
-        xs.Attribute.define(obj, 'a', {
+        xs.Attribute.define(me.obj, 'a', {
             configurable: false
         });
 
         //test that it is not configurable
-        strictEqual(xs.Attribute.isConfigurable(obj, 'a'), false);
+        strictEqual(xs.Attribute.isConfigurable(me.obj, 'a'), false);
     });
 
     test('isEnumerable', function () {
+        var me = this;
         //init test objects
-        var obj = {};
-        var value = { x: 1 };
+        me.obj = {};
+        me.value = { x: 1 };
 
     }, function () {
+        var me = this;
         //define enumerable property
-        xs.Attribute.define(obj, 'a', {
-            value: value,
+        xs.Attribute.define(me.obj, 'a', {
+            value: me.value,
             writable: true,
             configurable: true,
             enumerable: true
         });
 
         //test that it is enumerable
-        strictEqual(xs.Attribute.isEnumerable(obj, 'a'), true);
+        strictEqual(xs.Attribute.isEnumerable(me.obj, 'a'), true);
 
         //define non-enumerable property
-        xs.Attribute.define(obj, 'a', {
+        xs.Attribute.define(me.obj, 'a', {
             enumerable: false
         });
 
         //test that it is not enumerable
-        strictEqual(xs.Attribute.isEnumerable(obj, 'a'), false);
+        strictEqual(xs.Attribute.isEnumerable(me.obj, 'a'), false);
     });
 
     test('isDescriptor', function () {
@@ -281,23 +293,23 @@ module('xs.lang.Attribute', function () {
     });
 
     test('constant', function () {
+        var me = this;
         //init test objects
-        var obj = {};
-        var value = { x: 1 };
+        me.obj = {};
+        me.value = { x: 1 };
 
     }, function () {
+        var me = this;
         //define and test constant
-        xs.Attribute.constant(obj, 'a', value);
-        strictEqual(obj.a, value);
+        xs.Attribute.constant(me.obj, 'a', me.value);
+        strictEqual(me.obj.a, me.value);
 
         //constant is defined
-        strictEqual('a' in obj, true);
+        strictEqual('a' in me.obj, true);
 
         //constant is immutable for change
-        throws(function () {
-            obj.a = 1;
-        });
-        strictEqual(obj['a'], value);
+        me.obj.a = 1;
+        strictEqual(me.obj['a'], me.value);
     });
 
     test('property.prepare', function () {
@@ -346,45 +358,47 @@ module('xs.lang.Attribute', function () {
     });
 
     test('property.define', function () {
+        var me = this;
         //init test objects
-        var obj = {};
-        var getter = function () {
+        me.obj = {};
+        me.getter = function () {
             return 1;
         };
-        var setter = function (value) {
+        me.setter = function (value) {
             this.value = value;
         };
-        var value = { x: 1 };
+        me.value = { x: 1 };
 
     }, function () {
+        var me = this;
         //try to define incorrect descriptor
-        xs.Attribute.property.define(obj, 'a', value);
+        xs.Attribute.property.define(me.obj, 'a', me.value);
 
-        strictEqual(obj.a, undefined);
+        strictEqual(me.obj.a, undefined);
 
         //define assigned property correctly
-        xs.Attribute.property.define(obj, 'b', {
-            value: value,
+        xs.Attribute.property.define(me.obj, 'b', {
+            value: me.value,
             configurable: true,
             enumerable: false,
             writable: false,
             default: 5,
             someProperty: null
         });
-        strictEqual(xs.Attribute.isAssigned(obj, 'b'), true);
-        strictEqual(xs.Attribute.isConfigurable(obj, 'b'), false);
-        strictEqual(xs.Attribute.isWritable(obj, 'b'), true);
-        strictEqual(xs.Attribute.isEnumerable(obj, 'b'), true);
-        strictEqual(obj.b, value);
+        strictEqual(xs.Attribute.isAssigned(me.obj, 'b'), true);
+        strictEqual(xs.Attribute.isConfigurable(me.obj, 'b'), false);
+        strictEqual(xs.Attribute.isWritable(me.obj, 'b'), true);
+        strictEqual(xs.Attribute.isEnumerable(me.obj, 'b'), true);
+        strictEqual(me.obj.b, me.value);
 
         //define accessed property correctly
-        xs.Attribute.property.define(obj, 'c', {
-            get: getter,
-            set: setter
+        xs.Attribute.property.define(me.obj, 'c', {
+            get: me.getter,
+            set: me.setter
         });
-        strictEqual(xs.Attribute.isAccessed(obj, 'c'), true);
-        strictEqual(xs.Attribute.isConfigurable(obj, 'c'), false);
-        strictEqual(xs.Attribute.isEnumerable(obj, 'c'), true);
+        strictEqual(xs.Attribute.isAccessed(me.obj, 'c'), true);
+        strictEqual(xs.Attribute.isConfigurable(me.obj, 'c'), false);
+        strictEqual(xs.Attribute.isEnumerable(me.obj, 'c'), true);
     });
 
     test('method.prepare', function () {
