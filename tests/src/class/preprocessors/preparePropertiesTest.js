@@ -11,86 +11,92 @@
 module('xs.class.preprocessors.prepareProperties', function () {
 
     test('properties chain', function () {
-        //Base
-        var BaseName = 'my.Base';
+        var me = this;
 
-        var baseAGet = function () {
+        //Base
+        me.BaseName = 'my.Base';
+
+        me.baseAGet = function () {
 
             return 1;
         };
         //define
-        var Base = xs.Class.create(function () {
+        me.Base = xs.Class.create(function () {
             this.properties.a = {
-                get: baseAGet
+                get: me.baseAGet
             };
         });
 
         //save
-        var BaseSave = xs.ClassManager.get(BaseName);
-        BaseSave && xs.ClassManager.delete(BaseName);
+        me.BaseSave = xs.ClassManager.get(me.BaseName);
+        me.BaseSave && xs.ClassManager.delete(me.BaseName);
 
         //add to ClassManager
-        xs.ClassManager.add(BaseName, Base);
+        xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        var ParentName = 'my.Parent';
+        me.ParentName = 'my.Parent';
 
-        var parentAGet = function () {
+        me.parentAGet = function () {
 
             return this.privates.a;
         };
-        var parentBSet = function (b) {
+        me.parentBSet = function (b) {
 
             return this.privates.b = b + 1;
         };
         //define
-        var Parent = xs.Class.create(function () {
+        me.Parent = xs.Class.create(function () {
             this.extends = 'my.Base';
             this.properties.a = {
-                get: parentAGet
+                get: me.parentAGet
             };
             this.properties.b = {
-                set: parentBSet
+                set: me.parentBSet
             };
         });
 
         //save
-        var ParentSave = xs.ClassManager.get(ParentName);
-        ParentSave && xs.ClassManager.delete(ParentName);
+        me.ParentSave = xs.ClassManager.get(me.ParentName);
+        me.ParentSave && xs.ClassManager.delete(me.ParentName);
 
         //add to ClassManager
-        xs.ClassManager.add(ParentName, Parent);
+        xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        var ChildName = 'my.Child';
+        me.ChildName = 'my.Child';
 
 
-        var childCGet = function () {
+        me.childCGet = function () {
 
             return this.privates.c + '!';
         };
-        var childCSet = function (c) {
+        me.childCSet = function (c) {
 
             return this.privates.c = '?' + c;
         };
         //define
-        var Child = xs.Class.create(function () {
+        me.Child = xs.Class.create(function () {
             this.extends = 'my.Parent';
             this.properties.a = 2;
             this.properties.c = {
-                get: childCGet,
-                set: childCSet
+                get: me.childCGet,
+                set: me.childCSet
             };
         });
 
         //save
-        var ChildSave = xs.ClassManager.get(ChildName);
-        ChildSave && xs.ClassManager.delete(ChildName);
+        me.ChildSave = xs.ClassManager.get(me.ChildName);
+        me.ChildSave && xs.ClassManager.delete(me.ChildName);
 
         //add to ClassManager
-        xs.ClassManager.add(ChildName, Child);
+        xs.ClassManager.add(me.ChildName, me.Child);
 
+        xs.onReady(me.done);
+
+        return false;
     }, function () {
+        var me = this;
 
         //init properties (will be referred to descriptor.static.properties)
         var properties;
@@ -99,18 +105,18 @@ module('xs.class.preprocessors.prepareProperties', function () {
         //Base
         properties = my.Base.descriptor.properties;
         //a
-        strictEqual(properties.a.get, baseAGet);
+        strictEqual(properties.a.get, me.baseAGet);
         strictEqual(properties.a.configurable, false);
         strictEqual(properties.a.enumerable, true);
 
         //Parent
         properties = my.Parent.descriptor.properties;
         //a
-        strictEqual(properties.a.get, parentAGet);
+        strictEqual(properties.a.get, me.parentAGet);
         strictEqual(properties.a.configurable, false);
         strictEqual(properties.a.enumerable, true);
         //b
-        strictEqual(properties.b.set, parentBSet);
+        strictEqual(properties.b.set, me.parentBSet);
         strictEqual(properties.b.configurable, false);
         strictEqual(properties.b.enumerable, true);
 
@@ -122,28 +128,29 @@ module('xs.class.preprocessors.prepareProperties', function () {
         strictEqual(properties.a.configurable, false);
         strictEqual(properties.a.enumerable, true);
         //b
-        strictEqual(properties.b.set, parentBSet);
+        strictEqual(properties.b.set, me.parentBSet);
         strictEqual(properties.b.configurable, false);
         strictEqual(properties.b.enumerable, true);
         //c
-        strictEqual(properties.c.get, childCGet);
-        strictEqual(properties.c.set, childCSet);
+        strictEqual(properties.c.get, me.childCGet);
+        strictEqual(properties.c.set, me.childCSet);
         strictEqual(properties.c.configurable, false);
         strictEqual(properties.c.enumerable, true);
 
     }, function () {
+        var me = this;
 
         //tearDown
         //Base
-        xs.ClassManager.delete(BaseName);
-        BaseSave && xs.ClassManager.add(BaseName, BaseSave);
+        xs.ClassManager.delete(me.BaseName);
+        me.BaseSave && xs.ClassManager.add(me.BaseName, me.BaseSave);
 
         //Parent
-        xs.ClassManager.delete(ParentName);
-        ParentSave && xs.ClassManager.add(ParentName, ParentSave);
+        xs.ClassManager.delete(me.ParentName);
+        me.ParentSave && xs.ClassManager.add(me.ParentName, me.ParentSave);
 
         //Child
-        xs.ClassManager.delete(ChildName);
-        ChildSave && xs.ClassManager.add(ChildName, ChildSave);
+        xs.ClassManager.delete(me.ChildName);
+        me.ChildSave && xs.ClassManager.add(me.ChildName, me.ChildSave);
     });
 });
