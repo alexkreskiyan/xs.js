@@ -14,7 +14,7 @@ module('xs.class.preprocessors.prepareMixins', function () {
         var me = this;
 
         //Class
-        me.ClassName = 'my.Class';
+        me.ClassName = 'tests.class.preprocessors.prepareMixins.Class';
 
         //define
         me.Class = xs.Class.create(function () {
@@ -29,13 +29,15 @@ module('xs.class.preprocessors.prepareMixins', function () {
         //add to ClassManager
         xs.ClassManager.add(me.ClassName, me.Class);
 
-        xs.onReady(me.done);
+        xs.onReady([me.ClassName], me.done);
 
         return false;
     }, function () {
+        var ns = tests.class.preprocessors.prepareMixins;
+
         //check chain
-        strictEqual(xs.size(my.Class.descriptor.mixins), 1);
-        strictEqual(my.Class.descriptor.mixins.demo, 'xs.Base');
+        strictEqual(xs.size(ns.Class.descriptor.mixins), 1);
+        strictEqual(ns.Class.descriptor.mixins.demo, 'xs.Base');
 
     }, function () {
         var me = this;
