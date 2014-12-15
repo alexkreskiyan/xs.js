@@ -63,7 +63,6 @@
                 if (xs.isString(name) && name) {
                     name = resolveName(name);
                     requires.indexOf(name) < 0 && requires.push(name);
-                    requires.push(name);
                     imports[name] = alias;
 
                     //otherwise - incorrect alias error

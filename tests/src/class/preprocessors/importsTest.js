@@ -33,7 +33,14 @@ module('xs.class.preprocessors.imports', function () {
             me.imports = imports;
         });
 
-        xs.onReady(me.done);
+        xs.onReady([
+            'tests.class.preprocessors.imports.Child',
+            'tests.class.preprocessors.imports.Base',
+            'tests.class.preprocessors.imports.One',
+            'tests.class.preprocessors.imports.Two',
+            'tests.class.preprocessors.imports.Three'
+        ], me.done);
+
 
         return false;
     }, function () {
