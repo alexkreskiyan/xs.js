@@ -27,7 +27,12 @@ module('xs.class.preprocessors.processMixins', function () {
             this.mixins.mix2 = 'ns.Mix2';
         });
 
-        xs.onReady(me.done);
+        xs.onReady([
+            'tests.class.preprocessors.processMixins.Child',
+            'tests.class.preprocessors.processMixins.Base',
+            'tests.class.preprocessors.processMixins.Mix1',
+            'tests.class.preprocessors.processMixins.Mix2'
+        ], me.done);
 
         return false;
     }, function () {
