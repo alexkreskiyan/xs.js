@@ -66,7 +66,7 @@ module('xs.class.preprocessors.defineConstants', function () {
         return false;
     }, function () {
         var ns = tests.class.preprocessors.defineConstants;
-        
+
         //check constants
         //Base
         //a
