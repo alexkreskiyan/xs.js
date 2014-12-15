@@ -14,7 +14,7 @@ module('xs.class.preprocessors.prepareProperties', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'my.Base';
+        me.BaseName = 'tests.class.preprocessors.prepareProperties.Base';
 
         me.baseAGet = function () {
 
@@ -35,7 +35,7 @@ module('xs.class.preprocessors.prepareProperties', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.Parent';
+        me.ParentName = 'tests.class.preprocessors.prepareProperties.Parent';
 
         me.parentAGet = function () {
 
@@ -47,7 +47,7 @@ module('xs.class.preprocessors.prepareProperties', function () {
         };
         //define
         me.Parent = xs.Class.create(function () {
-            this.extends = 'my.Base';
+            this.extends = 'tests.class.preprocessors.prepareProperties.Base';
             this.properties.a = {
                 get: me.parentAGet
             };
@@ -64,7 +64,7 @@ module('xs.class.preprocessors.prepareProperties', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.Child';
+        me.ChildName = 'tests.class.preprocessors.prepareProperties.Child';
 
 
         me.childCGet = function () {
@@ -77,7 +77,7 @@ module('xs.class.preprocessors.prepareProperties', function () {
         };
         //define
         me.Child = xs.Class.create(function () {
-            this.extends = 'my.Parent';
+            this.extends = 'tests.class.preprocessors.prepareProperties.Parent';
             this.properties.a = 2;
             this.properties.c = {
                 get: me.childCGet,
@@ -92,25 +92,31 @@ module('xs.class.preprocessors.prepareProperties', function () {
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
 
-        xs.onReady(me.done);
+        xs.onReady([
+            me.BaseName,
+            me.ParentName,
+            me.ChildName
+        ], me.done);
 
         return false;
     }, function () {
         var me = this;
+
+        var ns = tests.class.preprocessors.prepareProperties;
 
         //init properties (will be referred to descriptor.static.properties)
         var properties;
 
         //check properties definition
         //Base
-        properties = my.Base.descriptor.properties;
+        properties = ns.Base.descriptor.properties;
         //a
         strictEqual(properties.a.get, me.baseAGet);
         strictEqual(properties.a.configurable, false);
         strictEqual(properties.a.enumerable, true);
 
         //Parent
-        properties = my.Parent.descriptor.properties;
+        properties = ns.Parent.descriptor.properties;
         //a
         strictEqual(properties.a.get, me.parentAGet);
         strictEqual(properties.a.configurable, false);
@@ -121,7 +127,7 @@ module('xs.class.preprocessors.prepareProperties', function () {
         strictEqual(properties.b.enumerable, true);
 
         //Child
-        properties = my.Child.descriptor.properties;
+        properties = ns.Child.descriptor.properties;
         //a
         strictEqual(properties.a.value, 2);
         strictEqual(properties.a.writable, true);
