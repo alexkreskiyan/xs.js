@@ -14,7 +14,7 @@ module('xs.class.preprocessors.defineConstants', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'my.Base';
+        me.BaseName = 'tests.class.preprocessors.defineConstants.Base';
 
         //define
         me.Base = xs.Class.create(function () {
@@ -29,11 +29,11 @@ module('xs.class.preprocessors.defineConstants', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.Parent';
+        me.ParentName = 'tests.class.preprocessors.defineConstants.Parent';
 
         //define
         me.Parent = xs.Class.create(function () {
-            this.extends = 'my.Base';
+            this.extends = 'tests.class.preprocessors.defineConstants.Base';
             this.constants.a = 2;
             this.constants.b = 3;
         });
@@ -46,11 +46,11 @@ module('xs.class.preprocessors.defineConstants', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.Child';
+        me.ChildName = 'tests.class.preprocessors.defineConstants.Child';
 
         //define
         me.Child = xs.Class.create(function () {
-            this.extends = 'my.Parent';
+            this.extends = 'tests.class.preprocessors.defineConstants.Parent';
             this.constants.c = 5;
         });
 
@@ -65,36 +65,38 @@ module('xs.class.preprocessors.defineConstants', function () {
 
         return false;
     }, function () {
+        var ns = tests.class.preprocessors.defineConstants;
+        
         //check constants
         //Base
         //a
-        strictEqual(my.Base.a, 1);
-        strictEqual(xs.Attribute.isWritable(my.Base, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Base, 'a'), false);
+        strictEqual(ns.Base.a, 1);
+        strictEqual(xs.Attribute.isWritable(ns.Base, 'a'), false);
+        strictEqual(xs.Attribute.isConfigurable(ns.Base, 'a'), false);
 
         //Parent
         //a
-        strictEqual(my.Parent.a, 2);
-        strictEqual(xs.Attribute.isWritable(my.Parent, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Parent, 'a'), false);
+        strictEqual(ns.Parent.a, 2);
+        strictEqual(xs.Attribute.isWritable(ns.Parent, 'a'), false);
+        strictEqual(xs.Attribute.isConfigurable(ns.Parent, 'a'), false);
         //b
-        strictEqual(my.Parent.b, 3);
-        strictEqual(xs.Attribute.isWritable(my.Parent, 'b'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Parent, 'b'), false);
+        strictEqual(ns.Parent.b, 3);
+        strictEqual(xs.Attribute.isWritable(ns.Parent, 'b'), false);
+        strictEqual(xs.Attribute.isConfigurable(ns.Parent, 'b'), false);
 
         //Child
         //a
-        strictEqual(my.Child.a, 2);
-        strictEqual(xs.Attribute.isWritable(my.Child, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Child, 'a'), false);
+        strictEqual(ns.Child.a, 2);
+        strictEqual(xs.Attribute.isWritable(ns.Child, 'a'), false);
+        strictEqual(xs.Attribute.isConfigurable(ns.Child, 'a'), false);
         //b
-        strictEqual(my.Child.b, 3);
-        strictEqual(xs.Attribute.isWritable(my.Child, 'b'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Child, 'b'), false);
+        strictEqual(ns.Child.b, 3);
+        strictEqual(xs.Attribute.isWritable(ns.Child, 'b'), false);
+        strictEqual(xs.Attribute.isConfigurable(ns.Child, 'b'), false);
         //c
-        strictEqual(my.Child.c, 5);
-        strictEqual(xs.Attribute.isWritable(my.Child, 'c'), false);
-        strictEqual(xs.Attribute.isConfigurable(my.Child, 'c'), false);
+        strictEqual(ns.Child.c, 5);
+        strictEqual(xs.Attribute.isWritable(ns.Child, 'c'), false);
+        strictEqual(xs.Attribute.isConfigurable(ns.Child, 'c'), false);
 
 
     }, function () {
