@@ -14,7 +14,7 @@ module('xs.class.preprocessors.namespace', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'my.base.Base';
+        me.BaseName = 'tests.class.preprocessors.namespace.base.Base';
 
         //define
         me.Base = xs.Class.create(function () {
@@ -28,11 +28,11 @@ module('xs.class.preprocessors.namespace', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.base.Parent';
+        me.ParentName = 'tests.class.preprocessors.namespace.base.Parent';
 
         //define
         me.Parent = xs.Class.create(function () {
-            this.namespace = 'my.base';
+            this.namespace = 'tests.class.preprocessors.namespace.base';
             this.extends = 'ns.Base';
         });
 
@@ -44,12 +44,12 @@ module('xs.class.preprocessors.namespace', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.demo.Child';
+        me.ChildName = 'tests.class.preprocessors.namespace.demo.Child';
 
         //define
         me.Child = xs.Class.create(function () {
-            this.namespace = 'my.demo';
-            this.extends = 'my.base.Parent';
+            this.namespace = 'tests.class.preprocessors.namespace.demo';
+            this.extends = 'tests.class.preprocessors.namespace.base.Parent';
         });
 
         //save
@@ -60,15 +60,21 @@ module('xs.class.preprocessors.namespace', function () {
         xs.ClassManager.add(me.ChildName, me.Child);
 
         //call done, when classes ready to continue test
-        xs.onReady(me.done);
+        xs.onReady([
+            me.BaseName,
+            me.ParentName,
+            me.ChildName
+        ], me.done);
 
         return false;
     }, function () {
+        var ns = tests.class.preprocessors.namespace;
+
         //Parent
-        strictEqual(my.base.Parent.parent, my.base.Base);
+        strictEqual(ns.base.Parent.parent, ns.base.Base);
 
         //Child
-        strictEqual(my.demo.Child.parent, my.base.Parent);
+        strictEqual(ns.demo.Child.parent, ns.base.Parent);
     }, function () {
         var me = this;
 
