@@ -14,7 +14,7 @@ module('xs.class.preprocessors.defineMethods', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'my.Base';
+        me.BaseName = 'tests.class.preprocessors.defineMethods.Base';
 
         //define
         me.Base = xs.Class.create(function () {
@@ -32,11 +32,11 @@ module('xs.class.preprocessors.defineMethods', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.Parent';
+        me.ParentName = 'tests.class.preprocessors.defineMethods.Parent';
 
         //define
         me.Parent = xs.Class.create(function () {
-            this.extends = 'my.Base';
+            this.extends = 'tests.class.preprocessors.defineMethods.Base';
             this.methods.a = function () {
 
                 return 2;
@@ -55,11 +55,11 @@ module('xs.class.preprocessors.defineMethods', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.Child';
+        me.ChildName = 'tests.class.preprocessors.defineMethods.Child';
 
         //define
         me.Child = xs.Class.create(function () {
-            this.extends = 'my.Parent';
+            this.extends = 'tests.class.preprocessors.defineMethods.Parent';
             this.methods.c = function () {
 
                 return 5;
@@ -81,17 +81,19 @@ module('xs.class.preprocessors.defineMethods', function () {
 
         return false;
     }, function () {
+        var ns = tests.class.preprocessors.defineMethods;
+
         //Base
-        var base = new my.Base;
+        var base = new ns.Base;
         strictEqual(base.a(), 1);
 
         //Parent
-        var parent = new my.Parent;
+        var parent = new ns.Parent;
         strictEqual(parent.a(), 2);
         strictEqual(parent.b(), 3);
 
         //Child
-        var child = new my.Child;
+        var child = new ns.Child;
         strictEqual(child.a(), 2);
         strictEqual(child.b(), 3);
         strictEqual(child.c(), 5);

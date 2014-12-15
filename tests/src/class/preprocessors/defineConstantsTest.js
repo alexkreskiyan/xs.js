@@ -61,7 +61,11 @@ module('xs.class.preprocessors.defineConstants', function () {
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
 
-        xs.onReady(me.done);
+        xs.onReady([
+            me.BaseName,
+            me.ParentName,
+            me.ChildName
+        ], me.done);
 
         return false;
     }, function () {
