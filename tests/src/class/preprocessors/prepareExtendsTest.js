@@ -23,7 +23,7 @@ module('xs.class.preprocessors.prepareExtends', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'my.Base';
+        me.BaseName = 'tests.class.preprocessors.prepareExtends.Base';
 
         //define
         me.Base = xs.Class.create(function () {
@@ -37,11 +37,11 @@ module('xs.class.preprocessors.prepareExtends', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.Parent';
+        me.ParentName = 'tests.class.preprocessors.prepareExtends.Parent';
 
         //define
         me.Parent = xs.Class.create(function () {
-            this.extends = 'my.Base';
+            this.extends = 'tests.class.preprocessors.prepareExtends.Base';
         });
 
         //save
@@ -52,11 +52,11 @@ module('xs.class.preprocessors.prepareExtends', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.Child';
+        me.ChildName = 'tests.class.preprocessors.prepareExtends.Child';
 
         //define
         me.Child = xs.Class.create(function () {
-            this.extends = 'my.Parent';
+            this.extends = 'tests.class.preprocessors.prepareExtends.Parent';
         });
 
         //save
@@ -66,14 +66,20 @@ module('xs.class.preprocessors.prepareExtends', function () {
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
 
-        xs.onReady(me.done);
+        xs.onReady([
+            me.BaseName,
+            me.ParentName,
+            me.ChildName
+        ], me.done);
 
         return false;
     }, function () {
+        var ns = tests.class.preprocessors.prepareExtends;
+
         //check chain
-        strictEqual(my.Base.parent, xs.Base);
-        strictEqual(my.Parent.parent, my.Base);
-        strictEqual(my.Child.parent, my.Parent);
+        strictEqual(ns.Base.parent, xs.Base);
+        strictEqual(ns.Parent.parent, ns.Base);
+        strictEqual(ns.Child.parent, ns.Parent);
 
     }, function () {
         var me = this;
