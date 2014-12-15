@@ -14,7 +14,7 @@ module('xs.class.preprocessors.constructor', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'my.Base';
+        me.BaseName = 'tests.class.preprocessors.constructor.Base';
 
         me.constructor = function () {
 
@@ -37,11 +37,11 @@ module('xs.class.preprocessors.constructor', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.Parent';
+        me.ParentName = 'tests.class.preprocessors.constructor.Parent';
 
         //define
         me.Parent = xs.Class.create(function () {
-            this.extends = 'my.Base';
+            this.extends = 'tests.class.preprocessors.constructor.Base';
         });
 
         //save
@@ -52,11 +52,11 @@ module('xs.class.preprocessors.constructor', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.Child';
+        me.ChildName = 'tests.class.preprocessors.constructor.Child';
 
         //define
         me.Child = xs.Class.create(function () {
-            this.extends = 'my.Parent';
+            this.extends = 'tests.class.preprocessors.constructor.Parent';
             this.constructor = me.constructor2;
         });
 
@@ -77,15 +77,16 @@ module('xs.class.preprocessors.constructor', function () {
     }, function () {
         var me = this;
 
+        var ns = tests.class.preprocessors.constructor;
         //check chain
         //Base
-        strictEqual(my.Base.descriptor.constructor, me.constructor);
+        strictEqual(ns.Base.descriptor.constructor, me.constructor);
 
         //Parent
-        strictEqual(my.Parent.descriptor.constructor, me.constructor);
+        strictEqual(ns.Parent.descriptor.constructor, me.constructor);
 
         //Child
-        strictEqual(my.Child.descriptor.constructor, me.constructor2);
+        strictEqual(ns.Child.descriptor.constructor, me.constructor2);
     }, function () {
         var me = this;
 
