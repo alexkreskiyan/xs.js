@@ -14,7 +14,7 @@ module('xs.class.preprocessors.defineStaticMethods', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'my.Base';
+        me.BaseName = 'tests.class.preprocessors.defineStaticMethods.Base';
 
         //define
         me.Base = xs.Class.create(function () {
@@ -32,11 +32,11 @@ module('xs.class.preprocessors.defineStaticMethods', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.Parent';
+        me.ParentName = 'tests.class.preprocessors.defineStaticMethods.Parent';
 
         //define
         me.Parent = xs.Class.create(function () {
-            this.extends = 'my.Base';
+            this.extends = 'tests.class.preprocessors.defineStaticMethods.Base';
             this.static.methods.a = function () {
 
                 return 2;
@@ -55,11 +55,11 @@ module('xs.class.preprocessors.defineStaticMethods', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.Child';
+        me.ChildName = 'tests.class.preprocessors.defineStaticMethods.Child';
 
         //define
         me.Child = xs.Class.create(function () {
-            this.extends = 'my.Parent';
+            this.extends = 'tests.class.preprocessors.defineStaticMethods.Parent';
             this.static.methods.c = function () {
 
                 return 5;
@@ -73,22 +73,28 @@ module('xs.class.preprocessors.defineStaticMethods', function () {
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
 
-        xs.onReady(me.done);
+        xs.onReady([
+            me.BaseName,
+            me.ParentName,
+            me.ChildName
+        ], me.done);
 
         return false;
     }, function () {
+        var ns = tests.class.preprocessors.defineStaticMethods;
+
         //test
         //Base
-        strictEqual(my.Base.a(), 1);
+        strictEqual(ns.Base.a(), 1);
 
         //Parent
-        strictEqual(my.Parent.a(), 2);
-        strictEqual(my.Parent.b(), 3);
+        strictEqual(ns.Parent.a(), 2);
+        strictEqual(ns.Parent.b(), 3);
 
         //Child
-        strictEqual(my.Child.a(), 2);
-        strictEqual(my.Child.b(), 3);
-        strictEqual(my.Child.c(), 5);
+        strictEqual(ns.Child.a(), 2);
+        strictEqual(ns.Child.b(), 3);
+        strictEqual(ns.Child.c(), 5);
 
     }, function () {
         var me = this;
