@@ -14,7 +14,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'my.Base';
+        me.BaseName = 'tests.class.preprocessors.prepareStaticMethods.Base';
 
         me.baseA = function () {
 
@@ -34,7 +34,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.Parent';
+        me.ParentName = 'tests.class.preprocessors.prepareStaticMethods.Parent';
 
         me.parentA = function () {
 
@@ -46,7 +46,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         };
         //define
         me.Parent = xs.Class.create(function () {
-            this.extends = 'my.Base';
+            this.extends = 'tests.class.preprocessors.prepareStaticMethods.Base';
             this.static.methods.a = me.parentA;
             this.static.methods.b = me.parentB;
         });
@@ -59,7 +59,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.Child';
+        me.ChildName = 'tests.class.preprocessors.prepareStaticMethods.Child';
 
         me.childC = function () {
 
@@ -67,7 +67,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         };
         //define
         me.Child = xs.Class.create(function () {
-            this.extends = 'my.Parent';
+            this.extends = 'tests.class.preprocessors.prepareStaticMethods.Parent';
             this.static.methods.c = me.childC;
         });
 
@@ -78,18 +78,24 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
 
-        xs.onReady(me.done);
+        xs.onReady([
+            me.BaseName,
+            me.ParentName,
+            me.ChildName
+        ], me.done);
 
         return false;
     }, function () {
         var me = this;
+
+        var ns = tests.class.preprocessors.prepareStaticMethods;
 
         //init methods (will be referred to descriptor.static.methods)
         var methods;
 
         //check static methods definition
         //Base
-        methods = my.Base.descriptor.static.methods;
+        methods = ns.Base.descriptor.static.methods;
         //a
         strictEqual(methods.a.value, me.baseA);
         strictEqual(methods.a.writable, false);
@@ -97,7 +103,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         strictEqual(methods.a.enumerable, true);
 
         //Parent
-        methods = my.Parent.descriptor.static.methods;
+        methods = ns.Parent.descriptor.static.methods;
         //a
         strictEqual(methods.a.value, me.parentA);
         strictEqual(methods.a.writable, false);
@@ -110,7 +116,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         strictEqual(methods.b.enumerable, true);
 
         //Child
-        methods = my.Child.descriptor.static.methods;
+        methods = ns.Child.descriptor.static.methods;
         //a
         strictEqual(methods.a.value, me.parentA);
         strictEqual(methods.a.writable, false);
