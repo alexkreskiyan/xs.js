@@ -14,7 +14,7 @@ module('xs.class.preprocessors.defineStaticProperties', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'my.Base';
+        me.BaseName = 'tests.class.preprocessors.defineStaticProperties.Base';
 
         //define
         me.Base = xs.Class.create(function () {
@@ -34,11 +34,11 @@ module('xs.class.preprocessors.defineStaticProperties', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.Parent';
+        me.ParentName = 'tests.class.preprocessors.defineStaticProperties.Parent';
 
         //define
         me.Parent = xs.Class.create(function () {
-            this.extends = 'my.Base';
+            this.extends = 'tests.class.preprocessors.defineStaticProperties.Base';
             this.static.properties.a = {
                 get: function () {
 
@@ -61,11 +61,11 @@ module('xs.class.preprocessors.defineStaticProperties', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.Child';
+        me.ChildName = 'tests.class.preprocessors.defineStaticProperties.Child';
 
         //define
         me.Child = xs.Class.create(function () {
-            this.extends = 'my.Parent';
+            this.extends = 'tests.class.preprocessors.defineStaticProperties.Parent';
             this.static.properties.a = 2;
             this.static.properties.c = {
                 get: function () {
@@ -86,42 +86,48 @@ module('xs.class.preprocessors.defineStaticProperties', function () {
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
 
-        xs.onReady(me.done);
+        xs.onReady([
+            me.BaseName,
+            me.ParentName,
+            me.ChildName
+        ], me.done);
 
         return false;
     }, function () {
+        var ns = tests.class.preprocessors.defineStaticProperties;
+
         //Base
         //a
-        strictEqual(my.Base.a, 1);
-        my.Base.a = 2; //readonly
-        strictEqual(my.Base.a, 1);
+        strictEqual(ns.Base.a, 1);
+        ns.Base.a = 2; //readonly
+        strictEqual(ns.Base.a, 1);
 
         //Parent
         //a
-        strictEqual(my.Parent.a, undefined);
-        my.Parent.a = 2; //setter assigned
-        strictEqual(my.Parent.a, 2);
-        strictEqual(my.Parent.privates.a, 2);
+        strictEqual(ns.Parent.a, undefined);
+        ns.Parent.a = 2; //setter assigned
+        strictEqual(ns.Parent.a, 2);
+        strictEqual(ns.Parent.privates.a, 2);
         //b
-        strictEqual(my.Parent.b, undefined);
-        my.Parent.b = 2; //getter assigned
-        strictEqual(my.Parent.b, 3);
-        strictEqual(my.Parent.privates.b, 3);
+        strictEqual(ns.Parent.b, undefined);
+        ns.Parent.b = 2; //getter assigned
+        strictEqual(ns.Parent.b, 3);
+        strictEqual(ns.Parent.privates.b, 3);
 
         //Child
         //a
-        strictEqual(my.Child.a, 2);
+        strictEqual(ns.Child.a, 2);
         //b
-        strictEqual(my.Child.b, undefined);
-        my.Child.b = 2; //getter assigned
-        strictEqual(my.Child.b, 3);
-        strictEqual(my.Child.privates.b, 3);
+        strictEqual(ns.Child.b, undefined);
+        ns.Child.b = 2; //getter assigned
+        strictEqual(ns.Child.b, 3);
+        strictEqual(ns.Child.privates.b, 3);
         //c
-        strictEqual(my.Child.c, 'undefined!');
-        strictEqual(my.Child.privates.c, undefined);
-        my.Child.c = 3;
-        strictEqual(my.Child.c, '?3!');
-        strictEqual(my.Child.privates.c, '?3');
+        strictEqual(ns.Child.c, 'undefined!');
+        strictEqual(ns.Child.privates.c, undefined);
+        ns.Child.c = 3;
+        strictEqual(ns.Child.c, '?3!');
+        strictEqual(ns.Child.privates.c, '?3');
     }, function () {
         var me = this;
 
