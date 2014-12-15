@@ -12,9 +12,10 @@ module('xs.class.preprocessors.defineProperties', function () {
 
     test('properties chain', function () {
         var me = this;
+
         //setUp
         //Base
-        me.BaseName = 'my.Base';
+        me.BaseName = 'tests.class.preprocessors.defineProperties.Base';
 
         //define
         me.Base = xs.Class.create(function () {
@@ -34,11 +35,11 @@ module('xs.class.preprocessors.defineProperties', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.Parent';
+        me.ParentName = 'tests.class.preprocessors.defineProperties.Parent';
 
         //define
         me.Parent = xs.Class.create(function () {
-            this.extends = 'my.Base';
+            this.extends = 'tests.class.preprocessors.defineProperties.Base';
             this.properties.a = {
                 get: function () {
 
@@ -61,11 +62,11 @@ module('xs.class.preprocessors.defineProperties', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.Child';
+        me.ChildName = 'tests.class.preprocessors.defineProperties.Child';
 
         //define
         me.Child = xs.Class.create(function () {
-            this.extends = 'my.Parent';
+            this.extends = 'tests.class.preprocessors.defineProperties.Parent';
             this.properties.a = 2;
             this.properties.c = {
                 get: function () {
@@ -94,16 +95,18 @@ module('xs.class.preprocessors.defineProperties', function () {
 
         return false;
     }, function () {
+        var ns = tests.class.preprocessors.defineProperties;
+
         //test
         //Base
-        var base = new my.Base;
+        var base = new ns.Base;
         //a
         strictEqual(base.a, 1);
         base.a = 2; //readonly
         strictEqual(base.a, 1);
 
         //Parent
-        var parent = new my.Parent;
+        var parent = new ns.Parent;
         //a
         strictEqual(parent.a, undefined);
         parent.a = 2; //setter assigned
@@ -116,7 +119,7 @@ module('xs.class.preprocessors.defineProperties', function () {
         strictEqual(parent.privates.b, 3);
 
         //Child
-        var child = new my.Child;
+        var child = new ns.Child;
         //a
         strictEqual(child.a, 2);
         //b
@@ -133,6 +136,7 @@ module('xs.class.preprocessors.defineProperties', function () {
 
     }, function () {
         var me = this;
+
         //Base
         xs.ClassManager.delete(me.BaseName);
         me.BaseSave && xs.ClassManager.add(me.BaseName, me.BaseSave);
