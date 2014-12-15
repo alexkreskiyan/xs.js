@@ -28,6 +28,8 @@ module('xs.class.preprocessors.processExtends', function () {
         //Class extends xs.Base
         strictEqual(me.Class.parent, xs.Base);
     }, function () {
+        var me = this;
+        
         //delete Class from ClassManager
         xs.ClassManager.delete(me.Class.label);
     });
@@ -87,6 +89,8 @@ module('xs.class.preprocessors.processExtends', function () {
 
         return false;
     }, function () {
+        var ns = tests.class.preprocessors.processExtends;
+
         //check chain
         strictEqual(ns.Base.parent, xs.Base);
         strictEqual(ns.Parent.parent, ns.Base);
