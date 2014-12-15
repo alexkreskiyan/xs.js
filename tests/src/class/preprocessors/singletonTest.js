@@ -14,7 +14,7 @@ module('xs.class.preprocessors.singleton', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'my.Base';
+        me.BaseName = 'tests.class.preprocessors.singleton.Base';
 
         //define
         me.Base = xs.Class.create(function () {
@@ -28,11 +28,11 @@ module('xs.class.preprocessors.singleton', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.Parent';
+        me.ParentName = 'tests.class.preprocessors.singleton.Parent';
 
         //define
         me.Parent = xs.Class.create(function () {
-            this.extends = 'my.Base';
+            this.extends = 'tests.class.preprocessors.singleton.Base';
             this.singleton = true;
         });
 
@@ -44,11 +44,11 @@ module('xs.class.preprocessors.singleton', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.Child';
+        me.ChildName = 'tests.class.preprocessors.singleton.Child';
 
         //define
         me.Child = xs.Class.create(function () {
-            this.extends = 'my.Parent';
+            this.extends = 'tests.class.preprocessors.singleton.Parent';
         });
 
         //save
@@ -58,20 +58,26 @@ module('xs.class.preprocessors.singleton', function () {
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
 
-        xs.onReady(me.done);
+        xs.onReady([
+            me.BaseName,
+            me.ParentName,
+            me.ChildName
+        ], me.done);
 
         return false;
     }, function () {
+        var ns = tests.class.preprocessors.singleton;
+
         //Base
-        new my.Base;
+        new ns.Base;
 
         //Parent
         throws(function () {
-            new my.Parent;
+            new ns.Parent;
         });
 
         //Child
-        new my.Child;
+        new ns.Child;
 
     }, function () {
         var me = this;
