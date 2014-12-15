@@ -14,7 +14,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'my.Base';
+        me.BaseName = 'tests.class.preprocessors.prepareMethods.Base';
 
         me.baseA = function () {
 
@@ -34,7 +34,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.Parent';
+        me.ParentName = 'tests.class.preprocessors.prepareMethods.Parent';
 
         me.parentA = function () {
 
@@ -46,7 +46,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         };
         //define
         me.Parent = xs.Class.create(function () {
-            this.extends = 'my.Base';
+            this.extends = 'tests.class.preprocessors.prepareMethods.Base';
             this.methods.a = me.parentA;
             this.methods.b = me.parentB;
         });
@@ -59,7 +59,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.Child';
+        me.ChildName = 'tests.class.preprocessors.prepareMethods.Child';
 
         me.childC = function () {
 
@@ -67,7 +67,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         };
         //define
         me.Child = xs.Class.create(function () {
-            this.extends = 'my.Parent';
+            this.extends = 'tests.class.preprocessors.prepareMethods.Parent';
             this.methods.c = me.childC;
         });
 
@@ -78,18 +78,24 @@ module('xs.class.preprocessors.prepareMethods', function () {
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
 
-        xs.onReady(me.done);
+        xs.onReady([
+            me.BaseName,
+            me.ParentName,
+            me.ChildName
+        ], me.done);
 
         return false;
     }, function () {
         var me = this;
+
+        var ns = tests.class.preprocessors.prepareMethods;
 
         //init methods (will be referred to descriptor.methods)
         var methods;
 
         //check methods definition
         //Base
-        methods = my.Base.descriptor.methods;
+        methods = ns.Base.descriptor.methods;
         //a
         strictEqual(methods.a.value, me.baseA);
         strictEqual(methods.a.writable, false);
@@ -97,7 +103,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         strictEqual(methods.a.enumerable, true);
 
         //Parent
-        methods = my.Parent.descriptor.methods;
+        methods = ns.Parent.descriptor.methods;
         //a
         strictEqual(methods.a.value, me.parentA);
         strictEqual(methods.a.writable, false);
@@ -110,7 +116,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         strictEqual(methods.b.enumerable, true);
 
         //Child
-        methods = my.Child.descriptor.methods;
+        methods = ns.Child.descriptor.methods;
         //a
         strictEqual(methods.a.value, me.parentA);
         strictEqual(methods.a.writable, false);
