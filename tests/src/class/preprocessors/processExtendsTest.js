@@ -13,11 +13,13 @@ module('xs.class.preprocessors.processExtends', function () {
     test('extend base', function () {
         var me = this;
 
+        me.ClassName = 'tests.class.preprocessors.processExtends.Class';
+
         //create Class
-        me.Class = xs.Class.create(function () {
+        me.Class = xs.define('tests.class.preprocessors.processExtends.Class', function () {
         });
 
-        xs.onReady(me.done);
+        xs.onReady([me.ClassName], me.done);
 
         return false;
     }, function () {
@@ -25,13 +27,16 @@ module('xs.class.preprocessors.processExtends', function () {
 
         //Class extends xs.Base
         strictEqual(me.Class.parent, xs.Base);
+    }, function () {
+        //delete Class from ClassManager
+        xs.ClassManager.delete(me.Class.label);
     });
 
     test('extend chain', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'my.Base';
+        me.BaseName = 'tests.class.preprocessors.processExtends.Base';
 
         //define
         me.Base = xs.Class.create(function () {
@@ -45,11 +50,11 @@ module('xs.class.preprocessors.processExtends', function () {
         xs.ClassManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'my.Parent';
+        me.ParentName = 'tests.class.preprocessors.processExtends.Parent';
 
         //define
         me.Parent = xs.Class.create(function () {
-            this.extends = 'my.Base';
+            this.extends = 'tests.class.preprocessors.processExtends.Base';
         });
 
         //save
@@ -60,11 +65,11 @@ module('xs.class.preprocessors.processExtends', function () {
         xs.ClassManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'my.Child';
+        me.ChildName = 'tests.class.preprocessors.processExtends.Child';
 
         //define
         me.Child = xs.Class.create(function () {
-            this.extends = 'my.Parent';
+            this.extends = 'tests.class.preprocessors.processExtends.Parent';
         });
 
         //save
@@ -74,14 +79,18 @@ module('xs.class.preprocessors.processExtends', function () {
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
 
-        xs.onReady(me.done);
+        xs.onReady([
+            me.BaseName,
+            me.ParentName,
+            me.ChildName
+        ], me.done);
 
         return false;
     }, function () {
         //check chain
-        strictEqual(my.Base.parent, xs.Base);
-        strictEqual(my.Parent.parent, my.Base);
-        strictEqual(my.Child.parent, my.Parent);
+        strictEqual(ns.Base.parent, xs.Base);
+        strictEqual(ns.Parent.parent, ns.Base);
+        strictEqual(ns.Child.parent, ns.Parent);
 
     }, function () {
         var me = this;
