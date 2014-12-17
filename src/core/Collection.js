@@ -27,10 +27,59 @@
      *
      * @singleton
      */
-    xs.core.Collection = function () {
+    xs.core.Collection = function (array) {
         var me = this;
 
-        var items = {};
+        //items array
+        var items = [];
+
+//        //keys
+//        keyOf(item)
+//        lastKeyOf(item)
+//        hasKey(index)
+//
+//        has(item)
+//
+//        length
+//        clone
+//
+//        at(index)
+//        first
+//        last
+//
+//        //adding elements
+//        add(item)
+//        addAll(items[])
+//        insert(index,item)
+//        insertAll(index,items[])
+//        set(index,item)
+//
+//        //removing elements
+//        delete(item)
+//        deleteLast(item)
+//        deleteAll([item])
+//            deleteAt(index)
+//        shift()
+//        pop()
+//
+//        //iteration
+//        each
+//        eachReverse
+//
+//        //find
+//        find
+//        findLast
+//        findAll
+//
+//        //operation
+//        map
+//        reduce
+//        reduceRight
+//
+//        //verification
+//        every
+//        some
+//        none
 
 
     };
