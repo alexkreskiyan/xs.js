@@ -29,6 +29,7 @@
     var fn = xs.Function = new (function () {
         var me = this;
 
+        var _bind = Function.prototype.bind;
         var _slice = Function.prototype.apply.bind(Array.prototype.slice);
         var _concatenate = Function.prototype.apply.bind(Array.prototype.concat);
 
@@ -52,7 +53,7 @@
          * @return {Function} bound function
          */
         var _bind = me.bind = function (fn, scope, args) {
-            return Function.prototype.bind.apply(fn, _concatenate(scope, args));
+            return _bind.apply(fn, _concatenate(scope, args));
         };
 
         /**
@@ -76,7 +77,7 @@
          */
         me.prefill = function (fn, defaults, scope) {
             return function () {
-                var args = xs.values(arguments);
+                var args = _slice(arguments);
                 xs.defaults(args, defaults);
                 return fn.apply(scope, args);
             }
@@ -105,13 +106,24 @@
          */
         me.memorize = function (fn) {
             var ran = false, memo;
+
             return function () {
+                //return saved result if already ran
                 if (ran) {
+
                     return memo;
                 }
+
+                //mark, that function was run
                 ran = true;
+
+                //save result
                 memo = fn.apply(this, arguments);
+
+                //remove reference to fn
                 fn = null;
+
+                //return result
                 return memo;
             };
         };
@@ -138,9 +150,11 @@
          * @return {Function} wrapped function
          */
         me.wrap = function (fn, wrapper, scope) {
+
             return function () {
                 var args = _slice(arguments);
                 args.unshift(fn);
+
                 return wrapper.apply(scope, args);
             }
         };
