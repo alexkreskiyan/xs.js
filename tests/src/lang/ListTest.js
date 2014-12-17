@@ -378,7 +378,7 @@ module('xs.lang.List', function () {
         ];
         strictEqual(xs.reduce(x, function (memo, value, name) {
             return memo + 2 * value + name;
-        }), 25);
+        }), 27);
         strictEqual(xs.reduce(x, function (memo, value, name) {
             return memo + 2 * value + name;
         }, -3), 30);
