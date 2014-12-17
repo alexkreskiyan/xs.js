@@ -61,13 +61,24 @@
          * @param {Object} object extended object
          */
         me.extend = function (object) {
-            var adds = _slice(arguments, 1);
+            var adds = _slice(arguments, 1), addsLength = adds.length;
 
-            xs.each(adds, function (source) {
-                xs.isObject(source) && xs.each(source, function (item, name) {
-                    object[name] = item;
-                });
-            });
+            //iterate over add-ons
+            for (var i = 0; i < addsLength; i++) {
+                var source = adds[i];
+
+                //continue if source is not object
+                if (!xs.isObject(source)) {
+                    continue;
+                }
+
+                var sourceKeys = Object.keys(source), sourceLength = sourceKeys.length;
+
+                for (var j = 0; j < sourceLength; j++) {
+                    var key = sourceKeys[j];
+                    object[key] = source[key];
+                }
+            }
         };
 
     });
