@@ -29,7 +29,7 @@
     var fn = xs.Function = new (function () {
         var me = this;
 
-        var _bind = Function.prototype.bind;
+        var _bindFunction = Function.prototype.bind;
         var _slice = Function.prototype.apply.bind(Array.prototype.slice);
         var _concatenate = Function.prototype.apply.bind(Array.prototype.concat);
 
@@ -53,7 +53,7 @@
          * @return {Function} bound function
          */
         var _bind = me.bind = function (fn, scope, args) {
-            return _bind.apply(fn, _concatenate(scope, args));
+            return _bindFunction.apply(fn, _concatenate(scope, args));
         };
 
         /**
