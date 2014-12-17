@@ -272,7 +272,7 @@
             }
 
             //handle object list
-            var index, keys = Object.keys(list), keysLength = keys.length, key;
+            var index, keys = Object.keys(list), keysLength = keys.length;
 
             for (index = 0; index < keysLength; index++) {
                 key = keys[index];
@@ -341,7 +341,7 @@
             }
 
             //handle object list
-            var index, keys = Object.keys(list), keysLength = keys.length, key;
+            var index, keys = Object.keys(list), keysLength = keys.length;
 
             for (index = keysLength - 1; index >= 0; index--) {
                 key = keys[index];
@@ -506,7 +506,7 @@
          * @param {Function} iterator list iterator
          * @param {Object} scope optional scope
          */
-        var _eachReverse = me.eachReverse = function (list, iterator, scope) {
+        me.eachReverse = function (list, iterator, scope) {
             var index, keysLength;
 
             //handle array list
@@ -1667,7 +1667,7 @@
          *
          * @return {*} First value of list
          */
-        var _shift = me.shift = function (list) {
+        me.shift = function (list) {
             var key = _keys(list).shift();
             var value = list[key];
 
@@ -1765,7 +1765,7 @@
          *
          * @return {*} Last value of list
          */
-        var _pop = me.pop = function (list) {
+        me.pop = function (list) {
             var key = _keys(list).pop();
             var value = list[key];
 
