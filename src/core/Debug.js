@@ -15,6 +15,9 @@
     //framework shorthand
     var xs = root[ns];
 
+    //define xs.core
+    xs.core || (xs.core = {});
+
     /**
      * xs.core.Debug is private singleton, adding debug capabilities to framework.
      *
@@ -26,7 +29,7 @@
      *
      * @singleton
      */
-    var debug = xs.Debug = new (function () {
+    var debug = xs.core.Debug = new (function () {
         var me = this;
 
         var _concatenate = Function.prototype.apply.bind(Array.prototype.concat);
@@ -50,7 +53,7 @@
          * @param {String...} message Messages, being logged
          */
         me.log = function (message) {
-            if (!xs.Debug.active) {
+            if (!xs.core.Debug.active) {
                 return;
             }
             console.log.apply(console, arguments);
@@ -60,10 +63,10 @@
     //assign debug flag
     xs.Attribute.define(xs, 'debug', {
         get: function () {
-            return xs.Debug.active;
+            return xs.core.Debug.active;
         },
         set: function (value) {
-            xs.Debug.active = value;
+            xs.core.Debug.active = value;
         },
         configurable: false
     });
