@@ -288,7 +288,7 @@
      *
      * @method has
      *
-     * @param {*} value value to lookup for
+     * @param {*} item value to lookup for
      *
      * @return {Boolean} whether list has value
      */
@@ -355,7 +355,7 @@
      *
      * @method keyOf
      *
-     * @param {*} value value to lookup for
+     * @param {*} item value to lookup for
      *
      * @return {String|Number|undefined} found key, or undefined if nothing found
      */
@@ -364,7 +364,7 @@
 
         //handle array list
         if (me.isArray) {
-            key = me.items.indexOf(value);
+            key = me.items.indexOf(item);
 
             return key < 0 ? undefined : key;
         }
@@ -375,7 +375,7 @@
         for (index = 0; index < keysLength; index++) {
             key = keys[index];
 
-            if (list[key] === value) {
+            if (me.items[key] === item) {
 
                 return key;
             }
