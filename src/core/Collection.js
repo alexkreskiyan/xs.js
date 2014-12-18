@@ -503,6 +503,10 @@
      * @param {String|Number} key value to lookup for
      *
      * @return {*} item with specified key
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if given key doesn't exist
      */
     collection.prototype.at = function (key) {
         var me = this;
@@ -515,12 +519,146 @@
         return me.items[key];
     };
 
+    /**
+     * Returns first value of collection
+     *
+     * For example:
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         {
+     *             x: 1,
+     *             y: 2
+     *         },
+     *         {
+     *             x: 2,
+     *             y: 2
+     *         },
+     *         {
+     *             x: 2,
+     *             y: 1
+     *         },
+     *         {
+     *             x: 1,
+     *             y: 1
+     *         }
+     *     ]);
+     *     console.log(collection.first());
+     *     //outputs:
+     *     // {x: 1, y: 2}, reference to list[0] respectively
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: {
+     *             x: 1,
+     *             y: 2
+     *         },
+     *         c: {
+     *             x: 2,
+     *             y: 2
+     *         },
+     *         b: {
+     *             x: 2,
+     *             y: 1
+     *         },
+     *         d: {
+     *             x: 1,
+     *             y: 1
+     *         }
+     *     });
+     *     console.log(collection.first());
+     *     //outputs:
+     *     // {x: 1, y: 2}, reference to list.a respectively
+     *
+     * @method first
+     *
+     * @return {*} first value, undefined if collection is empty
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if collection is empty
+     */
     collection.prototype.first = function () {
+        var me = this;
+        var keys = me.keys();
 
+        //check that collection is not empty
+        if (!keys.length) {
+            throw new CollectionError('first - collection is empty');
+        }
+
+        return me.items[keys[0]];
     };
 
+    /**
+     * Returns last value of collection
+     *
+     * For example:
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         {
+     *             x: 1,
+     *             y: 2
+     *         },
+     *         {
+     *             x: 2,
+     *             y: 2
+     *         },
+     *         {
+     *             x: 2,
+     *             y: 1
+     *         },
+     *         {
+     *             x: 1,
+     *             y: 1
+     *         }
+     *     ]);
+     *     console.log(collection.last());
+     *     //outputs:
+     *     // {x: 1, y: 1}, reference to list[0] respectively
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: {
+     *             x: 1,
+     *             y: 2
+     *         },
+     *         c: {
+     *             x: 2,
+     *             y: 2
+     *         },
+     *         b: {
+     *             x: 2,
+     *             y: 1
+     *         },
+     *         d: {
+     *             x: 1,
+     *             y: 1
+     *         }
+     *     });
+     *     console.log(collection.last());
+     *     //outputs:
+     *     // {x: 1, y: 1}, reference to list.a respectively
+     *
+     * @method last
+     *
+     * @return {*} last value, undefined if list is empty
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if collection is empty
+     */
     collection.prototype.last = function () {
+        var me = this;
+        var keys = me.keys();
 
+        //check that collection is not empty
+        if (!keys.length) {
+            throw new CollectionError('last - collection is empty');
+        }
+
+        return me.items[keys[keys.length - 1]];
     };
 
     collection.prototype.add = function (item) {

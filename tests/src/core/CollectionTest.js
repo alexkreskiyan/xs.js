@@ -363,26 +363,113 @@ module('xs.core.Collection', function () {
         strictEqual(collection.at('b'), 2);
     });
 
-    //test('size', function () {
-    //    //init test variables
-    //    var x;
+    test('first', function () {
+        //init test variables
+        var collection;
 
-    //    //test array list
-    //    x = [
-    //        2,
-    //        3
-    //    ];
-    //    strictEqual(xs.size(x), 2);
-    //    strictEqual(xs.size([]), 0);
+        //check collection filled
+        collection = new xs.core.Collection([]);
+        throws(function () {
+            collection.first();
+        });
 
-    //    //test object list
-    //    x = {
-    //        x: 1,
-    //        b: 2
-    //    };
-    //    strictEqual(xs.size(x), 2);
-    //    strictEqual(xs.size({}), 0);
-    //});
+        //test array list
+        collection = new xs.core.Collection([
+            {
+                x: 1,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 1
+            },
+            {
+                x: 1,
+                y: 1
+            }
+        ]);
+
+        strictEqual(collection.first(), collection.at(0));
+
+        //test object list
+        collection = new xs.core.Collection({
+            a: {
+                x: 1,
+                y: 2
+            },
+            b: {
+                x: 2,
+                y: 2
+            },
+            c: {
+                x: 2,
+                y: 1
+            },
+            d: {
+                x: 1,
+                y: 1
+            }
+        });
+        strictEqual(collection.first(), collection.at('a'));
+    });
+
+    test('last', function () {
+        //init test variables
+        var collection;
+
+        //check collection filled
+        collection = new xs.core.Collection([]);
+        throws(function () {
+            collection.last();
+        });
+
+        //test array list
+        collection = new xs.core.Collection([
+            {
+                x: 1,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 1
+            },
+            {
+                x: 1,
+                y: 1
+            }
+        ]);
+
+        strictEqual(collection.last(), collection.at(3));
+
+        //test object list
+        collection = new xs.core.Collection({
+            a: {
+                x: 1,
+                y: 2
+            },
+            b: {
+                x: 2,
+                y: 2
+            },
+            c: {
+                x: 2,
+                y: 1
+            },
+            d: {
+                x: 1,
+                y: 1
+            }
+        });
+        strictEqual(collection.last(), collection.at('d'));
+    });
 
     //test('each', function () {
     //    //init test variables
@@ -1314,117 +1401,6 @@ module('xs.core.Collection', function () {
     //    strictEqual(xs.none(x, function (value) {
     //        return value.x === 1;
     //    }), true);
-    //});
-
-    //test('first', function () {
-    //    //init test variables
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-
-    //    strictEqual(xs.first(x), x[0]);
-
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.first(x), undefined);
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-    //    strictEqual(xs.first(x), x.a);
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.first(x), undefined);
-    //});
-
-    //test('last', function () {
-    //    //init test variables
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-
-    //    strictEqual(xs.last(x), x[3]);
-
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.last(x), undefined);
-
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-    //    strictEqual(xs.last(x), x.d);
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.last(x), undefined);
     //});
 
     //test('shift', function () {
