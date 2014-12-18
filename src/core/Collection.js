@@ -246,6 +246,7 @@
      */
     collection.prototype.hasKey = function (key) {
         var me = this;
+
         //handle array list
         if (me.isArray) {
 
@@ -256,8 +257,63 @@
         return xs.isString(key) && me.items.hasOwnProperty(key);
     };
 
+    /**
+     * Returns whether collection has value
+     *
+     * For example:
+     *
+     *     var value = {};
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         2,
+     *         value
+     *     ]);
+     *     console.log(collection.has(0)); //false - no value
+     *     console.log(collection.has({})); //false - another object in array
+     *     console.log(collection.has(1)); //true - value exists
+     *     console.log(collection.has(value)); //true - value exists
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         c: 2,
+     *         b: value
+     *     });
+     *     console.log(collection.has(0)); //false - no value
+     *     console.log(collection.has({})); //false - another object in array
+     *     console.log(collection.has(1)); //true - value exists
+     *     console.log(collection.has(value)); //true - value exists
+     *
+     * @method has
+     *
+     * @param {*} value value to lookup for
+     *
+     * @return {Boolean} whether list has value
+     */
     collection.prototype.has = function (item) {
+        var me = this, key;
 
+        //handle array list
+        if (me.isArray) {
+
+            return me.items.indexOf(item) >= 0;
+        }
+
+        //handle object list
+        var index, keys = Object.keys(me.items), keysLength = keys.length;
+
+        for (index = 0; index < keysLength; index++) {
+            key = keys[index];
+
+            if (me.items[key] === item) {
+
+                return true;
+            }
+        }
+
+        return false;
     };
 
     /**

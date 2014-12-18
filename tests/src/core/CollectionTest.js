@@ -198,42 +198,42 @@ module('xs.core.Collection', function () {
         strictEqual(collection.hasKey('y'), false);
     });
 
-    //test('has', function () {
-    //    //init test variables
-    //    var x;
-    //    var item = { a: 1 };
+    test('has', function () {
+        //init test variables
+        var collection;
+        var item = { a: 1 };
 
-    //    //test array list
-    //    x = [
-    //        1,
-    //        3,
-    //        item
-    //    ];
-    //    strictEqual(xs.has(x, 1), true);
-    //    strictEqual(xs.has(x, item), true);
-    //    strictEqual(xs.has(x, 'A'), false);
+        //test array list
+        collection = new xs.core.Collection([
+            1,
+            3,
+            item
+        ]);
+        strictEqual(collection.has(1), true);
+        strictEqual(collection.has(item), true);
+        strictEqual(collection.has('A'), false);
 
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.has(x, 1), false);
-    //    strictEqual(xs.has(x, 'A'), false);
+        //test empty array list
+        collection = new xs.core.Collection([]);
+        strictEqual(collection.has(1), false);
+        strictEqual(collection.has('A'), false);
 
-    //    //test object list
-    //    x = {
-    //        x: 1,
-    //        b: 2,
-    //        a: item
-    //    };
-    //    strictEqual(xs.has(x, 1), true);
-    //    strictEqual(xs.has(x, item), true);
-    //    strictEqual(xs.has(x, '1'), false);
+        //test object list
+        collection = new xs.core.Collection({
+            x: 1,
+            b: 2,
+            a: item
+        });
+        strictEqual(collection.has(1), true);
+        strictEqual(collection.has(item), true);
+        strictEqual(collection.has('1'), false);
 
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.has(x, 1), false);
-    //    strictEqual(xs.has(x, '1'), false);
+        //test empty object list
+        collection = new xs.core.Collection({});
+        strictEqual(collection.has(1), false);
+        strictEqual(collection.has('1'), false);
 
-    //});
+    });
 
     //test('keyOf', function () {
     //    //init test variables
