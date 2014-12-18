@@ -52,7 +52,6 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.items), JSON.stringify(x));
     });
 
-
     test('length', function () {
         //init test variables
         var collection;
@@ -80,6 +79,37 @@ module('xs.core.Collection', function () {
         strictEqual(collection.length, 2);
     });
 
+    test('keys', function () {
+        //init test variables
+        var x, collection;
+
+        //check simple array list
+        x = [
+            1,
+            3
+        ];
+        collection = new xs.core.Collection(x);
+        strictEqual(JSON.stringify(collection.keys()), '[0,1]');
+
+        //check empty array list
+        x = [];
+        collection = new xs.core.Collection(x);
+        strictEqual(JSON.stringify(collection.keys()), '[]');
+
+        //check simple object list
+        x = {
+            x: 1,
+            b: 2
+        };
+        collection = new xs.core.Collection(x);
+        strictEqual(JSON.stringify(collection.keys()), '["x","b"]');
+
+        //check empty object list
+        x = {};
+        collection = new xs.core.Collection(x);
+        strictEqual(JSON.stringify(collection.keys()), '[]');
+    });
+
     //test('values', function () {
     //    //init test variables
     //    var x;
@@ -105,6 +135,44 @@ module('xs.core.Collection', function () {
     //    //check empty object list
     //    x = {};
     //    strictEqual(JSON.stringify(xs.values(x)), '[]');
+    //});
+
+    //test('clone', function () {
+    //    //init test variables
+    //    var x, item = { x: 1 }, collection, clone;
+
+    //    //test array list
+    //    x = [
+    //        1,
+    //        2,
+    //        item
+    //    ];
+    //    collection = new xs.core.Collection(x);
+    //    clone = collection.clone();
+    //    //keys are equal
+    //    strictEqual(JSON.stringify(xs.keys(clone)), JSON.stringify(xs.keys(x)));
+    //    //values are equal
+    //    strictEqual(xs.every(x, function (value, key) {
+    //        return clone[key] === x[key];
+    //    }), true);
+    //    //links are saved
+    //    strictEqual(x[2] === clone[2], true);
+
+    //    //test object list
+    //    x = {
+    //        a: 1,
+    //        c: 2,
+    //        b: item
+    //    };
+    //    clone = xs.clone(x);
+    //    //keys are equal
+    //    strictEqual(JSON.stringify(xs.keys(clone)), JSON.stringify(xs.keys(x)));
+    //    //values are equal
+    //    strictEqual(xs.every(x, function (value, key) {
+    //        return clone[key] === x[key];
+    //    }), true);
+    //    //links are saved
+    //    strictEqual(x.b === clone.b, true);
     //});
 
     //test('hasKey', function () {
@@ -1626,44 +1694,6 @@ module('xs.core.Collection', function () {
 
     //    strictEqual(xs.deleteAll(x), 0);
     //    strictEqual(JSON.stringify(x), '{}');
-    //});
-
-    //test('clone', function () {
-    //    //init test variables
-    //    var item = { x: 1 };
-    //    var x, clone;
-
-    //    //test array list
-    //    x = [
-    //        1,
-    //        2,
-    //        item
-    //    ];
-    //    clone = xs.clone(x);
-    //    //keys are equal
-    //    strictEqual(JSON.stringify(xs.keys(clone)), JSON.stringify(xs.keys(x)));
-    //    //values are equal
-    //    strictEqual(xs.every(x, function (value, key) {
-    //        return clone[key] === x[key];
-    //    }), true);
-    //    //links are saved
-    //    strictEqual(x[2] === clone[2], true);
-
-    //    //test object list
-    //    x = {
-    //        a: 1,
-    //        c: 2,
-    //        b: item
-    //    };
-    //    clone = xs.clone(x);
-    //    //keys are equal
-    //    strictEqual(JSON.stringify(xs.keys(clone)), JSON.stringify(xs.keys(x)));
-    //    //values are equal
-    //    strictEqual(xs.every(x, function (value, key) {
-    //        return clone[key] === x[key];
-    //    }), true);
-    //    //links are saved
-    //    strictEqual(x.b === clone.b, true);
     //});
 
     //test('defaults', function () {

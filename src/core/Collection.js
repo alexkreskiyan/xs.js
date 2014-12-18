@@ -94,8 +94,119 @@
         set: xs.emptyFn
     });
 
-    collection.prototype.clone = function () {
+    /**
+     * Returns all collection keys
+     *
+     * For example:
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         2,
+     *         3
+     *     ]);
+     *     console.log(collection.keys()); //[0, 1, 2]
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         b: 2,
+     *         c: 3
+     *     });
+     *     console.log(collection.keys()); //['a', 'b', 'c']
+     *
+     * @method keys
+     *
+     * @return {Array} collection keys
+     */
+    collection.prototype.keys = function () {
+        var me = this;
+        //handle array collection
+        if (me.isArray) {
+            var keys = [], length = me.items.length;
 
+            for (var i = 0; i < length; i++) {
+                keys.push(i);
+            }
+
+            return keys;
+        }
+
+        //handle object list
+        return Object.keys(me.items);
+    };
+
+    /**
+     * Returns all list values
+     *
+     * For example:
+     *
+     *     //for Array
+     *     var values = xs.values([
+     *         1,
+     *         2,
+     *         3
+     *     ]);
+     *     console.log(values); //[1, 2, 3] - returns copy of source array
+     *
+     *     //for Object
+     *     var values = xs.values({
+     *         a: 1,
+     *         b: 2,
+     *         c: 3
+     *     });
+     *     console.log(values); //[1, 2, 3]
+     *
+     * @method values
+     *
+     * @param {Array|Object} list list, values are fetched from
+     *
+     * @return {Array} list values
+     */
+    collection.prototype.values = function (list) {
+        //handle array list
+        if (xs.isArray(list)) {
+
+            return _slice(list);
+        }
+
+        //handle object list
+        var values = [], index, keys = Object.keys(list), len = keys.length;
+
+        for (index = 0; index < len; index++) {
+            values.push(list[keys[index]]);
+        }
+
+        return values;
+    };
+
+    /**
+     * Returns shallow copy of collection
+     *
+     * For example:
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         2,
+     *         3
+     *     ]);
+     *     var clone = collection.clone();
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection([
+     *         a: 1,
+     *         c: 2,
+     *         b: 3
+     *     });
+     *     var clone = collection.clone();
+     * 
+     * @method clone
+     *
+     * @return {Array|Object} collection shallow copy
+     */
+    collection.prototype.clone = function () {
+        return new this.constructor(this.items, true);
     };
 
     collection.prototype.has = function (item) {
