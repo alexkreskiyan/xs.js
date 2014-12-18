@@ -402,6 +402,10 @@
          * @param {Object} dependent dependent Class
          * @param {Object|Object[]} waiting array of processed classes, dependent class is waiting for
          * @param {Function} handleReady callback, called when all waited classes were processed
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - deadLock is detected
          */
         me.add = function (dependent, waiting, handleReady) {
 
@@ -912,6 +916,18 @@
 
         var storage = [];
 
+        /**
+         * Adds handler for event when classes' with given names will be loaded
+         *
+         * @method add
+         *
+         * @param {String[]} [waiting] waiting list. If empty - handler will be called when all pending classes will be loaded
+         * @param {Function} handleReady onReady handler
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - incorrect params given
+         */
         me.add = function (waiting, handleReady) {
             //if waiting if function - it's handleReady and empty waiting
             if (xs.isFunction(waiting)) {
@@ -949,6 +965,13 @@
             });
         };
 
+        /**
+         * Deletes given class name from all waiting lists. If processed is null - all pending classes are loaded. Call specific all ready handler
+         *
+         * @method delete
+         *
+         * @param {String|Null} processed name of processed class or null if all classes processed
+         */
         me.delete = function (processed) {
             xs.log('xs.Class::queue::delete. Resolve:', processed);
             //get resolved queue lists. If processed given - with non-null waiting list. If no processed given - with null lists only

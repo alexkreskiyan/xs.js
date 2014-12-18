@@ -91,6 +91,10 @@
          * @param {Function} [handleFail] handler for one of files failed.
          * When called, 3 lists are passed as arguments: failed, loaded and unresolved classes.
          * Unresolved means, that those were not loaded yet before fail
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - some of required classes' already failed to load
          */
         me.require = function (name, handleLoad, handleFail) {
             xs.log('xs.Loader::require. Acquired:', name);
@@ -154,7 +158,6 @@
          *
          * - class name is not string
          * - class name has incorrect format
-         * - class was already attempted to load, but load failed - error occurred
          */
         function _getLoadList(classes) {
 
@@ -295,6 +298,7 @@
              *
              * - if given alias is already registered
              * - if given path is not a string
+             * - if given aliases list has incorrect format
              */
             me.add = function (alias, path) {
                 //single alias style
@@ -348,6 +352,7 @@
              * @throws {Error} Error is thrown:
              *
              * - if given alias is not a string
+             * - if given alias has incorrect format
              */
             me.has = function (alias) {
                 //check, that alias is string
@@ -445,6 +450,7 @@
              * @throws {Error} Error is thrown:
              *
              * - if given class name is not a string
+             * - if given class name has incorrect format
              */
             me.resolve = function (name) {
                 //throw LoaderError if name is not string
@@ -570,6 +576,10 @@
              * @method handleFail
              *
              * @param {String} path
+             *
+             * @throws {Error} Error is thrown:
+             *
+             * - if no handleFail is specified to handle load fail of given class
              */
             me.reject = function (path) {
                 //find rejected items
@@ -765,6 +775,10 @@
              * @param {String} path added path
              *
              * @chainable
+             *
+             * @throws {Error} Error is thrown:
+             *
+             * - if given class path is already in list
              */
             me.add = function (path) {
                 var me = this;
