@@ -7,6 +7,7 @@
     "xs.lang.Function",
     "xs.lang.String",
     "xs.core.Debug",
+    "xs.core.Collection",
     "xs.class.Class",
     "xs.class.ClassManager",
     "xs.class.Loader",

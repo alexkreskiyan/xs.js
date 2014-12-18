@@ -260,7 +260,8 @@ module('xs.Loader', function () {
         ], function (loaded) {
 
             //assert all was loaded nicely
-            strictEqual(JSON.stringify(loaded), '{"tests.class.Loader.Demo":"/tests/resources/class/Loader/Demo.js","tests.class.Loader.Sample":"/tests/resources/class/Loader/Sample.js"}');
+            strictEqual(loaded['tests.class.Loader.Demo'], '/tests/resources/class/Loader/Demo.js');
+            strictEqual(loaded['tests.class.Loader.Sample'], '/tests/resources/class/Loader/Sample.js');
 
             //assert classes loaded
             strictEqual(xs.ClassManager.has('tests.class.Loader.Demo'), true);
