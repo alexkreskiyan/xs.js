@@ -52,6 +52,34 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.items), JSON.stringify(x));
     });
 
+
+    test('length', function () {
+        //init test variables
+        var collection;
+
+        //check empty array list
+        collection = new xs.core.Collection([]);
+        strictEqual(collection.length, 0);
+
+        //check array list
+        collection = new xs.core.Collection([
+            1,
+            3
+        ]);
+        strictEqual(collection.length, 2);
+
+        //check empty object list
+        collection = new xs.core.Collection({});
+        strictEqual(collection.length, 0);
+
+        //check object list
+        collection = new xs.core.Collection({
+            a: 1,
+            b: 3
+        });
+        strictEqual(collection.length, 2);
+    });
+
     //test('values', function () {
     //    //init test variables
     //    var x;

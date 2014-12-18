@@ -73,9 +73,23 @@
         }
     };
 
+    /**
+     * Collection length
+     * 
+     * @property length
+     * 
+     * @readonly
+     * 
+     * @type Number
+     */
     xs.Attribute.property.define(collection.prototype, 'length', {
         get: function () {
-            return this.items.length;
+            if (this.isArray) {
+
+                return this.items.length;
+            }
+
+            return Object.keys(this.items).length;
         },
         set: xs.emptyFn
     });
