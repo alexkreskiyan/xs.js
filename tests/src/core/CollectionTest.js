@@ -110,32 +110,35 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.keys()), '[]');
     });
 
-    //test('values', function () {
-    //    //init test variables
-    //    var x;
-    //    x = [
-    //        1,
-    //        3
-    //    ];
+    test('values', function () {
+        //init test variables
+        var x, collection;
+        //check simple array list
+        x = [
+            1,
+            3
+        ];
+        collection = new xs.core.Collection(x);
+        strictEqual(JSON.stringify(collection.values()), '[1,3]');
 
-    //    //check simple array list
-    //    strictEqual(JSON.stringify(xs.values(x)), '[1,3]');
+        //check empty object list
+        x = [];
+        collection = new xs.core.Collection(x);
+        strictEqual(JSON.stringify(collection.values()), '[]');
 
-    //    //check empty object list
-    //    x = [];
-    //    strictEqual(JSON.stringify(xs.values(x)), '[]');
+        //check simple object list
+        x = {
+            x: 1,
+            b: '2'
+        };
+        collection = new xs.core.Collection(x);
+        strictEqual(JSON.stringify(collection.values()), '[1,"2"]');
 
-    //    //check simple object list
-    //    x = {
-    //        x: 1,
-    //        b: '2'
-    //    };
-    //    strictEqual(JSON.stringify(xs.values(x)), '[1,"2"]');
-
-    //    //check empty object list
-    //    x = {};
-    //    strictEqual(JSON.stringify(xs.values(x)), '[]');
-    //});
+        //check empty object list
+        x = {};
+        collection = new xs.core.Collection(x);
+        strictEqual(JSON.stringify(collection.values()), '[]');
+    });
 
     //test('clone', function () {
     //    //init test variables

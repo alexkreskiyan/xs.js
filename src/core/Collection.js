@@ -121,6 +121,7 @@
      */
     collection.prototype.keys = function () {
         var me = this;
+
         //handle array collection
         if (me.isArray) {
             var keys = [], length = me.items.length;
@@ -137,44 +138,44 @@
     };
 
     /**
-     * Returns all list values
+     * Returns all collection values
      *
      * For example:
      *
      *     //for Array
-     *     var values = xs.values([
+     *     var collection = new xs.core.Collection([
      *         1,
      *         2,
      *         3
      *     ]);
-     *     console.log(values); //[1, 2, 3] - returns copy of source array
+     *     console.log(collection.values()); //[1, 2, 3] - returns copy of source array
      *
      *     //for Object
-     *     var values = xs.values({
+     *     var collection = new xs.core.Collection({
      *         a: 1,
      *         b: 2,
      *         c: 3
      *     });
-     *     console.log(values); //[1, 2, 3]
+     *     console.log(collection.values()); //[1, 2, 3]
      *
      * @method values
      *
-     * @param {Array|Object} list list, values are fetched from
-     *
-     * @return {Array} list values
+     * @return {Array} collection values
      */
-    collection.prototype.values = function (list) {
-        //handle array list
-        if (xs.isArray(list)) {
+    collection.prototype.values = function () {
+        var me = this;
 
-            return _slice(list);
+        //handle array collection
+        if (me.isArray) {
+
+            return _slice(me.items);
         }
 
         //handle object list
-        var values = [], index, keys = Object.keys(list), len = keys.length;
+        var values = [], index, keys = Object.keys(me.items), len = keys.length;
 
         for (index = 0; index < len; index++) {
-            values.push(list[keys[index]]);
+            values.push(me.items[keys[index]]);
         }
 
         return values;
