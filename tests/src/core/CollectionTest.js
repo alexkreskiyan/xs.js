@@ -278,48 +278,48 @@ module('xs.core.Collection', function () {
         strictEqual(collection.keyOf('1'), undefined);
     });
 
-    //test('lastKeyOf', function () {
-    //    //init test variables
-    //    var x;
-    //    var item = { a: 1 };
+    test('lastKeyOf', function () {
+        //init test variables
+        var collection;
+        var item = { a: 1 };
 
-    //    //test array list
-    //    x = [
-    //        1,
-    //        1,
-    //        3,
-    //        3,
-    //        item,
-    //        item
-    //    ];
+        //test array list
+        collection = new xs.core.Collection([
+            1,
+            1,
+            3,
+            3,
+            item,
+            item
+        ]);
 
-    //    strictEqual(xs.lastKeyOf(x, 3), 3);
-    //    strictEqual(xs.lastKeyOf(x, item), 5);
-    //    strictEqual(xs.lastKeyOf(x, '1'), undefined);
+        strictEqual(collection.lastKeyOf(3), 3);
+        strictEqual(collection.lastKeyOf(item), 5);
+        strictEqual(collection.lastKeyOf('1'), undefined);
 
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.lastKeyOf(x, 0), undefined);
-    //    strictEqual(xs.lastKeyOf(x, '0'), undefined);
+        //test empty array list
+        collection = new xs.core.Collection([]);
+        strictEqual(collection.lastKeyOf(0), undefined);
+        strictEqual(collection.lastKeyOf('0'), undefined);
 
-    //    //test object list
-    //    x = {
-    //        x: 1,
-    //        y: 1,
-    //        c: 2,
-    //        d: 2,
-    //        a: item,
-    //        b: item
-    //    };
-    //    strictEqual(xs.lastKeyOf(x, 1), 'y');
-    //    strictEqual(xs.lastKeyOf(x, item), 'b');
-    //    strictEqual(xs.lastKeyOf(x, '1'), undefined);
+        //test object list
+        collection = new xs.core.Collection({
+            x: 1,
+            y: 1,
+            c: 2,
+            d: 2,
+            a: item,
+            b: item
+        });
+        strictEqual(collection.lastKeyOf(1), 'y');
+        strictEqual(collection.lastKeyOf(item), 'b');
+        strictEqual(collection.lastKeyOf('1'), undefined);
 
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.lastKeyOf(x, 1), undefined);
-    //    strictEqual(xs.lastKeyOf(x, '1'), undefined);
-    //});
+        //test empty object list
+        collection = new xs.core.Collection({});
+        strictEqual(collection.lastKeyOf(1), undefined);
+        strictEqual(collection.lastKeyOf('1'), undefined);
+    });
 
     //test('size', function () {
     //    //init test variables

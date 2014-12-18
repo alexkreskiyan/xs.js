@@ -31,9 +31,9 @@
      */
     /**
      * xs.core.Collection constructor
-     * 
+     *
      * @constructor
-     * 
+     *
      * @param {Array|Object} items collection source. Is required. If empty collection created - specify empty list
      * @param {Boolean} copy specifies behavior of created collection relative to given source - whether to copy given source or use it as is
      */
@@ -75,11 +75,11 @@
 
     /**
      * Collection length
-     * 
+     *
      * @property length
-     * 
+     *
      * @readonly
-     * 
+     *
      * @type Number
      */
     xs.Attribute.property.define(collection.prototype, 'length', {
@@ -201,7 +201,7 @@
      *         b: 3
      *     });
      *     var clone = collection.clone();
-     * 
+     *
      * @method clone
      *
      * @return {Array|Object} collection shallow copy
@@ -392,44 +392,64 @@
      *     var value = {};
      *
      *     //for Array
-     *     var list = [
+     *     var collection = new xs.core.Collection([
      *         1,
      *         2,
      *         1,
      *         value,
      *         2,
      *         value
-     *     ];
-     *     console.log(xs.lastKeyOf(list, 0)); //undefined - no value
-     *     console.log(xs.lastKeyOf(list, {})); //undefined - another object in array
-     *     console.log(xs.lastKeyOf(list, 1)); //2
-     *     console.log(xs.lastKeyOf(list, value)); //5
+     *     ]);
+     *     console.log(collection.lastKeyOf(0)); //undefined - no value
+     *     console.log(collection.lastKeyOf({})); //undefined - another object in array
+     *     console.log(collection.lastKeyOf(1)); //2
+     *     console.log(collection.lastKeyOf(value)); //5
      *
      *     //for Object
-     *     var list = {
+     *     var collection = new xs.core.Collection({
      *         a: 1,
      *         b: 2,
      *         c: 1,
      *         f: value,
      *         d: 2,
      *         e: value
-     *     };
-     *     console.log(xs.lastKeyOf(list, 0)); //undefined - no value
-     *     console.log(xs.lastKeyOf(list, {})); //undefined - another object in array
-     *     console.log(xs.lastKeyOf(list, 1)); //'c'
-     *     console.log(xs.lastKeyOf(list, value)); //'e'
+     *     });
+     *     console.log(collection.lastKeyOf(0)); //undefined - no value
+     *     console.log(collection.lastKeyOf({})); //undefined - another object in array
+     *     console.log(collection.lastKeyOf(1)); //'c'
+     *     console.log(collection.lastKeyOf(value)); //'e'
      *
      * ATTENTION: Try to avoid using integer indices in objects, because their order in V8 is not guaranteed!
      *
      * @method lastKeyOf
      *
-     * @param {Array|Object} list list to search within
-     * @param {*} value value to lookup for
+     * @param {*} item value to lookup for
      *
      * @return {String|Number|undefined} found key, or undefined if nothing found
      */
     collection.prototype.lastKeyOf = function (item) {
+        var me = this, key;
 
+        //handle array list
+        if (me.isArray) {
+            key = me.items.lastIndexOf(item);
+
+            return key < 0 ? undefined : key;
+        }
+
+        //handle object list
+        var index, keys = Object.keys(me.items), keysLength = keys.length;
+
+        for (index = keysLength - 1; index >= 0; index--) {
+            key = keys[index];
+
+            if (me.items[key] === item) {
+
+                return key;
+            }
+        }
+
+        return undefined;
     };
 
     collection.prototype.at = function (key) {
