@@ -195,7 +195,7 @@
      *     var clone = collection.clone();
      *
      *     //for Object
-     *     var collection = new xs.core.Collection([
+     *     var collection = new xs.core.Collection({
      *         a: 1,
      *         c: 2,
      *         b: 3

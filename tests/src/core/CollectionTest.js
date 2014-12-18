@@ -140,43 +140,40 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.values()), '[]');
     });
 
-    //test('clone', function () {
-    //    //init test variables
-    //    var x, item = { x: 1 }, collection, clone;
+    test('clone', function () {
+        //init test variables
+        var x, item = { x: 1 }, collection, clone;
 
-    //    //test array list
-    //    x = [
-    //        1,
-    //        2,
-    //        item
-    //    ];
-    //    collection = new xs.core.Collection(x);
-    //    clone = collection.clone();
-    //    //keys are equal
-    //    strictEqual(JSON.stringify(xs.keys(clone)), JSON.stringify(xs.keys(x)));
-    //    //values are equal
-    //    strictEqual(xs.every(x, function (value, key) {
-    //        return clone[key] === x[key];
-    //    }), true);
-    //    //links are saved
-    //    strictEqual(x[2] === clone[2], true);
+        //test array list
+        x = [
+            1,
+            2,
+            item
+        ];
+        collection = new xs.core.Collection(x);
+        clone = collection.clone();
+        //keys are equal
+        strictEqual(JSON.stringify(clone.keys()), JSON.stringify(collection.keys()));
+        //values are equal
+        strictEqual(JSON.stringify(clone.values()), JSON.stringify(collection.values()));
+        //links are saved
+        strictEqual(collection.items[2] === clone.items[2], true);
 
-    //    //test object list
-    //    x = {
-    //        a: 1,
-    //        c: 2,
-    //        b: item
-    //    };
-    //    clone = xs.clone(x);
-    //    //keys are equal
-    //    strictEqual(JSON.stringify(xs.keys(clone)), JSON.stringify(xs.keys(x)));
-    //    //values are equal
-    //    strictEqual(xs.every(x, function (value, key) {
-    //        return clone[key] === x[key];
-    //    }), true);
-    //    //links are saved
-    //    strictEqual(x.b === clone.b, true);
-    //});
+        //test object list
+        x = {
+            a: 1,
+            c: 2,
+            b: item
+        };
+        collection = new xs.core.Collection(x);
+        clone = collection.clone();
+        //keys are equal
+        strictEqual(JSON.stringify(clone.keys()), JSON.stringify(collection.keys()));
+        //values are equal
+        strictEqual(JSON.stringify(clone.values()), JSON.stringify(collection.values()));
+        //links are saved
+        strictEqual(collection.items.b === clone.items.b, true);
+    });
 
     //test('hasKey', function () {
     //    //init test variables
