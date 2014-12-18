@@ -81,76 +81,67 @@ module('xs.core.Collection', function () {
 
     test('keys', function () {
         //init test variables
-        var x, collection;
+        var collection;
 
         //check simple array list
-        x = [
+        collection = new xs.core.Collection([
             1,
             3
-        ];
-        collection = new xs.core.Collection(x);
+        ]);
         strictEqual(JSON.stringify(collection.keys()), '[0,1]');
 
         //check empty array list
-        x = [];
-        collection = new xs.core.Collection(x);
+        collection = new xs.core.Collection([]);
         strictEqual(JSON.stringify(collection.keys()), '[]');
 
         //check simple object list
-        x = {
+        collection = new xs.core.Collection({
             x: 1,
             b: 2
-        };
-        collection = new xs.core.Collection(x);
+        });
         strictEqual(JSON.stringify(collection.keys()), '["x","b"]');
 
         //check empty object list
-        x = {};
-        collection = new xs.core.Collection(x);
+        collection = new xs.core.Collection({});
         strictEqual(JSON.stringify(collection.keys()), '[]');
     });
 
     test('values', function () {
         //init test variables
-        var x, collection;
+        var collection;
         //check simple array list
-        x = [
+        collection = new xs.core.Collection([
             1,
             3
-        ];
-        collection = new xs.core.Collection(x);
+        ]);
         strictEqual(JSON.stringify(collection.values()), '[1,3]');
 
         //check empty object list
-        x = [];
-        collection = new xs.core.Collection(x);
+        collection = new xs.core.Collection([]);
         strictEqual(JSON.stringify(collection.values()), '[]');
 
         //check simple object list
-        x = {
+        collection = new xs.core.Collection({
             x: 1,
             b: '2'
-        };
-        collection = new xs.core.Collection(x);
+        });
         strictEqual(JSON.stringify(collection.values()), '[1,"2"]');
 
         //check empty object list
-        x = {};
-        collection = new xs.core.Collection(x);
+        collection = new xs.core.Collection({});
         strictEqual(JSON.stringify(collection.values()), '[]');
     });
 
     test('clone', function () {
         //init test variables
-        var x, item = { x: 1 }, collection, clone;
+        var item = { x: 1 }, collection, clone;
 
         //test array list
-        x = [
+        collection = new xs.core.Collection([
             1,
             2,
             item
-        ];
-        collection = new xs.core.Collection(x);
+        ]);
         clone = collection.clone();
         //keys are equal
         strictEqual(JSON.stringify(clone.keys()), JSON.stringify(collection.keys()));
@@ -160,12 +151,11 @@ module('xs.core.Collection', function () {
         strictEqual(collection.items[2] === clone.items[2], true);
 
         //test object list
-        x = {
+        collection = new xs.core.Collection({
             a: 1,
             c: 2,
             b: item
-        };
-        collection = new xs.core.Collection(x);
+        });
         clone = collection.clone();
         //keys are equal
         strictEqual(JSON.stringify(clone.keys()), JSON.stringify(collection.keys()));
@@ -175,38 +165,38 @@ module('xs.core.Collection', function () {
         strictEqual(collection.items.b === clone.items.b, true);
     });
 
-    //test('hasKey', function () {
-    //    //init test variables
-    //    var x;
+    test('hasKey', function () {
+        //init test variables
+        var collection;
 
-    //    //check simple array list
-    //    x = [
-    //        1,
-    //        3
-    //    ];
-    //    strictEqual(xs.hasKey(x, 0), true);
-    //    strictEqual(xs.hasKey(x, 1), true);
-    //    strictEqual(xs.hasKey(x, 2), false);
+        //check simple array list
+        collection = new xs.core.Collection([
+            1,
+            3
+        ]);
+        strictEqual(collection.hasKey(0), true);
+        strictEqual(collection.hasKey(1), true);
+        strictEqual(collection.hasKey(2), false);
 
-    //    //check empty array list
-    //    x = [];
-    //    strictEqual(xs.hasKey(x, 0), false);
-    //    strictEqual(xs.hasKey(x, 1), false);
-    //    strictEqual(xs.hasKey(x, 2), false);
+        //check empty array list
+        collection = new xs.core.Collection([]);
+        strictEqual(collection.hasKey(0), false);
+        strictEqual(collection.hasKey(1), false);
+        strictEqual(collection.hasKey(2), false);
 
-    //    //check simple object list
-    //    x = {
-    //        x: 1,
-    //        b: 2
-    //    };
-    //    strictEqual(xs.hasKey(x, 'x'), true);
-    //    strictEqual(xs.hasKey(x, 'y'), false);
+        //check simple object list
+        collection = new xs.core.Collection({
+            x: 1,
+            b: 2
+        });
+        strictEqual(collection.hasKey('x'), true);
+        strictEqual(collection.hasKey('y'), false);
 
-    //    //check empty object list
-    //    x = {};
-    //    strictEqual(xs.hasKey(x, 'x'), false);
-    //    strictEqual(xs.hasKey(x, 'y'), false);
-    //});
+        //check empty object list
+        collection = new xs.core.Collection({});
+        strictEqual(collection.hasKey('x'), false);
+        strictEqual(collection.hasKey('y'), false);
+    });
 
     //test('has', function () {
     //    //init test variables

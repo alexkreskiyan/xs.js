@@ -210,11 +210,53 @@
         return new this.constructor(this.items, true);
     };
 
-    collection.prototype.has = function (item) {
+    /**
+     * Returns whether list has given key. Keys' comparison is strict, differing numbers and strings
+     *
+     * For example:
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         2,
+     *         3
+     *     ]);
+     *     console.log(collection.hasKey(-1)); //false - out of bounds
+     *     console.log(collection.hasKey(3)); //false - out of bounds
+     *     console.log(collection.hasKey('1')); //false - string given
+     *     console.log(collection.hasKey(1)); //true - key exists
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         b: 2,
+     *         c: 3,
+     *         1: 4
+     *     });
+     *     console.log(collection.hasKey('d')); //false
+     *     console.log(collection.hasKey('a')); //true
+     *     console.log(collection.hasKey(1)); //false - number given
+     *     console.log(collection.hasKey('1')); //true - string given
+     *
+     * @method hasKey
+     *
+     * @param {String|Number} key key to lookup for
+     *
+     * @return {Boolean} whether list has key
+     */
+    collection.prototype.hasKey = function (key) {
+        var me = this;
+        //handle array list
+        if (me.isArray) {
 
+            return xs.isNumber(key) && key >= 0 && key < me.items.length;
+        }
+
+        //handle object list
+        return xs.isString(key) && me.items.hasOwnProperty(key);
     };
 
-    collection.prototype.hasKey = function (key) {
+    collection.prototype.has = function (item) {
 
     };
 
