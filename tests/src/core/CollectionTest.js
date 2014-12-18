@@ -169,6 +169,15 @@ module('xs.core.Collection', function () {
         //init test variables
         var collection;
 
+        //check key processing
+        collection = new xs.core.Collection([
+            1,
+            3
+        ]);
+        throws(function () {
+            collection.hasKey([]);
+        });
+
         //check simple array list
         collection = new xs.core.Collection([
             1,
@@ -319,6 +328,39 @@ module('xs.core.Collection', function () {
         collection = new xs.core.Collection({});
         strictEqual(collection.lastKeyOf(1), undefined);
         strictEqual(collection.lastKeyOf('1'), undefined);
+    });
+
+    test('at', function () {
+        //init test variables
+        var collection;
+
+        //check key processing
+        collection = new xs.core.Collection([
+            1,
+            3
+        ]);
+        throws(function () {
+            collection.at([]);
+        });
+        throws(function () {
+            collection.at(3);
+        });
+
+        //check simple array list
+        collection = new xs.core.Collection([
+            1,
+            3
+        ]);
+        strictEqual(collection.at(0), 1);
+        strictEqual(collection.at(1), 3);
+
+        //check simple object list
+        collection = new xs.core.Collection({
+            x: 1,
+            b: 2
+        });
+        strictEqual(collection.at('x'), 1);
+        strictEqual(collection.at('b'), 2);
     });
 
     //test('size', function () {

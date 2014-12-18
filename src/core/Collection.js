@@ -36,6 +36,10 @@
      *
      * @param {Array|Object} items collection source. Is required. If empty collection created - specify empty list
      * @param {Boolean} copy specifies behavior of created collection relative to given source - whether to copy given source or use it as is
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if given source is nor array neither object
      */
     var collection = xs.core.Collection = function (items, copy) {
         var me = this;
@@ -243,9 +247,18 @@
      * @param {String|Number} key key to lookup for
      *
      * @return {Boolean} whether list has key
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if given key is nor a string neither an object
      */
     collection.prototype.hasKey = function (key) {
         var me = this;
+
+        //check that key is number or string
+        if (!xs.isString(key) && !xs.isNumber(key)) {
+            throw new CollectionError('hasKey - given key "' + key + '" is not string or number');
+        }
 
         //handle array list
         if (me.isArray) {
@@ -452,8 +465,54 @@
         return undefined;
     };
 
+    /**
+     * Returns collection item for specified key
+     *
+     * For example:
+     *
+     *     var value = {};
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         2,
+     *         1,
+     *         value,
+     *         2,
+     *         value
+     *     ]);
+     *     console.log(collection.at(0)); //1
+     *     console.log(collection.at(3)); //value
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         b: 2,
+     *         c: 1,
+     *         f: value,
+     *         d: 2,
+     *         e: value
+     *     });
+     *     console.log(collection.at('a')); //1 - no value
+     *     console.log(collection.at('f')); //value
+     *
+     * ATTENTION: Try to avoid using integer indices in objects, because their order in V8 is not guaranteed!
+     *
+     * @method at
+     *
+     * @param {String|Number} key value to lookup for
+     *
+     * @return {*} item with specified key
+     */
     collection.prototype.at = function (key) {
+        var me = this;
 
+        //check, that key exists
+        if (!me.hasKey(key)) {
+            throw new CollectionError('at - given key "' + key + '" doesn\'t exist');
+        }
+
+        return me.items[key];
     };
 
     collection.prototype.first = function () {
