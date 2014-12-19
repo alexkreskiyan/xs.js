@@ -16,9 +16,6 @@ module('xs.core.Collection', function () {
 
         //check incorrect source
         throws(function () {
-            new xs.core.Collection();
-        });
-        throws(function () {
             new xs.core.Collection(true);
         });
 
@@ -27,29 +24,18 @@ module('xs.core.Collection', function () {
             1,
             3
         ];
-        //assigned
         collection = new xs.core.Collection(x);
-        strictEqual(collection.items, x);
-        //copied
-        collection = new xs.core.Collection(x, true);
-        strictEqual(collection.items === x, false);
-        strictEqual(JSON.stringify(collection.items), JSON.stringify(x));
-
-        //check simple array list
-        strictEqual(JSON.stringify(xs.keys(x)), '[0,1]');
+        strictEqual(collection.items[0].value, x[0]);
+        strictEqual(collection.items[1].value, x[1]);
 
         //check object list
         x = {
             a: 1,
             b: 3
         };
-        //assigned
         collection = new xs.core.Collection(x);
-        strictEqual(collection.items, x);
-        //copied
-        collection = new xs.core.Collection(x, true);
-        strictEqual(collection.items === x, false);
-        strictEqual(JSON.stringify(collection.items), JSON.stringify(x));
+        strictEqual(collection.items[0].value, x.a);
+        strictEqual(collection.items[1].value, x.b);
     });
 
     test('length', function () {
@@ -148,7 +134,7 @@ module('xs.core.Collection', function () {
         //values are equal
         strictEqual(JSON.stringify(clone.values()), JSON.stringify(collection.values()));
         //links are saved
-        strictEqual(collection.items[2] === clone.items[2], true);
+        strictEqual(collection.items[2].value === clone.items[2].value, true);
 
         //test object list
         collection = new xs.core.Collection({
@@ -162,7 +148,7 @@ module('xs.core.Collection', function () {
         //values are equal
         strictEqual(JSON.stringify(clone.values()), JSON.stringify(collection.values()));
         //links are saved
-        strictEqual(collection.items.b === clone.items.b, true);
+        strictEqual(collection.items[2].value === clone.items[2].value, true);
     });
 
     test('hasKey', function () {
@@ -471,43 +457,43 @@ module('xs.core.Collection', function () {
         strictEqual(collection.last(), collection.at('d'));
     });
 
-    test('add', function () {
-        //init test variables
-        var collection, x = {
-            x: 1,
-            y: 2
-        };
-
-        //check object collection error handling
-        collection = new xs.core.Collection({});
-        throws(function () {
-            collection.add();
-        });
-        throws(function () {
-            collection.add(1, 1);
-        });
-        throws(function () {
-            collection.add(1, '1');
-        });
-        throws(function () {
-            collection.add(1, 'a');
-            collection.add(1, 'a');
-        });
-
-        //test array list
-        collection = new xs.core.Collection([
-        ]);
-        collection.add(x);
-        strictEqual(collection.last(), x);
-        strictEqual(collection.at(0), x);
-
-        //test object list
-        collection = new xs.core.Collection({
-        });
-        collection.add('a', x);
-        strictEqual(collection.last(), x);
-        strictEqual(collection.at('a'), x);
-    });
+//    test('add', function () {
+//        //init test variables
+//        var collection, x = {
+//            x: 1,
+//            y: 2
+//        };
+//
+//        //check object collection error handling
+//        collection = new xs.core.Collection({});
+//        throws(function () {
+//            collection.add();
+//        });
+//        throws(function () {
+//            collection.add(1, 1);
+//        });
+//        throws(function () {
+//            collection.add(1, '1');
+//        });
+//        throws(function () {
+//            collection.add(1, 'a');
+//            collection.add(1, 'a');
+//        });
+//
+//        //test array list
+//        collection = new xs.core.Collection([
+//        ]);
+//        collection.add(x);
+//        strictEqual(collection.last(), x);
+//        strictEqual(collection.at(0), x);
+//
+//        //test object list
+//        collection = new xs.core.Collection({
+//        });
+//        collection.add('a', x);
+//        strictEqual(collection.last(), x);
+//        strictEqual(collection.at('a'), x);
+//    });
     //test('each', function () {
     //    //init test variables
     //    var x, sum;
