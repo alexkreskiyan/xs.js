@@ -67,7 +67,7 @@
             return;
         }
 
-        //copy object source
+        //copy hash source
         me.items = {};
 
         var i, key, keys = Object.keys(items), keysLength = keys.length;
@@ -137,7 +137,7 @@
             return keys;
         }
 
-        //handle object list
+        //handle hash collection
         return Object.keys(me.items);
     };
 
@@ -175,7 +175,7 @@
             return _slice(me.items);
         }
 
-        //handle object list
+        //handle hash collection
         var values = [], index, keys = Object.keys(me.items), len = keys.length;
 
         for (index = 0; index < len; index++) {
@@ -208,7 +208,7 @@
      *
      * @method clone
      *
-     * @return {Array|Object} collection shallow copy
+     * @return {xs.core.Collection} collection shallow copy
      */
     collection.prototype.clone = function () {
         return new this.constructor(this.items, true);
@@ -250,24 +250,34 @@
      *
      * @throws {Error} Error is thrown:
      *
-     * - if given key is nor a string neither an object
+     * - if given key is nor a string neither a number
      */
     collection.prototype.hasKey = function (key) {
         var me = this;
 
-        //check that key is number or string
-        if (!xs.isString(key) && !xs.isNumber(key)) {
-            throw new CollectionError('hasKey - given key "' + key + '" is not string or number');
-        }
-
-        //handle array list
+        //handle array collection
         if (me.isArray) {
+            //check that key is number
+            if (!xs.isNumber(key)) {
+                throw new CollectionError('hasKey - key "' + key + '", given for array collection, is not number');
+            }
 
             return xs.isNumber(key) && key >= 0 && key < me.items.length;
         }
 
-        //handle object list
-        return xs.isString(key) && me.items.hasOwnProperty(key);
+        //handle hash collection
+
+        //check that key is string
+        if (!xs.isString(key)) {
+            throw new CollectionError('hasKey - key "' + key + '", given for hash collection, is not string');
+        }
+
+        //check that key is not numeric
+        if (xs.isNumeric(key)) {
+            throw new CollectionError('hasKey - key "' + key + '", given for hash collection, is numeric');
+        }
+
+        return me.items.hasOwnProperty(key);
     };
 
     /**
@@ -308,13 +318,13 @@
     collection.prototype.has = function (item) {
         var me = this, key;
 
-        //handle array list
+        //handle array collection
         if (me.isArray) {
 
             return me.items.indexOf(item) >= 0;
         }
 
-        //handle object list
+        //handle hash collection
         var index, keys = Object.keys(me.items), keysLength = keys.length;
 
         for (index = 0; index < keysLength; index++) {
@@ -375,14 +385,14 @@
     collection.prototype.keyOf = function (item) {
         var me = this, key;
 
-        //handle array list
+        //handle array collection
         if (me.isArray) {
             key = me.items.indexOf(item);
 
             return key < 0 ? undefined : key;
         }
 
-        //handle object list
+        //handle hash collection
         var index, keys = Object.keys(me.items), keysLength = keys.length;
 
         for (index = 0; index < keysLength; index++) {
@@ -443,14 +453,14 @@
     collection.prototype.lastKeyOf = function (item) {
         var me = this, key;
 
-        //handle array list
+        //handle array collection
         if (me.isArray) {
             key = me.items.lastIndexOf(item);
 
             return key < 0 ? undefined : key;
         }
 
-        //handle object list
+        //handle hash collection
         var index, keys = Object.keys(me.items), keysLength = keys.length;
 
         for (index = keysLength - 1; index >= 0; index--) {
@@ -661,11 +671,58 @@
         return me.items[keys[keys.length - 1]];
     };
 
-    collection.prototype.add = function (item) {
+    /**
+     * Adds item to collection
+     *
+     * For example:
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([]);
+     *     collection.add({x: 1});
+     *     console.log(collection.last());
+     *     //outputs:
+     *     // {x: 1}
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({});
+     *     collection.add('a', {x: 1});
+     *     console.log(collection.last());
+     *     //outputs:
+     *     // {x: 1}
+     *
+     * @method add
+     *
+     * @param {String} key for array collection - added item. for hash collection - key of added item
+     * @param {*} [item] item, added to hash collection
+     * 
+     * @chainable
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if has collection already has element with given key
+     */
+    collection.prototype.add = function (key, item) {
+        var me = this;
 
+        //handle array collection
+        if (me.isArray) {
+            me.items.push(key);
+
+            return me;
+        }
+
+        //handle hash collection
+        //check that key does not exist
+        if (me.hasKey(key)) {
+            throw new CollectionError('add - hash collection already has key "' + key + '"');
+        }
+
+        me.items[key] = item;
+
+        return me;
     };
 
-    collection.prototype.insert = function (item) {
+    collection.prototype.insert = function (index, item, key) {
 
     };
 
@@ -678,6 +735,10 @@
     };
 
     collection.prototype.deleteLast = function (item) {
+
+    };
+
+    collection.prototype.deleteAll = function (item) {
 
     };
 
