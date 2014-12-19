@@ -699,7 +699,7 @@
      *
      * @throws {Error} Error is thrown:
      *
-     * - if has collection already has element with given key
+     * - if hash collection already has an element with given key
      */
     collection.prototype.add = function (key, item) {
         var me = this;
@@ -722,8 +722,101 @@
         return me;
     };
 
-    collection.prototype.insert = function (index, item, key) {
+    /**
+     * Inserts item into collection
+     *
+     * For example:
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([]);
+     *     collection.insert(0, {x: 2});
+     *     collection.insert(0, {x: 1});
+     *     console.log(collection.items);
+     *     //outputs:
+     *     //[
+     *     //    {x: 1}
+     *     //    {x: 2}
+     *     //]
+     * 
+     *     //for Object
+     *     var collection = new xs.core.Collection({});
+     *     collection.insert(0, 'b', {x: 2});
+     *     collection.insert(0, 'a', {x: 1});
+     *     console.log(collection.items);
+     *     //outputs:
+     *     //{
+     *     //    a: {x: 1}
+     *     //    b: {x: 2}
+     *     //}
+     *
+     * @method insert
+     *
+     * @param {Number} index index, that will be assigned to inserted item
+     * @param {String} key for array collection - inserted item. for hash collection - key of inserted item
+     * @param {*} [item] item, inserted to hash collection
+     * 
+     * @chainable
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if given index is not a number
+     * - if given index is out of bounds: -collection.length < index <= collection.length
+     * - if hash collection already has an element with given key
+     */
+    collection.prototype.insert = function (index, key, item) {
+        var me = this;
 
+        //check, that index is number
+        if (!xs.isNumber(index)) {
+            throw new CollectionError('insert - given index "' + index + '" is not number');
+        }
+
+
+        //check that index is in bounds
+        if (me.isArray) {
+            //get bounds
+            var min = -me.items.length + 1, max = me.items.length;
+        } else {
+            //get keys
+            var keys = me.keys(), keysLength;
+            //get bounds
+            var min = -keysLength + 1, max = keysLength;
+        }
+
+        if (index < min || index > max) {
+            throw new CollectionError('insert - index "' + index + '" is out of bounds [' + min + ',' + max + ']');
+        }
+
+
+        //handle array collection
+        if (me.isArray) {
+            me.items.splice(index, 0, key);
+
+            return me;
+        }
+
+
+        //handle hash collection
+        //check that key does not exist
+        if (me.hasKey(key)) {
+            throw new CollectionError('add - hash collection already has key "' + key + '"');
+        }
+
+        //create copy
+        var i, copy = {};
+        for (i = 0; i < keysLength; i++) {
+
+        }
+        //remove all existing items
+        var reference = me.items;
+
+        //insert key
+        keys.splice(index, 0, key);
+
+
+        me.items[key] = item;
+
+        return me;
     };
 
     collection.prototype.set = function (key, item) {
