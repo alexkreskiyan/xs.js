@@ -638,21 +638,27 @@
      */
     collection.prototype.add = function (key, item) {
         var me = this;
+        if (!arguments.length) {
+            throw new CollectionError('add - empty arguments');
+        }
 
-        //handle array collection
-        if (me.isArray) {
-            me.items.push(key);
-
-            return me;
+        if (xs.isDefined(item)) {
+            if (me.hasKey(key)) {
+                throw new CollectionError('add - hash collection already has key "' + key + '"');
+            }
+            //handle autoincrement index
+        } else {
+            item = key;
+            key = me.items.length;
         }
 
         //handle hash collection
         //check that key does not exist
-        if (me.hasKey(key)) {
-            throw new CollectionError('add - hash collection already has key "' + key + '"');
-        }
 
-        me.items[key] = item;
+        me.items.push({
+            key: key,
+            value: item
+        });
 
         return me;
     };

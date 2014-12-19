@@ -457,43 +457,39 @@ module('xs.core.Collection', function () {
         strictEqual(collection.last(), collection.at('d'));
     });
 
-//    test('add', function () {
-//        //init test variables
-//        var collection, x = {
-//            x: 1,
-//            y: 2
-//        };
-//
-//        //check object collection error handling
-//        collection = new xs.core.Collection({});
-//        throws(function () {
-//            collection.add();
-//        });
-//        throws(function () {
-//            collection.add(1, 1);
-//        });
-//        throws(function () {
-//            collection.add(1, '1');
-//        });
-//        throws(function () {
-//            collection.add(1, 'a');
-//            collection.add(1, 'a');
-//        });
-//
-//        //test array list
-//        collection = new xs.core.Collection([
-//        ]);
-//        collection.add(x);
-//        strictEqual(collection.last(), x);
-//        strictEqual(collection.at(0), x);
-//
-//        //test object list
-//        collection = new xs.core.Collection({
-//        });
-//        collection.add('a', x);
-//        strictEqual(collection.last(), x);
-//        strictEqual(collection.at('a'), x);
-//    });
+    test('add', function () {
+        //init test variables
+        var collection, x = {
+            x: 1,
+            y: 2
+        };
+
+        //check object collection error handling
+        collection = new xs.core.Collection({});
+        //throws if no arguments
+        throws(function () {
+            collection.add();
+        });
+        //throws if adding with existent key
+        throws(function () {
+            collection.add(1, 1);
+            collection.add(1, '1');
+        });
+
+        //test array list
+        collection = new xs.core.Collection([
+        ]);
+        collection.add(x);
+        strictEqual(collection.last(), x);
+        strictEqual(collection.at(0), x);
+
+        //test object list
+        collection = new xs.core.Collection({
+        });
+        collection.add('a', x);
+        strictEqual(collection.last(), x);
+        strictEqual(collection.at('a'), x);
+    });
     //test('each', function () {
     //    //init test variables
     //    var x, sum;
