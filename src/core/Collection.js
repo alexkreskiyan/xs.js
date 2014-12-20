@@ -752,11 +752,9 @@
 
 
         //check that index is in bounds
-        var min, max, keys = me.keys(), keysLength = keys.length;
-        //get bounds
-        max = me.items.length;
+        var max = me.items.length;
         //if max is 0, then min is 0
-        min = max > 0 ? -max + 1 : 0;
+        var min = max > 0 ? -max + 1 : 0;
 
         if (index < min || index > max) {
             throw new CollectionError('insert - index "' + index + '" is out of bounds [' + min + ',' + max + ']');
@@ -789,14 +787,8 @@
             value: value
         });
 
-        //update indexes
-        //<= - because 1 item is already inserted
-        for (var i = index + 1; i <= keysLength; i++) {
-            var item = me.items[i];
-
-            //update if is number
-            xs.isNumber(item.key) && (item.key = i);
-        }
+        //updated indexes
+        _updateIndexes.call(me, index + 1);
 
         return me;
     };
@@ -887,14 +879,294 @@
         return me;
     };
 
-    collection.prototype.delete = function (item) {
+    /**
+     * Deletes value with given key
+     *
+     * For example:
+     *
+     *     var value = {
+     *         x: 1
+     *     };
+     *
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         2,
+     *         value,
+     *     ]);
+     *     collection.deleteAt(0);
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    2,
+     *     //    value
+     *     //]
+     *
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         c: 2,
+     *         b: value,
+     *     });
+     *     collection.deleteAt(0);
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //{
+     *     //    c: 2,
+     *     //    b: value
+     *     //}
+     *
+     * @method deleteAt
+     *
+     * @param {Number|String} key key of deleted value
+     *
+     * @chainable
+     */
+    collection.prototype.deleteAt = function (key) {
+        var me = this;
 
+        //if index given
+        if (xs.isNumber(key)) {
+            //check, that key exists
+            if (key < 0 || key >= me.items.length) {
+                throw new CollectionError('deleteAt - given index "' + key + '" doesn\'t exist');
+            }
+
+            //delete item by key
+            me.items.splice(key, 1);
+
+            //if key given
+        } else if (xs.isString(key)) {
+            //get index
+            var index = me.keys().indexOf(key);
+
+            //check, that key exists
+            if (index < 0) {
+                throw new CollectionError('deleteAt - given key doesn\'t exist in collection');
+            }
+
+
+            //delete item by key
+            me.items.splice(index, 1);
+
+            //else - it's error
+        } else {
+            throw new CollectionError('hasKey - key "' + key + '", given for collection, is nor number neither string');
+        }
+
+        return me;
     };
 
+    /**
+     * Deletes first value from list, that matches given value
+     *
+     * For example:
+     *
+     *     var value = {
+     *         x: 1
+     *     };
+     *
+     *     var list = [
+     *         1,
+     *         2,
+     *         value,
+     *         2,
+     *         1,
+     *         value
+     *     ];
+     *     console.log(xs.delete(list, value));
+     *     //outputs:
+     *     //true, value exists
+     *     console.log(list);
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    2,
+     *     //    1,
+     *     //    value
+     *     //]
+     *     console.log(xs.delete(list, -1));
+     *     //outputs:
+     *     //false, value missing
+     *
+     *     var list = {
+     *         a: 1,
+     *         c: 2,
+     *         b: value,
+     *         f: 2,
+     *         e: 1,
+     *         d: value
+     *     };
+     *     console.log(xs.delete(list, value));
+     *     //outputs:
+     *     //true, index exists
+     *     console.log(list);
+     *     //outputs:
+     *     //{
+     *     //    a: 1,
+     *     //    c: 2,
+     *     //    f: 2,
+     *     //    e: 1,
+     *     //    d: value
+     *     //}
+     *     console.log(xs.delete(list, 0));
+     *     //outputs:
+     *     //false, index missing
+     *
+     * @method delete
+     *
+     * @param {*} value deleted value
+     *
+     * @chainable
+     */
+    collection.prototype.delete = function (value) {
+        var me = this;
+
+        var index = me.values().indexOf(item);
+
+        //check, that item exists
+        if (index < 0) {
+            throw new CollectionError('delete - given value doesn\'t exist in collection');
+        }
+
+        //delete item from items
+        me.items.splice(index, 1);
+
+        //update indexes
+        _updateIndexes.call(index);
+
+        return me;
+    };
+
+    /**
+     * Deletes last value from list, that matches elem as key or as value
+     *
+     * For example:
+     *
+     *     var value = {
+     *         x: 1
+     *     };
+     *
+     *     var list = [
+     *         1,
+     *         2,
+     *         value,
+     *         2,
+     *         1,
+     *         value
+     *     ];
+     *     console.log(xs.deleteLast(list, value));
+     *     //outputs:
+     *     //true, value exists
+     *     console.log(list);
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    value,
+     *     //    2,
+     *     //    1
+     *     //]
+     *     console.log(xs.deleteLast(list, -1));
+     *     //outputs:
+     *     //false, value missing
+     *
+     *     var list = {
+     *         a: 1,
+     *         c: 2,
+     *         b: value,
+     *         f: 2,
+     *         e: 1,
+     *         d: value
+     *     };
+     *     console.log(xs.deleteLast(list, value));
+     *     //outputs:
+     *     //true, index exists
+     *     console.log(list);
+     *     //outputs:
+     *     //{
+     *     //    a: 1,
+     *     //    c: 2,
+     *     //    b: value
+     *     //    f: 2,
+     *     //    e: 1
+     *     //}
+     *     console.log(xs.deleteLast(list, 0));
+     *     //outputs:
+     *     //false, index missing
+     *
+     * @method deleteLast
+     *
+     * @param {Array|Object} list list, value is deleted from
+     * @param {*} value deleted value
+     *
+     * @return {Boolean} whether value was deleted
+     */
     collection.prototype.deleteLast = function (item) {
 
     };
 
+    /**
+     * Deletes all values from list, passed as array/plain arguments
+     *
+     * For example:
+     *
+     *     var value = {
+     *         x: 1
+     *     };
+     *
+     *     var list = [
+     *         1,
+     *         2,
+     *         value,
+     *         2,
+     *         1,
+     *         value
+     *     ];
+     *     console.log(xs.deleteAll(list, value));
+     *     //outputs:
+     *     //true, value exists
+     *     console.log(list);
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    2,
+     *     //    1
+     *     //]
+     *     console.log(xs.deleteAll(list, -1));
+     *     //outputs:
+     *     //false, value missing
+     *
+     *     var list = {
+     *         a: 1,
+     *         c: 2,
+     *         b: value,
+     *         f: 2,
+     *         e: 1,
+     *         d: value
+     *     };
+     *     console.log(xs.deleteAll(list, value));
+     *     //outputs:
+     *     //true, index exists
+     *     console.log(list);
+     *     //outputs:
+     *     //{
+     *     //    a: 1,
+     *     //    c: 2,
+     *     //    f: 2,
+     *     //    e: 1
+     *     //}
+     *     console.log(xs.deleteAll(list, 0));
+     *     //outputs:
+     *     //false, index missing
+     *
+     * @method deleteAll
+     *
+     * @param {Array|Object} list list, values are deleted from
+     * @param {*} [value] optional deleted value. If specified all value entries will be removed from list. If not - list is truncated
+     *
+     * @return {Number} count of deleted values
+     */
     collection.prototype.deleteAll = function (item) {
 
     };
@@ -949,6 +1221,28 @@
 
     collection.prototype.none = function () {
 
+    };
+
+    /**
+     * Updates indexes starting from item with given index
+     * @ignore
+     *
+     * @private
+     *
+     * @method updateIndexes
+     *
+     * @param {Number} index index, update starts from
+     */
+    var _updateIndexes = function (index) {
+        var me = this, length = me.items.length;
+
+        //updated indexes for all items, starting from given index
+        for (var i = index; i < length; i++) {
+            var item = me.items[i];
+
+            //update if is number
+            xs.isNumber(item.key) && (item.key = i);
+        }
     };
 
     /**
