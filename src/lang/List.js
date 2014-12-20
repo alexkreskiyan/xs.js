@@ -252,7 +252,7 @@
          *     console.log(xs.keyOf(list, 1)); //'a'
          *     console.log(xs.keyOf(list, value)); //'f'
          *
-         * ATTENTION: Try to avoid using integer indices in objects, because their order in V8 is not guaranteed!
+         * ATTENTION: Try to avoid using integer indexes in objects, because their order in V8 is not guaranteed!
          *
          * @method keyOf
          *
@@ -321,7 +321,7 @@
          *     console.log(xs.lastKeyOf(list, 1)); //'c'
          *     console.log(xs.lastKeyOf(list, value)); //'e'
          *
-         * ATTENTION: Try to avoid using integer indices in objects, because their order in V8 is not guaranteed!
+         * ATTENTION: Try to avoid using integer indexes in objects, because their order in V8 is not guaranteed!
          *
          * @method lastKeyOf
          *

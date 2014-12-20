@@ -30,56 +30,56 @@
      *
      * @constructor
      *
-     * @param {Array|Object} [items] collection source
+     * @param {Array|Object} [values] collection source
      *
      * @throws {Error} Error is thrown:
      *
      * - if given source is nor array neither object
      */
-    var collection = xs.core.Collection = function (items) {
+    var collection = xs.core.Collection = function (values) {
         var me = this;
 
         //init items array
         me.items = [];
 
-        if (!xs.isDefined(items)) {
+        if (!arguments.length) {
 
             return;
         }
 
-        var i, itemsLength;
+        var i, valuesLength;
 
         //handle array source
-        if (xs.isArray(items)) {
-            //get itemsLength
-            itemsLength = items.length;
+        if (xs.isArray(values)) {
+            //get valuesLength
+            valuesLength = values.length;
 
-            for (i = 0; i < itemsLength; i++) {
+            for (i = 0; i < valuesLength; i++) {
                 //add item
                 me.items.push({
                     key: i,
-                    value: items[i]
+                    value: values[i]
                 });
             }
 
             //handle hash source
-        } else if (xs.isObject(items)) {
-            //get keys and itemsLength
-            var keys = Object.keys(items), key;
-            itemsLength = keys.length;
+        } else if (xs.isObject(values)) {
+            //get keys and valuesLength
+            var keys = Object.keys(values), key;
+            valuesLength = keys.length;
 
-            for (i = 0; i < itemsLength; i++) {
+            for (i = 0; i < valuesLength; i++) {
                 key = keys[i];
                 //add item
                 me.items.push({
                     key: key,
-                    value: items[key]
+                    value: values[key]
                 });
             }
 
             //otherwise - it's error
         } else {
-            throw new CollectionError('constructor - source "' + items + '" is nor array neither object');
+            throw new CollectionError('constructor - source "' + values + '" is nor array neither object');
         }
     };
 
@@ -295,12 +295,12 @@
      *
      * @method has
      *
-     * @param {*} item value to lookup for
+     * @param {*} value value to lookup for
      *
      * @return {Boolean} whether list has value
      */
-    collection.prototype.has = function (item) {
-        return this.values().indexOf(item) >= 0;
+    collection.prototype.has = function (value) {
+        return this.values().indexOf(value) >= 0;
     };
 
     /**
@@ -338,18 +338,18 @@
      *     console.log(collection.keyOf(1)); //'a'
      *     console.log(collection.keyOf(value)); //'f'
      *
-     * ATTENTION: Try to avoid using integer indices in objects, because their order in V8 is not guaranteed!
+     * ATTENTION: Try to avoid using integer indexes in objects, because their order in V8 is not guaranteed!
      *
      * @method keyOf
      *
-     * @param {*} item value to lookup for
+     * @param {*} value value to lookup for
      *
      * @return {String|Number|undefined} found key, or undefined if nothing found
      */
-    collection.prototype.keyOf = function (item) {
+    collection.prototype.keyOf = function (value) {
         var me = this, key;
 
-        key = me.values().indexOf(item);
+        key = me.values().indexOf(value);
 
         return key >= 0 ? me.items[key].key : undefined;
     };
@@ -389,24 +389,24 @@
      *     console.log(collection.lastKeyOf(1)); //'c'
      *     console.log(collection.lastKeyOf(value)); //'e'
      *
-     * ATTENTION: Try to avoid using integer indices in objects, because their order in V8 is not guaranteed!
+     * ATTENTION: Try to avoid using integer indexes in objects, because their order in V8 is not guaranteed!
      *
      * @method lastKeyOf
      *
-     * @param {*} item value to lookup for
+     * @param {*} value value to lookup for
      *
      * @return {String|Number|undefined} found key, or undefined if nothing found
      */
-    collection.prototype.lastKeyOf = function (item) {
+    collection.prototype.lastKeyOf = function (value) {
         var me = this, key;
 
-        key = me.values().lastIndexOf(item);
+        key = me.values().lastIndexOf(value);
 
         return key >= 0 ? me.items[key].key : undefined;
     };
 
     /**
-     * Returns collection item for specified key
+     * Returns collection value for specified key
      *
      * For example:
      *
@@ -436,13 +436,13 @@
      *     console.log(collection.at('a')); //1 - no value
      *     console.log(collection.at('f')); //value
      *
-     * ATTENTION: Try to avoid using integer indices in objects, because their order in V8 is not guaranteed!
+     * ATTENTION: Try to avoid using integer indexes in objects, because their order in V8 is not guaranteed!
      *
      * @method at
      *
      * @param {String|Number} key value to lookup for
      *
-     * @return {*} item with specified key
+     * @return {*} value with specified key
      *
      * @throws {Error} Error is thrown:
      *
@@ -607,7 +607,7 @@
     };
 
     /**
-     * Adds item to collection
+     * Adds value to collection
      *
      * For example:
      *
@@ -627,8 +627,8 @@
      *
      * @method add
      *
-     * @param {String} key for array collection - added item. for hash collection - key of added item
-     * @param {*} [item] item, added to hash collection
+     * @param {String} key for array collection - added value. for hash collection - key of added value
+     * @param {*} [value] value, added to hash collection
      *
      * @chainable
      *
@@ -636,19 +636,20 @@
      *
      * - if hash collection already has an element with given key
      */
-    collection.prototype.add = function (key, item) {
+    collection.prototype.add = function (key, value) {
         var me = this;
+        //check arguments enough
         if (!arguments.length) {
             throw new CollectionError('add - empty arguments');
         }
 
-        if (xs.isDefined(item)) {
+        if (arguments.length > 1) {
             if (me.hasKey(key)) {
                 throw new CollectionError('add - hash collection already has key "' + key + '"');
             }
             //handle autoincrement index
         } else {
-            item = key;
+            value = key;
             key = me.items.length;
         }
 
@@ -657,14 +658,14 @@
 
         me.items.push({
             key: key,
-            value: item
+            value: value
         });
 
         return me;
     };
 
     /**
-     * Inserts item into collection
+     * Inserts value into collection
      *
      * For example:
      *
@@ -672,7 +673,13 @@
      *     var collection = new xs.core.Collection([]);
      *     collection.insert(0, {x: 2});
      *     collection.insert(0, {x: 1});
-     *     console.log(collection.items);
+     *     console.log(collection.keys());
+     *     //outputs:
+     *     //[
+     *     //    0
+     *     //    1
+     *     //]
+     *     console.log(collection.values());
      *     //outputs:
      *     //[
      *     //    {x: 1}
@@ -683,18 +690,24 @@
      *     var collection = new xs.core.Collection({});
      *     collection.insert(0, 'b', {x: 2});
      *     collection.insert(0, 'a', {x: 1});
-     *     console.log(collection.items);
+     *     console.log(collection.keys());
      *     //outputs:
-     *     //{
-     *     //    a: {x: 1}
-     *     //    b: {x: 2}
-     *     //}
+     *     //[
+     *     //    'a'
+     *     //    'b'
+     *     //]
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    {x: 1}
+     *     //    {x: 2}
+     *     //]
      *
      * @method insert
      *
-     * @param {Number} index index, that will be assigned to inserted item
-     * @param {String} key for array collection - inserted item. for hash collection - key of inserted item
-     * @param {*} [item] item, inserted to hash collection
+     * @param {Number} index index, that will be assigned to inserted value
+     * @param {String} key for array collection - inserted value. for hash collection - key of inserted value
+     * @param {*} [value] value, inserted to hash collection
      *
      * @chainable
      *
@@ -704,8 +717,13 @@
      * - if given index is out of bounds: -collection.length < index <= collection.length
      * - if hash collection already has an element with given key
      */
-    collection.prototype.insert = function (index, key, item) {
+    collection.prototype.insert = function (index, key, value) {
         var me = this;
+
+        //check arguments enough
+        if (arguments.length <= 1) {
+            throw new CollectionError('insert - no enough arguments');
+        }
 
         //check, that index is number
         if (!xs.isNumber(index)) {
@@ -714,48 +732,50 @@
 
 
         //check that index is in bounds
-        if (me.isArray) {
-            //get bounds
-            var min = -me.items.length + 1, max = me.items.length;
-        } else {
-            //get keys
-            var keys = me.keys(), keysLength;
-            //get bounds
-            var min = -keysLength + 1, max = keysLength;
-        }
+        var min, max, keys = me.keys(), keysLength = keys.length;
+        //get bounds
+        max = me.items.length;
+        //if max is 0, then min is 0
+        min = max > 0 ? -max + 1 : 0;
 
         if (index < min || index > max) {
             throw new CollectionError('insert - index "' + index + '" is out of bounds [' + min + ',' + max + ']');
         }
 
 
-        //handle array collection
-        if (me.isArray) {
-            me.items.splice(index, 0, key);
+        //check key if value given
+        if (arguments.length > 2) {
+            //check that key is number or string
+            if (!xs.isNumber(key) && !xs.isString(key)) {
+                throw new CollectionError('hasKey - key "' + key + '", given for array collection, is nor number neither string');
+            }
 
-            return me;
+            //check that key does not exist
+            if (keys.indexOf(key) >= 0) {
+                throw new CollectionError('add - hash collection already has key "' + key + '"');
+            }
+            //handle autoincrement index
+        } else {
+            value = key;
+            key = index;
         }
 
 
-        //handle hash collection
-        //check that key does not exist
-        if (me.hasKey(key)) {
-            throw new CollectionError('add - hash collection already has key "' + key + '"');
+        //insert
+        //insert new item
+        me.items.splice(index, 0, {
+            key: key,
+            value: value
+        });
+
+        //update indexes
+        //<= - because 1 item is already inserted
+        for (var i = index + 1; i <= keysLength; i++) {
+            var item = me.items[i];
+
+            //update if is number
+            xs.isNumber(item.key) && (item.key = i);
         }
-
-        //create copy
-        var i, copy = {};
-        for (i = 0; i < keysLength; i++) {
-
-        }
-        //remove all existing items
-        var reference = me.items;
-
-        //insert key
-        keys.splice(index, 0, key);
-
-
-        me.items[key] = item;
 
         return me;
     };

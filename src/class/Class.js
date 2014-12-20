@@ -670,7 +670,7 @@
              */
             me.getLock = function (dependent) {
                 xs.log('xs.Class::dependencies::chains::getLock. Get lock for', dependent.label);
-                //first and last dependent occurrences indices
+                //first and last dependent occurrences indexes
                 var first = 0, last = 0;
 
                 //try to find locked chain

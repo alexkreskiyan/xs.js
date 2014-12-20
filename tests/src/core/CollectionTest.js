@@ -476,19 +476,55 @@ module('xs.core.Collection', function () {
             collection.add(1, '1');
         });
 
-        //test array list
-        collection = new xs.core.Collection([
-        ]);
+        //complex test
+        collection = new xs.core.Collection();
         collection.add(x);
         strictEqual(collection.last(), x);
         strictEqual(collection.at(0), x);
+        collection.add('a', 3);
+        strictEqual(collection.last(), 3);
+        strictEqual(collection.at('a'), 3);
+    });
 
-        //test object list
-        collection = new xs.core.Collection({
+    test('insert', function () {
+        //init test variables
+        var collection, x = {
+            x: 1
+        };
+
+        //check object collection error handling
+        collection = new xs.core.Collection();
+        //throws if no arguments
+        throws(function () {
+            collection.insert();
         });
-        collection.add('a', x);
+        //throws if no value
+        throws(function () {
+            collection.insert(0);
+        });
+        //throws if adding with same key
+        //array
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.insert(0, 0, 1);
+        });
+        //object
+        collection = new xs.core.Collection({a: 1});
+        throws(function () {
+            collection.insert(0, 'a', 1);
+        });
+
+        //complex test
+        collection = new xs.core.Collection();
+        collection.insert(0, x);
         strictEqual(collection.last(), x);
-        strictEqual(collection.at('a'), x);
+        strictEqual(collection.at(0), x);
+        collection.insert(0, 'a', 2);
+        strictEqual(collection.first(), 2);
+        strictEqual(collection.at('a'), 2);
+        collection.insert(-1, 'b', 3);
+        strictEqual(collection.keys().toString(), 'a,b,2');
+        strictEqual(collection.at('b'), 3);
     });
     //test('each', function () {
     //    //init test variables
