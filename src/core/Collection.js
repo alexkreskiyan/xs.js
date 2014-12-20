@@ -990,7 +990,16 @@
      *         1,
      *         value
      *     ]);
-     *     collection.delete(list, value);
+     *     collection.delete(value);
+     *     console.log(collection.keys());
+     *     //outputs:
+     *     //[
+     *     //    0,
+     *     //    1,
+     *     //    2,
+     *     //    3,
+     *     //    4
+     *     //]
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1000,9 +1009,6 @@
      *     //    1,
      *     //    value
      *     //]
-     *     console.log(xs.delete(list, -1));
-     *     //outputs:
-     *     //false, value missing
      *
      *     var collection = new xs.core.Collection({
      *         a: 1,
@@ -1011,22 +1017,26 @@
      *         f: 2,
      *         e: 1,
      *         d: value
-     *     };
-     *     console.log(xs.delete(list, value));
+     *     });
+     *     collection.delete(value);
+     *     console.log(collection.keys());
      *     //outputs:
-     *     //true, index exists
-     *     console.log(list);
+     *     //[
+     *     //    'a',
+     *     //    'c',
+     *     //    'f',
+     *     //    'e',
+     *     //    'd'
+     *     //]
+     *     console.log(collection.values());
      *     //outputs:
-     *     //{
-     *     //    a: 1,
-     *     //    c: 2,
-     *     //    f: 2,
-     *     //    e: 1,
-     *     //    d: value
-     *     //}
-     *     console.log(xs.delete(list, 0));
-     *     //outputs:
-     *     //false, index missing
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    2,
+     *     //    1,
+     *     //    value
+     *     //]
      *
      * @method delete
      *
@@ -1037,7 +1047,7 @@
     collection.prototype.delete = function (value) {
         var me = this;
 
-        var index = me.values().indexOf(item);
+        var index = me.values().indexOf(value);
 
         //check, that item exists
         if (index < 0) {
@@ -1048,7 +1058,7 @@
         me.items.splice(index, 1);
 
         //update indexes
-        _updateIndexes.call(index);
+        _updateIndexes.call(me, index);
 
         return me;
     };

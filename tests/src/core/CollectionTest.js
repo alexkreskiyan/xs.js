@@ -584,52 +584,40 @@ module('xs.core.Collection', function () {
         collection.deleteAt('b');
         strictEqual(collection.keys().toString(), 'a,c');
         strictEqual(collection.values().toString(), '1,3');
-        collection.deleteAt(1);
+        collection.deleteAt(-1);
         strictEqual(collection.keys().toString(), 'a');
         strictEqual(collection.values().toString(), '1');
     });
 
-    //test('delete', function () {
-    //    //init test variables
-    //    var item = { x: 1 };
-    //    var itemString = JSON.stringify(item);
-    //    var x;
+    test('delete', function () {
+        //init test variables
+        var item = { x: 1 };
+        var itemString = JSON.stringify(item);
+        var collection;
 
-    //    //test array list
-    //    x = [
-    //        3,
-    //        item,
-    //        2,
-    //        item
-    //    ];
+        //test array
+        collection = new xs.core.Collection([
+            3,
+            item,
+            2,
+            item
+        ]);
 
-    //    strictEqual(xs.delete(x, item), true);
-    //    strictEqual(JSON.stringify(x), '[3,2,' + itemString + ']');
+        collection.delete(item);
+        strictEqual(JSON.stringify(collection.keys()), '[0,1,2]');
+        strictEqual(JSON.stringify(collection.values()), '[3,2,' + itemString + ']');
 
-    //    strictEqual(xs.delete(x, 1), false);
-    //    strictEqual(JSON.stringify(x), '[3,2,' + itemString + ']');
+        collection = new xs.core.Collection({
+            a: 1,
+            b: item,
+            d: item,
+            c: 3
+        });
 
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.delete(x, 2), false);
-
-    //    x = {
-    //        a: 1,
-    //        b: item,
-    //        d: item,
-    //        c: 3
-    //    };
-
-    //    strictEqual(xs.delete(x, item), true);
-    //    strictEqual(JSON.stringify(x), '{"a":1,"d":' + itemString + ',"c":3}');
-
-    //    strictEqual(xs.delete(x, 2), false);
-    //    strictEqual(JSON.stringify(x), '{"a":1,"d":' + itemString + ',"c":3}');
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.delete(x, 2), false);
-    //});
+        collection.delete(item);
+        strictEqual(JSON.stringify(collection.keys()), '["a","d","c"]');
+        strictEqual(JSON.stringify(collection.values()), '[1,' + itemString + ',3]');
+    });
 
     //test('deleteLast', function () {
     //    //init test variables
@@ -645,15 +633,15 @@ module('xs.core.Collection', function () {
     //        item
     //    ];
 
-    //    strictEqual(xs.deleteLast(x, item), true);
+    //    strictEqual(collection.deleteLast(item), true);
     //    strictEqual(JSON.stringify(x), '[3,' + itemString + ',2]');
 
-    //    strictEqual(xs.deleteLast(x, 1), false);
+    //    strictEqual(collection.deleteLast(1), false);
     //    strictEqual(JSON.stringify(x), '[3,' + itemString + ',2]');
 
     //    //test empty array list
     //    x = [];
-    //    strictEqual(xs.deleteLast(x, 2), false);
+    //    strictEqual(collection.deleteLast(2), false);
 
     //    //test object list
     //    x = {
@@ -663,15 +651,15 @@ module('xs.core.Collection', function () {
     //        c: 3
     //    };
 
-    //    strictEqual(xs.deleteLast(x, item), true);
+    //    strictEqual(collection.deleteLast(item), true);
     //    strictEqual(JSON.stringify(x), '{"a":1,"b":' + itemString + ',"c":3}');
 
-    //    strictEqual(xs.deleteLast(x, 2), false);
+    //    strictEqual(collection.deleteLast(2), false);
     //    strictEqual(JSON.stringify(x), '{"a":1,"b":' + itemString + ',"c":3}');
 
     //    //test empty object list
     //    x = {};
-    //    strictEqual(xs.deleteLast(x, 2), false);
+    //    strictEqual(collection.deleteLast(2), false);
     //});
 
     //test('deleteAll', function () {
@@ -691,19 +679,19 @@ module('xs.core.Collection', function () {
     //        1
     //    ];
 
-    //    strictEqual(xs.deleteAll(x, 2), 2);
+    //    strictEqual(collection.deleteAll(2), 2);
     //    strictEqual(JSON.stringify(x), '[1,' + itemString + ',' + itemString + ',' + itemString + ',1]');
 
-    //    strictEqual(xs.deleteAll(x, 3), 0);
+    //    strictEqual(collection.deleteAll(3), 0);
     //    strictEqual(JSON.stringify(x), '[1,' + itemString + ',' + itemString + ',' + itemString + ',1]');
 
-    //    strictEqual(xs.deleteAll(x, item), 3);
+    //    strictEqual(collection.deleteAll(item), 3);
     //    strictEqual(JSON.stringify(x), '[1,1]');
 
-    //    strictEqual(xs.deleteAll(x), 2);
+    //    strictEqual(collection.deleteAll(), 2);
     //    strictEqual(JSON.stringify(x), '[]');
 
-    //    strictEqual(xs.deleteAll(x), 0);
+    //    strictEqual(collection.deleteAll(), 0);
     //    strictEqual(JSON.stringify(x), '[]');
 
     //    //test object list
@@ -717,19 +705,19 @@ module('xs.core.Collection', function () {
     //        g: 1
     //    };
 
-    //    strictEqual(xs.deleteAll(x, 2), 2);
+    //    strictEqual(collection.deleteAll(2), 2);
     //    strictEqual(JSON.stringify(x), '{"a":1,"c":' + itemString + ',"d":' + itemString + ',"f":' + itemString + ',"g":1}');
 
-    //    strictEqual(xs.deleteAll(x, 3), 0);
+    //    strictEqual(collection.deleteAll(3), 0);
     //    strictEqual(JSON.stringify(x), '{"a":1,"c":' + itemString + ',"d":' + itemString + ',"f":' + itemString + ',"g":1}');
 
-    //    strictEqual(xs.deleteAll(x, item), 3);
+    //    strictEqual(collection.deleteAll(item), 3);
     //    strictEqual(JSON.stringify(x), '{"a":1,"g":1}');
 
-    //    strictEqual(xs.deleteAll(x), 2);
+    //    strictEqual(collection.deleteAll(), 2);
     //    strictEqual(JSON.stringify(x), '{}');
 
-    //    strictEqual(xs.deleteAll(x), 0);
+    //    strictEqual(collection.deleteAll(), 0);
     //    strictEqual(JSON.stringify(x), '{}');
     //});
     //test('each', function () {
