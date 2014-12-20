@@ -939,9 +939,13 @@
 
         //if index given
         if (xs.isNumber(key)) {
-            //check, that key exists
-            if (key < 0 || key >= me.items.length) {
-                throw new CollectionError('deleteAt - given index "' + key + '" doesn\'t exist');
+            //check that index is in bounds
+            var max = me.items.length;
+            //if max is 0, then min is 0
+            var min = max > 0 ? -max + 1 : 0;
+
+            if (key < min || key > max) {
+                throw new CollectionError('set - index "' + key + '" is out of bounds [' + min + ',' + max + ']');
             }
 
             //delete item by key
