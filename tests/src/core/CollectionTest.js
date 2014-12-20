@@ -472,8 +472,8 @@ module('xs.core.Collection', function () {
         });
         //throws if adding with existent key
         throws(function () {
-            collection.add(1, 1);
-            collection.add(1, '1');
+            collection.add('1', 1);
+            collection.add('1', '1');
         });
 
         //complex test
@@ -503,12 +503,6 @@ module('xs.core.Collection', function () {
             collection.insert(0);
         });
         //throws if adding with same key
-        //array
-        collection = new xs.core.Collection([1]);
-        throws(function () {
-            collection.insert(0, 0, 1);
-        });
-        //object
         collection = new xs.core.Collection({a: 1});
         throws(function () {
             collection.insert(0, 'a', 1);
@@ -525,6 +519,45 @@ module('xs.core.Collection', function () {
         collection.insert(-1, 'b', 3);
         strictEqual(collection.keys().toString(), 'a,b,2');
         strictEqual(collection.at('b'), 3);
+    });
+
+    test('set', function () {
+        //init test variables
+        var collection, x = {
+            x: 1
+        };
+
+        //check object collection error handling
+        collection = new xs.core.Collection();
+        //throws if no arguments
+        throws(function () {
+            collection.set();
+        });
+        //throws if no value given
+        throws(function () {
+            collection.set(0);
+        });
+        //throws if key is missing
+        //array
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.set(1, 1);
+        });
+        //object
+        collection = new xs.core.Collection({a: 1});
+        throws(function () {
+            collection.set('b', 1);
+        });
+
+        //complex test
+        collection = new xs.core.Collection();
+        collection.add('a', x);
+        strictEqual(collection.at(0), x);
+        collection.set(0, 2);
+        strictEqual(collection.first(), 2);
+        strictEqual(collection.keyOf(2), 'a');
+        collection.set('a', 5);
+        strictEqual(collection.at('a'), 5);
     });
     //test('each', function () {
     //    //init test variables

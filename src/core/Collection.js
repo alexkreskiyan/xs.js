@@ -256,12 +256,17 @@
     collection.prototype.hasKey = function (key) {
         var me = this;
 
-        //check that key is number or string
-        if (!xs.isNumber(key) && !xs.isString(key)) {
-            throw new CollectionError('hasKey - key "' + key + '", given for array collection, is nor number neither string');
+        //if key is number - it's index
+        if (xs.isNumber(key)) {
+            //check, that key exists
+            return 0 <= key && key < me.items.length;
+            //if it is string - it's key
+        } else if (xs.isString(key)) {
+            return me.keys().indexOf(key) >= 0;
+            //else - it's error
+        } else {
+            throw new CollectionError('hasKey - key "' + key + '", given for collection, is nor number neither string');
         }
-
-        return me.keys().indexOf(key) >= 0;
     };
 
     /**
@@ -451,19 +456,28 @@
     collection.prototype.at = function (key) {
         var me = this, index;
 
-        //check that key is number or string
-        if (!xs.isNumber(key) && !xs.isString(key)) {
-            throw new CollectionError('at - key "' + key + '", given for array collection, is nor number neither string');
+        //if key is number - it's index
+        if (xs.isNumber(key)) {
+            //check, that key exists
+            if (key < 0 || key >= me.items.length) {
+                throw new CollectionError('at - given index "' + key + '" doesn\'t exist');
+            }
+
+            return me.items[key].value;
+            //if it is string - it's key
+        } else if (xs.isString(key)) {
+            index = me.keys().indexOf(key);
+
+            //check, that key exists
+            if (index < 0) {
+                throw new CollectionError('at - given key "' + key + '" doesn\'t exist');
+            }
+
+            return me.items[index].value;
+            //else - it's error
+        } else {
+            throw new CollectionError('at - key "' + key + '", given for collection, is nor number neither string');
         }
-
-        index = me.keys().indexOf(key);
-
-        //check, that key exists
-        if (index < 0) {
-            throw new CollectionError('at - given key "' + key + '" doesn\'t exist');
-        }
-
-        return me.items[index].value;
     };
 
     /**
@@ -627,14 +641,14 @@
      *
      * @method add
      *
-     * @param {String} key for array collection - added value. for hash collection - key of added value
-     * @param {*} [value] value, added to hash collection
+     * @param {String} key for array collection - added value. for collection - key of added value
+     * @param {*} [value] value, added to collection
      *
      * @chainable
      *
      * @throws {Error} Error is thrown:
      *
-     * - if hash collection already has an element with given key
+     * - if collection already has an element with given key
      */
     collection.prototype.add = function (key, value) {
         var me = this;
@@ -644,8 +658,14 @@
         }
 
         if (arguments.length > 1) {
-            if (me.hasKey(key)) {
-                throw new CollectionError('add - hash collection already has key "' + key + '"');
+            //key must be string
+            if (!xs.isString(key)) {
+                throw new CollectionError('add - key "' + key + '", given for collection, is not a string');
+            }
+
+            //check key is not taken yet
+            if (me.keys().indexOf(key) >= 0) {
+                throw new CollectionError('add - collection already has key "' + key + '"');
             }
             //handle autoincrement index
         } else {
@@ -653,9 +673,7 @@
             key = me.items.length;
         }
 
-        //handle hash collection
-        //check that key does not exist
-
+        //add item
         me.items.push({
             key: key,
             value: value
@@ -706,16 +724,18 @@
      * @method insert
      *
      * @param {Number} index index, that will be assigned to inserted value
-     * @param {String} key for array collection - inserted value. for hash collection - key of inserted value
-     * @param {*} [value] value, inserted to hash collection
+     * @param {String} key for array collection - inserted value. for collection - key of inserted value
+     * @param {*} [value] value, inserted to collection
      *
      * @chainable
      *
      * @throws {Error} Error is thrown:
      *
+     * - if not enough arguments - index and key are required
      * - if given index is not a number
      * - if given index is out of bounds: -collection.length < index <= collection.length
-     * - if hash collection already has an element with given key
+     * - if given key is nor a number, neither a string
+     * - if collection already has an element with given key
      */
     collection.prototype.insert = function (index, key, value) {
         var me = this;
@@ -745,15 +765,16 @@
 
         //check key if value given
         if (arguments.length > 2) {
-            //check that key is number or string
-            if (!xs.isNumber(key) && !xs.isString(key)) {
-                throw new CollectionError('hasKey - key "' + key + '", given for array collection, is nor number neither string');
+            //key must be string
+            if (!xs.isString(key)) {
+                throw new CollectionError('insert - key "' + key + '", given for collection, is not a string');
             }
 
-            //check that key does not exist
-            if (keys.indexOf(key) >= 0) {
-                throw new CollectionError('add - hash collection already has key "' + key + '"');
+            //check key is not taken yet
+            if (me.keys().indexOf(key) >= 0) {
+                throw new CollectionError('insert - collection already has key "' + key + '"');
             }
+
             //handle autoincrement index
         } else {
             value = key;
@@ -780,8 +801,90 @@
         return me;
     };
 
-    collection.prototype.set = function (key, item) {
+    /**
+     * Sets value for item by specified key
+     *
+     * For example:
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([1,2]);
+     *     collection.set(1, {x: 2});
+     *     collection.set(0, {x: 1});
+     *     console.log(collection.keys());
+     *     //outputs:
+     *     //[
+     *     //    0
+     *     //    1
+     *     //]
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    {x: 1}
+     *     //    {x: 2}
+     *     //]
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({a: 2, b: 1});
+     *     collection.set('b', {x: 2});
+     *     collection.set('a', {x: 1});
+     *     console.log(collection.keys());
+     *     //outputs:
+     *     //[
+     *     //    'a'
+     *     //    'b'
+     *     //]
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    {x: 1}
+     *     //    {x: 2}
+     *     //]
+     *
+     * @method set
+     *
+     * @param {String|Number} key key of changed value
+     * @param {*} value value new value for item with given key
+     *
+     * @chainable
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if not enough arguments - key and value are required
+     * - if given key is nor a number, neither a string
+     * - if collection does not have item with given key
+     */
+    collection.prototype.set = function (key, value) {
+        var me = this;
 
+        //check arguments enough
+        if (arguments.length <= 1) {
+            throw new CollectionError('set - no enough arguments');
+        }
+
+        //if key is number - it's index
+        if (xs.isNumber(key)) {
+            //check, that key exists
+            if (key < 0 || key >= me.items.length) {
+                throw new CollectionError('set - given index "' + key + '" doesn\'t exist');
+            }
+
+            me.items[key].value = value;
+            //if it is string - it's key
+        } else if (xs.isString(key)) {
+            var index = me.keys().indexOf(key);
+
+            //check, that key exists
+            if (index < 0) {
+                throw new CollectionError('set - given key "' + key + '" doesn\'t exist');
+            }
+
+            me.items[index].value = value;
+            //else - it's error
+        } else {
+            throw new CollectionError('at - key "' + key + '", given for collection, is nor number neither string');
+        }
+
+        return me;
     };
 
     collection.prototype.delete = function (item) {
