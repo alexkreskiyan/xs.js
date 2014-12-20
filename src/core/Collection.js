@@ -458,10 +458,17 @@
 
         //if key is number - it's index
         if (xs.isNumber(key)) {
-            //check, that key exists
-            if (key < 0 || key >= me.items.length) {
-                throw new CollectionError('at - given index "' + key + '" doesn\'t exist');
+            //check that index is in bounds
+            var max = me.items.length;
+            //if max is 0, then min is 0
+            var min = max > 0 ? -max + 1 : 0;
+
+            if (key < min || key > max) {
+                throw new CollectionError('at - index "' + key + '" is out of bounds [' + min + ',' + max + ']');
             }
+
+            //convert negative index
+            key < 0 && (key += max);
 
             return me.items[key].value;
             //if it is string - it's key
@@ -964,18 +971,16 @@
      *         x: 1
      *     };
      *
-     *     var list = [
+     *     var collection = new xs.core.Collection([
      *         1,
      *         2,
      *         value,
      *         2,
      *         1,
      *         value
-     *     ];
-     *     console.log(xs.delete(list, value));
-     *     //outputs:
-     *     //true, value exists
-     *     console.log(list);
+     *     ]);
+     *     collection.delete(list, value);
+     *     console.log(collection.values());
      *     //outputs:
      *     //[
      *     //    1,
@@ -988,7 +993,7 @@
      *     //outputs:
      *     //false, value missing
      *
-     *     var list = {
+     *     var collection = new xs.core.Collection({
      *         a: 1,
      *         c: 2,
      *         b: value,
