@@ -602,6 +602,72 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
     });
 
+    test('deleteBy', function () {
+        //init test variables
+        var item = { x: 1 };
+        var itemString = JSON.stringify(item);
+        var collection;
+
+        //test array
+        collection = new xs.core.Collection([
+            3,
+            item,
+            3,
+            item,
+            2,
+            item,
+            2,
+            item
+        ]);
+
+        collection.deleteBy(function (value) {
+            return value === item;
+        });
+        strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5,6]');
+        strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2,' + itemString + ']');
+
+        collection.deleteBy(function (value) {
+            return value === item;
+        }, xs.core.Collection.LAST);
+        strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5]');
+        strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
+
+        collection.deleteBy(function (value) {
+            return value === item;
+        }, xs.core.Collection.ALL);
+        strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3]');
+        strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
+
+        collection = new xs.core.Collection({
+            a: 3,
+            b: item,
+            c: 3,
+            d: item,
+            e: 2,
+            f: item,
+            g: 2,
+            h: item
+        });
+
+        collection.deleteBy(function (value) {
+            return value === item;
+        });
+        strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g","h"]');
+        strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2,' + itemString + ']');
+
+        collection.deleteBy(function (value) {
+            return value === item;
+        }, xs.core.Collection.LAST);
+        strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g"]');
+        strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
+
+        collection.deleteBy(function (value) {
+            return value === item;
+        }, xs.core.Collection.ALL);
+        strictEqual(JSON.stringify(collection.keys()), '["a","c","e","g"]');
+        strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
+    });
+
     test('shift', function () {
         //init test variables
         var collection, shifted;

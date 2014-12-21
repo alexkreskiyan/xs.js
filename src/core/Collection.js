@@ -1071,6 +1071,7 @@
      * @throws {Error} Error is thrown:
      *
      * - if given flags list is not number
+     * - if nothing to delete in collection
      */
     collection.prototype.delete = function (value, flags) {
         var me = this, values = me.values();
@@ -1142,6 +1143,238 @@
 
         //update indexes
         _updateIndexes.call(me, index);
+
+        return me;
+    };
+
+    /**
+     * Deletes value from collection, if it matches given function. Function's arguments are: value, key
+     *
+     * For example:
+     *
+     *     var value = {
+     *         x: 1
+     *     };
+     *
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         value,
+     *         2,
+     *         value,
+     *         2,
+     *         value,
+     *         1,
+     *         value
+     *     ]);
+     *     collection.deleteBy(function(val){
+     *         return val === value;
+     *     });
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    value
+     *     //    2,
+     *     //    value
+     *     //    1,
+     *     //    value
+     *     //]
+     *     collection.deleteBy(function(val){
+     *         return val === value;
+     *     }, xs.core.Collection.LAST);
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    value
+     *     //    2,
+     *     //    value
+     *     //    1
+     *     //]
+     *     collection.deleteBy(function(val){
+     *         return val === value;
+     *     }, xs.core.Collection.ALL);
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    2,
+     *     //    1
+     *     //]
+     *
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         b: value,
+     *         c: 2,
+     *         d: value,
+     *         e: 2,
+     *         f: value,
+     *         g: 1,
+     *         h: value
+     *     });
+     *     collection.deleteBy(function(val){
+     *         return val === value;
+     *     });
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    value
+     *     //    2,
+     *     //    value
+     *     //    1,
+     *     //    value
+     *     //]
+     *     collection.deleteBy(function(val){
+     *         return val === value;
+     *     }, xs.core.Collection.LAST);
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    value
+     *     //    2,
+     *     //    value
+     *     //    1
+     *     //]
+     *     collection.deleteBy(function(val){
+     *         return val === value;
+     *     }, xs.core.Collection.ALL);
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    2,
+     *     //    1
+     *     //]
+     *
+     * @method deleteBy
+     *
+     * @param {Function} finder function, that returns whether to delete value or not
+     * @param {Number} [flags] optional delete flags:
+     * - LAST - to lookup for value from the end of the collection
+     *
+     * @chainable
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if finder is not a function
+     * - if given flags list is not number
+     */
+    collection.prototype.deleteBy = function (finder, flags) {
+        var me = this;
+
+        //check that finder is function
+        if (!xs.isFunction(finder)) {
+            throw new CollectionError('deleteBy - given finder "' + finder + '" is not a function');
+        }
+
+        var all = false, reverse = false;
+        //handle flags
+        if (arguments.length > 1) {
+            //check, that flags list is a number
+            if (!xs.isNumber(flags)) {
+                throw new CollectionError('keyOf - given flags "' + flags + '" list is not number');
+            }
+
+            //if ALL flag given - order does not matter
+            if (flags & xs.core.Collection.ALL) {
+                all = true;
+                //if LAST flag given - last value occurrence is looked up for
+            } else if (flags & xs.core.Collection.LAST) {
+                reverse = true;
+            }
+        }
+
+        //init variables
+        var values = me.values(), i, item, length = me.items.length;
+
+        if (all) {
+            i = 0;
+            //delete all matched occurrences from collection
+            while (i < length) {
+                item = me.items[i];
+
+                //if item does not match - continue with next item
+                if (!finder(item.value, item.key)) {
+                    //increment index
+                    i++;
+
+                    continue;
+                }
+
+                //delete item from values
+                values.splice(i, 1);
+
+                //delete item from collection
+                me.items.splice(i, 1);
+
+                //decrement valuesLength
+                length--;
+            }
+        } else if (reverse) {
+            i = length - 1;
+            //delete all matched occurrences from collection
+            while (i >= 0) {
+                item = me.items[i];
+
+                //if item does not match - continue with next item
+                if (!finder(item.value, item.key)) {
+                    //decrement index
+                    i--;
+
+                    continue;
+                }
+
+                //delete item from values
+                values.splice(i, 1);
+
+                //delete item from collection
+                me.items.splice(i, 1);
+
+                //decrement valuesLength
+                length--;
+
+                //decrement index
+                i--;
+
+                break;
+            }
+        } else {
+            i = 0;
+            //delete first matched occurrence from collection
+            while (i < length) {
+                item = me.items[i];
+
+                //if item does not match - continue with next item
+                if (!finder(item.value, item.key)) {
+                    //increment index
+                    i++;
+
+                    continue;
+                }
+
+                //delete item from values
+                values.splice(i, 1);
+
+                //delete item from collection
+                me.items.splice(i, 1);
+
+                //decrement valuesLength
+                length--;
+
+                break;
+            }
+        }
+
+        //update indexes
+        _updateIndexes.call(me, 0);
 
         return me;
     };
