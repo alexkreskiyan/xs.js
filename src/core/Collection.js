@@ -1776,6 +1776,10 @@
      * @param {Object} [flags] additional iterating flags:
      *
      * @return {*} found value, undefined if nothing found
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if finder is not a function
      */
     collection.prototype.find = function (finder, scope, flags) {
         var me = this;
@@ -1849,15 +1853,86 @@
         return found;
     };
 
-    collection.prototype.map = function (mapper) {
+    /**
+     * Produces a new list with values, returned by iterator function
+     * if source was array - array is created
+     * if source was object - object is created
+     *
+     * For example:
+     *
+     *     var scope = {
+     *         twice: function(x) {
+     *             return x * 2;
+     *         }
+     *     };
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         2,
+     *         4
+     *     ]);
+     *     console.log(collection.map(function(value, key) {
+     *         return key + this.twice(value);
+     *     }, scope).values());
+     *     //outputs:
+     *     // [ 2, 5, 10 ]
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         c: 2,
+     *         b: 4
+     *     });
+     *     console.log(collection.map(function(value, key) {
+     *         return key + this.twice(value);
+     *     }, scope).values());
+     *     //outputs:
+     *     // ['a2', 'c4', 'b8' ]
+     *
+     * @method map
+     *
+     * @param {Function} mapper mapping function
+     * @param {Object} [scope] optional scope
+     *
+     * @return {Array|Object} Mapping result
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if mapper is not a function
+     */
+    collection.prototype.map = function (mapper, scope) {
+        var me = this;
+
+        //check that finder is function
+        if (!xs.isFunction(mapper)) {
+            throw new CollectionError('map - given mapper "' + mapper + '" is not a function');
+        }
+
+        //init variables
+        var i, item, length = me.items.length;
+
+        //mapped items
+        var items = [];
+        for (i = 0; i < length; i++) {
+            item = me.items[i];
+            items.push({
+                key: item.key,
+                value: mapper.call(scope, item.value, item.key, me)
+            });
+        }
+
+        var collection = new me.constructor();
+        collection.items = items;
+
+        return collection;
+    };
+
+    collection.prototype.reduce = function (handler, memo, scope, flags) {
 
     };
 
-    collection.prototype.reduce = function (handler, flags) {
-
-    };
-
-    collection.prototype.some = function (tester, count) {
+    collection.prototype.some = function (tester, count, scope) {
 
     };
 

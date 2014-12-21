@@ -902,44 +902,36 @@ module('xs.core.Collection', function () {
         strictEqual(found.ab, collection.at('ab'));
     });
 
-    //test('map', function () {
-    //    //init test variables
-    //    var x;
+    test('map', function () {
+        //init test variables
+        var collection, scope = {
+            twice: function (x) {
+                return x * 2;
+            }
+        }, map;
 
-    //    //test array list
-    //    x = [
-    //        4,
-    //        3
-    //    ];
-    //    x = xs.map(x, function (value, name) {
-    //        return value * 2 + name;
-    //    });
-    //    strictEqual(JSON.stringify(x), '[8,7]');
+        //for Array
+        collection = new xs.core.Collection([
+            1,
+            2,
+            4
+        ]);
+        map = collection.map(function (value, key) {
+            return key + this.twice(value);
+        }, scope);
+        strictEqual(JSON.stringify(map.values()), '[2,5,10]');
 
-    //    //test empty array list
-    //    x = [];
-    //    x = xs.map(x, function (value, name) {
-    //        return value * 2 + name;
-    //    });
-    //    strictEqual(JSON.stringify(x), '[]');
-
-    //    //test object list
-    //    x = {
-    //        x: 1,
-    //        b: 2
-    //    };
-    //    x = xs.map(x, function (value, name) {
-    //        return value * 2 + name;
-    //    });
-    //    strictEqual(JSON.stringify(x), '{"x":"2x","b":"4b"}');
-
-    //    //test empty object list
-    //    x = {};
-    //    x = xs.map(x, function (value, name) {
-    //        return value * 2 + name;
-    //    });
-    //    strictEqual(JSON.stringify(x), '{}');
-    //});
+        //for Object
+        collection = new xs.core.Collection({
+            a: 1,
+            c: 2,
+            b: 4
+        });
+        map = collection.map(function (value, key) {
+            return key + this.twice(value);
+        }, scope);
+        strictEqual(JSON.stringify(map.values()), '["a2","c4","b8"]');
+    });
 
     //test('reduce', function () {
     //    //init test variables
