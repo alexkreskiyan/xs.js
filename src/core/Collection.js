@@ -1655,7 +1655,7 @@
      *
      * @param {Function} iterator list iterator
      * @param {Object} [scope] optional scope
-     * @param {Object} [flags] additional iterating flags:
+     * @param {Number} [flags] additional iterating flags:
      * - REVERSE - to iterate in reverse order
      *
      * @chainable
@@ -1673,9 +1673,12 @@
             throw new CollectionError('each - given iterator "' + iterator + '" is not a function');
         }
 
+        //default scope to me
+        arguments.length >= 2 || (scope = me);
+
         //handle flags
         var reverse = false;
-        if (arguments.length > 2) {
+        if (arguments.length >= 3) {
             //check, that flags list is a number
             if (!xs.isNumber(flags)) {
                 throw new CollectionError('each - given flags "' + flags + '" list is not number');
@@ -1773,7 +1776,7 @@
      *
      * @param {Function} finder function, returning true if value matches given conditions
      * @param {Object} [scope] optional scope
-     * @param {Object} [flags] additional iterating flags:
+     * @param {Number} [flags] additional iterating flags:
      *
      * @return {*} found value, undefined if nothing found
      *
@@ -1789,9 +1792,12 @@
             throw new CollectionError('find - given finder "' + finder + '" is not a function');
         }
 
+        //default scope to me
+        arguments.length >= 2 || (scope = me);
+
         //handle flags
         var all = false, reverse = false;
-        if (arguments.length > 2) {
+        if (arguments.length >= 3) {
             //check, that flags list is a number
             if (!xs.isNumber(flags)) {
                 throw new CollectionError('each - given flags "' + flags + '" list is not number');
@@ -1909,6 +1915,9 @@
             throw new CollectionError('map - given mapper "' + mapper + '" is not a function');
         }
 
+        //default scope to me
+        arguments.length >= 2 || (scope = me);
+
         //init variables
         var i, item, length = me.items.length;
 
@@ -1928,8 +1937,162 @@
         return collection;
     };
 
-    collection.prototype.reduce = function (handler, memo, scope, flags) {
+    /**
+     * Reduces collection values by reducer function
+     *
+     * For example:
+     *
+     *     var scope = {
+     *         twice: function(x) {
+     *             return x * 2;
+     *         }
+     *     };
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         2,
+     *         4
+     *     ]);
+     *
+     *     //direct
+     *     console.log(collection.reduce(function(memo, value, key) {
+     *         return memo + key + this.twice(value);
+     *     }, scope, 0, 5));
+     *     //outputs:
+     *     // 22, evaluated as 5 + (0 + 1 * 2) + (1 + 2 * 2) + (2 + 2 * 4)
+     *     console.log(collection.reduce(function(memo, value, key) {
+     *         return memo + key + 2 * value;
+     *     }));
+     *     //outputs:
+     *     // 16, evaluated as 1 + (1 + 2 * 2) + (2 + 4 * 2)
+     *
+     *     //reverse
+     *     console.log(collection.reduce(function(memo, value, key) {
+     *         return memo + key + this.twice(value);
+     *     }, scope, xs.core.Collection.REVERSE, 5));
+     *     //outputs:
+     *     // 22, evaluated as 5 + (2 + 4 * 2) + (1 + 2 * 2) + (0 + 1 * 2)
+     *     console.log(collection.reduce(function(memo, value, key) {
+     *         return memo + key + 2 * value;
+     *     }, scope, xs.core.Collection.REVERSE));
+     *     //outputs:
+     *     // 11, evaluated as 4 + (1 + 2 * 2) + (0 + 1 * 2)
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         c: 2,
+     *         b: 4
+     *     });
+     *
+     *     //direct
+     *     console.log(collection.reduce(function(memo, value, key) {
+     *         return memo + key + this.twice(value);
+     *     }, scope, 0, 5));
+     *     //outputs:
+     *     // '5a2c4b8', evaluated as 5 + ('a' + 1 * 2) + ('c' + 2 * 2) + ('b' + 2 * 4)
+     *     console.log(collection.reduce(function(memo, value, key) {
+     *         return memo + key + 2 * value;
+     *     }));
+     *     //outputs:
+     *     // '1c4b8', evaluated as 1 + ('c' + 2 * 2) + ('b' + 4 * 2)
+     *
+     *     //direct
+     *     console.log(collection.reduce(function(memo, value, key) {
+     *         return memo + key + this.twice(value);
+     *     }, scope, xs.core.Collection.REVERSE, 5));
+     *     //outputs:
+     *     // '5b8c4a2', evaluated as 5 + ('b' + 2 * 4) + ('c' + 2 * 2) + ('a' + 1 * 2)
+     *     console.log(collection.reduce(function(memo, value, key) {
+     *         return memo + key + 2 * value;
+     *     }, scope, xs.core.Collection.REVERSE));
+     *     //outputs:
+     *     // '4c4a2', evaluated as 4 + ('c' + 2 * 2) + ('a' + 1 * 2)
+     *
+     * @method reduce
+     *
+     * @param {Function} reducer reducing function
+     * @param {Object} scope optional scope
+     * @param {Number} [flags] additional iterating flags:
+     * @param {*} memo initial value. Is optional. If omitted, first value's value is shifted from list and used as memo
+     *
+     * @return {*} Reducing result
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if finder is not a function
+     * - if collection is empty
+     */
+    collection.prototype.reduce = function (reducer, scope, flags, memo) {
+        var me = this;
 
+        //check that finder is function
+        if (!xs.isFunction(reducer)) {
+            throw new CollectionError('reduce - given reducer "' + reducer + '" is not a function');
+        }
+
+        //check that collection is not empty
+        if (!me.items.length) {
+            throw new CollectionError('reduce - collection is empty');
+        }
+
+        //default scope to me
+        arguments.length >= 2 || (scope = me);
+
+        //handle flags
+        var reverse = false;
+        if (arguments.length >= 3) {
+            //check, that flags list is a number
+            if (!xs.isNumber(flags)) {
+                throw new CollectionError('reduce - given flags "' + flags + '" list is not number');
+            }
+
+            //if REVERSE flag given
+            if (flags & xs.core.Collection.REVERSE) {
+                reverse = true;
+            }
+        }
+
+        //check memo
+        var hasMemo = false;
+        if (arguments.length >= 4) {
+            hasMemo = true;
+        }
+
+        //init variables
+        var result, i, item, length = me.items.length;
+
+        //reduce
+        if (reverse) {
+            if (hasMemo) {
+                i = length - 1;
+                result = memo;
+            } else {
+                i = length - 2;
+                result = me.items[length - 1].value;
+            }
+
+            for (; i >= 0; i--) {
+                item = me.items[i];
+                result = reducer.call(scope, result, item.value, item.key, me);
+            }
+        } else {
+            if (hasMemo) {
+                i = 0;
+                result = memo;
+            } else {
+                i = 1;
+                result = me.items[0].value;
+            }
+
+            for (; i < length; i++) {
+                item = me.items[i];
+                result = reducer.call(scope, result, item.value, item.key, me);
+            }
+        }
+
+        return result;
     };
 
     collection.prototype.some = function (tester, count, scope) {

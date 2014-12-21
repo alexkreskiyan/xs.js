@@ -933,51 +933,52 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(map.values()), '["a2","c4","b8"]');
     });
 
-    //test('reduce', function () {
-    //    //init test variables
-    //    var x;
+    test('reduce', function () {
+        //init test variables
+        var collection;
 
-    //    //test array list
-    //    x = [
-    //        6,
-    //        5,
-    //        4
-    //    ];
-    //    strictEqual(xs.reduce(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }), 27);
-    //    strictEqual(xs.reduce(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }, -3), 30);
+        //test array list
+        collection = new xs.core.Collection([
+            6,
+            5,
+            4
+        ]);
+        //direct
+        strictEqual(collection.reduce(function (memo, value, name) {
+            return memo + 2 * value + name;
+        }), 27);
+        strictEqual(collection.reduce(function (memo, value, name) {
+            return memo + 2 * value + name;
+        }, undefined, 0, -3), 30);
+        //reverse
+        strictEqual(collection.reduce(function (memo, value, name) {
+            return memo + 2 * value + name;
+        }, undefined, xs.core.Collection.REVERSE), 27);
+        strictEqual(collection.reduce(function (memo, value, name) {
+            return memo + 2 * value + name;
+        }, undefined, xs.core.Collection.REVERSE, -3), 30);
 
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.reduce(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }, -3), -3);
-
-    //    //test object list
-    //    x = {
-    //        x: 1,
-    //        b: 2,
-    //        a: 3
-    //    };
-    //    strictEqual(xs.reduce(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }), '5b6a');
-    //    strictEqual(xs.reduce(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }, -3), '-1x4b6a');
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.reduce(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }), undefined);
-    //    strictEqual(xs.reduce(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }, -3), -3);
-    //});
+        //test object
+        collection = new xs.core.Collection({
+            x: 1,
+            b: 2,
+            a: 3
+        });
+        //direct
+        strictEqual(collection.reduce(function (memo, value, name) {
+            return memo + 2 * value + name;
+        }), '5b6a');
+        strictEqual(collection.reduce(function (memo, value, name) {
+            return memo + 2 * value + name;
+        }, undefined, 0, -3), '-1x4b6a');
+        //reverse
+        strictEqual(collection.reduce(function (memo, value, name) {
+            return memo + 2 * value + name;
+        }, undefined, xs.core.Collection.REVERSE), '7b2x');
+        strictEqual(collection.reduce(function (memo, value, name) {
+            return memo + 2 * value + name;
+        }, undefined, xs.core.Collection.REVERSE, -3), '3a4b2x');
+    });
 
     //test('reduceRight', function () {
     //    //init test variables
@@ -998,7 +999,7 @@ module('xs.core.Collection', function () {
 
     //    //test empty array list
     //    x = [];
-    //    strictEqual(xs.reduce(x, function (memo, value, name) {
+    //    strictEqual(collection.reduce(function (memo, value, name) {
     //        return memo + 2 * value + name;
     //    }, -3), -3);
 
