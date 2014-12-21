@@ -88,13 +88,13 @@
      *
      * @static
      *
-     * @property LAST
+     * @property REVERSE
      *
      * @readonly
      *
      * @type {Number}
      */
-    collection.LAST = 0x1;
+    collection.REVERSE = 0x1;
 
     /**
      * Collection flag, meaning, that operation is made for all matches.
@@ -335,7 +335,7 @@
     };
 
     /**
-     * Returns key of collection value, equal to given. Supports LAST flag, that will perform lookup from the end of the collection
+     * Returns key of collection value, equal to given. Supports REVERSE flag, that will perform lookup from the end of the collection
      *
      * For example:
      *
@@ -353,7 +353,7 @@
      *     console.log(collection.keyOf(0)); //undefined - no value
      *     console.log(collection.keyOf({})); //undefined - another object in array
      *     console.log(collection.keyOf(1)); //0
-     *     console.log(collection.keyOf(value, xs.core.Collection.LAST)); //5
+     *     console.log(collection.keyOf(value, xs.core.Collection.REVERSE)); //5
      *
      *     //for Object
      *     var collection = new xs.core.Collection({
@@ -367,14 +367,13 @@
      *     console.log(collection.keyOf(0)); //undefined - no value
      *     console.log(collection.keyOf({})); //undefined - another object in array
      *     console.log(collection.keyOf(1)); //'a'
-     *     console.log(collection.keyOf(value, xs.core.Collection.LAST)); //'e'
-     *
-     * ATTENTION: Try to avoid using integer indexes in objects, because their order in V8 is not guaranteed!
+     *     console.log(collection.keyOf(value, xs.core.Collection.REVERSE)); //'e'
      *
      * @method keyOf
      *
      * @param {*} value value to lookup for
-     * @param {Number} [flags] optional lookup flags
+     * @param {Number} [flags] optional lookup flags:
+     * - REVERSE - to lookup for value from the end of the collection
      *
      * @return {String|Number|undefined} found key, or undefined if nothing found
      *
@@ -392,7 +391,7 @@
                 throw new CollectionError('keyOf - given flags "' + flags + '" list is not number');
             }
 
-            if (flags & xs.core.Collection.LAST) {
+            if (flags & xs.core.Collection.REVERSE) {
                 key = values.lastIndexOf(value);
             } else {
                 key = values.indexOf(value);
@@ -432,8 +431,6 @@
      *     });
      *     console.log(collection.at('a')); //1 - no value
      *     console.log(collection.at('f')); //value
-     *
-     * ATTENTION: Try to avoid using integer indexes in objects, because their order in V8 is not guaranteed!
      *
      * @method at
      *
@@ -996,7 +993,7 @@
      *     //    1,
      *     //    value
      *     //]
-     *     collection.delete(value, xs.core.Collection.LAST);
+     *     collection.delete(value, xs.core.Collection.REVERSE);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1039,7 +1036,7 @@
      *     //    1,
      *     //    value
      *     //]
-     *     collection.delete(value, xs.core.Collection.LAST);
+     *     collection.delete(value, xs.core.Collection.REVERSE);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1064,7 +1061,8 @@
      *
      * @param {*} value deleted value
      * @param {Number} [flags] optional delete flags:
-     * - LAST - to lookup for value from the end of the collection
+     * - REVERSE - to lookup for value from the end of the collection
+     * - ALL - to delete all matches
      *
      * @chainable
      *
@@ -1099,8 +1097,8 @@
             if (flags & xs.core.Collection.ALL) {
                 index = values.indexOf(value);
                 all = true;
-                //if LAST flag given - last value occurrence is looked up for
-            } else if (flags & xs.core.Collection.LAST) {
+                //if REVERSE flag given - last value occurrence is looked up for
+            } else if (flags & xs.core.Collection.REVERSE) {
                 index = values.lastIndexOf(value);
                 //else - first value occurrence is looked up for
             } else {
@@ -1182,7 +1180,7 @@
      *     //]
      *     collection.deleteBy(function(val){
      *         return val === value;
-     *     }, xs.core.Collection.LAST);
+     *     }, xs.core.Collection.REVERSE);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1231,7 +1229,7 @@
      *     //]
      *     collection.deleteBy(function(val){
      *         return val === value;
-     *     }, xs.core.Collection.LAST);
+     *     }, xs.core.Collection.REVERSE);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1258,7 +1256,8 @@
      *
      * @param {Function} finder function, that returns whether to delete value or not
      * @param {Number} [flags] optional delete flags:
-     * - LAST - to lookup for value from the end of the collection
+     * - REVERSE - to lookup for value from the end of the collection
+     * - ALL - to delete all matches
      *
      * @chainable
      *
@@ -1286,8 +1285,8 @@
             //if ALL flag given - order does not matter
             if (flags & xs.core.Collection.ALL) {
                 all = true;
-                //if LAST flag given - last value occurrence is looked up for
-            } else if (flags & xs.core.Collection.LAST) {
+                //if REVERSE flag given - last value occurrence is looked up for
+            } else if (flags & xs.core.Collection.REVERSE) {
                 reverse = true;
             }
         }
@@ -1465,6 +1464,10 @@
      * @method shift
      *
      * @return {*} First value of collection
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if collection is empty
      */
     collection.prototype.shift = function () {
         var me = this;
@@ -1572,6 +1575,10 @@
      * @method pop
      *
      * @return {*} First value of collection
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if collection is empty
      */
     collection.prototype.pop = function () {
         var me = this;
@@ -1593,23 +1600,111 @@
         return value;
     };
 
-    collection.prototype.each = function () {
+    /**
+     * Iterates over collection in direct or reverse order
+     *
+     * For example:
+     *
+     *     var scope = {
+     *         x: 1
+     *     };
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         2,
+     *         {}
+     *     ]);
+     *     collection.each(function(value, key, collection) {
+     *         console.log(this, value, key, collection);
+     *     }, scope);
+     *     //outputs:
+     *     // {x:1}, 1, 0, collection
+     *     // {x:1}, 2, 1, collection
+     *     // {x:1}, {}, 2, collection
+     *     collection.each(function(value, key, collection) {
+     *         console.log(this, value, key, collection);
+     *     }, scope, xs.core.Collection.REVERSE);
+     *     //outputs:
+     *     // {x:1}, {}, 2, collection
+     *     // {x:1}, 2, 1, collection
+     *     // {x:1}, 1, 0, collection
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         c: 2,
+     *         b: {}
+     *     });
+     *     collection.each(function(value, key, collection) {
+     *         console.log(this, value, key, collection);
+     *     }, scope);
+     *     //outputs:
+     *     // {x:1}, 1, a, collection
+     *     // {x:1}, 2, c, collection
+     *     // {x:1}, {}, b, collection
+     *     collection.each(function(value, key, collection) {
+     *         console.log(this, value, key, collection);
+     *     }, scope, xs.core.Collection.REVERSE);
+     *     //outputs:
+     *     // {x:1}, {}, b, collection
+     *     // {x:1}, 2, c, collection
+     *     // {x:1}, 1, a, collection
+     *
+     * @method each
+     *
+     * @param {Function} iterator list iterator
+     * @param {Object} [scope] optional scope
+     * @param {Object} [flags] additional iterating flags:
+     * - REVERSE - to iterate in reverse order
+     *
+     * @chainable
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if iterator is not a function
+     * - if given flags list is not a number
+     */
+    collection.prototype.each = function (iterator, scope, flags) {
+        var me = this;
 
+        //check that iterator is function
+        if (!xs.isFunction(iterator)) {
+            throw new CollectionError('each - given iterator "' + iterator + '" is not a function');
+        }
+
+        //handle flags
+        var reverse = false;
+        if (arguments.length > 2) {
+            //check, that flags list is a number
+            if (!xs.isNumber(flags)) {
+                throw new CollectionError('each - given flags "' + flags + '" list is not number');
+            }
+
+            //if REVERSE flag given - last value occurrence is looked up for
+            if (flags & xs.core.Collection.REVERSE) {
+                reverse = true;
+            }
+        }
+
+        //iterate
+        var i, item, length = me.items.length;
+        if (reverse) {
+            for (i = length - 1; i >= 0; i--) {
+                item = me.items[i];
+                iterator.call(scope, item.value, item.key, me);
+            }
+        } else {
+            for (i = 0; i < length; i++) {
+                item = me.items[i];
+                iterator.call(scope, item.value, item.key, me);
+            }
+        }
+
+        return me;
     };
 
-    collection.prototype.eachReverse = function () {
-
-    };
-
-    collection.prototype.find = function (finder) {
-
-    };
-
-    collection.prototype.findLast = function (finder) {
-
-    };
-
-    collection.prototype.findAll = function (finder) {
+    collection.prototype.find = function (finder, flags) {
 
     };
 
@@ -1617,23 +1712,11 @@
 
     };
 
-    collection.prototype.reduce = function () {
+    collection.prototype.reduce = function (handler, flags) {
 
     };
 
-    collection.prototype.reduceRight = function () {
-
-    };
-
-    collection.prototype.every = function () {
-
-    };
-
-    collection.prototype.some = function () {
-
-    };
-
-    collection.prototype.none = function () {
+    collection.prototype.some = function (tester, count) {
 
     };
 

@@ -247,7 +247,7 @@ module('xs.core.Collection', function () {
 
         strictEqual(collection.keyOf(3), 2);
         strictEqual(collection.keyOf(item), 4);
-        strictEqual(collection.keyOf(item, xs.core.Collection.LAST), 5);
+        strictEqual(collection.keyOf(item, xs.core.Collection.REVERSE), 5);
         strictEqual(collection.keyOf('1'), undefined);
 
         //test empty array list
@@ -266,7 +266,7 @@ module('xs.core.Collection', function () {
         });
         strictEqual(collection.keyOf(1), 'x');
         strictEqual(collection.keyOf(item), 'a');
-        strictEqual(collection.keyOf(item, xs.core.Collection.LAST), 'b');
+        strictEqual(collection.keyOf(item, xs.core.Collection.REVERSE), 'b');
         strictEqual(collection.keyOf('1'), undefined);
 
         //test empty object list
@@ -570,7 +570,7 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5,6]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2,' + itemString + ']');
 
-        collection.delete(item, xs.core.Collection.LAST);
+        collection.delete(item, xs.core.Collection.REVERSE);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
@@ -593,7 +593,7 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g","h"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2,' + itemString + ']');
 
-        collection.delete(item, xs.core.Collection.LAST);
+        collection.delete(item, xs.core.Collection.REVERSE);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
@@ -628,7 +628,7 @@ module('xs.core.Collection', function () {
 
         collection.deleteBy(function (value) {
             return value === item;
-        }, xs.core.Collection.LAST);
+        }, xs.core.Collection.REVERSE);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
@@ -657,7 +657,7 @@ module('xs.core.Collection', function () {
 
         collection.deleteBy(function (value) {
             return value === item;
-        }, xs.core.Collection.LAST);
+        }, xs.core.Collection.REVERSE);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
@@ -770,48 +770,76 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.keys()), '["a","b","c"]');
     });
 
-    //test('each', function () {
-    //    //init test variables
-    //    var x, sum;
+    test('each', function () {
+        //init test variables
+        var collection, sum;
 
-    //    //test array list
-    //    x = [
-    //        1,
-    //        2
-    //    ];
-    //    sum = '';
-    //    xs.each(x, function (value) {
-    //        sum += value;
-    //    });
-    //    strictEqual(sum, '12');
+        //test array
+        collection = new xs.core.Collection([
+            1,
+            2
+        ]);
+        //direct
+        sum = '';
+        collection.each(function (value) {
+            sum += value;
+        });
+        strictEqual(sum, '12');
+        //reverse
+        sum = '';
+        collection.each(function (value) {
+            sum += value;
+        }, null, xs.core.Collection.REVERSE);
+        strictEqual(sum, '21');
 
-    //    //test empty array list
-    //    x = [];
-    //    sum = '';
-    //    xs.each(x, function (value) {
-    //        sum += value;
-    //    });
-    //    strictEqual(sum, '');
+        //test empty array
+        collection = new xs.core.Collection([]);
+        //direct
+        sum = '';
+        collection.each(function (value) {
+            sum += value;
+        });
+        strictEqual(sum, '');
+        //reverse
+        sum = '';
+        collection.each(function (value) {
+            sum += value;
+        }, null, xs.core.Collection.REVERSE);
+        strictEqual(sum, '');
 
-    //    //test object list
-    //    x = {
-    //        x: 1,
-    //        b: 2
-    //    };
-    //    sum = '';
-    //    xs.each(x, function (value) {
-    //        sum += value;
-    //    });
-    //    strictEqual(sum, '12');
+        //test object
+        collection = new xs.core.Collection({
+            x: 1,
+            b: 2
+        });
+        //direct
+        sum = '';
+        collection.each(function (value) {
+            sum += value;
+        });
+        strictEqual(sum, '12');
+        //reverse
+        sum = '';
+        collection.each(function (value) {
+            sum += value;
+        }, null, xs.core.Collection.REVERSE);
+        strictEqual(sum, '21');
 
-    //    //test empty object list
-    //    x = {};
-    //    sum = '';
-    //    xs.each(x, function (value) {
-    //        sum += value;
-    //    });
-    //    strictEqual(sum, '');
-    //});
+        //test empty object
+        collection = new xs.core.Collection({});
+        //direct
+        sum = '';
+        collection.each(function (value) {
+            sum += value;
+        });
+        strictEqual(sum, '');
+        //reverse
+        sum = '';
+        collection.each(function (value) {
+            sum += value;
+        }, null, xs.core.Collection.REVERSE);
+        strictEqual(sum, '');
+    });
 
     //test('eachReverse', function () {
     //    //init test variables
