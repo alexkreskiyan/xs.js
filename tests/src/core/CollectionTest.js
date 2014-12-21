@@ -841,48 +841,66 @@ module('xs.core.Collection', function () {
         strictEqual(sum, '');
     });
 
-    //test('eachReverse', function () {
-    //    //init test variables
-    //    var x, sum;
+    test('find', function () {
+        //init test variables
+        var collection, found;
 
-    //    //test array list
-    //    x = [
-    //        1,
-    //        2
-    //    ];
-    //    sum = '';
-    //    xs.eachReverse(x, function (value) {
-    //        sum += value;
-    //    });
-    //    strictEqual(sum, '21');
+        var scope = {
+            sum: function (x, y) {
+                return x + y;
+            },
+            first: function (x) {
+                return x[0];
+            }
+        };
 
-    //    //test empty array list
-    //    x = [];
-    //    sum = '';
-    //    xs.eachReverse(x, function (value) {
-    //        sum += value;
-    //    });
-    //    strictEqual(sum, '');
+        //for Array
+        collection = new xs.core.Collection([
+            {x: 2},
+            {x: 2},
+            {x: 0}
+        ]);
+        //direct
+        found = collection.find(function (value, key) {
+            return this.sum(key, value.x) === 2;
+        }, scope);
+        strictEqual(found, collection.at(0));
+        //reverse
+        found = collection.find(function (value, key) {
+            return this.sum(key, value.x) === 2;
+        }, scope, xs.core.Collection.REVERSE);
+        strictEqual(found, collection.at(2));
+        //all
+        found = collection.find(function (value, key) {
+            return this.sum(key, value.x) >= 2;
+        }, scope, xs.core.Collection.ALL);
+        strictEqual(found[0], collection.at(0));
+        strictEqual(found[1], collection.at(1));
+        strictEqual(found[2], collection.at(2));
 
-    //    //test object list
-    //    x = {
-    //        x: 1,
-    //        b: 2
-    //    };
-    //    sum = '';
-    //    xs.eachReverse(x, function (value) {
-    //        sum += value;
-    //    });
-    //    strictEqual(sum, '21');
-
-    //    //test empty object list
-    //    x = {};
-    //    sum = '';
-    //    xs.eachReverse(x, function (value) {
-    //        sum += value;
-    //    });
-    //    strictEqual(sum, '');
-    //});
+        //for Object
+        collection = new xs.core.Collection({
+            aa: {x: 1},
+            c: {x: 2},
+            ab: {x: 3}
+        });
+        //direct
+        found = collection.find(function (value, key) {
+            return this.first(key) === 'a';
+        }, scope);
+        strictEqual(found, collection.at('aa'));
+        //reverse
+        found = collection.find(function (value, key) {
+            return this.first(key) === 'a';
+        }, scope, xs.core.Collection.REVERSE);
+        strictEqual(found, collection.at('ab'));
+        //all
+        found = collection.find(function (value, key) {
+            return this.first(key) === 'a';
+        }, scope, xs.core.Collection.ALL);
+        strictEqual(found.aa, collection.at('aa'));
+        strictEqual(found.ab, collection.at('ab'));
+    });
 
     //test('map', function () {
     //    //init test variables
@@ -1013,234 +1031,6 @@ module('xs.core.Collection', function () {
     //    strictEqual(xs.reduce(x, function (memo, value, name) {
     //        return memo + 2 * value + name;
     //    }, -3), -3);
-    //});
-
-    //test('find', function () {
-    //    //init test variables
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-
-    //    strictEqual(xs.find(x, function (value) {
-    //        return value.y == 1;
-    //    }), x[2]);
-
-    //    strictEqual(xs.find(x, function (value) {
-    //        return value.y == 3;
-    //    }), undefined);
-
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.find(x, function (value) {
-    //        return value.y == 1;
-    //    }), undefined);
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-    //    strictEqual(xs.find(x, function (value) {
-    //        return value.y == 1;
-    //    }), x.c);
-
-    //    strictEqual(xs.find(x, function (value) {
-    //        return value.y == 3;
-    //    }), undefined);
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.find(x, function (value) {
-    //        return value.y == 1;
-    //    }), undefined);
-
-    //});
-
-    //test('findLast', function () {
-    //    //init test variables
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-    //    strictEqual(xs.findLast(x, function (value) {
-    //        return value.y == 1;
-    //    }), x[3]);
-    //    strictEqual(xs.findLast(x, function (value) {
-    //        return value.y == 3;
-    //    }), undefined);
-
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.findLast(x, function (value) {
-    //        return value.y == 3;
-    //    }), undefined);
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-    //    strictEqual(xs.findLast(x, function (value) {
-    //        return value.y == 1;
-    //    }), x.d);
-
-    //    strictEqual(xs.findLast(x, function (value) {
-    //        return value.y == 3;
-    //    }), undefined);
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.findLast(x, function (value) {
-    //        return value.y == 3;
-    //    }), undefined);
-    //});
-
-    //test('findAll', function () {
-    //    //init test variables
-    //    var x;
-    //    var results;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-    //    results = xs.findAll(x, function (value) {
-    //        return value.y == 1;
-    //    });
-    //    strictEqual(JSON.stringify(results), JSON.stringify([
-    //        x[2],
-    //        x[3]
-    //    ]));
-
-    //    results = xs.findAll(x, function (value) {
-    //        return value.y == 3;
-    //    });
-    //    strictEqual(JSON.stringify(results), JSON.stringify([]));
-
-    //    //test empty array list
-    //    x = [];
-    //    results = xs.findAll(x, function (value) {
-    //        return value.a = 'aa';
-    //    });
-    //    strictEqual(JSON.stringify(results), JSON.stringify([]));
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-
-    //    results = xs.findAll(x, function (value) {
-    //        return value.y == 1;
-    //    });
-    //    strictEqual(JSON.stringify(results), JSON.stringify({
-    //        c: x.c,
-    //        d: x.d
-    //    }));
-
-    //    results = xs.findAll(x, function (value) {
-    //        return value.y == 3;
-    //    });
-    //    strictEqual(JSON.stringify(results), JSON.stringify({}));
-
-    //    //test empty object list
-    //    x = {};
-    //    results = xs.findAll(x, function (value) {
-    //        return value.y == 3;
-    //    });
-    //    strictEqual(JSON.stringify(results), JSON.stringify({}));
     //});
 
     //test('filter', function () {

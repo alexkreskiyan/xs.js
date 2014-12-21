@@ -1704,8 +1704,149 @@
         return me;
     };
 
-    collection.prototype.find = function (finder, flags) {
+    /**
+     * Returns collection item|items, that passed given test function
+     *
+     * For example:
+     *
+     *     var scope = {
+     *         sum: function(x, y) {
+     *             return x + y;
+     *         },
+     *         first: function(x) {
+     *             return x[0];
+     *         }
+     *     };
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         {x: 2},
+     *         {x: 2},
+     *         {x: 0}
+     *     ]);
+     *     console.log(collection.find(function(value, key) {
+     *         return this.sum(key, value.x) === 2;
+     *     }, scope));
+     *     //outputs:
+     *     // {x: 2}, reference to collection[0], first value, passed finder function
+     *     console.log(collection.find(function(value, key) {
+     *         return this.sum(key, value.x) === 2;
+     *     }, scope, xs.core.Collection.REVERSE));
+     *     //outputs:
+     *     // {x: 0}, reference to collection[2], first value, passed finder function
+     *     console.log(collection.find(function(value, key) {
+     *         return this.sum(key, value.x) >= 2;
+     *     }, scope, xs.core.Collection.ALL));
+     *     //outputs:
+     *     //[
+     *     //    {x: 2},
+     *     //    {x: 2},
+     *     //    {x: 0}
+     *     //]
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         aa: {x: 1},
+     *         c: {x: 2},
+     *         ab: {x: 3}
+     *     });
+     *     console.log(collection.find(function(value, key) {
+     *         return this.first(key) === 'a';
+     *     }, scope));
+     *     //outputs:
+     *     // {x: 2}, reference to collection[0], first value, passed finder function
+     *     console.log(collection.find(function(value, key) {
+     *         return this.first(key) === 'a';
+     *     }, scope, xs.core.Collection.REVERSE));
+     *     //outputs:
+     *     // {x: 0}, reference to collection[2], first value, passed finder function
+     *     console.log(collection.find(function(value, key) {
+     *         return this.first(key) === 'a';
+     *     }, scope, xs.core.Collection.ALL));
+     *     //outputs:
+     *     //{
+     *     //    aa: {x: 2},
+     *     //    ab: {x: 0}
+     *     //}
+     *
+     * @method find
+     *
+     * @param {Function} finder function, returning true if value matches given conditions
+     * @param {Object} [scope] optional scope
+     * @param {Object} [flags] additional iterating flags:
+     *
+     * @return {*} found value, undefined if nothing found
+     */
+    collection.prototype.find = function (finder, scope, flags) {
+        var me = this;
 
+        //check that finder is function
+        if (!xs.isFunction(finder)) {
+            throw new CollectionError('find - given finder "' + finder + '" is not a function');
+        }
+
+        //handle flags
+        var all = false, reverse = false;
+        if (arguments.length > 2) {
+            //check, that flags list is a number
+            if (!xs.isNumber(flags)) {
+                throw new CollectionError('each - given flags "' + flags + '" list is not number');
+            }
+
+            //if ALL flag given
+            if (flags & xs.core.Collection.ALL) {
+                all = true;
+                //else - if REVERSE flag given
+            } else if (flags & xs.core.Collection.REVERSE) {
+                reverse = true;
+            }
+        }
+
+        //init variables
+        var i, item, length = me.items.length, found;
+
+        if (all) {
+            //indexes of matched items
+            var indexes = [];
+            var isArray = true;
+
+            for (i = 0; i < length; i++) {
+                item = me.items[i];
+                if (finder.call(scope, item.value, item.key, me)) {
+                    //add index
+                    indexes.push(i);
+
+                    //if isArray flag on and key is not number - turn it off
+                    isArray && !xs.isNumber(item.key) && (isArray = false);
+                }
+            }
+
+            //collect result data set
+            length = indexes.length;
+            found = isArray ? [] : {};
+            for (i = 0; i < length; i++) {
+                item = me.items[indexes[i]];
+                found[item.key] = item.value;
+            }
+        } else if (reverse) {
+            for (i = length - 1; i >= 0; i--) {
+                item = me.items[i];
+                if (finder.call(scope, item.value, item.key, me)) {
+                    found = item.value;
+                    break;
+                }
+            }
+        } else {
+            for (i = 0; i < length; i++) {
+                item = me.items[i];
+                if (finder.call(scope, item.value, item.key, me)) {
+                    found = item.value;
+                    break;
+                }
+            }
+        }
+
+        return found;
     };
 
     collection.prototype.map = function (mapper) {
