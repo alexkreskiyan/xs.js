@@ -86,7 +86,11 @@
     /**
      * Collection flag, meaning, that operation is reverse
      *
-     * @constant LAST
+     * @static
+     *
+     * @property LAST
+     *
+     * @readonly
      *
      * @type {Number}
      */
@@ -95,7 +99,11 @@
     /**
      * Collection flag, meaning, that operation is made for all matches.
      *
-     * @constant ALL
+     * @static
+     *
+     * @property ALL
+     *
+     * @readonly
      *
      * @type {Number}
      */
@@ -1138,12 +1146,218 @@
         return me;
     };
 
+    /**
+     * Shifts and returns first value from collection
+     *
+     * For example:
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         {
+     *             x: 1,
+     *             y: 2
+     *         },
+     *         {
+     *             x: 2,
+     *             y: 2
+     *         },
+     *         {
+     *             x: 2,
+     *             y: 1
+     *         },
+     *         {
+     *             x: 1,
+     *             y: 1
+     *         }
+     *     ]);
+     *     console.log(collection.shift());
+     *     //outputs:
+     *     // {x: 1, y: 2, reference to collection[0] respectively
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    {
+     *     //        x: 2,
+     *     //        y: 2
+     *     //    },
+     *     //    {
+     *     //        x: 2,
+     *     //        y: 1
+     *     //    },
+     *     //    {
+     *     //        x: 1,
+     *     //        y: 1
+     *     //    }
+     *     //];
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: {
+     *             x: 1,
+     *             y: 2
+     *         },
+     *         c: {
+     *             x: 2,
+     *             y: 2
+     *         },
+     *         b: {
+     *             x: 2,
+     *             y: 1
+     *         },
+     *         d: {
+     *             x: 1,
+     *             y: 1
+     *         }
+     *     });
+     *     console.log(collection.shift());
+     *     //outputs:
+     *     // {x: 1, y: 2}, reference to collection.a respectively
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    {
+     *     //        x: 2,
+     *     //        y: 2
+     *     //    },
+     *     //    {
+     *     //        x: 2,
+     *     //        y: 1
+     *     //    },
+     *     //    {
+     *     //        x: 1,
+     *     //        y: 1
+     *     //    }
+     *     //];
+     *
+     * @method shift
+     *
+     * @return {*} First value of collection
+     */
     collection.prototype.shift = function () {
+        var me = this;
 
+        //check that collection is not empty
+        if (!me.items.length) {
+            throw new CollectionError('shift - collection is empty');
+        }
+
+        //get returned value
+        var value = me.items[0].value;
+
+        //delete first item from collection
+        me.items.splice(0, 1);
+
+        _updateIndexes.call(me, 0);
+
+        //return value
+        return value;
     };
 
+    /**
+     * Pops and returns last value from collection
+     *
+     * For example:
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         {
+     *             x: 1,
+     *             y: 2
+     *         },
+     *         {
+     *             x: 2,
+     *             y: 2
+     *         },
+     *         {
+     *             x: 2,
+     *             y: 1
+     *         },
+     *         {
+     *             x: 1,
+     *             y: 1
+     *         }
+     *     ]);
+     *     console.log(collection.pop());
+     *     //outputs:
+     *     // {x: 1, y: 1}, reference to collection[3] respectively
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    {
+     *     //        x: 1,
+     *     //        y: 2
+     *     //    },
+     *     //    {
+     *     //        x: 2,
+     *     //        y: 2
+     *     //    },
+     *     //    {
+     *     //        x: 2,
+     *     //        y: 1
+     *     //    }
+     *     //];
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: {
+     *             x: 1,
+     *             y: 2
+     *         },
+     *         c: {
+     *             x: 2,
+     *             y: 2
+     *         },
+     *         b: {
+     *             x: 2,
+     *             y: 1
+     *         },
+     *         d: {
+     *             x: 1,
+     *             y: 1
+     *         }
+     *     });
+     *     console.log(collection.pop());
+     *     //outputs:
+     *     // {x: 1, y: 1}, reference to collection.a respectively
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    {
+     *     //        x: 1,
+     *     //        y: 2
+     *     //    },
+     *     //    {
+     *     //        x: 2,
+     *     //        y: 2
+     *     //    },
+     *     //    {
+     *     //        x: 2,
+     *     //        y: 1
+     *     //    }
+     *     //];
+     *
+     * @method pop
+     *
+     * @return {*} First value of collection
+     */
     collection.prototype.pop = function () {
+        var me = this;
 
+        //check that collection is not empty
+        if (!me.items.length) {
+            throw new CollectionError('pop - collection is empty');
+        }
+
+        var index = me.items.length - 1;
+
+        //get returned value
+        var value = me.items[index].value;
+
+        //delete last item from collection
+        me.items.splice(-1, 1);
+
+        //return value
+        return value;
     };
 
     collection.prototype.each = function () {

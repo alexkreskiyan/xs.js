@@ -602,64 +602,108 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
     });
 
-    //test('deleteAll', function () {
-    //    //init test variables
-    //    var item = { x: 1 };
-    //    var itemString = JSON.stringify(item);
-    //    var x;
+    test('shift', function () {
+        //init test variables
+        var collection, shifted;
 
-    //    //test array list
-    //    x = [
-    //        1,
-    //        2,
-    //        item,
-    //        item,
-    //        2,
-    //        item,
-    //        1
-    //    ];
+        //test array list
+        collection = new xs.core.Collection([
+            {
+                x: 1,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 1
+            },
+            {
+                x: 1,
+                y: 1
+            }
+        ]);
+        shifted = collection.at(0);
+        strictEqual(collection.shift(), shifted);
+        strictEqual(JSON.stringify(collection.keys()), '[0,1,2]');
 
-    //    strictEqual(collection.deleteAll(2), 2);
-    //    strictEqual(JSON.stringify(x), '[1,' + itemString + ',' + itemString + ',' + itemString + ',1]');
+        //test object list
+        collection = new xs.core.Collection({
+            a: {
+                x: 1,
+                y: 2
+            },
+            b: {
+                x: 2,
+                y: 2
+            },
+            c: {
+                x: 2,
+                y: 1
+            },
+            d: {
+                x: 1,
+                y: 1
+            }
+        });
+        shifted = collection.at('a');
+        strictEqual(collection.shift(), shifted);
+        strictEqual(JSON.stringify(collection.keys()), '["b","c","d"]');
+    });
 
-    //    strictEqual(collection.deleteAll(3), 0);
-    //    strictEqual(JSON.stringify(x), '[1,' + itemString + ',' + itemString + ',' + itemString + ',1]');
+    test('pop', function () {
+        //init test variables
+        var collection, popped;
 
-    //    strictEqual(collection.deleteAll(item), 3);
-    //    strictEqual(JSON.stringify(x), '[1,1]');
+        //test array list
+        collection = new xs.core.Collection([
+            {
+                x: 1,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 1
+            },
+            {
+                x: 1,
+                y: 1
+            }
+        ]);
+        popped = collection.at(3);
+        strictEqual(collection.pop(), popped);
+        strictEqual(JSON.stringify(collection.keys()), '[0,1,2]');
 
-    //    strictEqual(collection.deleteAll(), 2);
-    //    strictEqual(JSON.stringify(x), '[]');
+        //test object list
+        collection = new xs.core.Collection({
+            a: {
+                x: 1,
+                y: 2
+            },
+            b: {
+                x: 2,
+                y: 2
+            },
+            c: {
+                x: 2,
+                y: 1
+            },
+            d: {
+                x: 1,
+                y: 1
+            }
+        });
+        popped = collection.at('d');
+        strictEqual(collection.pop(), popped);
+        strictEqual(JSON.stringify(collection.keys()), '["a","b","c"]');
+    });
 
-    //    strictEqual(collection.deleteAll(), 0);
-    //    strictEqual(JSON.stringify(x), '[]');
-
-    //    //test object list
-    //    x = {
-    //        a: 1,
-    //        b: 2,
-    //        c: item,
-    //        d: item,
-    //        e: 2,
-    //        f: item,
-    //        g: 1
-    //    };
-
-    //    strictEqual(collection.deleteAll(2), 2);
-    //    strictEqual(JSON.stringify(x), '{"a":1,"c":' + itemString + ',"d":' + itemString + ',"f":' + itemString + ',"g":1}');
-
-    //    strictEqual(collection.deleteAll(3), 0);
-    //    strictEqual(JSON.stringify(x), '{"a":1,"c":' + itemString + ',"d":' + itemString + ',"f":' + itemString + ',"g":1}');
-
-    //    strictEqual(collection.deleteAll(item), 3);
-    //    strictEqual(JSON.stringify(x), '{"a":1,"g":1}');
-
-    //    strictEqual(collection.deleteAll(), 2);
-    //    strictEqual(JSON.stringify(x), '{}');
-
-    //    strictEqual(collection.deleteAll(), 0);
-    //    strictEqual(JSON.stringify(x), '{}');
-    //});
     //test('each', function () {
     //    //init test variables
     //    var x, sum;
@@ -1590,124 +1634,6 @@ module('xs.core.Collection', function () {
     //    strictEqual(xs.none(x, function (value) {
     //        return value.x === 1;
     //    }), true);
-    //});
-
-    //test('shift', function () {
-    //    //init test variables
-    //    var x, shifted;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-    //    shifted = x[0];
-    //    strictEqual(xs.shift(x), shifted);
-    //    strictEqual(JSON.stringify(xs.keys(x)), '[0,1,2]');
-
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.shift(x), undefined);
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-    //    shifted = x.a;
-    //    strictEqual(xs.shift(x), shifted);
-    //    strictEqual(JSON.stringify(xs.keys(x)), '["b","c","d"]');
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.shift(x), undefined);
-    //});
-
-    //test('pop', function () {
-    //    //init test variables
-    //    var x, popped;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-    //    popped = x[x.length - 1];
-    //    strictEqual(xs.pop(x), popped);
-    //    strictEqual(JSON.stringify(xs.keys(x)), '[0,1,2]');
-
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.pop(x), undefined);
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-    //    popped = x.d;
-    //    strictEqual(xs.pop(x), popped);
-    //    strictEqual(JSON.stringify(xs.keys(x)), '["a","b","c"]');
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.pop(x), undefined);
     //});
 
     //test('defaults', function () {
