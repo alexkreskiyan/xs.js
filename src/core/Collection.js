@@ -234,7 +234,7 @@
     };
 
     /**
-     * Returns whether list has given key. Keys' comparison is strict, differing numbers and strings
+     * Returns whether collection has given key. Keys' comparison is strict, differing numbers and strings
      *
      * For example:
      *
@@ -265,7 +265,7 @@
      *
      * @param {String|Number} key key to lookup for
      *
-     * @return {Boolean} whether list has key
+     * @return {Boolean} whether collection has key
      *
      * @throws {Error} Error is thrown:
      *
@@ -320,7 +320,7 @@
      *
      * @param {*} value value to lookup for
      *
-     * @return {Boolean} whether list has value
+     * @return {Boolean} whether collection has value
      */
     collection.prototype.has = function (value) {
         return this.values().indexOf(value) >= 0;
@@ -497,7 +497,7 @@
      *     ]);
      *     console.log(collection.first());
      *     //outputs:
-     *     // {x: 1, y: 2}, reference to list[0] respectively
+     *     // {x: 1, y: 2}, reference to collection[0] respectively
      *
      *     //for Object
      *     var collection = new xs.core.Collection({
@@ -520,7 +520,7 @@
      *     });
      *     console.log(collection.first());
      *     //outputs:
-     *     // {x: 1, y: 2}, reference to list.a respectively
+     *     // {x: 1, y: 2}, reference to collection.a respectively
      *
      * @method first
      *
@@ -567,7 +567,7 @@
      *     ]);
      *     console.log(collection.last());
      *     //outputs:
-     *     // {x: 1, y: 1}, reference to list[0] respectively
+     *     // {x: 1, y: 1}, reference to collection[0] respectively
      *
      *     //for Object
      *     var collection = new xs.core.Collection({
@@ -590,11 +590,11 @@
      *     });
      *     console.log(collection.last());
      *     //outputs:
-     *     // {x: 1, y: 1}, reference to list.a respectively
+     *     // {x: 1, y: 1}, reference to collection.a respectively
      *
      * @method last
      *
-     * @return {*} last value, undefined if list is empty
+     * @return {*} last value, undefined if collection is empty
      *
      * @throws {Error} Error is thrown:
      *
@@ -958,7 +958,7 @@
     };
 
     /**
-     * Deletes first value from list, that matches given value
+     * Deletes value from collection, truncates collection
      *
      * For example:
      *
@@ -968,254 +968,169 @@
      *
      *     var collection = new xs.core.Collection([
      *         1,
+     *         value,
      *         2,
      *         value,
      *         2,
+     *         value,
      *         1,
      *         value
      *     ]);
      *     collection.delete(value);
-     *     console.log(collection.keys());
+     *     console.log(collection.values());
      *     //outputs:
      *     //[
-     *     //    0,
      *     //    1,
      *     //    2,
-     *     //    3,
-     *     //    4
+     *     //    value
+     *     //    2,
+     *     //    value
+     *     //    1,
+     *     //    value
      *     //]
+     *     collection.delete(value, xs.core.Collection.LAST);
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    value
+     *     //    2,
+     *     //    value
+     *     //    1
+     *     //]
+     *     collection.delete(value, xs.core.Collection.ALL);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
      *     //    1,
      *     //    2,
      *     //    2,
-     *     //    1,
-     *     //    value
+     *     //    1
      *     //]
      *
      *     var collection = new xs.core.Collection({
      *         a: 1,
-     *         c: 2,
      *         b: value,
-     *         f: 2,
-     *         e: 1,
-     *         d: value
+     *         c: 2,
+     *         d: value,
+     *         e: 2,
+     *         f: value,
+     *         g: 1,
+     *         h: value
      *     });
      *     collection.delete(value);
-     *     console.log(collection.keys());
+     *     console.log(collection.values());
      *     //outputs:
      *     //[
-     *     //    'a',
-     *     //    'c',
-     *     //    'f',
-     *     //    'e',
-     *     //    'd'
+     *     //    1,
+     *     //    2,
+     *     //    value
+     *     //    2,
+     *     //    value
+     *     //    1,
+     *     //    value
      *     //]
+     *     collection.delete(value, xs.core.Collection.LAST);
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    value
+     *     //    2,
+     *     //    value
+     *     //    1
+     *     //]
+     *     collection.delete(value, xs.core.Collection.ALL);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
      *     //    1,
      *     //    2,
      *     //    2,
-     *     //    1,
-     *     //    value
+     *     //    1
      *     //]
      *
      * @method delete
      *
      * @param {*} value deleted value
+     * @param {Number} [flags] optional delete flags:
+     * - LAST - to lookup for value from the end of the collection
      *
      * @chainable
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if given flags list is not number
      */
-    collection.prototype.delete = function (value) {
-        var me = this;
+    collection.prototype.delete = function (value, flags) {
+        var me = this, values = me.values();
 
-        var index = me.values().indexOf(value);
+        //delete all if no value given
+        if (!arguments.length) {
+            me.items.splice(0, me.items.length);
+
+            return me;
+        }
+
+        var index, all = false;
+        //if no flags - delete first occurrence of value
+        if (arguments.length == 1) {
+            index = values.indexOf(value);
+
+            //handle flags
+        } else {
+            //check, that flags list is a number
+            if (!xs.isNumber(flags)) {
+                throw new CollectionError('keyOf - given flags "' + flags + '" list is not number');
+            }
+
+            //if ALL flag given - no index is needed
+            if (flags & xs.core.Collection.ALL) {
+                index = values.indexOf(value);
+                all = true;
+                //if LAST flag given - last value occurrence is looked up for
+            } else if (flags & xs.core.Collection.LAST) {
+                index = values.lastIndexOf(value);
+                //else - first value occurrence is looked up for
+            } else {
+                index = values.indexOf(value);
+            }
+        }
 
         //check, that item exists
         if (index < 0) {
             throw new CollectionError('delete - given value doesn\'t exist in collection');
         }
 
-        //delete item from items
-        me.items.splice(index, 1);
+        //if all flag is given
+        if (all) {
+            var i = 0, valuesLength = values.length;
 
-        //update indexes
-        _updateIndexes.call(me, index);
+            //delete all occurrences of value in collection
+            while (i < valuesLength) {
 
-        return me;
-    };
+                //if item.value is not equal to value - continue with next item
+                if (values[i] !== value) {
+                    i++;
+                    continue;
+                }
 
-    /**
-     * Deletes last value from list, that matches given value
-     *
-     * For example:
-     *
-     *     var value = {
-     *         x: 1
-     *     };
-     *
-     *     var collection = new xs.core.Collection([
-     *         1,
-     *         2,
-     *         value,
-     *         2,
-     *         1,
-     *         value
-     *     ]);
-     *     collection.deleteLast(value);
-     *     console.log(collection.keys());
-     *     //outputs:
-     *     //[
-     *     //    0,
-     *     //    1,
-     *     //    2,
-     *     //    3,
-     *     //    4
-     *     //]
-     *     console.log(collection.values());
-     *     //outputs:
-     *     //[
-     *     //    1,
-     *     //    2,
-     *     //    value,
-     *     //    2,
-     *     //    1
-     *     //]
-     *
-     *     var collection = new xs.core.Collection({
-     *         a: 1,
-     *         c: 2,
-     *         b: value,
-     *         f: 2,
-     *         e: 1,
-     *         d: value
-     *     });
-     *     collection.deleteLast(value);
-     *     console.log(collection.keys());
-     *     //outputs:
-     *     //[
-     *     //    'a',
-     *     //    'c',
-     *     //    'b',
-     *     //    'f',
-     *     //    'e'
-     *     //]
-     *     console.log(collection.values());
-     *     //outputs:
-     *     //[
-     *     //    1,
-     *     //    2,
-     *     //    value,
-     *     //    2,
-     *     //    1
-     *     //]
-     *
-     * @method deleteLast
-     *
-     * @param {*} value deleted value
-     *
-     * @chainable
-     */
-    collection.prototype.deleteLast = function (value) {
-        var me = this;
+                //delete item from values
+                values.splice(i, 1);
 
-        var index = me.values().lastIndexOf(value);
+                //delete item from collection
+                me.items.splice(i, 1);
 
-        //check, that item exists
-        if (index < 0) {
-            throw new CollectionError('delete - given value doesn\'t exist in collection');
+                //decrement valuesLength
+                valuesLength--;
+            }
+        } else {
+
+            //delete item from items
+            me.items.splice(index, 1);
         }
-
-        //delete item from items
-        me.items.splice(index, 1);
-
-        //update indexes
-        _updateIndexes.call(me, index);
-
-        return me;
-    };
-
-    /**
-     * Deletes all values from list, passed as array/plain arguments
-     *
-     * For example:
-     *
-     *     var value = {
-     *         x: 1
-     *     };
-     *
-     *     var collection = new xs.core.Collection([
-     *         1,
-     *         2,
-     *         value,
-     *         2,
-     *         1,
-     *         value
-     *     ]);
-     *     collection.deleteAll(value);
-     *     console.log(collection.keys());
-     *     //outputs:
-     *     //[
-     *     //    0,
-     *     //    1,
-     *     //    2,
-     *     //    3
-     *     //]
-     *     console.log(collection.values());
-     *     //outputs:
-     *     //[
-     *     //    1,
-     *     //    2,
-     *     //    2,
-     *     //    1
-     *     //]
-     *
-     *     var collection = new xs.core.Collection({
-     *         a: 1,
-     *         c: 2,
-     *         b: value,
-     *         f: 2,
-     *         e: 1,
-     *         d: value
-     *     };
-     *     collection.deleteAll(value);
-     *     console.log(collection.keys());
-     *     //outputs:
-     *     //[
-     *     //    'a',
-     *     //    'c',
-     *     //    'f',
-     *     //    'e'
-     *     //]
-     *     console.log(collection.values());
-     *     //outputs:
-     *     //[
-     *     //    1,
-     *     //    2,
-     *     //    2,
-     *     //    1
-     *     //]
-     *
-     * @method deleteAll
-     *
-     * @param {*} [value] optional deleted value. If specified all value entries will be removed from collection. If not - collection is truncated
-     *
-     * @chainable
-     */
-    collection.prototype.deleteAll = function (value) {
-        var me = this;
-
-        var index = me.values().lastIndexOf(value);
-
-        //check, that item exists
-        if (index < 0) {
-            throw new CollectionError('delete - given value doesn\'t exist in collection');
-        }
-
-        //delete item from items
-        me.items.splice(index, 1);
 
         //update indexes
         _updateIndexes.call(me, index);
