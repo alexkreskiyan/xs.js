@@ -84,6 +84,24 @@
     };
 
     /**
+     * Collection flag, meaning, that operation is reverse
+     *
+     * @constant LAST
+     *
+     * @type {Number}
+     */
+    collection.LAST = 0x1;
+
+    /**
+     * Collection flag, meaning, that operation is made for all matches.
+     *
+     * @constant ALL
+     *
+     * @type {Number}
+     */
+    collection.ALL = 0x2;
+
+    /**
      * Collection length
      *
      * @property length
@@ -309,7 +327,7 @@
     };
 
     /**
-     * Returns key of first collection value, equal to given
+     * Returns key of collection value, equal to given. Supports LAST flag, that will perform lookup from the end of the collection
      *
      * For example:
      *
@@ -327,7 +345,7 @@
      *     console.log(collection.keyOf(0)); //undefined - no value
      *     console.log(collection.keyOf({})); //undefined - another object in array
      *     console.log(collection.keyOf(1)); //0
-     *     console.log(collection.keyOf(value)); //3
+     *     console.log(collection.keyOf(value, xs.core.Collection.LAST)); //5
      *
      *     //for Object
      *     var collection = new xs.core.Collection({
@@ -341,71 +359,37 @@
      *     console.log(collection.keyOf(0)); //undefined - no value
      *     console.log(collection.keyOf({})); //undefined - another object in array
      *     console.log(collection.keyOf(1)); //'a'
-     *     console.log(collection.keyOf(value)); //'f'
+     *     console.log(collection.keyOf(value, xs.core.Collection.LAST)); //'e'
      *
      * ATTENTION: Try to avoid using integer indexes in objects, because their order in V8 is not guaranteed!
      *
      * @method keyOf
      *
      * @param {*} value value to lookup for
+     * @param {Number} [flags] optional lookup flags
      *
      * @return {String|Number|undefined} found key, or undefined if nothing found
+     *
+     * @throws {Error} Error is thrown:
+     *
+     * - if given flags list is not number
      */
-    collection.prototype.keyOf = function (value) {
-        var me = this, key;
+    collection.prototype.keyOf = function (value, flags) {
+        var me = this, key, values = me.values();
 
-        key = me.values().indexOf(value);
+        if (arguments.length == 1) {
+            key = values.indexOf(value);
+        } else {
+            if (!xs.isNumber(flags)) {
+                throw new CollectionError('keyOf - given flags "' + flags + '" list is not number');
+            }
 
-        return key >= 0 ? me.items[key].key : undefined;
-    };
-
-    /**
-     * Returns key of last list value, equal to given
-     *
-     * For example:
-     *
-     *     var value = {};
-     *
-     *     //for Array
-     *     var collection = new xs.core.Collection([
-     *         1,
-     *         2,
-     *         1,
-     *         value,
-     *         2,
-     *         value
-     *     ]);
-     *     console.log(collection.lastKeyOf(0)); //undefined - no value
-     *     console.log(collection.lastKeyOf({})); //undefined - another object in array
-     *     console.log(collection.lastKeyOf(1)); //2
-     *     console.log(collection.lastKeyOf(value)); //5
-     *
-     *     //for Object
-     *     var collection = new xs.core.Collection({
-     *         a: 1,
-     *         b: 2,
-     *         c: 1,
-     *         f: value,
-     *         d: 2,
-     *         e: value
-     *     });
-     *     console.log(collection.lastKeyOf(0)); //undefined - no value
-     *     console.log(collection.lastKeyOf({})); //undefined - another object in array
-     *     console.log(collection.lastKeyOf(1)); //'c'
-     *     console.log(collection.lastKeyOf(value)); //'e'
-     *
-     * ATTENTION: Try to avoid using integer indexes in objects, because their order in V8 is not guaranteed!
-     *
-     * @method lastKeyOf
-     *
-     * @param {*} value value to lookup for
-     *
-     * @return {String|Number|undefined} found key, or undefined if nothing found
-     */
-    collection.prototype.lastKeyOf = function (value) {
-        var me = this, key;
-
-        key = me.values().lastIndexOf(value);
+            if (flags & xs.core.Collection.LAST) {
+                key = values.lastIndexOf(value);
+            } else {
+                key = values.indexOf(value);
+            }
+        }
 
         return key >= 0 ? me.items[key].key : undefined;
     };
@@ -1162,18 +1146,24 @@
      *         x: 1
      *     };
      *
-     *     var list = [
+     *     var collection = new xs.core.Collection([
      *         1,
      *         2,
      *         value,
      *         2,
      *         1,
      *         value
-     *     ];
-     *     console.log(xs.deleteAll(list, value));
+     *     ]);
+     *     collection.deleteAll(value);
+     *     console.log(collection.keys());
      *     //outputs:
-     *     //true, value exists
-     *     console.log(list);
+     *     //[
+     *     //    0,
+     *     //    1,
+     *     //    2,
+     *     //    3
+     *     //]
+     *     console.log(collection.values());
      *     //outputs:
      *     //[
      *     //    1,
@@ -1181,11 +1171,8 @@
      *     //    2,
      *     //    1
      *     //]
-     *     console.log(xs.deleteAll(list, -1));
-     *     //outputs:
-     *     //false, value missing
      *
-     *     var list = {
+     *     var collection = new xs.core.Collection({
      *         a: 1,
      *         c: 2,
      *         b: value,
@@ -1193,30 +1180,47 @@
      *         e: 1,
      *         d: value
      *     };
-     *     console.log(xs.deleteAll(list, value));
+     *     collection.deleteAll(value);
+     *     console.log(collection.keys());
      *     //outputs:
-     *     //true, index exists
-     *     console.log(list);
+     *     //[
+     *     //    'a',
+     *     //    'c',
+     *     //    'f',
+     *     //    'e'
+     *     //]
+     *     console.log(collection.values());
      *     //outputs:
-     *     //{
-     *     //    a: 1,
-     *     //    c: 2,
-     *     //    f: 2,
-     *     //    e: 1
-     *     //}
-     *     console.log(xs.deleteAll(list, 0));
-     *     //outputs:
-     *     //false, index missing
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    2,
+     *     //    1
+     *     //]
      *
      * @method deleteAll
      *
-     * @param {Array|Object} list list, values are deleted from
-     * @param {*} [value] optional deleted value. If specified all value entries will be removed from list. If not - list is truncated
+     * @param {*} [value] optional deleted value. If specified all value entries will be removed from collection. If not - collection is truncated
      *
-     * @return {Number} count of deleted values
+     * @chainable
      */
-    collection.prototype.deleteAll = function (item) {
+    collection.prototype.deleteAll = function (value) {
+        var me = this;
 
+        var index = me.values().lastIndexOf(value);
+
+        //check, that item exists
+        if (index < 0) {
+            throw new CollectionError('delete - given value doesn\'t exist in collection');
+        }
+
+        //delete item from items
+        me.items.splice(index, 1);
+
+        //update indexes
+        _updateIndexes.call(me, index);
+
+        return me;
     };
 
     collection.prototype.shift = function () {

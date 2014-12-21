@@ -247,6 +247,7 @@ module('xs.core.Collection', function () {
 
         strictEqual(collection.keyOf(3), 2);
         strictEqual(collection.keyOf(item), 4);
+        strictEqual(collection.keyOf(item, xs.core.Collection.LAST), 5);
         strictEqual(collection.keyOf('1'), undefined);
 
         //test empty array list
@@ -265,55 +266,13 @@ module('xs.core.Collection', function () {
         });
         strictEqual(collection.keyOf(1), 'x');
         strictEqual(collection.keyOf(item), 'a');
+        strictEqual(collection.keyOf(item, xs.core.Collection.LAST), 'b');
         strictEqual(collection.keyOf('1'), undefined);
 
         //test empty object list
         collection = new xs.core.Collection({});
         strictEqual(collection.keyOf(1), undefined);
         strictEqual(collection.keyOf('1'), undefined);
-    });
-
-    test('lastKeyOf', function () {
-        //init test variables
-        var collection;
-        var item = { a: 1 };
-
-        //test array list
-        collection = new xs.core.Collection([
-            1,
-            1,
-            3,
-            3,
-            item,
-            item
-        ]);
-
-        strictEqual(collection.lastKeyOf(3), 3);
-        strictEqual(collection.lastKeyOf(item), 5);
-        strictEqual(collection.lastKeyOf('1'), undefined);
-
-        //test empty array list
-        collection = new xs.core.Collection([]);
-        strictEqual(collection.lastKeyOf(0), undefined);
-        strictEqual(collection.lastKeyOf('0'), undefined);
-
-        //test object list
-        collection = new xs.core.Collection({
-            x: 1,
-            y: 1,
-            c: 2,
-            d: 2,
-            a: item,
-            b: item
-        });
-        strictEqual(collection.lastKeyOf(1), 'y');
-        strictEqual(collection.lastKeyOf(item), 'b');
-        strictEqual(collection.lastKeyOf('1'), undefined);
-
-        //test empty object list
-        collection = new xs.core.Collection({});
-        strictEqual(collection.lastKeyOf(1), undefined);
-        strictEqual(collection.lastKeyOf('1'), undefined);
     });
 
     test('at', function () {
