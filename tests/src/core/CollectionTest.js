@@ -619,48 +619,35 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.values()), '[1,' + itemString + ',3]');
     });
 
-    //test('deleteLast', function () {
-    //    //init test variables
-    //    var item = { x: 1 };
-    //    var itemString = JSON.stringify(item);
-    //    var x;
+    test('deleteLast', function () {
+        //init test variables
+        var item = { x: 1 };
+        var itemString = JSON.stringify(item);
+        var collection;
 
-    //    //test array list
-    //    x = [
-    //        3,
-    //        item,
-    //        2,
-    //        item
-    //    ];
+        //test array
+        collection = new xs.core.Collection([
+            3,
+            item,
+            2,
+            item
+        ]);
 
-    //    strictEqual(collection.deleteLast(item), true);
-    //    strictEqual(JSON.stringify(x), '[3,' + itemString + ',2]');
+        collection.deleteLast(item);
+        strictEqual(JSON.stringify(collection.keys()), '[0,1,2]');
+        strictEqual(JSON.stringify(collection.values()), '[3,' + itemString + ',2]');
 
-    //    strictEqual(collection.deleteLast(1), false);
-    //    strictEqual(JSON.stringify(x), '[3,' + itemString + ',2]');
+        collection = new xs.core.Collection({
+            a: 1,
+            b: item,
+            d: item,
+            c: 3
+        });
 
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(collection.deleteLast(2), false);
-
-    //    //test object list
-    //    x = {
-    //        a: 1,
-    //        b: item,
-    //        d: item,
-    //        c: 3
-    //    };
-
-    //    strictEqual(collection.deleteLast(item), true);
-    //    strictEqual(JSON.stringify(x), '{"a":1,"b":' + itemString + ',"c":3}');
-
-    //    strictEqual(collection.deleteLast(2), false);
-    //    strictEqual(JSON.stringify(x), '{"a":1,"b":' + itemString + ',"c":3}');
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(collection.deleteLast(2), false);
-    //});
+        collection.deleteLast(item);
+        strictEqual(JSON.stringify(collection.keys()), '["a","b","c"]');
+        strictEqual(JSON.stringify(collection.values()), '[1,' + itemString + ',3]');
+    });
 
     //test('deleteAll', function () {
     //    //init test variables

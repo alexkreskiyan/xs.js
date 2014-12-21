@@ -1064,7 +1064,7 @@
     };
 
     /**
-     * Deletes last value from list, that matches elem as key or as value
+     * Deletes last value from list, that matches given value
      *
      * For example:
      *
@@ -1072,18 +1072,25 @@
      *         x: 1
      *     };
      *
-     *     var list = [
+     *     var collection = new xs.core.Collection([
      *         1,
      *         2,
      *         value,
      *         2,
      *         1,
      *         value
-     *     ];
-     *     console.log(xs.deleteLast(list, value));
+     *     ]);
+     *     collection.deleteLast(value);
+     *     console.log(collection.keys());
      *     //outputs:
-     *     //true, value exists
-     *     console.log(list);
+     *     //[
+     *     //    0,
+     *     //    1,
+     *     //    2,
+     *     //    3,
+     *     //    4
+     *     //]
+     *     console.log(collection.values());
      *     //outputs:
      *     //[
      *     //    1,
@@ -1092,43 +1099,58 @@
      *     //    2,
      *     //    1
      *     //]
-     *     console.log(xs.deleteLast(list, -1));
-     *     //outputs:
-     *     //false, value missing
      *
-     *     var list = {
+     *     var collection = new xs.core.Collection({
      *         a: 1,
      *         c: 2,
      *         b: value,
      *         f: 2,
      *         e: 1,
      *         d: value
-     *     };
-     *     console.log(xs.deleteLast(list, value));
+     *     });
+     *     collection.deleteLast(value);
+     *     console.log(collection.keys());
      *     //outputs:
-     *     //true, index exists
-     *     console.log(list);
+     *     //[
+     *     //    'a',
+     *     //    'c',
+     *     //    'b',
+     *     //    'f',
+     *     //    'e'
+     *     //]
+     *     console.log(collection.values());
      *     //outputs:
-     *     //{
-     *     //    a: 1,
-     *     //    c: 2,
-     *     //    b: value
-     *     //    f: 2,
-     *     //    e: 1
-     *     //}
-     *     console.log(xs.deleteLast(list, 0));
-     *     //outputs:
-     *     //false, index missing
+     *     //[
+     *     //    1,
+     *     //    2,
+     *     //    value,
+     *     //    2,
+     *     //    1
+     *     //]
      *
      * @method deleteLast
      *
-     * @param {Array|Object} list list, value is deleted from
      * @param {*} value deleted value
      *
-     * @return {Boolean} whether value was deleted
+     * @chainable
      */
-    collection.prototype.deleteLast = function (item) {
+    collection.prototype.deleteLast = function (value) {
+        var me = this;
 
+        var index = me.values().lastIndexOf(value);
+
+        //check, that item exists
+        if (index < 0) {
+            throw new CollectionError('delete - given value doesn\'t exist in collection');
+        }
+
+        //delete item from items
+        me.items.splice(index, 1);
+
+        //update indexes
+        _updateIndexes.call(me, index);
+
+        return me;
     };
 
     /**
