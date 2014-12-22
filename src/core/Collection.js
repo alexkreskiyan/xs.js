@@ -876,7 +876,7 @@
             me.items[index].value = value;
             //else - it's error
         } else {
-            throw new CollectionError('at - key "' + key + '", given for collection, is nor number neither string');
+            throw new CollectionError('set - key "' + key + '", given for collection, is nor number neither string');
         }
 
         return me;
@@ -934,7 +934,7 @@
             var min = max > 0 ? -max + 1 : 0;
 
             if (key < min || key > max) {
-                throw new CollectionError('set - index "' + key + '" is out of bounds [' + min + ',' + max + ']');
+                throw new CollectionError('removeAt - index "' + key + '" is out of bounds [' + min + ',' + max + ']');
             }
 
             //remove item by key
@@ -956,7 +956,7 @@
 
             //else - it's error
         } else {
-            throw new CollectionError('hasKey - key "' + key + '", given for collection, is nor number neither string');
+            throw new CollectionError('removeAt - key "' + key + '", given for collection, is nor number neither string');
         }
 
         return me;
@@ -1090,7 +1090,7 @@
         } else {
             //check, that flags list is a number
             if (!xs.isNumber(flags)) {
-                throw new CollectionError('keyOf - given flags "' + flags + '" list is not number');
+                throw new CollectionError('remove - given flags "' + flags + '" list is not number');
             }
 
             //if ALL flag given - no index is needed
@@ -1279,7 +1279,7 @@
         if (arguments.length > 1) {
             //check, that flags list is a number
             if (!xs.isNumber(flags)) {
-                throw new CollectionError('keyOf - given flags "' + flags + '" list is not number');
+                throw new CollectionError('removeBy - given flags "' + flags + '" list is not number');
             }
 
             //if ALL flag given - order does not matter
@@ -1654,8 +1654,8 @@
      * @method each
      *
      * @param {Function} iterator list iterator
-     * @param {Object} [scope] optional scope
      * @param {Number} [flags] additional iterating flags:
+     * @param {Object} [scope] optional scope
      * - REVERSE - to iterate in reverse order
      *
      * @chainable
@@ -1665,7 +1665,7 @@
      * - if iterator is not a function
      * - if given flags list is not a number
      */
-    collection.prototype.each = function (iterator, scope, flags) {
+    collection.prototype.each = function (iterator, flags, scope) {
         var me = this;
 
         //check that iterator is function
@@ -1673,12 +1673,9 @@
             throw new CollectionError('each - given iterator "' + iterator + '" is not a function');
         }
 
-        //default scope to me
-        arguments.length >= 2 || (scope = me);
-
         //handle flags
         var reverse = false;
-        if (arguments.length >= 3) {
+        if (arguments.length >= 2) {
             //check, that flags list is a number
             if (!xs.isNumber(flags)) {
                 throw new CollectionError('each - given flags "' + flags + '" list is not number');
@@ -1689,6 +1686,9 @@
                 reverse = true;
             }
         }
+
+        //default scope to me
+        arguments.length >= 3 || (scope = me);
 
         //iterate
         var i, item, length = me.items.length;
@@ -1775,8 +1775,8 @@
      * @method find
      *
      * @param {Function} finder function, returning true if value matches given conditions
-     * @param {Object} [scope] optional scope
      * @param {Number} [flags] additional iterating flags:
+     * @param {Object} [scope] optional scope
      *
      * @return {*} found value, undefined if nothing found
      *
@@ -1784,7 +1784,7 @@
      *
      * - if finder is not a function
      */
-    collection.prototype.find = function (finder, scope, flags) {
+    collection.prototype.find = function (finder, flags, scope) {
         var me = this;
 
         //check that finder is function
@@ -1792,15 +1792,12 @@
             throw new CollectionError('find - given finder "' + finder + '" is not a function');
         }
 
-        //default scope to me
-        arguments.length >= 2 || (scope = me);
-
         //handle flags
         var all = false, reverse = false;
-        if (arguments.length >= 3) {
+        if (arguments.length >= 2) {
             //check, that flags list is a number
             if (!xs.isNumber(flags)) {
-                throw new CollectionError('each - given flags "' + flags + '" list is not number');
+                throw new CollectionError('find - given flags "' + flags + '" list is not number');
             }
 
             //if ALL flag given
@@ -1811,6 +1808,9 @@
                 reverse = true;
             }
         }
+
+        //default scope to me
+        arguments.length >= 3 || (scope = me);
 
         //init variables
         var i, item, length = me.items.length, found;
@@ -2013,8 +2013,8 @@
      * @method reduce
      *
      * @param {Function} reducer reducing function
-     * @param {Object} [scope] optional scope
      * @param {Number} [flags] additional iterating flags:
+     * @param {Object} [scope] optional scope
      * @param {*} [memo] initial value. Is optional. If omitted, first value's value is shifted from list and used as memo
      *
      * @return {*} Reducing result
@@ -2024,7 +2024,7 @@
      * - if finder is not a function
      * - if collection is empty
      */
-    collection.prototype.reduce = function (reducer, scope, flags, memo) {
+    collection.prototype.reduce = function (reducer, flags, scope, memo) {
         var me = this;
 
         //check that finder is function
@@ -2037,12 +2037,9 @@
             throw new CollectionError('reduce - collection is empty');
         }
 
-        //default scope to me
-        arguments.length >= 2 || (scope = me);
-
         //handle flags
         var reverse = false;
-        if (arguments.length >= 3) {
+        if (arguments.length >= 2) {
             //check, that flags list is a number
             if (!xs.isNumber(flags)) {
                 throw new CollectionError('reduce - given flags "' + flags + '" list is not number');
@@ -2053,6 +2050,9 @@
                 reverse = true;
             }
         }
+
+        //default scope to me
+        arguments.length >= 3 || (scope = me);
 
         //check memo
         var hasMemo = false;
@@ -2497,7 +2497,7 @@
         var me = this;
 
         if (!xs.isArray(keys)) {
-            throw new CollectionError('pick - given keys list "' + keys + '" is not array');
+            throw new CollectionError('omit - given keys list "' + keys + '" is not array');
         }
 
         var length = keys.length, key, i, ownKeys = me.keys(), ownLength = ownKeys.length, index, item, items = [];
@@ -2512,17 +2512,17 @@
 
                 //check, that key exists
                 if (index < 0) {
-                    throw new CollectionError('pick - given key "' + key + '" doesn\'t exist');
+                    throw new CollectionError('omit - given key "' + key + '" doesn\'t exist');
                 }
                 //else if it's number - it's index
             } else if (xs.isNumber(key)) {
                 if (key < 0 || key > ownLength) {
-                    throw new CollectionError('pick - given index "' + key + '" is out of bounds [0,' + ownLength + ']');
+                    throw new CollectionError('omit - given index "' + key + '" is out of bounds [0,' + ownLength + ']');
                 }
                 index = key;
                 //else - it's error
             } else {
-                throw new CollectionError('pick - key "' + key + '", given for collection, is nor number neither string');
+                throw new CollectionError('omit - key "' + key + '", given for collection, is nor number neither string');
             }
 
             //add omitted index

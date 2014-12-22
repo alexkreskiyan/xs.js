@@ -789,7 +789,7 @@ module('xs.core.Collection', function () {
         sum = '';
         collection.each(function (value) {
             sum += value;
-        }, null, xs.core.Collection.REVERSE);
+        }, xs.core.Collection.REVERSE);
         strictEqual(sum, '21');
 
         //test empty array
@@ -804,7 +804,7 @@ module('xs.core.Collection', function () {
         sum = '';
         collection.each(function (value) {
             sum += value;
-        }, null, xs.core.Collection.REVERSE);
+        }, xs.core.Collection.REVERSE);
         strictEqual(sum, '');
 
         //test object
@@ -822,7 +822,7 @@ module('xs.core.Collection', function () {
         sum = '';
         collection.each(function (value) {
             sum += value;
-        }, null, xs.core.Collection.REVERSE);
+        }, xs.core.Collection.REVERSE);
         strictEqual(sum, '21');
 
         //test empty object
@@ -837,7 +837,7 @@ module('xs.core.Collection', function () {
         sum = '';
         collection.each(function (value) {
             sum += value;
-        }, null, xs.core.Collection.REVERSE);
+        }, xs.core.Collection.REVERSE);
         strictEqual(sum, '');
     });
 
@@ -863,17 +863,17 @@ module('xs.core.Collection', function () {
         //direct
         found = collection.find(function (value, key) {
             return this.sum(key, value.x) === 2;
-        }, scope);
+        }, 0, scope);
         strictEqual(found, collection.at(0));
         //reverse
         found = collection.find(function (value, key) {
             return this.sum(key, value.x) === 2;
-        }, scope, xs.core.Collection.REVERSE);
+        }, xs.core.Collection.REVERSE, scope);
         strictEqual(found, collection.at(2));
         //all
         found = collection.find(function (value, key) {
             return this.sum(key, value.x) >= 2;
-        }, scope, xs.core.Collection.ALL);
+        }, xs.core.Collection.ALL, scope);
         strictEqual(found[0], collection.at(0));
         strictEqual(found[1], collection.at(1));
         strictEqual(found[2], collection.at(2));
@@ -887,17 +887,17 @@ module('xs.core.Collection', function () {
         //direct
         found = collection.find(function (value, key) {
             return this.first(key) === 'a';
-        }, scope);
+        }, 0, scope);
         strictEqual(found, collection.at('aa'));
         //reverse
         found = collection.find(function (value, key) {
             return this.first(key) === 'a';
-        }, scope, xs.core.Collection.REVERSE);
+        }, xs.core.Collection.REVERSE, scope);
         strictEqual(found, collection.at('ab'));
         //all
         found = collection.find(function (value, key) {
             return this.first(key) === 'a';
-        }, scope, xs.core.Collection.ALL);
+        }, xs.core.Collection.ALL, scope);
         strictEqual(found.aa, collection.at('aa'));
         strictEqual(found.ab, collection.at('ab'));
     });
@@ -949,14 +949,14 @@ module('xs.core.Collection', function () {
         }), 27);
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, undefined, 0, -3), 30);
+        }, 0, undefined, -3), 30);
         //reverse
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, undefined, xs.core.Collection.REVERSE), 27);
+        }, xs.core.Collection.REVERSE), 27);
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, undefined, xs.core.Collection.REVERSE, -3), 30);
+        }, xs.core.Collection.REVERSE, undefined, -3), 30);
 
         //test object
         collection = new xs.core.Collection({
@@ -970,14 +970,14 @@ module('xs.core.Collection', function () {
         }), '5b6a');
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, undefined, 0, -3), '-1x4b6a');
+        }, 0, undefined, -3), '-1x4b6a');
         //reverse
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, undefined, xs.core.Collection.REVERSE), '7b2x');
+        }, xs.core.Collection.REVERSE), '7b2x');
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, undefined, xs.core.Collection.REVERSE, -3), '3a4b2x');
+        }, xs.core.Collection.REVERSE, undefined, -3), '3a4b2x');
     });
 
     test('some', function () {
@@ -1154,7 +1154,11 @@ module('xs.core.Collection', function () {
         correctKeys = '[0,1,2]';
         correctValues = '[{"x":2,"y":1},{"x":1,"y":2},{"x":2,"y":2}]';
 
-        picked = collection.pick([2, 0, 1]);
+        picked = collection.pick([
+            2,
+            0,
+            1
+        ]);
         strictEqual(JSON.stringify(picked.keys()), correctKeys);
         strictEqual(JSON.stringify(picked.values()), correctValues);
 
@@ -1180,7 +1184,11 @@ module('xs.core.Collection', function () {
         correctKeys = '["b","a","d"]';
         correctValues = '[{"x":2,"y":2},{"x":1,"y":2},{"x":1,"y":1}]';
 
-        picked = collection.pick(['b', 'a', 'd']);
+        picked = collection.pick([
+            'b',
+            'a',
+            'd'
+        ]);
         strictEqual(JSON.stringify(picked.keys()), correctKeys);
         strictEqual(JSON.stringify(picked.values()), correctValues);
     });
@@ -1211,7 +1219,11 @@ module('xs.core.Collection', function () {
         correctKeys = '[0]';
         correctValues = '[{"x":1,"y":1}]';
 
-        omitted = collection.omit([2, 0, 1]);
+        omitted = collection.omit([
+            2,
+            0,
+            1
+        ]);
         strictEqual(JSON.stringify(omitted.keys()), correctKeys);
         strictEqual(JSON.stringify(omitted.values()), correctValues);
 
@@ -1237,7 +1249,11 @@ module('xs.core.Collection', function () {
         correctKeys = '["c"]';
         correctValues = '[{"x":2,"y":1}]';
 
-        omitted = collection.omit(['b', 'a', 'd']);
+        omitted = collection.omit([
+            'b',
+            'a',
+            'd'
+        ]);
         strictEqual(JSON.stringify(omitted.keys()), correctKeys);
         strictEqual(JSON.stringify(omitted.values()), correctValues);
     });
