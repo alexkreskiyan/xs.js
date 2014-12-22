@@ -2331,7 +2331,7 @@
     };
 
     /**
-     * Returns copy of list with only white-listed keys, passed in array
+     * Returns collection's subset with only white-listed keys, passed in array
      *
      * For example:
      *
@@ -2397,7 +2397,7 @@
             throw new CollectionError('pick - given keys list "' + keys + '" is not array');
         }
 
-        var picked = new xs.core.Collection, length = keys.length, key, i, ownKeys = me.keys(), ownLength = ownKeys.length, index, item, items = [];
+        var length = keys.length, key, i, ownKeys = me.keys(), ownLength = ownKeys.length, index, item, items = [];
         for (i = 0; i < length; i++) {
             key = keys[i];
             //if key is string - it's key
@@ -2430,6 +2430,7 @@
         }
 
         //set picked items as items of picked collection
+        var picked = new xs.core.Collection;
         picked.items = items;
 
         //update indexes
@@ -2438,8 +2439,117 @@
         return picked;
     };
 
-    collection.prototype.omit = function () {
+    /**
+     * Returns collection's subset without black-listed keys, passed in array
+     *
+     * For example:
+     *
+     *     //for Array
+     *     console.log(new xs.core.Collection([
+     *         1,
+     *         2,
+     *         3,
+     *         4,
+     *         5,
+     *         6
+     *     ]).omit([1, 3, 2, 5]).values());
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    5
+     *     //]
+     *
+     *     //for Object
+     *     var omit = new xs.core.Collection({
+     *         a: 1,
+     *         c: 2,
+     *         d: 3,
+     *         b: 4,
+     *         f: 5,
+     *         e: 6
+     *     }).omit([1, 3, 2, 5]);
+     *     console.log(omit.keys());
+     *     //outputs:
+     *     //[
+     *     //    'a',
+     *     //    'f'
+     *     //]
+     *     console.log(omit.values());
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    5
+     *     //]
+     *
+     * @method omit
+     *
+     * @param {String[]|Number[]} keys list with keys of omitted items
+     *
+     * @return {xs.core.Collection} collection of without omitted items
+     * 
+     * @throws {Error} Error is thrown:
+     *
+     * - if keys is not array
+     * - if any key is nor string neither number
+     * - if any key is not in collection
+     */
+    collection.prototype.omit = function (keys) {
+        var me = this;
 
+        if (!xs.isArray(keys)) {
+            throw new CollectionError('pick - given keys list "' + keys + '" is not array');
+        }
+
+        var length = keys.length, key, i, ownKeys = me.keys(), ownLength = ownKeys.length, index, item, items = [];
+
+        var omittedIndexes = [];
+        //remove blacklisted items
+        for (i = 0; i < length; i++) {
+            key = keys[i];
+            //if key is string - it's key
+            if (xs.isString(key)) {
+                index = ownKeys.indexOf(key);
+
+                //check, that key exists
+                if (index < 0) {
+                    throw new CollectionError('pick - given key "' + key + '" doesn\'t exist');
+                }
+                //else if it's number - it's index
+            } else if (xs.isNumber(key)) {
+                if (key < 0 || key > ownLength) {
+                    throw new CollectionError('pick - given index "' + index + '" is out of bounds [0,' + ownLength + ']');
+                }
+                index = key;
+                //else - it's error
+            } else {
+                throw new CollectionError('pick - key "' + key + '", given for collection, is nor number neither string');
+            }
+
+            //add omitted index
+            omittedIndexes.push(index);
+        }
+
+        //fill items from me.items without omitted indexes
+        for (i = 0; i < ownLength; i++) {
+            if (omittedIndexes.indexOf(i) >= 0) {
+                continue;
+            }
+
+            item = me.items[i];
+            items.push({
+                key: item.key,
+                value: item.value
+            });
+        }
+
+        //set picked items as items of omitted collection
+        var omitted = new xs.core.Collection;
+        omitted.items = items;
+
+        //update indexes
+        _updateIndexes.call(omitted, 0);
+
+        return omitted;
     };
 
     /**
