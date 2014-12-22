@@ -2411,7 +2411,7 @@
                 //else if it's number - it's index
             } else if (xs.isNumber(key)) {
                 if (key < 0 || key > ownLength) {
-                    throw new CollectionError('pick - given index "' + index + '" is out of bounds [0,' + ownLength + ']');
+                    throw new CollectionError('pick - given index "' + key + '" is out of bounds [0,' + ownLength + ']');
                 }
                 index = key;
                 //else - it's error
@@ -2517,7 +2517,7 @@
                 //else if it's number - it's index
             } else if (xs.isNumber(key)) {
                 if (key < 0 || key > ownLength) {
-                    throw new CollectionError('pick - given index "' + index + '" is out of bounds [0,' + ownLength + ']');
+                    throw new CollectionError('pick - given index "' + key + '" is out of bounds [0,' + ownLength + ']');
                 }
                 index = key;
                 //else - it's error
