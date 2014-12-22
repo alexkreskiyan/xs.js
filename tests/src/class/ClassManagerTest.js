@@ -20,7 +20,7 @@ module('xs.ClassManager', function () {
 
         //save class, if defined
         me.save = xs.ClassManager.get(me.className);
-        me.save && xs.ClassManager.delete(me.className);
+        me.save && xs.ClassManager.remove(me.className);
 
     }, function () {
         var me = this;
@@ -35,8 +35,8 @@ module('xs.ClassManager', function () {
         strictEqual(xs.ClassManager.has(me.className), true);
 
 
-        //delete class
-        xs.ClassManager.delete(me.className);
+        //remove class
+        xs.ClassManager.remove(me.className);
 
     }, function () {
         var me = this;
@@ -55,7 +55,7 @@ module('xs.ClassManager', function () {
 
         //save class, if defined
         me.save = xs.ClassManager.get(me.className);
-        me.save && xs.ClassManager.delete(me.className);
+        me.save && xs.ClassManager.remove(me.className);
 
         //add class
         xs.ClassManager.add(me.className, me.Class);
@@ -66,8 +66,8 @@ module('xs.ClassManager', function () {
         //class is in manager
         strictEqual(xs.ClassManager.get(me.className), me.Class);
 
-        //delete class
-        xs.ClassManager.delete(me.className);
+        //remove class
+        xs.ClassManager.remove(me.className);
 
         //class is not in manager
         strictEqual(xs.ClassManager.get(me.className), undefined);
@@ -89,11 +89,11 @@ module('xs.ClassManager', function () {
 
         //save classes, if defined
         me.saveOne = xs.ClassManager.get(me.classOneName);
-        me.saveOne && xs.ClassManager.delete(me.classOneName);
+        me.saveOne && xs.ClassManager.remove(me.classOneName);
         me.saveTwo = xs.ClassManager.get(me.classTwoName);
-        me.saveTwo && xs.ClassManager.delete(me.classTwoName);
+        me.saveTwo && xs.ClassManager.remove(me.classTwoName);
         me.saveThree = xs.ClassManager.get(me.classThreeName);
-        me.saveThree && xs.ClassManager.delete(me.classThreeName);
+        me.saveThree && xs.ClassManager.remove(me.classThreeName);
 
         //create ClassOne
         me.ClassOne = xs.Class.create(function () {
@@ -192,9 +192,9 @@ module('xs.ClassManager', function () {
         var me = this;
 
         //remove defined
-        xs.ClassManager.delete(me.classOneName);
-        xs.ClassManager.delete(me.classTwoName);
-        xs.ClassManager.delete(me.classThreeName);
+        xs.ClassManager.remove(me.classOneName);
+        xs.ClassManager.remove(me.classTwoName);
+        xs.ClassManager.remove(me.classThreeName);
 
         //restore save
         me.saveOne && xs.ClassManager.add(me.classOneName, me.saveOne);
@@ -202,7 +202,7 @@ module('xs.ClassManager', function () {
         me.saveThree && xs.ClassManager.add(me.classThreeName, me.saveThree);
     });
 
-    test('delete', function () {
+    test('remove', function () {
         var me = this;
 
         //define names
@@ -212,11 +212,11 @@ module('xs.ClassManager', function () {
 
         //save classes, if defined
         me.saveOne = xs.ClassManager.get(me.classOneName);
-        me.saveOne && xs.ClassManager.delete(me.classOneName);
+        me.saveOne && xs.ClassManager.remove(me.classOneName);
         me.saveTwo = xs.ClassManager.get(me.classTwoName);
-        me.saveTwo && xs.ClassManager.delete(me.classTwoName);
+        me.saveTwo && xs.ClassManager.remove(me.classTwoName);
         me.saveThree = xs.ClassManager.get(me.classThreeName);
-        me.saveThree && xs.ClassManager.delete(me.classThreeName);
+        me.saveThree && xs.ClassManager.remove(me.classThreeName);
 
         //create ClassOne
         me.ClassOne = xs.Class.create(function () {
@@ -250,12 +250,12 @@ module('xs.ClassManager', function () {
         strictEqual(my.demo.first.ClassTwo.namespace.ClassOne, me.ClassOne);
         strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
 
-        //delete classOne
-        xs.ClassManager.delete(me.classOneName);
+        //remove classOne
+        xs.ClassManager.remove(me.classOneName);
 
-        //not deleted again
+        //not removed again
         throws(function () {
-            xs.ClassManager.delete(me.classOneName);
+            xs.ClassManager.remove(me.classOneName);
         });
 
         //class is not in manager
@@ -271,12 +271,12 @@ module('xs.ClassManager', function () {
         strictEqual(xs.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassTwo');
         strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
 
-        //delete classTwo
-        xs.ClassManager.delete(me.classTwoName);
+        //remove classTwo
+        xs.ClassManager.remove(me.classTwoName);
 
-        //not deleted again
+        //not removed again
         throws(function () {
-            xs.ClassManager.delete(me.classTwoName);
+            xs.ClassManager.remove(me.classTwoName);
         });
 
         //class is not in manager
@@ -289,12 +289,12 @@ module('xs.ClassManager', function () {
         strictEqual(xs.Attribute.defined(window, 'my'), false);
         strictEqual(xs.keys(me.ClassTwo.namespace).toString(), '');
 
-        //delete classThree
-        xs.ClassManager.delete(me.classThreeName);
+        //remove classThree
+        xs.ClassManager.remove(me.classThreeName);
 
-        //not deleted again
+        //not removed again
         throws(function () {
-            xs.ClassManager.delete(me.classThreeName);
+            xs.ClassManager.remove(me.classThreeName);
         });
 
         //class is not in manager
@@ -322,7 +322,7 @@ module('xs.ClassManager', function () {
 
         //save class, if defined
         me.save = xs.ClassManager.get(me.className);
-        me.save && xs.ClassManager.delete(me.className);
+        me.save && xs.ClassManager.remove(me.className);
 
 
         //define class
@@ -348,8 +348,8 @@ module('xs.ClassManager', function () {
         strictEqual(xs.myClass, me.Class);
 
 
-        //delete class
-        xs.ClassManager.delete(me.className);
+        //remove class
+        xs.ClassManager.remove(me.className);
 
     }, function () {
         var me = this;

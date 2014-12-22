@@ -519,7 +519,7 @@ module('xs.core.Collection', function () {
         strictEqual(collection.at('a'), 5);
     });
 
-    test('deleteAt', function () {
+    test('removeAt', function () {
         //init test variables
         var collection;
 
@@ -530,7 +530,7 @@ module('xs.core.Collection', function () {
             2
         ]);
 
-        collection.deleteAt(1);
+        collection.removeAt(1);
         strictEqual(collection.values().toString(), '1,2');
 
         //test object
@@ -540,15 +540,15 @@ module('xs.core.Collection', function () {
             c: 3
         });
 
-        collection.deleteAt('b');
+        collection.removeAt('b');
         strictEqual(collection.keys().toString(), 'a,c');
         strictEqual(collection.values().toString(), '1,3');
-        collection.deleteAt(-1);
+        collection.removeAt(-1);
         strictEqual(collection.keys().toString(), 'a');
         strictEqual(collection.values().toString(), '1');
     });
 
-    test('delete', function () {
+    test('remove', function () {
         //init test variables
         var item = { x: 1 };
         var itemString = JSON.stringify(item);
@@ -566,15 +566,15 @@ module('xs.core.Collection', function () {
             item
         ]);
 
-        collection.delete(item);
+        collection.remove(item);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5,6]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2,' + itemString + ']');
 
-        collection.delete(item, xs.core.Collection.REVERSE);
+        collection.remove(item, xs.core.Collection.REVERSE);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
-        collection.delete(item, xs.core.Collection.ALL);
+        collection.remove(item, xs.core.Collection.ALL);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
 
@@ -589,20 +589,20 @@ module('xs.core.Collection', function () {
             h: item
         });
 
-        collection.delete(item);
+        collection.remove(item);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g","h"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2,' + itemString + ']');
 
-        collection.delete(item, xs.core.Collection.REVERSE);
+        collection.remove(item, xs.core.Collection.REVERSE);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
-        collection.delete(item, xs.core.Collection.ALL);
+        collection.remove(item, xs.core.Collection.ALL);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","e","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
     });
 
-    test('deleteBy', function () {
+    test('removeBy', function () {
         //init test variables
         var item = { x: 1 };
         var itemString = JSON.stringify(item);
@@ -620,19 +620,19 @@ module('xs.core.Collection', function () {
             item
         ]);
 
-        collection.deleteBy(function (value) {
+        collection.removeBy(function (value) {
             return value === item;
         });
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5,6]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2,' + itemString + ']');
 
-        collection.deleteBy(function (value) {
+        collection.removeBy(function (value) {
             return value === item;
         }, xs.core.Collection.REVERSE);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
-        collection.deleteBy(function (value) {
+        collection.removeBy(function (value) {
             return value === item;
         }, xs.core.Collection.ALL);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3]');
@@ -649,19 +649,19 @@ module('xs.core.Collection', function () {
             h: item
         });
 
-        collection.deleteBy(function (value) {
+        collection.removeBy(function (value) {
             return value === item;
         });
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g","h"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2,' + itemString + ']');
 
-        collection.deleteBy(function (value) {
+        collection.removeBy(function (value) {
             return value === item;
         }, xs.core.Collection.REVERSE);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
-        collection.deleteBy(function (value) {
+        collection.removeBy(function (value) {
             return value === item;
         }, xs.core.Collection.ALL);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","e","g"]');

@@ -169,7 +169,7 @@ xs.define('xs.util.Observable', function () {
             off: function (event, callback) {
                 var me = this;
                 if (arguments.length == 0) {
-                    me.deleteAllEvents();
+                    me.removeAllEvents();
                     return;
                 }
 
@@ -179,7 +179,7 @@ xs.define('xs.util.Observable', function () {
                             unbind.call(me, event, callback);
                         });
                     } else {
-                        me.deleteEvent(event);
+                        me.removeEvent(event);
                     }
                     return;
                 }
@@ -208,10 +208,10 @@ xs.define('xs.util.Observable', function () {
                 var me = this;
                 me.events[name] || (me.events[name] = []);
             },
-            deleteEvent: function (name) {
+            removeEvent: function (name) {
                 delete this.events[name];
             },
-            deleteAllEvents: function () {
+            removeAllEvents: function () {
                 this.events = {};
             }
         }

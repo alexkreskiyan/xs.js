@@ -18,7 +18,7 @@
      *
      * xs.Loader provides 2 public abilities:
      *
-     * - paths management - allows to add/delete/get path of class
+     * - paths management - allows to add/remove/get path of class
      * - class loading
      *
      * Usage example:
@@ -32,10 +32,10 @@
      *         demo: 'app/demo',
      *     });
      *
-     *     //single path delete
-     *     xs.Loader.paths.delete('my');
-     *     //multiple paths delete
-     *     xs.Loader.paths.delete(['my', 'demo']);
+     *     //single path remove
+     *     xs.Loader.paths.remove('my');
+     *     //multiple paths remove
+     *     xs.Loader.paths.remove(['my', 'demo']);
      *
      *     //single class load
      *     xs.Loader.require('my.Base', function(Base) {
@@ -374,15 +374,15 @@
              *
              * For example:
              *
-             *     //delete single path from xs.Loader.paths
-             *     xs.Loader.paths.delete('my');
-             *     //delete multiple paths from xs.Loader.paths
-             *     xs.Loader.paths.delete([
+             *     //remove single path from xs.Loader.paths
+             *     xs.Loader.paths.remove('my');
+             *     //remove multiple paths from xs.Loader.paths
+             *     xs.Loader.paths.remove([
              *         'my',
              *         'demo'
              *     ]);
              *
-             * @method delete
+             * @method remove
              *
              * @param {String|String[]} alias Single alias or aliases array
              *
@@ -392,7 +392,7 @@
              *
              * - if given alias is not registered
              */
-            me.delete = function (alias) {
+            me.remove = function (alias) {
                 //single alias style
                 if (!xs.isArray(alias)) {
 
@@ -407,8 +407,8 @@
                     return this;
                 }
 
-                //delete each alias
-                xs.each(alias, me.delete);
+                //remove each alias
+                xs.each(alias, me.remove);
 
                 return this;
             };
@@ -544,8 +544,8 @@
                 var resolved = xs.findAll(awaiting, function (item) {
                     xs.log('xs.Loader::resolver::resolve. Clean up item.pending', item.pending);
 
-                    //item is resolved, if path delete succeeds (path was deleted) and pending is empty
-                    if (xs.delete(item.pending, path)) {
+                    //item is resolved, if path remove succeeds (path was removed) and pending is empty
+                    if (xs.remove(item.pending, path)) {
 
                         //update item list
                         var name = xs.keyOf(item.list.unresolved, path);
@@ -565,7 +565,7 @@
 
                 //handle each resolved item
                 xs.each(resolved, function (item) {
-                    xs.delete(awaiting, item);
+                    xs.remove(awaiting, item);
                     item.handleLoad(item.list.loaded);
                 });
             };
@@ -597,8 +597,8 @@
 
                 //handle each rejected item
                 xs.each(rejected, function (item) {
-                    //delete item from awaiting list
-                    xs.delete(awaiting, item);
+                    //remove item from awaiting list
+                    xs.remove(awaiting, item);
 
                     //update item list
                     var name = xs.keyOf(item.list.unresolved, path);
@@ -717,8 +717,8 @@
                 //remove handler after call
                 me.removeEventListener('load', _handleLoad);
 
-                //delete src from loading list
-                xs.delete(loading, me.path);
+                //remove src from loading list
+                xs.remove(loading, me.path);
 
                 //handle load callback
                 handleLoad(me.path);
@@ -733,8 +733,8 @@
                 //remove handler after call
                 me.removeEventListener('load', _handleFail);
 
-                //delete src from loading list
-                xs.delete(loading, me.path);
+                //remove src from loading list
+                xs.remove(loading, me.path);
 
                 //handle load callback
                 handleFail(me.path);
@@ -810,23 +810,23 @@
             /**
              * Deletes path from list
              *
-             * @method delete
+             * @method remove
              *
-             * @param {String} path deleted path
+             * @param {String} path removed path
              *
              * @chainable
              */
-            me.delete = function (path) {
+            me.remove = function (path) {
                 var me = this;
 
-                xs.log('xs.Loader::' + name + '::delete. Delete path "' + path + '"');
+                xs.log('xs.Loader::' + name + '::remove. Delete path "' + path + '"');
                 //check that path is in list
                 if (!me.has(path)) {
                     throw new LoaderError('class "' + path + '" is not in ' + listName + ' list');
                 }
 
-                //delete path from list
-                xs.delete(list, path);
+                //remove path from list
+                xs.remove(list, path);
 
                 return me;
             };

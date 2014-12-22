@@ -68,7 +68,7 @@ xs.define('xs.request.Data', function () {
                 var me = this;
                 console.log('get', name);
             },
-            delete: function () {
+            remove: function () {
                 var me = this, params = xs.Array.unique(xs.Array.union(xs.Array.clone(arguments)));
                 console.log(params);
             }

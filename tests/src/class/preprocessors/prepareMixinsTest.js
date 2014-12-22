@@ -24,7 +24,7 @@ module('xs.class.preprocessors.prepareMixins', function () {
 
         //save
         me.ClassSave = xs.ClassManager.get(me.ClassName);
-        me.ClassSave && xs.ClassManager.delete(me.ClassName);
+        me.ClassSave && xs.ClassManager.remove(me.ClassName);
 
         //add to ClassManager
         xs.ClassManager.add(me.ClassName, me.Class);
@@ -42,7 +42,7 @@ module('xs.class.preprocessors.prepareMixins', function () {
     }, function () {
         var me = this;
         //Class
-        xs.ClassManager.delete(me.ClassName);
+        xs.ClassManager.remove(me.ClassName);
         me.ClassSave && xs.ClassManager.add(me.ClassName, me.ClassSave);
     });
 

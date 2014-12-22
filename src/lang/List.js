@@ -1788,7 +1788,7 @@
          *         2,
          *         value,
          *     ];
-         *     console.log(xs.deleteAt(list, 0));
+         *     console.log(xs.removeAt(list, 0));
          *     //outputs:
          *     //true, index exists
          *     console.log(list);
@@ -1797,7 +1797,7 @@
          *     //    2,
          *     //    value
          *     //]
-         *     console.log(xs.deleteAt(list, -1));
+         *     console.log(xs.removeAt(list, -1));
          *     //outputs:
          *     //false, index missing
          *
@@ -1806,7 +1806,7 @@
          *         c: 2,
          *         b: value,
          *     };
-         *     console.log(xs.deleteAt(list, 'a'));
+         *     console.log(xs.removeAt(list, 'a'));
          *     //outputs:
          *     //true, index exists
          *     console.log(list);
@@ -1815,18 +1815,18 @@
          *     //    c: 2,
          *     //    b: value
          *     //}
-         *     console.log(xs.deleteAt(list, 0));
+         *     console.log(xs.removeAt(list, 0));
          *     //outputs:
          *     //false, index missing
          *
-         * @method deleteAt
+         * @method removeAt
          *
-         * @param {Array|Object} list list, value is deleted from
-         * @param {Number|String} key key of deleted value
+         * @param {Array|Object} list list, value is removed from
+         * @param {Number|String} key key of removed value
          *
-         * @return {Boolean} whether value was deleted
+         * @return {Boolean} whether value was removed
          */
-        var _deleteAt = me.deleteAt = function (list, key) {
+        var _removeAt = me.removeAt = function (list, key) {
             if (_hasKey(list, key)) {
                 xs.isArray(list) ? list.splice(key, 1) : delete list[key];
 
@@ -1853,7 +1853,7 @@
          *         1,
          *         value
          *     ];
-         *     console.log(xs.delete(list, value));
+         *     console.log(xs.remove(list, value));
          *     //outputs:
          *     //true, value exists
          *     console.log(list);
@@ -1865,7 +1865,7 @@
          *     //    1,
          *     //    value
          *     //]
-         *     console.log(xs.delete(list, -1));
+         *     console.log(xs.remove(list, -1));
          *     //outputs:
          *     //false, value missing
          *
@@ -1877,7 +1877,7 @@
          *         e: 1,
          *         d: value
          *     };
-         *     console.log(xs.delete(list, value));
+         *     console.log(xs.remove(list, value));
          *     //outputs:
          *     //true, index exists
          *     console.log(list);
@@ -1889,18 +1889,18 @@
          *     //    e: 1,
          *     //    d: value
          *     //}
-         *     console.log(xs.delete(list, 0));
+         *     console.log(xs.remove(list, 0));
          *     //outputs:
          *     //false, index missing
          *
-         * @method delete
+         * @method remove
          *
-         * @param {Array|Object} list list, value is deleted from
-         * @param {*} value deleted value
+         * @param {Array|Object} list list, value is removed from
+         * @param {*} value removed value
          *
-         * @return {Boolean} whether something was deleted
+         * @return {Boolean} whether something was removed
          */
-        me.delete = function (list, value) {
+        me.remove = function (list, value) {
             var key = _keyOf(list, value);
 
             if (key !== undefined) {
@@ -1929,7 +1929,7 @@
          *         1,
          *         value
          *     ];
-         *     console.log(xs.deleteLast(list, value));
+         *     console.log(xs.removeLast(list, value));
          *     //outputs:
          *     //true, value exists
          *     console.log(list);
@@ -1941,7 +1941,7 @@
          *     //    2,
          *     //    1
          *     //]
-         *     console.log(xs.deleteLast(list, -1));
+         *     console.log(xs.removeLast(list, -1));
          *     //outputs:
          *     //false, value missing
          *
@@ -1953,7 +1953,7 @@
          *         e: 1,
          *         d: value
          *     };
-         *     console.log(xs.deleteLast(list, value));
+         *     console.log(xs.removeLast(list, value));
          *     //outputs:
          *     //true, index exists
          *     console.log(list);
@@ -1965,18 +1965,18 @@
          *     //    f: 2,
          *     //    e: 1
          *     //}
-         *     console.log(xs.deleteLast(list, 0));
+         *     console.log(xs.removeLast(list, 0));
          *     //outputs:
          *     //false, index missing
          *
-         * @method deleteLast
+         * @method removeLast
          *
-         * @param {Array|Object} list list, value is deleted from
-         * @param {*} value deleted value
+         * @param {Array|Object} list list, value is removed from
+         * @param {*} value removed value
          *
-         * @return {Boolean} whether value was deleted
+         * @return {Boolean} whether value was removed
          */
-        me.deleteLast = function (list, value) {
+        me.removeLast = function (list, value) {
             var key = _lastKeyOf(list, value);
 
             if (key !== undefined) {
@@ -2005,7 +2005,7 @@
          *         1,
          *         value
          *     ];
-         *     console.log(xs.deleteAll(list, value));
+         *     console.log(xs.removeAll(list, value));
          *     //outputs:
          *     //true, value exists
          *     console.log(list);
@@ -2016,7 +2016,7 @@
          *     //    2,
          *     //    1
          *     //]
-         *     console.log(xs.deleteAll(list, -1));
+         *     console.log(xs.removeAll(list, -1));
          *     //outputs:
          *     //false, value missing
          *
@@ -2028,7 +2028,7 @@
          *         e: 1,
          *         d: value
          *     };
-         *     console.log(xs.deleteAll(list, value));
+         *     console.log(xs.removeAll(list, value));
          *     //outputs:
          *     //true, index exists
          *     console.log(list);
@@ -2039,31 +2039,31 @@
          *     //    f: 2,
          *     //    e: 1
          *     //}
-         *     console.log(xs.deleteAll(list, 0));
+         *     console.log(xs.removeAll(list, 0));
          *     //outputs:
          *     //false, index missing
          *
-         * @method deleteAll
+         * @method removeAll
          *
-         * @param {Array|Object} list list, values are deleted from
-         * @param {*} [value] optional deleted value. If specified all value entries will be removed from list. If not - list is truncated
+         * @param {Array|Object} list list, values are removed from
+         * @param {*} [value] optional removed value. If specified all value entries will be removed from list. If not - list is truncated
          *
-         * @return {Number} count of deleted values
+         * @return {Number} count of removed values
          */
-        me.deleteAll = function (list, value) {
-            var deleted = 0;
+        me.removeAll = function (list, value) {
+            var removed = 0;
 
             //if value specified
             if (arguments.length > 1) {
                 var key;
 
-                //delete each entry
+                //remove each entry
                 while ((key = _keyOf(list, value)) !== undefined) {
-                    _deleteAt(list, key);
-                    deleted++;
+                    _removeAt(list, key);
+                    removed++;
                 }
 
-                return deleted;
+                return removed;
             }
 
             var size = _size(list);

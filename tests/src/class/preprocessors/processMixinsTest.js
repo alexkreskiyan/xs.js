@@ -51,14 +51,14 @@ module('xs.class.preprocessors.processMixins', function () {
         strictEqual(Child.descriptor.methods.printB, Mix2.descriptor.methods.printB);
     }, function () {
         var me = this;
-        xs.Loader.paths.delete('tests');
+        xs.Loader.paths.remove('tests');
 
-        //delete created classes from namespace
+        //remove created classes from namespace
         var ns = tests.class.preprocessors.processMixins;
-        xs.ClassManager.delete(ns.Child.label);
-        xs.ClassManager.delete(ns.Base.label);
-        xs.ClassManager.delete(ns.Mix1.label);
-        xs.ClassManager.delete(ns.Mix2.label);
+        xs.ClassManager.remove(ns.Child.label);
+        xs.ClassManager.remove(ns.Base.label);
+        xs.ClassManager.remove(ns.Mix1.label);
+        xs.ClassManager.remove(ns.Mix2.label);
     });
 
 });

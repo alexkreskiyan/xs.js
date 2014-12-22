@@ -31,7 +31,7 @@ module('xs.class.preprocessors.prepareExtends', function () {
 
         //save
         me.BaseSave = xs.ClassManager.get(me.BaseName);
-        me.BaseSave && xs.ClassManager.delete(me.BaseName);
+        me.BaseSave && xs.ClassManager.remove(me.BaseName);
 
         //add to ClassManager
         xs.ClassManager.add(me.BaseName, me.Base);
@@ -46,7 +46,7 @@ module('xs.class.preprocessors.prepareExtends', function () {
 
         //save
         me.ParentSave = xs.ClassManager.get(me.ParentName);
-        me.ParentSave && xs.ClassManager.delete(me.ParentName);
+        me.ParentSave && xs.ClassManager.remove(me.ParentName);
 
         //add to ClassManager
         xs.ClassManager.add(me.ParentName, me.Parent);
@@ -61,7 +61,7 @@ module('xs.class.preprocessors.prepareExtends', function () {
 
         //save
         me.ChildSave = xs.ClassManager.get(me.ChildName);
-        me.ChildSave && xs.ClassManager.delete(me.ChildName);
+        me.ChildSave && xs.ClassManager.remove(me.ChildName);
 
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
@@ -84,15 +84,15 @@ module('xs.class.preprocessors.prepareExtends', function () {
     }, function () {
         var me = this;
         //Base
-        xs.ClassManager.delete(me.BaseName);
+        xs.ClassManager.remove(me.BaseName);
         me.BaseSave && xs.ClassManager.add(me.BaseName, me.BaseSave);
 
         //Parent
-        xs.ClassManager.delete(me.ParentName);
+        xs.ClassManager.remove(me.ParentName);
         me.ParentSave && xs.ClassManager.add(me.ParentName, me.ParentSave);
 
         //Child
-        xs.ClassManager.delete(me.ChildName);
+        xs.ClassManager.remove(me.ChildName);
         me.ChildSave && xs.ClassManager.add(me.ChildName, me.ChildSave);
     });
 });

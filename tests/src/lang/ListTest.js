@@ -1402,7 +1402,7 @@ module('xs.lang.List', function () {
         strictEqual(xs.pop(x), undefined);
     });
 
-    test('deleteAt', function () {
+    test('removeAt', function () {
         //init test variables
         var x;
 
@@ -1413,15 +1413,15 @@ module('xs.lang.List', function () {
             2
         ];
 
-        strictEqual(xs.deleteAt(x, 1), true);
+        strictEqual(xs.removeAt(x, 1), true);
         strictEqual(JSON.stringify(x), '[1,2]');
 
-        strictEqual(xs.deleteAt(x, 2), false);
+        strictEqual(xs.removeAt(x, 2), false);
         strictEqual(JSON.stringify(x), '[1,2]');
 
         //test empty array list
         x = [];
-        strictEqual(xs.deleteAt(x, 2), false);
+        strictEqual(xs.removeAt(x, 2), false);
 
         //test object list
         x = {
@@ -1430,18 +1430,18 @@ module('xs.lang.List', function () {
             c: 3
         };
 
-        strictEqual(xs.deleteAt(x, 'b'), true);
+        strictEqual(xs.removeAt(x, 'b'), true);
         strictEqual(JSON.stringify(x), '{"a":1,"c":3}');
 
-        strictEqual(xs.deleteAt(x, 'd'), false);
+        strictEqual(xs.removeAt(x, 'd'), false);
         strictEqual(JSON.stringify(x), '{"a":1,"c":3}');
 
         //test empty object list
         x = {};
-        strictEqual(xs.deleteAt(x, 2), false);
+        strictEqual(xs.removeAt(x, 2), false);
     });
 
-    test('delete', function () {
+    test('remove', function () {
         //init test variables
         var item = { x: 1 };
         var itemString = JSON.stringify(item);
@@ -1455,15 +1455,15 @@ module('xs.lang.List', function () {
             item
         ];
 
-        strictEqual(xs.delete(x, item), true);
+        strictEqual(xs.remove(x, item), true);
         strictEqual(JSON.stringify(x), '[3,2,' + itemString + ']');
 
-        strictEqual(xs.delete(x, 1), false);
+        strictEqual(xs.remove(x, 1), false);
         strictEqual(JSON.stringify(x), '[3,2,' + itemString + ']');
 
         //test empty array list
         x = [];
-        strictEqual(xs.delete(x, 2), false);
+        strictEqual(xs.remove(x, 2), false);
 
         x = {
             a: 1,
@@ -1472,18 +1472,18 @@ module('xs.lang.List', function () {
             c: 3
         };
 
-        strictEqual(xs.delete(x, item), true);
+        strictEqual(xs.remove(x, item), true);
         strictEqual(JSON.stringify(x), '{"a":1,"d":' + itemString + ',"c":3}');
 
-        strictEqual(xs.delete(x, 2), false);
+        strictEqual(xs.remove(x, 2), false);
         strictEqual(JSON.stringify(x), '{"a":1,"d":' + itemString + ',"c":3}');
 
         //test empty object list
         x = {};
-        strictEqual(xs.delete(x, 2), false);
+        strictEqual(xs.remove(x, 2), false);
     });
 
-    test('deleteLast', function () {
+    test('removeLast', function () {
         //init test variables
         var item = { x: 1 };
         var itemString = JSON.stringify(item);
@@ -1497,15 +1497,15 @@ module('xs.lang.List', function () {
             item
         ];
 
-        strictEqual(xs.deleteLast(x, item), true);
+        strictEqual(xs.removeLast(x, item), true);
         strictEqual(JSON.stringify(x), '[3,' + itemString + ',2]');
 
-        strictEqual(xs.deleteLast(x, 1), false);
+        strictEqual(xs.removeLast(x, 1), false);
         strictEqual(JSON.stringify(x), '[3,' + itemString + ',2]');
 
         //test empty array list
         x = [];
-        strictEqual(xs.deleteLast(x, 2), false);
+        strictEqual(xs.removeLast(x, 2), false);
 
         //test object list
         x = {
@@ -1515,18 +1515,18 @@ module('xs.lang.List', function () {
             c: 3
         };
 
-        strictEqual(xs.deleteLast(x, item), true);
+        strictEqual(xs.removeLast(x, item), true);
         strictEqual(JSON.stringify(x), '{"a":1,"b":' + itemString + ',"c":3}');
 
-        strictEqual(xs.deleteLast(x, 2), false);
+        strictEqual(xs.removeLast(x, 2), false);
         strictEqual(JSON.stringify(x), '{"a":1,"b":' + itemString + ',"c":3}');
 
         //test empty object list
         x = {};
-        strictEqual(xs.deleteLast(x, 2), false);
+        strictEqual(xs.removeLast(x, 2), false);
     });
 
-    test('deleteAll', function () {
+    test('removeAll', function () {
         //init test variables
         var item = { x: 1 };
         var itemString = JSON.stringify(item);
@@ -1543,19 +1543,19 @@ module('xs.lang.List', function () {
             1
         ];
 
-        strictEqual(xs.deleteAll(x, 2), 2);
+        strictEqual(xs.removeAll(x, 2), 2);
         strictEqual(JSON.stringify(x), '[1,' + itemString + ',' + itemString + ',' + itemString + ',1]');
 
-        strictEqual(xs.deleteAll(x, 3), 0);
+        strictEqual(xs.removeAll(x, 3), 0);
         strictEqual(JSON.stringify(x), '[1,' + itemString + ',' + itemString + ',' + itemString + ',1]');
 
-        strictEqual(xs.deleteAll(x, item), 3);
+        strictEqual(xs.removeAll(x, item), 3);
         strictEqual(JSON.stringify(x), '[1,1]');
 
-        strictEqual(xs.deleteAll(x), 2);
+        strictEqual(xs.removeAll(x), 2);
         strictEqual(JSON.stringify(x), '[]');
 
-        strictEqual(xs.deleteAll(x), 0);
+        strictEqual(xs.removeAll(x), 0);
         strictEqual(JSON.stringify(x), '[]');
 
         //test object list
@@ -1569,19 +1569,19 @@ module('xs.lang.List', function () {
             g: 1
         };
 
-        strictEqual(xs.deleteAll(x, 2), 2);
+        strictEqual(xs.removeAll(x, 2), 2);
         strictEqual(JSON.stringify(x), '{"a":1,"c":' + itemString + ',"d":' + itemString + ',"f":' + itemString + ',"g":1}');
 
-        strictEqual(xs.deleteAll(x, 3), 0);
+        strictEqual(xs.removeAll(x, 3), 0);
         strictEqual(JSON.stringify(x), '{"a":1,"c":' + itemString + ',"d":' + itemString + ',"f":' + itemString + ',"g":1}');
 
-        strictEqual(xs.deleteAll(x, item), 3);
+        strictEqual(xs.removeAll(x, item), 3);
         strictEqual(JSON.stringify(x), '{"a":1,"g":1}');
 
-        strictEqual(xs.deleteAll(x), 2);
+        strictEqual(xs.removeAll(x), 2);
         strictEqual(JSON.stringify(x), '{}');
 
-        strictEqual(xs.deleteAll(x), 0);
+        strictEqual(xs.removeAll(x), 0);
         strictEqual(JSON.stringify(x), '{}');
     });
 

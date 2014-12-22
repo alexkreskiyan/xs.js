@@ -15,7 +15,7 @@ module('xs.Loader', function () {
 
         //backup all paths
         me.paths = xs.Loader.paths.get();
-        xs.Loader.paths.delete(xs.keys(me.paths));
+        xs.Loader.paths.remove(xs.keys(me.paths));
 
     }, function () {
         //single mode
@@ -66,7 +66,7 @@ module('xs.Loader', function () {
         var me = this;
 
         //remove current paths
-        xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
+        xs.Loader.paths.remove(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
         xs.Loader.paths.add(me.paths);
     });
@@ -76,7 +76,7 @@ module('xs.Loader', function () {
 
         //backup all paths
         me.paths = xs.Loader.paths.get();
-        xs.Loader.paths.delete(xs.keys(me.paths));
+        xs.Loader.paths.remove(xs.keys(me.paths));
 
     }, function () {
         //non-string alias
@@ -105,42 +105,42 @@ module('xs.Loader', function () {
         var me = this;
 
         //remove current paths
-        xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
+        xs.Loader.paths.remove(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
         xs.Loader.paths.add(me.paths);
     });
 
-    test('paths delete', function () {
+    test('paths remove', function () {
         var me = this;
 
         //backup all paths
         me.paths = xs.Loader.paths.get();
-        xs.Loader.paths.delete(xs.keys(me.paths));
+        xs.Loader.paths.remove(xs.keys(me.paths));
 
     }, function () {
         //single mode
         //non-string alias
         throws(function () {
-            xs.Loader.paths.delete(1);
+            xs.Loader.paths.remove(1);
         });
         //incorrect alias
         throws(function () {
-            xs.Loader.paths.delete('1');
+            xs.Loader.paths.remove('1');
         });
         throws(function () {
-            xs.Loader.paths.delete('a.');
+            xs.Loader.paths.remove('a.');
         });
         throws(function () {
-            xs.Loader.paths.delete('1a');
+            xs.Loader.paths.remove('1a');
         });
         throws(function () {
-            xs.Loader.paths.delete('a.a.');
+            xs.Loader.paths.remove('a.a.');
         });
         //correct data
         strictEqual(xs.Loader.paths.has('a'), false);
         xs.Loader.paths.add('a', 'a');
         strictEqual(xs.Loader.paths.has('a'), true);
-        xs.Loader.paths.delete('a');
+        xs.Loader.paths.remove('a');
         strictEqual(xs.Loader.paths.has('a'), false);
 
         //multiple mode
@@ -153,7 +153,7 @@ module('xs.Loader', function () {
         });
         strictEqual(xs.Loader.paths.has('a'), true);
         strictEqual(xs.Loader.paths.has('b'), true);
-        xs.Loader.paths.delete([
+        xs.Loader.paths.remove([
             'a',
             'b'
         ]);
@@ -164,7 +164,7 @@ module('xs.Loader', function () {
         var me = this;
 
         //remove current paths
-        xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
+        xs.Loader.paths.remove(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
         xs.Loader.paths.add(me.paths);
     });
@@ -174,7 +174,7 @@ module('xs.Loader', function () {
 
         //backup all paths
         me.paths = xs.Loader.paths.get();
-        xs.Loader.paths.delete(xs.keys(me.paths));
+        xs.Loader.paths.remove(xs.keys(me.paths));
 
     }, function () {
 
@@ -184,7 +184,7 @@ module('xs.Loader', function () {
             b: 'path2'
         });
         strictEqual(JSON.stringify(xs.Loader.paths.get()), '{"a":"path1","b":"path2"}');
-        xs.Loader.paths.delete([
+        xs.Loader.paths.remove([
             'a',
             'b'
         ]);
@@ -194,7 +194,7 @@ module('xs.Loader', function () {
         var me = this;
 
         //remove current paths
-        xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
+        xs.Loader.paths.remove(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
         xs.Loader.paths.add(me.paths);
     });
@@ -204,7 +204,7 @@ module('xs.Loader', function () {
 
         //backup all paths
         me.paths = xs.Loader.paths.get();
-        xs.Loader.paths.delete(xs.keys(me.paths));
+        xs.Loader.paths.remove(xs.keys(me.paths));
 
     }, function () {
         //non-string name
@@ -238,7 +238,7 @@ module('xs.Loader', function () {
         var me = this;
 
         //remove current paths
-        xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
+        xs.Loader.paths.remove(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
         xs.Loader.paths.add(me.paths);
     });
@@ -268,8 +268,8 @@ module('xs.Loader', function () {
             strictEqual(xs.ClassManager.has('tests.class.Loader.Sample'), true);
 
             //cleanUp
-            xs.ClassManager.delete('tests.class.Loader.Demo');
-            xs.ClassManager.delete('tests.class.Loader.Sample');
+            xs.ClassManager.remove('tests.class.Loader.Demo');
+            xs.ClassManager.remove('tests.class.Loader.Sample');
 
             //require loaded and failed classes
             xs.Loader.require([
@@ -292,6 +292,6 @@ module('xs.Loader', function () {
 
         return false;
     }, function () {
-        xs.Loader.paths.delete('tests.class.Loader');
+        xs.Loader.paths.remove('tests.class.Loader');
     });
 });

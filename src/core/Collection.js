@@ -896,7 +896,7 @@
      *         2,
      *         value,
      *     ]);
-     *     collection.deleteAt(0);
+     *     collection.removeAt(0);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -909,7 +909,7 @@
      *         c: 2,
      *         b: value,
      *     });
-     *     collection.deleteAt(0);
+     *     collection.removeAt(0);
      *     console.log(collection.values());
      *     //outputs:
      *     //{
@@ -917,13 +917,13 @@
      *     //    b: value
      *     //}
      *
-     * @method deleteAt
+     * @method removeAt
      *
-     * @param {Number|String} key key of deleted value
+     * @param {Number|String} key key of removed value
      *
      * @chainable
      */
-    collection.prototype.deleteAt = function (key) {
+    collection.prototype.removeAt = function (key) {
         var me = this;
 
         //if index given
@@ -937,7 +937,7 @@
                 throw new CollectionError('set - index "' + key + '" is out of bounds [' + min + ',' + max + ']');
             }
 
-            //delete item by key
+            //remove item by key
             me.items.splice(key, 1);
 
             //if key given
@@ -947,11 +947,11 @@
 
             //check, that key exists
             if (index < 0) {
-                throw new CollectionError('deleteAt - given key doesn\'t exist in collection');
+                throw new CollectionError('removeAt - given key doesn\'t exist in collection');
             }
 
 
-            //delete item by key
+            //remove item by key
             me.items.splice(index, 1);
 
             //else - it's error
@@ -981,7 +981,7 @@
      *         1,
      *         value
      *     ]);
-     *     collection.delete(value);
+     *     collection.remove(value);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -993,7 +993,7 @@
      *     //    1,
      *     //    value
      *     //]
-     *     collection.delete(value, xs.core.Collection.REVERSE);
+     *     collection.remove(value, xs.core.Collection.REVERSE);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1004,7 +1004,7 @@
      *     //    value
      *     //    1
      *     //]
-     *     collection.delete(value, xs.core.Collection.ALL);
+     *     collection.remove(value, xs.core.Collection.ALL);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1024,7 +1024,7 @@
      *         g: 1,
      *         h: value
      *     });
-     *     collection.delete(value);
+     *     collection.remove(value);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1036,7 +1036,7 @@
      *     //    1,
      *     //    value
      *     //]
-     *     collection.delete(value, xs.core.Collection.REVERSE);
+     *     collection.remove(value, xs.core.Collection.REVERSE);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1047,7 +1047,7 @@
      *     //    value
      *     //    1
      *     //]
-     *     collection.delete(value, xs.core.Collection.ALL);
+     *     collection.remove(value, xs.core.Collection.ALL);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1057,24 +1057,24 @@
      *     //    1
      *     //]
      *
-     * @method delete
+     * @method remove
      *
-     * @param {*} value deleted value
-     * @param {Number} [flags] optional delete flags:
+     * @param {*} value removed value
+     * @param {Number} [flags] optional remove flags:
      * - REVERSE - to lookup for value from the end of the collection
-     * - ALL - to delete all matches
+     * - ALL - to remove all matches
      *
      * @chainable
      *
      * @throws {Error} Error is thrown:
      *
      * - if given flags list is not number
-     * - if nothing to delete in collection
+     * - if nothing to remove in collection
      */
-    collection.prototype.delete = function (value, flags) {
+    collection.prototype.remove = function (value, flags) {
         var me = this, values = me.values();
 
-        //delete all if no value given
+        //remove all if no value given
         if (!arguments.length) {
             me.items.splice(0, me.items.length);
 
@@ -1082,7 +1082,7 @@
         }
 
         var index, all = false;
-        //if no flags - delete first occurrence of value
+        //if no flags - remove first occurrence of value
         if (arguments.length == 1) {
             index = values.indexOf(value);
 
@@ -1108,14 +1108,14 @@
 
         //check, that item exists
         if (index < 0) {
-            throw new CollectionError('delete - given value doesn\'t exist in collection');
+            throw new CollectionError('remove - given value doesn\'t exist in collection');
         }
 
         //if all flag is given
         if (all) {
             var i = 0, valuesLength = values.length;
 
-            //delete all occurrences of value in collection
+            //remove all occurrences of value in collection
             while (i < valuesLength) {
 
                 //if item.value is not equal to value - continue with next item
@@ -1124,10 +1124,10 @@
                     continue;
                 }
 
-                //delete item from values
+                //remove item from values
                 values.splice(i, 1);
 
-                //delete item from collection
+                //remove item from collection
                 me.items.splice(i, 1);
 
                 //decrement valuesLength
@@ -1135,7 +1135,7 @@
             }
         } else {
 
-            //delete item from items
+            //remove item from items
             me.items.splice(index, 1);
         }
 
@@ -1164,7 +1164,7 @@
      *         1,
      *         value
      *     ]);
-     *     collection.deleteBy(function(val){
+     *     collection.removeBy(function(val){
      *         return val === value;
      *     });
      *     console.log(collection.values());
@@ -1178,7 +1178,7 @@
      *     //    1,
      *     //    value
      *     //]
-     *     collection.deleteBy(function(val){
+     *     collection.removeBy(function(val){
      *         return val === value;
      *     }, xs.core.Collection.REVERSE);
      *     console.log(collection.values());
@@ -1191,7 +1191,7 @@
      *     //    value
      *     //    1
      *     //]
-     *     collection.deleteBy(function(val){
+     *     collection.removeBy(function(val){
      *         return val === value;
      *     }, xs.core.Collection.ALL);
      *     console.log(collection.values());
@@ -1213,7 +1213,7 @@
      *         g: 1,
      *         h: value
      *     });
-     *     collection.deleteBy(function(val){
+     *     collection.removeBy(function(val){
      *         return val === value;
      *     });
      *     console.log(collection.values());
@@ -1227,7 +1227,7 @@
      *     //    1,
      *     //    value
      *     //]
-     *     collection.deleteBy(function(val){
+     *     collection.removeBy(function(val){
      *         return val === value;
      *     }, xs.core.Collection.REVERSE);
      *     console.log(collection.values());
@@ -1240,7 +1240,7 @@
      *     //    value
      *     //    1
      *     //]
-     *     collection.deleteBy(function(val){
+     *     collection.removeBy(function(val){
      *         return val === value;
      *     }, xs.core.Collection.ALL);
      *     console.log(collection.values());
@@ -1252,12 +1252,12 @@
      *     //    1
      *     //]
      *
-     * @method deleteBy
+     * @method removeBy
      *
-     * @param {Function} finder function, that returns whether to delete value or not
-     * @param {Number} [flags] optional delete flags:
+     * @param {Function} finder function, that returns whether to remove value or not
+     * @param {Number} [flags] optional remove flags:
      * - REVERSE - to lookup for value from the end of the collection
-     * - ALL - to delete all matches
+     * - ALL - to remove all matches
      *
      * @chainable
      *
@@ -1266,12 +1266,12 @@
      * - if finder is not a function
      * - if given flags list is not number
      */
-    collection.prototype.deleteBy = function (finder, flags) {
+    collection.prototype.removeBy = function (finder, flags) {
         var me = this;
 
         //check that finder is function
         if (!xs.isFunction(finder)) {
-            throw new CollectionError('deleteBy - given finder "' + finder + '" is not a function');
+            throw new CollectionError('removeBy - given finder "' + finder + '" is not a function');
         }
 
         var all = false, reverse = false;
@@ -1296,7 +1296,7 @@
 
         if (all) {
             i = 0;
-            //delete all matched occurrences from collection
+            //remove all matched occurrences from collection
             while (i < length) {
                 item = me.items[i];
 
@@ -1308,10 +1308,10 @@
                     continue;
                 }
 
-                //delete item from values
+                //remove item from values
                 values.splice(i, 1);
 
-                //delete item from collection
+                //remove item from collection
                 me.items.splice(i, 1);
 
                 //decrement valuesLength
@@ -1319,7 +1319,7 @@
             }
         } else if (reverse) {
             i = length - 1;
-            //delete all matched occurrences from collection
+            //remove all matched occurrences from collection
             while (i >= 0) {
                 item = me.items[i];
 
@@ -1331,10 +1331,10 @@
                     continue;
                 }
 
-                //delete item from values
+                //remove item from values
                 values.splice(i, 1);
 
-                //delete item from collection
+                //remove item from collection
                 me.items.splice(i, 1);
 
                 //decrement valuesLength
@@ -1347,7 +1347,7 @@
             }
         } else {
             i = 0;
-            //delete first matched occurrence from collection
+            //remove first matched occurrence from collection
             while (i < length) {
                 item = me.items[i];
 
@@ -1359,10 +1359,10 @@
                     continue;
                 }
 
-                //delete item from values
+                //remove item from values
                 values.splice(i, 1);
 
-                //delete item from collection
+                //remove item from collection
                 me.items.splice(i, 1);
 
                 //decrement valuesLength
@@ -1480,7 +1480,7 @@
         //get returned value
         var value = me.items[0].value;
 
-        //delete first item from collection
+        //remove first item from collection
         me.items.splice(0, 1);
 
         _updateIndexes.call(me, 0);
@@ -1593,7 +1593,7 @@
         //get returned value
         var value = me.items[index].value;
 
-        //delete last item from collection
+        //remove last item from collection
         me.items.splice(-1, 1);
 
         //return value
@@ -2317,7 +2317,7 @@
                 continue;
             }
 
-            //delete item from me.items
+            //remove item from me.items
             me.items.splice(i, 1);
 
             //decrement length

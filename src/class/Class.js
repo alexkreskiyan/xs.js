@@ -183,19 +183,19 @@
                 delete Class.isProcessing;
 
                 //remove class from processing list
-                xs.delete(processing, Class);
+                xs.remove(processing, Class);
 
-                //delete from dependencies
-                dependencies.delete(Class);
+                //remove from dependencies
+                dependencies.remove(Class);
 
-                //delete from queue
-                queue.delete(Class.label);
+                //remove from queue
+                queue.remove(Class.label);
 
                 //if dependencies empty - all classes processed
                 if (!processing.length) {
 
-                    //delete from queue
-                    queue.delete(null);
+                    //remove from queue
+                    queue.remove(null);
                 }
 
                 //call createdFn
@@ -452,19 +452,19 @@
         /**
          * Cleans up dependencies and chains after class was processed
          *
-         * @method delete
+         * @method remove
          *
          * @param {Object} processed processed class
          */
-        me.delete = function (processed) {
-            xs.log('xs.Class::dependencies::delete. Resolving dependencies, because', processed.label, 'has been processed');
+        me.remove = function (processed) {
+            xs.log('xs.Class::dependencies::remove. Resolving dependencies, because', processed.label, 'has been processed');
             //remove processed from chains
-            chains.delete(processed);
+            chains.remove(processed);
 
             //get resolved dependencies list
             var resolved = xs.findAll(storage, function (dependency) {
-                //dependency is resolved, if processed delete succeeds (processed was deleted) and waiting is empty
-                if (xs.delete(dependency.waiting, processed)) {
+                //dependency is resolved, if processed remove succeeds (processed was removed) and waiting is empty
+                if (xs.remove(dependency.waiting, processed)) {
 
                     return !dependency.waiting.length;
                 }
@@ -472,10 +472,10 @@
                 return false;
             });
 
-            xs.log('xs.Class::dependencies::delete. Resolved dependencies', resolved);
+            xs.log('xs.Class::dependencies::remove. Resolved dependencies', resolved);
             //process resolved dependencies to remove them from stack
             xs.each(resolved, function (dependency) {
-                xs.delete(storage, dependency);
+                xs.remove(storage, dependency);
                 dependency.handleReady();
             });
         };
@@ -504,10 +504,10 @@
                 if (Class.isProcessing) {
                     i++;
 
-                    //else - delete class from waiting
+                    //else - remove class from waiting
                 } else {
                     xs.log('xs.Class::dependencies::filterWaiting. Class:', Class.label, 'is already processed, removing it from waiting');
-                    xs.deleteAt(waiting, i);
+                    xs.removeAt(waiting, i);
                 }
             }
             xs.log('xs.Class::dependencies::filterWaiting. Filtered list:', xs.map(waiting, function (Class) {
@@ -623,37 +623,37 @@
             /**
              * Deletes processed class from all chains
              *
-             * @method delete
+             * @method remove
              *
              * @param {Object} processed processed class
              */
-            me.delete = function (processed) {
+            me.remove = function (processed) {
 
-                xs.log('xs.Class::dependencies::chains::delete.', processed.label, 'resolved');
+                xs.log('xs.Class::dependencies::chains::remove.', processed.label, 'resolved');
 
                 //get work chains, that contain processed class
                 var chains = _getChains(processed);
-                xs.log('xs.Class::dependencies::chains::delete. Work chains:');
+                xs.log('xs.Class::dependencies::chains::remove. Work chains:');
                 xs.each(chains, function (chain) {
-                    xs.log('xs.Class::dependencies::chains::delete.', xs.map(chain, function (Class) {
+                    xs.log('xs.Class::dependencies::chains::remove.', xs.map(chain, function (Class) {
                         return Class.label;
                     }));
                 });
 
                 //remove processed class from each work chain
                 xs.each(chains, function (chain) {
-                    //if chain is more than 2 items long - delete item from it
+                    //if chain is more than 2 items long - remove item from it
                     if (chain.length > 2) {
-                        xs.delete(chain, processed);
+                        xs.remove(chain, processed);
 
-                        //else - delete chain from storage
+                        //else - remove chain from storage
                     } else {
-                        xs.delete(storage, chain);
+                        xs.remove(storage, chain);
                     }
                 });
-                xs.log('xs.Class::dependencies::chains::delete. Chains left:');
+                xs.log('xs.Class::dependencies::chains::remove. Chains left:');
                 xs.each(storage, function (chain) {
-                    xs.log('xs.Class::dependencies::chains::delete.', xs.map(chain, function (Class) {
+                    xs.log('xs.Class::dependencies::chains::remove.', xs.map(chain, function (Class) {
                         return Class.label;
                     }));
                 });
@@ -785,7 +785,7 @@
                 var updated = [];
 
                 //remove chain from storage
-                xs.delete(storage, chain);
+                xs.remove(storage, chain);
 
                 //for each waiting class add it chain copy
                 xs.each(waiting, function (Class) {
@@ -968,12 +968,12 @@
         /**
          * Deletes given class name from all waiting lists. If processed is null - all pending classes are loaded. Call specific all ready handler
          *
-         * @method delete
+         * @method remove
          *
          * @param {String|Null} processed name of processed class or null if all classes processed
          */
-        me.delete = function (processed) {
-            xs.log('xs.Class::queue::delete. Resolve:', processed);
+        me.remove = function (processed) {
+            xs.log('xs.Class::queue::remove. Resolve:', processed);
             //get resolved queue lists. If processed given - with non-null waiting list. If no processed given - with null lists only
             var resolved;
             if (processed === null) {
@@ -990,8 +990,8 @@
                         return false;
                     }
 
-                    //item is resolved, if processed delete succeeds (processed was deleted) and waiting is empty
-                    if (xs.delete(item.waiting, processed)) {
+                    //item is resolved, if processed remove succeeds (processed was removed) and waiting is empty
+                    if (xs.remove(item.waiting, processed)) {
 
                         return !item.waiting.length;
                     }
@@ -1000,10 +1000,10 @@
                 });
             }
 
-            xs.log('xs.Class::queue::delete. Resolved items', resolved);
+            xs.log('xs.Class::queue::remove. Resolved items', resolved);
             //process resolved dependencies to remove them from stack
             xs.each(resolved, function (item) {
-                xs.delete(storage, item);
+                xs.remove(storage, item);
                 item.handleReady();
             });
         };
@@ -1028,9 +1028,9 @@
                 if (!Class || Class.isProcessing) {
                     i++;
 
-                    //else - delete class from waiting
+                    //else - remove class from waiting
                 } else {
-                    xs.deleteAt(waiting, i);
+                    xs.removeAt(waiting, i);
                 }
             }
         };
@@ -1089,7 +1089,7 @@
             var keys = xs.keys(items);
 
             //remove name from keys
-            xs.delete(keys, name);
+            xs.remove(keys, name);
 
             //insert to specified position
             if (position == 'first' || position == 'last') {
@@ -1195,9 +1195,9 @@
          *
          * For example:
          *
-         *     stack.delete('addY');
+         *     stack.remove('addY');
          *
-         * @method delete
+         * @method remove
          *
          * @param {String} name processor name
          *
@@ -1205,9 +1205,9 @@
          *
          * - processor with given name is not found in stack
          */
-        me.delete = function (name) {
+        me.remove = function (name) {
             if (xs.hasKey(items, name)) {
-                xs.deleteAt(items, name);
+                xs.removeAt(items, name);
             } else {
                 throw new ClassError('processor "' + name + '" not found in stack');
             }

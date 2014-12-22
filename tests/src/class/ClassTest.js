@@ -66,7 +66,7 @@ module('xs.Class', function () {
 
         //clear stack
         xs.each(me.save, function (item, name) {
-            me.stack.delete(name);
+            me.stack.remove(name);
         });
 
         me.verifier = function () {
@@ -116,7 +116,7 @@ module('xs.Class', function () {
         var me = this;
         //clear stack
         xs.each(me.stack.get(), function (item, name) {
-            me.stack.delete(name);
+            me.stack.remove(name);
         });
 
         //reset stack
@@ -134,7 +134,7 @@ module('xs.Class', function () {
 
         //clear stack
         xs.each(me.save, function (item, name) {
-            me.stack.delete(name);
+            me.stack.remove(name);
         });
 
         me.verifier = function () {
@@ -185,7 +185,7 @@ module('xs.Class', function () {
 
         //clear stack
         xs.each(me.stack.get(), function (item, name) {
-            me.stack.delete(name);
+            me.stack.remove(name);
         });
 
         //reset stack
@@ -194,7 +194,7 @@ module('xs.Class', function () {
         });
     });
 
-    test('processors delete', function () {
+    test('processors remove', function () {
         var me = this;
         //setUp
         me.stack = xs.Class.preprocessors;
@@ -204,7 +204,7 @@ module('xs.Class', function () {
 
         //clear stack
         xs.each(me.save, function (item, name) {
-            me.stack.delete(name);
+            me.stack.remove(name);
         });
 
         me.verifier = function () {
@@ -225,21 +225,21 @@ module('xs.Class', function () {
     }, function () {
         var me = this;
 
-        //delete undefined
+        //remove undefined
         throws(function () {
-            me.stack.delete('unknown');
+            me.stack.remove('unknown');
         });
 
-        //delete first
-        me.stack.delete('one');
+        //remove first
+        me.stack.remove('one');
         strictEqual(JSON.stringify(xs.keys(me.stack.get())), '["two","three","four","five"]');
 
-        //delete last
-        me.stack.delete('five');
+        //remove last
+        me.stack.remove('five');
         strictEqual(JSON.stringify(xs.keys(me.stack.get())), '["two","three","four"]');
 
-        //delete in middle
-        me.stack.delete('three');
+        //remove in middle
+        me.stack.remove('three');
         strictEqual(JSON.stringify(xs.keys(me.stack.get())), '["two","four"]');
 
     }, function () {
@@ -247,7 +247,7 @@ module('xs.Class', function () {
 
         //clear stack
         xs.each(me.stack.get(), function (item, name) {
-            me.stack.delete(name);
+            me.stack.remove(name);
         });
 
         //reset stack
@@ -265,7 +265,7 @@ module('xs.Class', function () {
 
         //clear stack
         xs.each(me.save, function (item, name) {
-            me.stack.delete(name);
+            me.stack.remove(name);
         });
 
         me.verifier = function () {
@@ -308,7 +308,7 @@ module('xs.Class', function () {
 
         //clear stack
         xs.each(me.stack.get(), function (item, name) {
-            me.stack.delete(name);
+            me.stack.remove(name);
         });
 
         //reset stack

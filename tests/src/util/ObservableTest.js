@@ -52,16 +52,16 @@ test('addEvent', function () {
     strictEqual(env.inst.one.hasEvent('event'), true, 'env.inst.one has events "event"');
 });
 
-test('deleteEvent', function () {
+test('removeEvent', function () {
     var env = setUp();
     strictEqual(env.inst.one.hasEvent('event'), false, 'env.inst.one has no event "event"');
     env.inst.one.addEvent('event');
     strictEqual(env.inst.one.hasEvent('event'), true, 'env.inst.one was add event "event"');
-    env.inst.one.deleteEvent('event');
-    strictEqual(env.inst.one.hasEvent('event'), false, 'env.inst.one was delete event "event"');
+    env.inst.one.removeEvent('event');
+    strictEqual(env.inst.one.hasEvent('event'), false, 'env.inst.one was remove event "event"');
 });
 
-test('deleteAllEvent', function () {
+test('removeAllEvent', function () {
     var env = setUp();
     strictEqual(env.inst.one.hasEvent('foo'), false, 'env.inst.one has no event "foo"');
     strictEqual(env.inst.one.hasEvent('bar'), false, 'env.inst.one has no event "bar"');
@@ -72,7 +72,7 @@ test('deleteAllEvent', function () {
     env.inst.one.addEvent('bar');
     strictEqual(env.inst.one.hasEvent('bar'), true, 'env.inst.one was add event "bar"');
 
-    env.inst.one.deleteAllEvents();
+    env.inst.one.removeAllEvents();
     strictEqual(env.inst.one.hasEvent('foo'), false, 'env.inst.one has no event "foo"');
     strictEqual(env.inst.one.hasEvent('bar'), false, 'env.inst.one has no event "bar"');
 });
@@ -102,7 +102,7 @@ test('on', function () {
 
     env.inst.one.on('foo', env.fn.one, {});
     strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
-    env.inst.one.deleteAllEvents();
+    env.inst.one.removeAllEvents();
 
     env.inst.one.on([
         'foo',
@@ -110,7 +110,7 @@ test('on', function () {
     ], env.fn.one, {});
     strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
     strictEqual(env.inst.one.hasEvent('bar'), true, 'env.inst.one has event "bar"');
-    env.inst.one.deleteAllEvents();
+    env.inst.one.removeAllEvents();
     strictEqual(env.inst.one.hasEvent('foo'), false, 'env.inst.one has event "foo"');
     strictEqual(env.inst.one.hasEvent('bar'), false, 'env.inst.one has event "bar"');
 
@@ -132,7 +132,7 @@ test('once', function () {
 
     env.inst.one.once('foo', env.fn.one, {});
     strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
-    env.inst.one.deleteAllEvents();
+    env.inst.one.removeAllEvents();
 
     env.inst.one.once([
         'foo',
@@ -140,7 +140,7 @@ test('once', function () {
     ], env.fn.one, {});
     strictEqual(env.inst.one.hasEvent('foo'), true, 'env.inst.one has event "foo"');
     strictEqual(env.inst.one.hasEvent('bar'), true, 'env.inst.one has event "bar"');
-    env.inst.one.deleteAllEvents();
+    env.inst.one.removeAllEvents();
     strictEqual(env.inst.one.hasEvent('foo'), false, 'env.inst.one has event "foo"');
     strictEqual(env.inst.one.hasEvent('bar'), false, 'env.inst.one has event "bar"');
 
@@ -168,7 +168,7 @@ test('off', function () {
     });
 
     strictEqual(existsFoo, undefined, 'env.inst.one has no event "foo"');
-    env.inst.one.deleteAllEvents();
+    env.inst.one.removeAllEvents();
 
     env.inst.one.on([
         'foo',
@@ -188,7 +188,7 @@ test('off', function () {
     });
     strictEqual(existsFoo, undefined, 'env.inst.one has no event "foo"');
     strictEqual(existsBar, undefined, 'env.inst.one has no event "foo"');
-    env.inst.one.deleteAllEvents();
+    env.inst.one.removeAllEvents();
 
     var eventMap = {
         foo: env.fn.one,
@@ -206,7 +206,7 @@ test('off', function () {
     });
     strictEqual(existsFoo, undefined, 'env.inst.one has no event "foo"');
     strictEqual(existsBar, undefined, 'env.inst.one has no event "bar"');
-    env.inst.one.deleteAllEvents();
+    env.inst.one.removeAllEvents();
 
 });
 
@@ -220,7 +220,7 @@ test('listen', function () {
         return dispatcher.callback == env.fn.one;
     });
     strictEqual(env.inst.two.hasEvent('foo'), true, 'env.inst.one has event "foo"');
-    env.inst.one.deleteAllEvents();
+    env.inst.one.removeAllEvents();
 
     //env.inst.one.listen(env.inst.two, ['foo', 'bar'], env.fn.one);
     /*  var eventMap = {
@@ -247,13 +247,13 @@ test('listen', function () {
 //     inst1.trigger('create', 1, 2);
 
 //     //give array
-//     inst1.on(['create', 'delete'], function(a, b) {
+//     inst1.on(['create', 'remove'], function(a, b) {
 //         console.log(this, a, b, 'array use');
 //     }, {
 //         x: 1
 //     });
 //     inst1.trigger('create', 1, 2);
-//     inst1.trigger('delete', 3, 4);
+//     inst1.trigger('remove', 3, 4);
 
 //     //test with event map
 //     //init map
@@ -261,8 +261,8 @@ test('listen', function () {
 //         create: function(a, b) {
 //             console.log(this, a, b, 'event map create');
 //         },
-//         delete: function(a, b) {
-//             console.log(this, a, b, 'event map delete')
+//         remove: function(a, b) {
+//             console.log(this, a, b, 'event map remove')
 //         }
 //     }
 //     //give map into 'on'
@@ -270,7 +270,7 @@ test('listen', function () {
 //         x: 1
 //     });
 //     inst1.trigger('create', 1, 2);
-//     inst1.trigger('delete', 3, 4);
+//     inst1.trigger('remove', 3, 4);
 
 //     /**
 //      * Test 'once' methods
@@ -284,13 +284,13 @@ test('listen', function () {
 //     inst1.trigger('create', 1, 2);
 
 //     //use with array
-//     inst1.once(['create', 'delete'], function(a, b) {
+//     inst1.once(['create', 'remove'], function(a, b) {
 //         console.log(this, a, b);
 //     }, {
 //         x: 1
 //     });
 //     inst1.trigger('create', 1, 2);
-//     inst1.trigger('delete', 3, 4);
+//     inst1.trigger('remove', 3, 4);
 
 //     //use with event map
 //     //init event map
@@ -298,8 +298,8 @@ test('listen', function () {
 //         create: function(a, b) {
 //             console(this, a, b, 'create');
 //         },
-//         delete: function(a, b) {
-//             console(this, a, b, 'delete')
+//         remove: function(a, b) {
+//             console(this, a, b, 'remove')
 //         }
 //     }
 
@@ -308,7 +308,7 @@ test('listen', function () {
 //         x: 1
 //     });
 //     inst1.trigger('create', 1, 2);
-//     inst1.trigger('delete', 3, 4);
+//     inst1.trigger('remove', 3, 4);
 
 //     /**
 //      * Test 'off' methods
@@ -353,7 +353,7 @@ test('listen', function () {
 //     inst1.trigger('foo', 1, 2);
 //     inst1.trigger('bar', 3, 4);
 
-//     //delete all handlers
+//     //remove all handlers
 //     inst1.on(eventMap, {
 //         x: 'testEventMap'
 //     });

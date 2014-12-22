@@ -146,9 +146,9 @@
          * For example:
          *
          *     //unset Class
-         *     xs.ClassManager.delete('xs.myClass');
+         *     xs.ClassManager.remove('xs.myClass');
          *
-         * @method delete
+         * @method remove
          *
          * @param {String} name name of unset Class
          *
@@ -156,7 +156,7 @@
          *
          * - class with given name is not registered
          */
-        me.delete = function (name) {
+        me.remove = function (name) {
             //throw error if trying to unset undefined
             if (!_has(name)) {
                 throw new ClassManagerError('class "' + name + '" is not defined');
@@ -175,7 +175,7 @@
             var namespace = _namespace(root, path);
 
             //sync namespaces
-            _syncNamespaces(namespace, 'delete', label);
+            _syncNamespaces(namespace, 'remove', label);
 
             //unset Class from namespace
             delete namespace[label];
@@ -183,7 +183,7 @@
             //clean namespace
             _cleanNamespace(root, path);
 
-            //delete Class from registry
+            //remove Class from registry
             delete registry[name];
         };
 
@@ -395,11 +395,11 @@
                 xs.each(classes, function (Class) {
                     Class.namespace[name] = classes[name];
                 });
-            } else if (operation == 'delete') {
+            } else if (operation == 'remove') {
                 //empty old class' namespace
-                xs.deleteAll(changedClass.namespace);
+                xs.removeAll(changedClass.namespace);
 
-                //delete old class from all namespaces
+                //remove old class from all namespaces
                 xs.each(classes, function (Class) {
                     delete Class.namespace[name];
                 });

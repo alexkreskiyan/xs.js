@@ -15,7 +15,7 @@ module('xs.class.preprocessors.imports', function () {
 
         //backup all paths
         me.paths = xs.Loader.paths.get();
-        xs.Loader.paths.delete(xs.keys(me.paths));
+        xs.Loader.paths.remove(xs.keys(me.paths));
 
         //add tests path
         xs.Loader.paths.add('tests', '/tests/resources');
@@ -56,17 +56,17 @@ module('xs.class.preprocessors.imports', function () {
         var me = this;
 
         //remove current paths
-        xs.Loader.paths.delete(xs.keys(xs.Loader.paths.get()));
+        xs.Loader.paths.remove(xs.keys(xs.Loader.paths.get()));
         //restore saved paths
         xs.Loader.paths.add(me.paths);
 
         var ns = tests.class.preprocessors.imports;
 
-        //delete created classes
-        xs.ClassManager.delete(ns.One.label);
-        xs.ClassManager.delete(ns.Two.label);
-        xs.ClassManager.delete(ns.Three.label);
-        xs.ClassManager.delete(ns.Base.label);
-        xs.ClassManager.delete(ns.Child.label);
+        //remove created classes
+        xs.ClassManager.remove(ns.One.label);
+        xs.ClassManager.remove(ns.Two.label);
+        xs.ClassManager.remove(ns.Three.label);
+        xs.ClassManager.remove(ns.Base.label);
+        xs.ClassManager.remove(ns.Child.label);
     });
 });

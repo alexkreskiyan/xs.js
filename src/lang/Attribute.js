@@ -295,7 +295,7 @@
          *     //outputs:
          *     //{
          *     //    value: 1,
-         *     //    x: 5 //properties, not relative to descriptor are not deleted
+         *     //    x: 5 //properties, not relative to descriptor are not removed
          *     //}
          *     console.log(xs.Attribute.prepareDescriptor({
          *         get: 5,
@@ -305,7 +305,7 @@
          *     //outputs:
          *     //{
          *     //    value: 1,
-         *     //    x: 5 //properties, not relative to descriptor are not deleted
+         *     //    x: 5 //properties, not relative to descriptor are not removed
          *     //}
          *     console.log(xs.Attribute.prepareDescriptor({
          *         get: function() {},
@@ -315,7 +315,7 @@
          *     //outputs:
          *     //{
          *     //    get: function() {},
-         *     //    x: 5 //properties, not relative to descriptor are not deleted
+         *     //    x: 5 //properties, not relative to descriptor are not removed
          *     //}
          *
          * Important: Properties, that are not relative to property descriptor itself, are not removed from given descriptor
