@@ -1128,102 +1128,62 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.values()), '[]');
     });
 
-    //test('pick', function () {
-    //    //init test variables
-    //    var collection;
+    test('pick', function () {
+        //init test variables
+        var collection, picked, correctKeys, correctValues;
 
-    //    //test array list
-    //    collection = new xs.core.Collection([
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ]);
-    //    var correct = '[{"x":1,"y":2},{"x":2,"y":2}]';
-    //    var correctKeys = '[0,1]';
+        //test array list
+        collection = new xs.core.Collection([
+            {
+                x: 1,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 1
+            },
+            {
+                x: 1,
+                y: 1
+            }
+        ]);
+        correctKeys = '[0,1,2]';
+        correctValues = '[{"x":2,"y":1},{"x":1,"y":2},{"x":2,"y":2}]';
 
-    //    var clone = xs.pick(x, 0, 1);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
+        picked = collection.pick([2, 0, 1]);
+        strictEqual(JSON.stringify(picked.keys()), correctKeys);
+        strictEqual(JSON.stringify(picked.values()), correctValues);
 
-    //    clone = xs.pick(x, [0], [1]);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
+        //test object list
+        collection = new xs.core.Collection({
+            a: {
+                x: 1,
+                y: 2
+            },
+            b: {
+                x: 2,
+                y: 2
+            },
+            c: {
+                x: 2,
+                y: 1
+            },
+            d: {
+                x: 1,
+                y: 1
+            }
+        });
+        correctKeys = '["b","a","d"]';
+        correctValues = '[{"x":2,"y":2},{"x":1,"y":2},{"x":1,"y":1}]';
 
-    //    clone = xs.pick(x, [
-    //        0,
-    //        1
-    //    ]);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.pick(x);
-    //    strictEqual(JSON.stringify(clone), '[]');
-
-    //    clone = xs.pick(x, 'a');
-    //    strictEqual(JSON.stringify(clone), '[]');
-
-    //    clone = xs.pick([], 'a');
-    //    strictEqual(JSON.stringify(clone), '[]');
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-    //    correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}';
-    //    correctKeys = '["a","b"]';
-
-    //    clone = xs.pick(x, 'a', 'b', 'e');
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.pick(x, ['a'], ['b']);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.pick(x, [
-    //        'a',
-    //        'b'
-    //    ]);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.pick(x);
-    //    strictEqual(JSON.stringify(clone), '{}');
-
-    //    clone = xs.pick(x, 'n');
-    //    strictEqual(JSON.stringify(clone), '{}');
-
-    //    clone = xs.pick({}, 'n');
-    //    strictEqual(JSON.stringify(clone), '{}');
-    //});
+        picked = collection.pick(['b', 'a', 'd']);
+        strictEqual(JSON.stringify(picked.keys()), correctKeys);
+        strictEqual(JSON.stringify(picked.values()), correctValues);
+    });
 
     //test('omit', function () {
     //    //init test variables

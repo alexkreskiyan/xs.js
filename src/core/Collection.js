@@ -2195,7 +2195,7 @@
 
         //handle negative scenario
         if (count === 0) {
-            //iterae over me.items to find matches
+            //iterate over me.items to find matches
             for (i = 0; i < length; i++) {
                 item = me.items[i];
 
@@ -2213,7 +2213,7 @@
         }
 
         //handle positive scenario
-        //iterare over me.items to find matches
+        //iterate over me.items to find matches
         for (i = 0; i < length; i++) {
             item = me.items[i];
 
@@ -2330,8 +2330,112 @@
         return me;
     };
 
-    collection.prototype.pick = function () {
+    /**
+     * Returns copy of list with only white-listed keys, passed in array
+     *
+     * For example:
+     *
+     *     //for Array
+     *     console.log(new xs.core.Collection([
+     *         1,
+     *         2,
+     *         3,
+     *         4,
+     *         5,
+     *         6
+     *     ]).pick([1, 3, 2, 5]).values());
+     *     //outputs:
+     *     //[
+     *     //    2,
+     *     //    4,
+     *     //    3,
+     *     //    6
+     *     //]
+     *
+     *     //for Object
+     *     var pick = new xs.core.Collection({
+     *         a: 1,
+     *         c: 2,
+     *         d: 3,
+     *         b: 4,
+     *         f: 5,
+     *         e: 6
+     *     }).pick([1, 3, 2, 5]);
+     *     console.log(pick.keys());
+     *     //outputs:
+     *     //[
+     *     //    'c',
+     *     //    'b',
+     *     //    'd',
+     *     //    'e'
+     *     //]
+     *     console.log(pick.values());
+     *     //outputs:
+     *     //[
+     *     //    2,
+     *     //    4,
+     *     //    3,
+     *     //    6
+     *     //]
+     *
+     * @method pick
+     *
+     * @param {String[]|Number[]} keys list with keys of picked items
+     *
+     * @return {xs.core.Collection} collection of picked items
+     * 
+     * @throws {Error} Error is thrown:
+     *
+     * - if keys is not array
+     * - if any key is nor string neither number
+     * - if any key is not in collection
+     */
+    collection.prototype.pick = function (keys) {
+        var me = this;
 
+        if (!xs.isArray(keys)) {
+            throw new CollectionError('pick - given keys list "' + keys + '" is not array');
+        }
+
+        var picked = new xs.core.Collection, length = keys.length, key, i, ownKeys = me.keys(), ownLength = ownKeys.length, index, item, items = [];
+        for (i = 0; i < length; i++) {
+            key = keys[i];
+            //if key is string - it's key
+            if (xs.isString(key)) {
+                index = ownKeys.indexOf(key);
+
+                //check, that key exists
+                if (index < 0) {
+                    throw new CollectionError('pick - given key "' + key + '" doesn\'t exist');
+                }
+                //else if it's number - it's index
+            } else if (xs.isNumber(key)) {
+                if (key < 0 || key > ownLength) {
+                    throw new CollectionError('pick - given index "' + index + '" is out of bounds [0,' + ownLength + ']');
+                }
+                index = key;
+                //else - it's error
+            } else {
+                throw new CollectionError('pick - key "' + key + '", given for collection, is nor number neither string');
+            }
+
+            //get picked item
+            item = me.items[index];
+
+            //copy it to items
+            items.push({
+                key: item.key,
+                value: item.value
+            });
+        }
+
+        //set picked items as items of picked collection
+        picked.items = items;
+
+        //update indexes
+        _updateIndexes.call(picked, 0);
+
+        return picked;
     };
 
     collection.prototype.omit = function () {
