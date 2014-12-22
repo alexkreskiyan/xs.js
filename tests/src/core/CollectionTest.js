@@ -874,9 +874,9 @@ module('xs.core.Collection', function () {
         found = collection.find(function (value, key) {
             return this.sum(key, value.x) >= 2;
         }, xs.core.Collection.ALL, scope);
-        strictEqual(found[0], collection.at(0));
-        strictEqual(found[1], collection.at(1));
-        strictEqual(found[2], collection.at(2));
+        strictEqual(found.at(0), collection.at(0));
+        strictEqual(found.at(1), collection.at(1));
+        strictEqual(found.at(2), collection.at(2));
 
         //for Object
         collection = new xs.core.Collection({
@@ -898,8 +898,8 @@ module('xs.core.Collection', function () {
         found = collection.find(function (value, key) {
             return this.first(key) === 'a';
         }, xs.core.Collection.ALL, scope);
-        strictEqual(found.aa, collection.at('aa'));
-        strictEqual(found.ab, collection.at('ab'));
+        strictEqual(found.at('aa'), collection.at('aa'));
+        strictEqual(found.at('ab'), collection.at('ab'));
     });
 
     test('map', function () {

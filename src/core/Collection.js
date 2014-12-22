@@ -1776,9 +1776,10 @@
      *
      * @param {Function} finder function, returning true if value matches given conditions
      * @param {Number} [flags] additional iterating flags:
+     * - ALL - to find all matches
      * @param {Object} [scope] optional scope
      *
-     * @return {*} found value, undefined if nothing found
+     * @return {*|xs.core.Collection} found value, undefined if nothing found, or xs.core.Collection with results if ALL flag was given
      *
      * @throws {Error} Error is thrown:
      *
@@ -1816,28 +1817,22 @@
         var i, item, length = me.items.length, found;
 
         if (all) {
-            //indexes of matched items
-            var indexes = [];
-            var isArray = true;
+            //copies of matched items
+            var items = [];
 
             for (i = 0; i < length; i++) {
                 item = me.items[i];
                 if (finder.call(scope, item.value, item.key, me)) {
                     //add index
-                    indexes.push(i);
-
-                    //if isArray flag on and key is not number - turn it off
-                    isArray && !xs.isNumber(item.key) && (isArray = false);
+                    items.push({
+                        key: item.key,
+                        value: item.value
+                    });
                 }
             }
 
-            //collect result data set
-            length = indexes.length;
-            found = isArray ? [] : {};
-            for (i = 0; i < length; i++) {
-                item = me.items[indexes[i]];
-                found[item.key] = item.value;
-            }
+            found = new me.constructor();
+            found.items = items;
         } else if (reverse) {
             for (i = length - 1; i >= 0; i--) {
                 item = me.items[i];
@@ -2014,6 +2009,7 @@
      *
      * @param {Function} reducer reducing function
      * @param {Number} [flags] additional iterating flags:
+     * - REVERSE - to reduce in reverse order
      * @param {Object} [scope] optional scope
      * @param {*} [memo] initial value. Is optional. If omitted, first value's value is shifted from list and used as memo
      *
