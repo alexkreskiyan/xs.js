@@ -2013,9 +2013,9 @@
      * @method reduce
      *
      * @param {Function} reducer reducing function
-     * @param {Object} scope optional scope
+     * @param {Object} [scope] optional scope
      * @param {Number} [flags] additional iterating flags:
-     * @param {*} memo initial value. Is optional. If omitted, first value's value is shifted from list and used as memo
+     * @param {*} [memo] initial value. Is optional. If omitted, first value's value is shifted from list and used as memo
      *
      * @return {*} Reducing result
      *
@@ -2095,8 +2095,139 @@
         return result;
     };
 
+    /**
+     * Returns whether count of list values pass tester function
+     *
+     * For example:
+     *
+     *     var scope = {
+     *        one: function(value) {
+     *            return value === 1;
+     *        },
+     *     }
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         1,
+     *         2,
+     *         2,
+     *     ]);
+     *     console.log(collection.some(function(value) {
+     *         return this.one(value);
+     *     }, 3, scope));
+     *     //outputs:
+     *     // false
+     *     console.log(collection.some(function(value) {
+     *         return this.one(value);
+     *     }, 1, scope));
+     *     //outputs:
+     *     // true
+     *     console.log(collection.some(function(value) {
+     *         return value === 1;
+     *     }));
+     *     //outputs:
+     *     // true
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         c: 1,
+     *         b: 2,
+     *         d: 2
+     *     });
+     *     console.log(collection.some(function(value) {
+     *         return this.one(value);
+     *     }, 3, scope));
+     *     //outputs:
+     *     // false
+     *     console.log(collection.some(function(value) {
+     *         return this.one(value);
+     *     }, 1, scope));
+     *     //outputs:
+     *     // true
+     *     console.log(collection.some(function(value) {
+     *         return value === 1;
+     *     }));
+     *     //outputs:
+     *     // true
+     *
+     * @method some
+     *
+     * @param {Function} tester tester function
+     * @param {Number} [count] count of values needed to resolve as true
+     * @param {Object} [scope] optional scope
+     *
+     * @return {Boolean} whether some values pass tester function
+     * 
+     * @throws {Error} Error is thrown:
+     *
+     * - if tester is not a function
+     * - if collection is empty
+     */
     collection.prototype.some = function (tester, count, scope) {
+        var me = this, length = me.items.length;
 
+        //check that finder is function
+        if (!xs.isFunction(tester)) {
+            throw new CollectionError('some - given tester "' + tester + '" is not a function');
+        }
+
+        //default count to 1, if not given
+        arguments.length == 1 && (count = 1);
+
+        //check, that count is number and is in bounds
+        if (!xs.isNumber(count)) {
+            throw new CollectionError('some - given count "' + count + '" is not number');
+        }
+        if (count < 0 || count > length) {
+            throw new CollectionError('some - given count "' + count + '" is out of bounds [0,' + length + ']');
+        }
+
+        //check that collection is not empty
+        if (!me.items.length) {
+            throw new CollectionError('some - collection is empty');
+        }
+
+        //default scope to me
+        arguments.length >= 3 || (scope = me);
+
+        var i, item, found = 0;
+
+        //handle negative scenario
+        if (count === 0) {
+            //iterae over me.items to find matches
+            for (i = 0; i < length; i++) {
+                item = me.items[i];
+
+                //increment found if tester returns true
+                tester.call(scope, item.value, item.key, me) && found++;
+
+                //return false if found at least one item
+                if (found) {
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        //handle positive scenario
+        //iterare over me.items to find matches
+        for (i = 0; i < length; i++) {
+            item = me.items[i];
+
+            //increment found if tester returns true
+            tester.call(scope, item.value, item.key, me) && found++;
+
+            //return true if found became equal to count
+            if (found === count) {
+
+                return true;
+            }
+        }
+
+        return false;
     };
 
     /**

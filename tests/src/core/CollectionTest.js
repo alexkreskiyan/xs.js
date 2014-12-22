@@ -462,7 +462,7 @@ module('xs.core.Collection', function () {
             collection.insert(0);
         });
         //throws if adding with same key
-        collection = new xs.core.Collection({a: 1});
+        collection = new xs.core.Collection({ a: 1 });
         throws(function () {
             collection.insert(0, 'a', 1);
         });
@@ -503,7 +503,7 @@ module('xs.core.Collection', function () {
             collection.set(1, 1);
         });
         //object
-        collection = new xs.core.Collection({a: 1});
+        collection = new xs.core.Collection({ a: 1 });
         throws(function () {
             collection.set('b', 1);
         });
@@ -856,9 +856,9 @@ module('xs.core.Collection', function () {
 
         //for Array
         collection = new xs.core.Collection([
-            {x: 2},
-            {x: 2},
-            {x: 0}
+            { x: 2 },
+            { x: 2 },
+            { x: 0 }
         ]);
         //direct
         found = collection.find(function (value, key) {
@@ -880,9 +880,9 @@ module('xs.core.Collection', function () {
 
         //for Object
         collection = new xs.core.Collection({
-            aa: {x: 1},
-            c: {x: 2},
-            ab: {x: 3}
+            aa: { x: 1 },
+            c: { x: 2 },
+            ab: { x: 3 }
         });
         //direct
         found = collection.find(function (value, key) {
@@ -980,1178 +980,99 @@ module('xs.core.Collection', function () {
         }, undefined, xs.core.Collection.REVERSE, -3), '3a4b2x');
     });
 
-    //test('reduceRight', function () {
-    //    //init test variables
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        6,
-    //        5,
-    //        4
-    //    ];
-    //    strictEqual(xs.reduceRight(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }), 27);
-    //    strictEqual(xs.reduceRight(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }, -3), 30);
-
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(collection.reduce(function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }, -3), -3);
-
-    //    //test object list
-    //    x = {
-    //        x: 1,
-    //        b: 2,
-    //        a: 3
-    //    };
-    //    strictEqual(xs.reduceRight(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }), '7b2x');
-    //    strictEqual(xs.reduceRight(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }, -3), '3a4b2x');
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.reduce(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }), undefined);
-    //    strictEqual(xs.reduce(x, function (memo, value, name) {
-    //        return memo + 2 * value + name;
-    //    }, -3), -3);
-    //});
-
-    //test('filter', function () {
-    //    //init test variables
-    //    var x;
-    //    var results;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-
-    //    results = xs.filter(x, {
-    //        x: 1
-    //    });
-    //    strictEqual(results, x[0]);
-
-    //    results = xs.filter(x, {
-    //        x: 3
-    //    });
-    //    strictEqual(results, undefined);
-
-    //    //test empty array list
-    //    x = [];
-    //    results = xs.filter(x, {
-    //        x: 'A'
-    //    });
-    //    strictEqual(results, undefined);
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-
-    //    results = xs.filter(x, {
-    //        x: 1
-    //    });
-    //    strictEqual(results, x.a);
-
-    //    results = xs.filter(x, {
-    //        x: 3
-    //    });
-    //    strictEqual(results, undefined);
-
-    //    //test empty object list
-    //    x = {};
-    //    results = xs.filter(x, {
-    //        x: 3
-    //    });
-    //    strictEqual(results, undefined);
-    //});
-
-    //test('filterLast', function () {
-    //    //init test variables
-    //    var x;
-    //    var results;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-
-    //    results = xs.filterLast(x, {
-    //        x: 1
-    //    });
-    //    strictEqual(results, x[3]);
-
-    //    results = xs.filterLast(x, {
-    //        x: 3
-    //    });
-    //    strictEqual(results, undefined);
-
-    //    //test empty array list
-    //    x = [];
-    //    results = xs.filterLast(x, {
-    //        x: 'A'
-    //    });
-    //    strictEqual(results, undefined);
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-
-    //    results = xs.filterLast(x, {
-    //        x: 1
-    //    });
-    //    strictEqual(results, x.d);
-
-    //    results = xs.filterLast(x, {
-    //        x: 3
-    //    });
-    //    strictEqual(results, undefined);
-
-    //    //test empty object list
-    //    x = {};
-    //    results = xs.filterLast(x, {
-    //        x: 3
-    //    });
-    //    strictEqual(results, undefined);
-    //});
-
-    //test('filterAll', function () {
-    //    //init test variables
-    //    var x;
-    //    var results;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-
-    //    results = xs.filterAll(x, {
-    //        x: 1
-    //    });
-    //    strictEqual(results.length, 2);
-    //    strictEqual(results[0], x[0]);
-    //    strictEqual(results[1], x[3]);
-
-    //    results = xs.filterAll(x, {
-    //        x: 3
-    //    });
-    //    strictEqual(results.length, 0);
-
-    //    //test empty array list
-    //    x = [];
-    //    results = xs.filterAll(x, {
-    //        x: 'A'
-    //    });
-    //    strictEqual(results.length, 0);
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-
-    //    results = xs.filterAll(x, {
-    //        x: 1
-    //    });
-    //    strictEqual(xs.size(results), 2);
-    //    strictEqual(results.a, x.a);
-    //    strictEqual(results.d, x.d);
-
-    //    results = xs.filterAll(x, {
-    //        x: 3
-    //    });
-    //    strictEqual(xs.size(results), 0);
-
-    //    //test empty object list
-    //    x = {};
-    //    results = xs.filterAll(x, {
-    //        x: 3
-    //    });
-    //    strictEqual(xs.size(results), 0);
-    //});
-
-    //test('every', function () {
-    //    //init test variables
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-
-    //    strictEqual(xs.every(x, function (value) {
-    //        return value.hasOwnProperty('y');
-    //    }), true);
-
-    //    strictEqual(xs.every(x, function (value) {
-    //        return value.x === 1;
-    //    }), false);
-
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.every(x, function (value) {
-    //        return !value.hasOwnProperty('y');
-    //    }), true);
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-
-    //    strictEqual(xs.every(x, function (value) {
-    //        return xs.hasKey(value, 'y');
-    //    }), true);
-
-    //    strictEqual(xs.every(x, function (value) {
-    //        return value.x === 1;
-    //    }), false);
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.every(x, function (value) {
-    //        return value.x === 1;
-    //    }), true);
-    //});
-
-    //test('some', function () {
-    //    //init test variables
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-
-    //    strictEqual(xs.some(x, function (value) {
-    //        return value.x == 1 && value.y == 1;
-    //    }, -1), true, 'some method runs ok when result succeeds with given count less than 0');
-
-    //    strictEqual(xs.some(x, function (value) {
-    //        return value.x == 1 && value.y == 1;
-    //    }, 0), true, 'some method runs ok when result succeeds with given count equal to 0');
-
-    //    strictEqual(xs.some(x, function (value) {
-    //        return value.x == 1 && value.y == 1;
-    //    }), true);
-
-    //    strictEqual(xs.some(x, function (value) {
-    //        return value.x == 1 && value.y == 1;
-    //    }, 2), false, 'some method runs ok when result succeeds with given count greater then 0');
-
-    //    strictEqual(xs.some(x, function (value) {
-    //        return value.x == 1 && value.y == 3;
-    //    }), false);
-
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.some(x, function (value) {
-    //        return value.x == 1 && value.y == 1;
-    //    }), false);
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-
-    //    strictEqual(xs.some(x, function (value) {
-    //        return value.x == 1 && value.y == 1;
-    //    }, -1), true, 'some method runs ok when result succeeds with given count less than 0');
-
-    //    strictEqual(xs.some(x, function (value) {
-    //        return value.x == 1 && value.y == 1;
-    //    }, 0), true, 'some method runs ok when result succeeds with given count equal to 0');
-
-    //    strictEqual(xs.some(x, function (value) {
-    //        return value.x == 1 && value.y == 1;
-    //    }), true);
-
-    //    strictEqual(xs.some(x, function (value) {
-    //        return value.x == 1 && value.y == 1;
-    //    }, 2), false, 'some method runs ok when result succeeds with given count greater then 0');
-
-    //    strictEqual(xs.some(x, function (value) {
-    //        return value.x == 1 && value.y == 3;
-    //    }), false);
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.some(x, function (value) {
-    //        return value.x == 1 && value.y == 1;
-    //    }), false);
-    //});
-
-    //test('none', function () {
-    //    //init test variables
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-
-    //    strictEqual(xs.none(x, function (value) {
-    //        return value.hasOwnProperty('y');
-    //    }), false);
-
-    //    strictEqual(xs.none(x, function (value) {
-    //        return value.x === 3;
-    //    }), true);
-
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(xs.none(x, function (value) {
-    //        return !value.hasOwnProperty('y');
-    //    }), true);
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-
-    //    strictEqual(xs.none(x, function (value) {
-    //        return xs.hasKey(value, 'y');
-    //    }), false);
-
-    //    strictEqual(xs.none(x, function (value) {
-    //        return value.x === 3;
-    //    }), true);
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(xs.none(x, function (value) {
-    //        return value.x === 1;
-    //    }), true);
-    //});
-
-    //test('defaults', function () {
-    //    //init test variables
-    //    var x, clone, correct;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-
-    //    clone = xs.clone([]);
-    //    xs.defaults(clone, 1, 2, 3);
-    //    strictEqual(JSON.stringify(clone), '[1,2,3]');
-
-    //    clone = xs.clone(x);
-    //    xs.defaults(clone, 1, 2, 3);
-    //    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1}]');
-
-    //    clone = xs.clone(x);
-    //    xs.defaults(clone, 1, 2, 3, 4, 5);
-    //    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1},5]');
-
-    //    clone = xs.clone(x);
-    //    xs.defaults(clone);
-    //    strictEqual(JSON.stringify(clone), '[{"x":1,"y":2},{"x":2,"y":2},{"x":2,"y":1},{"x":1,"y":1}]');
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-
-    //    correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2},"c":{"x":2,"y":1},"d":{"x":1,"y":1},"e":1,"f":1}';
-
-    //    clone = xs.clone({});
-    //    xs.defaults(clone, {
-    //        e: 1
-    //    }, {
-    //        f: 1
-    //    });
-    //    strictEqual(JSON.stringify(clone), '{"e":1,"f":1}');
-
-    //    clone = xs.clone(x);
-    //    xs.defaults(clone, {
-    //        e: 1
-    //    }, {
-    //        f: 1
-    //    });
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.clone(x);
-    //    xs.defaults(clone, {
-    //        a: 1
-    //    });
-    //    strictEqual(JSON.stringify(clone), JSON.stringify(x));
-
-    //    clone = xs.clone(x);
-    //    xs.defaults(clone);
-    //    strictEqual(JSON.stringify(clone), JSON.stringify(x));
-    //});
-
-    //test('compact', function () {
-    //    //init test variables
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        0,
-    //        1,
-    //        2,
-    //        undefined,
-    //        false,
-    //        null,
-    //        true,
-    //        {},
-    //        [],
-    //        '',
-    //        '0',
-    //        '1'
-    //    ];
-
-    //    strictEqual(JSON.stringify(xs.compact(x)), '[1,2,true,{},[],"0","1"]');
-
-    //    //test empty array list
-    //    x = [];
-    //    strictEqual(JSON.stringify(xs.compact(x)), '[]');
-
-    //    //test object list
-    //    x = {
-    //        a: 0,
-    //        b: 1,
-    //        c: 2,
-    //        d: undefined,
-    //        e: false,
-    //        f: null,
-    //        g: true,
-    //        h: {},
-    //        i: [],
-    //        j: '',
-    //        k: '0',
-    //        l: '1'
-    //    };
-
-    //    strictEqual(JSON.stringify(xs.compact(x)), '{"b":1,"c":2,"g":true,"h":{},"i":[],"k":"0","l":"1"}');
-
-    //    //test empty object list
-    //    x = {};
-    //    strictEqual(JSON.stringify(xs.compact(x)), '{}');
-    //});
-
-    //test('unique', function () {
-    //    //init test variables
-    //    var arr = [];
-    //    var obj = {};
-    //    var x, unique;
-
-    //    //test array list
-    //    x = [
-    //        1,
-    //        1,
-    //        2,
-    //        2,
-    //        obj,
-    //        null,
-    //        true,
-    //        false,
-    //        '',
-    //        obj,
-    //        arr
-    //    ];
-    //    unique = xs.unique(x);
-    //    strictEqual(JSON.stringify(unique), '[1,2,{},null,true,false,"",[]]');
-    //    strictEqual(xs.has(unique, arr), true);
-    //    strictEqual(xs.has(unique, obj), true);
-
-    //    //test empty array list
-    //    x = [];
-    //    unique = xs.unique(x);
-    //    strictEqual(JSON.stringify(unique), '[]');
-
-    //    //test object list
-    //    x = {
-    //        a: 1,
-    //        b: 1,
-    //        c: true,
-    //        d: arr,
-    //        e: arr,
-    //        f: obj,
-    //        g: obj
-    //    };
-    //    unique = xs.unique(x);
-    //    strictEqual(JSON.stringify(unique), '{"a":1,"c":true,"d":[],"f":{}}');
-    //    strictEqual(xs.has(unique, arr), true);
-    //    strictEqual(xs.has(unique, obj), true);
-
-    //    //test empty object list
-    //    x = {};
-    //    unique = xs.unique(x);
-    //    strictEqual(JSON.stringify(unique), '{}');
-    //});
-
-    //test('union', function () {
-    //    //init test variables
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        null,
-    //        undefined,
-    //        1,
-    //        2,
-    //        [3],
-    //        [
-    //            4,
-    //            5
-    //        ]
-    //    ];
-    //    strictEqual(JSON.stringify(xs.union.apply(xs, x)), '[null,null,1,2,3,4,5]');
-
-    //    strictEqual(JSON.stringify(xs.union([], [], [])), '[]');
-
-    //    strictEqual(JSON.stringify(xs.union([])), '[]');
-
-    //    //test object list
-    //    x = [
-    //        { a: 1 },
-    //        { b: 2 },
-    //        [
-    //            { c: 3 }
-    //        ],
-    //        [
-    //            { d: 4 }
-    //        ],
-    //        [
-    //            { e: 5 },
-    //            { f: 6 }
-    //        ]
-    //    ];
-    //    strictEqual(JSON.stringify(xs.union.apply(xs, x)), '{"a":1,"b":2,"c":3,"d":4,"e":5,"f":6}');
-
-    //    strictEqual(JSON.stringify(xs.union({}, {}, [
-    //        {},
-    //        {}
-    //    ])), '{}');
-
-    //    strictEqual(JSON.stringify(xs.union({})), '{}');
-    //});
-
-    //test('intersection', function () {
-    //    //init test variables
-    //    var arr = [];
-    //    var obj = {};
-    //    var x;
-    //    var intersection;
-
-    //    //test array list
-    //    x = [
-    //        [
-    //            1,
-    //            2,
-    //            3,
-    //            4,
-    //            5,
-    //            null,
-    //            true,
-    //            false,
-    //            '',
-    //            obj,
-    //            arr
-    //        ],
-    //        [
-    //            2,
-    //            3,
-    //            4,
-    //            5,
-    //            null,
-    //            false,
-    //            '',
-    //            obj,
-    //            arr
-    //        ],
-    //        [
-    //            1,
-    //            7,
-    //            3,
-    //            4,
-    //            null,
-    //            5,
-    //            false,
-    //            obj,
-    //            arr
-    //        ],
-    //        [
-    //            7,
-    //            2,
-    //            3,
-    //            4,
-    //            5,
-    //            false,
-    //            true,
-    //            obj,
-    //            arr,
-    //            null
-    //        ]
-    //    ];
-    //    intersection = xs.intersection(x[0], x[1], x[2], x[3]);
-    //    strictEqual(JSON.stringify(intersection), '[3,4,5,null,false,{},[]]');
-    //    strictEqual(xs.has(intersection, arr), true);
-    //    strictEqual(xs.has(intersection, obj), true);
-
-    //    intersection = xs.intersection([], obj, arr);
-    //    strictEqual(JSON.stringify(intersection), '{}');
-
-    //    intersection = xs.intersection([arr], [
-    //        obj,
-    //        arr
-    //    ]);
-    //    strictEqual(xs.has(intersection, arr), true);
-
-    //    intersection = xs.intersection();
-    //    strictEqual(JSON.stringify(intersection), '{}');
-
-    //    //test object list
-    //    var a = { a: 1 };
-    //    var b = { b: 2 };
-    //    var c = [
-    //        { c: 3 }
-    //    ];
-    //    var d = [
-    //        { d: 4 }
-    //    ];
-    //    var e = [
-    //        { e: 5 },
-    //        { f: 6 }
-    //    ];
-
-    //    x = [
-    //        { a: a, b: b, c: c, d: d, e: e, f: null, g: true, h: false, i: '', j: obj, k: arr },
-    //        { b: b, c: c, d: d, e: e, f: null, g: false, h: obj, i: arr },
-    //        { a: a, c: c, d: d, e: e, f: null, g: true, h: false, i: '', j: obj, k: arr }
-    //    ];
-    //    intersection = xs.intersection(x[0], x[1], x[2]);
-    //    var correct = '{"c":[{"c":3}],"d":[{"d":4}],"e":[{"e":5},{"f":6}],"f":null,"h":false,"j":{},"k":[]}';
-    //    strictEqual(JSON.stringify(intersection), correct);
-    //    strictEqual(xs.has(intersection, arr), true);
-    //    strictEqual(xs.has(intersection, obj), true);
-    //    strictEqual(xs.has(intersection, c), true);
-    //    strictEqual(xs.has(intersection, d), true);
-    //    strictEqual(xs.has(intersection, e), true);
-
-    //    intersection = xs.intersection({ a: a }, { a: a });
-    //    strictEqual(JSON.stringify(intersection), '{"a":{"a":1}}');
-
-    //    intersection = xs.intersection();
-    //    strictEqual(JSON.stringify(intersection), '{}');
-    //});
-
-    //test('difference', function () {
-    //    //init test variables
-    //    var arr = [];
-    //    var obj = {};
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        [
-    //            1,
-    //            2,
-    //            3,
-    //            4,
-    //            5,
-    //            8,
-    //            null,
-    //            true,
-    //            false,
-    //            '',
-    //            obj,
-    //            arr
-    //        ],
-    //        [
-    //            2,
-    //            3,
-    //            4,
-    //            5,
-    //            null,
-    //            false,
-    //            '',
-    //            obj,
-    //            arr
-    //        ],
-    //        [
-    //            1,
-    //            7,
-    //            3,
-    //            4,
-    //            null,
-    //            5,
-    //            false,
-    //            obj,
-    //            arr
-    //        ],
-    //        [
-    //            7,
-    //            2,
-    //            3,
-    //            4,
-    //            5,
-    //            false,
-    //            true,
-    //            obj,
-    //            arr,
-    //            null
-    //        ]
-    //    ];
-
-    //    var diff = xs.difference(x[0], x[1], x[2], x[3]);
-    //    strictEqual(JSON.stringify(diff), '[8]');
-
-    //    diff = xs.difference(x[0], []);
-    //    strictEqual(JSON.stringify(diff), JSON.stringify(x[0]));
-
-    //    diff = xs.difference([], x[0]);
-    //    strictEqual(JSON.stringify(diff), JSON.stringify([]));
-
-    //    diff = xs.difference([]);
-    //    strictEqual(JSON.stringify(diff), JSON.stringify([]));
-
-    //    //test object list
-    //    var a = { a: 1 };
-    //    var b = { b: 2 };
-    //    var c = [
-    //        { c: 3 }
-    //    ];
-    //    var d = [
-    //        { d: 4 }
-    //    ];
-    //    var e = [
-    //        { e: 5 },
-    //        { f: 6 }
-    //    ];
-
-    //    x = [
-    //        { a: a, b: b, c: c, d: d, e: e, f: null, g: true, h: false, i: '', j: obj, k: arr },
-    //        { b: b, c: c, d: d, f: null, g: true, j: obj, k: arr },
-    //        { c: c, d: d, f: null, g: true }
-    //    ];
-
-    //    diff = xs.difference(x[0], x[1], x[2]);
-    //    strictEqual(JSON.stringify(diff), '{"a":{"a":1},"e":[{"e":5},{"f":6}],"h":false,"i":""}');
-
-    //    diff = xs.difference(x[0], {});
-    //    strictEqual(JSON.stringify(diff), JSON.stringify(x[0]));
-
-    //    diff = xs.difference({}, x[0]);
-    //    strictEqual(JSON.stringify(diff), JSON.stringify({}));
-
-    //    diff = xs.difference({});
-    //    strictEqual(JSON.stringify(diff), JSON.stringify({}));
-    //});
-
-    //test('pick', function () {
-    //    //init test variables
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-    //    var correct = '[{"x":1,"y":2},{"x":2,"y":2}]';
-    //    var correctKeys = '[0,1]';
-
-    //    var clone = xs.pick(x, 0, 1);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.pick(x, [0], [1]);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.pick(x, [
-    //        0,
-    //        1
-    //    ]);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.pick(x);
-    //    strictEqual(JSON.stringify(clone), '[]');
-
-    //    clone = xs.pick(x, 'a');
-    //    strictEqual(JSON.stringify(clone), '[]');
-
-    //    clone = xs.pick([], 'a');
-    //    strictEqual(JSON.stringify(clone), '[]');
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-    //    correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}';
-    //    correctKeys = '["a","b"]';
-
-    //    clone = xs.pick(x, 'a', 'b', 'e');
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.pick(x, ['a'], ['b']);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.pick(x, [
-    //        'a',
-    //        'b'
-    //    ]);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.pick(x);
-    //    strictEqual(JSON.stringify(clone), '{}');
-
-    //    clone = xs.pick(x, 'n');
-    //    strictEqual(JSON.stringify(clone), '{}');
-
-    //    clone = xs.pick({}, 'n');
-    //    strictEqual(JSON.stringify(clone), '{}');
-    //});
-
-    //test('omit', function () {
-    //    //init test variables
-    //    var x;
-
-    //    //test array list
-    //    x = [
-    //        {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    ];
-    //    var correct = '[{"x":1,"y":2},{"x":2,"y":2}]';
-    //    var correctKeys = '[0,1]';
-
-    //    var clone = xs.omit(x, 2, 3);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.omit(x, [2], [3]);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.omit(x, [
-    //        2,
-    //        3
-    //    ]);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.omit(x);
-    //    strictEqual(JSON.stringify(clone), JSON.stringify(x));
-
-    //    clone = xs.omit(x, 'a');
-    //    strictEqual(JSON.stringify(clone), JSON.stringify(x));
-
-    //    clone = xs.omit([], 'a');
-    //    strictEqual(JSON.stringify(clone), '[]');
-
-    //    //test object list
-    //    x = {
-    //        a: {
-    //            x: 1,
-    //            y: 2
-    //        },
-    //        b: {
-    //            x: 2,
-    //            y: 2
-    //        },
-    //        c: {
-    //            x: 2,
-    //            y: 1
-    //        },
-    //        d: {
-    //            x: 1,
-    //            y: 1
-    //        }
-    //    };
-    //    correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}';
-    //    correctKeys = '["a","b"]';
-
-    //    clone = xs.omit(x, 'c', 'd', 'e');
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.omit(x, ['c'], ['d']);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.omit(x, [
-    //        'c',
-    //        'd'
-    //    ]);
-    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
-    //    strictEqual(JSON.stringify(clone), correct);
-
-    //    clone = xs.omit(x);
-    //    strictEqual(JSON.stringify(clone), JSON.stringify(x));
-
-    //    clone = xs.omit(x, 'n');
-    //    strictEqual(JSON.stringify(clone), JSON.stringify(x));
-
-    //    clone = xs.omit({}, 'n');
-    //    strictEqual(JSON.stringify(clone), '{}');
-    //});
+    test('some', function () {
+        //init test variables
+        var collection;
+
+        //test array list
+        collection = new xs.core.Collection([
+            {
+                x: 1,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 1
+            },
+            {
+                x: 1,
+                y: 1
+            }
+        ]);
+
+        //negative
+        //true
+        strictEqual(collection.some(function (value) {
+            return value.x == 1 && value.y == 3;
+        }, 0), true);
+        //false
+        strictEqual(collection.some(function (value) {
+            return value.x == 1 && value.y == 1;
+        }, 0), false);
+
+        //without count
+        strictEqual(collection.some(function (value) {
+            return value.x == 1 && value.y == 1;
+        }), true);
+
+        //positive
+        //true
+        strictEqual(collection.some(function (value) {
+            return value.x == 1;
+        }, 2), true);
+        //false
+        strictEqual(collection.some(function (value) {
+            return value.x == 1 && value.y == 1;
+        }, 2), false);
+
+
+        //test object list
+        collection = new xs.core.Collection({
+            a: {
+                x: 1,
+                y: 2
+            },
+            b: {
+                x: 2,
+                y: 2
+            },
+            c: {
+                x: 2,
+                y: 1
+            },
+            d: {
+                x: 1,
+                y: 1
+            }
+        });
+
+        //negative
+        //true
+        strictEqual(collection.some(function (value) {
+            return value.x == 1 && value.y == 3;
+        }, 0), true);
+        //false
+        strictEqual(collection.some(function (value) {
+            return value.x == 1 && value.y == 1;
+        }, 0), false);
+
+        //without count
+        strictEqual(collection.some(function (value) {
+            return value.x == 1 && value.y == 1;
+        }), true);
+
+        //positive
+        //true
+        strictEqual(collection.some(function (value) {
+            return value.x == 1;
+        }, 2), true);
+        //false
+        strictEqual(collection.some(function (value) {
+            return value.x == 1 && value.y == 1;
+        }, 2), false);
+    });
 });
