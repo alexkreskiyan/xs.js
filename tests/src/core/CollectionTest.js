@@ -1075,4 +1075,250 @@ module('xs.core.Collection', function () {
             return value.x == 1 && value.y == 1;
         }, 2), false);
     });
+
+    test('unique', function () {
+        //init test variables
+        var arr = [];
+        var obj = {};
+        var collection, unique;
+
+        //test array
+        collection = new xs.core.Collection([
+            1,
+            1,
+            2,
+            2,
+            obj,
+            null,
+            true,
+            false,
+            '',
+            obj,
+            arr
+        ]);
+        collection.unique();
+        strictEqual(JSON.stringify(collection.values()), '[1,2,{},null,true,false,"",[]]');
+        strictEqual(collection.has(arr), true);
+        strictEqual(collection.has(obj), true);
+
+        //test empty array
+        collection = new xs.core.Collection([]);
+        collection.unique();
+        strictEqual(JSON.stringify(collection.values()), '[]');
+
+        //test object
+        collection = new xs.core.Collection({
+            a: 1,
+            b: 1,
+            c: true,
+            d: arr,
+            e: arr,
+            f: obj,
+            g: obj
+        });
+        collection.unique();
+        strictEqual(JSON.stringify(collection.keys()), '["a","c","d","f"]');
+        strictEqual(JSON.stringify(collection.values()), '[1,true,[],{}]');
+        strictEqual(collection.has(arr), true);
+        strictEqual(collection.has(obj), true);
+
+        //test empty object
+        collection = new xs.core.Collection({});
+        collection.unique();
+        strictEqual(JSON.stringify(collection.values()), '[]');
+    });
+
+    //test('pick', function () {
+    //    //init test variables
+    //    var collection;
+
+    //    //test array list
+    //    collection = new xs.core.Collection([
+    //        {
+    //            x: 1,
+    //            y: 2
+    //        },
+    //        {
+    //            x: 2,
+    //            y: 2
+    //        },
+    //        {
+    //            x: 2,
+    //            y: 1
+    //        },
+    //        {
+    //            x: 1,
+    //            y: 1
+    //        }
+    //    ]);
+    //    var correct = '[{"x":1,"y":2},{"x":2,"y":2}]';
+    //    var correctKeys = '[0,1]';
+
+    //    var clone = xs.pick(x, 0, 1);
+    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    //    strictEqual(JSON.stringify(clone), correct);
+
+    //    clone = xs.pick(x, [0], [1]);
+    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    //    strictEqual(JSON.stringify(clone), correct);
+
+    //    clone = xs.pick(x, [
+    //        0,
+    //        1
+    //    ]);
+    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    //    strictEqual(JSON.stringify(clone), correct);
+
+    //    clone = xs.pick(x);
+    //    strictEqual(JSON.stringify(clone), '[]');
+
+    //    clone = xs.pick(x, 'a');
+    //    strictEqual(JSON.stringify(clone), '[]');
+
+    //    clone = xs.pick([], 'a');
+    //    strictEqual(JSON.stringify(clone), '[]');
+
+    //    //test object list
+    //    x = {
+    //        a: {
+    //            x: 1,
+    //            y: 2
+    //        },
+    //        b: {
+    //            x: 2,
+    //            y: 2
+    //        },
+    //        c: {
+    //            x: 2,
+    //            y: 1
+    //        },
+    //        d: {
+    //            x: 1,
+    //            y: 1
+    //        }
+    //    };
+    //    correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}';
+    //    correctKeys = '["a","b"]';
+
+    //    clone = xs.pick(x, 'a', 'b', 'e');
+    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    //    strictEqual(JSON.stringify(clone), correct);
+
+    //    clone = xs.pick(x, ['a'], ['b']);
+    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    //    strictEqual(JSON.stringify(clone), correct);
+
+    //    clone = xs.pick(x, [
+    //        'a',
+    //        'b'
+    //    ]);
+    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    //    strictEqual(JSON.stringify(clone), correct);
+
+    //    clone = xs.pick(x);
+    //    strictEqual(JSON.stringify(clone), '{}');
+
+    //    clone = xs.pick(x, 'n');
+    //    strictEqual(JSON.stringify(clone), '{}');
+
+    //    clone = xs.pick({}, 'n');
+    //    strictEqual(JSON.stringify(clone), '{}');
+    //});
+
+    //test('omit', function () {
+    //    //init test variables
+    //    var x;
+
+    //    //test array list
+    //    x = [
+    //        {
+    //            x: 1,
+    //            y: 2
+    //        },
+    //        {
+    //            x: 2,
+    //            y: 2
+    //        },
+    //        {
+    //            x: 2,
+    //            y: 1
+    //        },
+    //        {
+    //            x: 1,
+    //            y: 1
+    //        }
+    //    ];
+    //    var correct = '[{"x":1,"y":2},{"x":2,"y":2}]';
+    //    var correctKeys = '[0,1]';
+
+    //    var clone = xs.omit(x, 2, 3);
+    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    //    strictEqual(JSON.stringify(clone), correct);
+
+    //    clone = xs.omit(x, [2], [3]);
+    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    //    strictEqual(JSON.stringify(clone), correct);
+
+    //    clone = xs.omit(x, [
+    //        2,
+    //        3
+    //    ]);
+    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    //    strictEqual(JSON.stringify(clone), correct);
+
+    //    clone = xs.omit(x);
+    //    strictEqual(JSON.stringify(clone), JSON.stringify(x));
+
+    //    clone = xs.omit(x, 'a');
+    //    strictEqual(JSON.stringify(clone), JSON.stringify(x));
+
+    //    clone = xs.omit([], 'a');
+    //    strictEqual(JSON.stringify(clone), '[]');
+
+    //    //test object list
+    //    x = {
+    //        a: {
+    //            x: 1,
+    //            y: 2
+    //        },
+    //        b: {
+    //            x: 2,
+    //            y: 2
+    //        },
+    //        c: {
+    //            x: 2,
+    //            y: 1
+    //        },
+    //        d: {
+    //            x: 1,
+    //            y: 1
+    //        }
+    //    };
+    //    correct = '{"a":{"x":1,"y":2},"b":{"x":2,"y":2}}';
+    //    correctKeys = '["a","b"]';
+
+    //    clone = xs.omit(x, 'c', 'd', 'e');
+    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    //    strictEqual(JSON.stringify(clone), correct);
+
+    //    clone = xs.omit(x, ['c'], ['d']);
+    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    //    strictEqual(JSON.stringify(clone), correct);
+
+    //    clone = xs.omit(x, [
+    //        'c',
+    //        'd'
+    //    ]);
+    //    strictEqual(JSON.stringify(xs.keys(clone)), correctKeys);
+    //    strictEqual(JSON.stringify(clone), correct);
+
+    //    clone = xs.omit(x);
+    //    strictEqual(JSON.stringify(clone), JSON.stringify(x));
+
+    //    clone = xs.omit(x, 'n');
+    //    strictEqual(JSON.stringify(clone), JSON.stringify(x));
+
+    //    clone = xs.omit({}, 'n');
+    //    strictEqual(JSON.stringify(clone), '{}');
+    //});
 });

@@ -2231,6 +2231,114 @@
     };
 
     /**
+     * Removes all duplicates from collection
+     *
+     * For example:
+     *
+     *     //for Array
+     *     console.log(new xs.core.Collection([
+     *         1,
+     *         0,
+     *         1,
+     *         2,
+     *         {},
+     *         {},
+     *         3,
+     *         3,
+     *         1,
+     *         4
+     *     ]).unique().values());
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    0,
+     *     //    2,
+     *     //    {},
+     *     //    {},
+     *     //    3,
+     *     //    4
+     *     //]
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         g: 0,
+     *         b: 1,
+     *         f: 2,
+     *         i: {},
+     *         m: {},
+     *         d: 3,
+     *         e: 3,
+     *         c: 1,
+     *         h: 4
+     *     }).unique();
+     *     console.log(collection.keys());
+     *     //outputs:
+     *     //[
+     *     //    'a',
+     *     //    'g',
+     *     //    'f',
+     *     //    'i',
+     *     //    'm',
+     *     //    'd',
+     *     //    'h'
+     *     //]
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    1,
+     *     //    0,
+     *     //    2,
+     *     //    {},
+     *     //    {},
+     *     //    3,
+     *     //    4
+     *     //]
+     *
+     * @method unique
+     *
+     * @chainable
+     */
+    collection.prototype.unique = function () {
+        var me = this, values = [], i = 0, item, length = me.items.length;
+
+        while (i < length) {
+            item = me.items[i];
+
+            //continue to next if no match
+            if (values.indexOf(item.value) < 0) {
+
+                //add value to values
+                values.push(item.value);
+
+                //increment index
+                i++;
+
+                continue;
+            }
+
+            //delete item from me.items
+            me.items.splice(i, 1);
+
+            //decrement length
+            length--;
+        }
+
+        //update indexes
+        _updateIndexes.call(me, 0);
+
+        return me;
+    };
+
+    collection.prototype.pick = function () {
+
+    };
+
+    collection.prototype.omit = function () {
+
+    };
+
+    /**
      * Updates indexes starting from item with given index
      * @ignore
      *
