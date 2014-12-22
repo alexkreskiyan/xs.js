@@ -1080,7 +1080,7 @@ module('xs.core.Collection', function () {
         //init test variables
         var arr = [];
         var obj = {};
-        var collection, unique;
+        var collection;
 
         //test array
         collection = new xs.core.Collection([
@@ -1240,5 +1240,31 @@ module('xs.core.Collection', function () {
         omitted = collection.omit(['b', 'a', 'd']);
         strictEqual(JSON.stringify(omitted.keys()), correctKeys);
         strictEqual(JSON.stringify(omitted.values()), correctValues);
+    });
+
+    test('toSource', function () {
+        //init test variables
+        var collection;
+        //check simple array list
+        collection = new xs.core.Collection([
+            1,
+            3
+        ]);
+        strictEqual(JSON.stringify(collection.toSource()), '{"0":1,"1":3}');
+
+        //check empty object list
+        collection = new xs.core.Collection([]);
+        strictEqual(JSON.stringify(collection.toSource()), '{}');
+
+        //check simple object list
+        collection = new xs.core.Collection({
+            x: 1,
+            b: '2'
+        });
+        strictEqual(JSON.stringify(collection.toSource()), '{"x":1,"b":"2"}');
+
+        //check empty object list
+        collection = new xs.core.Collection({});
+        strictEqual(JSON.stringify(collection.toSource()), '{}');
     });
 });

@@ -32,8 +32,6 @@
     var debug = xs.core.Debug = new (function () {
         var me = this;
 
-        var _concatenate = Function.prototype.apply.bind(Array.prototype.concat);
-
         /**
          * Debug state
          *

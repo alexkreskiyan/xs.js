@@ -2158,7 +2158,7 @@
      * @param {Object} [scope] optional scope
      *
      * @return {Boolean} whether some values pass tester function
-     * 
+     *
      * @throws {Error} Error is thrown:
      *
      * - if tester is not a function
@@ -2383,7 +2383,7 @@
      * @param {String[]|Number[]} keys list with keys of picked items
      *
      * @return {xs.core.Collection} collection of picked items
-     * 
+     *
      * @throws {Error} Error is thrown:
      *
      * - if keys is not array
@@ -2486,7 +2486,7 @@
      * @param {String[]|Number[]} keys list with keys of omitted items
      *
      * @return {xs.core.Collection} collection of without omitted items
-     * 
+     *
      * @throws {Error} Error is thrown:
      *
      * - if keys is not array
@@ -2550,6 +2550,44 @@
         _updateIndexes.call(omitted, 0);
 
         return omitted;
+    };
+
+    /**
+     * Returns collection as hash of key=>value pairs
+     *
+     * For example:
+     *
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         2,
+     *         3
+     *     ]);
+     *     console.log(collection.toSource()); //{0: 1, 1: 2, 2: 3}
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         b: 2,
+     *         c: 3
+     *     });
+     *     console.log(collection.toSource()); //{a: 1, b: 2, c: 3}
+     *
+     * @method asHash
+     *
+     * @return {Object} collection as hash
+     */
+    collection.prototype.toSource = function () {
+        var me = this;
+
+        var source = {}, length = me.items.length, item;
+
+        for (var i = 0; i < length; i++) {
+            item = me.items[i];
+            source[item.key] = item.value;
+        }
+
+        return source;
     };
 
     /**
