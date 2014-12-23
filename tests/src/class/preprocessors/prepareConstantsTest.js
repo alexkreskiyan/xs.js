@@ -22,8 +22,10 @@ module('xs.class.preprocessors.prepareConstants', function () {
         });
 
         //save
-        me.BaseSave = xs.ClassManager.get(me.BaseName);
-        me.BaseSave && xs.ClassManager.remove(me.BaseName);
+        if (xs.ClassManager.has(me.BaseName)) {
+            me.BaseSave = xs.ClassManager.get(me.BaseName);
+            xs.ClassManager.remove(me.BaseName);
+        }
 
         //add to ClassManager
         xs.ClassManager.add(me.BaseName, me.Base);
@@ -39,8 +41,10 @@ module('xs.class.preprocessors.prepareConstants', function () {
         });
 
         //save
-        me.ParentSave = xs.ClassManager.get(me.ParentName);
-        me.ParentSave && xs.ClassManager.remove(me.ParentName);
+        if (xs.ClassManager.has(me.ParentName)) {
+            me.ParentSave = xs.ClassManager.get(me.ParentName);
+            xs.ClassManager.remove(me.ParentName);
+        }
 
         //add to ClassManager
         xs.ClassManager.add(me.ParentName, me.Parent);
@@ -55,8 +59,10 @@ module('xs.class.preprocessors.prepareConstants', function () {
         });
 
         //save
-        me.ChildSave = xs.ClassManager.get(me.ChildName);
-        me.ChildSave && xs.ClassManager.remove(me.ChildName);
+        if (xs.ClassManager.has(me.ChildName)) {
+            me.ChildSave = xs.ClassManager.get(me.ChildName);
+            xs.ClassManager.remove(me.ChildName);
+        }
 
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
@@ -72,16 +78,16 @@ module('xs.class.preprocessors.prepareConstants', function () {
         var ns = tests.class.preprocessors.prepareConstants;
 
         //Base
-        strictEqual(ns.Base.descriptor.constants.a, 1);
+        strictEqual(ns.Base.descriptor.constants.at('a'), 1);
 
         //Parent
-        strictEqual(ns.Parent.descriptor.constants.a, 2);
-        strictEqual(ns.Parent.descriptor.constants.b, 3);
+        strictEqual(ns.Parent.descriptor.constants.at('a'), 2);
+        strictEqual(ns.Parent.descriptor.constants.at('b'), 3);
 
         //Child
-        strictEqual(ns.Child.descriptor.constants.a, 2);
-        strictEqual(ns.Child.descriptor.constants.b, 3);
-        strictEqual(ns.Child.descriptor.constants.c, 5);
+        strictEqual(ns.Child.descriptor.constants.at('a'), 2);
+        strictEqual(ns.Child.descriptor.constants.at('b'), 3);
+        strictEqual(ns.Child.descriptor.constants.at('c'), 5);
     }, function () {
         var me = this;
 

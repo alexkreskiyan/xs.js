@@ -23,8 +23,10 @@ module('xs.class.preprocessors.prepareMixins', function () {
         });
 
         //save
-        me.ClassSave = xs.ClassManager.get(me.ClassName);
-        me.ClassSave && xs.ClassManager.remove(me.ClassName);
+        if (xs.ClassManager.has(me.ClassName)) {
+            me.ClassSave = xs.ClassManager.get(me.ClassName);
+            xs.ClassManager.remove(me.ClassName);
+        }
 
         //add to ClassManager
         xs.ClassManager.add(me.ClassName, me.Class);
@@ -37,7 +39,7 @@ module('xs.class.preprocessors.prepareMixins', function () {
 
         //check chain
         strictEqual(xs.size(ns.Class.descriptor.mixins), 1);
-        strictEqual(ns.Class.descriptor.mixins.demo, 'xs.Base');
+        strictEqual(ns.Class.descriptor.mixins.at('demo'), 'xs.Base');
 
     }, function () {
         var me = this;

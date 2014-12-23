@@ -39,7 +39,8 @@
         mixins.each(function (name, alias, list) {
 
             //resolve name with namespace and update list
-            name = list[alias] = resolveName(name);
+            name = resolveName(name);
+            list.set(alias, name);
 
             //if Mixin is not defined - throw error
             if (!xs.ClassManager.has(name)) {
@@ -133,9 +134,18 @@
      */
     var _mixinSection = function (type, target, mixin) {
         //find differing intersections
-        xs.each(target, function (targetValue, targetName) {
-            var mixinValue = mixin[targetName];
-            if (xs.isDefined(mixinValue) && mixinValue !== targetValue) {
+        target.each(function (targetValue, targetName) {
+            //continue if not intersection
+            if (!mixin.hasKey(targetName)) {
+
+                return;
+            }
+
+            //get mixed value
+            var mixinValue = mixin.at(targetName);
+
+            //if values differ - its error
+            if (mixinValue !== targetValue) {
                 throw new MixinError(type + ' "' + targetName + '" is already declared');
             }
         });

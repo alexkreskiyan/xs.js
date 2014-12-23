@@ -27,8 +27,10 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         });
 
         //save
-        me.BaseSave = xs.ClassManager.get(me.BaseName);
-        me.BaseSave && xs.ClassManager.remove(me.BaseName);
+        if (xs.ClassManager.has(me.BaseName)) {
+            me.BaseSave = xs.ClassManager.get(me.BaseName);
+            xs.ClassManager.remove(me.BaseName);
+        }
 
         //add to ClassManager
         xs.ClassManager.add(me.BaseName, me.Base);
@@ -52,8 +54,10 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         });
 
         //save
-        me.ParentSave = xs.ClassManager.get(me.ParentName);
-        me.ParentSave && xs.ClassManager.remove(me.ParentName);
+        if (xs.ClassManager.has(me.ParentName)) {
+            me.ParentSave = xs.ClassManager.get(me.ParentName);
+            xs.ClassManager.remove(me.ParentName);
+        }
 
         //add to ClassManager
         xs.ClassManager.add(me.ParentName, me.Parent);
@@ -72,8 +76,10 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         });
 
         //save
-        me.ChildSave = xs.ClassManager.get(me.ChildName);
-        me.ChildSave && xs.ClassManager.remove(me.ChildName);
+        if (xs.ClassManager.has(me.ChildName)) {
+            me.ChildSave = xs.ClassManager.get(me.ChildName);
+            xs.ClassManager.remove(me.ChildName);
+        }
 
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
@@ -97,41 +103,41 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         //Base
         methods = ns.Base.descriptor.static.methods;
         //a
-        strictEqual(methods.a.value, me.baseA);
-        strictEqual(methods.a.writable, false);
-        strictEqual(methods.a.configurable, false);
-        strictEqual(methods.a.enumerable, true);
+        strictEqual(methods.at('a').value, me.baseA);
+        strictEqual(methods.at('a').writable, false);
+        strictEqual(methods.at('a').configurable, false);
+        strictEqual(methods.at('a').enumerable, true);
 
         //Parent
         methods = ns.Parent.descriptor.static.methods;
         //a
-        strictEqual(methods.a.value, me.parentA);
-        strictEqual(methods.a.writable, false);
-        strictEqual(methods.a.configurable, false);
-        strictEqual(methods.a.enumerable, true);
+        strictEqual(methods.at('a').value, me.parentA);
+        strictEqual(methods.at('a').writable, false);
+        strictEqual(methods.at('a').configurable, false);
+        strictEqual(methods.at('a').enumerable, true);
         //b
-        strictEqual(methods.b.value, me.parentB);
-        strictEqual(methods.b.writable, false);
-        strictEqual(methods.b.configurable, false);
-        strictEqual(methods.b.enumerable, true);
+        strictEqual(methods.at('b').value, me.parentB);
+        strictEqual(methods.at('b').writable, false);
+        strictEqual(methods.at('b').configurable, false);
+        strictEqual(methods.at('b').enumerable, true);
 
         //Child
         methods = ns.Child.descriptor.static.methods;
         //a
-        strictEqual(methods.a.value, me.parentA);
-        strictEqual(methods.a.writable, false);
-        strictEqual(methods.a.configurable, false);
-        strictEqual(methods.a.enumerable, true);
+        strictEqual(methods.at('a').value, me.parentA);
+        strictEqual(methods.at('a').writable, false);
+        strictEqual(methods.at('a').configurable, false);
+        strictEqual(methods.at('a').enumerable, true);
         //b
-        strictEqual(methods.b.value, me.parentB);
-        strictEqual(methods.b.writable, false);
-        strictEqual(methods.b.configurable, false);
-        strictEqual(methods.b.enumerable, true);
+        strictEqual(methods.at('b').value, me.parentB);
+        strictEqual(methods.at('b').writable, false);
+        strictEqual(methods.at('b').configurable, false);
+        strictEqual(methods.at('b').enumerable, true);
         //c
-        strictEqual(methods.c.value, me.childC);
-        strictEqual(methods.c.writable, false);
-        strictEqual(methods.c.configurable, false);
-        strictEqual(methods.c.enumerable, true);
+        strictEqual(methods.at('c').value, me.childC);
+        strictEqual(methods.at('c').writable, false);
+        strictEqual(methods.at('c').configurable, false);
+        strictEqual(methods.at('c').enumerable, true);
 
     }, function () {
         var me = this;

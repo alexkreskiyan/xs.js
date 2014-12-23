@@ -28,8 +28,10 @@ module('xs.class.preprocessors.prepareProperties', function () {
         });
 
         //save
-        me.BaseSave = xs.ClassManager.get(me.BaseName);
-        me.BaseSave && xs.ClassManager.remove(me.BaseName);
+        if (xs.ClassManager.has(me.BaseName)) {
+            me.BaseSave = xs.ClassManager.get(me.BaseName);
+            xs.ClassManager.remove(me.BaseName);
+        }
 
         //add to ClassManager
         xs.ClassManager.add(me.BaseName, me.Base);
@@ -57,8 +59,10 @@ module('xs.class.preprocessors.prepareProperties', function () {
         });
 
         //save
-        me.ParentSave = xs.ClassManager.get(me.ParentName);
-        me.ParentSave && xs.ClassManager.remove(me.ParentName);
+        if (xs.ClassManager.has(me.ParentName)) {
+            me.ParentSave = xs.ClassManager.get(me.ParentName);
+            xs.ClassManager.remove(me.ParentName);
+        }
 
         //add to ClassManager
         xs.ClassManager.add(me.ParentName, me.Parent);
@@ -86,8 +90,10 @@ module('xs.class.preprocessors.prepareProperties', function () {
         });
 
         //save
-        me.ChildSave = xs.ClassManager.get(me.ChildName);
-        me.ChildSave && xs.ClassManager.remove(me.ChildName);
+        if (xs.ClassManager.has(me.ChildName)) {
+            me.ChildSave = xs.ClassManager.get(me.ChildName);
+            xs.ClassManager.remove(me.ChildName);
+        }
 
         //add to ClassManager
         xs.ClassManager.add(me.ChildName, me.Child);
@@ -111,37 +117,37 @@ module('xs.class.preprocessors.prepareProperties', function () {
         //Base
         properties = ns.Base.descriptor.properties;
         //a
-        strictEqual(properties.a.get, me.baseAGet);
-        strictEqual(properties.a.configurable, false);
-        strictEqual(properties.a.enumerable, true);
+        strictEqual(properties.at('a').get, me.baseAGet);
+        strictEqual(properties.at('a').configurable, false);
+        strictEqual(properties.at('a').enumerable, true);
 
         //Parent
         properties = ns.Parent.descriptor.properties;
         //a
-        strictEqual(properties.a.get, me.parentAGet);
-        strictEqual(properties.a.configurable, false);
-        strictEqual(properties.a.enumerable, true);
+        strictEqual(properties.at('a').get, me.parentAGet);
+        strictEqual(properties.at('a').configurable, false);
+        strictEqual(properties.at('a').enumerable, true);
         //b
-        strictEqual(properties.b.set, me.parentBSet);
-        strictEqual(properties.b.configurable, false);
-        strictEqual(properties.b.enumerable, true);
+        strictEqual(properties.at('b').set, me.parentBSet);
+        strictEqual(properties.at('b').configurable, false);
+        strictEqual(properties.at('b').enumerable, true);
 
         //Child
         properties = ns.Child.descriptor.properties;
         //a
-        strictEqual(properties.a.value, 2);
-        strictEqual(properties.a.writable, true);
-        strictEqual(properties.a.configurable, false);
-        strictEqual(properties.a.enumerable, true);
+        strictEqual(properties.at('a').value, 2);
+        strictEqual(properties.at('a').writable, true);
+        strictEqual(properties.at('a').configurable, false);
+        strictEqual(properties.at('a').enumerable, true);
         //b
-        strictEqual(properties.b.set, me.parentBSet);
-        strictEqual(properties.b.configurable, false);
-        strictEqual(properties.b.enumerable, true);
+        strictEqual(properties.at('b').set, me.parentBSet);
+        strictEqual(properties.at('b').configurable, false);
+        strictEqual(properties.at('b').enumerable, true);
         //c
-        strictEqual(properties.c.get, me.childCGet);
-        strictEqual(properties.c.set, me.childCSet);
-        strictEqual(properties.c.configurable, false);
-        strictEqual(properties.c.enumerable, true);
+        strictEqual(properties.at('c').get, me.childCGet);
+        strictEqual(properties.at('c').set, me.childCSet);
+        strictEqual(properties.at('c').configurable, false);
+        strictEqual(properties.at('c').enumerable, true);
 
     }, function () {
         var me = this;

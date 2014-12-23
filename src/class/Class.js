@@ -264,16 +264,12 @@
                 me.privates = {};
 
                 //assign values
-                if (xs.isObject(descriptor.properties)) {
-                    var properties = descriptor.properties;
-                    var keys = Object.keys(properties);
-                    var i, length = keys.length, name, property;
+                var properties = descriptor.properties.items; //xs.core.Collection
+                var i, length = properties.length, name, item;
 
-                    for (i = 0; i < length; i++) {
-                        name = keys[i];
-                        property = properties[name];
-                        property.hasOwnProperty('value') && (me[name] = property.value);
-                    }
+                for (i = 0; i < length; i++) {
+                    item = properties[i];
+                    item.value.hasOwnProperty('value') && (me[item.key] = item.value.value);
                 }
 
                 //native constructor call
@@ -882,7 +878,7 @@
              */
             var _getMergedChains = function (chain) {
 
-                xs.log('xs.Class::dependencies::chains::getMergedChains. For ', chain.values().map(chain, function (Class) {
+                xs.log('xs.Class::dependencies::chains::getMergedChains. For ', chain.values().map(function (Class) {
                     return Class.label;
                 }));
                 //init merged array
