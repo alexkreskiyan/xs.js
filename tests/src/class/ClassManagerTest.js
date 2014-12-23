@@ -140,9 +140,9 @@ module('xs.ClassManager', function () {
         strictEqual(me.ClassOne.label, me.classOneName);
 
         //namespace ok
-        strictEqual(xs.keys(my.demo.first).toString(), 'ClassOne');
+        strictEqual(Object.keys(my.demo.first).toString(), 'ClassOne');
         strictEqual(my.demo.first.ClassOne, me.ClassOne);
-        strictEqual(xs.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne');
+        strictEqual(Object.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne');
         strictEqual(my.demo.first.ClassOne.namespace.ClassOne, me.ClassOne);
 
         //add class two
@@ -165,12 +165,12 @@ module('xs.ClassManager', function () {
         strictEqual(me.ClassTwo.label, me.classTwoName);
 
         //namespace ok
-        strictEqual(xs.keys(my.demo.first).toString(), 'ClassOne,ClassTwo');
+        strictEqual(Object.keys(my.demo.first).toString(), 'ClassOne,ClassTwo');
         strictEqual(my.demo.first.ClassTwo, me.ClassTwo);
-        strictEqual(xs.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne,ClassTwo');
+        strictEqual(Object.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne,ClassTwo');
         strictEqual(my.demo.first.ClassOne.namespace.ClassOne, me.ClassOne);
         strictEqual(my.demo.first.ClassOne.namespace.ClassTwo, me.ClassTwo);
-        strictEqual(xs.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassOne,ClassTwo');
+        strictEqual(Object.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassOne,ClassTwo');
         strictEqual(my.demo.first.ClassTwo.namespace.ClassOne, me.ClassOne);
         strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
 
@@ -195,7 +195,7 @@ module('xs.ClassManager', function () {
 
         //namespace ok
         strictEqual(window.ClassThree, me.ClassThree);
-        strictEqual(xs.keys(window.ClassThree.namespace).toString(), 'ClassThree');
+        strictEqual(Object.keys(window.ClassThree.namespace).toString(), 'ClassThree');
         strictEqual(window.ClassThree.namespace.ClassThree, me.ClassThree);
 
     }, function () {
@@ -257,12 +257,12 @@ module('xs.ClassManager', function () {
         var me = this;
 
         //test namespaces
-        strictEqual(xs.keys(my.demo.first).toString(), 'ClassOne,ClassTwo');
+        strictEqual(Object.keys(my.demo.first).toString(), 'ClassOne,ClassTwo');
         strictEqual(my.demo.first.ClassTwo, me.ClassTwo);
-        strictEqual(xs.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne,ClassTwo');
+        strictEqual(Object.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne,ClassTwo');
         strictEqual(my.demo.first.ClassOne.namespace.ClassOne, me.ClassOne);
         strictEqual(my.demo.first.ClassOne.namespace.ClassTwo, me.ClassTwo);
-        strictEqual(xs.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassOne,ClassTwo');
+        strictEqual(Object.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassOne,ClassTwo');
         strictEqual(my.demo.first.ClassTwo.namespace.ClassOne, me.ClassOne);
         strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
 
@@ -282,9 +282,9 @@ module('xs.ClassManager', function () {
 
         //namespace is cleaned
         strictEqual(xs.Attribute.defined(my.demo.first, 'ClassOne'), false);
-        strictEqual(xs.keys(my.demo.first).toString(), 'ClassTwo');
+        strictEqual(Object.keys(my.demo.first).toString(), 'ClassTwo');
         strictEqual(my.demo.first.ClassTwo, me.ClassTwo);
-        strictEqual(xs.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassTwo');
+        strictEqual(Object.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassTwo');
         strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
 
         //remove classTwo
@@ -303,7 +303,7 @@ module('xs.ClassManager', function () {
 
         //namespace is cleaned
         strictEqual(xs.Attribute.defined(window, 'my'), false);
-        strictEqual(xs.keys(me.ClassTwo.namespace).toString(), '');
+        strictEqual(Object.keys(me.ClassTwo.namespace).toString(), '');
 
         //remove classThree
         xs.ClassManager.remove(me.classThreeName);

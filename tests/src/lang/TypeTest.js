@@ -78,7 +78,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isObject(test.data), test.ok);
         });
     });
@@ -151,7 +151,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isArray(test.data), test.ok);
         });
     });
@@ -224,7 +224,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isFunction(test.data), test.ok);
         });
     });
@@ -297,7 +297,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isString(test.data), test.ok);
         });
     });
@@ -370,7 +370,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isNumber(test.data), test.ok);
         });
     });
@@ -443,7 +443,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isBoolean(test.data), test.ok);
         });
     });
@@ -520,7 +520,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isRegExp(test.data), test.ok);
         });
     });
@@ -597,7 +597,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isError(test.data), test.ok);
         });
     });
@@ -670,7 +670,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isNull(test.data), test.ok);
         });
     });
@@ -743,7 +743,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isIterable(test.data), test.ok);
         });
     });
@@ -816,7 +816,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isPrimitive(test.data), test.ok);
         });
     });
@@ -889,7 +889,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isNumeric(test.data), test.ok);
         });
     });
@@ -962,7 +962,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isDefined(test.data), test.ok);
         });
     });
@@ -1031,7 +1031,7 @@ module('xs.lang.Type', function () {
     }, function () {
         var me = this;
         //run test cases
-        xs.each(me.tests, function (test) {
+        me.tests.forEach(function (test) {
             strictEqual(xs.isEmpty(test.data), test.ok);
         });
     });

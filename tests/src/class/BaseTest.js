@@ -104,11 +104,11 @@ module('xs.Base', function () {
         var clone = sample.clone();
 
         //clone is equal by keys
-        strictEqual(JSON.stringify(xs.keys(clone)), JSON.stringify(xs.keys(sample)));
+        strictEqual(JSON.stringify(Object.keys(clone)), JSON.stringify(Object.keys(sample)));
 
         //values are equal
-        xs.each(sample, function (value, key) {
-            strictEqual(clone[key], value);
+        Object.keys(sample).forEach(function (key) {
+            strictEqual(clone[key], clone[key]);
         });
 
         //clone constructor is ok

@@ -1,8 +1,8 @@
 [
     "xs.lang.Type",
-    "xs.lang.List",
     "xs.lang.Object",
     "xs.lang.Array",
+    "xs.lang.List",
     "xs.lang.Attribute",
     "xs.lang.Function",
     "xs.lang.String",

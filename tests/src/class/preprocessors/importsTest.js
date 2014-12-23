@@ -15,7 +15,7 @@ module('xs.class.preprocessors.imports', function () {
 
         //backup all paths
         me.paths = xs.Loader.paths.get();
-        xs.Loader.paths.remove(xs.keys(me.paths));
+        xs.Loader.paths.remove(Object.keys(me.paths));
 
         //add tests path
         xs.Loader.paths.add('tests', '/tests/resources');
@@ -48,7 +48,7 @@ module('xs.class.preprocessors.imports', function () {
         var ns = tests.class.preprocessors.imports;
 
         //check imports
-        strictEqual(xs.keys(me.imports).toString(), 'one,three');
+        strictEqual(Object.keys(me.imports).toString(), 'one,three');
         strictEqual(me.imports.one, ns.One);
         strictEqual(me.imports.three, ns.Three);
 
@@ -56,7 +56,7 @@ module('xs.class.preprocessors.imports', function () {
         var me = this;
 
         //remove current paths
-        xs.Loader.paths.remove(xs.keys(xs.Loader.paths.get()));
+        xs.Loader.paths.remove(Object.keys(xs.Loader.paths.get()));
         //restore saved paths
         xs.Loader.paths.add(me.paths);
 

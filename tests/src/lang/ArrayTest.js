@@ -58,18 +58,13 @@ module('xs.lang.Array', function () {
         xs.shuffle(x);
 
         //check items all saved
-        strictEqual(true, xs.every(clone, function (value) {
-            return xs.has(x, value);
-        }));
+        Object.keys(clone).forEach(function (key) {
+            strictEqual(true, x.indexOf(clone[key]) >= 0);
+        });
 
         //check all keys exist
-        strictEqual(true, xs.every(clone, function (value, key) {
-            return xs.hasKey(x, key);
-        }));
-
-        //check order is changed
-        strictEqual(false, xs.every(clone, function (value) {
-            return xs.keyOf(x, value) === xs.keyOf(clone, value);
-        }));
+        Object.keys(clone).forEach(function (key) {
+            strictEqual(true, key in x);
+        });
     });
 });

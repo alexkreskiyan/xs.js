@@ -200,9 +200,13 @@
          */
         me.getArguments = function (fn) {
             getArgumentsRe.lastIndex = 0;
-            return xs.compact(xs.map(getArgumentsRe.exec(fn.toString()).pop().split(','), function (name) {
+            return getArgumentsRe.exec(fn.toString()).pop().split(',').map(function (name) {
+
                 return name.trim();
-            }));
+            }).filter(function (value) {
+
+                return value;
+            });
         };
 
         /**
@@ -248,9 +252,13 @@
             var data = parseRe.exec(stringFn);
             return {
                 name: data[1],
-                arguments: xs.compact(xs.map(data[2].split(','), function (name) {
+                arguments: data[2].split(',').map(function (name) {
+
                     return name.trim();
-                })),
+                }).filter(function (value) {
+
+                    return value;
+                }),
                 body: stringFn.substring(stringFn.indexOf('{') + 1, stringFn.length - 1)
             };
         };
@@ -264,12 +272,11 @@
         };
     });
 
-    xs.extend(xs, xs.pick(fn, [
-        'bind',
-        'prefill',
-        'memorize',
-        'wrap',
-        'nextTick',
-        'emptyFn'
-    ]));
+    xs.extend(xs, {
+        bind: fn.bind,
+        memorize: fn.memorize,
+        wrap: fn.wrap,
+        nextTick: fn.nextTick,
+        emptyFn: fn.emptyFn
+    });
 })(window, 'xs');

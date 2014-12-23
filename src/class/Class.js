@@ -1120,11 +1120,11 @@
          *
          * @method get
          *
-         * @return {Object} stack items source
+         * @return {xs.core.Collection} stack items clone
          */
         me.get = function () {
 
-            return items.toSource();
+            return items.clone();
         };
 
         /**

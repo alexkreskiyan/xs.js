@@ -850,7 +850,7 @@
         LoaderError.prototype = new Error();
     });
 
-    xs.extend(xs, xs.pick(xs.Loader, [
-        'require'
-    ]));
+    xs.extend(xs, {
+        require: xs.Loader.require
+    });
 })(window, 'xs');

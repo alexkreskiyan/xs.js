@@ -38,7 +38,7 @@ module('xs.class.preprocessors.prepareMixins', function () {
         var ns = tests.class.preprocessors.prepareMixins;
 
         //check chain
-        strictEqual(xs.size(ns.Class.descriptor.mixins), 1);
+        strictEqual(ns.Class.descriptor.mixins.length, 1);
         strictEqual(ns.Class.descriptor.mixins.at('demo'), 'xs.Base');
 
     }, function () {

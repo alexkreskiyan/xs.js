@@ -69,7 +69,7 @@
         configurable: false
     });
 
-    xs.extend(xs, xs.pick(debug, [
-        'log'
-    ]));
+    xs.extend(xs, {
+        log:debug.log
+    });
 })(window, 'xs');
