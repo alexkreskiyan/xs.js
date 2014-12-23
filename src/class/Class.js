@@ -265,7 +265,7 @@
 
                 //assign values
                 var properties = descriptor.properties.items; //xs.core.Collection
-                var i, length = properties.length, name, item;
+                var i, length = properties.length, item;
 
                 for (i = 0; i < length; i++) {
                     item = properties[i];
@@ -417,7 +417,7 @@
          *
          * @type {xs.core.Collection}
          */
-        var storage = xs.ClassDependencies = new xs.core.Collection;
+        var storage = new xs.core.Collection;
 
         /**
          * Adds dependency from dependent Class to array of processed Classes.
@@ -588,7 +588,7 @@
              *
              * @type {xs.core.Collection}
              */
-            var storage = xs.ClassDependenciesChains = new xs.core.Collection;
+            var storage = new xs.core.Collection;
 
             /**
              * Adds dependent class with it waiting list to manager
@@ -706,10 +706,10 @@
                 var lockedChain = storage.find(function (chain) {
 
                     //first occurrence key
-                    first = xs.keyOf(chain, dependent);
+                    first = chain.keyOf(dependent);
 
                     //last occurrence key
-                    last = xs.lastKeyOf(chain, dependent);
+                    last = chain.keyOf(dependent, xs.core.Collection.REVERSE);
 
                     return first !== last;
                 });
@@ -955,7 +955,7 @@
          *
          * @type {xs.core.Collection}
          */
-        var storage = xs.ClassWaiting = new xs.core.Collection;
+        var storage = new xs.core.Collection;
 
         /**
          * Adds handler for event when classes' with given names will be loaded
@@ -1162,7 +1162,7 @@
             //position defaults to last
             position || (position = 'last');
 
-            if (xs.hasKey(items, name)) {
+            if (items.hasKey(name)) {
                 throw new ClassError('processor "' + name + '" already in stack');
             }
 

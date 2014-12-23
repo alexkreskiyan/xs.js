@@ -23,7 +23,7 @@
      */
     xs.Class.preprocessors.add('processMixins', function (Class, descriptor) {
 
-        return xs.size(descriptor.mixins) > 0;
+        return descriptor.mixins.length > 0;
     }, function (Class) {
 
         xs.log('xs.class.preprocessor.processMixins[', Class.label, ']');
