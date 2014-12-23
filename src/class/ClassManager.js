@@ -32,9 +32,9 @@
          *
          * @property registry
          *
-         * @type {Object}
+         * @type {xs.core.Collection}
          */
-        var registry = {};
+        var registry = new xs.core.Collection;
 
         /**
          * Checks whether class with given name is already defined by ClassManager
@@ -51,7 +51,7 @@
          */
         var _has = me.has = function (name) {
 
-            return xs.hasKey(registry, name);
+            return registry.hasKey(name);
         };
 
         /**
@@ -69,7 +69,7 @@
          */
         me.get = function (name) {
 
-            return registry[name];
+            return registry.at(name);
         };
 
         /**
@@ -106,7 +106,7 @@
             }
 
             //throw error if trying to add already added with other name
-            if (xs.has(registry, Class)) {
+            if (registry.has(Class)) {
                 throw new ClassManagerError('class "' + Class.label + '" can not be added as "' + name + '"');
             }
 
@@ -128,7 +128,7 @@
             namespace[label] = Class;
 
             //save Class to registry
-            registry[name] = Class;
+            registry.add(name, Class);
 
             //sync namespaces
             _syncNamespaces(namespace, 'add', label);
@@ -163,7 +163,7 @@
             }
 
             //unset Class label
-            delete registry[name].label;
+            delete registry.at(name).label;
 
             //get short name of Class
             var label = _getName(name);
@@ -184,7 +184,7 @@
             _cleanNamespace(root, path);
 
             //remove Class from registry
-            delete registry[name];
+            registry.removeAt(name);
         };
 
         /**
@@ -379,28 +379,30 @@
          * @param {String} name name of changed class
          */
         var _syncNamespaces = function (namespace, operation, name) {
-            var classes = xs.findAll(namespace, function (value) {
+            var classes = new xs.core.Collection(namespace).find(function (value) {
                 return xs.isFunction(value) && xs.isObject(value.namespace);
-            });
-            var changedClass = classes[name];
+            }, xs.core.Collection.ALL);
+            var changedClass = classes.at(name);
 
             //add new class to all namespaces
             if (operation == 'add') {
                 //add all classes to new class' namespace
-                xs.each(classes, function (Class, name) {
+                classes.each(function (Class, name) {
                     changedClass.namespace[name] = Class;
                 });
 
                 //add new class to all namespaces
-                xs.each(classes, function (Class) {
-                    Class.namespace[name] = classes[name];
+                classes.each(function (Class) {
+                    Class.namespace[name] = classes.at(name);
                 });
             } else if (operation == 'remove') {
                 //empty old class' namespace
-                xs.removeAll(changedClass.namespace);
+                Object.keys(changedClass.namespace).forEach(function (key) {
+                    delete changedClass.namespace[key];
+                });
 
                 //remove old class from all namespaces
-                xs.each(classes, function (Class) {
+                classes.each(function (Class) {
                     delete Class.namespace[name];
                 });
             }
