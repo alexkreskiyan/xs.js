@@ -29,12 +29,12 @@
         xs.log('xs.class.preprocessor.constructor[', Class.label, ']');
         //inherited
         //get inherited constructor from parent descriptor
-        var inherited = xs.hasKey(Class.parent.descriptor, 'constructor') ? Class.parent.descriptor.constructor : undefined;
+        var inherited = Class.parent.descriptor.hasOwnProperty('constructor') ? Class.parent.descriptor.constructor : undefined;
 
 
         //own
         //get own methods from raw descriptor
-        var own = xs.hasKey(descriptor, 'constructor') ? descriptor.constructor : undefined;
+        var own = descriptor.hasOwnProperty('constructor') ? descriptor.constructor : undefined;
 
         //verify, that own constructor is function
         if (xs.isDefined(own) && !xs.isFunction(own)) {

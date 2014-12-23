@@ -157,9 +157,13 @@
 
             //get descriptor instance
             var descriptor = new Descriptor(Class, namespace, imports);
+            //convert descriptor
+            _convertDescriptor(descriptor);
 
             //save Class descriptor
-            xs.constant(Class, 'descriptor', _createDescriptorPrototype());
+            var emptyDescriptor = _createDescriptorPrototype();
+            _convertDescriptor(emptyDescriptor);
+            xs.constant(Class, 'descriptor', emptyDescriptor);
 
             //mark class as not ready yet (until preprocessors done)
             Class.isProcessing = true;
@@ -372,6 +376,26 @@
         };
 
         /**
+         * Converts prototype to use xs.core.Collection
+         *
+         * @ignore
+         *
+         * @method convertDescriptor
+         *
+         * @return {Object} convert descriptor
+         */
+        var _convertDescriptor = function (descriptor) {
+            descriptor.imports = new xs.core.Collection(descriptor.imports);
+            descriptor.mixins = new xs.core.Collection(descriptor.mixins);
+            descriptor.implements = new xs.core.Collection(descriptor.implements);
+            descriptor.constants = new xs.core.Collection(descriptor.constants);
+            descriptor.static.methods = new xs.core.Collection(descriptor.static.methods);
+            descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
+            descriptor.methods = new xs.core.Collection(descriptor.methods);
+            descriptor.properties = new xs.core.Collection(descriptor.properties);
+        };
+
+        /**
          * Private dependencies manager
          *
          * It's aim is storing of cross-classes processing dependencies.
@@ -397,7 +421,7 @@
          *
          * @type {xs.core.Collection}
          */
-        var storage = new xs.core.Collection;
+        var storage = xs.ClassDependencies = new xs.core.Collection;
 
         /**
          * Adds dependency from dependent Class to array of processed Classes.
@@ -415,7 +439,7 @@
          */
         me.add = function (dependent, waiting, handleReady) {
 
-            xs.log('xs.Class::dependencies::add. Adding dependency for', dependent.label, 'from', waiting.map(function (Class) {
+            xs.log('xs.Class::dependencies::add. Adding dependency for', dependent.label, 'from', waiting.values().map(function (Class) {
                 return Class.label;
             }));
             //filter waiting classes to exclude processed ones
@@ -495,7 +519,7 @@
         var _filterWaiting = function (waiting) {
             var Class, i = 0;
 
-            xs.log('xs.Class::dependencies::filterWaiting. Filtering list:', waiting.map(function (Class) {
+            xs.log('xs.Class::dependencies::filterWaiting. Filtering list:', waiting.values().map(function (Class) {
                 return Class.label;
             }));
 
@@ -515,7 +539,7 @@
                 xs.log('xs.Class::dependencies::filterWaiting. Class:', Class.label, 'is already processed, removing it from waiting');
                 waiting.removeAt(i);
             }
-            xs.log('xs.Class::dependencies::filterWaiting. Filtered list:', waiting.map(function (Class) {
+            xs.log('xs.Class::dependencies::filterWaiting. Filtered list:', waiting.values().map(function (Class) {
                 return Class.label;
             }));
         };
@@ -537,9 +561,9 @@
 
             //chain lock
             var first = deadLock.shift();
-            var names = deadLock.map(function (Class) {
+            var names = deadLock.values().map(function (Class) {
                 return Class.label;
-            }).values();
+            });
             return 'Class "' + first.label + '" imports "' + names.join('", which imports "') + '", which, in it\'s turn, imports "' + first.label + '"';
         };
 
@@ -568,7 +592,7 @@
              *
              * @type {xs.core.Collection}
              */
-            var storage = new xs.core.Collection;
+            var storage = xs.ClassDependenciesChains = new xs.core.Collection;
 
             /**
              * Adds dependent class with it waiting list to manager
@@ -580,7 +604,7 @@
              */
             me.add = function (dependent, waiting) {
 
-                xs.log('xs.Class::dependencies::chains::add. Adding dependency chain for', dependent.label, 'from', waiting.map(function (Class) {
+                xs.log('xs.Class::dependencies::chains::add. Adding dependency chain for', dependent.label, 'from', waiting.values().map(function (Class) {
                     return Class.label;
                 }));
                 //get existing chains, where dependent class was in waiting list
@@ -588,7 +612,7 @@
 
                 xs.log('xs.Class::dependencies::chains::add. Work chains:');
                 chains.each(function (chain) {
-                    xs.log('xs.Class::dependencies::chains::add.', chain.map(function (Class) {
+                    xs.log('xs.Class::dependencies::chains::add.', chain.values().map(function (Class) {
                         return Class.label;
                     }));
                 });
@@ -623,7 +647,7 @@
 
                 xs.log('xs.Class::dependencies::chains::add. Chains after add:');
                 storage.each(function (chain) {
-                    xs.log('xs.Class::dependencies::chains::add.', chain.map(function (Class) {
+                    xs.log('xs.Class::dependencies::chains::add.', chain.values().map(function (Class) {
                         return Class.label;
                     }));
                 });
@@ -644,7 +668,7 @@
                 var chains = _getChains(processed);
                 xs.log('xs.Class::dependencies::chains::remove. Work chains:');
                 chains.each(function (chain) {
-                    xs.log('xs.Class::dependencies::chains::remove.', chain.map(function (Class) {
+                    xs.log('xs.Class::dependencies::chains::remove.', chain.values().map(function (Class) {
                         return Class.label;
                     }));
                 });
@@ -662,7 +686,7 @@
                 });
                 xs.log('xs.Class::dependencies::chains::remove. Chains left:');
                 storage.each(function (chain) {
-                    xs.log('xs.Class::dependencies::chains::remove.', chain.map(function (Class) {
+                    xs.log('xs.Class::dependencies::chains::remove.', chain.values().map(function (Class) {
                         return Class.label;
                     }));
                 });
@@ -752,7 +776,7 @@
                     if (merged.length) {
                         xs.log('xs.Class::dependencies::chains::createChains. Adding merged:');
                         merged.each(function (chain) {
-                            xs.log('xs.Class::dependencies::chains::createChains.', chain.map(function (Class) {
+                            xs.log('xs.Class::dependencies::chains::createChains.', chain.values().map(function (Class) {
                                 return Class.label;
                             }));
                         });
@@ -763,7 +787,7 @@
                         //else - add chain
                     } else {
                         xs.log('xs.Class::dependencies::chains::createChains. Adding single:');
-                        xs.log('xs.Class::dependencies::chains::createChains.', chain.map(function (Class) {
+                        xs.log('xs.Class::dependencies::chains::createChains.', chain.values().map(function (Class) {
                             return Class.label;
                         }));
                         created.add(chain);
@@ -772,7 +796,7 @@
 
                 xs.log('xs.Class::dependencies::chains::createChains. ', dependent.label, ' created chains:');
                 created.each(function (chain) {
-                    xs.log('xs.Class::dependencies::chains::createChains.', chain.map(function (Class) {
+                    xs.log('xs.Class::dependencies::chains::createChains.', chain.values().map(function (Class) {
                         return Class.label;
                     }));
                 });
@@ -806,7 +830,7 @@
                     copy.add(Class);
 
                     xs.log('xs.Class::dependencies::chains::updateChains. Try to find merges for:');
-                    xs.log('xs.Class::dependencies::chains::updateChains.', chain.map(function (Class) {
+                    xs.log('xs.Class::dependencies::chains::updateChains.', chain.values().map(function (Class) {
                         return Class.label;
                     }), '->', Class.label);
                     //get merged chains
@@ -816,7 +840,7 @@
                     if (merged.length) {
                         xs.log('xs.Class::dependencies::chains::updateChains. Adding merged:');
                         merged.each(function (chain) {
-                            xs.log('xs.Class::dependencies::chains::updateChains.', chain.map(function (Class) {
+                            xs.log('xs.Class::dependencies::chains::updateChains.', chain.values().map(function (Class) {
                                 return Class.label;
                             }));
                         });
@@ -827,7 +851,7 @@
                         //else - add chain
                     } else {
                         xs.log('xs.Class::dependencies::chains::updateChains. Adding single:');
-                        xs.log('xs.Class::dependencies::chains::updateChains.', copy.map(function (Class) {
+                        xs.log('xs.Class::dependencies::chains::updateChains.', copy.values().map(function (Class) {
                             return Class.label;
                         }));
                         updated.add(copy);
@@ -838,7 +862,7 @@
                 var junction = chain.last();
                 xs.log('xs.Class::dependencies::chains::updateChains. ', junction.label, ' updated chains:');
                 updated.each(function (chain) {
-                    xs.log('xs.Class::dependencies::chains::updateChains.', chain.map(function (Class) {
+                    xs.log('xs.Class::dependencies::chains::updateChains.', chain.values().map(function (Class) {
                         return Class.label;
                     }));
                 });
@@ -858,7 +882,7 @@
              */
             var _getMergedChains = function (chain) {
 
-                xs.log('xs.Class::dependencies::chains::getMergedChains. For ', chain.map(chain, function (Class) {
+                xs.log('xs.Class::dependencies::chains::getMergedChains. For ', chain.values().map(chain, function (Class) {
                     return Class.label;
                 }));
                 //init merged array
@@ -886,15 +910,15 @@
                             merge.add(item);
                         });
 
-                        xs.log('xs.Class::dependencies::chains::getMergedChains. Source:', source.map(function (Class) {
+                        xs.log('xs.Class::dependencies::chains::getMergedChains. Source:', source.values().map(function (Class) {
                             return Class.label;
                         }));
 
-                        xs.log('xs.Class::dependencies::chains::getMergedChains. Slice:', slice.map(function (Class) {
+                        xs.log('xs.Class::dependencies::chains::getMergedChains. Slice:', slice.values().map(function (Class) {
                             return Class.label;
                         }));
 
-                        xs.log('xs.Class::dependencies::chains::getMergedChains. Merge:', merge.map(function (Class) {
+                        xs.log('xs.Class::dependencies::chains::getMergedChains. Merge:', merge.values().map(function (Class) {
                             return Class.label;
                         }));
 
@@ -935,7 +959,7 @@
          *
          * @type {xs.core.Collection}
          */
-        var storage = new xs.core.Collection;
+        var storage = xs.ClassWaiting = new xs.core.Collection;
 
         /**
          * Adds handler for event when classes' with given names will be loaded
@@ -963,7 +987,7 @@
                 throw new ClassError('incorrect onReady parameters');
             }
 
-            xs.log('xs.Class::queue::add. Waiting', waiting);
+            xs.log('xs.Class::queue::add. Waiting', waiting.values());
             //waiting: null means, that all classes must be loaded
             if (!waiting) {
 
@@ -981,7 +1005,7 @@
             //filter waiting classes
             _filterWaiting(waiting);
 
-            xs.log('xs.Class::queue::add. Wait for filtered:', waiting.toSource());
+            xs.log('xs.Class::queue::add. Wait for filtered:', waiting.values());
             //add item to storage
             storage.add({
                 waiting: waiting,
@@ -1014,13 +1038,16 @@
                         return false;
                     }
 
-                    //item is resolved, if processed remove succeeds (processed was removed) and waiting is empty
-                    if (xs.remove(item.waiting, processed)) {
-
-                        return !item.waiting.length;
+                    //return false if item waiting doesn't have processed
+                    if (!item.waiting.has(processed)) {
+                        return false;
                     }
 
-                    return false;
+                    //remove processed from item waiting
+                    item.waiting.remove(processed);
+
+                    //item is resolved, if waiting is empty
+                    return !item.waiting.length;
                 }, xs.core.Collection.ALL);
             }
 

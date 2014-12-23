@@ -27,10 +27,6 @@
     }, function (Class, descriptor) {
 
         xs.log('xs.class.preprocessor.prepareConstants[', Class.label, ']');
-        //if constants are specified not as object - throw respective error
-        if (!xs.isObject(descriptor.constants)) {
-            throw new ConstError('[' + Class.label + ']: incorrect constants list');
-        }
 
         //init constants reference
         var constants = Class.descriptor.constants;
@@ -40,8 +36,10 @@
         //get inherited constants from parent descriptor
         var inherited = Class.parent.descriptor.constants;
 
-        //extend constants with inherited
-        xs.extend(constants, inherited);
+        //add all inherited
+        inherited.each(function (value, name) {
+            constants.add(name, value);
+        });
 
 
         //own
@@ -49,14 +47,16 @@
         var own = descriptor.constants;
 
         //verify own constants
-        xs.each(own, function (value, name) {
+        own.each(function (value, name) {
             if (!xs.isString(name) || !name) {
                 throw new ConstError('[' + Class.label + ']: incorrect constant name');
             }
         });
 
-        //extend constants with own
-        xs.extend(constants, own);
+        //add all own
+        own.each(function (value, name) {
+            constants.hasKey(name) ? constants.set(name, value) : constants.add(name, value);
+        });
     });
 
     /**

@@ -27,10 +27,6 @@
     }, function (Class, descriptor) {
 
         xs.log('xs.class.preprocessor.prepareProperties[', Class.label, ']');
-        //if properties are specified not as object - throw respective error
-        if (!xs.isObject(descriptor.properties)) {
-            throw new PropertyError('[' + Class.label + ']: incorrect properties list');
-        }
 
         //init properties reference
         var properties = Class.descriptor.properties;
@@ -40,8 +36,10 @@
         //get inherited properties from parent descriptor
         var inherited = Class.parent.descriptor.properties;
 
-        //extend properties with inherited
-        xs.extend(properties, inherited);
+        //add all inherited
+        inherited.each(function (value, name) {
+            properties.add(name, value);
+        });
 
 
         //own
@@ -50,16 +48,18 @@
         //get own properties from raw descriptor and apply
 
         //verify and prepare them
-        xs.each(own, function (value, name, list) {
+        own.each(function (value, name, list) {
             if (!xs.isString(name) || !name) {
                 throw new PropertyError('[' + Class.label + ']: incorrect property name');
             }
 
-            list[name] = xs.Attribute.property.prepare(name, value);
+            list.set(name, xs.Attribute.property.prepare(name, value));
         });
 
-        //extend properties with own ones
-        xs.extend(properties, own);
+        //add all own
+        own.each(function (value, name) {
+            properties.hasKey(name) ? properties.set(name, value) : properties.add(name, value);
+        });
     });
 
     /**

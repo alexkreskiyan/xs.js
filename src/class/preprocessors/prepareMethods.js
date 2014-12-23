@@ -40,8 +40,10 @@
         //get inherited methods from parent descriptor
         var inherited = Class.parent.descriptor.methods;
 
-        //extend methods with inherited
-        xs.extend(methods, inherited);
+        //add all inherited
+        inherited.each(function (value, name) {
+            methods.add(name, value);
+        });
 
 
         //own
@@ -49,16 +51,18 @@
         var own = descriptor.methods;
 
         //verify and prepare them
-        xs.each(own, function (value, name, list) {
+        own.each(function (value, name, list) {
             if (!xs.isString(name) || !name) {
                 throw new MethodError('[' + Class.label + ']: incorrect method name');
             }
 
-            list[name] = xs.Attribute.method.prepare(name, value);
+            list.set(name, xs.Attribute.method.prepare(name, value));
         });
 
-        //extend methods with own ones
-        xs.extend(methods, own);
+        //add all own
+        own.each(function (value, name) {
+            methods.hasKey(name) ? methods.set(name, value) : methods.add(name, value);
+        });
     });
 
     /**

@@ -63,7 +63,7 @@
             }
 
             //handle hash source
-        } else if (xs.isObject(values)) {
+        } else if (xs.isObject(values) || xs.isFunction(values)) {
             //get keys and valuesLength
             var keys = Object.keys(values), key;
             valuesLength = keys.length;
@@ -79,7 +79,7 @@
 
             //otherwise - it's error
         } else {
-            throw new CollectionError('constructor - source "' + values + '" is nor array neither object');
+            throw new CollectionError('constructor - source "' + values + '" is nor array, nor object neither function');
         }
     };
 

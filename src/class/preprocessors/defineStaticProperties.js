@@ -31,7 +31,7 @@
         Class.privates = {};
 
         //apply
-        xs.each(Class.descriptor.static.properties, function (descriptor, name) {
+        Class.descriptor.static.properties.each(function (descriptor, name) {
 
             //save property to class
             xs.Attribute.property.define(Class, name, descriptor);

@@ -26,33 +26,38 @@
         return xs.size(descriptor.mixins) > 0;
     }, function (Class) {
 
-        xs.log('xs.class.preprocessor.mixins[', Class.label, ']');
+        xs.log('xs.class.preprocessor.processMixins[', Class.label, ']');
 
         //init
         //get mixins list
         var mixins = Class.descriptor.mixins;
 
-        //extend mixins with inherited mixins
-        xs.extend(mixins, Class.parent.descriptor.mixins);
-
         //process mixins list
-        xs.log('xs.class.preprocessor.mixins[', Class.label, ']. Mixins:', mixins);
+        xs.log('xs.class.preprocessor.processMixins[', Class.label, ']. Mixins:', mixins.toSource());
         //namespace shortcut
         var resolveName = Class.descriptor.resolveName;
-        xs.each(mixins, function (name, alias, list) {
+        mixins.each(function (name, alias, list) {
 
             //resolve name with namespace and update list
             name = list[alias] = resolveName(name);
 
-            //get Mixin reference
-            var Mixin = xs.ClassManager.get(name);
-
-            //if Mixin is not defined or is processing - throw errors
-            if (!Mixin) {
+            //if Mixin is not defined - throw error
+            if (!xs.ClassManager.has(name)) {
                 throw new MixinError('[' + Class.label + ']: parent class "' + name + '" is not defined');
-            } else if (Mixin.isProcessing) {
-                throw new MixinError('[' + Class.label + ']: parent class "' + Mixin.label + '" is not processed yet. Move it to imports section, please');
+            } else {
+                //get Mixin reference
+                var Mixin = xs.ClassManager.get(name);
+
+                //if Mixin is processing = throw error
+                if (Mixin.isProcessing) {
+                    throw new MixinError('[' + Class.label + ']: parent class "' + Mixin.label + '" is not processed yet. Move it to imports section, please');
+                }
             }
+        });
+
+        //add all inherited
+        Class.parent.descriptor.mixins.each(function (value, name) {
+            mixins.add(name, value);
         });
 
         //apply mixins to Class.descriptor
@@ -74,11 +79,11 @@
         target.prototype.mixins = {};
 
         //apply each mixin
-        xs.each(mixins, function (name, alias) {
+        mixins.each(function (name, alias) {
 
             var Mixin = xs.ClassManager.get(name);
 
-            xs.log('xs.class.preprocessor.mixins[', target.label, ']. Mixing in:', Mixin.label, 'as', alias);
+            xs.log('xs.class.preprocessor.processMixins[', target.label, ']. Mixing in:', Mixin.label, 'as', alias);
             //mix mixed class descriptor into target descriptor
             _mixinClass(target.descriptor, Mixin.descriptor);
 
@@ -149,7 +154,7 @@
      * @class MixinError
      */
     function MixinError(message) {
-        this.message = 'xs.class.preprocessors.mixin :: ' + message;
+        this.message = 'xs.class.preprocessors.processMixins :: ' + message;
     }
 
     MixinError.prototype = new Error();

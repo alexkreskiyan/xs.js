@@ -27,43 +27,38 @@
     }, function (Class, descriptor, ns, dependencies, ready) {
 
         xs.log('xs.class.preprocessor.imports[', Class.label, ']');
-        //if imports are specified not as object - throw respective error
-        if (!xs.isArray(descriptor.imports)) {
-            throw new ImportsError('[' + Class.label + ']: incorrect imports list');
-        }
-
 
         //init
         //init requires list
-        var requires = [];
+        var requires = new xs.core.Collection;
         //init imports list
-        var imports = {};
+        var imports = new xs.core.Collection;
 
 
         //process imports list
         //namespace shortcut
         var resolveName = Class.descriptor.resolveName;
         //fill imports
-        xs.each(descriptor.imports, function (imported) {
+        descriptor.imports.each(function (imported) {
             var name;
 
             //if imported is string - it's simply className without alias, added only to loads list
             if (xs.isString(imported)) {
                 name = resolveName(imported);
-                requires.indexOf(name) < 0 && requires.push(name);
+                requires.has(name) || requires.add(name);
 
                 //or imported my be used class - then it is specified as object
-            } else if (xs.isObject(imported) && xs.size(imported) == 1) {
+            } else if (xs.isObject(imported) && Object.keys(imported).length == 1) {
 
                 //get name and alias
-                var alias = xs.keys(imported)[0];
+                var alias = Object.keys(imported)[0];
                 name = imported[alias];
 
                 //if name is non-empty string - add it to both loads and imports
                 if (xs.isString(name) && name) {
                     name = resolveName(name);
-                    requires.indexOf(name) < 0 && requires.push(name);
-                    imports[name] = alias;
+                    requires.has(name) || requires.add(name);
+                    imports.add(name, alias);
 
                     //otherwise - incorrect alias error
                 } else {
@@ -77,15 +72,15 @@
         });
 
         //filter loads to find out already loaded ones
-        var loads = xs.findAll(requires, function (name) {
+        var loads = requires.find(function (name) {
             return !xs.ClassManager.has(name);
-        });
+        }, xs.core.Collection.ALL);
 
         if (loads.length) {
             //load imported classes
-            xs.log('xs.class.preprocessor.imports[', Class.label, ']. Loading', loads);
+            xs.log('xs.class.preprocessor.imports[', Class.label, ']. Loading', loads.values());
             //require async
-            xs.require(loads, _process);
+            xs.require(loads.values(), _process);
         } else {
             //nothing to load
             xs.log('xs.class.preprocessor.imports[', Class.label, ']. Nothing to load');
@@ -95,15 +90,15 @@
         //define process function
         function _process() {
 
-            var waiting = xs.map(requires, function (name) {
+            var waiting = requires.map(function (name) {
                 return xs.ClassManager.get(name);
             });
 
-            xs.log('xs.class.preprocessor.imports[', Class.label, ']. Imports', loads, 'loaded, applying dependency');
+            xs.log('xs.class.preprocessor.imports[', Class.label, ']. Imports', loads.values(), 'loaded, applying dependency');
             //create new dependency
             dependencies.add(Class, waiting, function () {
 
-                xs.log('xs.class.preprocessor.imports[', Class.label, ']. Imports', loads, 'processed, applying imports:', imports);
+                xs.log('xs.class.preprocessor.imports[', Class.label, ']. Imports', loads.values(), 'processed, applying imports:', imports.toSource());
                 //apply imports
                 _applyImports(Class, imports);
 
@@ -128,7 +123,7 @@
      */
     var _applyImports = function (target, imports) {
         //assign imports
-        xs.each(imports, function (alias, name) {
+        imports.each(function (alias, name) {
             //save class by alias in imports list
             target.imports[alias] = xs.ClassManager.get(name);
         });

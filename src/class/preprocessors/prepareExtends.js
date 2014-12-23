@@ -21,17 +21,16 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('prepareExtends', function (Class, descriptor) {
+    xs.Class.preprocessors.add('prepareExtends', function () {
 
-        //is executed only if imports is given correctly
-        return xs.isArray(descriptor.imports);
+        return true;
     }, function (Class, descriptor) {
         var extended = descriptor.extends;
 
         xs.log('xs.class.preprocessor.prepareExtends[', Class.label, ']. Extended:', extended);
         //if extended is non-empty string - resolve parent name
         if (xs.isString(extended) && extended) {
-            descriptor.imports.push(extended);
+            descriptor.imports.add(extended);
 
             //if no parent given - extend from xs.Base
         } else if (xs.isDefined(extended)) {

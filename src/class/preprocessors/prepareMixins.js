@@ -21,18 +21,12 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('prepareMixins', function (Class, descriptor) {
+    xs.Class.preprocessors.add('prepareMixins', function () {
 
-        //is executed only if imports is given correctly
-        return xs.isArray(descriptor.imports);
+        return true;
     }, function (Class, descriptor) {
 
-        xs.log('xs.class.preprocessor.mixins[', Class.label, ']');
-        //if mixins are specified not as object - throw respective error
-        if (!xs.isObject(descriptor.mixins)) {
-            throw new PrepareMixinsError('[' + Class.label + ']: incorrect mixins list');
-        }
-
+        xs.log('xs.class.preprocessor.prepareMixins[', Class.label, ']');
 
         //init
         //init mixins list with own values
@@ -44,8 +38,8 @@
         var imports = descriptor.imports;
 
         //process mixins list
-        xs.log('xs.class.preprocessor.mixins[', Class.label, ']. Mixins:', mixins);
-        xs.each(mixins, function (name, alias) {
+        xs.log('xs.class.preprocessor.prepareMixins[', Class.label, ']. Mixins:', mixins.toSource());
+        mixins.each(function (name, alias) {
             //verify mixed class name
             if (!xs.isString(name) || !name) {
                 throw new PrepareMixinsError('[' + Class.label + ']: incorrect mixed class name');
@@ -56,7 +50,7 @@
                 throw new PrepareMixinsError('[' + Class.label + ']: incorrect mixed class alias');
             }
 
-            imports.push(name);
+            imports.add(name);
         });
     });
 
@@ -70,7 +64,7 @@
      * @class PrepareMixinsError
      */
     function PrepareMixinsError(message) {
-        this.message = 'xs.class.preprocessors.mixin :: ' + message;
+        this.message = 'xs.class.preprocessors.prepareMixins :: ' + message;
     }
 
     PrepareMixinsError.prototype = new Error();

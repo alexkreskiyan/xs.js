@@ -30,13 +30,13 @@
         //apply
         var prototype = Class.prototype;
 
-        xs.each(Class.descriptor.properties, function (descriptor, name) {
+        Class.descriptor.properties.each(function (descriptor, name) {
 
             //save property to prototype
             xs.Attribute.property.define(prototype, name, descriptor);
 
             //set undefined for assigned properties
-            xs.hasKey(descriptor, 'value') && (prototype[name] = undefined);
+            descriptor.hasOwnProperty('value') && (prototype[name] = undefined);
         });
     });
 })(window, 'xs');

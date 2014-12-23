@@ -27,10 +27,6 @@
     }, function (Class, descriptor) {
 
         xs.log('xs.class.preprocessor.prepareStaticProperties[', Class.label, ']');
-        //if static properties are specified not as object - throw respective error
-        if (!xs.isObject(descriptor.static) || !xs.isObject(descriptor.static.properties)) {
-            throw new StaticPropertyError('[' + Class.label + ']: incorrect static properties list');
-        }
 
         //init properties reference
         var properties = Class.descriptor.static.properties;
@@ -40,8 +36,10 @@
         //get inherited static properties from parent descriptor
         var inherited = Class.parent.descriptor.static.properties;
 
-        //extend static properties with inherited
-        xs.extend(properties, inherited);
+        //add all inherited
+        inherited.each(function (value, name) {
+            properties.add(name, value);
+        });
 
 
         //own
@@ -49,16 +47,18 @@
         var own = descriptor.static.properties;
 
         //verify and prepare them
-        xs.each(own, function (value, name, list) {
+        own.each(function (value, name, list) {
             if (!xs.isString(name) || !name) {
                 throw new StaticPropertyError('[' + Class.label + ']: incorrect static property name');
             }
 
-            list[name] = xs.Attribute.property.prepare(name, value);
+            list.set(name, xs.Attribute.property.prepare(name, value));
         });
 
-        //extend properties with own ones
-        xs.extend(properties, own);
+        //add all own
+        own.each(function (value, name) {
+            properties.hasKey(name) ? properties.set(name, value) : properties.add(name, value);
+        });
     });
 
     /**

@@ -42,14 +42,16 @@
             extended = Class.descriptor.resolveName(extended);
         }
 
-        //get parent reference
-        var Parent = xs.ClassManager.get(extended);
-
         //if parent is not defined or is processing - throw errors
-        if (!Parent) {
+        if (!xs.ClassManager.has(extended)) {
             throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + extended + '" is not defined. Move it to imports section, please');
-        } else if (Parent.isProcessing) {
-            throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + Parent.label + '" is not processed yet. Move it to imports section, please');
+        } else {
+            //get parent reference
+            var Parent = xs.ClassManager.get(extended);
+
+            if (Parent.isProcessing) {
+                throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + Parent.label + '" is not processed yet. Move it to imports section, please');
+            }
         }
 
         xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extending', Parent.label);
