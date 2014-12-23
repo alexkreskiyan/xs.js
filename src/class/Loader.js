@@ -326,7 +326,7 @@
                 }
 
                 //add each path
-                xs.each(alias, function (path, alias) {
+                (new xs.core.Collection(alias)).each(function (path, alias) {
                     me.add(alias, path);
                 });
 
@@ -408,7 +408,7 @@
                 }
 
                 //remove each alias
-                xs.each(alias, me.remove, me);
+                (new xs.core.Collection(alias)).each(me.remove, 0, me);
 
                 return this;
             };
