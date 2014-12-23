@@ -51,7 +51,8 @@
          * @return {String} translated string
          */
         me.translate = function (string, replaces) {
-            xs.each(replaces, function (to, from) {
+            Object.keys(replaces).forEach(function (from) {
+                var to = replaces[from];
                 string = string.split(from).join(to);
             });
 

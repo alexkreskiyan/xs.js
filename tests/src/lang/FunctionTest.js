@@ -26,23 +26,6 @@ module('xs.lang.Function', function () {
         strictEqual(binded(4), 5 + (2 - 3) * 4);
     });
 
-    test('prefill', function () {
-        //init test function
-        var fn = function (a, b, c) {
-            return this.x + (a - b) * c;
-        };
-
-        //get prefilled function
-        var filled = xs.prefill(fn, [
-            1,
-            2,
-            3
-        ], { x: 5 });
-
-        //check prefill
-        strictEqual(filled(4), 5 + (4 - 2) * 3);
-    });
-
     test('memorize', function () {
         //init memorized function
         var fn = function (obj) {

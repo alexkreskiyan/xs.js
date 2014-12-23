@@ -57,33 +57,6 @@
         };
 
         /**
-         * Prefills function's arguments and optionally adds execution scope
-         *
-         * For example:
-         *
-         *     var fn = function (a, b, c) {
-         *         return this.x + (a - b) * c;
-         *     };
-         *     var filled = xs.prefill(fn, [1, 2, 3], {x: 5});
-         *     console.log(filled(4));//11
-         *
-         * @method prefill
-         *
-         * @param {Function} fn bound function
-         * @param {Array} defaults predefined params' defaults
-         * @param {Object} [scope] optional execution scope
-         *
-         * @return {Function} bound function
-         */
-        me.prefill = function (fn, defaults, scope) {
-            return function () {
-                var args = _slice(arguments);
-                xs.defaults(args, defaults);
-                return fn.apply(scope, args);
-            }
-        };
-
-        /**
          * Creates function, that is executed only once. Result is memorized and is simply returned in later calls
          *
          * For example:
