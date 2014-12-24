@@ -25,7 +25,7 @@
 
         return true;
     }, function (Class, descriptor) {
-        xs.log('xs.class.preprocessor.singleton[', Class.label, ']');
+        xs.log('xs.class.preprocessors.singleton[', Class.label, ']');
         Class.descriptor.singleton = Boolean(descriptor.singleton);
     });
 })(window, 'xs');

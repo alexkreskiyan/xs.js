@@ -26,7 +26,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.log('xs.class.preprocessor.defineMethods[', Class.label, ']');
+        xs.log('xs.class.preprocessors.defineMethods[', Class.label, ']');
         //apply
         Class.descriptor.methods.each(function (value, name) {
 

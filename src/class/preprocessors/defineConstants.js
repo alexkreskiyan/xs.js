@@ -26,7 +26,7 @@
         return true;
     }, function (Class) {
 
-        xs.log('xs.class.preprocessor.defineConstants[', Class.label, ']');
+        xs.log('xs.class.preprocessors.defineConstants[', Class.label, ']');
         //define constants
         Class.descriptor.constants.each(function (value, name) {
 

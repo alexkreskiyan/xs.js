@@ -26,7 +26,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.log('xs.class.preprocessor.prepareProperties[', Class.label, ']');
+        xs.log('xs.class.preprocessors.prepareProperties[', Class.label, ']');
 
         //init properties reference
         var properties = Class.descriptor.properties;

@@ -27,7 +27,7 @@
     }, function (Class, descriptor) {
         var extended = descriptor.extends;
 
-        xs.log('xs.class.preprocessor.prepareExtends[', Class.label, ']. Extended:', extended);
+        xs.log('xs.class.preprocessors.prepareExtends[', Class.label, ']. Extended:', extended);
         //if extended is non-empty string - resolve parent name
         if (xs.isString(extended) && extended) {
             descriptor.imports.add(extended);

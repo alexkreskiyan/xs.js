@@ -26,7 +26,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.log('xs.class.preprocessor.prepareStaticMethods[', Class.label, ']');
+        xs.log('xs.class.preprocessors.prepareStaticMethods[', Class.label, ']');
         //if static methods are specified not as object - throw respective error
         if (!xs.isObject(descriptor.static) || !xs.isObject(descriptor.static.methods)) {
             throw new StaticMethodError('[' + Class.label + ']: incorrect static methods list');

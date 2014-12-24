@@ -26,7 +26,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.log('xs.class.preprocessor.prepareMixins[', Class.label, ']');
+        xs.log('xs.class.preprocessors.prepareMixins[', Class.label, ']');
 
         //init
         //init mixins list with own values
@@ -38,7 +38,7 @@
         var imports = descriptor.imports;
 
         //process mixins list
-        xs.log('xs.class.preprocessor.prepareMixins[', Class.label, ']. Mixins:', mixins.toSource());
+        xs.log('xs.class.preprocessors.prepareMixins[', Class.label, ']. Mixins:', mixins.toSource());
         mixins.each(function (name, alias) {
             //verify mixed class name
             if (!xs.isString(name) || !name) {

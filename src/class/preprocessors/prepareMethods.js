@@ -26,7 +26,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.log('xs.class.preprocessor.prepareMethods[', Class.label, ']');
+        xs.log('xs.class.preprocessors.prepareMethods[', Class.label, ']');
         //if methods are specified not as object - throw respective error
         if (!xs.isObject(descriptor.properties)) {
             throw new MethodError('[' + Class.label + ']: incorrect methods list');

@@ -26,14 +26,14 @@
         return descriptor.mixins.length > 0;
     }, function (Class) {
 
-        xs.log('xs.class.preprocessor.processMixins[', Class.label, ']');
+        xs.log('xs.class.preprocessors.processMixins[', Class.label, ']');
 
         //init
         //get mixins list
         var mixins = Class.descriptor.mixins;
 
         //process mixins list
-        xs.log('xs.class.preprocessor.processMixins[', Class.label, ']. Mixins:', mixins.toSource());
+        xs.log('xs.class.preprocessors.processMixins[', Class.label, ']. Mixins:', mixins.toSource());
         //namespace shortcut
         var resolveName = Class.descriptor.resolveName;
         mixins.each(function (name, alias, list) {
@@ -84,7 +84,7 @@
 
             var Mixin = xs.ContractsManager.get(name);
 
-            xs.log('xs.class.preprocessor.processMixins[', target.label, ']. Mixing in:', Mixin.label, 'as', alias);
+            xs.log('xs.class.preprocessors.processMixins[', target.label, ']. Mixing in:', Mixin.label, 'as', alias);
             //mix mixed class descriptor into target descriptor
             _mixinClass(target.descriptor, Mixin.descriptor);
 

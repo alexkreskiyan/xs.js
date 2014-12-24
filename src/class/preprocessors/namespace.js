@@ -26,7 +26,7 @@
         return true;
     }, function (Class, descriptor, ns, dependencies, ready) {
 
-        xs.log('xs.class.preprocessor.namespace');
+        xs.log('xs.class.preprocessors.namespace');
         var namespace = (xs.isString(descriptor.namespace) && descriptor.namespace.length) ? descriptor.namespace : undefined;
         //save namespace
         Class.descriptor.resolveName = function (path) {
