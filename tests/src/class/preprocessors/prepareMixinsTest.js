@@ -19,7 +19,7 @@ module('xs.class.preprocessors.prepareMixins', function () {
         //define
         me.Class = xs.Class(function () {
             var me = this;
-            me.mixins.demo = 'xs.Base';
+            me.mixins.demo = 'xs.class.Base';
         });
 
         //save
@@ -39,7 +39,7 @@ module('xs.class.preprocessors.prepareMixins', function () {
 
         //check chain
         strictEqual(ns.Class.descriptor.mixins.length, 1);
-        strictEqual(ns.Class.descriptor.mixins.at('demo'), 'xs.Base');
+        strictEqual(ns.Class.descriptor.mixins.at('demo'), 'xs.class.Base');
 
     }, function () {
         var me = this;

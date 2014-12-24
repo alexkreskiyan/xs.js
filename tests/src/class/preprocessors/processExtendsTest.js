@@ -25,8 +25,8 @@ module('xs.class.preprocessors.processExtends', function () {
     }, function () {
         var me = this;
 
-        //Class extends xs.Base
-        strictEqual(me.Class.parent, xs.Base);
+        //Class extends xs.class.Base
+        strictEqual(me.Class.parent, xs.class.Base);
     }, function () {
         var me = this;
         
@@ -98,7 +98,7 @@ module('xs.class.preprocessors.processExtends', function () {
         var ns = tests.class.preprocessors.processExtends;
 
         //check chain
-        strictEqual(ns.Base.parent, xs.Base);
+        strictEqual(ns.Base.parent, xs.class.Base);
         strictEqual(ns.Parent.parent, ns.Base);
         strictEqual(ns.Child.parent, ns.Parent);
 

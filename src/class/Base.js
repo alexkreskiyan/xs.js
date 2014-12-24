@@ -9,15 +9,15 @@
 
  */
 /**
- * Private internal core class. All xs classes inherit xs.Base
+ * Private internal core class. All xs classes inherit xs.class.Base
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @abstract
  *
- * @class xs.Base
+ * @class xs.class.Base
  */
-xs.define('xs.Base', function () {
+xs.define('xs.class.Base', function () {
     var me = this;
     /**
      * Returns whether this is child of given parent
@@ -31,7 +31,7 @@ xs.define('xs.Base', function () {
      *
      * @method inherits
      *
-     * @param {xs.Base} parent Class, being verified to be ancestor of this Class
+     * @param {xs.class.Base} parent Class, being verified to be ancestor of this Class
      *
      * @return {Boolean} verification result
      */
@@ -44,7 +44,7 @@ xs.define('xs.Base', function () {
      *
      * @method clone
      *
-     * @return {xs.Base} clone object
+     * @return {xs.class.Base} clone object
      */
     me.methods.clone = function () {
         var me = this;

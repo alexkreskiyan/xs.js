@@ -97,7 +97,7 @@
          *
          * - class with given name is already registered
          * - class is not function
-         * - class is not extended from xs.Base
+         * - class is not extended from xs.class.Base
          */
         var _add = me.add = function (name, Class) {
             //throw error if trying to set defined

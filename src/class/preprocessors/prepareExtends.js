@@ -32,7 +32,7 @@
         if (xs.isString(extended) && extended) {
             descriptor.imports.add(extended);
 
-            //if no parent given - extend from xs.Base
+            //if no parent given - extend from xs.class.Base
         } else if (xs.isDefined(extended)) {
 
             //if extended is not string (empty string) - throw respective error

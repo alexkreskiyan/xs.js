@@ -28,10 +28,10 @@
         var extended = descriptor.extends;
 
         xs.log('xs.class.preprocessor.processExtends[', Class.label, ']. Extended:', extended);
-        //if no parent given - extend from xs.Base
+        //if no parent given - extend from xs.class.Base
         if (!xs.isDefined(extended)) {
-            xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extending xs.Base');
-            _extend(Class, xs.Base);
+            xs.log('xs.class.preprocessor.extends[', Class.label, ']. Extending xs.class.Base');
+            _extend(Class, xs.class.Base);
 
             return;
 

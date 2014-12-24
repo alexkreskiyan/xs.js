@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.Base', function () {
+module('xs.class.Base', function () {
     test('chain', function () {
         var me = this;
         //Base
@@ -96,8 +96,8 @@ module('xs.Base', function () {
     });
 
     test('clone', function () {
-        //create simple xs.Base instance
-        var sample = new xs.Base;
+        //create simple xs.class.Base instance
+        var sample = new xs.class.Base;
         sample.a = 1;
 
         //create clone
@@ -112,6 +112,6 @@ module('xs.Base', function () {
         });
 
         //clone constructor is ok
-        strictEqual(clone.constructor, xs.Base);
+        strictEqual(clone.constructor, xs.class.Base);
     })
 });

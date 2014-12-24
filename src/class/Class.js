@@ -411,8 +411,8 @@
     Object.keys(xs.DependenciesManager).length || delete xs.DependenciesManager;
 
 
-    //define prototype of xs.Base
-    xs.Base = xs.Class(function () {
+    //define prototype of xs.class.Base
+    xs.class.Base = xs.Class(function () {
     }, xs.emptyFn);
 
 

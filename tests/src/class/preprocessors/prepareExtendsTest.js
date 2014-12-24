@@ -15,7 +15,7 @@ module('xs.class.preprocessors.prepareExtends', function () {
         var Class = xs.Class(function () {
         });
 
-        //Class extends xs.Base
+        //Class extends xs.class.Base
         strictEqual(Class.descriptor.extends, undefined);
     });
 
@@ -83,7 +83,7 @@ module('xs.class.preprocessors.prepareExtends', function () {
         var ns = tests.class.preprocessors.prepareExtends;
 
         //check chain
-        strictEqual(ns.Base.parent, xs.Base);
+        strictEqual(ns.Base.parent, xs.class.Base);
         strictEqual(ns.Parent.parent, ns.Base);
         strictEqual(ns.Child.parent, ns.Parent);
 
