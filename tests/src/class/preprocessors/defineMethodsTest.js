@@ -17,7 +17,7 @@ module('xs.class.preprocessors.defineMethods', function () {
         me.BaseName = 'tests.class.preprocessors.defineMethods.Base';
 
         //define
-        me.Base = xs.Class.create(function () {
+        me.Base = xs.Class(function () {
             this.methods.a = function () {
 
                 return 1;
@@ -37,7 +37,7 @@ module('xs.class.preprocessors.defineMethods', function () {
         me.ParentName = 'tests.class.preprocessors.defineMethods.Parent';
 
         //define
-        me.Parent = xs.Class.create(function () {
+        me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineMethods.Base';
             this.methods.a = function () {
 
@@ -62,7 +62,7 @@ module('xs.class.preprocessors.defineMethods', function () {
         me.ChildName = 'tests.class.preprocessors.defineMethods.Child';
 
         //define
-        me.Child = xs.Class.create(function () {
+        me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineMethods.Parent';
             this.methods.c = function () {
 

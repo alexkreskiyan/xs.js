@@ -22,7 +22,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         };
 
         //define
-        me.Base = xs.Class.create(function () {
+        me.Base = xs.Class(function () {
             this.methods.a = me.baseA;
         });
 
@@ -47,7 +47,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
             return 3;
         };
         //define
-        me.Parent = xs.Class.create(function () {
+        me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.prepareMethods.Base';
             this.methods.a = me.parentA;
             this.methods.b = me.parentB;
@@ -70,7 +70,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
             return 5;
         };
         //define
-        me.Child = xs.Class.create(function () {
+        me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.prepareMethods.Parent';
             this.methods.c = me.childC;
         });

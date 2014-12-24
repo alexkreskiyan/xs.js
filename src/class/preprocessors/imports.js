@@ -21,7 +21,7 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('imports', function () {
+    xs.class.preprocessors.add('imports', function () {
 
         return true;
     }, function (Class, descriptor, ns, dependencies, ready) {

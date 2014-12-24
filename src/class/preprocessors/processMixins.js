@@ -21,7 +21,7 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('processMixins', function (Class, descriptor) {
+    xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
 
         return descriptor.mixins.length > 0;
     }, function (Class) {

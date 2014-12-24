@@ -17,7 +17,7 @@ module('xs.class.preprocessors.prepareMixins', function () {
         me.ClassName = 'tests.class.preprocessors.prepareMixins.Class';
 
         //define
-        me.Class = xs.Class.create(function () {
+        me.Class = xs.Class(function () {
             var me = this;
             me.mixins.demo = 'xs.Base';
         });

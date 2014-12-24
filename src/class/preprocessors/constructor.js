@@ -21,7 +21,7 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('constructor', function () {
+    xs.class.preprocessors.add('constructor', function () {
 
         return true;
     }, function (Class, descriptor) {

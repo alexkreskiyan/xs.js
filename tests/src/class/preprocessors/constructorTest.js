@@ -25,7 +25,7 @@ module('xs.class.preprocessors.constructor', function () {
         };
 
         //define
-        me.Base = xs.Class.create(function () {
+        me.Base = xs.Class(function () {
             this.constructor = me.constructor;
         });
 
@@ -42,7 +42,7 @@ module('xs.class.preprocessors.constructor', function () {
         me.ParentName = 'tests.class.preprocessors.constructor.Parent';
 
         //define
-        me.Parent = xs.Class.create(function () {
+        me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.constructor.Base';
         });
 
@@ -59,7 +59,7 @@ module('xs.class.preprocessors.constructor', function () {
         me.ChildName = 'tests.class.preprocessors.constructor.Child';
 
         //define
-        me.Child = xs.Class.create(function () {
+        me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.constructor.Parent';
             this.constructor = me.constructor2;
         });

@@ -8,13 +8,13 @@
  License: http://annium.com/contact
 
  */
-module('xs.Class', function () {
+module('xs.class.Class', function () {
 
     test('create', function () {
         //test create without descriptor fails
-        throws(xs.Class.create);
+        throws(xs.Class);
 
-        var Class = xs.Class.create(function (self, ns) {
+        var Class = xs.Class(function (self, ns) {
         });
 
         //class is function
@@ -24,7 +24,7 @@ module('xs.Class', function () {
     test('factory', function () {
         var me = this;
         //create simple class
-        me.Class = xs.Class.create(function (self, ns) {
+        me.Class = xs.Class(function (self, ns) {
         });
 
         //assign some constructor
@@ -59,7 +59,7 @@ module('xs.Class', function () {
     test('processors add', function () {
         var me = this;
         //setUp
-        me.stack = xs.Class.preprocessors;
+        me.stack = xs.class.preprocessors;
 
         //save stack items
         me.save = me.stack.get();
@@ -127,7 +127,7 @@ module('xs.Class', function () {
 
     test('processors reorder', function () {
         var me = this;
-        me.stack = xs.Class.preprocessors;
+        me.stack = xs.class.preprocessors;
 
         //save stack items
         me.save = me.stack.get();
@@ -197,7 +197,7 @@ module('xs.Class', function () {
     test('processors remove', function () {
         var me = this;
         //setUp
-        me.stack = xs.Class.preprocessors;
+        me.stack = xs.class.preprocessors;
 
         //save stack items
         me.save = me.stack.get();
@@ -258,7 +258,8 @@ module('xs.Class', function () {
 
     test('process class', function () {
         var me = this;
-        me.stack = xs.Class.preprocessors;
+
+        me.stack = xs.class.preprocessors;
 
         //save stack items
         me.save = me.stack.get();
@@ -292,7 +293,7 @@ module('xs.Class', function () {
 
     }, function () {
         var me = this;
-        xs.Class.create(function () {
+        xs.Class(function () {
 
         }, function (Class) {
             strictEqual(Class.descriptor.chain, 'onetwothree');

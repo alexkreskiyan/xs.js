@@ -17,7 +17,7 @@ module('xs.class.preprocessors.singleton', function () {
         me.BaseName = 'tests.class.preprocessors.singleton.Base';
 
         //define
-        me.Base = xs.Class.create(function () {
+        me.Base = xs.Class(function () {
         });
 
         //save
@@ -33,7 +33,7 @@ module('xs.class.preprocessors.singleton', function () {
         me.ParentName = 'tests.class.preprocessors.singleton.Parent';
 
         //define
-        me.Parent = xs.Class.create(function () {
+        me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.singleton.Base';
             this.singleton = true;
         });
@@ -51,7 +51,7 @@ module('xs.class.preprocessors.singleton', function () {
         me.ChildName = 'tests.class.preprocessors.singleton.Child';
 
         //define
-        me.Child = xs.Class.create(function () {
+        me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.singleton.Parent';
         });
 

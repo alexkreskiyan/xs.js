@@ -21,7 +21,7 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('singleton', function () {
+    xs.class.preprocessors.add('singleton', function () {
 
         return true;
     }, function (Class, descriptor) {

@@ -21,7 +21,7 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('prepareStaticMethods', function () {
+    xs.class.preprocessors.add('prepareStaticMethods', function () {
 
         return true;
     }, function (Class, descriptor) {

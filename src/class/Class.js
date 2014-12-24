@@ -13,77 +13,53 @@
     //framework shorthand
     var xs = root[ns];
 
+    //define xs.class
+    xs.class || (xs.class = {});
+
     /**
-     * xs.Class is core class, that is used for class generation.
+     * xs.class.Class is core class, that is used for class generation.
      *
-     * xs.Class provides 2 stacks to register processors:
+     * xs.class.Class provides 2 stacks to register processors:
      *
-     * - {@link xs.Class#preprocessors preprocessors}
-     * - {@link xs.Class#postprocessors postprocessors}
+     * - {@link xs.class.preprocessors preprocessors}
+     * - {@link xs.class.postprocessors postprocessors}
      *
      * Usage example:
      *
      *     //create simple Class
-     *     var Class = xs.Class.create(function (Class) {
-     *         //here is Class descriptor returned
-     *         return {
-     *         };
+     *     var Class = xs.Class(function (Class) {
+     *         //here Class descriptor is described:
+     *         var me = this;
+     *         me.imports = [];
+     *         me.constants.a = 1;
      *     });
+     *
+     * xs.class.Class has 2 params:
+     *
+     * 1 Descriptor (Function) -  descriptor constructor. Creates raw descriptor instance. Is called with 3 params:
+     *
+     * - self. Created class instance
+     * - ns. namespace object, where namespace references are placed
+     * - imports. namespace object, where namespace references are placed
+     * - dependencies. system dependencies manager. Is used to describe classes' dependencies
+     *
+     * 2 createdFn ([Function]) - optional class creation callback. Is called after
+     * {@link xs.class.preprocessors preprocessors} stack is processed. When called, created class is passed as param.
+     *
+     * Errors are thrown, when:
+     *
+     * - descFn is given not as function
+     * - descFn doesn't return object
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class xs.Class
+     * @class xs.class.Class
+     *
+     * @alternateClassName xs.Class
      *
      * @singleton
      */
-    xs.Class = new (function (dependencies) {
-        var me = this;
-
-        /**
-         * Stack of processors, processing class before it's considered to be created (before createdFn is called)
-         *
-         * Provided arguments are:
-         *
-         * For verifier:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * For handler:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * @property preprocessors
-         *
-         * @type {xs.core.ProcessorsStack}
-         */
-        var preprocessors = me.preprocessors = new xs.ProcessorsStack.Class();
-
-        /**
-         * Stack of processors, processing class after it's considered to be created (after createdFn is called)
-         *
-         * Provided arguments are:
-         *
-         * For verifier:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * For handler:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * @property postprocessors
-         *
-         * @type {.core.ProcessorsStack}
-         */
-        var postprocessors = me.postprocessors = new xs.ProcessorsStack.Class();
+    xs.Class = xs.class.Class = (function (dependencies) {
 
         /**
          * Currently processing classes' list
@@ -99,36 +75,11 @@
         /**
          * Creates class sample and starts processors applying
          *
-         * For example:
-         *
-         *     //create simple Class
-         *     var Class = xs.Class.create(function (self, ns) {
-         *         //here is Class descriptor returned
-         *         return {
-         *         };
-         *     }, function(Class) {
-         *         console.log('class', Class, 'created');
-         *     );
+         * @ignore
          *
          * @method create
-         *
-         * @param {Function} Descriptor descriptor constructor. Creates raw descriptor instance. Is called with 3 params:
-         *
-         * - self. Created class instance
-         * - ns. namespace object, where namespace references are placed
-         * - imports. namespace object, where namespace references are placed
-         *
-         * @param {Function} [createdFn] class creation callback. Is called after
-         * {@link xs.Class#preprocessors preprocessors} stack is processed. When called, created class is passed as param
-         *
-         * @return {Function} created Class
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - descFn is given not as function
-         * - descFn doesn't return object
          */
-        me.create = function (Descriptor, createdFn) {
+        var Class = function (Descriptor, createdFn) {
 
             //Descriptor must be function
             if (!xs.isFunction(Descriptor)) {
@@ -138,7 +89,7 @@
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
 
             //create class
-            var Class = _create();
+            var Class = _createSample();
 
             //assign factory for class
             Class.factory = _createFactory(Class);
@@ -218,6 +169,60 @@
         };
 
         /**
+         * Stack of processors, processing class before it's considered to be created (before createdFn is called)
+         *
+         * Provided arguments are:
+         *
+         * For verifier:
+         *
+         *  - Class
+         *  - descriptor
+         *  - namespace
+         *
+         * For handler:
+         *
+         *  - Class
+         *  - descriptor
+         *  - namespace
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class xs.class.preprocessors
+         *
+         * @extends xs.core.ProcessorsStack
+         *
+         * @singleton
+         */
+        var preprocessors = xs.class.preprocessors = new xs.ProcessorsStack.Class();
+
+        /**
+         * Stack of processors, processing class after it's considered to be created (after createdFn is called)
+         *
+         * Provided arguments are:
+         *
+         * For verifier:
+         *
+         *  - Class
+         *  - descriptor
+         *  - namespace
+         *
+         * For handler:
+         *
+         *  - Class
+         *  - descriptor
+         *  - namespace
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class xs.class.postprocessors
+         *
+         * @extends xs.core.ProcessorsStack
+         *
+         * @singleton
+         */
+        var postprocessors = xs.class.postprocessors = new xs.ProcessorsStack.Class();
+
+        /**
          * Returns new xClass sample
          *
          * @ignore
@@ -226,7 +231,7 @@
          *
          * @return {Function} new xClass
          */
-        var _create = function () {
+        var _createSample = function () {
             var Class = function xClass() {
                 var me = this;
 
@@ -388,20 +393,7 @@
             descriptor.properties = new xs.core.Collection(descriptor.properties);
         };
 
-        /**
-         * Private dependencies manager
-         *
-         * It's aim is storing of cross-classes processing dependencies.
-         * Using dependencies manager allows to prevent dead locks and regulate classes processing
-         *
-         * @ignore
-         *
-         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-         *
-         * @private
-         *
-         * @class dependencies
-         */
+        return Class;
     })(xs.DependenciesManager.Class);
 
 
@@ -418,9 +410,11 @@
     //complete if ready
     Object.keys(xs.DependenciesManager).length || delete xs.DependenciesManager;
 
+
     //define prototype of xs.Base
-    xs.Base = xs.Class.create(function () {
+    xs.Base = xs.Class(function () {
     }, xs.emptyFn);
+
 
     /**
      * Internal error class
@@ -432,7 +426,7 @@
      * @class ClassError
      */
     function ClassError(message) {
-        this.message = 'xs.Class :: ' + message;
+        this.message = 'xs.class.Class :: ' + message;
     }
 
     ClassError.prototype = new Error();

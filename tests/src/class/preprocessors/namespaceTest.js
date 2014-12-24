@@ -17,7 +17,7 @@ module('xs.class.preprocessors.namespace', function () {
         me.BaseName = 'tests.class.preprocessors.namespace.base.Base';
 
         //define
-        me.Base = xs.Class.create(function () {
+        me.Base = xs.Class(function () {
         });
 
         //save
@@ -33,7 +33,7 @@ module('xs.class.preprocessors.namespace', function () {
         me.ParentName = 'tests.class.preprocessors.namespace.base.Parent';
 
         //define
-        me.Parent = xs.Class.create(function () {
+        me.Parent = xs.Class(function () {
             this.namespace = 'tests.class.preprocessors.namespace.base';
             this.extends = 'ns.Base';
         });
@@ -51,7 +51,7 @@ module('xs.class.preprocessors.namespace', function () {
         me.ChildName = 'tests.class.preprocessors.namespace.demo.Child';
 
         //define
-        me.Child = xs.Class.create(function () {
+        me.Child = xs.Class(function () {
             this.namespace = 'tests.class.preprocessors.namespace.demo';
             this.extends = 'tests.class.preprocessors.namespace.base.Parent';
         });

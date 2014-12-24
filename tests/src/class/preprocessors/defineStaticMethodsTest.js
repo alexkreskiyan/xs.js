@@ -17,7 +17,7 @@ module('xs.class.preprocessors.defineStaticMethods', function () {
         me.BaseName = 'tests.class.preprocessors.defineStaticMethods.Base';
 
         //define
-        me.Base = xs.Class.create(function () {
+        me.Base = xs.Class(function () {
             this.static.methods.a = function () {
 
                 return 1;
@@ -37,7 +37,7 @@ module('xs.class.preprocessors.defineStaticMethods', function () {
         me.ParentName = 'tests.class.preprocessors.defineStaticMethods.Parent';
 
         //define
-        me.Parent = xs.Class.create(function () {
+        me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineStaticMethods.Base';
             this.static.methods.a = function () {
 
@@ -62,7 +62,7 @@ module('xs.class.preprocessors.defineStaticMethods', function () {
         me.ChildName = 'tests.class.preprocessors.defineStaticMethods.Child';
 
         //define
-        me.Child = xs.Class.create(function () {
+        me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineStaticMethods.Parent';
             this.static.methods.c = function () {
 

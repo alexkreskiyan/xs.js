@@ -13,7 +13,7 @@ module('xs.ContractsManager', function () {
     test('has', function () {
         var me = this;
 
-        me.Class = xs.Class.create(function () {
+        me.Class = xs.Class(function () {
         });
 
         me.className = 'xs.myClass';
@@ -50,7 +50,7 @@ module('xs.ContractsManager', function () {
     test('get', function () {
         var me = this;
 
-        me.Class = xs.Class.create(function () {
+        me.Class = xs.Class(function () {
         });
 
         me.className = 'xs.myClass';
@@ -106,15 +106,15 @@ module('xs.ContractsManager', function () {
         }
 
         //create ClassOne
-        me.ClassOne = xs.Class.create(function () {
+        me.ClassOne = xs.Class(function () {
         });
 
         //create ClassTwo
-        me.ClassTwo = xs.Class.create(function () {
+        me.ClassTwo = xs.Class(function () {
         });
 
         //create ClassThree
-        me.ClassThree = xs.Class.create(function () {
+        me.ClassThree = xs.Class(function () {
         });
 
     }, function () {
@@ -235,15 +235,15 @@ module('xs.ContractsManager', function () {
         }
 
         //create ClassOne
-        me.ClassOne = xs.Class.create(function () {
+        me.ClassOne = xs.Class(function () {
         });
 
         //create ClassTwo
-        me.ClassTwo = xs.Class.create(function () {
+        me.ClassTwo = xs.Class(function () {
         });
 
         //create ClassThree
-        me.ClassThree = xs.Class.create(function () {
+        me.ClassThree = xs.Class(function () {
         });
 
         //add classOne

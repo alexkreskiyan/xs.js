@@ -12,6 +12,7 @@
 
     //framework shorthand
     var xs = root[ns];
+
     /**
      * Private internal core class.
      *

@@ -83,7 +83,7 @@
          *
          * For example:
          *
-         *     var Class = xs.Class.create(function() {
+         *     var Class = xs.Class(function() {
          *         return {};
          *     });
          *     xs.ContractsManager.add('xs.myClass', Class);
@@ -188,7 +188,7 @@
         };
 
         /**
-         * Creates class sample via {@link xs.Class#create xs.Class}. After that, when {@link xs.Class#preprocessors}
+         * Creates class sample via {@link xs.class.Class xs.class.Class}. After that, when {@link xs.class.preprocessors}
          * stack is processed, saves created class in internal registry with given name. If class with that name is already defined,
          * respective error is thrown.
          *
@@ -212,7 +212,7 @@
          * - ns. namespace object, where namespace references are placed
          *
          * @param {Function} createdFn class creation callback. Is called after
-         * {@link xs.Class#preprocessors preprocessors} stack is processed. When called, created class is passed as param
+         * {@link xs.class.preprocessors preprocessors} stack is processed. When called, created class is passed as param
          *
          * @return {Function} created Class
          *
@@ -222,7 +222,7 @@
          */
         me.define = function (name, descFn, createdFn) {
             //create Class and start it's processing
-            var Class = xs.Class.create(descFn, createdFn);
+            var Class = xs.Class(descFn, createdFn);
 
             //here class namespace is evaluated. Evaluate real name of class
             name = Class.descriptor.resolveName(name);

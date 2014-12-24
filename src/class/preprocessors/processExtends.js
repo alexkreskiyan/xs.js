@@ -21,7 +21,7 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('processExtends', function () {
+    xs.class.preprocessors.add('processExtends', function () {
 
         return true;
     }, function (Class, descriptor) {

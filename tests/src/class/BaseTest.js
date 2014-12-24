@@ -15,7 +15,7 @@ module('xs.Base', function () {
         me.BaseName = 'my.Base';
 
         //define
-        me.Base = xs.Class.create(function () {
+        me.Base = xs.Class(function () {
 
         });
 
@@ -32,7 +32,7 @@ module('xs.Base', function () {
         me.ParentName = 'my.Parent';
 
         //define
-        me.Parent = xs.Class.create(function () {
+        me.Parent = xs.Class(function () {
             this.extends = 'my.Base';
         });
 
@@ -49,7 +49,7 @@ module('xs.Base', function () {
         me.ChildName = 'my.Child';
 
         //define
-        me.Child = xs.Class.create(function () {
+        me.Child = xs.Class(function () {
             this.extends = 'my.Parent';
         });
 

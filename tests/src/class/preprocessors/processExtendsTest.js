@@ -41,7 +41,7 @@ module('xs.class.preprocessors.processExtends', function () {
         me.BaseName = 'tests.class.preprocessors.processExtends.Base';
 
         //define
-        me.Base = xs.Class.create(function () {
+        me.Base = xs.Class(function () {
         });
 
         //save
@@ -57,7 +57,7 @@ module('xs.class.preprocessors.processExtends', function () {
         me.ParentName = 'tests.class.preprocessors.processExtends.Parent';
 
         //define
-        me.Parent = xs.Class.create(function () {
+        me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.processExtends.Base';
         });
 
@@ -74,7 +74,7 @@ module('xs.class.preprocessors.processExtends', function () {
         me.ChildName = 'tests.class.preprocessors.processExtends.Child';
 
         //define
-        me.Child = xs.Class.create(function () {
+        me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.processExtends.Parent';
         });
 

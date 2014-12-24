@@ -22,7 +22,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         };
 
         //define
-        me.Base = xs.Class.create(function () {
+        me.Base = xs.Class(function () {
             this.static.methods.a = me.baseA;
         });
 
@@ -47,7 +47,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
             return 3;
         };
         //define
-        me.Parent = xs.Class.create(function () {
+        me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.prepareStaticMethods.Base';
             this.static.methods.a = me.parentA;
             this.static.methods.b = me.parentB;
@@ -70,7 +70,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
             return 5;
         };
         //define
-        me.Child = xs.Class.create(function () {
+        me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.prepareStaticMethods.Parent';
             this.static.methods.c = me.childC;
         });

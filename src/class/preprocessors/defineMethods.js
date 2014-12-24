@@ -21,7 +21,7 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('defineMethods', function () {
+    xs.class.preprocessors.add('defineMethods', function () {
 
         return true;
     }, function (Class, descriptor) {

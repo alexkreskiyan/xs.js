@@ -21,7 +21,7 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.Class.preprocessors.add('namespace', function () {
+    xs.class.preprocessors.add('namespace', function () {
 
         return true;
     }, function (Class, descriptor, ns, dependencies, ready) {

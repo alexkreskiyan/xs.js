@@ -21,7 +21,7 @@ module('xs.class.preprocessors.prepareStaticProperties', function () {
             return 1;
         };
         //define
-        me.Base = xs.Class.create(function () {
+        me.Base = xs.Class(function () {
             this.static.properties.a = {
                 get: me.baseAGet
             };
@@ -48,7 +48,7 @@ module('xs.class.preprocessors.prepareStaticProperties', function () {
             return this.privates.b = b + 1;
         };
         //define
-        me.Parent = xs.Class.create(function () {
+        me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.prepareStaticProperties.Base';
             this.static.properties.a = {
                 get: me.parentAGet
@@ -79,7 +79,7 @@ module('xs.class.preprocessors.prepareStaticProperties', function () {
             return this.privates.c = '?' + c;
         };
         //define
-        me.Child = xs.Class.create(function () {
+        me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.prepareStaticProperties.Parent';
             this.static.properties.a = 2;
             this.static.properties.c = {
