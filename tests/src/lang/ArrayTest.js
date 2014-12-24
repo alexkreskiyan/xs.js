@@ -55,7 +55,7 @@ module('xs.lang.Array', function () {
         clone = xs.clone(x);
 
         //shuffle original array
-        xs.shuffle(x);
+        xs.Array.shuffle(x);
 
         //check items all saved
         Object.keys(clone).forEach(function (key) {

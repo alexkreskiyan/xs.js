@@ -51,5 +51,4 @@
         };
     });
 
-    xs.extend(xs, array);
 })(window, 'xs');

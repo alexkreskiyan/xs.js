@@ -844,7 +844,7 @@
          * @class LoaderError
          */
         function LoaderError(message) {
-            this.message = 'xs.Loader :: ' + message;
+            this.message = 'xs.core.Loader :: ' + message;
         }
 
         LoaderError.prototype = new Error();
