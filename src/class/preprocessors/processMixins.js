@@ -43,11 +43,11 @@
             list.set(alias, name);
 
             //if Mixin is not defined - throw error
-            if (!xs.ClassManager.has(name)) {
+            if (!xs.ContractsManager.has(name)) {
                 throw new MixinError('[' + Class.label + ']: parent class "' + name + '" is not defined');
             } else {
                 //get Mixin reference
-                var Mixin = xs.ClassManager.get(name);
+                var Mixin = xs.ContractsManager.get(name);
 
                 //if Mixin is processing = throw error
                 if (Mixin.isProcessing) {
@@ -82,7 +82,7 @@
         //apply each mixin
         mixins.each(function (name, alias) {
 
-            var Mixin = xs.ClassManager.get(name);
+            var Mixin = xs.ContractsManager.get(name);
 
             xs.log('xs.class.preprocessor.processMixins[', target.label, ']. Mixing in:', Mixin.label, 'as', alias);
             //mix mixed class descriptor into target descriptor

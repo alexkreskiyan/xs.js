@@ -63,10 +63,10 @@ module('xs.class.preprocessors.imports', function () {
         var ns = tests.class.preprocessors.imports;
 
         //remove created classes
-        xs.ClassManager.remove(ns.One.label);
-        xs.ClassManager.remove(ns.Two.label);
-        xs.ClassManager.remove(ns.Three.label);
-        xs.ClassManager.remove(ns.Base.label);
-        xs.ClassManager.remove(ns.Child.label);
+        xs.ContractsManager.remove(ns.One.label);
+        xs.ContractsManager.remove(ns.Two.label);
+        xs.ContractsManager.remove(ns.Three.label);
+        xs.ContractsManager.remove(ns.Base.label);
+        xs.ContractsManager.remove(ns.Child.label);
     });
 });

@@ -1070,13 +1070,13 @@
                 name = waiting.at(i);
 
                 //go to next if class is not registered
-                if (!xs.ClassManager.has(name)) {
+                if (!xs.ContractsManager.has(name)) {
                     i++;
                     continue;
                 }
 
                 //get class
-                Class = xs.ClassManager.get(name);
+                Class = xs.ContractsManager.get(name);
 
                 //if class is processing - go to next
                 if (Class.isProcessing) {

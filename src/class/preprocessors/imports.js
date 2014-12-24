@@ -73,7 +73,7 @@
 
         //filter loads to find out already loaded ones
         var loads = requires.find(function (name) {
-            return !xs.ClassManager.has(name);
+            return !xs.ContractsManager.has(name);
         }, xs.core.Collection.ALL);
 
         if (loads.length) {
@@ -91,7 +91,7 @@
         function _process() {
 
             var waiting = requires.map(function (name) {
-                return xs.ClassManager.get(name);
+                return xs.ContractsManager.get(name);
             });
 
             xs.log('xs.class.preprocessor.imports[', Class.label, ']. Imports', loads.values(), 'loaded, applying dependency');
@@ -125,7 +125,7 @@
         //assign imports
         imports.each(function (alias, name) {
             //save class by alias in imports list
-            target.imports[alias] = xs.ClassManager.get(name);
+            target.imports[alias] = xs.ContractsManager.get(name);
         });
 
         //remove imports from Class

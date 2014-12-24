@@ -23,13 +23,13 @@ module('xs.class.preprocessors.prepareMixins', function () {
         });
 
         //save
-        if (xs.ClassManager.has(me.ClassName)) {
-            me.ClassSave = xs.ClassManager.get(me.ClassName);
-            xs.ClassManager.remove(me.ClassName);
+        if (xs.ContractsManager.has(me.ClassName)) {
+            me.ClassSave = xs.ContractsManager.get(me.ClassName);
+            xs.ContractsManager.remove(me.ClassName);
         }
 
-        //add to ClassManager
-        xs.ClassManager.add(me.ClassName, me.Class);
+        //add to ContractsManager
+        xs.ContractsManager.add(me.ClassName, me.Class);
 
         xs.onReady([me.ClassName], me.done);
 
@@ -44,8 +44,8 @@ module('xs.class.preprocessors.prepareMixins', function () {
     }, function () {
         var me = this;
         //Class
-        xs.ClassManager.remove(me.ClassName);
-        me.ClassSave && xs.ClassManager.add(me.ClassName, me.ClassSave);
+        xs.ContractsManager.remove(me.ClassName);
+        me.ClassSave && xs.ContractsManager.add(me.ClassName, me.ClassSave);
     });
 
 });

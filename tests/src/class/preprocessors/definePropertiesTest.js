@@ -28,13 +28,13 @@ module('xs.class.preprocessors.defineProperties', function () {
         });
 
         //save
-        if (xs.ClassManager.has(me.BaseName)) {
-            me.BaseSave = xs.ClassManager.get(me.BaseName);
-            xs.ClassManager.remove(me.BaseName);
+        if (xs.ContractsManager.has(me.BaseName)) {
+            me.BaseSave = xs.ContractsManager.get(me.BaseName);
+            xs.ContractsManager.remove(me.BaseName);
         }
 
-        //add to ClassManager
-        xs.ClassManager.add(me.BaseName, me.Base);
+        //add to ContractsManager
+        xs.ContractsManager.add(me.BaseName, me.Base);
 
         //Parent
         me.ParentName = 'tests.class.preprocessors.defineProperties.Parent';
@@ -57,13 +57,13 @@ module('xs.class.preprocessors.defineProperties', function () {
         });
 
         //save
-        if (xs.ClassManager.has(me.ParentName)) {
-            me.ParentSave = xs.ClassManager.get(me.ParentName);
-            xs.ClassManager.remove(me.ParentName);
+        if (xs.ContractsManager.has(me.ParentName)) {
+            me.ParentSave = xs.ContractsManager.get(me.ParentName);
+            xs.ContractsManager.remove(me.ParentName);
         }
 
-        //add to ClassManager
-        xs.ClassManager.add(me.ParentName, me.Parent);
+        //add to ContractsManager
+        xs.ContractsManager.add(me.ParentName, me.Parent);
 
         //Child
         me.ChildName = 'tests.class.preprocessors.defineProperties.Child';
@@ -85,13 +85,13 @@ module('xs.class.preprocessors.defineProperties', function () {
         });
 
         //save
-        if (xs.ClassManager.has(me.ChildName)) {
-            me.ChildSave = xs.ClassManager.get(me.ChildName);
-            xs.ClassManager.remove(me.ChildName);
+        if (xs.ContractsManager.has(me.ChildName)) {
+            me.ChildSave = xs.ContractsManager.get(me.ChildName);
+            xs.ContractsManager.remove(me.ChildName);
         }
 
-        //add to ClassManager
-        xs.ClassManager.add(me.ChildName, me.Child);
+        //add to ContractsManager
+        xs.ContractsManager.add(me.ChildName, me.Child);
 
         xs.onReady([
             me.BaseName,
@@ -144,15 +144,15 @@ module('xs.class.preprocessors.defineProperties', function () {
         var me = this;
 
         //Base
-        xs.ClassManager.remove(me.BaseName);
-        me.BaseSave && xs.ClassManager.add(me.BaseName, me.BaseSave);
+        xs.ContractsManager.remove(me.BaseName);
+        me.BaseSave && xs.ContractsManager.add(me.BaseName, me.BaseSave);
 
         //Parent
-        xs.ClassManager.remove(me.ParentName);
-        me.ParentSave && xs.ClassManager.add(me.ParentName, me.ParentSave);
+        xs.ContractsManager.remove(me.ParentName);
+        me.ParentSave && xs.ContractsManager.add(me.ParentName, me.ParentSave);
 
         //Child
-        xs.ClassManager.remove(me.ChildName);
-        me.ChildSave && xs.ClassManager.add(me.ChildName, me.ChildSave);
+        xs.ContractsManager.remove(me.ChildName);
+        me.ChildSave && xs.ContractsManager.add(me.ChildName, me.ChildSave);
     });
 });

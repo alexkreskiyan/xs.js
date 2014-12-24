@@ -43,11 +43,11 @@
         }
 
         //if parent is not defined or is processing - throw errors
-        if (!xs.ClassManager.has(extended)) {
+        if (!xs.ContractsManager.has(extended)) {
             throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + extended + '" is not defined. Move it to imports section, please');
         } else {
             //get parent reference
-            var Parent = xs.ClassManager.get(extended);
+            var Parent = xs.ContractsManager.get(extended);
 
             if (Parent.isProcessing) {
                 throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + Parent.label + '" is not processed yet. Move it to imports section, please');

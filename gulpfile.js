@@ -27,7 +27,7 @@ var paths = {
         //        'src/lang/Number.js',
         //        'src/lang/String.js',
         //        'src/class/Class.js',
-        //        'src/class/ClassManager.js',
+        //        'src/class/ContractsManager.js',
         //        'src/class/Base.js',
         //        'src/class/Loader.js',
         //        'src/util/Observable.js',

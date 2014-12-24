@@ -250,8 +250,8 @@ module('xs.Loader', function () {
         var me = this;
 
         //assert classes were not loaded yet
-        strictEqual(xs.ClassManager.has('tests.class.Loader.Demo'), false);
-        strictEqual(xs.ClassManager.has('tests.class.Loader.Sample'), false);
+        strictEqual(xs.ContractsManager.has('tests.class.Loader.Demo'), false);
+        strictEqual(xs.ContractsManager.has('tests.class.Loader.Sample'), false);
 
         //require classes
         xs.Loader.require([
@@ -264,12 +264,12 @@ module('xs.Loader', function () {
             strictEqual(loaded['tests.class.Loader.Sample'], '/tests/resources/class/Loader/Sample.js');
 
             //assert classes loaded
-            strictEqual(xs.ClassManager.has('tests.class.Loader.Demo'), true);
-            strictEqual(xs.ClassManager.has('tests.class.Loader.Sample'), true);
+            strictEqual(xs.ContractsManager.has('tests.class.Loader.Demo'), true);
+            strictEqual(xs.ContractsManager.has('tests.class.Loader.Sample'), true);
 
             //cleanUp
-            xs.ClassManager.remove('tests.class.Loader.Demo');
-            xs.ClassManager.remove('tests.class.Loader.Sample');
+            xs.ContractsManager.remove('tests.class.Loader.Demo');
+            xs.ContractsManager.remove('tests.class.Loader.Sample');
 
             //require loaded and failed classes
             xs.Loader.require([
@@ -283,8 +283,8 @@ module('xs.Loader', function () {
                 strictEqual(JSON.stringify(loaded), '{"tests.class.Loader.Demo":"/tests/resources/class/Loader/Demo.js"}');
 
                 //assert classes not loaded
-                strictEqual(xs.ClassManager.has('tests.class.Loader.Demo'), false);
-                strictEqual(xs.ClassManager.has('tests.class.Loader.Sample'), false);
+                strictEqual(xs.ContractsManager.has('tests.class.Loader.Demo'), false);
+                strictEqual(xs.ContractsManager.has('tests.class.Loader.Sample'), false);
 
                 me.done();
             });

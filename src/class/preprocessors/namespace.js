@@ -47,7 +47,7 @@
             return path;
         };
 
-        //continue on next tick to allow ClassManager check class name
+        //continue on next tick to allow ContractsManager check class name
         xs.nextTick(ready);
 
         //return false to sign async processor

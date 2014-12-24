@@ -14,15 +14,15 @@
     var xs = root[ns];
 
     /**
-     * xs.ClassManager is core class, that is used to manage created classes
+     * xs.ContractsManager is core class, that is used to manage created classes
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class xs.ClassManager
+     * @class xs.ContractsManager
      *
      * @singleton
      */
-    xs.ClassManager = new (function () {
+    xs.ContractsManager = new (function () {
         var me = this;
 
         /**
@@ -37,11 +37,11 @@
         var registry = new xs.core.Collection;
 
         /**
-         * Checks whether class with given name is already defined by ClassManager
+         * Checks whether class with given name is already defined by ContractsManager
          *
          * For example:
          *
-         *     console.log(xs.ClassManager.has('xs.myClass')); // false
+         *     console.log(xs.ContractsManager.has('xs.myClass')); // false
          *
          * @method has
          *
@@ -59,7 +59,7 @@
          *
          * For example:
          *
-         *      xs.ClassManager.get('xs.myClass');
+         *      xs.ContractsManager.get('xs.myClass');
          *
          * @method get
          *
@@ -86,7 +86,7 @@
          *     var Class = xs.Class.create(function() {
          *         return {};
          *     });
-         *     xs.ClassManager.add('xs.myClass', Class);
+         *     xs.ContractsManager.add('xs.myClass', Class);
          *
          * @method add
          *
@@ -146,7 +146,7 @@
          * For example:
          *
          *     //unset Class
-         *     xs.ClassManager.remove('xs.myClass');
+         *     xs.ContractsManager.remove('xs.myClass');
          *
          * @method remove
          *
@@ -419,12 +419,12 @@
      * @class ClassManagerError
      */
     function ClassManagerError(message) {
-        this.message = 'xs.ClassManager :: ' + message;
+        this.message = 'xs.ContractsManager :: ' + message;
     }
 
     ClassManagerError.prototype = new Error();
 
     xs.extend(xs, {
-        define: xs.ClassManager.define
+        define: xs.ContractsManager.define
     });
 })(window, 'xs');

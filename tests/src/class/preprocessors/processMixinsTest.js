@@ -55,10 +55,10 @@ module('xs.class.preprocessors.processMixins', function () {
 
         //remove created classes from namespace
         var ns = tests.class.preprocessors.processMixins;
-        xs.ClassManager.remove(ns.Child.label);
-        xs.ClassManager.remove(ns.Base.label);
-        xs.ClassManager.remove(ns.Mix1.label);
-        xs.ClassManager.remove(ns.Mix2.label);
+        xs.ContractsManager.remove(ns.Child.label);
+        xs.ContractsManager.remove(ns.Base.label);
+        xs.ContractsManager.remove(ns.Mix1.label);
+        xs.ContractsManager.remove(ns.Mix2.label);
     });
 
 });
