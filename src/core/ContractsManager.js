@@ -14,11 +14,13 @@
     var xs = root[ns];
 
     /**
-     * xs.ContractsManager is core class, that is used to manage created classes
+     * xs.core.ContractsManager is core class, that is used to manage created classes
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class xs.ContractsManager
+     * @class xs.core.ContractsManager
+     *
+     * @alternateClassName xs.ContractsManager
      *
      * @singleton
      */
