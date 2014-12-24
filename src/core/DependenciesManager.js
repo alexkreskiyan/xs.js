@@ -12,400 +12,20 @@
 
     //framework shorthand
     var xs = root[ns];
-    return;
     /**
-     * xs.Class is core class, that is used for class generation.
+     * Private internal core class.
      *
-     * xs.Class provides 2 stacks to register processors:
-     *
-     * - {@link xs.Class#preprocessors preprocessors}
-     * - {@link xs.Class#postprocessors postprocessors}
-     *
-     * Usage example:
-     *
-     *     //create simple Class
-     *     var Class = xs.Class.create(function (Class) {
-     *         //here is Class descriptor returned
-     *         return {
-     *         };
-     *     });
+     * DependenciesManager used to manage contracts' dependencies
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class xs.Class
+     * @private
+     *
+     * @class xs.core.DependenciesManager
      *
      * @singleton
      */
-    xs.Class = new (function (dependencies, queue) {
-        var me = this;
-
-        /**
-         * Stack of processors, processing class before it's considered to be created (before createdFn is called)
-         *
-         * Provided arguments are:
-         *
-         * For verifier:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * For handler:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * @property preprocessors
-         *
-         * @type {xs.Class.Stack}
-         */
-        var preprocessors = me.preprocessors = new Stack();
-
-        /**
-         * Stack of processors, processing class after it's considered to be created (after createdFn is called)
-         *
-         * Provided arguments are:
-         *
-         * For verifier:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * For handler:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * @property postprocessors
-         *
-         * @type {xs.Class.Stack}
-         */
-        var postprocessors = me.postprocessors = new Stack();
-
-        /**
-         * Currently processing classes' list
-         *
-         * @ignore
-         *
-         * @property processing
-         *
-         * @type {xs.core.Collection}
-         */
-        var processing = new xs.core.Collection;
-
-        //save queue add method as xs.Class.onReady
-        me.onReady = queue.add;
-
-        /**
-         * Creates class sample and starts processors applying
-         *
-         * For example:
-         *
-         *     //create simple Class
-         *     var Class = xs.Class.create(function (self, ns) {
-         *         //here is Class descriptor returned
-         *         return {
-         *         };
-         *     }, function(Class) {
-         *         console.log('class', Class, 'created');
-         *     );
-         *
-         * @method create
-         *
-         * @param {Function} Descriptor descriptor constructor. Creates raw descriptor instance. Is called with 3 params:
-         *
-         * - self. Created class instance
-         * - ns. namespace object, where namespace references are placed
-         * - imports. namespace object, where namespace references are placed
-         *
-         * @param {Function} [createdFn] class creation callback. Is called after
-         * {@link xs.Class#preprocessors preprocessors} stack is processed. When called, created class is passed as param
-         *
-         * @return {Function} created Class
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - descFn is given not as function
-         * - descFn doesn't return object
-         */
-        me.create = function (Descriptor, createdFn) {
-
-            //Descriptor must be function
-            if (!xs.isFunction(Descriptor)) {
-                throw new ClassError('descriptor must be evaluated function');
-            }
-
-            xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
-
-            //create class
-            var Class = _create();
-
-            //assign factory for class
-            Class.factory = _createFactory(Class);
-
-            //get namespace for Class
-            var namespace = Class.namespace = {};
-
-            //get imports for Class
-            var imports = Class.imports = {};
-
-            //Fill descriptor prototype
-            Descriptor.prototype = _createDescriptorPrototype();
-
-            //get descriptor instance
-            var descriptor = new Descriptor(Class, namespace, imports);
-            //convert descriptor
-            _convertDescriptor(descriptor);
-
-            //save Class descriptor
-            var emptyDescriptor = _createDescriptorPrototype();
-            _convertDescriptor(emptyDescriptor);
-            xs.constant(Class, 'descriptor', emptyDescriptor);
-
-            //mark class as not ready yet (until preprocessors done)
-            Class.isProcessing = true;
-
-            //push class to processed list
-            processing.add(Class);
-
-            //process preprocessors stack before createdFn called.
-            //Normally, only namespace is processed on this tick - imports is unambiguously async
-            preprocessors.process([
-                Class,
-                descriptor,
-                namespace
-            ], [
-                Class,
-                descriptor,
-                namespace,
-                dependencies
-            ], function () {
-                //remove isProcessing mark
-                delete Class.isProcessing;
-
-                //remove class from processing list
-                processing.remove(Class);
-
-                //remove from dependencies
-                dependencies.remove(Class);
-
-                //remove from queue
-                queue.remove(Class.label);
-
-                //if dependencies empty - all classes processed
-                if (!processing.length) {
-
-                    //remove from queue
-                    queue.remove(null);
-                }
-
-                //call createdFn
-                createdFn(Class);
-
-                //process postprocessors stack after createdFn called
-                postprocessors.process([
-                    Class,
-                    descriptor,
-                    namespace
-                ], [
-                    Class,
-                    descriptor,
-                    namespace
-                ]);
-            });
-
-            return Class;
-        };
-
-        /**
-         * Returns new xClass sample
-         *
-         * @ignore
-         *
-         * @method create
-         *
-         * @return {Function} new xClass
-         */
-        var _create = function () {
-            var Class = function xClass() {
-                var me = this;
-
-                //define class constructor
-                var descriptor = Class.descriptor;
-
-
-                //singleton processing
-
-                //throw exception if Class is singleton
-                if (descriptor.singleton) {
-                    throw new ClassError('can not create instance of singleton class');
-                }
-
-                //get constructor shortcut
-                var constructor = descriptor.constructor != Object ? descriptor.constructor : undefined;
-
-                //if parent constructor - just call it
-                if (me.self && me.self !== Class) {
-                    constructor && constructor.apply(me, arguments);
-
-                    return;
-                }
-
-
-                //save call arguments
-                me.initArguments = arguments;
-
-                //properties processing
-
-                //init privates storage
-                me.privates = {};
-
-                //assign values
-                var properties = descriptor.properties.items; //xs.core.Collection
-                var i, length = properties.length, item;
-
-                for (i = 0; i < length; i++) {
-                    item = properties[i];
-                    item.value.hasOwnProperty('value') && (me[item.key] = item.value.value);
-                }
-
-                //native constructor call
-
-                //save class reference
-                me.self = Class;
-
-                //apply constructor
-                constructor && constructor.apply(me, arguments);
-            };
-
-            return Class;
-        };
-
-        /**
-         * Returns factory for given Class
-         *
-         * @ignore
-         *
-         * @method createFactory
-         *
-         * @param {Function} Class
-         *
-         * @return {Function} factory for given Class
-         */
-        var _createFactory = function (Class) {
-            //this - current class
-            //arguments - new instance arguments
-
-            //create wrapper
-            var xClass = function (args) {
-                return Class.apply(this, args);
-            };
-
-            //assign prototype
-            xClass.prototype = Class.prototype;
-
-            //return factory
-            return function () {
-
-                //return instance
-                return new xClass(arguments);
-            };
-        };
-
-        /**
-         * Returns prototype for descriptor function
-         *
-         * @ignore
-         *
-         * @method createDescriptorPrototype
-         *
-         * @return {Object} new descriptor prototype
-         */
-        var _createDescriptorPrototype = function () {
-            return {
-
-                //class namespace
-                namespace: undefined,
-
-                //class imports list
-                imports: [],
-
-                //class parent
-                extends: undefined,
-
-                //class mixins list
-                mixins: {},
-
-                //class implements list
-                implements: {},
-
-                //class singleton flag
-                singleton: undefined,
-
-                //class interface flag
-                interface: undefined,
-
-                //class constants list
-                constants: {},
-
-                //class statics list
-                static: {
-                    //class static methods list
-                    methods: {},
-
-                    //class static properties list
-                    properties: {}
-                },
-
-                //class constructor
-                constructor: undefined,
-
-                //class methods list
-                methods: {},
-
-                //class properties list
-                properties: {}
-            };
-        };
-
-        /**
-         * Converts prototype to use xs.core.Collection
-         *
-         * @ignore
-         *
-         * @method convertDescriptor
-         *
-         * @return {Object} convert descriptor
-         */
-        var _convertDescriptor = function (descriptor) {
-            descriptor.imports = new xs.core.Collection(descriptor.imports);
-            descriptor.mixins = new xs.core.Collection(descriptor.mixins);
-            descriptor.implements = new xs.core.Collection(descriptor.implements);
-            descriptor.constants = new xs.core.Collection(descriptor.constants);
-            descriptor.static.methods = new xs.core.Collection(descriptor.static.methods);
-            descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
-            descriptor.methods = new xs.core.Collection(descriptor.methods);
-            descriptor.properties = new xs.core.Collection(descriptor.properties);
-        };
-
-        /**
-         * Private dependencies manager
-         *
-         * It's aim is storing of cross-classes processing dependencies.
-         * Using dependencies manager allows to prevent dead locks and regulate classes processing
-         *
-         * @ignore
-         *
-         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-         *
-         * @private
-         *
-         * @class dependencies
-         */
-    })(new (function () {
+    var DependenciesManager = new (function () {
         var me = this;
 
         /**
@@ -574,7 +194,7 @@
          *
          * @private
          *
-         * @class dependencies.chains
+         * @class DependenciesManager.chains
          */
         var chains = new (function () {
             var me = this;
@@ -930,7 +550,7 @@
         });
 
         /**
-         * Public onReady manager
+         * Private onReady manager with simplified public interface
          *
          * It's aim is storing of cross-classes processing dependencies.
          * Using dependencies manager allows to prevent dead locks and regulate classes processing
@@ -941,387 +561,172 @@
          *
          * @private
          *
-         * @class dependencies
+         * @class DependenciesManager.queue
          */
-    }), new (function () {
-        var me = this;
-
-        /**
-         * Store of all registered dependencies
-         *
-         * @private
-         *
-         * @property storage
-         *
-         * @type {xs.core.Collection}
-         */
-        var storage = new xs.core.Collection;
-
-        /**
-         * Adds handler for event when classes' with given names will be loaded
-         *
-         * @method add
-         *
-         * @param {String[]} [waiting] waiting list. If empty - handler will be called when all pending classes will be loaded
-         * @param {Function} handleReady onReady handler
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - incorrect params given
-         */
-        me.add = function (waiting, handleReady) {
-            //if waiting if function - it's handleReady and empty waiting
-            if (xs.isFunction(waiting)) {
-                handleReady = waiting;
-                waiting = null;
-
-                //else - waiting must be array, handleReady - function
-            } else if (xs.isArray(waiting) && xs.isFunction(handleReady)) {
-                waiting = new xs.core.Collection(waiting);
-                //otherwise - it's error
-            } else {
-                throw new ClassError('incorrect onReady parameters');
-            }
-
-            xs.log('xs.Class::queue::add. Waiting', waiting.values());
-            //waiting: null means, that all classes must be loaded
-            if (!waiting) {
-
-                xs.log('xs.Class::queue::add. Waiting is empty. Wait for all');
-                //add item to storage
-                storage.add({
-                    waiting: null,
-                    handleReady: handleReady
-                });
-
-                return;
-            }
-
-            xs.log('xs.Class::queue::add. Waiting is not empty - filter');
-            //filter waiting classes
-            _filterWaiting(waiting);
-
-            xs.log('xs.Class::queue::add. Wait for filtered:', waiting.values());
-            //add item to storage
-            storage.add({
-                waiting: waiting,
-                handleReady: handleReady
-            });
-        };
-
-        /**
-         * Deletes given class name from all waiting lists. If processed is null - all pending classes are loaded. Call specific all ready handler
-         *
-         * @method remove
-         *
-         * @param {String|Null} processed name of processed class or null if all classes processed
-         */
-        me.remove = function (processed) {
-            xs.log('xs.Class::queue::remove. Resolve:', processed);
-            //get resolved queue lists. If processed given - with non-null waiting list. If no processed given - with null lists only
-            var resolved;
-            if (processed === null) {
-                resolved = storage.find(function (item) {
-                    //item is resolved, if waiting list is null
-
-                    return item.waiting === null;
-                }, xs.core.Collection.ALL);
-            } else {
-                resolved = storage.find(function (item) {
-                    //items with waiting null are not resolved
-                    if (item.waiting === null) {
-
-                        return false;
-                    }
-
-                    //return false if item waiting doesn't have processed
-                    if (!item.waiting.has(processed)) {
-                        return false;
-                    }
-
-                    //remove processed from item waiting
-                    item.waiting.remove(processed);
-
-                    //item is resolved, if waiting is empty
-                    return !item.waiting.length;
-                }, xs.core.Collection.ALL);
-            }
-
-            xs.log('xs.Class::queue::remove. Resolved items', resolved.toSource());
-            //process resolved dependencies to remove them from stack
-            resolved.each(function (item) {
-                storage.remove(item);
-                item.handleReady();
-            });
-        };
-
-        /**
-         * Filter waiting classes to exclude those ones which are already processed
-         *
-         * @method filterWaiting
-         *
-         * @param {xs.core.Collection} waiting collection of waiting classes' names
-         */
-        var _filterWaiting = function (waiting) {
-            var i = 0, Class, name;
-
-            //iterate over waiting
-            while (i < waiting.length) {
-                name = waiting.at(i);
-
-                //go to next if class is not registered
-                if (!xs.ContractsManager.has(name)) {
-                    i++;
-                    continue;
-                }
-
-                //get class
-                Class = xs.ContractsManager.get(name);
-
-                //if class is processing - go to next
-                if (Class.isProcessing) {
-                    i++;
-                    continue;
-                }
-
-                //Class exists and is processed - remove class from waiting
-                waiting.removeAt(i);
-            }
-        };
-    }));
-
-    //move xs.Class.onReady as xs.onReady
-    xs.onReady = xs.Class.onReady;
-    delete xs.Class.onReady;
-
-    //define prototype of xs.Base
-    xs.Base = xs.SuperBase = xs.Class.create(function () {
-    }, xs.emptyFn);
-
-    /**
-     * Private internal stack class
-     *
-     * Stack is used to store ordered list of processors
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @private
-     *
-     * @class xs.Class.Stack
-     */
-    function Stack() {
-        var me = this;
-
-        //items hash
-        var items = new xs.core.Collection;
-
-        /**
-         * Returns stack items copy
-         *
-         * @method get
-         *
-         * @return {xs.core.Collection} stack items clone
-         */
-        me.get = function () {
-
-            return items.clone();
-        };
-
-        /**
-         * Adds new processor to stack
-         *
-         * For example:
-         *
-         *     stack.add('addY', function() {
-         *         return true;
-         *     }, function() {
-         *        this.x = 0;
-         *     }, 'after', 'addY')
-         *
-         * @method add
-         *
-         * @param {String} name processor name
-         * @param {Function} verifier processor verifier.
-         * Returns boolean whether processor should be applied to Class. Accepts class descriptor as param
-         * @param {Function} handler processor body
-         * @param {String} [position] position, class processor is inserted at. Valid values are:
-         *
-         *  - first,
-         *  - last,
-         *  - before, (relativeTo is required)
-         *  - after (relativeTo is required)
-         *
-         * By default, last is used
-         * @param {String} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - processor with given name is already in stack
-         */
-        me.add = function (name, verifier, handler, position, relativeTo) {
-            //position defaults to last
-            position || (position = 'last');
-
-            if (items.hasKey(name)) {
-                throw new ClassError('processor "' + name + '" already in stack');
-            }
-
-            items.add(name, {
-                verifier: verifier,
-                handler: handler
-            });
-
-            _apply(name, position, relativeTo);
-        };
-
-        /**
-         * Reorders processor at stack
-         *
-         * For example:
-         *
-         *     stack.reorder('addY','before','addX');
-         *
-         * @method reorder
-         *
-         * @param {String} name processor name
-         * @param {String} position position, class processor is inserted at. Valid values are:
-         *
-         *  - first,
-         *  - last,
-         *  - before, (relativeTo is required)
-         *  - after (relativeTo is required)
-         *
-         * @param {String} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
-         */
-        me.reorder = function (name, position, relativeTo) {
-            _apply(name, position, relativeTo);
-        };
-
-        /**
-         * Deletes processor from stack. If processor not found, error is thrown
-         *
-         * For example:
-         *
-         *     stack.remove('addY');
-         *
-         * @method remove
-         *
-         * @param {String} name processor name
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - processor with given name is not found in stack
-         */
-        me.remove = function (name) {
-            if (items.hasKey(name)) {
-                items.removeAt(name);
-            } else {
-                throw new ClassError('processor "' + name + '" not found in stack');
-            }
-        };
-
-        /**
-         * Starts stack processing chain with given arguments
-         *
-         * For example:
-         *
-         *     stack.process([1, 2], [2, 3], function() {
-         *         console.log('ready');
-         *     });
-         *
-         * @method process
-         *
-         * @param {Array} verifierArgs arguments, passed to each stack item's verifier
-         * @param {Array} handlerArgs arguments, passed to each stack item's handler
-         * @param {Function} [callback] optional executed callback
-         */
-        me.process = function (verifierArgs, handlerArgs, callback) {
-            _process(items.clone(), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
-        };
-
-        /**
-         * Internal process function
-         *
-         * @ignore
-         *
-         * @method process
-         *
-         * @param {xs.core.Collection} items items stack
-         * @param {Array} verifierArgs arguments for items' verifiers
-         * @param {Array} handlerArgs arguments for items' handlers
-         * @param {Function} callback stack ready callback
-         */
-        var _process = function (items, verifierArgs, handlerArgs, callback) {
+        var queue = new (function () {
             var me = this;
-            if (!items.length) {
-                callback();
 
-                return;
-            }
-            var item = items.shift();
+            /**
+             * Store of all registered dependencies
+             *
+             * @private
+             *
+             * @property storage
+             *
+             * @type {xs.core.Collection}
+             */
+            var storage = new xs.core.Collection;
 
-            //if item.verifier allows handler execution, process next
-            if (item.verifier.apply(me, verifierArgs)) {
+            /**
+             * Adds handler for event when classes' with given names will be loaded
+             *
+             * @method add
+             *
+             * @param {String[]} [waiting] waiting list. If empty - handler will be called when all pending classes will be loaded
+             * @param {Function} handleReady onReady handler
+             *
+             * @throws {Error} Error is thrown, when:
+             *
+             * - incorrect params given
+             */
+            me.add = function (waiting, handleReady) {
+                //if waiting if function - it's handleReady and empty waiting
+                if (xs.isFunction(waiting)) {
+                    handleReady = waiting;
+                    waiting = null;
 
-                var ready = function () {
-                    _process(items, verifierArgs, handlerArgs, callback);
-                };
+                    //else - waiting must be array, handleReady - function
+                } else if (xs.isArray(waiting) && xs.isFunction(handleReady)) {
+                    waiting = new xs.core.Collection(waiting);
+                    //otherwise - it's error
+                } else {
+                    throw new ClassError('incorrect onReady parameters');
+                }
 
-                //if item.handler returns false, processing is async, stop processing, awaiting ready call
-                if (item.handler.apply(me, handlerArgs.concat(ready)) === false) {
+                xs.log('xs.Class::queue::add. Waiting', waiting.values());
+                //waiting: null means, that all classes must be loaded
+                if (!waiting) {
+
+                    xs.log('xs.Class::queue::add. Waiting is empty. Wait for all');
+                    //add item to storage
+                    storage.add({
+                        waiting: null,
+                        handleReady: handleReady
+                    });
 
                     return;
                 }
-            }
 
-            _process(items, verifierArgs, handlerArgs, callback);
-        };
+                xs.log('xs.Class::queue::add. Waiting is not empty - filter');
+                //filter waiting classes
+                _filterWaiting(waiting);
 
+                xs.log('xs.Class::queue::add. Wait for filtered:', waiting.values());
+                //add item to storage
+                storage.add({
+                    waiting: waiting,
+                    handleReady: handleReady
+                });
+            };
 
-        /**
-         * Applies item in stack relative to item with given name
-         *
-         * @ignore
-         *
-         * @param {String} name name of repositioned item
-         * @param {String} position new item position
-         * @param {*} relativeTo name of relativeTo positioned item
-         *
-         * @throws {Error} Error is thrown:
-         *
-         * - if incorrect position given
-         * - relativeTo item is missing in stack
-         */
-        var _apply = function (name, position, relativeTo) {
-            if ([
-                'first',
-                'last',
-                'before',
-                'after'
-            ].indexOf(position) < 0) {
-                throw new ClassError('incorrect position given');
-            }
+            /**
+             * Deletes given class name from all waiting lists. If processed is null - all pending classes are loaded. Call specific all ready handler
+             *
+             * @method remove
+             *
+             * @param {String|Null} processed name of processed class or null if all classes processed
+             */
+            me.remove = function (processed) {
+                xs.log('xs.Class::queue::remove. Resolve:', processed);
+                //get resolved queue lists. If processed given - with non-null waiting list. If no processed given - with null lists only
+                var resolved;
+                if (processed === null) {
+                    resolved = storage.find(function (item) {
+                        //item is resolved, if waiting list is null
 
-            //get item from items
-            var item = items.at(name);
+                        return item.waiting === null;
+                    }, xs.core.Collection.ALL);
+                } else {
+                    resolved = storage.find(function (item) {
+                        //items with waiting null are not resolved
+                        if (item.waiting === null) {
 
-            //remove item from items
-            items.removeAt(name);
+                            return false;
+                        }
 
-            //insert to specified position
-            if (position == 'first' || position == 'last') {
-                position == 'first' ? items.insert(0, name, item) : items.add(name, item);
-            } else {
-                var relativeKey = new xs.core.Collection(items.keys()).keyOf(relativeTo);
+                        //return false if item waiting doesn't have processed
+                        if (!item.waiting.has(processed)) {
+                            return false;
+                        }
 
-                if (!xs.isDefined(relativeKey)) {
-                    throw new ClassError('relative item "' + relativeTo + '" missing in stack');
+                        //remove processed from item waiting
+                        item.waiting.remove(processed);
+
+                        //item is resolved, if waiting is empty
+                        return !item.waiting.length;
+                    }, xs.core.Collection.ALL);
                 }
-                position == 'after' && relativeKey++;
-                items.insert(relativeKey, name, item);
-            }
-        };
-    }
+
+                xs.log('xs.Class::queue::remove. Resolved items', resolved.toSource());
+                //process resolved dependencies to remove them from stack
+                resolved.each(function (item) {
+                    storage.remove(item);
+                    item.handleReady();
+                });
+            };
+
+            /**
+             * Filter waiting classes to exclude those ones which are already processed
+             *
+             * @method filterWaiting
+             *
+             * @param {xs.core.Collection} waiting collection of waiting classes' names
+             */
+            var _filterWaiting = function (waiting) {
+                var i = 0, Class, name;
+
+                //iterate over waiting
+                while (i < waiting.length) {
+                    name = waiting.at(i);
+
+                    //go to next if class is not registered
+                    if (!xs.ContractsManager.has(name)) {
+                        i++;
+                        continue;
+                    }
+
+                    //get class
+                    Class = xs.ContractsManager.get(name);
+
+                    //if class is processing - go to next
+                    if (Class.isProcessing) {
+                        i++;
+                        continue;
+                    }
+
+                    //Class exists and is processed - remove class from waiting
+                    waiting.removeAt(i);
+                }
+            };
+        });
+
+        me.onReady = queue.add;
+        me.ready = queue.remove;
+    });
+
+    //save DependenciesManager.onReady to xs.onReady
+    xs.onReady = DependenciesManager.onReady;
+
+    /**
+     * @ignore
+     *
+     * Create DependenciesManager references hash for all contracts implemented.
+     * When contract is implemented it fetches and removes it's reference from hash. If hash is empty - it is removed
+     */
+    xs.DependenciesManager = {
+        Class: DependenciesManager,
+        Interface: DependenciesManager
+    };
 
     /**
      * Internal error class
@@ -1336,5 +741,5 @@
         this.message = 'xs.DependenciesManager :: ' + message;
     }
 
-    DependenciesManager.prototype = new Error();
+    DependenciesManagerError.prototype = new Error();
 })(window, 'xs');
