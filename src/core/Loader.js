@@ -14,9 +14,9 @@
     var xs = root[ns];
 
     /**
-     * xs.Loader is core class, that is used for class loading
+     * xs.core.Loader is core class, that is used for class loading
      *
-     * xs.Loader provides 2 public abilities:
+     * xs.core.Loader provides 2 public abilities:
      *
      * - paths management - allows to add/remove/get path of class
      * - class loading
@@ -46,7 +46,9 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class xs.Loader
+     * @class xs.core.Loader
+     *
+     * @alternateClassName xs.Loader
      *
      * @singleton
      */
@@ -258,7 +260,9 @@
          *
          * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
          *
-         * @class xs.Loader.paths
+         * @class xs.core.Loader.paths
+         *
+         * @alternateClassName xs.Loader.paths
          *
          * @singleton
          */
@@ -334,7 +338,7 @@
             };
 
             /**
-             * Checks whether alias is already registered in xs.Loader
+             * Checks whether alias is already registered in xs.core.Loader
              *
              * For example:
              *
@@ -370,7 +374,7 @@
             };
 
             /**
-             * Deletes path alias from {@link xs.Loader.paths}. Has single and multiple mode
+             * Deletes path alias from {@link xs.core.Loader.paths}. Has single and multiple mode
              *
              * For example:
              *
