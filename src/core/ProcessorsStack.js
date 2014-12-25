@@ -78,7 +78,7 @@
             position || (position = 'last');
 
             if (items.hasKey(name)) {
-                throw new ClassError('processor "' + name + '" already in stack');
+                throw new ProcessorsStackError('processor "' + name + '" already in stack');
             }
 
             items.add(name, {
@@ -131,7 +131,7 @@
             if (items.hasKey(name)) {
                 items.removeAt(name);
             } else {
-                throw new ClassError('processor "' + name + '" not found in stack');
+                throw new ProcessorsStackError('processor "' + name + '" not found in stack');
             }
         };
 
@@ -214,7 +214,7 @@
                 'before',
                 'after'
             ].indexOf(position) < 0) {
-                throw new ClassError('incorrect position given');
+                throw new ProcessorsStackError('incorrect position given');
             }
 
             //get item from items
@@ -230,7 +230,7 @@
                 var relativeKey = new xs.core.Collection(items.keys()).keyOf(relativeTo);
 
                 if (!xs.isDefined(relativeKey)) {
-                    throw new ClassError('relative item "' + relativeTo + '" missing in stack');
+                    throw new ProcessorsStackError('relative item "' + relativeTo + '" missing in stack');
                 }
                 position == 'after' && relativeKey++;
                 items.insert(relativeKey, name, item);
@@ -256,7 +256,7 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class ClassError
+     * @class ProcessorsStackError
      */
     function ProcessorsStackError(message) {
         this.message = 'xs.core.ProcessorsStack::' + message;

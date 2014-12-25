@@ -104,17 +104,17 @@
         var _add = me.add = function (name, Class) {
             //throw error if trying to set defined
             if (_has(name)) {
-                throw new ClassManagerError('class "' + name + '" is already defined');
+                throw new ContractsManagerError('class "' + name + '" is already defined');
             }
 
             //throw error if trying to add already added with other name
             if (registry.has(Class)) {
-                throw new ClassManagerError('class "' + Class.label + '" can not be added as "' + name + '"');
+                throw new ContractsManagerError('class "' + Class.label + '" can not be added as "' + name + '"');
             }
 
             //throw error if Class is not function
             if (!xs.isFunction(Class)) {
-                throw new ClassManagerError('class "' + name + '" is not a function');
+                throw new ContractsManagerError('class "' + name + '" is not a function');
             }
 
             //assign real name as label
@@ -161,7 +161,7 @@
         me.remove = function (name) {
             //throw error if trying to unset undefined
             if (!_has(name)) {
-                throw new ClassManagerError('class "' + name + '" is not defined');
+                throw new ContractsManagerError('class "' + name + '" is not defined');
             }
 
             //unset Class label
@@ -231,7 +231,7 @@
 
             //throw error if trying to redefine
             if (_has(name)) {
-                throw new ClassManagerError('class "' + name + '" is already defined');
+                throw new ContractsManagerError('class "' + name + '" is already defined');
             }
 
             //save Class in registry by name
@@ -418,13 +418,13 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class ClassManagerError
+     * @class ContractsManagerError
      */
-    function ClassManagerError(message) {
+    function ContractsManagerError(message) {
         this.message = 'xs.core.ContractsManager::' + message;
     }
 
-    ClassManagerError.prototype = new Error();
+    ContractsManagerError.prototype = new Error();
 
     xs.extend(xs, {
         define: xs.ContractsManager.define

@@ -78,10 +78,10 @@
             waiting.each(function (Class) {
                 var deadLock = chains.getLock(Class);
 
-                //throw respective ClassError if dead lock found
+                //throw respective DependenciesManagerError if dead lock found
                 if (deadLock) {
                     xs.log('xs.DependenciesManager::add. Lock detected');
-                    throw new ClassError('dead lock detected: ' + _showDeadLock(deadLock));
+                    throw new DependenciesManagerError('dead lock detected: ' + _showDeadLock(deadLock));
                 }
             });
 
@@ -601,7 +601,7 @@
                     waiting = new xs.core.Collection(waiting);
                     //otherwise - it's error
                 } else {
-                    throw new ClassError('incorrect onReady parameters');
+                    throw new DependenciesManagerError('incorrect onReady parameters');
                 }
 
                 xs.log('xs.DependenciesManager::queue::add. Waiting', waiting.values());
