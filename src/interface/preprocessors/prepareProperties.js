@@ -53,7 +53,20 @@
                 throw new PropertyError('[' + Interface.label + ']: incorrect property name');
             }
 
-            list.set(name, xs.Attribute.property.prepare(name, value));
+            //save descriptor basics
+            var property = xs.Attribute.property.prepare(name, value);
+
+            //if is assigned
+            if (property.hasOwnProperty('value')) {
+                list.set(name, {
+                    isAssigned: true
+                });
+            } else {
+                list.set(name, {
+                    isAccessed: true,
+                    isReadonly: property.get === xs.emptyFn
+                });
+            }
         });
 
         //add all own

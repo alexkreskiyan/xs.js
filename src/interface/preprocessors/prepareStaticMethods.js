@@ -56,7 +56,11 @@
                 throw new StaticMethodError('[' + Interface.label + ']: incorrect static method name');
             }
 
-            list.set(name, xs.Attribute.method.prepare(name, value));
+            //save descriptor basics
+            var method = xs.Attribute.method.prepare(name, value);
+            list.set(name, {
+                arguments: xs.Function.getArguments(method.value)
+            });
         });
 
         //add all own

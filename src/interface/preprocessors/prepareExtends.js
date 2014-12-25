@@ -27,6 +27,9 @@
     }, function (Interface, descriptor) {
         var extended = descriptor.extends;
 
+        //reset imports collection
+        descriptor.imports.remove();
+
         xs.log('xs.interface.preprocessors.prepareExtends[', Interface.label, ']. Extended:', extended);
         //if extended is non-empty string - resolve parent name
         if (xs.isString(extended) && extended) {

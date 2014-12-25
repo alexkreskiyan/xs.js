@@ -37,8 +37,8 @@
         var inherited = Interface.parent.descriptor.constants;
 
         //add all inherited
-        inherited.each(function (value, name) {
-            constants.add(name, value);
+        inherited.each(function (name) {
+            constants.add(name);
         });
 
 
@@ -47,15 +47,15 @@
         var own = descriptor.constants;
 
         //verify own constants
-        own.each(function (value, name) {
+        own.each(function (name) {
             if (!xs.isString(name) || !name) {
                 throw new ConstError('[' + Interface.label + ']: incorrect constant name');
             }
         });
 
-        //add all own
-        own.each(function (value, name) {
-            constants.hasKey(name) ? constants.set(name, value) : constants.add(name, value);
+        //add own ones if not yet
+        own.each(function (name) {
+            constants.has(name) || constants.add(name);
         });
     });
 

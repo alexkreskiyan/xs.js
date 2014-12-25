@@ -95,7 +95,7 @@
             Descriptor.prototype = _createDescriptorPrototype();
 
             //get descriptor instance
-            var descriptor = new Descriptor(Interface, namespace, imports);
+            var descriptor = new Descriptor(Interface, namespace);
             //convert descriptor
             _convertDescriptor(descriptor);
 
@@ -223,58 +223,9 @@
          * @return {Function} new xInterface
          */
         var _createSample = function () {
-            var Interface = function xInterface() {
-                var me = this;
 
-                //define interface constructor
-                var descriptor = Interface.descriptor;
-
-
-                //singleton processing
-
-                //throw exception if Interface is singleton
-                if (descriptor.singleton) {
-                    throw new InterfaceError('can not create instance of singleton interface');
-                }
-
-                //get constructor shortcut
-                var constructor = descriptor.constructor != Object ? descriptor.constructor : undefined;
-
-                //if parent constructor - just call it
-                if (me.self && me.self !== Interface) {
-                    constructor && constructor.apply(me, arguments);
-
-                    return;
-                }
-
-
-                //save call arguments
-                me.initArguments = arguments;
-
-                //properties processing
-
-                //init privates storage
-                me.privates = {};
-
-                //assign values
-                var properties = descriptor.properties.items; //xs.core.Collection
-                var i, length = properties.length, item;
-
-                for (i = 0; i < length; i++) {
-                    item = properties[i];
-                    item.value.hasOwnProperty('value') && (me[item.key] = item.value.value);
-                }
-
-                //native constructor call
-
-                //save interface reference
-                me.self = Interface;
-
-                //apply constructor
-                constructor && constructor.apply(me, arguments);
+            return function xInterface() {
             };
-
-            return Interface;
         };
 
         /**
