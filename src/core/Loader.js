@@ -99,15 +99,15 @@
          * - some of required classes' already failed to load
          */
         me.require = function (name, handleLoad, handleFail) {
-            xs.log('xs.Loader::require. Acquired:', name);
+            xs.log('xs.core.Loader::require. Acquired:', name);
 
             //init loaded classes list
             var loadList = _getLoadList(new xs.core.Collection(xs.isArray(name) ? name : [name]));
-            xs.log('xs.Loader::require. LoadList: loaded:', loadList.loaded.toSource(), ', failed:', loadList.failed.toSource(), ', unresolved:', loadList.unresolved.toSource());
+            xs.log('xs.core.Loader::require. LoadList: loaded:', loadList.loaded.toSource(), ', failed:', loadList.failed.toSource(), ', unresolved:', loadList.unresolved.toSource());
 
             //if failed section is not empty - handle fail
             if (loadList.failed.length) {
-                xs.log('xs.Loader::require. LoadList has failed classes. Handle fail');
+                xs.log('xs.core.Loader::require. LoadList has failed classes. Handle fail');
                 //use handleFail method if given
                 if (handleFail) {
                     xs.nextTick(function () {
@@ -126,7 +126,7 @@
 
             //if new section is empty - handle load - all classes are in loaded section
             if (!loadList.unresolved.length) {
-                xs.log('xs.Loader::require. LoadList has only loaded classes. Handle load');
+                xs.log('xs.core.Loader::require. LoadList has only loaded classes. Handle load');
                 xs.nextTick(function () {
                     handleLoad(loadList.loaded.toSource());
                 });
@@ -134,11 +134,11 @@
                 return;
             }
 
-            xs.log('xs.Loader::require. Add loadList to resolver');
+            xs.log('xs.core.Loader::require. Add loadList to resolver');
             //add loadList to resolver
             resolver.add(loadList, handleLoad, handleFail);
 
-            xs.log('xs.Loader::require. Add each of loadList to loader');
+            xs.log('xs.core.Loader::require. Add each of loadList to loader');
             //add each of loadList.unresolved to loader
             loadList.unresolved.each(function (path) {
                 loader.has(path) || loader.add(path);
@@ -176,7 +176,7 @@
                 failed: new xs.core.Collection
             };
 
-            xs.log('xs.Loader::getLoadList. Processing classes', classes.toSource());
+            xs.log('xs.core.Loader::getLoadList. Processing classes', classes.toSource());
             //process loaded and missing classes
             classes.each(function (name) {
                 //check, that name is string
@@ -192,11 +192,11 @@
                 //resolve name with paths
                 var path = paths.resolve(name);
 
-                xs.log('xs.Loader::getLoadList. Resolved class "' + name + '" as path"' + path + '"');
-                xs.log('xs.Loader::getLoadList. Check path "' + path + '"');
+                xs.log('xs.core.Loader::getLoadList. Resolved class "' + name + '" as path"' + path + '"');
+                xs.log('xs.core.Loader::getLoadList. Check path "' + path + '"');
                 //if the class is already loaded - add it to loaded section
                 if (loaded.has(path)) {
-                    xs.log('xs.Loader::getLoadList. Path "' + path + '" is already loaded');
+                    xs.log('xs.core.Loader::getLoadList. Path "' + path + '" is already loaded');
                     loadList.loaded.add(name, path);
 
                     //if the class was already attempted to load, but load failed - add it to failed section
@@ -209,7 +209,7 @@
                 }
             });
 
-            xs.log('xs.Loader::getLoadList. Result loadList: loaded:', loadList.loaded, ', failed:', loadList.failed, ', unresolved:', loadList.unresolved);
+            xs.log('xs.core.Loader::getLoadList. Result loadList: loaded:', loadList.loaded, ', failed:', loadList.failed, ', unresolved:', loadList.unresolved);
 
             //return loadList
             return loadList;
@@ -225,7 +225,7 @@
          * @param {String} path
          */
         function _handleLoad(path) {
-            xs.log('xs.Loader::handleLoad. Path "' + path + '" loaded');
+            xs.log('xs.core.Loader::handleLoad. Path "' + path + '" loaded');
             //add loaded path
             loaded.add(path);
 
@@ -247,7 +247,7 @@
          * - failed loading url
          */
         function _handleFail(path) {
-            xs.log('xs.Loader::handleFail. Path "' + path + '" failed');
+            xs.log('xs.core.Loader::handleFail. Path "' + path + '" failed');
             //add failed path
             failed.add(path);
 
@@ -524,7 +524,7 @@
              * @param {Function} [handleFail] handler for one of files failed.
              */
             me.add = function (list, handleLoad, handleFail) {
-                xs.log('xs.Loader::resolver::add. Add list loaded:', list.loaded, ', failed:', list.failed, ', unresolved:', list.unresolved);
+                xs.log('xs.core.Loader::resolver::add. Add list loaded:', list.loaded, ', failed:', list.failed, ', unresolved:', list.unresolved);
                 awaiting.add({
                     list: list,
                     pending: list.unresolved.clone(),
@@ -544,9 +544,9 @@
              */
             me.resolve = function (path) {
                 //find resolved items
-                xs.log('xs.Loader::resolver::resolve. Handle path "' + path + '"');
+                xs.log('xs.core.Loader::resolver::resolve. Handle path "' + path + '"');
                 var resolved = awaiting.find(function (item) {
-                    xs.log('xs.Loader::resolver::resolve. Clean up item.pending', item.pending);
+                    xs.log('xs.core.Loader::resolver::resolve. Clean up item.pending', item.pending);
 
                     //item is resolved, if path remove succeeds (path was removed) and pending is empty
                     if (item.pending.has(path)) {
@@ -564,9 +564,9 @@
                     return false;
                 }, xs.core.Collection.ALL);
 
-                xs.log('xs.Loader::resolver::resolve. Handling items:');
+                xs.log('xs.core.Loader::resolver::resolve. Handling items:');
                 resolved.each(function (item) {
-                    xs.log('xs.Loader::resolver::resolve. loaded:', item.list.loaded.toSource(), ', failed:', item.list.failed.toSource(), ', unresolved:', item.list.unresolved.toSource());
+                    xs.log('xs.core.Loader::resolver::resolve. loaded:', item.list.loaded.toSource(), ', failed:', item.list.failed.toSource(), ', unresolved:', item.list.unresolved.toSource());
                 });
 
                 //handle each resolved item
@@ -589,16 +589,16 @@
              */
             me.reject = function (path) {
                 //find rejected items
-                xs.log('xs.Loader::resolver::reject. Handle path "' + path + '"');
+                xs.log('xs.core.Loader::resolver::reject. Handle path "' + path + '"');
                 var rejected = awaiting.find(function (item) {
-                    xs.log('xs.Loader::resolver::reject. Check item.pending', item.pending);
+                    xs.log('xs.core.Loader::resolver::reject. Check item.pending', item.pending);
                     //item is rejected, if pending has path
                     return item.pending.has(path);
                 }, xs.core.Collection.ALL);
 
-                xs.log('xs.Loader::resolver::reject. Handling items', rejected);
+                xs.log('xs.core.Loader::resolver::reject. Handling items', rejected);
                 rejected.each(function (item) {
-                    xs.log('xs.Loader::resolver::reject. Rejected: loaded:', item.list.loaded, ', failed:', item.list.failed, ', unresolved:', item.list.unresolved);
+                    xs.log('xs.core.Loader::resolver::reject. Rejected: loaded:', item.list.loaded, ', failed:', item.list.failed, ', unresolved:', item.list.unresolved);
                 });
 
                 //handle each rejected item
@@ -658,7 +658,7 @@
             me.add = function (path) {
                 var me = this;
 
-                xs.log('xs.Loader::loader::add. Add path "' + path + '"');
+                xs.log('xs.core.Loader::loader::add. Add path "' + path + '"');
                 //check that path was not added yet
                 if (me.has(path)) {
                     throw new LoaderError('path "' + path + '" is already loading');
@@ -697,7 +697,7 @@
                 //create script element
                 var script = document.createElement('script');
 
-                xs.log('xs.Loader::loader::load. Add script for path "' + path + '"');
+                xs.log('xs.core.Loader::loader::load. Add script for path "' + path + '"');
                 //set path as src and path (because src is resolved relative to domain)
                 script.src = script.path = path;
 
@@ -789,7 +789,7 @@
             me.add = function (path) {
                 var me = this;
 
-                xs.log('xs.Loader::' + name + '::add. Add path "' + path + '"');
+                xs.log('xs.core.Loader::' + name + '::add. Add path "' + path + '"');
                 //check that path is not in list
                 if (me.has(path)) {
                     throw new LoaderError('class "' + path + '" is already in ' + listName + ' list');
@@ -825,7 +825,7 @@
             me.remove = function (path) {
                 var me = this;
 
-                xs.log('xs.Loader::' + name + '::remove. Delete path "' + path + '"');
+                xs.log('xs.core.Loader::' + name + '::remove. Delete path "' + path + '"');
                 //check that path is in list
                 if (!me.has(path)) {
                     throw new LoaderError('class "' + path + '" is not in ' + listName + ' list');
@@ -848,7 +848,7 @@
          * @class LoaderError
          */
         function LoaderError(message) {
-            this.message = 'xs.core.Loader :: ' + message;
+            this.message = 'xs.core.Loader::' + message;
         }
 
         LoaderError.prototype = new Error();

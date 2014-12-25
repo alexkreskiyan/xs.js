@@ -421,7 +421,7 @@
      * @class ClassManagerError
      */
     function ClassManagerError(message) {
-        this.message = 'xs.core.ContractsManager :: ' + message;
+        this.message = 'xs.core.ContractsManager::' + message;
     }
 
     ClassManagerError.prototype = new Error();

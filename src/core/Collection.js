@@ -2618,7 +2618,7 @@
      * @class CollectionError
      */
     function CollectionError(message) {
-        this.message = 'xs.core.Collection :: ' + message;
+        this.message = 'xs.core.Collection::' + message;
     }
 
     CollectionError.prototype = new Error();

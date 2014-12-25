@@ -164,7 +164,7 @@
      * @class MixinError
      */
     function MixinError(message) {
-        this.message = 'xs.class.preprocessors.processMixins :: ' + message;
+        this.message = 'xs.class.preprocessors.processMixins::' + message;
     }
 
     MixinError.prototype = new Error();

@@ -75,7 +75,7 @@
      * @class MethodError
      */
     function MethodError(message) {
-        this.message = 'xs.class.preprocessors.methods :: ' + message;
+        this.message = 'xs.class.preprocessors.methods::' + message;
     }
 
     MethodError.prototype = new Error();

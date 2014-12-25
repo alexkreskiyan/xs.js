@@ -605,7 +605,7 @@
          * @class AttributeError
          */
         function AttributeError(message) {
-            this.message = 'xs.Attribute :: ' + message;
+            this.message = 'xs.Attribute::' + message;
         }
 
         AttributeError.prototype = new Error();

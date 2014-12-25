@@ -259,7 +259,7 @@
      * @class ClassError
      */
     function ProcessorsStackError(message) {
-        this.message = 'xs.core.ProcessorsStack :: ' + message;
+        this.message = 'xs.core.ProcessorsStack::' + message;
     }
 
     ProcessorsStackError.prototype = new Error();

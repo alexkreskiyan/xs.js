@@ -72,7 +72,7 @@
      * @class PropertyError
      */
     function PropertyError(message) {
-        this.message = 'xs.class.preprocessors.properties :: ' + message;
+        this.message = 'xs.class.preprocessors.properties::' + message;
     }
 
     PropertyError.prototype = new Error();

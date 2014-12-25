@@ -69,7 +69,7 @@
      * @class ConstError
      */
     function ConstError(message) {
-        this.message = 'xs.class.preprocessors.constants :: ' + message;
+        this.message = 'xs.class.preprocessors.constants::' + message;
     }
 
     ConstError.prototype = new Error();

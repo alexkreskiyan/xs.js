@@ -71,7 +71,7 @@
      * @class StaticPropertyError
      */
     function StaticPropertyError(message) {
-        this.message = 'xs.class.preprocessors.staticProperties :: ' + message;
+        this.message = 'xs.class.preprocessors.staticProperties::' + message;
     }
 
     StaticPropertyError.prototype = new Error();

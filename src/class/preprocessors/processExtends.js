@@ -113,7 +113,7 @@
      * @class ProcessExtendsError
      */
     function ProcessExtendsError(message) {
-        this.message = 'xs.class.preprocessors.processExtends :: ' + message;
+        this.message = 'xs.class.preprocessors.processExtends::' + message;
     }
 
     ProcessExtendsError.prototype = new Error();

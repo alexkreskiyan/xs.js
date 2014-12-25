@@ -50,7 +50,7 @@
      * @class PrepareExtendsError
      */
     function PrepareExtendsError(message) {
-        this.message = 'xs.class.preprocessors.prepareExtends :: ' + message;
+        this.message = 'xs.class.preprocessors.prepareExtends::' + message;
     }
 
     PrepareExtendsError.prototype = new Error();

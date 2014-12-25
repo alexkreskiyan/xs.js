@@ -142,7 +142,7 @@
      * @class ImportsError
      */
     function ImportsError(message) {
-        this.message = 'xs.class.preprocessors.imports :: ' + message;
+        this.message = 'xs.class.preprocessors.imports::' + message;
     }
 
     ImportsError.prototype = new Error();

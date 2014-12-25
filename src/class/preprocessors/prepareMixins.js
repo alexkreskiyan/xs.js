@@ -64,7 +64,7 @@
      * @class PrepareMixinsError
      */
     function PrepareMixinsError(message) {
-        this.message = 'xs.class.preprocessors.prepareMixins :: ' + message;
+        this.message = 'xs.class.preprocessors.prepareMixins::' + message;
     }
 
     PrepareMixinsError.prototype = new Error();

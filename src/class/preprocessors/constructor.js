@@ -60,7 +60,7 @@
      * @class ConstructorError
      */
     function ConstructorError(message) {
-        this.message = 'xs.class.preprocessors.constructor :: ' + message;
+        this.message = 'xs.class.preprocessors.constructor::' + message;
     }
 
     ConstructorError.prototype = new Error();

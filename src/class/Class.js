@@ -426,7 +426,7 @@
      * @class ClassError
      */
     function ClassError(message) {
-        this.message = 'xs.class.Class :: ' + message;
+        this.message = 'xs.class.Class::' + message;
     }
 
     ClassError.prototype = new Error();

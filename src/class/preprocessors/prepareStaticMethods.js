@@ -75,7 +75,7 @@
      * @class StaticMethodError
      */
     function StaticMethodError(message) {
-        this.message = 'xs.class.preprocessors.staticMethods :: ' + message;
+        this.message = 'xs.class.preprocessors.staticMethods::' + message;
     }
 
     StaticMethodError.prototype = new Error();
