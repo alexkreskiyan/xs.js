@@ -21,7 +21,7 @@
  * @class xs.request.Data represents request data object
  */
 'use strict';
-xs.define('xs.request.Data', function () {
+xs.define(xs.Class, 'xs.request.Data', function () {
     return {
         constructor: function () {
             var me = this;

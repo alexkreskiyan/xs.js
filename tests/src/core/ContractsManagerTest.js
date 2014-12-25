@@ -344,7 +344,7 @@ module('xs.ContractsManager', function () {
 
 
         //define class
-        me.Class = xs.define(me.className, function () {
+        me.Class = xs.define(xs.Class, me.className, function () {
         });
 
     }, function () {
@@ -352,7 +352,7 @@ module('xs.ContractsManager', function () {
 
         //not defined again
         throws(function () {
-            xs.define(me.className, function () {
+            xs.define(xs.Class, me.className, function () {
             })
         });
 

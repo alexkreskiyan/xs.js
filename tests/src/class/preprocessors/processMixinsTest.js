@@ -17,7 +17,7 @@ module('xs.class.preprocessors.processMixins', function () {
         xs.Loader.paths.add('tests', '/tests/resources');
 
         //define child class
-        xs.define('ns.Child', function () {
+        xs.define(xs.Class, 'ns.Child', function () {
             this.namespace = 'tests.class.preprocessors.processMixins';
             this.imports = [
                 'ns.Base',

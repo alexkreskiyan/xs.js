@@ -16,7 +16,7 @@ module('xs.class.preprocessors.processExtends', function () {
         me.ClassName = 'tests.class.preprocessors.processExtends.Class';
 
         //create Class
-        me.Class = xs.define('tests.class.preprocessors.processExtends.Class', function () {
+        me.Class = xs.define(xs.Class, 'tests.class.preprocessors.processExtends.Class', function () {
         });
 
         xs.onReady([me.ClassName], me.done);

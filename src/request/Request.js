@@ -21,7 +21,7 @@
  * @class xs.request.Request represents request object
  */
 'use strict';
-xs.define('xs.request.Request', function () {
+xs.define(xs.Class, 'xs.request.Request', function () {
     /**
      * Fetches all param indexes from param name
      * @type {RegExp}

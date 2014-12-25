@@ -39,7 +39,7 @@
  @private
  */
 
-xs.define('xs.promise.Resolver', {
+xs.define(xs.Class, 'xs.promise.Resolver', {
     constructor: function (onResolved, onRejected, onProgress) {
         //create promise object
         this.promise = xs.create('xs.promise.Promise', this);

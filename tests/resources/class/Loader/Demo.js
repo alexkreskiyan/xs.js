@@ -1,4 +1,4 @@
 //define demo class
-xs.define('tests.class.Loader.Demo', function () {
+xs.define(xs.Class, 'tests.class.Loader.Demo', function () {
 
 });

@@ -21,7 +21,7 @@
  * @class xs.uri.Url represents url string
  */
 'use strict';
-xs.define('xs.uri.Url', function () {
+xs.define(xs.Class, 'xs.uri.Url', function () {
     /**
      * Protocols, class works with
      * @type {String[]}

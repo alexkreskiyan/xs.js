@@ -24,7 +24,7 @@
  * Requests made by this class are asynchronous, and will return immediately. No data from the server will be available
  * to the statement immediately following the {@link #request} call.
  */
-xs.define('xs.data.Connection', function () {
+xs.define(xs.Class, 'xs.data.Connection', function () {
 
     var prepareRequest = function (request) {
         if (xs.is(request, xs.request.Request)) {

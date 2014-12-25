@@ -76,7 +76,7 @@
  call succeeded or failed.
  */
 
-xs.define('xs.promise.Promise', function () {
+xs.define(xs.Class, 'xs.promise.Promise', function () {
     var self = function () {
         return xs.promise.Promise;
     };

@@ -37,7 +37,7 @@
 
  trigger(event[string],arg1,arg2)
  */
-xs.define('xs.util.Observable', function () {
+xs.define(xs.Class, 'xs.util.Observable', function () {
     var unbind = function (event, callback) {
         var me = this;
         me.events[event] = xs.Array.findAll(me.events[event], function (dispatcher) {

@@ -14,7 +14,7 @@
     var xs = root[ns];
 
     /**
-     * xs.core.ContractsManager is core class, that is used to manage created classes
+     * xs.core.ContractsManager is core class, that is used to manage created contracts
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
@@ -28,7 +28,7 @@
         var me = this;
 
         /**
-         * Store of all registered classes
+         * Store of all registered contracts
          *
          * @private
          *
@@ -39,7 +39,7 @@
         var registry = new xs.core.Collection;
 
         /**
-         * Checks whether class with given name is already defined by ContractsManager
+         * Checks whether contract with given name is already defined by ContractsManager
          *
          * For example:
          *
@@ -57,7 +57,7 @@
         };
 
         /**
-         * Returns class from registry by name, or undefined if no class registered
+         * Returns contract from registry by name, or undefined if no contract registered
          *
          * For example:
          *
@@ -65,9 +65,9 @@
          *
          * @method get
          *
-         * @param {String} name class name
+         * @param {String} name contract name
          *
-         * @return {Function|undefined} class by name or undefined
+         * @return {Function|undefined} contract by name or undefined
          */
         me.get = function (name) {
 
@@ -75,13 +75,13 @@
         };
 
         /**
-         * Registers class in registry with given name. If class with given name is already defined - respective
+         * Registers contract in registry with given name. If contract with given name is already defined - respective
          * error is thrown. Internally:
          *
-         * - label is assigned for class
+         * - label is assigned for contract
          * - namespace is created if not defined
-         * - class is saved in namespace
-         * - class is saved in registry with name
+         * - contract is saved in namespace
+         * - contract is saved in registry with name
          *
          * For example:
          *
@@ -92,58 +92,57 @@
          *
          * @method add
          *
-         * @param {String} name new class name
-         * @param {Function} Class registered class
+         * @param {String} name new contract name
+         * @param {Function} Contract registered contract
          *
          * @throws {Error} Error is thrown, when:
          *
-         * - class with given name is already registered
-         * - class is not function
-         * - class is not extended from xs.class.Base
+         * - contract with given name is already registered
+         * - contract is not function
          */
-        var _add = me.add = function (name, Class) {
+        var _add = me.add = function (name, Contract) {
             //throw error if trying to set defined
             if (_has(name)) {
-                throw new ContractsManagerError('class "' + name + '" is already defined');
+                throw new ContractsManagerError('contract "' + name + '" is already defined');
             }
 
             //throw error if trying to add already added with other name
-            if (registry.has(Class)) {
-                throw new ContractsManagerError('class "' + Class.label + '" can not be added as "' + name + '"');
+            if (registry.has(Contract)) {
+                throw new ContractsManagerError('contract "' + Contract.label + '" can not be added as "' + name + '"');
             }
 
-            //throw error if Class is not function
-            if (!xs.isFunction(Class)) {
-                throw new ContractsManagerError('class "' + name + '" is not a function');
+            //throw error if Contract is not function
+            if (!xs.isFunction(Contract)) {
+                throw new ContractsManagerError('contract "' + name + '" is not a function');
             }
 
             //assign real name as label
-            Class.label = name;
+            Contract.label = name;
 
-            //get short name of Class
+            //get short name of Contract
             var label = _getName(name);
 
-            //get Class namespace by path
+            //get Contract namespace by path
             var namespace = _namespace(root, _getPath(name));
 
-            //save Class to namespace
-            namespace[label] = Class;
+            //save Contract to namespace
+            namespace[label] = Contract;
 
-            //save Class to registry
-            registry.add(name, Class);
+            //save Contract to registry
+            registry.add(name, Contract);
 
             //sync namespaces
             _syncNamespaces(namespace, 'add', label);
         };
 
         /**
-         * Removes class, registered with given name from registry. If class with given name is not defined - respective
+         * Removes contract, registered with given name from registry. If contract with given name is not defined - respective
          * error is thrown. Internally:
          *
-         * - label is removed for class
+         * - label is removed for contract
          * - namespace is created if not defined
-         * - class is saved in namespace
-         * - class is saved in registry with name
+         * - contract is saved in namespace
+         * - contract is saved in registry with name
          *
          * For example:
          *
@@ -152,52 +151,52 @@
          *
          * @method remove
          *
-         * @param {String} name name of unset Class
+         * @param {String} name name of unset Contract
          *
          * @throws {Error} Error is thrown, when:
          *
-         * - class with given name is not registered
+         * - contract with given name is not registered
          */
         me.remove = function (name) {
             //throw error if trying to unset undefined
             if (!_has(name)) {
-                throw new ContractsManagerError('class "' + name + '" is not defined');
+                throw new ContractsManagerError('contract "' + name + '" is not defined');
             }
 
-            //unset Class label
+            //unset Contract label
             delete registry.at(name).label;
 
-            //get short name of Class
+            //get short name of Contract
             var label = _getName(name);
 
-            //get path of Class
+            //get path of Contract
             var path = _getPath(name);
 
-            //get Class namespace by path
+            //get Contract namespace by path
             var namespace = _namespace(root, path);
 
             //sync namespaces
             _syncNamespaces(namespace, 'remove', label);
 
-            //unset Class from namespace
+            //unset Contract from namespace
             delete namespace[label];
 
             //clean namespace
             _cleanNamespace(root, path);
 
-            //remove Class from registry
+            //remove Contract from registry
             registry.removeAt(name);
         };
 
         /**
-         * Creates class sample via {@link xs.class.Class xs.class.Class}. After that, when {@link xs.class.preprocessors}
-         * stack is processed, saves created class in internal registry with given name. If class with that name is already defined,
+         * Creates contract via relative constructor. After that, when preprocessors
+         * stack is processed, saves created contract in internal registry with given name. If contract with that name is already defined,
          * respective error is thrown.
          *
          * For example:
          *
          *     //define simple class
-         *     xs.define('myClass', function (self, ns) {
+         *     xs.define(xs.Class, 'myClass', function (self, ns) {
          *         //here is Class descriptor returned
          *         return {
          *         };
@@ -207,41 +206,42 @@
          *
          * @method define
          *
-         * @param {String} name name of created class
+         * @param {Function} Contractor contractor, that is used
+         * @param {String} name name of created contract
          * @param {Function} descFn descriptor function. Is called with 2 params:
          *
-         * - self. Created class instance
+         * - self. Created contract instance
          * - ns. namespace object, where namespace references are placed
          *
-         * @param {Function} createdFn class creation callback. Is called after
-         * {@link xs.class.preprocessors preprocessors} stack is processed. When called, created class is passed as param
+         * @param {Function} createdFn contract creation callback. Is called after
+         * preprocessors stack is processed. When called, created contract is passed as param
          *
-         * @return {Function} created Class
+         * @return {Function} created Contract
          *
          * @throws {Error} Error is thrown, when:
          *
-         * - class with given name is already registered
+         * - contract with given name is already registered
          */
-        me.define = function (name, descFn, createdFn) {
-            //create Class and start it's processing
-            var Class = xs.Class(descFn, createdFn);
+        me.define = function (Contractor, name, descFn, createdFn) {
+            //create Contract and start it's processing
+            var Contract = Contractor(descFn, createdFn);
 
-            //here class namespace is evaluated. Evaluate real name of class
-            name = Class.descriptor.resolveName(name);
+            //here contract namespace is evaluated. Evaluate real name of contract
+            name = Contract.descriptor.resolveName(name);
 
             //throw error if trying to redefine
             if (_has(name)) {
-                throw new ContractsManagerError('class "' + name + '" is already defined');
+                throw new ContractsManagerError('contract "' + name + '" is already defined');
             }
 
-            //save Class in registry by name
-            _add(name, Class);
+            //save Contract in registry by name
+            _add(name, Contract);
 
-            return Class;
+            return Contract;
         };
 
         /**
-         * Returns short name of class by full name
+         * Returns short name of contract by full name
          *
          * For example:
          *
@@ -251,7 +251,7 @@
          *
          * @method getName
          *
-         * @param {String} name class name
+         * @param {String} name contract name
          *
          * @return {String} short name
          */
@@ -261,7 +261,7 @@
         };
 
         /**
-         * Returns class path by full name
+         * Returns contract path by full name
          *
          * For example:
          *
@@ -271,9 +271,9 @@
          *
          * @method getPath
          *
-         * @param {String} name class name
+         * @param {String} name contract name
          *
-         * @return {String} class path
+         * @return {String} contract path
          */
         var _getPath = function (name) {
 
@@ -366,7 +366,7 @@
         };
 
         /**
-         * Updates internal namespaces of all classes, registered in namespace
+         * Updates internal namespaces of all contracts, registered in namespace
          *
          * For example:
          *
@@ -378,34 +378,34 @@
          *
          * @param {Object|Function} namespace synchronized namespace
          * @param {String} operation operation name
-         * @param {String} name name of changed class
+         * @param {String} name name of changed contract
          */
         var _syncNamespaces = function (namespace, operation, name) {
-            var classes = new xs.core.Collection(namespace).find(function (value) {
+            var contracts = new xs.core.Collection(namespace).find(function (value) {
                 return xs.isFunction(value) && xs.isObject(value.namespace);
             }, xs.core.Collection.ALL);
-            var changedClass = classes.at(name);
+            var changedContract = contracts.at(name);
 
-            //add new class to all namespaces
+            //add new contract to all namespaces
             if (operation == 'add') {
-                //add all classes to new class' namespace
-                classes.each(function (Class, name) {
-                    changedClass.namespace[name] = Class;
+                //add all contracts to new contract' namespace
+                contracts.each(function (Contract, name) {
+                    changedContract.namespace[name] = Contract;
                 });
 
-                //add new class to all namespaces
-                classes.each(function (Class) {
-                    Class.namespace[name] = classes.at(name);
+                //add new contract to all namespaces
+                contracts.each(function (Contract) {
+                    Contract.namespace[name] = contracts.at(name);
                 });
             } else if (operation == 'remove') {
-                //empty old class' namespace
-                Object.keys(changedClass.namespace).forEach(function (key) {
-                    delete changedClass.namespace[key];
+                //empty old contract' namespace
+                Object.keys(changedContract.namespace).forEach(function (key) {
+                    delete changedContract.namespace[key];
                 });
 
-                //remove old class from all namespaces
-                classes.each(function (Class) {
-                    delete Class.namespace[name];
+                //remove old contract from all namespaces
+                contracts.each(function (Contract) {
+                    delete Contract.namespace[name];
                 });
             }
         };

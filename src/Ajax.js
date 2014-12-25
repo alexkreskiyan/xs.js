@@ -52,7 +52,7 @@
  requests in the application.
 
  */
-xs.define('xs.Ajax', {
+xs.define(xs.Class, 'xs.Ajax', {
     extend: 'xs.data.Connection',
     singleton: true,
     properties: {

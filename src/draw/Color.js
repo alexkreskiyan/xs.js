@@ -2,7 +2,7 @@
 
     //framework shorthand
     var xs = root[ns];
-    xs.define(ns + '.draw.Color', function () {
+    xs.define(xs.Class, ns + '.draw.Color', function () {
         var Color = function () {
             this.red = 0;
             this.green = 0;

@@ -32,7 +32,7 @@
  */
 'use strict';
 
-xs.define('xs.promise.Deferred', {
+xs.define(xs.Class, 'xs.promise.Deferred', {
     requires: ['xs.promise.Resolver'],
     static: {
         methods: {

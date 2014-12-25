@@ -17,7 +17,7 @@
  *
  * @class xs.class.Base
  */
-xs.define('xs.class.Base', function () {
+xs.define(xs.Class, 'xs.class.Base', function () {
     var me = this;
     /**
      * Returns whether this is child of given parent
