@@ -15,23 +15,23 @@
 
     /**
      * Preprocessor processExtends
-     * Is used to extend child class from parent class
+     * Is used to extend child interface from parent interface
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.class.preprocessors.add('processExtends', function () {
+    xs.interface.preprocessors.add('processExtends', function () {
 
         return true;
-    }, function (Class, descriptor) {
+    }, function (Interface, descriptor) {
         var extended = descriptor.extends;
 
-        xs.log('xs.class.preprocessors.processExtends[', Class.label, ']. Extended:', extended);
-        //if no parent given - extend from xs.class.Base
+        xs.log('xs.interface.preprocessors.processExtends[', Interface.label, ']. Extended:', extended);
+        //if no parent given - extend from xs.interface.Base
         if (!xs.isDefined(extended)) {
-            xs.log('xs.class.preprocessors.extends[', Class.label, ']. Extending xs.class.Base');
-            _extend(Class, xs.class.Base);
+            xs.log('xs.interface.preprocessors.extends[', Interface.label, ']. Extending xs.interface.Base');
+            _extend(Interface, xs.interface.Base);
 
             return;
 
@@ -39,35 +39,35 @@
         } else {
 
             //resolve parent name
-            extended = Class.descriptor.resolveName(extended);
+            extended = Interface.descriptor.resolveName(extended);
         }
 
         //if parent is not defined or is processing - throw errors
         if (!xs.ContractsManager.has(extended)) {
-            throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + extended + '" is not defined. Move it to imports section, please');
+            throw new ProcessExtendsError('[' + Interface.label + ']: parent interface "' + extended + '" is not defined. Move it to imports section, please');
         } else {
             //get parent reference
             var Parent = xs.ContractsManager.get(extended);
 
             if (Parent.isProcessing) {
-                throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + Parent.label + '" is not processed yet. Move it to imports section, please');
+                throw new ProcessExtendsError('[' + Interface.label + ']: parent interface "' + Parent.label + '" is not processed yet. Move it to imports section, please');
             }
         }
 
-        xs.log('xs.class.preprocessors.extends[', Class.label, ']. Extending', Parent.label);
+        xs.log('xs.interface.preprocessors.extends[', Interface.label, ']. Extending', Parent.label);
         //apply extends
-        _applyExtends(Class, Parent);
+        _applyExtends(Interface, Parent);
     });
 
     /**
-     * Core extends function. Saves imported classes by aliases
+     * Core extends function. Saves imported interfaces by aliases
      *
      * @ignore
      *
      * @method applyImports
      *
-     * @param {Function} target target class
-     * @param {Function} parent extended class
+     * @param {Function} target target interface
+     * @param {Function} parent extended interface
      */
     var _applyExtends = function (target, parent) {
         //extend
@@ -82,8 +82,8 @@
      *
      * @ignore
      *
-     * @param {Function} child child class
-     * @param {Function} parent parent class
+     * @param {Function} child child interface
+     * @param {Function} parent parent interface
      */
     var _extend = function (child, parent) {
         //create fake constructor
@@ -113,7 +113,7 @@
      * @class ProcessExtendsError
      */
     function ProcessExtendsError(message) {
-        this.message = 'xs.class.preprocessors.processExtends::' + message;
+        this.message = 'xs.interface.preprocessors.processExtends::' + message;
     }
 
     ProcessExtendsError.prototype = new Error();

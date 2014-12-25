@@ -15,21 +15,21 @@
 
     /**
      * Preprocessor namespace
-     * Is used to work with class namespace
+     * Is used to work with interface namespace
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.class.preprocessors.add('namespace', function () {
+    xs.interface.preprocessors.add('namespace', function () {
 
         return true;
-    }, function (Class, descriptor, ns, dependencies, ready) {
+    }, function (Interface, descriptor, ns, dependencies, ready) {
 
-        xs.log('xs.class.preprocessors.namespace');
+        xs.log('xs.interface.preprocessors.namespace');
         var namespace = (xs.isString(descriptor.namespace) && descriptor.namespace.length) ? descriptor.namespace : undefined;
         //save namespace
-        Class.descriptor.resolveName = function (path) {
+        Interface.descriptor.resolveName = function (path) {
 
             //simply return path, if namespace is empty
             if (!namespace) {
@@ -47,7 +47,7 @@
             return path;
         };
 
-        //continue on next tick to allow ContractsManager check class name
+        //continue on next tick to allow ContractsManager check interface name
         xs.nextTick(ready);
 
         //return false to sign async processor

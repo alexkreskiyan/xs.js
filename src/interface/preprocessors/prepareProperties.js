@@ -15,26 +15,26 @@
 
     /**
      * Preprocessor prepareProperties
-     * Is used to process class properties
+     * Is used to process interface properties
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.class.preprocessors.add('prepareProperties', function () {
+    xs.interface.preprocessors.add('prepareProperties', function () {
 
         return true;
-    }, function (Class, descriptor) {
+    }, function (Interface, descriptor) {
 
-        xs.log('xs.class.preprocessors.prepareProperties[', Class.label, ']');
+        xs.log('xs.interface.preprocessors.prepareProperties[', Interface.label, ']');
 
         //init properties reference
-        var properties = Class.descriptor.properties;
+        var properties = Interface.descriptor.properties;
 
 
         //inherited
         //get inherited properties from parent descriptor
-        var inherited = Class.parent.descriptor.properties;
+        var inherited = Interface.parent.descriptor.properties;
 
         //add all inherited
         inherited.each(function (value, name) {
@@ -50,7 +50,7 @@
         //verify and prepare them
         own.each(function (value, name, list) {
             if (!xs.isString(name) || !name) {
-                throw new PropertyError('[' + Class.label + ']: incorrect property name');
+                throw new PropertyError('[' + Interface.label + ']: incorrect property name');
             }
 
             list.set(name, xs.Attribute.property.prepare(name, value));
@@ -72,7 +72,7 @@
      * @class PropertyError
      */
     function PropertyError(message) {
-        this.message = 'xs.class.preprocessors.properties::' + message;
+        this.message = 'xs.interface.preprocessors.properties::' + message;
     }
 
     PropertyError.prototype = new Error();

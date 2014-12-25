@@ -15,30 +15,30 @@
 
     /**
      * Preprocessor prepareStaticMethods
-     * Is used to process class static methods
+     * Is used to process interface static methods
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.class.preprocessors.add('prepareStaticMethods', function () {
+    xs.interface.preprocessors.add('prepareStaticMethods', function () {
 
         return true;
-    }, function (Class, descriptor) {
+    }, function (Interface, descriptor) {
 
-        xs.log('xs.class.preprocessors.prepareStaticMethods[', Class.label, ']');
+        xs.log('xs.interface.preprocessors.prepareStaticMethods[', Interface.label, ']');
         //if static methods are specified not as object - throw respective error
         if (!xs.isObject(descriptor.static) || !xs.isObject(descriptor.static.methods)) {
-            throw new StaticMethodError('[' + Class.label + ']: incorrect static methods list');
+            throw new StaticMethodError('[' + Interface.label + ']: incorrect static methods list');
         }
 
         //init methods reference
-        var methods = Class.descriptor.static.methods;
+        var methods = Interface.descriptor.static.methods;
 
 
         //inherited
         //get inherited static methods from parent descriptor
-        var inherited = Class.parent.descriptor.static.methods;
+        var inherited = Interface.parent.descriptor.static.methods;
 
         //add all inherited
         inherited.each(function (value, name) {
@@ -53,7 +53,7 @@
         //verify and prepare them
         own.each(function (value, name, list) {
             if (!xs.isString(name) || !name) {
-                throw new StaticMethodError('[' + Class.label + ']: incorrect static method name');
+                throw new StaticMethodError('[' + Interface.label + ']: incorrect static method name');
             }
 
             list.set(name, xs.Attribute.method.prepare(name, value));
@@ -75,7 +75,7 @@
      * @class StaticMethodError
      */
     function StaticMethodError(message) {
-        this.message = 'xs.class.preprocessors.staticMethods::' + message;
+        this.message = 'xs.interface.preprocessors.staticMethods::' + message;
     }
 
     StaticMethodError.prototype = new Error();

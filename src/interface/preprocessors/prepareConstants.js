@@ -15,26 +15,26 @@
 
     /**
      * Preprocessor prepareConstants
-     * Is used to process class constants
+     * Is used to process interface constants
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.class.preprocessors.add('prepareConstants', function () {
+    xs.interface.preprocessors.add('prepareConstants', function () {
 
         return true;
-    }, function (Class, descriptor) {
+    }, function (Interface, descriptor) {
 
-        xs.log('xs.class.preprocessors.prepareConstants[', Class.label, ']');
+        xs.log('xs.interface.preprocessors.prepareConstants[', Interface.label, ']');
 
         //init constants reference
-        var constants = Class.descriptor.constants;
+        var constants = Interface.descriptor.constants;
 
 
         //inherited
         //get inherited constants from parent descriptor
-        var inherited = Class.parent.descriptor.constants;
+        var inherited = Interface.parent.descriptor.constants;
 
         //add all inherited
         inherited.each(function (value, name) {
@@ -43,13 +43,13 @@
 
 
         //own
-        //get own constants from raw descriptor and save to Class.descriptor
+        //get own constants from raw descriptor and save to Interface.descriptor
         var own = descriptor.constants;
 
         //verify own constants
         own.each(function (value, name) {
             if (!xs.isString(name) || !name) {
-                throw new ConstError('[' + Class.label + ']: incorrect constant name');
+                throw new ConstError('[' + Interface.label + ']: incorrect constant name');
             }
         });
 
@@ -69,7 +69,7 @@
      * @class ConstError
      */
     function ConstError(message) {
-        this.message = 'xs.class.preprocessors.constants::' + message;
+        this.message = 'xs.interface.preprocessors.constants::' + message;
     }
 
     ConstError.prototype = new Error();

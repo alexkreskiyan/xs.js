@@ -15,28 +15,28 @@
 
     /**
      * Preprocessor prepareExtends
-     * Is used to get extended class name and add it to imports
+     * Is used to get extended interface name and add it to imports
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.class.preprocessors.add('prepareExtends', function () {
+    xs.interface.preprocessors.add('prepareExtends', function () {
 
         return true;
-    }, function (Class, descriptor) {
+    }, function (Interface, descriptor) {
         var extended = descriptor.extends;
 
-        xs.log('xs.class.preprocessors.prepareExtends[', Class.label, ']. Extended:', extended);
+        xs.log('xs.interface.preprocessors.prepareExtends[', Interface.label, ']. Extended:', extended);
         //if extended is non-empty string - resolve parent name
         if (xs.isString(extended) && extended) {
             descriptor.imports.add(extended);
 
-            //if no parent given - extend from xs.class.Base
+            //if no parent given - extend from xs.interface.Base
         } else if (xs.isDefined(extended)) {
 
             //if extended is not string (empty string) - throw respective error
-            throw new PrepareExtendsError('[' + Class.label + ']: incorrect extended name');
+            throw new PrepareExtendsError('[' + Interface.label + ']: incorrect extended name');
         }
     });
 
@@ -50,7 +50,7 @@
      * @class PrepareExtendsError
      */
     function PrepareExtendsError(message) {
-        this.message = 'xs.class.preprocessors.prepareExtends::' + message;
+        this.message = 'xs.interface.preprocessors.prepareExtends::' + message;
     }
 
     PrepareExtendsError.prototype = new Error();

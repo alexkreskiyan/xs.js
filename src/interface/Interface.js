@@ -13,38 +13,38 @@
     //framework shorthand
     var xs = root[ns];
 
-    //define xs.class
-    xs.class || (xs.class = {});
+    //define xs.interface
+    xs.interface || (xs.interface = {});
 
     /**
-     * xs.class.Class is core class, that is used for class generation.
+     * xs.interface.Interface is core class, that is used for interface generation.
      *
-     * xs.class.Class provides 2 stacks to register processors:
+     * xs.interface.Interface provides 2 stacks to register processors:
      *
-     * - {@link xs.class.preprocessors preprocessors}
-     * - {@link xs.class.postprocessors postprocessors}
+     * - {@link xs.interface.preprocessors preprocessors}
+     * - {@link xs.interface.postprocessors postprocessors}
      *
      * Usage example:
      *
-     *     //create simple Class
-     *     var Class = xs.Class(function (Class) {
-     *         //here Class descriptor is described:
+     *     //create simple Interface
+     *     var Interface = xs.Interface(function (Interface) {
+     *         //here Interface descriptor is described:
      *         var me = this;
      *         me.imports = [];
      *         me.constants.a = 1;
      *     });
      *
-     * xs.class.Class has 2 params:
+     * xs.interface.Interface has 2 params:
      *
      * 1 Descriptor (Function) -  descriptor constructor. Creates raw descriptor instance. Is called with 3 params:
      *
-     * - self. Created class instance
+     * - self. Created interface instance
      * - ns. namespace object, where namespace references are placed
      * - imports. namespace object, where namespace references are placed
-     * - dependencies. system dependencies manager. Is used to describe classes' dependencies
+     * - dependencies. system dependencies manager. Is used to describe interfaces' dependencies
      *
-     * 2 createdFn ([Function]) - optional class creation callback. Is called after
-     * {@link xs.class.preprocessors preprocessors} stack is processed. When called, created class is passed as param.
+     * 2 createdFn ([Function]) - optional interface creation callback. Is called after
+     * {@link xs.interface.preprocessors preprocessors} stack is processed. When called, created interface is passed as param.
      *
      * Errors are thrown, when:
      *
@@ -53,16 +53,16 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class xs.class.Class
+     * @class xs.interface.Interface
      *
-     * @alternateClassName xs.Class
+     * @alternateClassName xs.Interface
      *
      * @singleton
      */
-    xs.Class = xs.class.Class = (function (dependencies) {
+    xs.Interface = xs.interface.Interface = (function (dependencies) {
 
         /**
-         * Currently processing classes' list
+         * Currently processing interfaces' list
          *
          * @ignore
          *
@@ -73,77 +73,77 @@
         var processing = new xs.core.Collection;
 
         /**
-         * Creates class sample and starts processors applying
+         * Creates interface sample and starts processors applying
          *
          * @ignore
          *
          * @method create
          */
-        var Class = function (Descriptor, createdFn) {
+        var Interface = function (Descriptor, createdFn) {
 
             //Descriptor must be function
             if (!xs.isFunction(Descriptor)) {
-                throw new ClassError('descriptor must be evaluated function');
+                throw new InterfaceError('descriptor must be evaluated function');
             }
 
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
 
-            //create class
-            var Class = _createSample();
+            //create interface
+            var Interface = _createSample();
 
-            //assign factory for class
-            Class.factory = _createFactory(Class);
+            //assign factory for interface
+            Interface.factory = _createFactory(Interface);
 
-            //get namespace for Class
-            var namespace = Class.namespace = {};
+            //get namespace for Interface
+            var namespace = Interface.namespace = {};
 
-            //get imports for Class
-            var imports = Class.imports = {};
+            //get imports for Interface
+            var imports = Interface.imports = {};
 
             //Fill descriptor prototype
             Descriptor.prototype = _createDescriptorPrototype();
 
             //get descriptor instance
-            var descriptor = new Descriptor(Class, namespace, imports);
+            var descriptor = new Descriptor(Interface, namespace, imports);
             //convert descriptor
             _convertDescriptor(descriptor);
 
-            //save Class descriptor
+            //save Interface descriptor
             var emptyDescriptor = _createDescriptorPrototype();
             _convertDescriptor(emptyDescriptor);
-            xs.constant(Class, 'descriptor', emptyDescriptor);
+            xs.constant(Interface, 'descriptor', emptyDescriptor);
 
-            //mark class as not ready yet (until preprocessors done)
-            Class.isProcessing = true;
+            //mark interface as not ready yet (until preprocessors done)
+            Interface.isProcessing = true;
 
-            //push class to processed list
-            processing.add(Class);
+            //push interface to processed list
+            processing.add(Interface);
 
             //process preprocessors stack before createdFn called.
             //Normally, only namespace is processed on this tick - imports is unambiguously async
             preprocessors.process([
-                Class,
+                Interface,
                 descriptor,
                 namespace
             ], [
-                Class,
+                Interface,
                 descriptor,
                 namespace,
                 dependencies
             ], function () {
                 //remove isProcessing mark
-                delete Class.isProcessing;
+                delete Interface.isProcessing;
 
-                //remove class from processing list
-                processing.remove(Class);
+                //remove interface from processing list
+                processing.remove(Interface);
 
                 //remove from dependencies
-                dependencies.remove(Class);
+                dependencies.remove(Interface);
 
-                //notify, that class is ready
-                dependencies.ready(Class.label);
+                //notify, that interface is ready
+                dependencies.ready(Interface.label);
 
-                //if dependencies empty - all classes processed
+                //if dependencies empty - all interfaces processed
                 if (!processing.length) {
 
                     //notify, that all ready
@@ -151,106 +151,106 @@
                 }
 
                 //call createdFn
-                createdFn(Class);
+                createdFn(Interface);
 
                 //process postprocessors stack after createdFn called
                 postprocessors.process([
-                    Class,
+                    Interface,
                     descriptor,
                     namespace
                 ], [
-                    Class,
+                    Interface,
                     descriptor,
                     namespace
                 ]);
             });
 
-            return Class;
+            return Interface;
         };
 
         /**
-         * Stack of processors, processing class before it's considered to be created (before createdFn is called)
+         * Stack of processors, processing interface before it's considered to be created (before createdFn is called)
          *
          * Provided arguments are:
          *
          * For verifier:
          *
-         *  - Class
+         *  - Interface
          *  - descriptor
          *  - namespace
          *
          * For handler:
          *
-         *  - Class
+         *  - Interface
          *  - descriptor
          *  - namespace
          *
          * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
          *
-         * @class xs.class.preprocessors
+         * @class xs.interface.preprocessors
          *
          * @extends xs.core.ProcessorsStack
          *
          * @singleton
          */
-        var preprocessors = xs.class.preprocessors = new xs.ProcessorsStack.Class();
+        var preprocessors = xs.interface.preprocessors = new xs.ProcessorsStack.Interface();
 
         /**
-         * Stack of processors, processing class after it's considered to be created (after createdFn is called)
+         * Stack of processors, processing interface after it's considered to be created (after createdFn is called)
          *
          * Provided arguments are:
          *
          * For verifier:
          *
-         *  - Class
+         *  - Interface
          *  - descriptor
          *  - namespace
          *
          * For handler:
          *
-         *  - Class
+         *  - Interface
          *  - descriptor
          *  - namespace
          *
          * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
          *
-         * @class xs.class.postprocessors
+         * @class xs.interface.postprocessors
          *
          * @extends xs.core.ProcessorsStack
          *
          * @singleton
          */
-        var postprocessors = xs.class.postprocessors = new xs.ProcessorsStack.Class();
+        var postprocessors = xs.interface.postprocessors = new xs.ProcessorsStack.Interface();
 
         /**
-         * Returns new xClass sample
+         * Returns new xInterface sample
          *
          * @ignore
          *
          * @method create
          *
-         * @return {Function} new xClass
+         * @return {Function} new xInterface
          */
         var _createSample = function () {
-            var Class = function xClass() {
+            var Interface = function xInterface() {
                 var me = this;
 
-                //define class constructor
-                var descriptor = Class.descriptor;
+                //define interface constructor
+                var descriptor = Interface.descriptor;
 
 
                 //singleton processing
 
-                //throw exception if Class is singleton
+                //throw exception if Interface is singleton
                 if (descriptor.singleton) {
-                    throw new ClassError('can not create instance of singleton class');
+                    throw new InterfaceError('can not create instance of singleton interface');
                 }
 
                 //get constructor shortcut
                 var constructor = descriptor.constructor != Object ? descriptor.constructor : undefined;
 
                 //if parent constructor - just call it
-                if (me.self && me.self !== Class) {
+                if (me.self && me.self !== Interface) {
                     constructor && constructor.apply(me, arguments);
 
                     return;
@@ -276,44 +276,44 @@
 
                 //native constructor call
 
-                //save class reference
-                me.self = Class;
+                //save interface reference
+                me.self = Interface;
 
                 //apply constructor
                 constructor && constructor.apply(me, arguments);
             };
 
-            return Class;
+            return Interface;
         };
 
         /**
-         * Returns factory for given Class
+         * Returns factory for given Interface
          *
          * @ignore
          *
          * @method createFactory
          *
-         * @param {Function} Class
+         * @param {Function} Interface
          *
-         * @return {Function} factory for given Class
+         * @return {Function} factory for given Interface
          */
-        var _createFactory = function (Class) {
-            //this - current class
+        var _createFactory = function (Interface) {
+            //this - current interface
             //arguments - new instance arguments
 
             //create wrapper
-            var xClass = function (args) {
-                return Class.apply(this, args);
+            var xInterface = function (args) {
+                return Interface.apply(this, args);
             };
 
             //assign prototype
-            xClass.prototype = Class.prototype;
+            xInterface.prototype = Interface.prototype;
 
             //return factory
             return function () {
 
                 //return instance
-                return new xClass(arguments);
+                return new xInterface(arguments);
             };
         };
 
@@ -329,46 +329,46 @@
         var _createDescriptorPrototype = function () {
             return {
 
-                //class namespace
+                //interface namespace
                 namespace: undefined,
 
-                //class imports list
+                //interface imports list
                 imports: [],
 
-                //class parent
+                //interface parent
                 extends: undefined,
 
-                //class mixins list
+                //interface mixins list
                 mixins: {},
 
-                //class implements list
+                //interface implements list
                 implements: {},
 
-                //class singleton flag
+                //interface singleton flag
                 singleton: undefined,
 
-                //class interface flag
+                //interface interface flag
                 interface: undefined,
 
-                //class constants list
+                //interface constants list
                 constants: {},
 
-                //class statics list
+                //interface statics list
                 static: {
-                    //class static methods list
+                    //interface static methods list
                     methods: {},
 
-                    //class static properties list
+                    //interface static properties list
                     properties: {}
                 },
 
-                //class constructor
+                //interface constructor
                 constructor: undefined,
 
-                //class methods list
+                //interface methods list
                 methods: {},
 
-                //class properties list
+                //interface properties list
                 properties: {}
             };
         };
@@ -393,26 +393,26 @@
             descriptor.properties = new xs.core.Collection(descriptor.properties);
         };
 
-        return Class;
-    })(xs.DependenciesManager.Class);
+        return Interface;
+    })(xs.DependenciesManager.Interface);
 
 
     //clean up ProcessorsStack
     //remove ProcessorsStack reference
-    delete xs.ProcessorsStack.Class;
+    delete xs.ProcessorsStack.Interface;
     //complete if ready
     Object.keys(xs.ProcessorsStack).length || delete xs.ProcessorsStack;
 
 
     //clean up DependenciesManager
     //remove DependenciesManager reference
-    delete xs.DependenciesManager.Class;
+    delete xs.DependenciesManager.Interface;
     //complete if ready
     Object.keys(xs.DependenciesManager).length || delete xs.DependenciesManager;
 
 
-    //define prototype of xs.class.Base
-    xs.class.Base = xs.Class(function () {
+    //define prototype of xs.interface.Base
+    xs.interface.Base = xs.Interface(function () {
     }, xs.emptyFn);
 
 
@@ -423,11 +423,11 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class ClassError
+     * @class InterfaceError
      */
-    function ClassError(message) {
-        this.message = 'xs.class.Class::' + message;
+    function InterfaceError(message) {
+        this.message = 'xs.interface.Interface::' + message;
     }
 
-    ClassError.prototype = new Error();
+    InterfaceError.prototype = new Error();
 })(window, 'xs');

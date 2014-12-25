@@ -15,30 +15,30 @@
 
     /**
      * Preprocessor prepareMethods
-     * Is used to process class methods
+     * Is used to process interface methods
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.class.preprocessors.add('prepareMethods', function () {
+    xs.interface.preprocessors.add('prepareMethods', function () {
 
         return true;
-    }, function (Class, descriptor) {
+    }, function (Interface, descriptor) {
 
-        xs.log('xs.class.preprocessors.prepareMethods[', Class.label, ']');
+        xs.log('xs.interface.preprocessors.prepareMethods[', Interface.label, ']');
         //if methods are specified not as object - throw respective error
         if (!xs.isObject(descriptor.properties)) {
-            throw new MethodError('[' + Class.label + ']: incorrect methods list');
+            throw new MethodError('[' + Interface.label + ']: incorrect methods list');
         }
 
         //init methods reference
-        var methods = Class.descriptor.methods;
+        var methods = Interface.descriptor.methods;
 
 
         //inherited
         //get inherited methods from parent descriptor
-        var inherited = Class.parent.descriptor.methods;
+        var inherited = Interface.parent.descriptor.methods;
 
         //add all inherited
         inherited.each(function (value, name) {
@@ -53,7 +53,7 @@
         //verify and prepare them
         own.each(function (value, name, list) {
             if (!xs.isString(name) || !name) {
-                throw new MethodError('[' + Class.label + ']: incorrect method name');
+                throw new MethodError('[' + Interface.label + ']: incorrect method name');
             }
 
             list.set(name, xs.Attribute.method.prepare(name, value));
@@ -75,7 +75,7 @@
      * @class MethodError
      */
     function MethodError(message) {
-        this.message = 'xs.class.preprocessors.methods::' + message;
+        this.message = 'xs.interface.preprocessors.methods::' + message;
     }
 
     MethodError.prototype = new Error();

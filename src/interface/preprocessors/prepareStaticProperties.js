@@ -15,26 +15,26 @@
 
     /**
      * Preprocessor prepareStaticProperties
-     * Is used to process class static properties
+     * Is used to process interface static properties
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.class.preprocessors.add('prepareStaticProperties', function () {
+    xs.interface.preprocessors.add('prepareStaticProperties', function () {
 
         return true;
-    }, function (Class, descriptor) {
+    }, function (Interface, descriptor) {
 
-        xs.log('xs.class.preprocessors.prepareStaticProperties[', Class.label, ']');
+        xs.log('xs.interface.preprocessors.prepareStaticProperties[', Interface.label, ']');
 
         //init properties reference
-        var properties = Class.descriptor.static.properties;
+        var properties = Interface.descriptor.static.properties;
 
 
         //inherited
         //get inherited static properties from parent descriptor
-        var inherited = Class.parent.descriptor.static.properties;
+        var inherited = Interface.parent.descriptor.static.properties;
 
         //add all inherited
         inherited.each(function (value, name) {
@@ -49,7 +49,7 @@
         //verify and prepare them
         own.each(function (value, name, list) {
             if (!xs.isString(name) || !name) {
-                throw new StaticPropertyError('[' + Class.label + ']: incorrect static property name');
+                throw new StaticPropertyError('[' + Interface.label + ']: incorrect static property name');
             }
 
             list.set(name, xs.Attribute.property.prepare(name, value));
@@ -71,7 +71,7 @@
      * @class StaticPropertyError
      */
     function StaticPropertyError(message) {
-        this.message = 'xs.class.preprocessors.staticProperties::' + message;
+        this.message = 'xs.interface.preprocessors.staticProperties::' + message;
     }
 
     StaticPropertyError.prototype = new Error();
