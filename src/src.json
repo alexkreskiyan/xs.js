@@ -31,5 +31,14 @@
     "xs.class.preprocessors.constructor",
     "xs.class.preprocessors.defineProperties",
     "xs.class.preprocessors.defineMethods",
-    "xs.class.Base"
+    "xs.class.Base",
+    "xs.interface.Interface",
+    "xs.interface.preprocessors.namespace",
+    "xs.interface.preprocessors.prepareExtends",
+    "xs.interface.preprocessors.processExtends",
+    "xs.interface.preprocessors.prepareConstants",
+    "xs.interface.preprocessors.prepareStaticProperties",
+    "xs.interface.preprocessors.prepareStaticMethods",
+    "xs.interface.preprocessors.prepareProperties",
+    "xs.interface.preprocessors.prepareMethods"
 ]
