@@ -41,7 +41,6 @@
      * - self. Created class instance
      * - ns. namespace object, where namespace references are placed
      * - imports. namespace object, where namespace references are placed
-     * - dependencies. system dependencies manager. Is used to describe classes' dependencies
      *
      * 2 createdFn ([Function]) - optional class creation callback. Is called after
      * {@link xs.class.preprocessors preprocessors} stack is processed. When called, created class is passed as param.
@@ -346,9 +345,6 @@
 
                 //class singleton flag
                 singleton: undefined,
-
-                //class interface flag
-                interface: undefined,
 
                 //class constants list
                 constants: {},

@@ -30,8 +30,7 @@
      *     var Interface = xs.Interface(function (Interface) {
      *         //here Interface descriptor is described:
      *         var me = this;
-     *         me.imports = [];
-     *         me.constants.a = 1;
+     *         me.constants = ['a'];
      *     });
      *
      * xs.interface.Interface has 2 params:
@@ -40,8 +39,6 @@
      *
      * - self. Created interface instance
      * - ns. namespace object, where namespace references are placed
-     * - imports. namespace object, where namespace references are placed
-     * - dependencies. system dependencies manager. Is used to describe interfaces' dependencies
      *
      * 2 createdFn ([Function]) - optional interface creation callback. Is called after
      * {@link xs.interface.preprocessors preprocessors} stack is processed. When called, created interface is passed as param.
@@ -91,14 +88,8 @@
             //create interface
             var Interface = _createSample();
 
-            //assign factory for interface
-            Interface.factory = _createFactory(Interface);
-
             //get namespace for Interface
             var namespace = Interface.namespace = {};
-
-            //get imports for Interface
-            var imports = Interface.imports = {};
 
             //Fill descriptor prototype
             Descriptor.prototype = _createDescriptorPrototype();
@@ -287,37 +278,6 @@
         };
 
         /**
-         * Returns factory for given Interface
-         *
-         * @ignore
-         *
-         * @method createFactory
-         *
-         * @param {Function} Interface
-         *
-         * @return {Function} factory for given Interface
-         */
-        var _createFactory = function (Interface) {
-            //this - current interface
-            //arguments - new instance arguments
-
-            //create wrapper
-            var xInterface = function (args) {
-                return Interface.apply(this, args);
-            };
-
-            //assign prototype
-            xInterface.prototype = Interface.prototype;
-
-            //return factory
-            return function () {
-
-                //return instance
-                return new xInterface(arguments);
-            };
-        };
-
-        /**
          * Returns prototype for descriptor function
          *
          * @ignore
@@ -338,18 +298,6 @@
                 //interface parent
                 extends: undefined,
 
-                //interface mixins list
-                mixins: {},
-
-                //interface implements list
-                implements: {},
-
-                //interface singleton flag
-                singleton: undefined,
-
-                //interface interface flag
-                interface: undefined,
-
                 //interface constants list
                 constants: {},
 
@@ -361,9 +309,6 @@
                     //interface static properties list
                     properties: {}
                 },
-
-                //interface constructor
-                constructor: undefined,
 
                 //interface methods list
                 methods: {},
@@ -384,8 +329,6 @@
          */
         var _convertDescriptor = function (descriptor) {
             descriptor.imports = new xs.core.Collection(descriptor.imports);
-            descriptor.mixins = new xs.core.Collection(descriptor.mixins);
-            descriptor.implements = new xs.core.Collection(descriptor.implements);
             descriptor.constants = new xs.core.Collection(descriptor.constants);
             descriptor.static.methods = new xs.core.Collection(descriptor.static.methods);
             descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
