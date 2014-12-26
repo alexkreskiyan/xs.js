@@ -21,41 +21,6 @@ module('xs.interface.Interface', function () {
         strictEqual(xs.isFunction(Interface), true);
     });
 
-    test('factory', function () {
-        var me = this;
-        //create simple interface
-        me.Interface = xs.Interface(function (self, ns) {
-        });
-
-        //assign some constructor
-        me.Interface.descriptor.constructor = function (a, b) {
-            this.a = a;
-            this.b = b;
-        };
-
-
-        //compare new and factory variants
-
-        //get instances
-        me.sampleNew = new me.Interface(1, 2);
-        me.sampleFactory = me.Interface.factory(1, 2);
-    }, function () {
-        var me = this;
-        //constructor is Interface
-        strictEqual(me.sampleNew.constructor, me.Interface);
-        strictEqual(me.sampleFactory.constructor, me.Interface);
-
-        //constructor is assigned in prototype
-        strictEqual(me.sampleNew.hasOwnProperty('constructor'), false);
-        strictEqual(me.sampleFactory.hasOwnProperty('constructor'), false);
-
-        //parameters assigned correctly
-        strictEqual(me.sampleNew.a, 1);
-        strictEqual(me.sampleNew.b, 2);
-        strictEqual(me.sampleFactory.a, 1);
-        strictEqual(me.sampleFactory.b, 2);
-    });
-
     test('processors add', function () {
         var me = this;
         //setUp
