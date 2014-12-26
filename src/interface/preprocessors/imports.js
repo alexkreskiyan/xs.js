@@ -77,7 +77,7 @@
             //create new dependency
             dependencies.add(Interface, waiting, function () {
 
-                xs.log('xs.interface.preprocessors.imports[', Interface.label, ']. Imports', loads.values(), 'processed, applying imports:', imports.toSource());
+                xs.log('xs.interface.preprocessors.imports[', Interface.label, ']. Imports', loads.values(), 'processed');
 
                 //call ready to notify processor stack, that import succeed
                 ready();

@@ -101,6 +101,11 @@
 
         //save reference to parent
         xs.constant(child, 'parent', parent);
+
+        //add inherits method
+        xs.constant(child, 'inherits', function (parent) {
+            return this.prototype instanceof parent;
+        });
     };
 
     /**

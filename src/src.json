@@ -35,6 +35,7 @@
     "xs.interface.Interface",
     "xs.interface.preprocessors.namespace",
     "xs.interface.preprocessors.prepareExtends",
+    "xs.interface.preprocessors.imports",
     "xs.interface.preprocessors.processExtends",
     "xs.interface.preprocessors.prepareConstants",
     "xs.interface.preprocessors.prepareStaticProperties",

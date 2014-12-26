@@ -19,25 +19,6 @@
  */
 xs.define(xs.Class, 'xs.class.Base', function () {
     var me = this;
-    /**
-     * Returns whether this is child of given parent
-     *
-     * For example:
-     *
-     *     Bird.inherits(Animal); //true
-     *     Bird.inherits(Transport); //false
-     *
-     * @static
-     *
-     * @method inherits
-     *
-     * @param {xs.class.Base} parent Class, being verified to be ancestor of this Class
-     *
-     * @return {Boolean} verification result
-     */
-    me.static.methods.inherits = function (parent) {
-        return this.prototype instanceof parent;
-    };
 
     /**
      * Returns clone of this object. Basically clone is made by factory and then extended with source properties

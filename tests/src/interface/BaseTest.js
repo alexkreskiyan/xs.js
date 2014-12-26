@@ -94,24 +94,4 @@ module('xs.interface.Base', function () {
         xs.ContractsManager.remove(me.ChildName);
         me.ChildSave && xs.ContractsManager.add(me.ChildName, me.ChildSave);
     });
-
-    test('clone', function () {
-        //create simple xs.interface.Base instance
-        var sample = new xs.interface.Base;
-        sample.a = 1;
-
-        //create clone
-        var clone = sample.clone();
-
-        //clone is equal by keys
-        strictEqual(JSON.stringify(Object.keys(clone)), JSON.stringify(Object.keys(sample)));
-
-        //values are equal
-        Object.keys(sample).forEach(function (key) {
-            strictEqual(clone[key], clone[key]);
-        });
-
-        //clone constructor is ok
-        strictEqual(clone.constructor, xs.interface.Base);
-    })
 });
