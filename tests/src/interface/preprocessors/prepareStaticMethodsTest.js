@@ -8,13 +8,13 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.preprocessors.prepareStaticMethods', function () {
+module('xs.interface.preprocessors.prepareStaticMethods', function () {
 
     test('static methods chain', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'tests.class.preprocessors.prepareStaticMethods.Base';
+        me.BaseName = 'tests.interface.preprocessors.prepareStaticMethods.Base';
 
         me.baseA = function () {
 
@@ -22,7 +22,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         };
 
         //define
-        me.Base = xs.Class(function () {
+        me.Base = xs.Interface(function () {
             this.static.methods.a = me.baseA;
         });
 
@@ -36,7 +36,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         xs.ContractsManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'tests.class.preprocessors.prepareStaticMethods.Parent';
+        me.ParentName = 'tests.interface.preprocessors.prepareStaticMethods.Parent';
 
         me.parentA = function () {
 
@@ -47,8 +47,8 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
             return 3;
         };
         //define
-        me.Parent = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.prepareStaticMethods.Base';
+        me.Parent = xs.Interface(function () {
+            this.extends = 'tests.interface.preprocessors.prepareStaticMethods.Base';
             this.static.methods.a = me.parentA;
             this.static.methods.b = me.parentB;
         });
@@ -63,15 +63,15 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         xs.ContractsManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'tests.class.preprocessors.prepareStaticMethods.Child';
+        me.ChildName = 'tests.interface.preprocessors.prepareStaticMethods.Child';
 
         me.childC = function () {
 
             return 5;
         };
         //define
-        me.Child = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.prepareStaticMethods.Parent';
+        me.Child = xs.Interface(function () {
+            this.extends = 'tests.interface.preprocessors.prepareStaticMethods.Parent';
             this.static.methods.c = me.childC;
         });
 
@@ -94,7 +94,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
     }, function () {
         var me = this;
 
-        var ns = tests.class.preprocessors.prepareStaticMethods;
+        var ns = tests.interface.preprocessors.prepareStaticMethods;
 
         //init methods (will be referred to descriptor.static.methods)
         var methods;

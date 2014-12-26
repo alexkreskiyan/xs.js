@@ -8,25 +8,25 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.preprocessors.prepareExtends', function () {
+module('xs.interface.preprocessors.prepareExtends', function () {
 
     test('extend base', function () {
-        //create Class
-        var Class = xs.Class(function () {
+        //create Interface
+        var Interface = xs.Interface(function () {
         });
 
-        //Class extends xs.class.Base
-        strictEqual(Class.descriptor.extends, undefined);
+        //Interface extends xs.interface.Base
+        strictEqual(Interface.descriptor.extends, undefined);
     });
 
     test('extend chain', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'tests.class.preprocessors.prepareExtends.Base';
+        me.BaseName = 'tests.interface.preprocessors.prepareExtends.Base';
 
         //define
-        me.Base = xs.Class(function () {
+        me.Base = xs.Interface(function () {
         });
 
         //save
@@ -39,11 +39,11 @@ module('xs.class.preprocessors.prepareExtends', function () {
         xs.ContractsManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'tests.class.preprocessors.prepareExtends.Parent';
+        me.ParentName = 'tests.interface.preprocessors.prepareExtends.Parent';
 
         //define
-        me.Parent = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.prepareExtends.Base';
+        me.Parent = xs.Interface(function () {
+            this.extends = 'tests.interface.preprocessors.prepareExtends.Base';
         });
 
         //save
@@ -56,11 +56,11 @@ module('xs.class.preprocessors.prepareExtends', function () {
         xs.ContractsManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'tests.class.preprocessors.prepareExtends.Child';
+        me.ChildName = 'tests.interface.preprocessors.prepareExtends.Child';
 
         //define
-        me.Child = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.prepareExtends.Parent';
+        me.Child = xs.Interface(function () {
+            this.extends = 'tests.interface.preprocessors.prepareExtends.Parent';
         });
 
         //save
@@ -80,10 +80,10 @@ module('xs.class.preprocessors.prepareExtends', function () {
 
         return false;
     }, function () {
-        var ns = tests.class.preprocessors.prepareExtends;
+        var ns = tests.interface.preprocessors.prepareExtends;
 
         //check chain
-        strictEqual(ns.Base.parent, xs.class.Base);
+        strictEqual(ns.Base.parent, xs.interface.Base);
         strictEqual(ns.Parent.parent, ns.Base);
         strictEqual(ns.Child.parent, ns.Parent);
 

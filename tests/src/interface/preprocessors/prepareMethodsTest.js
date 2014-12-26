@@ -8,13 +8,13 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.preprocessors.prepareMethods', function () {
+module('xs.interface.preprocessors.prepareMethods', function () {
 
     test('methods chain', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'tests.class.preprocessors.prepareMethods.Base';
+        me.BaseName = 'tests.interface.preprocessors.prepareMethods.Base';
 
         me.baseA = function () {
 
@@ -22,7 +22,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         };
 
         //define
-        me.Base = xs.Class(function () {
+        me.Base = xs.Interface(function () {
             this.methods.a = me.baseA;
         });
 
@@ -36,7 +36,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         xs.ContractsManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'tests.class.preprocessors.prepareMethods.Parent';
+        me.ParentName = 'tests.interface.preprocessors.prepareMethods.Parent';
 
         me.parentA = function () {
 
@@ -47,8 +47,8 @@ module('xs.class.preprocessors.prepareMethods', function () {
             return 3;
         };
         //define
-        me.Parent = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.prepareMethods.Base';
+        me.Parent = xs.Interface(function () {
+            this.extends = 'tests.interface.preprocessors.prepareMethods.Base';
             this.methods.a = me.parentA;
             this.methods.b = me.parentB;
         });
@@ -63,15 +63,15 @@ module('xs.class.preprocessors.prepareMethods', function () {
         xs.ContractsManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'tests.class.preprocessors.prepareMethods.Child';
+        me.ChildName = 'tests.interface.preprocessors.prepareMethods.Child';
 
         me.childC = function () {
 
             return 5;
         };
         //define
-        me.Child = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.prepareMethods.Parent';
+        me.Child = xs.Interface(function () {
+            this.extends = 'tests.interface.preprocessors.prepareMethods.Parent';
             this.methods.c = me.childC;
         });
 
@@ -94,7 +94,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
     }, function () {
         var me = this;
 
-        var ns = tests.class.preprocessors.prepareMethods;
+        var ns = tests.interface.preprocessors.prepareMethods;
 
         //init methods (will be referred to descriptor.methods)
         var methods;

@@ -8,14 +8,14 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.Base', function () {
+module('xs.interface.Base', function () {
     test('chain', function () {
         var me = this;
         //Base
         me.BaseName = 'my.Base';
 
         //define
-        me.Base = xs.Class(function () {
+        me.Base = xs.Interface(function () {
 
         });
 
@@ -32,7 +32,7 @@ module('xs.class.Base', function () {
         me.ParentName = 'my.Parent';
 
         //define
-        me.Parent = xs.Class(function () {
+        me.Parent = xs.Interface(function () {
             this.extends = 'my.Base';
         });
 
@@ -49,7 +49,7 @@ module('xs.class.Base', function () {
         me.ChildName = 'my.Child';
 
         //define
-        me.Child = xs.Class(function () {
+        me.Child = xs.Interface(function () {
             this.extends = 'my.Parent';
         });
 
@@ -96,8 +96,8 @@ module('xs.class.Base', function () {
     });
 
     test('clone', function () {
-        //create simple xs.class.Base instance
-        var sample = new xs.class.Base;
+        //create simple xs.interface.Base instance
+        var sample = new xs.interface.Base;
         sample.a = 1;
 
         //create clone
@@ -112,6 +112,6 @@ module('xs.class.Base', function () {
         });
 
         //clone constructor is ok
-        strictEqual(clone.constructor, xs.class.Base);
+        strictEqual(clone.constructor, xs.interface.Base);
     })
 });

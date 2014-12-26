@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.preprocessors.imports', function () {
+module('xs.interface.preprocessors.imports', function () {
 
     test('imports usage chain', function () {
         var me = this;
@@ -20,8 +20,8 @@ module('xs.class.preprocessors.imports', function () {
         //add tests path
         xs.Loader.paths.add('tests', '/tests/resources');
 
-        xs.define(xs.Class, 'ns.Child', function (Class, ns, imports) {
-            this.namespace = 'tests.class.preprocessors.imports';
+        xs.define(xs.Interface, 'ns.Child', function (Interface, ns, imports) {
+            this.namespace = 'tests.interface.preprocessors.imports';
             this.extends = 'ns.Base';
             this.imports = [
                 {one: 'ns.One'},
@@ -34,18 +34,18 @@ module('xs.class.preprocessors.imports', function () {
         });
 
         xs.onReady([
-            'tests.class.preprocessors.imports.Child',
-            'tests.class.preprocessors.imports.Base',
-            'tests.class.preprocessors.imports.One',
-            'tests.class.preprocessors.imports.Two',
-            'tests.class.preprocessors.imports.Three'
+            'tests.interface.preprocessors.imports.Child',
+            'tests.interface.preprocessors.imports.Base',
+            'tests.interface.preprocessors.imports.One',
+            'tests.interface.preprocessors.imports.Two',
+            'tests.interface.preprocessors.imports.Three'
         ], me.done);
 
 
         return false;
     }, function () {
         var me = this;
-        var ns = tests.class.preprocessors.imports;
+        var ns = tests.interface.preprocessors.imports;
 
         //check imports
         strictEqual(Object.keys(me.imports).toString(), 'one,three');
@@ -60,9 +60,9 @@ module('xs.class.preprocessors.imports', function () {
         //restore saved paths
         xs.Loader.paths.add(me.paths);
 
-        var ns = tests.class.preprocessors.imports;
+        var ns = tests.interface.preprocessors.imports;
 
-        //remove created classes
+        //remove created interfacees
         xs.ContractsManager.remove(ns.One.label);
         xs.ContractsManager.remove(ns.Two.label);
         xs.ContractsManager.remove(ns.Three.label);

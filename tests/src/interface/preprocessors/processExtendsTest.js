@@ -8,40 +8,40 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.preprocessors.processExtends', function () {
+module('xs.interface.preprocessors.processExtends', function () {
 
     test('extend base', function () {
         var me = this;
 
-        me.ClassName = 'tests.class.preprocessors.processExtends.Class';
+        me.InterfaceName = 'tests.interface.preprocessors.processExtends.Interface';
 
-        //create Class
-        me.Class = xs.define(xs.Class, 'tests.class.preprocessors.processExtends.Class', function () {
+        //create Interface
+        me.Interface = xs.define(xs.Interface, 'tests.interface.preprocessors.processExtends.Interface', function () {
         });
 
-        xs.onReady([me.ClassName], me.done);
+        xs.onReady([me.InterfaceName], me.done);
 
         return false;
     }, function () {
         var me = this;
 
-        //Class extends xs.class.Base
-        strictEqual(me.Class.parent, xs.class.Base);
+        //Interface extends xs.interface.Base
+        strictEqual(me.Interface.parent, xs.interface.Base);
     }, function () {
         var me = this;
         
-        //remove Class from ContractsManager
-        xs.ContractsManager.remove(me.Class.label);
+        //remove Interface from ContractsManager
+        xs.ContractsManager.remove(me.Interface.label);
     });
 
     test('extend chain', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'tests.class.preprocessors.processExtends.Base';
+        me.BaseName = 'tests.interface.preprocessors.processExtends.Base';
 
         //define
-        me.Base = xs.Class(function () {
+        me.Base = xs.Interface(function () {
         });
 
         //save
@@ -54,11 +54,11 @@ module('xs.class.preprocessors.processExtends', function () {
         xs.ContractsManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'tests.class.preprocessors.processExtends.Parent';
+        me.ParentName = 'tests.interface.preprocessors.processExtends.Parent';
 
         //define
-        me.Parent = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.processExtends.Base';
+        me.Parent = xs.Interface(function () {
+            this.extends = 'tests.interface.preprocessors.processExtends.Base';
         });
 
         //save
@@ -71,11 +71,11 @@ module('xs.class.preprocessors.processExtends', function () {
         xs.ContractsManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'tests.class.preprocessors.processExtends.Child';
+        me.ChildName = 'tests.interface.preprocessors.processExtends.Child';
 
         //define
-        me.Child = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.processExtends.Parent';
+        me.Child = xs.Interface(function () {
+            this.extends = 'tests.interface.preprocessors.processExtends.Parent';
         });
 
         //save
@@ -95,10 +95,10 @@ module('xs.class.preprocessors.processExtends', function () {
 
         return false;
     }, function () {
-        var ns = tests.class.preprocessors.processExtends;
+        var ns = tests.interface.preprocessors.processExtends;
 
         //check chain
-        strictEqual(ns.Base.parent, xs.class.Base);
+        strictEqual(ns.Base.parent, xs.interface.Base);
         strictEqual(ns.Parent.parent, ns.Base);
         strictEqual(ns.Child.parent, ns.Parent);
 

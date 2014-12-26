@@ -8,20 +8,20 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.preprocessors.prepareProperties', function () {
+module('xs.interface.preprocessors.prepareProperties', function () {
 
     test('properties chain', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'tests.class.preprocessors.prepareProperties.Base';
+        me.BaseName = 'tests.interface.preprocessors.prepareProperties.Base';
 
         me.baseAGet = function () {
 
             return 1;
         };
         //define
-        me.Base = xs.Class(function () {
+        me.Base = xs.Interface(function () {
             this.properties.a = {
                 get: me.baseAGet
             };
@@ -37,7 +37,7 @@ module('xs.class.preprocessors.prepareProperties', function () {
         xs.ContractsManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'tests.class.preprocessors.prepareProperties.Parent';
+        me.ParentName = 'tests.interface.preprocessors.prepareProperties.Parent';
 
         me.parentAGet = function () {
 
@@ -48,8 +48,8 @@ module('xs.class.preprocessors.prepareProperties', function () {
             return this.privates.b = b + 1;
         };
         //define
-        me.Parent = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.prepareProperties.Base';
+        me.Parent = xs.Interface(function () {
+            this.extends = 'tests.interface.preprocessors.prepareProperties.Base';
             this.properties.a = {
                 get: me.parentAGet
             };
@@ -68,7 +68,7 @@ module('xs.class.preprocessors.prepareProperties', function () {
         xs.ContractsManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'tests.class.preprocessors.prepareProperties.Child';
+        me.ChildName = 'tests.interface.preprocessors.prepareProperties.Child';
 
 
         me.childCGet = function () {
@@ -80,8 +80,8 @@ module('xs.class.preprocessors.prepareProperties', function () {
             return this.privates.c = '?' + c;
         };
         //define
-        me.Child = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.prepareProperties.Parent';
+        me.Child = xs.Interface(function () {
+            this.extends = 'tests.interface.preprocessors.prepareProperties.Parent';
             this.properties.a = 2;
             this.properties.c = {
                 get: me.childCGet,
@@ -108,7 +108,7 @@ module('xs.class.preprocessors.prepareProperties', function () {
     }, function () {
         var me = this;
 
-        var ns = tests.class.preprocessors.prepareProperties;
+        var ns = tests.interface.preprocessors.prepareProperties;
 
         //init properties (will be referred to descriptor.static.properties)
         var properties;

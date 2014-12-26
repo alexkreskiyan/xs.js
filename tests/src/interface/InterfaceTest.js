@@ -8,27 +8,27 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.Class', function () {
+module('xs.interface.Interface', function () {
 
     test('create', function () {
         //test create without descriptor fails
-        throws(xs.Class);
+        throws(xs.Interface);
 
-        var Class = xs.Class(function (self, ns) {
+        var Interface = xs.Interface(function (self, ns) {
         });
 
-        //class is function
-        strictEqual(xs.isFunction(Class), true);
+        //interface is function
+        strictEqual(xs.isFunction(Interface), true);
     });
 
     test('factory', function () {
         var me = this;
-        //create simple class
-        me.Class = xs.Class(function (self, ns) {
+        //create simple interface
+        me.Interface = xs.Interface(function (self, ns) {
         });
 
         //assign some constructor
-        me.Class.descriptor.constructor = function (a, b) {
+        me.Interface.descriptor.constructor = function (a, b) {
             this.a = a;
             this.b = b;
         };
@@ -37,13 +37,13 @@ module('xs.class.Class', function () {
         //compare new and factory variants
 
         //get instances
-        me.sampleNew = new me.Class(1, 2);
-        me.sampleFactory = me.Class.factory(1, 2);
+        me.sampleNew = new me.Interface(1, 2);
+        me.sampleFactory = me.Interface.factory(1, 2);
     }, function () {
         var me = this;
-        //constructor is Class
-        strictEqual(me.sampleNew.constructor, me.Class);
-        strictEqual(me.sampleFactory.constructor, me.Class);
+        //constructor is Interface
+        strictEqual(me.sampleNew.constructor, me.Interface);
+        strictEqual(me.sampleFactory.constructor, me.Interface);
 
         //constructor is assigned in prototype
         strictEqual(me.sampleNew.hasOwnProperty('constructor'), false);
@@ -59,7 +59,7 @@ module('xs.class.Class', function () {
     test('processors add', function () {
         var me = this;
         //setUp
-        me.stack = xs.class.preprocessors;
+        me.stack = xs.interface.preprocessors;
 
         //save stack items
         me.save = me.stack.get();
@@ -127,7 +127,7 @@ module('xs.class.Class', function () {
 
     test('processors reorder', function () {
         var me = this;
-        me.stack = xs.class.preprocessors;
+        me.stack = xs.interface.preprocessors;
 
         //save stack items
         me.save = me.stack.get();
@@ -197,7 +197,7 @@ module('xs.class.Class', function () {
     test('processors remove', function () {
         var me = this;
         //setUp
-        me.stack = xs.class.preprocessors;
+        me.stack = xs.interface.preprocessors;
 
         //save stack items
         me.save = me.stack.get();
@@ -256,10 +256,10 @@ module('xs.class.Class', function () {
         });
     });
 
-    test('process class', function () {
+    test('process interface', function () {
         var me = this;
 
-        me.stack = xs.class.preprocessors;
+        me.stack = xs.interface.preprocessors;
 
         //save stack items
         me.save = me.stack.get();
@@ -293,10 +293,10 @@ module('xs.class.Class', function () {
 
     }, function () {
         var me = this;
-        xs.Class(function () {
+        xs.Interface(function () {
 
-        }, function (Class) {
-            strictEqual(Class.descriptor.chain, 'onetwothree');
+        }, function (Interface) {
+            strictEqual(Interface.descriptor.chain, 'onetwothree');
 
             //continue
             me.done();

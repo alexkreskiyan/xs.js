@@ -8,16 +8,16 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.preprocessors.prepareConstants', function () {
+module('xs.interface.preprocessors.prepareConstants', function () {
 
     test('constants chain', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'tests.class.preprocessors.prepareConstants.Base';
+        me.BaseName = 'tests.interface.preprocessors.prepareConstants.Base';
 
         //define
-        me.Base = xs.Class(function () {
+        me.Base = xs.Interface(function () {
             this.constants.a = 1;
         });
 
@@ -31,11 +31,11 @@ module('xs.class.preprocessors.prepareConstants', function () {
         xs.ContractsManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'tests.class.preprocessors.prepareConstants.Parent';
+        me.ParentName = 'tests.interface.preprocessors.prepareConstants.Parent';
 
         //define
-        me.Parent = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.prepareConstants.Base';
+        me.Parent = xs.Interface(function () {
+            this.extends = 'tests.interface.preprocessors.prepareConstants.Base';
             this.constants.a = 2;
             this.constants.b = 3;
         });
@@ -50,11 +50,11 @@ module('xs.class.preprocessors.prepareConstants', function () {
         xs.ContractsManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'tests.class.preprocessors.prepareConstants.Child';
+        me.ChildName = 'tests.interface.preprocessors.prepareConstants.Child';
 
         //define
-        me.Child = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.prepareConstants.Parent';
+        me.Child = xs.Interface(function () {
+            this.extends = 'tests.interface.preprocessors.prepareConstants.Parent';
             this.constants.c = 5;
         });
 
@@ -75,7 +75,7 @@ module('xs.class.preprocessors.prepareConstants', function () {
 
         return false;
     }, function () {
-        var ns = tests.class.preprocessors.prepareConstants;
+        var ns = tests.interface.preprocessors.prepareConstants;
 
         //Base
         strictEqual(ns.Base.descriptor.constants.at('a'), 1);

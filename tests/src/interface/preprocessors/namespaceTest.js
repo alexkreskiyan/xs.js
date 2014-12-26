@@ -8,16 +8,16 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.preprocessors.namespace', function () {
+module('xs.interface.preprocessors.namespace', function () {
 
     test('namespace usage chain', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'tests.class.preprocessors.namespace.base.Base';
+        me.BaseName = 'tests.interface.preprocessors.namespace.base.Base';
 
         //define
-        me.Base = xs.Class(function () {
+        me.Base = xs.Interface(function () {
         });
 
         //save
@@ -30,11 +30,11 @@ module('xs.class.preprocessors.namespace', function () {
         xs.ContractsManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'tests.class.preprocessors.namespace.base.Parent';
+        me.ParentName = 'tests.interface.preprocessors.namespace.base.Parent';
 
         //define
-        me.Parent = xs.Class(function () {
-            this.namespace = 'tests.class.preprocessors.namespace.base';
+        me.Parent = xs.Interface(function () {
+            this.namespace = 'tests.interface.preprocessors.namespace.base';
             this.extends = 'ns.Base';
         });
 
@@ -48,12 +48,12 @@ module('xs.class.preprocessors.namespace', function () {
         xs.ContractsManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'tests.class.preprocessors.namespace.demo.Child';
+        me.ChildName = 'tests.interface.preprocessors.namespace.demo.Child';
 
         //define
-        me.Child = xs.Class(function () {
-            this.namespace = 'tests.class.preprocessors.namespace.demo';
-            this.extends = 'tests.class.preprocessors.namespace.base.Parent';
+        me.Child = xs.Interface(function () {
+            this.namespace = 'tests.interface.preprocessors.namespace.demo';
+            this.extends = 'tests.interface.preprocessors.namespace.base.Parent';
         });
 
         //save
@@ -65,7 +65,7 @@ module('xs.class.preprocessors.namespace', function () {
         //add to ContractsManager
         xs.ContractsManager.add(me.ChildName, me.Child);
 
-        //call done, when classes ready to continue test
+        //call done, when interfacees ready to continue test
         xs.onReady([
             me.BaseName,
             me.ParentName,
@@ -74,7 +74,7 @@ module('xs.class.preprocessors.namespace', function () {
 
         return false;
     }, function () {
-        var ns = tests.class.preprocessors.namespace;
+        var ns = tests.interface.preprocessors.namespace;
 
         //Parent
         strictEqual(ns.base.Parent.parent, ns.base.Base);
