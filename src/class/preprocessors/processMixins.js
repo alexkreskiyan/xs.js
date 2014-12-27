@@ -45,14 +45,19 @@
             //if Mixin is not defined - throw error
             if (!xs.ContractsManager.has(name)) {
                 throw new MixinError('[' + Class.label + ']: parent class "' + name + '" is not defined');
-            } else {
-                //get Mixin reference
-                var Mixin = xs.ContractsManager.get(name);
+            }
 
-                //if Mixin is processing = throw error
-                if (Mixin.isProcessing) {
-                    throw new MixinError('[' + Class.label + ']: parent class "' + Mixin.label + '" is not processed yet. Move it to imports section, please');
-                }
+            //get Mixin reference
+            var Mixin = xs.ContractsManager.get(name);
+
+            //check that contractor is same
+            if (Mixin.contractor != Class.contractor) {
+                throw new MixinError('[' + Class.label + ']: mixin class "' + Mixin.label + '" has different contractor: "' + Mixin.contractor.label + '"');
+            }
+
+            //if Mixin is processing = throw error
+            if (Mixin.isProcessing) {
+                throw new MixinError('[' + Class.label + ']: mixin class "' + Mixin.label + '" is not processed yet. Move it to imports section, please');
             }
         });
 

@@ -19,10 +19,6 @@ module('xs.class.preprocessors.processMixins', function () {
         //define child class
         xs.define(xs.Class, 'ns.Child', function () {
             this.namespace = 'tests.class.preprocessors.processMixins';
-            this.imports = [
-                'ns.Base',
-                'ns.Mix2'
-            ];
             this.extends = 'ns.Base';
             this.mixins.mix2 = 'ns.Mix2';
         });
