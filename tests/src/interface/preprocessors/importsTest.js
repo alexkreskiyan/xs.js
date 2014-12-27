@@ -20,7 +20,7 @@ module('xs.interface.preprocessors.imports', function () {
         //add tests path
         xs.Loader.paths.add('tests', '/tests/resources');
 
-        xs.define(xs.Interface, 'ns.Child', function (Interface, ns, imports) {
+        xs.define(xs.Interface, 'ns.Child', function (Interface, ns) {
             this.namespace = 'tests.interface.preprocessors.imports';
             this.extends = 'ns.Base';
             this.imports = [
@@ -28,17 +28,11 @@ module('xs.interface.preprocessors.imports', function () {
                 'ns.Two',
                 {three: 'ns.Three'}
             ];
-
-            //save imports reference
-            me.imports = imports;
         });
 
         xs.onReady([
             'tests.interface.preprocessors.imports.Child',
-            'tests.interface.preprocessors.imports.Base',
-            'tests.interface.preprocessors.imports.One',
-            'tests.interface.preprocessors.imports.Two',
-            'tests.interface.preprocessors.imports.Three'
+            'tests.interface.preprocessors.imports.Base'
         ], me.done);
 
 
@@ -47,10 +41,8 @@ module('xs.interface.preprocessors.imports', function () {
         var me = this;
         var ns = tests.interface.preprocessors.imports;
 
-        //check imports
-        strictEqual(Object.keys(me.imports).toString(), 'one,three');
-        strictEqual(me.imports.one, ns.One);
-        strictEqual(me.imports.three, ns.Three);
+        //here Base is already imported - all ok
+        expect(0);
 
     }, function () {
         var me = this;
@@ -62,10 +54,7 @@ module('xs.interface.preprocessors.imports', function () {
 
         var ns = tests.interface.preprocessors.imports;
 
-        //remove created interfacees
-        xs.ContractsManager.remove(ns.One.label);
-        xs.ContractsManager.remove(ns.Two.label);
-        xs.ContractsManager.remove(ns.Three.label);
+        //remove created interfaces
         xs.ContractsManager.remove(ns.Base.label);
         xs.ContractsManager.remove(ns.Child.label);
     });
