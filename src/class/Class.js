@@ -75,10 +75,8 @@
          * Creates class sample and starts processors applying
          *
          * @ignore
-         *
-         * @method create
          */
-        var Class = function (Descriptor, createdFn) {
+        var Contractor = function (Descriptor, createdFn) {
 
             //Descriptor must be function
             if (!xs.isFunction(Descriptor)) {
@@ -90,6 +88,9 @@
             //create class
             var Class = _createSample();
 
+            //save contract type
+            xs.constant(Class, 'contract', Contractor);
+
             //assign factory for class
             Class.factory = _createFactory(Class);
 
@@ -100,7 +101,7 @@
             var imports = Class.imports = {};
 
             //Fill descriptor prototype
-            Descriptor.prototype = _createDescriptorPrototype();
+            Descriptor.prototype = _createPrototypeDescriptor();
 
             //get descriptor instance
             var descriptor = new Descriptor(Class, namespace, imports);
@@ -108,9 +109,7 @@
             _convertDescriptor(descriptor);
 
             //save Class descriptor
-            var emptyDescriptor = _createDescriptorPrototype();
-            _convertDescriptor(emptyDescriptor);
-            xs.constant(Class, 'descriptor', emptyDescriptor);
+            xs.constant(Class, 'descriptor', _createEmptyDescriptor());
 
             //mark class as not ready yet (until preprocessors done)
             Class.isProcessing = true;
@@ -321,11 +320,11 @@
          *
          * @ignore
          *
-         * @method createDescriptorPrototype
+         * @method _createPrototypeDescriptor
          *
-         * @return {Object} new descriptor prototype
+         * @return {Object} prototype of new descriptor
          */
-        var _createDescriptorPrototype = function () {
+        var _createPrototypeDescriptor = function () {
             return {
 
                 //class namespace
@@ -370,13 +369,61 @@
         };
 
         /**
-         * Converts prototype to use xs.core.Collection
+         * Returns class empty descriptor
+         *
+         * @ignore
+         *
+         * @method _createEmptyDescriptor
+         *
+         * @return {Object} new empty descriptor
+         */
+        var _createEmptyDescriptor = function () {
+            return {
+
+                //class namespace
+                namespace: undefined,
+
+                //class parent
+                extends: undefined,
+
+                //class mixins list
+                mixins: new xs.core.Collection,
+
+                //class implements list
+                implements: new xs.core.Collection,
+
+                //class singleton flag
+                singleton: undefined,
+
+                //class constants list
+                constants: new xs.core.Collection,
+
+                //class statics list
+                static: {
+                    //class static methods list
+                    methods: new xs.core.Collection,
+
+                    //class static properties list
+                    properties: new xs.core.Collection
+                },
+
+                //class constructor
+                constructor: undefined,
+
+                //class methods list
+                methods: new xs.core.Collection,
+
+                //class properties list
+                properties: new xs.core.Collection
+            };
+        };
+
+        /**
+         * Converts prototype descriptor to use xs.core.Collection
          *
          * @ignore
          *
          * @method convertDescriptor
-         *
-         * @return {Object} convert descriptor
          */
         var _convertDescriptor = function (descriptor) {
             descriptor.imports = new xs.core.Collection(descriptor.imports);
@@ -389,7 +436,7 @@
             descriptor.properties = new xs.core.Collection(descriptor.properties);
         };
 
-        return Class;
+        return Contractor;
     })(xs.DependenciesManager.Class);
 
 
