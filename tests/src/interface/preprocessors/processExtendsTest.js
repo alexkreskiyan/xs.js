@@ -29,7 +29,7 @@ module('xs.interface.preprocessors.processExtends', function () {
         strictEqual(me.Interface.parent, xs.interface.Base);
     }, function () {
         var me = this;
-        
+
         //remove Interface from ContractsManager
         xs.ContractsManager.remove(me.Interface.label);
     });
