@@ -29,25 +29,20 @@
         xs.log('xs.class.preprocessors.prepareImplements[', Class.label, ']');
 
         //init
-        //init mixins list with own values
-        var mixins = Class.descriptor.mixins = descriptor.mixins;
+        //init interfaces list with own values
+        var interfaces = Class.descriptor.implements = descriptor.implements;
 
 
         //process
         //get imports reference
         var imports = descriptor.imports;
 
-        //process mixins list
-        xs.log('xs.class.preprocessors.prepareImplements[', Class.label, ']. Mixins:', mixins.toSource());
-        mixins.each(function (name, alias) {
-            //verify mixed class name
+        //process interfaces list
+        xs.log('xs.class.preprocessors.prepareImplements[', Class.label, ']. Interfaces:', interfaces.toSource());
+        interfaces.each(function (name) {
+            //verify implemented interface name
             if (!xs.isString(name) || !name) {
-                throw new PrepareImplementsError('[' + Class.label + ']: incorrect mixed class name');
-            }
-
-            //verify mixed class alias
-            if (!alias) {
-                throw new PrepareImplementsError('[' + Class.label + ']: incorrect mixed class alias');
+                throw new PrepareImplementsError('[' + Class.label + ']: incorrect implemented interface name');
             }
 
             imports.add(name);

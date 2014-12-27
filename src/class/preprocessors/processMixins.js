@@ -44,7 +44,7 @@
 
             //if Mixin is not defined - throw error
             if (!xs.ContractsManager.has(name)) {
-                throw new MixinError('[' + Class.label + ']: parent class "' + name + '" is not defined');
+                throw new ProcessMixinsError('[' + Class.label + ']: parent class "' + name + '" is not defined');
             }
 
             //get Mixin reference
@@ -52,12 +52,12 @@
 
             //check that contractor is same
             if (Mixin.contractor != Class.contractor) {
-                throw new MixinError('[' + Class.label + ']: mixin class "' + Mixin.label + '" has different contractor: "' + Mixin.contractor.label + '"');
+                throw new ProcessMixinsError('[' + Class.label + ']: mixin class "' + Mixin.label + '" has different contractor: "' + Mixin.contractor.label + '"');
             }
 
             //if Mixin is processing = throw error
             if (Mixin.isProcessing) {
-                throw new MixinError('[' + Class.label + ']: mixin class "' + Mixin.label + '" is not processed yet. Move it to imports section, please');
+                throw new ProcessMixinsError('[' + Class.label + ']: mixin class "' + Mixin.label + '" is not processed yet. Move it to imports section, please');
             }
         });
 
@@ -77,29 +77,29 @@
      *
      * @method applyMixins
      *
-     * @param {Object} target target class
+     * @param {Object} Class target class
      * @param {Object} mixins mixins list
      */
-    var _applyMixins = function (target, mixins) {
+    var _applyMixins = function (Class, mixins) {
         //create mixins property in target.prototype
-        target.prototype.mixins = {};
+        Class.prototype.mixins = {};
 
         //apply each mixin
         mixins.each(function (name, alias) {
 
             var Mixin = xs.ContractsManager.get(name);
 
-            xs.log('xs.class.preprocessors.processMixins[', target.label, ']. Mixing in:', Mixin.label, 'as', alias);
+            xs.log('xs.class.preprocessors.processMixins[', Class.label, ']. Mixing in:', Mixin.label, 'as', alias);
             //mix mixed class descriptor into target descriptor
-            _mixinClass(target.descriptor, Mixin.descriptor);
+            _mixinClass(Class.descriptor, Mixin.descriptor);
 
-            //save mixed into target.prototype.mixins
-            target.prototype.mixins[alias] = Mixin;
+            //save mixed into Class.prototype.mixins
+            Class.prototype.mixins[alias] = Mixin;
         });
     };
 
     /**
-     * Core mixins function. Defaults target descriptor parts with mix descriptor paths
+     * Core mixins function. Compares target descriptor parts with mix descriptor paths
      *
      * @ignore
      *
@@ -151,7 +151,7 @@
 
             //if values differ - its error
             if (mixinValue !== targetValue) {
-                throw new MixinError(type + ' "' + targetName + '" is already declared');
+                throw new ProcessMixinsError(type + ' "' + targetName + '" is already declared');
             }
         });
 
@@ -166,11 +166,11 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class MixinError
+     * @class ProcessMixinsError
      */
-    function MixinError(message) {
+    function ProcessMixinsError(message) {
         this.message = 'xs.class.preprocessors.processMixins::' + message;
     }
 
-    MixinError.prototype = new Error();
+    ProcessMixinsError.prototype = new Error();
 })(window, 'xs');
