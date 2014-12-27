@@ -96,7 +96,7 @@ module('xs.interface.preprocessors.processExtends', function () {
         return false;
     }, function () {
         var me = this;
-        
+
         var ns = tests.interface.preprocessors.processExtends;
 
         //check chain

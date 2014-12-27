@@ -22,6 +22,22 @@
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
     xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
+        //define mixins method
+
+        //add inherits method
+        xs.constant(Class, 'mixins', function (Mixin) {
+            var mixins = this.prototype.mixins;
+
+            /**
+             * Returns whether:
+             * - mixins is object (if not - no mixins are made for class)
+             * - mixins has Mixin as value of one of it's properties
+             */
+            return xs.isObject(mixins) && Object.keys(mixins).some(function (alias) {
+
+                return mixins[alias] === Mixin;
+            });
+        });
 
         return descriptor.mixins.length > 0;
     }, function (Class) {

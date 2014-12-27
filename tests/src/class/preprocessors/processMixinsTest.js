@@ -32,7 +32,8 @@ module('xs.class.preprocessors.processMixins', function () {
 
         return false;
     }, function () {
-        var Child = tests.class.preprocessors.processMixins.Child;
+        var ns = tests.class.preprocessors.processMixins;
+        var Child = ns.Child;
 
         //check attributes from Mix1
         var Mix1 = Child.prototype.mixins.mix1;
@@ -45,6 +46,12 @@ module('xs.class.preprocessors.processMixins', function () {
         strictEqual(Child.descriptor.constants.b, Mix2.descriptor.constants.b);
         strictEqual(Child.descriptor.properties.b, Mix2.descriptor.properties.b);
         strictEqual(Child.descriptor.methods.printB, Mix2.descriptor.methods.printB);
+
+        //verify mixins function
+        strictEqual(Child.mixins(ns.Mix1), true);
+        strictEqual(Child.mixins(ns.Mix2), true);
+        strictEqual(Child.mixins(ns.Base), false);
+        strictEqual(Child.mixins(xs.class.Base), false);
     }, function () {
         var me = this;
         xs.Loader.paths.remove('tests');
