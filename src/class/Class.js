@@ -89,7 +89,7 @@
             var Class = _createSample();
 
             //save contract type
-            xs.constant(Class, 'contract', Contractor);
+            xs.constant(Class, 'contractor', Contractor);
 
             //assign factory for class
             Class.factory = _createFactory(Class);
@@ -165,6 +165,7 @@
 
             return Class;
         };
+        Contractor.label = 'xs.Class';
 
         /**
          * Stack of processors, processing class before it's considered to be created (before createdFn is called)

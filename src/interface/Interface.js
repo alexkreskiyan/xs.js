@@ -87,7 +87,7 @@
             var Interface = _createSample();
 
             //save contract type
-            xs.constant(Interface, 'contract', Contractor);
+            xs.constant(Interface, 'contractor', Contractor);
 
             //get namespace for Interface
             var namespace = Interface.namespace = {};
@@ -157,6 +157,7 @@
 
             return Interface;
         };
+        Contractor.label = 'xs.Interface';
 
         /**
          * Stack of processors, processing interface before it's considered to be created (before createdFn is called)

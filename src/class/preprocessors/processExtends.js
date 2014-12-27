@@ -45,13 +45,18 @@
         //if parent is not defined or is processing - throw errors
         if (!xs.ContractsManager.has(extended)) {
             throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + extended + '" is not defined. Move it to imports section, please');
-        } else {
-            //get parent reference
-            var Parent = xs.ContractsManager.get(extended);
+        }
 
-            if (Parent.isProcessing) {
-                throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + Parent.label + '" is not processed yet. Move it to imports section, please');
-            }
+        //get parent reference
+        var Parent = xs.ContractsManager.get(extended);
+
+        //check that contractor is same
+        if (Parent.contractor != Class.contractor) {
+            throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + Parent.label + '" has different contractor: "' + Parent.contractor.label + '"');
+        }
+
+        if (Parent.isProcessing) {
+            throw new ProcessExtendsError('[' + Class.label + ']: parent class "' + Parent.label + '" is not processed yet. Move it to imports section, please');
         }
 
         xs.log('xs.class.preprocessors.extends[', Class.label, ']. Extending', Parent.label);
