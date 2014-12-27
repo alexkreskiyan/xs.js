@@ -22,17 +22,27 @@
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
     xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
-        //define mixins method
 
-        //add inherits method
+        /**
+         * Returns whether Class mixins given Mixin class
+         *
+         * @method mixins
+         *
+         * @param {Function} Mixin verified mixin class
+         *
+         * @return {Boolean} whether given Mixin class is stored with some alias in Class.prototype.mixins
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - non-class given
+         */
         xs.constant(Class, 'mixins', function (Mixin) {
+            if (!xs.isFunction(Mixin) || Mixin.contractor != xs.Class) {
+                throw new ProcessMixinsError('[' + Class.label + ']: mixins - given non-class value "' + Mixin + '"');
+            }
+
             var mixins = this.prototype.mixins;
 
-            /**
-             * Returns whether:
-             * - mixins is object (if not - no mixins are made for class)
-             * - mixins has Mixin as value of one of it's properties
-             */
             return xs.isObject(mixins) && Object.keys(mixins).some(function (alias) {
 
                 return mixins[alias] === Mixin;

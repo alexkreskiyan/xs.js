@@ -21,7 +21,28 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.class.preprocessors.add('processImplements', function (Class, descriptor) {
+    xs.class.preprocessors.add('processImplements', function (Class) {
+
+        /**
+         * Returns whether Class implements given interface
+         *
+         * @method implements
+         *
+         * @param {Function} Interface verified interface
+         *
+         * @return {Boolean} whether Class.descriptor.implements collection contains label of given interface
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - non-interface given
+         */
+        xs.constant(Class, 'implements', function (Interface) {
+            if (!xs.isFunction(Interface) || Interface.contractor != xs.Interface) {
+                throw new ProcessImplementsError('[' + Class.label + ']: implements - given non-interface value "' + Interface + '"');
+            }
+
+            return this.descriptor.implements.has(Interface.label);
+        });
 
         return true;
     }, function (Class) {
@@ -37,11 +58,11 @@
         xs.log('xs.class.preprocessors.processImplements[', Class.label, ']. Interfaces:', interfaces.toSource());
         //namespace shortcut
         var resolveName = Class.descriptor.resolveName;
-        interfaces.each(function (name, alias, list) {
+        interfaces.each(function (name, index, list) {
 
             //resolve name with namespace and update list
             name = resolveName(name);
-            list.set(alias, name);
+            list.set(index, name);
 
             //if Interface is not defined - throw error
             if (!xs.ContractsManager.has(name)) {

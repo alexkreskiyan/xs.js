@@ -147,6 +147,12 @@ module('xs.class.preprocessors.processImplements', function () {
         strictEqual(ns.ChildClass.descriptor.implements.at(0), 'tests.class.preprocessors.processImplements.ChildInterface');
         strictEqual(ns.ChildClass.descriptor.implements.at(1), 'tests.class.preprocessors.processImplements.BaseInterface');
 
+        //check implements method
+        strictEqual(ns.BaseClass.implements(ns.BaseInterface), true);
+        strictEqual(ns.BaseClass.implements(ns.ChildInterface), false);
+        strictEqual(ns.ChildClass.implements(ns.BaseInterface), true);
+        strictEqual(ns.ChildClass.implements(ns.ChildInterface), true);
+
     }, function () {
         var me = this;
 
