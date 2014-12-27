@@ -20,7 +20,7 @@ module('xs.interface.preprocessors.imports', function () {
         //add tests path
         xs.Loader.paths.add('tests', '/tests/resources');
 
-        xs.define(xs.Interface, 'ns.Child', function (Interface, ns) {
+        xs.define(xs.Interface, 'ns.Child', function () {
             this.namespace = 'tests.interface.preprocessors.imports';
             this.extends = 'ns.Base';
             this.imports = [
@@ -38,9 +38,6 @@ module('xs.interface.preprocessors.imports', function () {
 
         return false;
     }, function () {
-        var me = this;
-        var ns = tests.interface.preprocessors.imports;
-
         //here Base is already imported - all ok
         expect(0);
 
