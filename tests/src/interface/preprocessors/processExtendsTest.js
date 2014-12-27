@@ -95,12 +95,23 @@ module('xs.interface.preprocessors.processExtends', function () {
 
         return false;
     }, function () {
+        var me = this;
+        
         var ns = tests.interface.preprocessors.processExtends;
 
         //check chain
         strictEqual(ns.Base.parent, xs.interface.Base);
         strictEqual(ns.Parent.parent, ns.Base);
         strictEqual(ns.Child.parent, ns.Parent);
+
+        //check inherits
+        strictEqual(me.Child.inherits(me.Parent), true);
+        strictEqual(me.Parent.inherits(me.Base), true);
+        strictEqual(me.Child.inherits(me.Base), true);
+
+        strictEqual(me.Base.inherits(me.Parent), false);
+        strictEqual(me.Parent.inherits(me.Child), false);
+        strictEqual(me.Base.inherits(me.Child), false);
 
     }, function () {
         var me = this;
