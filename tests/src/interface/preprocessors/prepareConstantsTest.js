@@ -18,7 +18,9 @@ module('xs.interface.preprocessors.prepareConstants', function () {
 
         //define
         me.Base = xs.Interface(function () {
-            this.constants.a = 1;
+            this.constants = [
+                'a'
+            ];
         });
 
         //save
@@ -36,8 +38,10 @@ module('xs.interface.preprocessors.prepareConstants', function () {
         //define
         me.Parent = xs.Interface(function () {
             this.extends = 'tests.interface.preprocessors.prepareConstants.Base';
-            this.constants.a = 2;
-            this.constants.b = 3;
+            this.constants = [
+                'a',
+                'b'
+            ];
         });
 
         //save
@@ -55,7 +59,11 @@ module('xs.interface.preprocessors.prepareConstants', function () {
         //define
         me.Child = xs.Interface(function () {
             this.extends = 'tests.interface.preprocessors.prepareConstants.Parent';
-            this.constants.c = 5;
+            this.constants = [
+                'a',
+                'b',
+                'c'
+            ];
         });
 
         //save
@@ -78,16 +86,13 @@ module('xs.interface.preprocessors.prepareConstants', function () {
         var ns = tests.interface.preprocessors.prepareConstants;
 
         //Base
-        strictEqual(ns.Base.descriptor.constants.at('a'), 1);
+        strictEqual(ns.Base.descriptor.constants.values().toString(), 'a');
 
         //Parent
-        strictEqual(ns.Parent.descriptor.constants.at('a'), 2);
-        strictEqual(ns.Parent.descriptor.constants.at('b'), 3);
+        strictEqual(ns.Parent.descriptor.constants.values().toString(), 'a,b');
 
         //Child
-        strictEqual(ns.Child.descriptor.constants.at('a'), 2);
-        strictEqual(ns.Child.descriptor.constants.at('b'), 3);
-        strictEqual(ns.Child.descriptor.constants.at('c'), 5);
+        strictEqual(ns.Child.descriptor.constants.values().toString(), 'a,b,c');
     }, function () {
         var me = this;
 
