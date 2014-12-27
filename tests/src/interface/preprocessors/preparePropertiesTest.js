@@ -117,37 +117,28 @@ module('xs.interface.preprocessors.prepareProperties', function () {
         //Base
         properties = ns.Base.descriptor.properties;
         //a
-        strictEqual(properties.at('a').get, me.baseAGet);
-        strictEqual(properties.at('a').configurable, false);
-        strictEqual(properties.at('a').enumerable, true);
+        strictEqual(properties.at('a').isAccessed, true);
+        strictEqual(properties.at('a').isReadonly, false);
 
         //Parent
         properties = ns.Parent.descriptor.properties;
         //a
-        strictEqual(properties.at('a').get, me.parentAGet);
-        strictEqual(properties.at('a').configurable, false);
-        strictEqual(properties.at('a').enumerable, true);
+        strictEqual(properties.at('a').isAccessed, true);
+        strictEqual(properties.at('a').isReadonly, false);
         //b
-        strictEqual(properties.at('b').set, me.parentBSet);
-        strictEqual(properties.at('b').configurable, false);
-        strictEqual(properties.at('b').enumerable, true);
+        strictEqual(properties.at('b').isAccessed, true);
+        strictEqual(properties.at('b').isReadonly, false);
 
         //Child
         properties = ns.Child.descriptor.properties;
         //a
-        strictEqual(properties.at('a').value, 2);
-        strictEqual(properties.at('a').writable, true);
-        strictEqual(properties.at('a').configurable, false);
-        strictEqual(properties.at('a').enumerable, true);
+        strictEqual(properties.at('a').isAssigned, true);
         //b
-        strictEqual(properties.at('b').set, me.parentBSet);
-        strictEqual(properties.at('b').configurable, false);
-        strictEqual(properties.at('b').enumerable, true);
+        strictEqual(properties.at('b').isAccessed, true);
+        strictEqual(properties.at('b').isReadonly, false);
         //c
-        strictEqual(properties.at('c').get, me.childCGet);
-        strictEqual(properties.at('c').set, me.childCSet);
-        strictEqual(properties.at('c').configurable, false);
-        strictEqual(properties.at('c').enumerable, true);
+        strictEqual(properties.at('c').isAccessed, true);
+        strictEqual(properties.at('c').isReadonly, false);
 
     }, function () {
         var me = this;
