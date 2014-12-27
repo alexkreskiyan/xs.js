@@ -64,8 +64,8 @@
         });
 
         //add all inherited
-        Class.parent.descriptor.implements.each(function (value, name) {
-            interfaces.add(name, value);
+        Class.parent.descriptor.implements.each(function (value) {
+            interfaces.add(value);
         });
 
         //verify interfaces implementation

@@ -10,51 +10,161 @@
  */
 module('xs.class.preprocessors.processImplements', function () {
 
-//    test('mixins chain', function () {
-//        var me = this;
-//
-//        //add tests path
-//        xs.Loader.paths.add('tests', '/tests/resources');
-//
-//        //define child class
-//        xs.define(xs.Class, 'ns.Child', function () {
-//            this.namespace = 'tests.class.preprocessors.processMixins';
-//            this.extends = 'ns.Base';
-//            this.mixins.mix2 = 'ns.Mix2';
-//        });
-//
-//        xs.onReady([
-//            'tests.class.preprocessors.processMixins.Child',
-//            'tests.class.preprocessors.processMixins.Base',
-//            'tests.class.preprocessors.processMixins.Mix1',
-//            'tests.class.preprocessors.processMixins.Mix2'
-//        ], me.done);
-//
-//        return false;
-//    }, function () {
-//        var Child = tests.class.preprocessors.processMixins.Child;
-//
-//        //check attributes from Mix1
-//        var Mix1 = Child.prototype.mixins.mix1;
-//        strictEqual(Child.descriptor.constants.a, Mix1.descriptor.constants.a);
-//        strictEqual(Child.descriptor.properties.a, Mix1.descriptor.properties.a);
-//        strictEqual(Child.descriptor.methods.printA, Mix1.descriptor.methods.printA);
-//
-//        //check attributes from Mix2
-//        var Mix2 = Child.prototype.mixins.mix2;
-//        strictEqual(Child.descriptor.constants.b, Mix2.descriptor.constants.b);
-//        strictEqual(Child.descriptor.properties.b, Mix2.descriptor.properties.b);
-//        strictEqual(Child.descriptor.methods.printB, Mix2.descriptor.methods.printB);
-//    }, function () {
-//        var me = this;
-//        xs.Loader.paths.remove('tests');
-//
-//        //remove created classes from namespace
-//        var ns = tests.class.preprocessors.processMixins;
-//        xs.ContractsManager.remove(ns.Child.label);
-//        xs.ContractsManager.remove(ns.Base.label);
-//        xs.ContractsManager.remove(ns.Mix1.label);
-//        xs.ContractsManager.remove(ns.Mix2.label);
-//    });
+    test('processImplements', function () {
+        var me = this;
+
+        var ns = 'tests.class.preprocessors.processImplements';
+
+        //Base Interface
+        me.BaseInterfaceName = ns + '.BaseInterface';
+
+        //define
+        me.BaseInterface = xs.Interface(function () {
+            var me = this;
+            me.constants = ['a'];
+            me.static.properties.b = undefined;
+            me.static.properties.c = {
+                get: function () {
+                },
+                set: function () {
+                }
+            };
+            me.static.properties.d = {
+                get: function () {
+                },
+                set: xs.emptyFn
+            };
+            me.static.methods.e = xs.emptyFn;
+            me.static.methods.f = function (a, b) {
+            };
+        });
+
+        //save
+        if (xs.ContractsManager.has(me.BaseInterfaceName)) {
+            me.BaseInterfaceSave = xs.ContractsManager.get(me.BaseInterfaceName);
+            xs.ContractsManager.remove(me.BaseInterfaceName);
+        }
+
+        //add to ContractsManager
+        xs.ContractsManager.add(me.BaseInterfaceName, me.BaseInterface);
+
+
+        //Child Interface
+        me.ChildInterfaceName = ns + '.ChildInterface';
+
+        //define
+        me.ChildInterface = xs.Interface(function () {
+            var me = this;
+            me.extends = ns + '.BaseInterface';
+            me.properties.g = undefined;
+            me.properties.h = {
+                get: function () {
+                },
+                set: function () {
+                }
+            };
+            me.properties.i = {
+                get: function () {
+                },
+                set: xs.emptyFn
+            };
+            me.methods.j = xs.emptyFn;
+            me.methods.k = function (a, b) {
+            };
+        });
+
+        //save
+        if (xs.ContractsManager.has(me.ChildInterfaceName)) {
+            me.ChildInterfaceSave = xs.ContractsManager.get(me.ChildInterfaceName);
+            xs.ContractsManager.remove(me.ChildInterfaceName);
+        }
+
+        //add to ContractsManager
+        xs.ContractsManager.add(me.ChildInterfaceName, me.ChildInterface);
+
+
+        //Base Class
+        me.BaseClassName = ns + '.BaseClass';
+
+        //define
+        me.BaseClass = xs.Class(function () {
+            var me = this;
+            me.implements = ['tests.class.preprocessors.processImplements.BaseInterface'];
+            me.constants.a = 1;
+            me.static.properties.b = 1;
+            me.static.properties.c = {get: xs.emptyFn};
+            me.static.properties.d = {set: xs.emptyFn};
+            me.static.methods.e = xs.emptyFn;
+            me.static.methods.f = function (a, b) {
+            };
+        });
+
+        //save
+        if (xs.ContractsManager.has(me.BaseClassName)) {
+            me.BaseClassSave = xs.ContractsManager.get(me.BaseClassName);
+            xs.ContractsManager.remove(me.BaseClassName);
+        }
+
+        //add to ContractsManager
+        xs.ContractsManager.add(me.BaseClassName, me.BaseClass);
+
+
+        //Child Class
+        me.ChildClassName = ns + '.ChildClass';
+
+        //define
+        me.ChildClass = xs.Class(function () {
+            var me = this;
+            me.extends = 'tests.class.preprocessors.processImplements.BaseClass';
+            me.implements = ['tests.class.preprocessors.processImplements.ChildInterface'];
+            me.properties.g = 1;
+            me.properties.h = {get: xs.emptyFn};
+            me.properties.i = {set: xs.emptyFn};
+            me.methods.j = xs.emptyFn;
+            me.methods.k = function (a, b) {
+            };
+        });
+
+        //save
+        if (xs.ContractsManager.has(me.ChildClassName)) {
+            me.ChildClassSave = xs.ContractsManager.get(me.ChildClassName);
+            xs.ContractsManager.remove(me.ChildClassName);
+        }
+
+        //add to ContractsManager
+        xs.ContractsManager.add(me.ChildClassName, me.ChildClass);
+
+        xs.onReady([me.ChildClassName], me.done);
+
+        return false;
+    }, function () {
+        var ns = tests.class.preprocessors.processImplements;
+
+        //check chain
+        strictEqual(ns.BaseClass.descriptor.implements.length, 1);
+        strictEqual(ns.BaseClass.descriptor.implements.at(0), 'tests.class.preprocessors.processImplements.BaseInterface');
+        strictEqual(ns.ChildClass.descriptor.implements.length, 2);
+        strictEqual(ns.ChildClass.descriptor.implements.at(0), 'tests.class.preprocessors.processImplements.ChildInterface');
+        strictEqual(ns.ChildClass.descriptor.implements.at(1), 'tests.class.preprocessors.processImplements.BaseInterface');
+
+    }, function () {
+        var me = this;
+
+        //BaseInterface
+        xs.ContractsManager.remove(me.BaseInterfaceName);
+        me.BaseInterfaceSave && xs.ContractsManager.add(me.BaseInterfaceName, me.BaseInterfaceSave);
+
+        //ChildInterface
+        xs.ContractsManager.remove(me.ChildInterfaceName);
+        me.ChildInterfaceSave && xs.ContractsManager.add(me.ChildInterfaceName, me.ChildInterfaceSave);
+
+        //BaseClass
+        xs.ContractsManager.remove(me.BaseClassName);
+        me.BaseClassSave && xs.ContractsManager.add(me.BaseClassName, me.BaseClassSave);
+
+        //ChildClass
+        xs.ContractsManager.remove(me.ChildClassName);
+        me.ChildClassSave && xs.ContractsManager.add(me.ChildClassName, me.ChildClassSave);
+    });
 
 });
