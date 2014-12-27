@@ -209,7 +209,7 @@
                 }
             });
 
-            xs.log('xs.core.Loader::getLoadList. Result loadList: loaded:', loadList.loaded, ', failed:', loadList.failed, ', unresolved:', loadList.unresolved);
+            xs.log('xs.core.Loader::getLoadList. Result loadList: loaded:', loadList.loaded.toSource(), ', failed:', loadList.failed.toSource(), ', unresolved:', loadList.unresolved.toSource());
 
             //return loadList
             return loadList;
@@ -524,7 +524,7 @@
              * @param {Function} [handleFail] handler for one of files failed.
              */
             me.add = function (list, handleLoad, handleFail) {
-                xs.log('xs.core.Loader::resolver::add. Add list loaded:', list.loaded, ', failed:', list.failed, ', unresolved:', list.unresolved);
+                xs.log('xs.core.Loader::resolver::add. Add list loaded:', list.loaded.toSource(), ', failed:', list.failed.toSource(), ', unresolved:', list.unresolved.toSource());
                 awaiting.add({
                     list: list,
                     pending: list.unresolved.clone(),
@@ -546,7 +546,7 @@
                 //find resolved items
                 xs.log('xs.core.Loader::resolver::resolve. Handle path "' + path + '"');
                 var resolved = awaiting.find(function (item) {
-                    xs.log('xs.core.Loader::resolver::resolve. Clean up item.pending', item.pending);
+                    xs.log('xs.core.Loader::resolver::resolve. Clean up item.pending', item.pending.toSource());
 
                     //item is resolved, if path remove succeeds (path was removed) and pending is empty
                     if (item.pending.has(path)) {
@@ -591,12 +591,12 @@
                 //find rejected items
                 xs.log('xs.core.Loader::resolver::reject. Handle path "' + path + '"');
                 var rejected = awaiting.find(function (item) {
-                    xs.log('xs.core.Loader::resolver::reject. Check item.pending', item.pending);
+                    xs.log('xs.core.Loader::resolver::reject. Check item.pending', item.pending.toSource());
                     //item is rejected, if pending has path
                     return item.pending.has(path);
                 }, xs.core.Collection.ALL);
 
-                xs.log('xs.core.Loader::resolver::reject. Handling items', rejected);
+                xs.log('xs.core.Loader::resolver::reject. Handling items', rejected.toSource());
                 rejected.each(function (item) {
                     xs.log('xs.core.Loader::resolver::reject. Rejected: loaded:', item.list.loaded, ', failed:', item.list.failed, ', unresolved:', item.list.unresolved);
                 });

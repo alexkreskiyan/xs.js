@@ -245,46 +245,46 @@ module('xs.Loader', function () {
 
     test('require', function () {
 
-        xs.Loader.paths.add('tests.class.Loader', '/tests/resources/class/Loader');
+        xs.Loader.paths.add('tests.core.Loader', '/tests/resources/core/Loader');
     }, function () {
         var me = this;
 
         //assert classes were not loaded yet
-        strictEqual(xs.ContractsManager.has('tests.class.Loader.Demo'), false);
-        strictEqual(xs.ContractsManager.has('tests.class.Loader.Sample'), false);
+        strictEqual(xs.ContractsManager.has('tests.core.Loader.Demo'), false);
+        strictEqual(xs.ContractsManager.has('tests.core.Loader.Sample'), false);
 
         //require classes
         xs.Loader.require([
-            'tests.class.Loader.Demo',
-            'tests.class.Loader.Sample'
+            'tests.core.Loader.Demo',
+            'tests.core.Loader.Sample'
         ], function (loaded) {
 
             //assert all was loaded nicely
-            strictEqual(loaded['tests.class.Loader.Demo'], '/tests/resources/class/Loader/Demo.js');
-            strictEqual(loaded['tests.class.Loader.Sample'], '/tests/resources/class/Loader/Sample.js');
+            strictEqual(loaded['tests.core.Loader.Demo'], '/tests/resources/core/Loader/Demo.js');
+            strictEqual(loaded['tests.core.Loader.Sample'], '/tests/resources/core/Loader/Sample.js');
 
             //assert classes loaded
-            strictEqual(xs.ContractsManager.has('tests.class.Loader.Demo'), true);
-            strictEqual(xs.ContractsManager.has('tests.class.Loader.Sample'), true);
+            strictEqual(xs.ContractsManager.has('tests.core.Loader.Demo'), true);
+            strictEqual(xs.ContractsManager.has('tests.core.Loader.Sample'), true);
 
             //cleanUp
-            xs.ContractsManager.remove('tests.class.Loader.Demo');
-            xs.ContractsManager.remove('tests.class.Loader.Sample');
+            xs.ContractsManager.remove('tests.core.Loader.Demo');
+            xs.ContractsManager.remove('tests.core.Loader.Sample');
 
             //require loaded and failed classes
             xs.Loader.require([
-                'tests.class.Loader.Demo',
-                'tests.class.Loader.Sample2'
+                'tests.core.Loader.Demo',
+                'tests.core.Loader.Sample2'
             ], function (loaded) {
             }, function (failed, loaded) {
 
                 //assert require results are correct
-                strictEqual(JSON.stringify(failed), '{"tests.class.Loader.Sample2":"/tests/resources/class/Loader/Sample2.js"}');
-                strictEqual(JSON.stringify(loaded), '{"tests.class.Loader.Demo":"/tests/resources/class/Loader/Demo.js"}');
+                strictEqual(JSON.stringify(failed), '{"tests.core.Loader.Sample2":"/tests/resources/core/Loader/Sample2.js"}');
+                strictEqual(JSON.stringify(loaded), '{"tests.core.Loader.Demo":"/tests/resources/core/Loader/Demo.js"}');
 
                 //assert classes not loaded
-                strictEqual(xs.ContractsManager.has('tests.class.Loader.Demo'), false);
-                strictEqual(xs.ContractsManager.has('tests.class.Loader.Sample'), false);
+                strictEqual(xs.ContractsManager.has('tests.core.Loader.Demo'), false);
+                strictEqual(xs.ContractsManager.has('tests.core.Loader.Sample'), false);
 
                 me.done();
             });
@@ -292,6 +292,6 @@ module('xs.Loader', function () {
 
         return false;
     }, function () {
-        xs.Loader.paths.remove('tests.class.Loader');
+        xs.Loader.paths.remove('tests.core.Loader');
     });
 });
