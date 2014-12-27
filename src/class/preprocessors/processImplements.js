@@ -51,8 +51,8 @@
             //get Interface reference
             var Interface = xs.ContractsManager.get(name);
 
-            //check that contractor is same
-            if (Interface.contractor != Class.contractor) {
+            //check that contractor is xs.Interface
+            if (Interface.contractor != xs.Interface) {
                 throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" has different contractor: "' + Interface.contractor.label + '"');
             }
 
@@ -88,7 +88,7 @@
 
             var Interface = xs.ContractsManager.get(name);
 
-            xs.log('xs.class.preprocessors.processImplements[', target.label, ']. Verifying implementation of', Interface.label);
+            xs.log('xs.class.preprocessors.processImplements[', Class.label, ']. Verifying implementation of', Interface.label);
             //verify, that target implements Interface
             _verifyInterface(Class, Interface);
         });
@@ -131,7 +131,7 @@
                 }
 
                 //if property is required to be readonly, but is not - it's error
-                if (config.isReadonly && property.get !== xs.emptyFn) {
+                if (config.isReadonly && property.set !== xs.emptyFn) {
                     throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires static property "' + name + '" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly');
                 }
             } else {
@@ -150,7 +150,7 @@
             }
 
             //throw error if static method arguments are not compatible with required
-            var arguments = xs.Function.getArguments(descriptor.static.method.at(name).value);
+            var arguments = xs.Function.getArguments(descriptor.static.methods.at(name).value);
 
             if (arguments.toString() != config.arguments.toString()) {
                 throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires static method "' + name + '" to have arguments list: ' + config.arguments.toString() + ', but declared function has list: ' + arguments.toString());
@@ -193,7 +193,7 @@
             }
 
             //throw error if method arguments are not compatible with required
-            var arguments = xs.Function.getArguments(descriptor.method.at(name).value);
+            var arguments = xs.Function.getArguments(descriptor.methods.at(name).value);
 
             if (arguments.toString() != config.arguments.toString()) {
                 throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires method "' + name + '" to have arguments list: ' + config.arguments.toString() + ', but declared function has list: ' + arguments.toString());

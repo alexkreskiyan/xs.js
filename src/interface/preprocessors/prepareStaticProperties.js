@@ -63,7 +63,7 @@
             } else {
                 list.set(name, {
                     isAccessed: true,
-                    isReadonly: property.get === xs.emptyFn
+                    isReadonly: property.set === xs.emptyFn
                 });
             }
         });
