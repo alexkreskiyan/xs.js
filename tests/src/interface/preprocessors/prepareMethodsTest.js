@@ -16,9 +16,9 @@ module('xs.interface.preprocessors.prepareMethods', function () {
         //Base
         me.BaseName = 'tests.interface.preprocessors.prepareMethods.Base';
 
-        me.baseA = function () {
+        me.baseA = function (base, a) {
 
-            return 1;
+            return base + a;
         };
 
         //define
@@ -38,13 +38,13 @@ module('xs.interface.preprocessors.prepareMethods', function () {
         //Parent
         me.ParentName = 'tests.interface.preprocessors.prepareMethods.Parent';
 
-        me.parentA = function () {
+        me.parentA = function (parent, a) {
 
-            return 2;
+            return parent + a;
         };
-        me.parentB = function () {
+        me.parentB = function (parent, b) {
 
-            return 3;
+            return parent + b;
         };
         //define
         me.Parent = xs.Interface(function () {
@@ -65,9 +65,9 @@ module('xs.interface.preprocessors.prepareMethods', function () {
         //Child
         me.ChildName = 'tests.interface.preprocessors.prepareMethods.Child';
 
-        me.childC = function () {
+        me.childC = function (child, c) {
 
-            return 5;
+            return child + c;
         };
         //define
         me.Child = xs.Interface(function () {
@@ -92,8 +92,6 @@ module('xs.interface.preprocessors.prepareMethods', function () {
 
         return false;
     }, function () {
-        var me = this;
-
         var ns = tests.interface.preprocessors.prepareMethods;
 
         //init methods (will be referred to descriptor.methods)
@@ -103,41 +101,23 @@ module('xs.interface.preprocessors.prepareMethods', function () {
         //Base
         methods = ns.Base.descriptor.methods;
         //a
-        strictEqual(methods.at('a').value, me.baseA);
-        strictEqual(methods.at('a').writable, false);
-        strictEqual(methods.at('a').configurable, false);
-        strictEqual(methods.at('a').enumerable, true);
+        strictEqual(methods.at('a').arguments.toString(), 'base,a');
 
         //Parent
         methods = ns.Parent.descriptor.methods;
         //a
-        strictEqual(methods.at('a').value, me.parentA);
-        strictEqual(methods.at('a').writable, false);
-        strictEqual(methods.at('a').configurable, false);
-        strictEqual(methods.at('a').enumerable, true);
+        strictEqual(methods.at('a').arguments.toString(), 'parent,a');
         //b
-        strictEqual(methods.at('b').value, me.parentB);
-        strictEqual(methods.at('b').writable, false);
-        strictEqual(methods.at('b').configurable, false);
-        strictEqual(methods.at('b').enumerable, true);
+        strictEqual(methods.at('b').arguments.toString(), 'parent,b');
 
         //Child
         methods = ns.Child.descriptor.methods;
         //a
-        strictEqual(methods.at('a').value, me.parentA);
-        strictEqual(methods.at('a').writable, false);
-        strictEqual(methods.at('a').configurable, false);
-        strictEqual(methods.at('a').enumerable, true);
+        strictEqual(methods.at('a').arguments.toString(), 'parent,a');
         //b
-        strictEqual(methods.at('b').value, me.parentB);
-        strictEqual(methods.at('b').writable, false);
-        strictEqual(methods.at('b').configurable, false);
-        strictEqual(methods.at('b').enumerable, true);
+        strictEqual(methods.at('b').arguments.toString(), 'parent,b');
         //c
-        strictEqual(methods.at('c').value, me.childC);
-        strictEqual(methods.at('c').writable, false);
-        strictEqual(methods.at('c').configurable, false);
-        strictEqual(methods.at('c').enumerable, true);
+        strictEqual(methods.at('c').arguments.toString(), 'child,c');
 
     }, function () {
         var me = this;

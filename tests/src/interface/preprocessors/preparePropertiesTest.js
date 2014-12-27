@@ -106,8 +106,6 @@ module('xs.interface.preprocessors.prepareProperties', function () {
 
         return false;
     }, function () {
-        var me = this;
-
         var ns = tests.interface.preprocessors.prepareProperties;
 
         //init properties (will be referred to descriptor.static.properties)

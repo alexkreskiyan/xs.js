@@ -67,7 +67,7 @@ module('xs.interface.preprocessors.prepareStaticMethods', function () {
 
         me.childC = function (child, c) {
 
-            return child, c;
+            return child + c;
         };
         //define
         me.Child = xs.Interface(function () {
@@ -92,8 +92,6 @@ module('xs.interface.preprocessors.prepareStaticMethods', function () {
 
         return false;
     }, function () {
-        var me = this;
-
         var ns = tests.interface.preprocessors.prepareStaticMethods;
 
         //init methods (will be referred to descriptor.static.methods)
