@@ -1,4 +1,7 @@
 (function () {
+
+    'use strict';
+
     var me = this;
     var head = document.getElementsByTagName('head')[0];
 
@@ -6,14 +9,50 @@
 
     var handlers = [];
 
+    //fetches tests list from specified query param
+    var params = (function (key) {
+        var result = /\?([^#\?]+)/.exec(me.location.search);
+        if (!result) {
+
+            return {};
+        }
+        var paramsPairs = result.slice(1).shift().split('&');
+        var params = {}, pair;
+        for (var idx = 0; idx < paramsPairs.length; idx++) {
+            pair = paramsPairs[idx].split('=');
+            params[pair[0]] = pair[1];
+        }
+
+        return params;
+    }).call(me);
+
+    //fetches tests list from specified query param
+    var testsList = params.tests.split(',');
+
     //get src file
     request('/src/src.json', function (sources) {
         //get
         var tests = getTests(sources, testsList);
 
-        load(sources.map(function (name) {
-            return resolveSourceFile(name);
-        }), function () {
+        var scripts;
+
+        //release mode
+        if (params.mode === 'release') {
+            scripts = ['/build/release/xs.js'];
+
+            //preview mode
+        } else if (params.mode === 'preview') {
+            scripts = ['/build/preview/xs.js'];
+
+            //debug mode
+        } else {
+            scripts = sources.map(function (name) {
+                return resolveSourceFile(name);
+            });
+            scripts.unshift('/src/xs.js');
+        }
+
+        load(scripts, function () {
             load(tests.map(function (name) {
                 return resolveTestFile(name);
             }), runTests);
@@ -47,17 +86,17 @@
     //adds test case
     me.test = function (name, setUp, run, tearDown) {
         //if 2 arguments - setUp is missing
-        if (arguments.length == 2) {
+        if (arguments.length === 2) {
             run = setUp;
             setUp = function () {
             };
             tearDown = function () {
             };
-        } else if (arguments.length == 3) {
+        } else if (arguments.length === 3) {
             tearDown = function () {
             };
             //else if incorrect arguments count
-        } else if (arguments.length == 1 || arguments.length > 4) {
+        } else if (arguments.length === 1 || arguments.length > 4) {
             throw new Error('Incorrect test case');
         }
 
@@ -105,8 +144,10 @@
         var list = [];
         tests.forEach(function (test) {
             sources.forEach(function (source) {
-                if (source === test || source.indexOf(test + '.') == 0) { //either strict or namespace match
-                    list.indexOf(source) < 0 && list.push(source);
+                if (source === test || source.indexOf(test + '.') === 0) { //either strict or namespace match
+                    if (list.indexOf(source) < 0) {
+                        list.push(source);
+                    }
                 }
             });
         });
@@ -194,25 +235,11 @@
             handler();
         });
     };
-
-    //fetches tests list from specified query param
-    var testsList = (function (key) {
-        var result = /\?([^#\?]+)/.exec(me.location.search);
-        if (!result) {
-            return [];
-        }
-        var paramsPairs = result.slice(1).shift().split('&');
-        var pair;
-        for (var idx = 0; idx < paramsPairs.length; idx++) {
-            pair = paramsPairs[idx].split('=');
-            if (pair[0] == key) {
-                return pair[1].split(',');
-            }
-        }
-    }).call(me, 'tests');
-
 }).call(window);
 function benchmark(fn, n) {
+
+    'use strict';
+
     var start = Date.now();
     for (var i = 0; i < n; i++) {
         fn();
