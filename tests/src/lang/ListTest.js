@@ -10,6 +10,8 @@
  */
 module('xs.lang.List', function () {
 
+    'use strict';
+
     test('clone', function () {
         //init test variables
         var item = { x: 1 };

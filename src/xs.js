@@ -17,9 +17,9 @@
  at http://annium.com/contact.
 
  */
-'use strict';
-
 (function (root, ns) {
+
+    'use strict';
 
     /**
      * Framework entry point
@@ -30,7 +30,7 @@
      *
      * @singleton
      */
-    root[ns] = new (function () {
+    root[ns] = new function () {
         var me = this;
 
         /**
@@ -41,7 +41,7 @@
          * @return {Number} unique id
          */
         me.uid = function () {
-            return Math.round(Math.random() * 10 ^ 10);
-        }
-    });
+            return Math.round(Math.random() * 10e10);
+        };
+    };
 })(window, 'xs');

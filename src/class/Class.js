@@ -10,11 +10,15 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
     //define xs.class
-    xs.class || (xs.class = {});
+    if (!xs.class) {
+        xs.class = {};
+    }
 
     /**
      * xs.class.Class is core class, that is used for class generation.
@@ -69,7 +73,7 @@
          *
          * @type {xs.core.Collection}
          */
-        var processing = new xs.core.Collection;
+        var processing = new xs.core.Collection();
 
         /**
          * Creates class sample and starts processors applying
@@ -81,7 +85,9 @@
             //Descriptor must be function
             xs.assert.fn(Descriptor, ClassError, 'descriptor must be evaluated function');
 
-            xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
+            if (!xs.isFunction(createdFn)) {
+                createdFn = xs.emptyFn;
+            }
 
             //create class
             var Class = _createSample();
@@ -244,11 +250,13 @@
                 }
 
                 //get constructor shortcut
-                var constructor = descriptor.constructor != Object ? descriptor.constructor : undefined;
+                var constructor = descriptor.constructor !== Object ? descriptor.constructor : undefined;
 
                 //if parent constructor - just call it
                 if (me.self && me.self !== Class) {
-                    constructor && constructor.apply(me, arguments);
+                    if (constructor) {
+                        constructor.apply(me, arguments);
+                    }
 
                     return;
                 }
@@ -268,7 +276,9 @@
 
                 for (i = 0; i < length; i++) {
                     item = properties[i];
-                    item.value.hasOwnProperty('value') && (me[item.key] = item.value.value);
+                    if (item.value.hasOwnProperty('value')) {
+                        me[item.key] = item.value.value;
+                    }
                 }
 
                 //native constructor call
@@ -277,7 +287,9 @@
                 me.self = Class;
 
                 //apply constructor
-                constructor && constructor.apply(me, arguments);
+                if (constructor) {
+                    constructor.apply(me, arguments);
+                }
             };
 
             return Class;
@@ -299,18 +311,18 @@
             //arguments - new instance arguments
 
             //create wrapper
-            var xClass = function (args) {
+            var Factory = function (args) {
                 return Class.apply(this, args);
             };
 
             //assign prototype
-            xClass.prototype = Class.prototype;
+            Factory.prototype = Class.prototype;
 
             //return factory
             return function () {
 
                 //return instance
-                return new xClass(arguments);
+                return new Factory(arguments);
             };
         };
 
@@ -386,34 +398,34 @@
                 extends: undefined,
 
                 //class mixins list
-                mixins: new xs.core.Collection,
+                mixins: new xs.core.Collection(),
 
                 //class implements list
-                implements: new xs.core.Collection,
+                implements: new xs.core.Collection(),
 
                 //class singleton flag
                 singleton: undefined,
 
                 //class constants list
-                constants: new xs.core.Collection,
+                constants: new xs.core.Collection(),
 
                 //class statics list
                 static: {
                     //class static methods list
-                    methods: new xs.core.Collection,
+                    methods: new xs.core.Collection(),
 
                     //class static properties list
-                    properties: new xs.core.Collection
+                    properties: new xs.core.Collection()
                 },
 
                 //class constructor
                 constructor: undefined,
 
                 //class methods list
-                methods: new xs.core.Collection,
+                methods: new xs.core.Collection(),
 
                 //class properties list
-                properties: new xs.core.Collection
+                properties: new xs.core.Collection()
             };
         };
 
@@ -443,14 +455,18 @@
     //remove ProcessorsStack reference
     delete xs.ProcessorsStack.Class;
     //complete if ready
-    Object.keys(xs.ProcessorsStack).length || delete xs.ProcessorsStack;
+    if (!Object.keys(xs.ProcessorsStack).length) {
+        delete xs.ProcessorsStack;
+    }
 
 
     //clean up DependenciesManager
     //remove DependenciesManager reference
     delete xs.DependenciesManager.Class;
     //complete if ready
-    Object.keys(xs.DependenciesManager).length || delete xs.DependenciesManager;
+    if (!Object.keys(xs.DependenciesManager).length) {
+        delete xs.DependenciesManager;
+    }
 
 
     //define prototype of xs.class.Base

@@ -26,7 +26,7 @@
      *
      * @singleton
      */
-    var string = xs.String = new (function () {
+    var string = xs.String = new function () {
         var me = this;
 
         /**
@@ -58,7 +58,7 @@
 
             return string;
         };
-    });
+    };
 
     //extend xs with string
     xs.extend(xs, string);

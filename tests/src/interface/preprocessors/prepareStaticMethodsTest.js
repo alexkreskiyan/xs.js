@@ -10,6 +10,8 @@
  */
 module('xs.interface.preprocessors.prepareStaticMethods', function () {
 
+    'use strict';
+
     test('static methods chain', function () {
         var me = this;
 
@@ -92,7 +94,7 @@ module('xs.interface.preprocessors.prepareStaticMethods', function () {
 
         return false;
     }, function () {
-        var ns = tests.interface.preprocessors.prepareStaticMethods;
+        var ns = window.tests.interface.preprocessors.prepareStaticMethods;
 
         //init methods (will be referred to descriptor.static.methods)
         var methods;
@@ -101,37 +103,43 @@ module('xs.interface.preprocessors.prepareStaticMethods', function () {
         //Base
         methods = ns.Base.descriptor.static.methods;
         //a
-        strictEqual(methods.at('a').arguments.toString(), 'base,a');
+        strictEqual(methods.at('a').args.toString(), 'base,a');
 
         //Parent
         methods = ns.Parent.descriptor.static.methods;
         //a
-        strictEqual(methods.at('a').arguments.toString(), 'parent,a');
+        strictEqual(methods.at('a').args.toString(), 'parent,a');
         //b
-        strictEqual(methods.at('b').arguments.toString(), 'parent,b');
+        strictEqual(methods.at('b').args.toString(), 'parent,b');
 
         //Child
         methods = ns.Child.descriptor.static.methods;
         //a
-        strictEqual(methods.at('a').arguments.toString(), 'parent,a');
+        strictEqual(methods.at('a').args.toString(), 'parent,a');
         //b
-        strictEqual(methods.at('b').arguments.toString(), 'parent,b');
+        strictEqual(methods.at('b').args.toString(), 'parent,b');
         //c
-        strictEqual(methods.at('c').arguments.toString(), 'child,c');
+        strictEqual(methods.at('c').args.toString(), 'child,c');
 
     }, function () {
         var me = this;
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
-        me.BaseSave && xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        if (me.BaseSave) {
+            xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
-        me.ParentSave && xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        if (me.ParentSave) {
+            xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
-        me.ChildSave && xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        if (me.ChildSave) {
+            xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        }
     });
 });

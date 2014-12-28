@@ -26,7 +26,7 @@
      *
      * @singleton
      */
-    var list = xs.List = new (function () {
+    var list = xs.List = new function () {
         var me = this;
 
         // Create quick reference variables for speed access to core prototypes.
@@ -76,7 +76,7 @@
 
             return copy;
         };
-    });
+    };
 
     //extend xs with list
     xs.extend(xs, list);

@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -52,7 +54,7 @@
      *
      * @singleton
      */
-    xs.Loader = new (function () {
+    xs.Loader = new function () {
         var me = this;
 
         /**
@@ -141,7 +143,9 @@
             xs.log('xs.core.Loader::require. Add each of loadList to loader');
             //add each of loadList.unresolved to loader
             loadList.unresolved.each(function (path) {
-                loader.has(path) || loader.add(path);
+                if (!loader.has(path)) {
+                    loader.add(path);
+                }
             });
         };
 
@@ -266,7 +270,7 @@
          *
          * @singleton
          */
-        var paths = me.paths = new (function () {
+        var paths = me.paths = new function () {
             var me = this;
 
             /**
@@ -490,7 +494,7 @@
                 //return path joined with rest of name by / and suffix added
                 return namePath + '/' + name.substring(nameAlias.length + 1).split('.').join('/') + ext;
             };
-        });
+        };
 
         /**
          * Internal resolver instance, that handles all registered callbacks.
@@ -504,7 +508,7 @@
          *
          * @singleton
          */
-        var resolver = new (function () {
+        var resolver = new function () {
             var me = this;
 
             /**
@@ -619,7 +623,7 @@
                     }
                 });
             };
-        });
+        };
 
         /**
          * Internal loader instance
@@ -852,7 +856,7 @@
         }
 
         LoaderError.prototype = new Error();
-    });
+    };
 
     xs.extend(xs, {
         require: xs.Loader.require

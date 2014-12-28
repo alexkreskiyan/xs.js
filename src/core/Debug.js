@@ -16,7 +16,9 @@
     var xs = root[ns];
 
     //define xs.core
-    xs.core || (xs.core = {});
+    if (!xs.core) {
+        xs.core = {};
+    }
 
     /**
      * xs.core.Debug is private singleton, adding debug capabilities to framework.
@@ -29,7 +31,7 @@
      *
      * @singleton
      */
-    var debug = xs.core.Debug = new (function () {
+    var debug = xs.core.Debug = new function () {
         var me = this;
 
         /**
@@ -52,11 +54,12 @@
          */
         me.log = function (message) {
             if (!xs.core.Debug.active) {
+
                 return;
             }
             console.log.apply(console, arguments);
         };
-    });
+    };
 
     //assign debug flag
     xs.Attribute.define(xs, 'debug', {

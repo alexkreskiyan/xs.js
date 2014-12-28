@@ -10,6 +10,8 @@
  */
 module('xs.class.preprocessors.processImplements', function () {
 
+    'use strict';
+
     test('processImplements', function () {
         var me = this;
 
@@ -138,7 +140,7 @@ module('xs.class.preprocessors.processImplements', function () {
 
         return false;
     }, function () {
-        var ns = tests.class.preprocessors.processImplements;
+        var ns = window.tests.class.preprocessors.processImplements;
 
         //check chain
         strictEqual(ns.BaseClass.descriptor.implements.length, 1);
@@ -158,19 +160,27 @@ module('xs.class.preprocessors.processImplements', function () {
 
         //BaseInterface
         xs.ContractsManager.remove(me.BaseInterfaceName);
-        me.BaseInterfaceSave && xs.ContractsManager.add(me.BaseInterfaceName, me.BaseInterfaceSave);
+        if (me.BaseInterfaceSave) {
+            xs.ContractsManager.add(me.BaseInterfaceName, me.BaseInterfaceSave);
+        }
 
         //ChildInterface
         xs.ContractsManager.remove(me.ChildInterfaceName);
-        me.ChildInterfaceSave && xs.ContractsManager.add(me.ChildInterfaceName, me.ChildInterfaceSave);
+        if (me.ChildInterfaceSave) {
+            xs.ContractsManager.add(me.ChildInterfaceName, me.ChildInterfaceSave);
+        }
 
         //BaseClass
         xs.ContractsManager.remove(me.BaseClassName);
-        me.BaseClassSave && xs.ContractsManager.add(me.BaseClassName, me.BaseClassSave);
+        if (me.BaseClassSave) {
+            xs.ContractsManager.add(me.BaseClassName, me.BaseClassSave);
+        }
 
         //ChildClass
         xs.ContractsManager.remove(me.ChildClassName);
-        me.ChildClassSave && xs.ContractsManager.add(me.ChildClassName, me.ChildClassSave);
+        if (me.ChildClassSave) {
+            xs.ContractsManager.add(me.ChildClassName, me.ChildClassSave);
+        }
     });
 
 });

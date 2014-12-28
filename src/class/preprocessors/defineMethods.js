@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -24,7 +26,7 @@
     xs.class.preprocessors.add('defineMethods', function () {
 
         return true;
-    }, function (Class, descriptor) {
+    }, function (Class) {
 
         xs.log('xs.class.preprocessors.defineMethods[', Class.label, ']');
         //apply

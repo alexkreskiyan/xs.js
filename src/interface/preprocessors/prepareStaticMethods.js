@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -55,13 +57,17 @@
             //save descriptor basics
             var method = xs.Attribute.method.prepare(name, value);
             list.set(name, {
-                arguments: xs.Function.getArguments(method.value)
+                args: xs.Function.getArguments(method.value)
             });
         });
 
         //add all own
         own.each(function (value, name) {
-            methods.hasKey(name) ? methods.set(name, value) : methods.add(name, value);
+            if (methods.hasKey(name)) {
+                methods.set(name, value);
+            } else {
+                methods.add(name, value);
+            }
         });
     });
 

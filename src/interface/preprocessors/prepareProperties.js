@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -71,7 +73,11 @@
 
         //add all own
         own.each(function (value, name) {
-            properties.hasKey(name) ? properties.set(name, value) : properties.add(name, value);
+            if (properties.hasKey(name)) {
+                properties.set(name, value);
+            } else {
+                properties.add(name, value);
+            }
         });
     });
 

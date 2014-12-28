@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -55,7 +57,9 @@
 
         //add own ones if not yet
         own.each(function (name) {
-            constants.has(name) || constants.add(name);
+            if (!constants.has(name)) {
+                constants.add(name);
+            }
         });
     });
 

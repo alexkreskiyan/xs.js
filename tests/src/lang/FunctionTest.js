@@ -10,6 +10,8 @@
  */
 module('xs.lang.Function', function () {
 
+    'use strict';
+
     test('bind', function () {
         //init test function
         var fn = function (a, b, c) {
@@ -71,12 +73,12 @@ module('xs.lang.Function', function () {
 
     test('getArguments', function () {
         //test empty arguments
-        strictEqual(JSON.stringify(xs.Function.getArguments(function () {
-        })), '[]');
+        strictEqual(xs.Function.getArguments(function () {
+        }).toString(), '');
 
         //test arguments
-        strictEqual(JSON.stringify(xs.Function.getArguments(function demo123_Asd(demo123_Asd, asd_123_ASD) {
-        })), '["demo123_Asd","asd_123_ASD"]');
+        strictEqual(xs.Function.getArguments(function demo123_Asd(demo123_Asd, asd_123_ASD) {
+        }).toString(), 'demo123_Asd,asd_123_ASD');
     });
 
     test('getBody', function () {
@@ -86,19 +88,19 @@ module('xs.lang.Function', function () {
 
         //test named function
         strictEqual(xs.Function.getBody(function demo123_Asd(demo123_Asd, asd_123_ASD) {
-            return demo123_Asd + asd_123_ASD + "";
-        }).trim(), 'return demo123_Asd + asd_123_ASD + "";');
+            return demo123_Asd + asd_123_ASD + '';
+        }).trim(), 'return demo123_Asd + asd_123_ASD + \'\';');
     });
 
     test('parse', function () {
         //get parse data
         var data = xs.Function.parse(function demo123_Asd(demo123_Asd, asd_123_ASD) {
-            return demo123_Asd + asd_123_ASD + "";
+            return demo123_Asd + asd_123_ASD + '';
         });
 
         //test parsing results
         strictEqual(data.name, 'demo123_Asd');
-        strictEqual(JSON.stringify(data.arguments), '["demo123_Asd","asd_123_ASD"]');
-        strictEqual(data.body.trim(), 'return demo123_Asd + asd_123_ASD + "";');
+        strictEqual(data.args.toString(), 'demo123_Asd,asd_123_ASD');
+        strictEqual(data.body.trim(), 'return demo123_Asd + asd_123_ASD + \'\';');
     });
 });

@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -26,7 +28,7 @@
      *
      * @singleton
      */
-    var DependenciesManager = new (function () {
+    var DependenciesManager = new function () {
         var me = this;
 
         /**
@@ -172,7 +174,7 @@
          */
         var _showDeadLock = function (deadLock) {
             //self lock
-            if (deadLock.length == 1) {
+            if (deadLock.length === 1) {
                 return 'Class "' + deadLock[0].label + '" imports itself';
             }
 
@@ -197,7 +199,7 @@
          *
          * @class DependenciesManager.chains
          */
-        var chains = new (function () {
+        var chains = new function () {
             var me = this;
 
             /**
@@ -548,7 +550,7 @@
 
                 return merged;
             };
-        });
+        };
 
         /**
          * Private onReady manager with simplified public interface
@@ -564,7 +566,7 @@
          *
          * @class DependenciesManager.queue
          */
-        var queue = new (function () {
+        var queue = new function () {
             var me = this;
 
             /**
@@ -709,11 +711,11 @@
                     waiting.removeAt(i);
                 }
             };
-        });
+        };
 
         me.onReady = queue.add;
         me.ready = queue.remove;
-    });
+    };
 
     //save DependenciesManager.onReady to xs.onReady
     xs.onReady = DependenciesManager.onReady;

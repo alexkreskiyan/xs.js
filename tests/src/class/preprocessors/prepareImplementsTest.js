@@ -10,6 +10,8 @@
  */
 module('xs.class.preprocessors.prepareImplements', function () {
 
+    'use strict';
+
     test('prepareImplements', function () {
         var me = this;
 
@@ -98,7 +100,7 @@ module('xs.class.preprocessors.prepareImplements', function () {
 
         return false;
     }, function () {
-        var ns = tests.class.preprocessors.prepareImplements;
+        var ns = window.tests.class.preprocessors.prepareImplements;
 
         //check chain
         strictEqual(ns.Class.descriptor.implements.length, 1);
@@ -109,11 +111,15 @@ module('xs.class.preprocessors.prepareImplements', function () {
 
         //Interface
         xs.ContractsManager.remove(me.InterfaceName);
-        me.InterfaceSave && xs.ContractsManager.add(me.InterfaceName, me.InterfaceSave);
+        if (me.InterfaceSave) {
+            xs.ContractsManager.add(me.InterfaceName, me.InterfaceSave);
+        }
 
         //Class
         xs.ContractsManager.remove(me.ClassName);
-        me.ClassSave && xs.ContractsManager.add(me.ClassName, me.ClassSave);
+        if (me.ClassSave) {
+            xs.ContractsManager.add(me.ClassName, me.ClassSave);
+        }
     });
 
 });

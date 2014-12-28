@@ -10,6 +10,8 @@
  */
 module('xs.interface.preprocessors.imports', function () {
 
+    'use strict';
+
     test('imports usage chain', function () {
         var me = this;
 
@@ -49,7 +51,7 @@ module('xs.interface.preprocessors.imports', function () {
         //restore saved paths
         xs.Loader.paths.add(me.paths);
 
-        var ns = tests.interface.preprocessors.imports;
+        var ns = window.tests.interface.preprocessors.imports;
 
         //remove created interfaces
         xs.ContractsManager.remove(ns.Base.label);

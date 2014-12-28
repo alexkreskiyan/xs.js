@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -47,7 +49,10 @@
 
             //simply interfaceName without alias, added only to loads list
             name = resolveName(imported);
-            requires.has(name) || requires.add(name);
+
+            if (!requires.has(name)) {
+                requires.add(name);
+            }
         });
 
         //filter loads to find out already loaded ones

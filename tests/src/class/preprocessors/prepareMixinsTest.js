@@ -10,6 +10,8 @@
  */
 module('xs.class.preprocessors.prepareMixins', function () {
 
+    'use strict';
+
     test('prepareMixins', function () {
         var me = this;
 
@@ -35,7 +37,7 @@ module('xs.class.preprocessors.prepareMixins', function () {
 
         return false;
     }, function () {
-        var ns = tests.class.preprocessors.prepareMixins;
+        var ns = window.tests.class.preprocessors.prepareMixins;
 
         //check chain
         strictEqual(ns.Class.descriptor.mixins.length, 1);
@@ -45,7 +47,7 @@ module('xs.class.preprocessors.prepareMixins', function () {
         var me = this;
         //Class
         xs.ContractsManager.remove(me.ClassName);
-        me.ClassSave && xs.ContractsManager.add(me.ClassName, me.ClassSave);
+        if (me.ClassSave) { xs.ContractsManager.add(me.ClassName, me.ClassSave); }
     });
 
 });

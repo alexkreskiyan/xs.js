@@ -26,7 +26,7 @@
      *
      * @singleton
      */
-    var attribute = xs.Attribute = new (function () {
+    var attribute = xs.Attribute = new function () {
         var me = this;
 
         /**
@@ -87,7 +87,11 @@
          * @param {Object} descriptor descriptor of new property
          */
         me.define = function (object, name, descriptor) {
-            descriptor ? Object.defineProperty(object, name, descriptor) : Object.defineProperties(object, name);
+            if (descriptor) {
+                Object.defineProperty(object, name, descriptor);
+            } else {
+                Object.defineProperties(object, name);
+            }
         };
 
         /**
@@ -343,9 +347,15 @@
             }
 
             //writable,enumerable,configurable - are converted if presented
-            descriptor.hasOwnProperty('writable') && (descriptor.writable = !!descriptor.writable);
-            descriptor.hasOwnProperty('configurable') && (descriptor.configurable = !!descriptor.configurable);
-            descriptor.hasOwnProperty('enumerable') && (descriptor.enumerable = !!descriptor.enumerable);
+            if (descriptor.hasOwnProperty('writable')) {
+                descriptor.writable = Boolean(descriptor.writable);
+            }
+            if (descriptor.hasOwnProperty('configurable')) {
+                descriptor.configurable = Boolean(descriptor.configurable);
+            }
+            if (descriptor.hasOwnProperty('enumerable')) {
+                descriptor.enumerable = Boolean(descriptor.enumerable);
+            }
 
             //any additional fields allowed
             return descriptor;
@@ -358,7 +368,7 @@
          *
          * Contains methods to prepare and define properties
          */
-        me.property = new (function () {
+        me.property = new function () {
             var me = this;
 
             /**
@@ -411,10 +421,16 @@
 
                 //get|set priority
                 if (descriptor.get || descriptor.set) {
-                    descriptor.get || eval('descriptor.get = function () { \'use strict\'; return this.privates.' + name + ';}');
-                    descriptor.set || eval('descriptor.set = function (value) { \'use strict\'; this.privates.' + name + ' = value;}');
+                    if (!descriptor.get) {
+                        eval('descriptor.get = function () { \'use strict\'; return this.privates.' + name + ';}');
+                    }
+                    if (!descriptor.set) {
+                        eval('descriptor.set = function (value) { \'use strict\'; this.privates.' + name + ' = value;}');
+                    }
                 } else {
-                    descriptor.hasOwnProperty('value') || (descriptor.value = undefined);
+                    if (!descriptor.hasOwnProperty('value')) {
+                        descriptor.value = undefined;
+                    }
                     descriptor.writable = true;
                 }
                 descriptor.enumerable = true;
@@ -479,7 +495,7 @@
                 //define property and return
                 Object.defineProperty(object, name, descriptor);
             };
-        });
+        };
 
         /**
          * @class xs.lang.Attribute.method
@@ -488,7 +504,7 @@
          *
          * Contains methods to prepare and define methods
          */
-        me.method = new (function () {
+        me.method = new function () {
             var me = this;
             /**
              * Prepares method descriptor
@@ -593,7 +609,7 @@
                     configurable: false
                 });
             };
-        });
+        };
 
         /**
          * Internal error class
@@ -609,7 +625,7 @@
         }
 
         AttributeError.prototype = new Error();
-    });
+    };
 
     xs.extend(xs, {
         constant: attribute.constant,

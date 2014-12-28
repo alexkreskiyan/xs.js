@@ -10,6 +10,8 @@
  */
 module('xs.class.preprocessors.processMixins', function () {
 
+    'use strict';
+
     test('mixins chain', function () {
         var me = this;
 
@@ -32,7 +34,7 @@ module('xs.class.preprocessors.processMixins', function () {
 
         return false;
     }, function () {
-        var ns = tests.class.preprocessors.processMixins;
+        var ns = window.tests.class.preprocessors.processMixins;
         var Child = ns.Child;
 
         //check attributes from Mix1
@@ -53,11 +55,10 @@ module('xs.class.preprocessors.processMixins', function () {
         strictEqual(Child.mixins(ns.Base), false);
         strictEqual(Child.mixins(xs.class.Base), false);
     }, function () {
-        var me = this;
         xs.Loader.paths.remove('tests');
 
         //remove created classes from namespace
-        var ns = tests.class.preprocessors.processMixins;
+        var ns = window.tests.class.preprocessors.processMixins;
         xs.ContractsManager.remove(ns.Child.label);
         xs.ContractsManager.remove(ns.Base.label);
         xs.ContractsManager.remove(ns.Mix1.label);

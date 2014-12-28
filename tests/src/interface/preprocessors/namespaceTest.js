@@ -10,6 +10,8 @@
  */
 module('xs.interface.preprocessors.namespace', function () {
 
+    'use strict';
+
     test('namespace usage chain', function () {
         var me = this;
 
@@ -74,7 +76,7 @@ module('xs.interface.preprocessors.namespace', function () {
 
         return false;
     }, function () {
-        var ns = tests.interface.preprocessors.namespace;
+        var ns = window.tests.interface.preprocessors.namespace;
 
         //Parent
         strictEqual(ns.base.Parent.parent, ns.base.Base);
@@ -86,14 +88,20 @@ module('xs.interface.preprocessors.namespace', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
-        me.BaseSave && xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        if (me.BaseSave) {
+            xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
-        me.ParentSave && xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        if (me.ParentSave) {
+            xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
-        me.ChildSave && xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        if (me.ChildSave) {
+            xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        }
     });
 });

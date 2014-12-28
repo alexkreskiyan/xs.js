@@ -10,6 +10,8 @@
  */
 module('xs.Debug', function () {
 
+    'use strict';
+
     test('debug mode', function () {
         expect(0);
     });

@@ -10,11 +10,15 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
     //define xs.interface
-    xs.interface || (xs.interface = {});
+    if (!xs.interface) {
+        xs.interface = {};
+    }
 
     /**
      * xs.interface.Interface is core class, that is used for interface generation.
@@ -67,7 +71,7 @@
          *
          * @type {xs.core.Collection}
          */
-        var processing = new xs.core.Collection;
+        var processing = new xs.core.Collection();
 
         /**
          * Creates interface sample and starts processors applying
@@ -79,7 +83,9 @@
             //Descriptor must be function
             xs.assert.fn(Descriptor, InterfaceError, 'descriptor must be evaluated function');
 
-            xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
+            if (!xs.isFunction(createdFn)) {
+                createdFn = xs.emptyFn;
+            }
 
             //create interface
             var Interface = _createSample();
@@ -330,14 +336,18 @@
     //remove ProcessorsStack reference
     delete xs.ProcessorsStack.Interface;
     //complete if ready
-    Object.keys(xs.ProcessorsStack).length || delete xs.ProcessorsStack;
+    if (!Object.keys(xs.ProcessorsStack).length) {
+        delete xs.ProcessorsStack;
+    }
 
 
     //clean up DependenciesManager
     //remove DependenciesManager reference
     delete xs.DependenciesManager.Interface;
     //complete if ready
-    Object.keys(xs.DependenciesManager).length || delete xs.DependenciesManager;
+    if (!Object.keys(xs.DependenciesManager).length) {
+        delete xs.DependenciesManager;
+    }
 
 
     //define prototype of xs.interface.Base

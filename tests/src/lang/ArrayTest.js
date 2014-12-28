@@ -10,6 +10,8 @@
  */
 module('xs.lang.Array', function () {
 
+    'use strict';
+
     test('shuffle', function () {
         //init sample
         var item = { x: 1 };

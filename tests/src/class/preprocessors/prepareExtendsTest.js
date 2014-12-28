@@ -10,6 +10,8 @@
  */
 module('xs.class.preprocessors.prepareExtends', function () {
 
+    'use strict';
+
     test('extend base', function () {
         //create Class
         var Class = xs.Class(function () {
@@ -80,7 +82,7 @@ module('xs.class.preprocessors.prepareExtends', function () {
 
         return false;
     }, function () {
-        var ns = tests.class.preprocessors.prepareExtends;
+        var ns = window.tests.class.preprocessors.prepareExtends;
 
         //check chain
         strictEqual(ns.Base.parent, xs.class.Base);
@@ -91,14 +93,20 @@ module('xs.class.preprocessors.prepareExtends', function () {
         var me = this;
         //Base
         xs.ContractsManager.remove(me.BaseName);
-        me.BaseSave && xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        if (me.BaseSave) {
+            xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
-        me.ParentSave && xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        if (me.ParentSave) {
+            xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
-        me.ChildSave && xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        if (me.ChildSave) {
+            xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        }
     });
 });

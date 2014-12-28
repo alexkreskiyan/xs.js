@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -75,7 +77,9 @@
          */
         me.add = function (name, verifier, handler, position, relativeTo) {
             //position defaults to last
-            position || (position = 'last');
+            if (!position) {
+                position = 'last';
+            }
 
             if (items.hasKey(name)) {
                 throw new ProcessorsStackError('processor "' + name + '" already in stack');
@@ -224,15 +228,21 @@
             items.removeAt(name);
 
             //insert to specified position
-            if (position == 'first' || position == 'last') {
-                position == 'first' ? items.insert(0, name, item) : items.add(name, item);
+            if (position === 'first' || position === 'last') {
+                if (position === 'first') {
+                    items.insert(0, name, item);
+                } else {
+                    items.add(name, item);
+                }
             } else {
                 var relativeKey = new xs.core.Collection(items.keys()).keyOf(relativeTo);
 
                 if (!xs.isDefined(relativeKey)) {
                     throw new ProcessorsStackError('relative item "' + relativeTo + '" missing in stack');
                 }
-                position == 'after' && relativeKey++;
+                if (position === 'after') {
+                    relativeKey++;
+                }
                 items.insert(relativeKey, name, item);
             }
         };

@@ -10,6 +10,8 @@
  */
 module('xs.lang.Attribute', function () {
 
+    'use strict';
+
     test('defined', function () {
         strictEqual(xs.Attribute.defined({}, 'a'), false);
     });
@@ -308,8 +310,10 @@ module('xs.lang.Attribute', function () {
         strictEqual('a' in me.obj, true);
 
         //constant is immutable for change
-        me.obj.a = 1;
-        strictEqual(me.obj['a'], me.value);
+        throws(function () {
+            me.obj.a = 1;
+        });
+        strictEqual(me.obj.a, me.value);
     });
 
     test('property.prepare', function () {

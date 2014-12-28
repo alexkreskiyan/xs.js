@@ -10,6 +10,8 @@
  */
 module('xs.class.preprocessors.defineProperties', function () {
 
+    'use strict';
+
     test('properties chain', function () {
         var me = this;
 
@@ -51,7 +53,7 @@ module('xs.class.preprocessors.defineProperties', function () {
             this.properties.b = {
                 set: function (b) {
 
-                    return this.privates.b = b + 1;
+                    this.privates.b = b + 1;
                 }
             };
         });
@@ -79,7 +81,7 @@ module('xs.class.preprocessors.defineProperties', function () {
                 },
                 set: function (c) {
 
-                    return this.privates.c = '?' + c;
+                    this.privates.c = '?' + c;
                 }
             };
         });
@@ -101,7 +103,7 @@ module('xs.class.preprocessors.defineProperties', function () {
 
         return false;
     }, function () {
-        var ns = tests.class.preprocessors.defineProperties;
+        var ns = window.tests.class.preprocessors.defineProperties;
 
         //test
         //Base
@@ -145,14 +147,20 @@ module('xs.class.preprocessors.defineProperties', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
-        me.BaseSave && xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        if (me.BaseSave) {
+            xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
-        me.ParentSave && xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        if (me.ParentSave) {
+            xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
-        me.ChildSave && xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        if (me.ChildSave) {
+            xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        }
     });
 });

@@ -26,7 +26,7 @@
      *
      * @singleton
      */
-    var type = xs.Type = new (function () {
+    var type = xs.Type = new function () {
         var me = this;
 
         /**
@@ -49,7 +49,7 @@
                 return false;
             }
 
-            return typeof value == 'object';
+            return typeof value === 'object';
         };
 
         /**
@@ -87,7 +87,7 @@
          */
         me.isFunction = function (value) {
 
-            return typeof value == 'function';
+            return typeof value === 'function';
         };
 
         /**
@@ -106,7 +106,7 @@
          */
         me.isString = function (value) {
 
-            return typeof value == 'string';
+            return typeof value === 'string';
         };
 
         /**
@@ -125,7 +125,7 @@
          */
         me.isNumber = function (value) {
 
-            return typeof value == 'number';
+            return typeof value === 'number';
         };
 
         /**
@@ -144,7 +144,7 @@
          */
         me.isBoolean = function (value) {
 
-            return typeof value == 'boolean';
+            return typeof value === 'boolean';
         };
 
         /**
@@ -225,7 +225,7 @@
                 return false;
             }
 
-            return typeof value == 'object';
+            return typeof value === 'object';
         };
 
         /**
@@ -251,7 +251,7 @@
 
             var type = typeof value;
 
-            return type != 'object' && type != 'function';
+            return type !== 'object' && type !== 'function';
         };
 
         /**
@@ -290,7 +290,7 @@
          */
         me.isDefined = function (value) {
 
-            return typeof value != 'undefined';
+            return typeof value !== 'undefined';
         };
 
         /**
@@ -318,7 +318,7 @@
          * @return {Boolean} verification result
          */
         me.isEmpty = function (value) {
-            if (value == null) {
+            if (value === null) {
 
                 return true;
             }
@@ -330,20 +330,20 @@
 
             var type = typeof value;
 
-            if (type == 'object') {
+            if (type === 'object') {
 
                 return !Object.keys(value).length;
-            } else if (type == 'string') {
+            } else if (type === 'string') {
 
                 return !value.trim();
-            } else if (type == 'number') {
+            } else if (type === 'number') {
 
                 return !value;
             }
 
-            return type != 'function' && type != 'boolean';
+            return type !== 'function' && type !== 'boolean';
         };
-    });
+    };
 
     //extend xs with type
     Object.keys(type).forEach(function (method) {

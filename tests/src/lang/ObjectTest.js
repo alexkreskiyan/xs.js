@@ -10,6 +10,8 @@
  */
 module('xs.lang.Object', function () {
 
+    'use strict';
+
     test('extend', function () {
         var me = this;
         //init test data

@@ -10,6 +10,8 @@
  */
 module('xs.class.preprocessors.prepareStaticProperties', function () {
 
+    'use strict';
+
     test('static properties chain', function () {
         var me = this;
 
@@ -45,7 +47,7 @@ module('xs.class.preprocessors.prepareStaticProperties', function () {
         };
         me.parentBSet = function (b) {
 
-            return this.privates.b = b + 1;
+            this.privates.b = b + 1;
         };
         //define
         me.Parent = xs.Class(function () {
@@ -76,7 +78,7 @@ module('xs.class.preprocessors.prepareStaticProperties', function () {
         };
         me.childCSet = function (c) {
 
-            return this.privates.c = '?' + c;
+            this.privates.c = '?' + c;
         };
         //define
         me.Child = xs.Class(function () {
@@ -107,7 +109,7 @@ module('xs.class.preprocessors.prepareStaticProperties', function () {
     }, function () {
         var me = this;
 
-        var ns = tests.class.preprocessors.prepareStaticProperties;
+        var ns = window.tests.class.preprocessors.prepareStaticProperties;
 
         //init properties (will be referred to descriptor.static.properties)
         var properties;
@@ -153,14 +155,20 @@ module('xs.class.preprocessors.prepareStaticProperties', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
-        me.BaseSave && xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        if (me.BaseSave) {
+            xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
-        me.ParentSave && xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        if (me.ParentSave) {
+            xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
-        me.ChildSave && xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        if (me.ChildSave) {
+            xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        }
     });
 });

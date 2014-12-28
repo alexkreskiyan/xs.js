@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -36,7 +38,9 @@
             xs.Attribute.property.define(prototype, name, descriptor);
 
             //set undefined for assigned properties
-            descriptor.hasOwnProperty('value') && (prototype[name] = undefined);
+            if (descriptor.hasOwnProperty('value')) {
+                prototype[name] = undefined;
+            }
         });
     });
 })(window, 'xs');

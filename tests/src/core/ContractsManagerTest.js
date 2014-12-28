@@ -10,6 +10,8 @@
  */
 module('xs.ContractsManager', function () {
 
+    'use strict';
+
     test('has', function () {
         var me = this;
 
@@ -44,7 +46,9 @@ module('xs.ContractsManager', function () {
         var me = this;
 
         //restore save
-        me.save && xs.ContractsManager.add(me.className, me.save);
+        if (me.save) {
+            xs.ContractsManager.add(me.className, me.save);
+        }
     });
 
     test('get', function () {
@@ -80,7 +84,9 @@ module('xs.ContractsManager', function () {
         var me = this;
 
         //restore save
-        me.save && xs.ContractsManager.add(me.className, me.save);
+        if (me.save) {
+            xs.ContractsManager.add(me.className, me.save);
+        }
     });
 
     test('add', function () {
@@ -140,10 +146,10 @@ module('xs.ContractsManager', function () {
         strictEqual(me.ClassOne.label, me.classOneName);
 
         //namespace ok
-        strictEqual(Object.keys(my.demo.first).toString(), 'ClassOne');
-        strictEqual(my.demo.first.ClassOne, me.ClassOne);
-        strictEqual(Object.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne');
-        strictEqual(my.demo.first.ClassOne.namespace.ClassOne, me.ClassOne);
+        strictEqual(Object.keys(window.my.demo.first).toString(), 'ClassOne');
+        strictEqual(window.my.demo.first.ClassOne, me.ClassOne);
+        strictEqual(Object.keys(window.my.demo.first.ClassOne.namespace).toString(), 'ClassOne');
+        strictEqual(window.my.demo.first.ClassOne.namespace.ClassOne, me.ClassOne);
 
         //add class two
         xs.ContractsManager.add(me.classTwoName, me.ClassTwo);
@@ -165,14 +171,14 @@ module('xs.ContractsManager', function () {
         strictEqual(me.ClassTwo.label, me.classTwoName);
 
         //namespace ok
-        strictEqual(Object.keys(my.demo.first).toString(), 'ClassOne,ClassTwo');
-        strictEqual(my.demo.first.ClassTwo, me.ClassTwo);
-        strictEqual(Object.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne,ClassTwo');
-        strictEqual(my.demo.first.ClassOne.namespace.ClassOne, me.ClassOne);
-        strictEqual(my.demo.first.ClassOne.namespace.ClassTwo, me.ClassTwo);
-        strictEqual(Object.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassOne,ClassTwo');
-        strictEqual(my.demo.first.ClassTwo.namespace.ClassOne, me.ClassOne);
-        strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
+        strictEqual(Object.keys(window.my.demo.first).toString(), 'ClassOne,ClassTwo');
+        strictEqual(window.my.demo.first.ClassTwo, me.ClassTwo);
+        strictEqual(Object.keys(window.my.demo.first.ClassOne.namespace).toString(), 'ClassOne,ClassTwo');
+        strictEqual(window.my.demo.first.ClassOne.namespace.ClassOne, me.ClassOne);
+        strictEqual(window.my.demo.first.ClassOne.namespace.ClassTwo, me.ClassTwo);
+        strictEqual(Object.keys(window.my.demo.first.ClassTwo.namespace).toString(), 'ClassOne,ClassTwo');
+        strictEqual(window.my.demo.first.ClassTwo.namespace.ClassOne, me.ClassOne);
+        strictEqual(window.my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
 
         //add class three
         xs.ContractsManager.add(me.classThreeName, me.ClassThree);
@@ -207,9 +213,15 @@ module('xs.ContractsManager', function () {
         xs.ContractsManager.remove(me.classThreeName);
 
         //restore save
-        me.saveOne && xs.ContractsManager.add(me.classOneName, me.saveOne);
-        me.saveTwo && xs.ContractsManager.add(me.classTwoName, me.saveTwo);
-        me.saveThree && xs.ContractsManager.add(me.classThreeName, me.saveThree);
+        if (me.saveOne) {
+            xs.ContractsManager.add(me.classOneName, me.saveOne);
+        }
+        if (me.saveTwo) {
+            xs.ContractsManager.add(me.classTwoName, me.saveTwo);
+        }
+        if (me.saveThree) {
+            xs.ContractsManager.add(me.classThreeName, me.saveThree);
+        }
     });
 
     test('remove', function () {
@@ -257,14 +269,14 @@ module('xs.ContractsManager', function () {
         var me = this;
 
         //test namespaces
-        strictEqual(Object.keys(my.demo.first).toString(), 'ClassOne,ClassTwo');
-        strictEqual(my.demo.first.ClassTwo, me.ClassTwo);
-        strictEqual(Object.keys(my.demo.first.ClassOne.namespace).toString(), 'ClassOne,ClassTwo');
-        strictEqual(my.demo.first.ClassOne.namespace.ClassOne, me.ClassOne);
-        strictEqual(my.demo.first.ClassOne.namespace.ClassTwo, me.ClassTwo);
-        strictEqual(Object.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassOne,ClassTwo');
-        strictEqual(my.demo.first.ClassTwo.namespace.ClassOne, me.ClassOne);
-        strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
+        strictEqual(Object.keys(window.my.demo.first).toString(), 'ClassOne,ClassTwo');
+        strictEqual(window.my.demo.first.ClassTwo, me.ClassTwo);
+        strictEqual(Object.keys(window.my.demo.first.ClassOne.namespace).toString(), 'ClassOne,ClassTwo');
+        strictEqual(window.my.demo.first.ClassOne.namespace.ClassOne, me.ClassOne);
+        strictEqual(window.my.demo.first.ClassOne.namespace.ClassTwo, me.ClassTwo);
+        strictEqual(Object.keys(window.my.demo.first.ClassTwo.namespace).toString(), 'ClassOne,ClassTwo');
+        strictEqual(window.my.demo.first.ClassTwo.namespace.ClassOne, me.ClassOne);
+        strictEqual(window.my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
 
         //remove classOne
         xs.ContractsManager.remove(me.classOneName);
@@ -281,11 +293,11 @@ module('xs.ContractsManager', function () {
         strictEqual(xs.Attribute.defined(me.ClassOne, 'label'), false);
 
         //namespace is cleaned
-        strictEqual(xs.Attribute.defined(my.demo.first, 'ClassOne'), false);
-        strictEqual(Object.keys(my.demo.first).toString(), 'ClassTwo');
-        strictEqual(my.demo.first.ClassTwo, me.ClassTwo);
-        strictEqual(Object.keys(my.demo.first.ClassTwo.namespace).toString(), 'ClassTwo');
-        strictEqual(my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
+        strictEqual(xs.Attribute.defined(window.my.demo.first, 'ClassOne'), false);
+        strictEqual(Object.keys(window.my.demo.first).toString(), 'ClassTwo');
+        strictEqual(window.my.demo.first.ClassTwo, me.ClassTwo);
+        strictEqual(Object.keys(window.my.demo.first.ClassTwo.namespace).toString(), 'ClassTwo');
+        strictEqual(window.my.demo.first.ClassTwo.namespace.ClassTwo, me.ClassTwo);
 
         //remove classTwo
         xs.ContractsManager.remove(me.classTwoName);
@@ -326,9 +338,15 @@ module('xs.ContractsManager', function () {
         var me = this;
 
         //restore save
-        me.saveOne && xs.ContractsManager.add(me.classOneName, me.saveOne);
-        me.saveTwo && xs.ContractsManager.add(me.classTwoName, me.saveTwo);
-        me.saveThree && xs.ContractsManager.add(me.classThreeName, me.saveThree);
+        if (me.saveOne) {
+            xs.ContractsManager.add(me.classOneName, me.saveOne);
+        }
+        if (me.saveTwo) {
+            xs.ContractsManager.add(me.classTwoName, me.saveTwo);
+        }
+        if (me.saveThree) {
+            xs.ContractsManager.add(me.classThreeName, me.saveThree);
+        }
     });
 
     test('define', function () {
@@ -353,7 +371,7 @@ module('xs.ContractsManager', function () {
         //not defined again
         throws(function () {
             xs.define(xs.Class, me.className, function () {
-            })
+            });
         });
 
         //class is in manager
@@ -372,6 +390,8 @@ module('xs.ContractsManager', function () {
     }, function () {
         var me = this;
         //restore save
-        me.save && xs.ContractsManager.add(me.className, me.save);
+        if (me.save) {
+            xs.ContractsManager.add(me.className, me.save);
+        }
     });
 });

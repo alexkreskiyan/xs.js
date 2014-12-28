@@ -26,7 +26,7 @@
      *
      * @singleton
      */
-    var fn = xs.Function = new (function () {
+    var fn = xs.Function = new function () {
         var me = this;
 
         var _bindFunction = Function.prototype.bind;
@@ -129,7 +129,7 @@
                 args.unshift(fn);
 
                 return wrapper.apply(scope, args);
-            }
+            };
         };
 
         /**
@@ -151,7 +151,10 @@
          * @param {Object} scope optional execution scope
          */
         me.nextTick = function (fn, scope) {
-            scope && (fn = _bind(fn, scope));
+            if (scope) {
+                fn = _bind(fn, scope);
+            }
+
             setTimeout(fn, 0);
         };
 
@@ -252,7 +255,7 @@
             var data = parseRe.exec(stringFn);
             return {
                 name: data[1],
-                arguments: data[2].split(',').map(function (name) {
+                args: data[2].split(',').map(function (name) {
 
                     return name.trim();
                 }).filter(function (value) {
@@ -270,7 +273,7 @@
          */
         me.emptyFn = function () {
         };
-    });
+    };
 
     xs.extend(xs, {
         bind: fn.bind,

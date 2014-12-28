@@ -10,6 +10,8 @@
  */
 module('xs.class.Class', function () {
 
+    'use strict';
+
     test('create', function () {
         //test create without descriptor fails
         throws(xs.Class);

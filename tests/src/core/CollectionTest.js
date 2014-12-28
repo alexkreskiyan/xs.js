@@ -10,13 +10,15 @@
  */
 module('xs.core.Collection', function () {
 
+    'use strict';
+
     test('constructor', function () {
         //init test variables
         var x, collection;
 
         //check incorrect source
         throws(function () {
-            new xs.core.Collection(true);
+            return new xs.core.Collection(true);
         });
 
         //check array list
@@ -1007,26 +1009,26 @@ module('xs.core.Collection', function () {
         //negative
         //true
         strictEqual(collection.some(function (value) {
-            return value.x == 1 && value.y == 3;
+            return value.x === 1 && value.y === 3;
         }, 0), true);
         //false
         strictEqual(collection.some(function (value) {
-            return value.x == 1 && value.y == 1;
+            return value.x === 1 && value.y === 1;
         }, 0), false);
 
         //without count
         strictEqual(collection.some(function (value) {
-            return value.x == 1 && value.y == 1;
+            return value.x === 1 && value.y === 1;
         }), true);
 
         //positive
         //true
         strictEqual(collection.some(function (value) {
-            return value.x == 1;
+            return value.x === 1;
         }, 2), true);
         //false
         strictEqual(collection.some(function (value) {
-            return value.x == 1 && value.y == 1;
+            return value.x === 1 && value.y === 1;
         }, 2), false);
 
 
@@ -1053,26 +1055,26 @@ module('xs.core.Collection', function () {
         //negative
         //true
         strictEqual(collection.some(function (value) {
-            return value.x == 1 && value.y == 3;
+            return value.x === 1 && value.y === 3;
         }, 0), true);
         //false
         strictEqual(collection.some(function (value) {
-            return value.x == 1 && value.y == 1;
+            return value.x === 1 && value.y === 1;
         }, 0), false);
 
         //without count
         strictEqual(collection.some(function (value) {
-            return value.x == 1 && value.y == 1;
+            return value.x === 1 && value.y === 1;
         }), true);
 
         //positive
         //true
         strictEqual(collection.some(function (value) {
-            return value.x == 1;
+            return value.x === 1;
         }, 2), true);
         //false
         strictEqual(collection.some(function (value) {
-            return value.x == 1 && value.y == 1;
+            return value.x === 1 && value.y === 1;
         }, 2), false);
     });
 

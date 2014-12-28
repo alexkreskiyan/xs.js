@@ -10,6 +10,8 @@
  */
 module('xs.Loader', function () {
 
+    'use strict';
+
     test('paths add', function () {
         var me = this;
 

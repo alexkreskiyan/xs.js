@@ -10,6 +10,8 @@
  */
 module('xs.lang.Type', function () {
 
+    'use strict';
+
     test('isObject', function () {
         var me = this;
         //init test cases

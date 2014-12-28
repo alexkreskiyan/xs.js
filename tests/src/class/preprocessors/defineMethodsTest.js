@@ -10,6 +10,8 @@
  */
 module('xs.class.preprocessors.defineMethods', function () {
 
+    'use strict';
+
     test('methods chain', function () {
         var me = this;
 
@@ -87,7 +89,7 @@ module('xs.class.preprocessors.defineMethods', function () {
 
         return false;
     }, function () {
-        var ns = tests.class.preprocessors.defineMethods;
+        var ns = window.tests.class.preprocessors.defineMethods;
 
         //Base
         var base = new ns.Base;
@@ -108,14 +110,20 @@ module('xs.class.preprocessors.defineMethods', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
-        me.BaseSave && xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        if (me.BaseSave) {
+            xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
-        me.ParentSave && xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        if (me.ParentSave) {
+            xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
-        me.ChildSave && xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        if (me.ChildSave) {
+            xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        }
     });
 });

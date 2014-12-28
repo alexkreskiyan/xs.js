@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -24,7 +26,7 @@
      *
      * @singleton
      */
-    xs.ContractsManager = new (function () {
+    xs.ContractsManager = new function () {
         var me = this;
 
         /**
@@ -206,7 +208,7 @@
          *
          * @method define
          *
-         * @param {Function} Contractor contractor, that is used
+         * @param {Function} contractor contractor, that is used
          * @param {String} name name of created contract
          * @param {Function} descFn descriptor function. Is called with 2 params:
          *
@@ -222,9 +224,9 @@
          *
          * - contract with given name is already registered
          */
-        me.define = function (Contractor, name, descFn, createdFn) {
+        me.define = function (contractor, name, descFn, createdFn) {
             //create Contract and start it's processing
-            var Contract = Contractor(descFn, createdFn);
+            var Contract = contractor(descFn, createdFn);
 
             //here contract namespace is evaluated. Evaluate real name of contract
             name = Contract.descriptor.resolveName(name);
@@ -387,7 +389,7 @@
             var changedContract = contracts.at(name);
 
             //add new contract to all namespaces
-            if (operation == 'add') {
+            if (operation === 'add') {
                 //add all contracts to new contract' namespace
                 contracts.each(function (Contract, name) {
                     changedContract.namespace[name] = Contract;
@@ -397,7 +399,7 @@
                 contracts.each(function (Contract) {
                     Contract.namespace[name] = contracts.at(name);
                 });
-            } else if (operation == 'remove') {
+            } else if (operation === 'remove') {
                 //empty old contract' namespace
                 Object.keys(changedContract.namespace).forEach(function (key) {
                     delete changedContract.namespace[key];
@@ -409,7 +411,7 @@
                 });
             }
         };
-    });
+    };
 
     /**
      * Internal error class

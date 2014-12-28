@@ -20,4 +20,6 @@
  * @class xs.interface.Base
  */
 xs.define(xs.Interface, 'xs.interface.Base', function () {
+
+    'use strict';
 });

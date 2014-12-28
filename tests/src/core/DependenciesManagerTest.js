@@ -10,6 +10,8 @@
  */
 module('xs.DependenciesManager', function () {
 
+    'use strict';
+
     test('test', function () {
         //dependencies manager is private class and can not be tested
         expect(0);

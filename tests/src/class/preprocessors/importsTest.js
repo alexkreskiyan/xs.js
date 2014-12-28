@@ -10,6 +10,8 @@
  */
 module('xs.class.preprocessors.imports', function () {
 
+    'use strict';
+
     test('imports usage chain', function () {
         var me = this;
 
@@ -45,7 +47,7 @@ module('xs.class.preprocessors.imports', function () {
         return false;
     }, function () {
         var me = this;
-        var ns = tests.class.preprocessors.imports;
+        var ns = window.tests.class.preprocessors.imports;
 
         //check imports
         strictEqual(Object.keys(me.imports).toString(), 'one,three');
@@ -60,7 +62,7 @@ module('xs.class.preprocessors.imports', function () {
         //restore saved paths
         xs.Loader.paths.add(me.paths);
 
-        var ns = tests.class.preprocessors.imports;
+        var ns = window.tests.class.preprocessors.imports;
 
         //remove created classes
         xs.ContractsManager.remove(ns.One.label);

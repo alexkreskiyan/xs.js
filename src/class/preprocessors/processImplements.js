@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -161,11 +163,13 @@
                 });
 
                 //assert, that static property is readonly, if needed
-                config.isReadonly && xs.assert.equal(property.set, xs.emptyFn, ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires static property "$name" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
-                    $Class: Class.label,
-                    $Interface: Class.label,
-                    $name: name
-                });
+                if (config.isReadonly) {
+                    xs.assert.equal(property.set, xs.emptyFn, ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires static property "$name" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
+                        $Class: Class.label,
+                        $Interface: Class.label,
+                        $name: name
+                    });
+                }
             } else {
                 //assert, that static property is assigned
                 xs.assert.ok(property.hasOwnProperty('value'), ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires static property "$name" to be assigned property, but it is declared as accessed one', {
@@ -186,7 +190,7 @@
             });
 
             //assert, that static method arguments are compatible with required
-            var requiredArguments = config.arguments.toString();
+            var requiredArguments = config.args.toString();
             var declaredArguments = xs.Function.getArguments(descriptor.static.methods.at(name).value).toString();
 
             //assert, that arguments' lists are equal
@@ -220,11 +224,13 @@
                 });
 
                 //assert, that property is readonly, if needed
-                config.isReadonly && xs.assert.equal(property.set, xs.emptyFn, ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires property "$name" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
-                    $Class: Class.label,
-                    $Interface: Class.label,
-                    $name: name
-                });
+                if (config.isReadonly) {
+                    xs.assert.equal(property.set, xs.emptyFn, ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires property "$name" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
+                        $Class: Class.label,
+                        $Interface: Class.label,
+                        $name: name
+                    });
+                }
             } else {
                 //assert, that property is assigned
                 xs.assert.ok(property.hasOwnProperty('value'), ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires property "$name" to be assigned property, but it is declared as accessed one', {
@@ -245,7 +251,7 @@
             });
 
             //assert, that method arguments are compatible with required
-            var requiredArguments = config.arguments.toString();
+            var requiredArguments = config.args.toString();
             var declaredArguments = xs.Function.getArguments(descriptor.methods.at(name).value).toString();
 
             //assert, that arguments' lists are equal

@@ -10,6 +10,8 @@
  */
 module('xs.interface.Interface', function () {
 
+    'use strict';
+
     test('create', function () {
         //test create without descriptor fails
         throws(xs.Interface);

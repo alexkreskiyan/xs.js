@@ -10,6 +10,8 @@
  */
 module('xs.class.preprocessors.prepareConstants', function () {
 
+    'use strict';
+
     test('constants chain', function () {
         var me = this;
 
@@ -75,7 +77,7 @@ module('xs.class.preprocessors.prepareConstants', function () {
 
         return false;
     }, function () {
-        var ns = tests.class.preprocessors.prepareConstants;
+        var ns = window.tests.class.preprocessors.prepareConstants;
 
         //Base
         strictEqual(ns.Base.descriptor.constants.at('a'), 1);
@@ -93,14 +95,20 @@ module('xs.class.preprocessors.prepareConstants', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
-        me.BaseSave && xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        if (me.BaseSave) {
+            xs.ContractsManager.add(me.BaseName, me.BaseSave);
+        }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
-        me.ParentSave && xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        if (me.ParentSave) {
+            xs.ContractsManager.add(me.ParentName, me.ParentSave);
+        }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
-        me.ChildSave && xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        if (me.ChildSave) {
+            xs.ContractsManager.add(me.ChildName, me.ChildSave);
+        }
     });
 });

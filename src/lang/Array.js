@@ -26,7 +26,7 @@
      *
      * @singleton
      */
-    var array = xs.Array = new (function () {
+    xs.Array = new function () {
         var me = this;
 
         /**
@@ -49,6 +49,6 @@
                 return Math.random() - 0.5;
             });
         };
-    });
+    };
 
 })(window, 'xs');

@@ -10,6 +10,8 @@
  */
 module('xs.assert', function () {
 
+    'use strict';
+
     test('equal', function () {
         //incorrect throws
         throws(function () {
@@ -37,7 +39,7 @@ module('xs.assert', function () {
         });
 
         //correct is silent
-        xs.assert.not(1 == 2);
+        xs.assert.not(1 === 2);
     });
 
     test('object', function () {

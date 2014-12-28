@@ -10,11 +10,15 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
     //define xs.core
-    xs.core || (xs.core = {});
+    if (!xs.core) {
+        xs.core = {};
+    }
 
     /**
      * xs.core.Collection is core framework class, that is used for internal collections
@@ -384,7 +388,7 @@
     collection.prototype.keyOf = function (value, flags) {
         var me = this, key, values = me.values();
 
-        if (arguments.length == 1) {
+        if (arguments.length === 1) {
             key = values.indexOf(value);
         } else {
             if (!xs.isNumber(flags)) {
@@ -457,7 +461,9 @@
             }
 
             //convert negative index
-            key < 0 && (key += max);
+            if (key < 0) {
+                key += max;
+            }
 
             return me.items[key].value;
             //if it is string - it's key
@@ -861,7 +867,9 @@
             }
 
             //convert negative index
-            key < 0 && (key += max);
+            if (key < 0) {
+                key += max;
+            }
 
             me.items[key].value = value;
             //if it is string - it's key
@@ -1083,7 +1091,7 @@
 
         var index, all = false;
         //if no flags - remove first occurrence of value
-        if (arguments.length == 1) {
+        if (arguments.length === 1) {
             index = values.indexOf(value);
 
             //handle flags
@@ -1688,7 +1696,9 @@
         }
 
         //default scope to me
-        arguments.length >= 3 || (scope = me);
+        if (arguments.length < 3) {
+            scope = me;
+        }
 
         //iterate
         var i, item, length = me.items.length;
@@ -1811,7 +1821,9 @@
         }
 
         //default scope to me
-        arguments.length >= 3 || (scope = me);
+        if (arguments.length < 3) {
+            scope = me;
+        }
 
         //init variables
         var i, item, length = me.items.length, found;
@@ -1911,7 +1923,9 @@
         }
 
         //default scope to me
-        arguments.length >= 2 || (scope = me);
+        if (arguments.length < 2) {
+            scope = me;
+        }
 
         //init variables
         var i, item, length = me.items.length;
@@ -2048,7 +2062,9 @@
         }
 
         //default scope to me
-        arguments.length >= 3 || (scope = me);
+        if (arguments.length < 3) {
+            scope = me;
+        }
 
         //check memo
         var hasMemo = false;
@@ -2169,7 +2185,9 @@
         }
 
         //default count to 1, if not given
-        arguments.length == 1 && (count = 1);
+        if (arguments.length < 2) {
+            count = 1;
+        }
 
         //check, that count is number and is in bounds
         if (!xs.isNumber(count)) {
@@ -2185,7 +2203,9 @@
         }
 
         //default scope to me
-        arguments.length >= 3 || (scope = me);
+        if (arguments.length < 3) {
+            scope = me;
+        }
 
         var i, item, found = 0;
 
@@ -2196,7 +2216,9 @@
                 item = me.items[i];
 
                 //increment found if tester returns true
-                tester.call(scope, item.value, item.key, me) && found++;
+                if (tester.call(scope, item.value, item.key, me)) {
+                    found++;
+                }
 
                 //return false if found at least one item
                 if (found) {
@@ -2214,7 +2236,9 @@
             item = me.items[i];
 
             //increment found if tester returns true
-            tester.call(scope, item.value, item.key, me) && found++;
+            if (tester.call(scope, item.value, item.key, me)) {
+                found++;
+            }
 
             //return true if found became equal to count
             if (found === count) {
@@ -2604,7 +2628,9 @@
             var item = me.items[i];
 
             //update if is number
-            xs.isNumber(item.key) && (item.key = i);
+            if (xs.isNumber(item.key)) {
+                item.key = i;
+            }
         }
     };
 

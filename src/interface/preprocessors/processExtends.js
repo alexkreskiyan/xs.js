@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -96,14 +98,14 @@
      */
     var _extend = function (child, parent) {
         //create fake constructor
-        var fn = function () {
+        var Fn = function () {
         };
 
         //assign prototype for fake constructor
-        fn.prototype = parent.prototype;
+        Fn.prototype = parent.prototype;
 
         //assign new fake constructor's instance as child prototype, establishing correct prototype chain
-        child.prototype = new fn();
+        child.prototype = new Fn();
 
         //assign correct constructor instead fake constructor
         child.prototype.constructor = child;

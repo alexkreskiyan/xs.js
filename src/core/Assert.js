@@ -10,11 +10,15 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
     //define xs.core
-    xs.core || (xs.core = {});
+    if (!xs.core) {
+        xs.core = {};
+    }
 
     /**
      * xs.core.Assert is singleton, providing functionality to perform asserts for widely used verifications
@@ -29,7 +33,7 @@
      *
      * @singleton
      */
-    xs.assert = xs.core.Assert = new (function () {
+    xs.assert = xs.core.Assert = new function () {
         var me = this;
 
         /**
@@ -48,10 +52,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.equal = function (given, expected, Exception, message, vars) {
-            message || (message = 'Given "' + given + '" is not same to expected "' + expected + '"');
+            if (!message) {
+                message = 'Given "' + given + '" is not same to expected "' + expected + '"';
+            }
 
             //assert
-            given === expected || _raise(Exception, message, vars);
+            if (given !== expected) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -69,10 +77,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.ok = function (expression, Exception, message, vars) {
-            message || (message = 'Expression "' + expression + '" failed');
+            if (!message) {
+                message = 'Expression "' + expression + '" failed';
+            }
 
             //assert
-            expression || _raise(Exception, message, vars);
+            if (!expression) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -90,10 +102,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.not = function (expression, Exception, message, vars) {
-            message || (message = 'Expression "' + expression + '" succeed');
+            if (!message) {
+                message = 'Expression "' + expression + '" succeed';
+            }
 
             //assert
-            expression && _raise(Exception, message, vars);
+            if (expression) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -111,10 +127,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.object = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not object');
+            if (!message) {
+                message = '"' + value + '" is not object';
+            }
 
             //assert
-            xs.isObject(value) || _raise(Exception, message, vars);
+            if (!xs.isObject(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -132,10 +152,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.array = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not array');
+            if (!message) {
+                message = '"' + value + '" is not array';
+            }
 
             //assert
-            xs.isArray(value) || _raise(Exception, message, vars);
+            if (!xs.isArray(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -153,10 +177,14 @@
          * @param {Object} [vars] error optional vars
          */
         var _fn = me.fn = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not function');
+            if (!message) {
+                message = '"' + value + '" is not function';
+            }
 
             //assert
-            xs.isFunction(value) || _raise(Exception, message, vars);
+            if (!xs.isFunction(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -174,10 +202,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.string = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not string');
+            if (!message) {
+                message = '"' + value + '" is not string';
+            }
 
             //assert
-            xs.isString(value) || _raise(Exception, message, vars);
+            if (!xs.isString(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -195,10 +227,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.number = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not number');
+            if (!message) {
+                message = '"' + value + '" is not number';
+            }
 
             //assert
-            xs.isNumber(value) || _raise(Exception, message, vars);
+            if (!xs.isNumber(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -216,10 +252,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.boolean = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not boolean');
+            if (!message) {
+                message = '"' + value + '" is not boolean';
+            }
 
             //assert
-            xs.isBoolean(value) || _raise(Exception, message, vars);
+            if (!xs.isBoolean(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -237,10 +277,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.regExp = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not regular expression');
+            if (!message) {
+                message = '"' + value + '" is not regular expression';
+            }
 
             //assert
-            xs.isRegExp(value) || _raise(Exception, message, vars);
+            if (!xs.isRegExp(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -258,10 +302,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.error = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not error object');
+            if (!message) {
+                message = '"' + value + '" is not error object';
+            }
 
             //assert
-            xs.isError(value) || _raise(Exception, message, vars);
+            if (!xs.isError(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -279,10 +327,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.null = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not null');
+            if (!message) {
+                message = '"' + value + '" is not null';
+            }
 
             //assert
-            xs.isNull(value) || _raise(Exception, message, vars);
+            if (!xs.isNull(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -300,10 +352,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.iterable = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not iterable');
+            if (!message) {
+                message = '"' + value + '" is not iterable';
+            }
 
             //assert
-            xs.isIterable(value) || _raise(Exception, message, vars);
+            if (!xs.isIterable(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -321,10 +377,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.primitive = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not primitive');
+            if (!message) {
+                message = '"' + value + '" is not primitive';
+            }
 
             //assert
-            xs.isPrimitive(value) || _raise(Exception, message, vars);
+            if (!xs.isPrimitive(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -342,10 +402,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.numeric = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not numeric');
+            if (!message) {
+                message = '"' + value + '" is not numeric';
+            }
 
             //assert
-            xs.isNumeric(value) || _raise(Exception, message, vars);
+            if (!xs.isNumeric(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -363,10 +427,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.defined = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not defined');
+            if (!message) {
+                message = '"' + value + '" is not defined';
+            }
 
             //assert
-            xs.isDefined(value) || _raise(Exception, message, vars);
+            if (!xs.isDefined(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -384,10 +452,14 @@
          * @param {Object} [vars] error optional vars
          */
         me.empty = function (value, Exception, message, vars) {
-            message || (message = '"' + value + '" is not empty');
+            if (!message) {
+                message = '"' + value + '" is not empty';
+            }
 
             //assert
-            xs.isEmpty(value) || _raise(Exception, message, vars);
+            if (!xs.isEmpty(value)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -408,10 +480,14 @@
             //assert, that fn is function
             _fn(fn);
 
-            message || (message = '"' + fn + '" is not Class');
+            if (!message) {
+                message = '"' + fn + '" is not Class';
+            }
 
             //assert
-            (fn.contractor == xs.Class) || _raise(Exception, message, vars);
+            if (fn.contractor !== xs.Class) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -432,10 +508,14 @@
             //assert, that fn is function
             _fn(fn);
 
-            message || (message = '"' + fn + '" is not Interface');
+            if (!message) {
+                message = '"' + fn + '" is not Interface';
+            }
 
             //assert
-            (fn.contractor == xs.Interface) || _raise(Exception, message, vars);
+            if (fn.contractor !== xs.Interface) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -457,10 +537,14 @@
             //assert, that Class is function
             _fn(Class);
 
-            message || (message = '"' + value + '" is not instance of "' + (Class.label ? Class.label : Class.name) + '"');
+            if (!message) {
+                message = '"' + value + '" is not instance of "' + (Class.label ? Class.label : Class.name) + '"';
+            }
 
             //assert
-            (value instanceof Class) || _raise(Exception, message, vars);
+            if (!(value instanceof Class)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -485,10 +569,14 @@
             //assert that Parent is class
             _class(Parent);
 
-            message || (message = '"' + Child.label + '" does not inherit from "' + Parent.label + '"');
+            if (!message) {
+                message = '"' + Child.label + '" does not inherit from "' + Parent.label + '"';
+            }
 
             //assert
-            Child.inherits(Parent) || _raise(Exception, message, vars);
+            if (!Child.inherits(Parent)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -513,10 +601,14 @@
             //assert that Interface is interface
             _interface(Interface);
 
-            message || (message = 'Class "' + Class.label + '" does not implement interface "' + Interface.label + '"');
+            if (!message) {
+                message = 'Class "' + Class.label + '" does not implement interface "' + Interface.label + '"';
+            }
 
             //assert
-            Class.implements(Interface) || _raise(Exception, message, vars);
+            if (!Class.implements(Interface)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -541,10 +633,14 @@
             //assert that Mixin is class
             _class(Mixin);
 
-            message || (message = 'Class "' + Class.label + '" is not mixed with class "' + Mixin.label + '"');
+            if (!message) {
+                message = 'Class "' + Class.label + '" is not mixed with class "' + Mixin.label + '"';
+            }
 
             //assert
-            Class.mixins(Mixin) || _raise(Exception, message, vars);
+            if (!Class.mixins(Mixin)) {
+                _raise(Exception, message, vars);
+            }
         };
 
         /**
@@ -564,7 +660,9 @@
          */
         var _raise = function (Exception, message, vars) {
             //default Exception to Error
-            xs.isFunction(Exception) || (Exception = Error);
+            if (!xs.isFunction(Exception)) {
+                Exception = Error;
+            }
 
             //throw Exception
             if (xs.isObject(vars)) {
@@ -573,6 +671,6 @@
                 throw new Exception(message);
             }
         };
-    });
+    };
 
 })(window, 'xs');

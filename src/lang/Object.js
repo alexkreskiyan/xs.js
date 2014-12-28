@@ -26,7 +26,7 @@
      *
      * @singleton
      */
-    var object = xs.Object = new (function () {
+    var object = xs.Object = new function () {
         var me = this;
 
         // Create quick reference variables for speed access to core prototypes.
@@ -81,7 +81,7 @@
             }
         };
 
-    });
+    };
 
     //extend xs with object
     object.extend(xs, object);

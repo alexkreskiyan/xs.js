@@ -10,6 +10,8 @@
  */
 module('xs.lang.String', function () {
 
+    'use strict';
+
     test('translate', function () {
         var me = this;
         //get translated version

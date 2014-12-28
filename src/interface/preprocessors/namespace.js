@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -38,7 +40,7 @@
             }
 
             //if name starts from namespace - resolve it
-            if (path.substring(0, 3) == 'ns.') {
+            if (path.substring(0, 3) === 'ns.') {
 
                 return namespace + path.substring(2);
             }

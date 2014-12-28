@@ -18,6 +18,9 @@
  * @class xs.class.Base
  */
 xs.define(xs.Class, 'xs.class.Base', function () {
+
+    'use strict';
+
     var me = this;
 
     /**

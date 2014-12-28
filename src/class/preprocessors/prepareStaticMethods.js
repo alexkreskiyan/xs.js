@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -57,7 +59,11 @@
 
         //add all own
         own.each(function (value, name) {
-            methods.hasKey(name) ? methods.set(name, value) : methods.add(name, value);
+            if (methods.hasKey(name)) {
+                methods.set(name, value);
+            } else {
+                methods.add(name, value);
+            }
         });
     });
 

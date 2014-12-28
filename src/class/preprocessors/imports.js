@@ -10,6 +10,8 @@
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
@@ -30,9 +32,9 @@
 
         //init
         //init requires list
-        var requires = new xs.core.Collection;
+        var requires = new xs.core.Collection();
         //init imports list
-        var imports = new xs.core.Collection;
+        var imports = new xs.core.Collection();
 
 
         //process imports list
@@ -45,10 +47,12 @@
             //if imported is string - it's simply className without alias, added only to loads list
             if (xs.isString(imported)) {
                 name = resolveName(imported);
-                requires.has(name) || requires.add(name);
+                if (!requires.has(name)) {
+                    requires.add(name);
+                }
 
                 //or imported my be used class - then it is specified as object
-            } else if (xs.isObject(imported) && Object.keys(imported).length == 1) {
+            } else if (xs.isObject(imported) && Object.keys(imported).length === 1) {
 
                 //get name and alias
                 var alias = Object.keys(imported)[0];
@@ -61,7 +65,11 @@
                     $alias: alias
                 });
                 name = resolveName(name);
-                requires.has(name) || requires.add(name);
+
+                if (!requires.has(name)) {
+                    requires.add(name);
+                }
+
                 imports.add(name, alias);
 
                 //otherwise - incorrect imported value
