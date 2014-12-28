@@ -30,6 +30,16 @@ module('xs.assert', function () {
         xs.assert.ok(1 < 2);
     });
 
+    test('not', function () {
+        //incorrect throws
+        throws(function () {
+            xs.assert.not(1 === 1);
+        });
+
+        //correct is silent
+        xs.assert.not(1 == 2);
+    });
+
     test('object', function () {
         //incorrect throws
         throws(function () {

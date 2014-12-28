@@ -48,9 +48,9 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            if (!xs.isString(name) || !name) {
-                throw new StaticPropertyError('[' + Class.label + ']: incorrect static property name');
-            }
+            xs.assert.ok(name && xs.isString(name), PrepareStaticPropertiesError, '[$Class]: incorrect static property name', {
+                $Class: Class.label
+            });
 
             list.set(name, xs.Attribute.property.prepare(name, value));
         });
@@ -68,11 +68,11 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class StaticPropertyError
+     * @class PrepareStaticPropertiesError
      */
-    function StaticPropertyError(message) {
+    function PrepareStaticPropertiesError(message) {
         this.message = 'xs.class.preprocessors.staticProperties::' + message;
     }
 
-    StaticPropertyError.prototype = new Error();
+    PrepareStaticPropertiesError.prototype = new Error();
 })(window, 'xs');

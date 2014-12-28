@@ -42,22 +42,26 @@
             extended = Interface.descriptor.resolveName(extended);
         }
 
-        //if parent is not defined or is processing - throw errors
-        if (!xs.ContractsManager.has(extended)) {
-            throw new ProcessExtendsError('[' + Interface.label + ']: parent interface "' + extended + '" is not defined. Move it to imports section, please');
-        }
+        //assert, that parent is defined
+        xs.assert.ok(xs.ContractsManager.has(extended), ProcessExtendsError, '[$Interface]: parent interface "$extended" is not defined. Move it to imports section, please', {
+            $Interface: Interface.label,
+            $extended: extended
+        });
 
         //get parent reference
         var Parent = xs.ContractsManager.get(extended);
 
-        //check that contractor is same
-        if (Parent.contractor != Interface.contractor) {
-            throw new ProcessExtendsError('[' + Interface.label + ']: parent interface "' + Parent.label + '" has different contractor: "' + Parent.contractor.label + '"');
-        }
+        //check that parent is interface
+        xs.assert.Interface(Parent, ProcessExtendsError, '[$Interface]: contract "$Parent" is not Interface', {
+            $Interface: Interface.label,
+            $Parent: Parent.label
+        });
 
-        if (Parent.isProcessing) {
-            throw new ProcessExtendsError('[' + Interface.label + ']: parent interface "' + Parent.label + '" is not processed yet. Move it to imports section, please');
-        }
+        //check that interface is ready
+        xs.assert.not(Parent.isProcessing, ProcessExtendsError, '[$Interface]: parent interface "$Parent" is not processed yet. Move it to imports section, please', {
+            $Interface: Interface.label,
+            $Parent: Parent.label
+        });
 
         xs.log('xs.interface.preprocessors.extends[', Interface.label, ']. Extending', Parent.label);
         //apply extends

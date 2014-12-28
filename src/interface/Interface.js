@@ -77,9 +77,7 @@
         var Contractor = function (Descriptor, createdFn) {
 
             //Descriptor must be function
-            if (!xs.isFunction(Descriptor)) {
-                throw new InterfaceError('descriptor must be evaluated function');
-            }
+            xs.assert.fn(Descriptor, InterfaceError, 'descriptor must be evaluated function');
 
             xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
 

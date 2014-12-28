@@ -27,10 +27,6 @@
     }, function (Class, descriptor) {
 
         xs.log('xs.class.preprocessors.prepareMethods[', Class.label, ']');
-        //if methods are specified not as object - throw respective error
-        if (!xs.isObject(descriptor.properties)) {
-            throw new MethodError('[' + Class.label + ']: incorrect methods list');
-        }
 
         //init methods reference
         var methods = Class.descriptor.methods;
@@ -52,9 +48,9 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            if (!xs.isString(name) || !name) {
-                throw new MethodError('[' + Class.label + ']: incorrect method name');
-            }
+            xs.assert.ok(name && xs.isString(name), PrepareMethodsError, '[$Class]: incorrect method name', {
+                $Class: Class.label
+            });
 
             list.set(name, xs.Attribute.method.prepare(name, value));
         });
@@ -72,11 +68,11 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class MethodError
+     * @class PrepareMethodsError
      */
-    function MethodError(message) {
+    function PrepareMethodsError(message) {
         this.message = 'xs.class.preprocessors.methods::' + message;
     }
 
-    MethodError.prototype = new Error();
+    PrepareMethodsError.prototype = new Error();
 })(window, 'xs');

@@ -48,9 +48,9 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            if (!xs.isString(name) || !name) {
-                throw new StaticPropertyError('[' + Interface.label + ']: incorrect static property name');
-            }
+            xs.assert.ok(name && xs.isString(name), PrepareStaticPropertiesError, '[$Interface]: incorrect static property name', {
+                $Interface: Interface.label
+            });
 
             //save descriptor basics
             var property = xs.Attribute.property.prepare(name, value);
@@ -81,11 +81,11 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class StaticPropertyError
+     * @class PrepareStaticPropertiesError
      */
-    function StaticPropertyError(message) {
+    function PrepareStaticPropertiesError(message) {
         this.message = 'xs.interface.preprocessors.staticProperties::' + message;
     }
 
-    StaticPropertyError.prototype = new Error();
+    PrepareStaticPropertiesError.prototype = new Error();
 })(window, 'xs');

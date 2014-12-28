@@ -48,9 +48,9 @@
 
         //verify own constants
         own.each(function (value, name) {
-            if (!xs.isString(name) || !name) {
-                throw new ConstError('[' + Class.label + ']: incorrect constant name');
-            }
+            xs.assert.ok(name && xs.isString(name), PrepareConstantsError, '[$Class]: incorrect constant name', {
+                $Class: Class.label
+            });
         });
 
         //add all own
@@ -66,11 +66,11 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class ConstError
+     * @class PrepareConstantsError
      */
-    function ConstError(message) {
+    function PrepareConstantsError(message) {
         this.message = 'xs.class.preprocessors.constants::' + message;
     }
 
-    ConstError.prototype = new Error();
+    PrepareConstantsError.prototype = new Error();
 })(window, 'xs');

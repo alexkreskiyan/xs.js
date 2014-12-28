@@ -76,6 +76,27 @@
         };
 
         /**
+         * Verifies, that given expression if false-like
+         *
+         * For example:
+         *
+         *     xs.assert.not(1==2);
+         *
+         * @method not
+         *
+         * @param {Boolean} expression evaluated expression value
+         * @param {Function} Exception error class
+         * @param {String} message error message
+         * @param {Object} [vars] error optional vars
+         */
+        me.not = function (expression, Exception, message, vars) {
+            message || (message = 'Expression "' + expression + '" succeed');
+
+            //assert
+            expression && _raise(Exception, message, vars);
+        };
+
+        /**
          * Verifies, that given value is object
          *
          * For example:

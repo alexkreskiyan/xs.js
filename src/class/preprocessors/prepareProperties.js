@@ -49,9 +49,9 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            if (!xs.isString(name) || !name) {
-                throw new PropertyError('[' + Class.label + ']: incorrect property name');
-            }
+            xs.assert.ok(name && xs.isString(name), PreparePropertiesError, '[$Class]: incorrect property name', {
+                $Class: Class.label
+            });
 
             list.set(name, xs.Attribute.property.prepare(name, value));
         });
@@ -69,11 +69,11 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class PropertyError
+     * @class PreparePropertiesError
      */
-    function PropertyError(message) {
+    function PreparePropertiesError(message) {
         this.message = 'xs.class.preprocessors.properties::' + message;
     }
 
-    PropertyError.prototype = new Error();
+    PreparePropertiesError.prototype = new Error();
 })(window, 'xs');

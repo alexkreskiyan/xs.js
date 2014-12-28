@@ -27,10 +27,6 @@
     }, function (Interface, descriptor) {
 
         xs.log('xs.interface.preprocessors.prepareMethods[', Interface.label, ']');
-        //if methods are specified not as object - throw respective error
-        if (!xs.isObject(descriptor.properties)) {
-            throw new MethodError('[' + Interface.label + ']: incorrect methods list');
-        }
 
         //init methods reference
         var methods = Interface.descriptor.methods;
@@ -52,9 +48,9 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            if (!xs.isString(name) || !name) {
-                throw new MethodError('[' + Interface.label + ']: incorrect method name');
-            }
+            xs.assert.ok(name && xs.isString(name), PrepareMethodsError, '[$Interface]: incorrect method name', {
+                $Interface: Interface.label
+            });
 
             //save descriptor basics
             var method = xs.Attribute.method.prepare(name, value);
@@ -76,11 +72,11 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class MethodError
+     * @class PrepareMethodsError
      */
-    function MethodError(message) {
+    function PrepareMethodsError(message) {
         this.message = 'xs.interface.preprocessors.methods::' + message;
     }
 
-    MethodError.prototype = new Error();
+    PrepareMethodsError.prototype = new Error();
 })(window, 'xs');

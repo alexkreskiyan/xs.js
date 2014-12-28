@@ -37,9 +37,10 @@
          * - non-interface given
          */
         xs.constant(Class, 'implements', function (Interface) {
-            if (!xs.isFunction(Interface) || Interface.contractor != xs.Interface) {
-                throw new ProcessImplementsError('[' + Class.label + ']: implements - given non-interface value "' + Interface + '"');
-            }
+            xs.assert.Interface(Interface, ProcessImplementsError, '[$Class]: given "$Interface" is not interface', {
+                $Class: Class.label,
+                $Interface: Interface
+            });
 
             return this.descriptor.implements.has(Interface.label);
         });
@@ -64,24 +65,26 @@
             name = resolveName(name);
             list.set(index, name);
 
-            //if Interface is not defined - throw error
-            if (!xs.ContractsManager.has(name)) {
-                throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + name + '" is not defined');
-            }
+            //assert, that interface is defined
+            xs.assert.ok(xs.ContractsManager.has(name), ProcessImplementsError, '[$Class]: implemented interface "$name" is not defined. Move it to imports section, please', {
+                $Class: Class.label,
+                $name: name
+            });
 
             //get Interface reference
             var Interface = xs.ContractsManager.get(name);
 
             //check that contractor is xs.Interface
-            if (Interface.contractor != xs.Interface) {
-                throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" has different contractor: "' + Interface.contractor.label + '"');
-            }
+            xs.assert.Interface(Interface, ProcessImplementsError, '[$Class]: given "$Interface" is not interface', {
+                $Class: Class.label,
+                $Interface: Interface.label
+            });
 
-            //if Interface is processing = throw error
-            if (Interface.isProcessing) {
-                throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" is not processed yet. Move it to imports section, please');
-            }
-
+            //check that interface is ready
+            xs.assert.not(Interface.isProcessing, ProcessImplementsError, '[$Class]: implemented interface "$Interface" is not processed yet. Move it to imports section, please', {
+                $Class: Class.label,
+                $Interface: Interface.label
+            });
         });
 
         //add all inherited
@@ -129,96 +132,130 @@
         var descriptor = Class.descriptor;
         //verify constants
         Interface.descriptor.constants.each(function (name) {
-            //throw error if constant is not declared
-            if (!descriptor.constants.hasKey(name)) {
-                throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires constant "' + name + '", but it is not declared');
-            }
+            //assert, that constant is declared
+            xs.assert.ok(descriptor.constants.hasKey(name), ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires constant "$name", but it is not declared', {
+                $Class: Class.label,
+                $Interface: Class.label,
+                $name: name
+            });
         });
 
         //static properties
         Interface.descriptor.static.properties.each(function (config, name) {
-            //throw error if static property is not declared
-            if (!descriptor.static.properties.hasKey(name)) {
-                throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires static property "' + name + '", but it is not declared');
-            }
+            //assert, that static property is declared
+            xs.assert.ok(descriptor.static.properties.hasKey(name), ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires static property "$name", but it is not declared', {
+                $Class: Class.label,
+                $Interface: Class.label,
+                $name: name
+            });
 
-            //throw error if static property type is not compatible with required
+            //assert, that static property type is compatible with required
             var property = descriptor.static.properties.at(name);
 
             if (config.isAccessed) {
-                //if property is assigned - it's error
-                if (property.hasOwnProperty('value')) {
-                    throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires static property "' + name + '" to be accessed property, but it is declared as assigned one');
-                }
+                //assert, that static property is accessed
+                xs.assert.not(property.hasOwnProperty('value'), ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires static property "$name" to be accessed property, but it is declared as assigned one', {
+                    $Class: Class.label,
+                    $Interface: Class.label,
+                    $name: name
+                });
 
-                //if property is required to be readonly, but is not - it's error
-                if (config.isReadonly && property.set !== xs.emptyFn) {
-                    throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires static property "' + name + '" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly');
-                }
+                //assert, that static property is readonly, if needed
+                config.isReadonly && xs.assert.equal(property.set, xs.emptyFn, ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires static property "$name" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
+                    $Class: Class.label,
+                    $Interface: Class.label,
+                    $name: name
+                });
             } else {
-                //if property is accessed - it's error
-                if (property.hasOwnProperty('get')) {
-                    throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires static property "' + name + '" to be assigned property, but it is declared as accessed one');
-                }
+                //assert, that static property is assigned
+                xs.assert.ok(property.hasOwnProperty('value'), ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires static property "$name" to be assigned property, but it is declared as accessed one', {
+                    $Class: Class.label,
+                    $Interface: Class.label,
+                    $name: name
+                });
             }
         });
 
         //static methods
         Interface.descriptor.static.methods.each(function (config, name) {
-            //throw error if static method is not declared
-            if (!descriptor.static.methods.hasKey(name)) {
-                throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires static method "' + name + '", but it is not declared');
-            }
+            //assert, that static method is declared
+            xs.assert.ok(descriptor.static.methods.hasKey(name), ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires static method "$name", but it is not declared', {
+                $Class: Class.label,
+                $Interface: Class.label,
+                $name: name
+            });
 
-            //throw error if static method arguments are not compatible with required
-            var arguments = xs.Function.getArguments(descriptor.static.methods.at(name).value);
+            //assert, that static method arguments are compatible with required
+            var requiredArguments = config.arguments.toString();
+            var declaredArguments = xs.Function.getArguments(descriptor.static.methods.at(name).value).toString();
 
-            if (arguments.toString() != config.arguments.toString()) {
-                throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires static method "' + name + '" to have arguments list: ' + config.arguments.toString() + ', but declared function has list: ' + arguments.toString());
-            }
+            //assert, that arguments' lists are equal
+            xs.assert.equal(declaredArguments, requiredArguments, ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires static method "$name" to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
+                $Class: Class.label,
+                $Interface: Class.label,
+                $name: name,
+                $requiredArguments: requiredArguments,
+                $declaredArguments: declaredArguments
+            });
         });
 
         //properties
         Interface.descriptor.properties.each(function (config, name) {
-            //throw error if property is not declared
-            if (!descriptor.properties.hasKey(name)) {
-                throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires property "' + name + '", but it is not declared');
-            }
+            //assert, that static property is declared
+            xs.assert.ok(descriptor.properties.hasKey(name), ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires property "$name", but it is not declared', {
+                $Class: Class.label,
+                $Interface: Class.label,
+                $name: name
+            });
 
-            //throw error if property type is not compatible with required
+            //assert, that property type is compatible with required
             var property = descriptor.properties.at(name);
 
             if (config.isAccessed) {
-                //if property is assigned - it's error
-                if (property.hasOwnProperty('value')) {
-                    throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires property "' + name + '" to be accessed property, but it is declared as assigned one');
-                }
+                //assert, that property is accessed
+                xs.assert.not(property.hasOwnProperty('value'), ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires property "$name" to be accessed property, but it is declared as assigned one', {
+                    $Class: Class.label,
+                    $Interface: Class.label,
+                    $name: name
+                });
 
-                //if property is required to be readonly, but is not - it's error
-                if (config.isReadonly && property.get !== xs.emptyFn) {
-                    throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires property "' + name + '" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly');
-                }
+                //assert, that property is readonly, if needed
+                config.isReadonly && xs.assert.equal(property.set, xs.emptyFn, ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires property "$name" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
+                    $Class: Class.label,
+                    $Interface: Class.label,
+                    $name: name
+                });
             } else {
-                //if property is accessed - it's error
-                if (property.hasOwnProperty('get')) {
-                    throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires property "' + name + '" to be assigned property, but it is declared as accessed one');
-                }
+                //assert, that property is assigned
+                xs.assert.ok(property.hasOwnProperty('value'), ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires property "$name" to be assigned property, but it is declared as accessed one', {
+                    $Class: Class.label,
+                    $Interface: Class.label,
+                    $name: name
+                });
             }
         });
 
         //methods
         Interface.descriptor.methods.each(function (config, name) {
-            //throw error if method is not declared
-            if (!descriptor.methods.hasKey(name)) {
-                throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires method "' + name + '", but it is not declared');
-            }
+            //assert, that method is declared
+            xs.assert.ok(descriptor.methods.hasKey(name), ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires method "$name", but it is not declared', {
+                $Class: Class.label,
+                $Interface: Class.label,
+                $name: name
+            });
 
-            //throw error if method arguments are not compatible with required
-            var arguments = xs.Function.getArguments(descriptor.methods.at(name).value);
+            //assert, that method arguments are compatible with required
+            var requiredArguments = config.arguments.toString();
+            var declaredArguments = xs.Function.getArguments(descriptor.methods.at(name).value).toString();
 
-            if (arguments.toString() != config.arguments.toString()) {
-                throw new ProcessImplementsError('[' + Class.label + ']: implemented interface "' + Interface.label + '" requires method "' + name + '" to have arguments list: ' + config.arguments.toString() + ', but declared function has list: ' + arguments.toString());
-            }
+            //assert, that arguments' lists are equal
+            xs.assert.equal(declaredArguments, requiredArguments, ProcessImplementsError, '[$Class]: implemented interface "$Interface" requires method "$name" to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
+                $Class: Class.label,
+                $Interface: Class.label,
+                $name: name,
+                $requiredArguments: requiredArguments,
+                $declaredArguments: declaredArguments
+            });
         });
     };
 

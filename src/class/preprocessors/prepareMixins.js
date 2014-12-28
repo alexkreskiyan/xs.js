@@ -41,14 +41,14 @@
         xs.log('xs.class.preprocessors.prepareMixins[', Class.label, ']. Mixins:', mixins.toSource());
         mixins.each(function (name, alias) {
             //verify mixed class name
-            if (!xs.isString(name) || !name) {
-                throw new PrepareMixinsError('[' + Class.label + ']: incorrect mixed class name');
-            }
+            xs.assert.ok(name && xs.isString(name), PrepareMixinsError, '[$Class]: incorrect mixed class name', {
+                $Class: Class.label
+            });
 
             //verify mixed class alias
-            if (!alias) {
-                throw new PrepareMixinsError('[' + Class.label + ']: incorrect mixed class alias');
-            }
+            xs.assert.ok(alias, PrepareMixinsError, '[$Class]: incorrect mixed class alias', {
+                $Class: Class.label
+            });
 
             imports.add(name);
         });

@@ -55,15 +55,14 @@
                 name = imported[alias];
 
                 //if name is non-empty string - add it to both loads and imports
-                if (xs.isString(name) && name) {
-                    name = resolveName(name);
-                    requires.has(name) || requires.add(name);
-                    imports.add(name, alias);
-
-                    //otherwise - incorrect alias error
-                } else {
-                    throw new ImportsError('[' + Class.label + ']: imported class "' + name + '" has incorrect alias - ' + alias);
-                }
+                xs.assert.ok(xs.isString(name) && name, ImportsError, '[$Class]: imported class "$name" has incorrect alias - $alias', {
+                    $Class: Class.label,
+                    $name: name,
+                    $alias: alias
+                });
+                name = resolveName(name);
+                requires.has(name) || requires.add(name);
+                imports.add(name, alias);
 
                 //otherwise - incorrect imported value
             } else {

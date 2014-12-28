@@ -27,10 +27,6 @@
     }, function (Interface, descriptor) {
 
         xs.log('xs.interface.preprocessors.prepareStaticMethods[', Interface.label, ']');
-        //if static methods are specified not as object - throw respective error
-        if (!xs.isObject(descriptor.static) || !xs.isObject(descriptor.static.methods)) {
-            throw new StaticMethodError('[' + Interface.label + ']: incorrect static methods list');
-        }
 
         //init methods reference
         var methods = Interface.descriptor.static.methods;
@@ -52,9 +48,9 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            if (!xs.isString(name) || !name) {
-                throw new StaticMethodError('[' + Interface.label + ']: incorrect static method name');
-            }
+            xs.assert.ok(name && xs.isString(name), PrepareStaticMethodsError, '[$Interface]: incorrect static method name', {
+                $Interface: Interface.label
+            });
 
             //save descriptor basics
             var method = xs.Attribute.method.prepare(name, value);
@@ -76,11 +72,11 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class StaticMethodError
+     * @class PrepareStaticMethodsError
      */
-    function StaticMethodError(message) {
+    function PrepareStaticMethodsError(message) {
         this.message = 'xs.interface.preprocessors.staticMethods::' + message;
     }
 
-    StaticMethodError.prototype = new Error();
+    PrepareStaticMethodsError.prototype = new Error();
 })(window, 'xs');

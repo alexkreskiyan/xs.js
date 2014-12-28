@@ -49,9 +49,9 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            if (!xs.isString(name) || !name) {
-                throw new PropertyError('[' + Interface.label + ']: incorrect property name');
-            }
+            xs.assert.ok(name && xs.isString(name), PreparePropertiesError, '[$Interface]: incorrect property name', {
+                $Interface: Interface.label
+            });
 
             //save descriptor basics
             var property = xs.Attribute.property.prepare(name, value);
@@ -82,11 +82,11 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class PropertyError
+     * @class PreparePropertiesError
      */
-    function PropertyError(message) {
+    function PreparePropertiesError(message) {
         this.message = 'xs.interface.preprocessors.properties::' + message;
     }
 
-    PropertyError.prototype = new Error();
+    PreparePropertiesError.prototype = new Error();
 })(window, 'xs');

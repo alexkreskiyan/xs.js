@@ -37,9 +37,10 @@
          * - non-class given
          */
         xs.constant(Class, 'mixins', function (Mixin) {
-            if (!xs.isFunction(Mixin) || Mixin.contractor != xs.Class) {
-                throw new ProcessMixinsError('[' + Class.label + ']: mixins - given non-class value "' + Mixin + '"');
-            }
+            xs.assert.Class(Mixin, ProcessMixinsError, '[$Class]: given non-class value "$Mixin"', {
+                $Class: Class.label,
+                $Mixin: Mixin
+            });
 
             var mixins = this.prototype.mixins;
 
@@ -68,23 +69,26 @@
             name = resolveName(name);
             list.set(alias, name);
 
-            //if Mixin is not defined - throw error
-            if (!xs.ContractsManager.has(name)) {
-                throw new ProcessMixinsError('[' + Class.label + ']: parent class "' + name + '" is not defined');
-            }
+            //assert, that mixin is defined
+            xs.assert.ok(xs.ContractsManager.has(name), ProcessMixinsError, '[$Class]: mixed class "$name" is not defined. Move it to imports section, please', {
+                $Class: Class.label,
+                $name: name
+            });
 
             //get Mixin reference
             var Mixin = xs.ContractsManager.get(name);
 
-            //check that contractor is same
-            if (Mixin.contractor != Class.contractor) {
-                throw new ProcessMixinsError('[' + Class.label + ']: mixin class "' + Mixin.label + '" has different contractor: "' + Mixin.contractor.label + '"');
-            }
+            //check that contractor is xs.Class
+            xs.assert.Class(Mixin, ProcessMixinsError, '[$Class]: given "$Mixin" is not class', {
+                $Class: Class.label,
+                $Mixin: Mixin.label
+            });
 
-            //if Mixin is processing = throw error
-            if (Mixin.isProcessing) {
-                throw new ProcessMixinsError('[' + Class.label + ']: mixin class "' + Mixin.label + '" is not processed yet. Move it to imports section, please');
-            }
+            //check that mixin is ready
+            xs.assert.not(Mixin.isProcessing, ProcessMixinsError, '[$Class]: mixed class "$Mixin" is not processed yet. Move it to imports section, please', {
+                $Class: Class.label,
+                $Mixin: Mixin.label
+            });
         });
 
         //add all inherited
