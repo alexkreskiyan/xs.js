@@ -225,6 +225,7 @@
         var _createSample = function () {
 
             return function xInterface() {
+                throw new InterfaceError('Interface must not be called');
             };
         };
 
