@@ -28,6 +28,8 @@
         /**
          * Returns whether Class mixins given Mixin class
          *
+         * @member xs.class.Base
+         *
          * @method mixins
          *
          * @param {Function} Mixin verified mixin class

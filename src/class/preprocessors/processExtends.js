@@ -113,9 +113,26 @@
         //save reference to parent
         xs.constant(child, 'parent', parent);
 
-        //add inherits method
-        xs.constant(child, 'inherits', function (parent) {
-            return this.prototype instanceof parent;
+        /**
+         * Returns whether Class is inherited from given Parent
+         *
+         * @member xs.class.Base
+         *
+         * @method inherits
+         *
+         * @param {Function} Parent verified Parent class
+         *
+         * @return {Boolean} whether given Parent class is parent according to this Class
+         *
+         * @throws {Error} Error is thrown, when:
+         *
+         * - non-class given
+         */
+        xs.constant(child, 'inherits', function (Parent) {
+            //assert, that Parent is class
+            xs.assert.Class(Parent);
+
+            return this.prototype instanceof Parent;
         });
     };
 

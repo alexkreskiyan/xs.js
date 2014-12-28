@@ -28,6 +28,8 @@
         /**
          * Returns whether Class implements given interface
          *
+         * @member xs.class.Base
+         *
          * @method implements
          *
          * @param {Function} Interface verified interface
