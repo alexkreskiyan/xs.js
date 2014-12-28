@@ -30,29 +30,6 @@
         var me = this;
 
         /**
-         * Returns type of passed value.
-         *
-         * @ignore
-         *
-         * @method getType
-         *
-         * @param {*} value given value
-         *
-         * @return {String} value's type
-         */
-        var getType = function (value) {
-            var type = typeof value;
-
-            if (value === null) {
-                type = 'null';
-            } else if (Array.isArray(value)) {
-                type = 'array';
-            }
-
-            return type;
-        };
-
-        /**
          * Returns whether given value is object
          *
          * For example:
@@ -67,8 +44,12 @@
          * @return {Boolean} verification result
          */
         me.isObject = function (value) {
+            if (value === null || Array.isArray(value)) {
 
-            return getType(value) == 'object';
+                return false;
+            }
+
+            return typeof value == 'object';
         };
 
         /**
@@ -239,9 +220,12 @@
          * @return {Boolean} verification result
          */
         me.isIterable = function (value) {
-            var valueType = getType(value);
+            if (value === null) {
 
-            return valueType == 'object' || valueType == 'array';
+                return false;
+            }
+
+            return typeof value == 'object';
         };
 
         /**
@@ -260,9 +244,14 @@
          * @return {Boolean} verification result
          */
         me.isPrimitive = function (value) {
-            var valueType = getType(value);
+            if (value === null) {
 
-            return valueType !== 'object' && valueType !== 'array' && valueType !== 'function';
+                return true;
+            }
+
+            var type = typeof value;
+
+            return type != 'object' && type != 'function';
         };
 
         /**
@@ -282,7 +271,7 @@
          */
         me.isNumeric = function (value) {
 
-            return !isNaN(parseFloat(value)) && isFinite(value) && !Array.isArray(value);
+            return isFinite(value) && !Array.isArray(value) && !isNaN(parseFloat(value));
         };
 
         /**
@@ -329,20 +318,27 @@
          * @return {Boolean} verification result
          */
         me.isEmpty = function (value) {
-            var type = getType(value);
+            if (value == null) {
+
+                return true;
+            }
+
+            if (Array.isArray(value)) {
+
+                return !value.length;
+            }
+
+            var type = typeof value;
 
             if (type == 'object') {
 
                 return !Object.keys(value).length;
-            } else if (type == 'array') {
-
-                return !value.length;
             } else if (type == 'string') {
 
                 return !value.trim();
             } else if (type == 'number') {
 
-                return value == 0;
+                return !value;
             }
 
             return type != 'function' && type != 'boolean';
