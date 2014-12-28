@@ -33,6 +33,49 @@
         var me = this;
 
         /**
+         * Verifies, that two values are equal (===)
+         *
+         * For example:
+         *
+         *     xs.equal(1, '1');
+         *
+         * @method equal
+         *
+         * @param {*} given given value
+         * @param {*} expected given value
+         * @param {Function} Exception error class
+         * @param {String} message error message
+         * @param {Object} [vars] error optional vars
+         */
+        me.equal = function (given, expected, Exception, message, vars) {
+            message || (message = 'Given "' + given + '" is not same to expected "' + expected + '"');
+
+            //assert
+            given === expected || _raise(Exception, message, vars);
+        };
+
+        /**
+         * Verifies, that given expression if true-like
+         *
+         * For example:
+         *
+         *     xs.assert.ok(1==1);
+         *
+         * @method ok
+         *
+         * @param {Boolean} expression evaluated expression value
+         * @param {Function} Exception error class
+         * @param {String} message error message
+         * @param {Object} [vars] error optional vars
+         */
+        me.ok = function (expression, Exception, message, vars) {
+            message || (message = 'Expression "' + expression + '" failed');
+
+            //assert
+            expression || _raise(Exception, message, vars);
+        };
+
+        /**
          * Verifies, that given value is object
          *
          * For example:
@@ -47,7 +90,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.object = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not object');
+            message || (message = '"' + value + '" is not object');
 
             //assert
             xs.isObject(value) || _raise(Exception, message, vars);
@@ -68,7 +111,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.array = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not array');
+            message || (message = '"' + value + '" is not array');
 
             //assert
             xs.isArray(value) || _raise(Exception, message, vars);
@@ -89,7 +132,7 @@
          * @param {Object} [vars] error optional vars
          */
         var _fn = me.fn = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not function');
+            message || (message = '"' + value + '" is not function');
 
             //assert
             xs.isFunction(value) || _raise(Exception, message, vars);
@@ -110,7 +153,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.string = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not string');
+            message || (message = '"' + value + '" is not string');
 
             //assert
             xs.isString(value) || _raise(Exception, message, vars);
@@ -131,7 +174,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.number = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not number');
+            message || (message = '"' + value + '" is not number');
 
             //assert
             xs.isNumber(value) || _raise(Exception, message, vars);
@@ -152,7 +195,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.boolean = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not boolean');
+            message || (message = '"' + value + '" is not boolean');
 
             //assert
             xs.isBoolean(value) || _raise(Exception, message, vars);
@@ -173,7 +216,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.regExp = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not regular expression');
+            message || (message = '"' + value + '" is not regular expression');
 
             //assert
             xs.isRegExp(value) || _raise(Exception, message, vars);
@@ -194,7 +237,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.error = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not error object');
+            message || (message = '"' + value + '" is not error object');
 
             //assert
             xs.isError(value) || _raise(Exception, message, vars);
@@ -215,7 +258,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.null = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not null');
+            message || (message = '"' + value + '" is not null');
 
             //assert
             xs.isNull(value) || _raise(Exception, message, vars);
@@ -236,7 +279,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.iterable = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not iterable');
+            message || (message = '"' + value + '" is not iterable');
 
             //assert
             xs.isIterable(value) || _raise(Exception, message, vars);
@@ -257,7 +300,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.primitive = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not primitive');
+            message || (message = '"' + value + '" is not primitive');
 
             //assert
             xs.isPrimitive(value) || _raise(Exception, message, vars);
@@ -278,7 +321,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.numeric = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not numeric');
+            message || (message = '"' + value + '" is not numeric');
 
             //assert
             xs.isNumeric(value) || _raise(Exception, message, vars);
@@ -299,7 +342,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.defined = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not defined');
+            message || (message = '"' + value + '" is not defined');
 
             //assert
             xs.isDefined(value) || _raise(Exception, message, vars);
@@ -320,7 +363,7 @@
          * @param {Object} [vars] error optional vars
          */
         me.empty = function (value, Exception, message, vars) {
-            xs.isString(message) || (message = '"' + value + '" is not empty');
+            message || (message = '"' + value + '" is not empty');
 
             //assert
             xs.isEmpty(value) || _raise(Exception, message, vars);
@@ -344,7 +387,7 @@
             //assert, that fn is function
             _fn(fn);
 
-            xs.isString(message) || (message = '"' + fn + '" is not Class');
+            message || (message = '"' + fn + '" is not Class');
 
             //assert
             (fn.contractor == xs.Class) || _raise(Exception, message, vars);
@@ -368,7 +411,7 @@
             //assert, that fn is function
             _fn(fn);
 
-            xs.isString(message) || (message = '"' + fn + '" is not Class');
+            message || (message = '"' + fn + '" is not Interface');
 
             //assert
             (fn.contractor == xs.Interface) || _raise(Exception, message, vars);
@@ -393,7 +436,7 @@
             //assert, that Class is function
             _fn(Class);
 
-            xs.isString(message) || (message = '"' + value + '" is not instance of "' + Class.label ? Class.label : Class.name + '"');
+            message || (message = '"' + value + '" is not instance of "' + (Class.label ? Class.label : Class.name) + '"');
 
             //assert
             (value instanceof Class) || _raise(Exception, message, vars);
@@ -421,7 +464,7 @@
             //assert that Parent is class
             _class(Parent);
 
-            xs.isString(message) || (message = '"' + Child.label + '" does not inherit from "' + Parent.label + '"');
+            message || (message = '"' + Child.label + '" does not inherit from "' + Parent.label + '"');
 
             //assert
             Child.inherits(Parent) || _raise(Exception, message, vars);
@@ -449,7 +492,7 @@
             //assert that Interface is interface
             _interface(Interface);
 
-            xs.isString(message) || (message = 'Class "' + Class.label + '" does not implement interface "' + Interface.label + '"');
+            message || (message = 'Class "' + Class.label + '" does not implement interface "' + Interface.label + '"');
 
             //assert
             Class.implements(Interface) || _raise(Exception, message, vars);
@@ -472,58 +515,15 @@
          */
         me.mixins = function (Class, Mixin, Exception, message, vars) {
             //assert that Child is class
-            _class(Child);
+            _class(Class);
 
             //assert that Mixin is class
             _class(Mixin);
 
-            xs.isString(message) || (message = 'Class "' + Class.label + '" is not mixed with class "' + Mixin.label + '"');
+            message || (message = 'Class "' + Class.label + '" is not mixed with class "' + Mixin.label + '"');
 
             //assert
             Class.mixins(Mixin) || _raise(Exception, message, vars);
-        };
-
-        /**
-         * Verifies, that two values are equal (===)
-         *
-         * For example:
-         *
-         *     xs.equal(1, '1');
-         *
-         * @method equal
-         *
-         * @param {*} given given value
-         * @param {*} expected given value
-         * @param {Function} Exception error class
-         * @param {String} message error message
-         * @param {Object} [vars] error optional vars
-         */
-        me.equal = function (given, expected, Exception, message, vars) {
-            xs.isString(message) || (message = 'Given "' + given + '" is not same to expected "' + expected + '"');
-
-            //assert
-            given === expected || _raise(Exception, message, vars);
-        };
-
-        /**
-         * Verifies, that given expression if true-like
-         *
-         * For example:
-         *
-         *     xs.assert.ok(1==1);
-         *
-         * @method ok
-         *
-         * @param {Boolean} expression evaluated expression value
-         * @param {Function} Exception error class
-         * @param {String} message error message
-         * @param {Object} [vars] error optional vars
-         */
-        me.ok = function (expression, Exception, message, vars) {
-            xs.isString(message) || (message = 'Expression "' + expression + '" failed');
-
-            //assert
-            expression || _raise(Exception, message, vars);
         };
 
         /**
