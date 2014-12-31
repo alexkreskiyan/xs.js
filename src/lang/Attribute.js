@@ -48,6 +48,8 @@
          * @return {Boolean} verification result
          */
         me.defined = function (object, name) {
+            xs.assert.string(name);
+
             return object.hasOwnProperty(name);
         };
 
@@ -69,29 +71,17 @@
          *     //    a: 5
          *     //}
          *
-         *     xs.Attribute.define(x, {
-         *         a: {value: 1},
-         *         b: {value: 2}
-         *     });
-         *     console.log(x);
-         *     //outputs:
-         *     //{
-         *     //    a: 1,
-         *     //    b: 2
-         *     //}
-         *
          * @method define
          *
          * @param {Object} object used object
-         * @param {Object|string} name new property's name of list of new properties
+         * @param {String} name new property's name
          * @param {Object} descriptor descriptor of new property
          */
         me.define = function (object, name, descriptor) {
-            if (descriptor) {
-                Object.defineProperty(object, name, descriptor);
-            } else {
-                Object.defineProperties(object, name);
-            }
+            xs.assert.string(name);
+            xs.assert.object(descriptor);
+
+            Object.defineProperty(object, name, descriptor);
         };
 
         /**
@@ -109,6 +99,9 @@
          * @return {Object} property descriptor
          */
         me.getDescriptor = function (object, name) {
+            xs.assert.string(name);
+            xs.assert.ok(object.hasOwnProperty(name));
+
             return Object.getOwnPropertyDescriptor(object, name);
         };
 
@@ -131,8 +124,10 @@
          * @return {Boolean} whether property is assigned
          */
         me.isAssigned = function (object, name) {
-            var descriptor = Object.getOwnPropertyDescriptor(object, name);
-            return !!descriptor && descriptor.hasOwnProperty('value');
+            xs.assert.string(name);
+            xs.assert.ok(object.hasOwnProperty(name));
+
+            return Object.getOwnPropertyDescriptor(object, name).hasOwnProperty('value');
         };
 
         /**
@@ -154,8 +149,10 @@
          * @return {Boolean} whether property is accessed
          */
         me.isAccessed = function (object, name) {
-            var descriptor = Object.getOwnPropertyDescriptor(object, name);
-            return !!descriptor && (descriptor.hasOwnProperty('get') || descriptor.hasOwnProperty('set'));
+            xs.assert.string(name);
+            xs.assert.ok(object.hasOwnProperty(name));
+
+            return Object.getOwnPropertyDescriptor(object, name).hasOwnProperty('get');
         };
 
         /**
@@ -177,8 +174,10 @@
          * @return {Boolean} whether property is writable
          */
         me.isWritable = function (object, name) {
-            var descriptor = Object.getOwnPropertyDescriptor(object, name);
-            return !!descriptor && !!descriptor.writable;
+            xs.assert.string(name);
+            xs.assert.ok(object.hasOwnProperty(name));
+
+            return Boolean(Object.getOwnPropertyDescriptor(object, name).writable);
         };
 
         /**
@@ -200,8 +199,10 @@
          * @return {Boolean} whether property is configurable
          */
         var _isConfigurable = me.isConfigurable = function (object, name) {
-            var descriptor = Object.getOwnPropertyDescriptor(object, name);
-            return !!descriptor && !!descriptor.configurable;
+            xs.assert.string(name);
+            xs.assert.ok(object.hasOwnProperty(name));
+
+            return Boolean(Object.getOwnPropertyDescriptor(object, name).configurable);
         };
 
         /**
@@ -223,8 +224,10 @@
          * @return {Boolean} whether property is enumerable
          */
         me.isEnumerable = function (object, name) {
-            var descriptor = Object.getOwnPropertyDescriptor(object, name);
-            return !!descriptor && !!descriptor.enumerable;
+            xs.assert.string(name);
+            xs.assert.ok(object.hasOwnProperty(name));
+
+            return Boolean(Object.getOwnPropertyDescriptor(object, name).enumerable);
         };
 
         /**
@@ -244,47 +247,12 @@
         var _isDescriptor = me.isDescriptor = function (descriptor) {
             //false if descriptor is not object
             if (!xs.isObject(descriptor)) {
+
                 return false;
             }
 
             //if any descriptor fields specified - it is descriptor
             return descriptor.hasOwnProperty('get') || descriptor.hasOwnProperty('set') || descriptor.hasOwnProperty('value') || descriptor.hasOwnProperty('writable') || descriptor.hasOwnProperty('configurable') || descriptor.hasOwnProperty('enumerable');
-        };
-
-        /**
-         * Defines constant
-         *
-         * For example:
-         *
-         *     var x = {};
-         *     console.log(xs.Attribute.constant(x, 'a', 5)); //true
-         *     console.log(xs.Attribute.constant(x, 'a', 5)); //false
-         *     console.log(xs.Attribute.isAssigned(x, 'a')); //true
-         *     console.log(xs.Attribute.isAccessed(x, 'a')); //false
-         *     console.log(xs.Attribute.isWritable(x, 'a')); //false
-         *     console.log(xs.Attribute.isConfigurable(x, 'a')); //false
-         *     console.log(xs.Attribute.isEnumerable(x, 'a')); //true
-         *
-         * @method constant
-         *
-         * @param {Object} object used object
-         * @param {String} name constant name
-         * @param {*} value constant value
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - constant with given name is already defined
-         */
-        me.constant = function (object, name, value) {
-            if (object.hasOwnProperty(name) && !_isConfigurable(object, name)) {
-                throw new AttributeError('constant "' + name + '" is already defined');
-            }
-            Object.defineProperty(object, name, {
-                value: value,
-                writable: false,
-                enumerable: true,
-                configurable: false
-            });
         };
 
         /**
@@ -331,7 +299,11 @@
          * @return {Object} corrected descriptor copy
          */
         var _prepareDescriptor = me.prepareDescriptor = function (descriptor) {
+            xs.assert.object(descriptor);
+
+            //clone descriptor
             descriptor = xs.clone(descriptor);
+
             //non-function get|set are removed
             if (descriptor.hasOwnProperty('get') && !xs.isFunction(descriptor.get)) {
                 delete descriptor.get;
@@ -362,11 +334,50 @@
         };
 
         /**
-         * @class xs.lang.Attribute.property
-         * @singleton
+         * Defines constant
+         *
+         * For example:
+         *
+         *     var x = {};
+         *     console.log(xs.Attribute.constant(x, 'a', 5)); //true
+         *     console.log(xs.Attribute.constant(x, 'a', 5)); //false
+         *     console.log(xs.Attribute.isAssigned(x, 'a')); //true
+         *     console.log(xs.Attribute.isAccessed(x, 'a')); //false
+         *     console.log(xs.Attribute.isWritable(x, 'a')); //false
+         *     console.log(xs.Attribute.isConfigurable(x, 'a')); //false
+         *     console.log(xs.Attribute.isEnumerable(x, 'a')); //true
+         *
+         * @method constant
+         *
+         * @param {Object} object used object
+         * @param {String} name constant name
+         * @param {*} value constant value
+         */
+        me.constant = function (object, name, value) {
+            xs.assert.string(name);
+            //assert, that object has no constant "name", or it is defined, but is configurable
+            xs.assert.ok(!object.hasOwnProperty(name) || _isConfigurable(object, name), AttributeError, 'constant "$name" is already defined', {
+                $name: name
+            });
+
+            Object.defineProperty(object, name, {
+                value: value,
+                writable: false,
+                enumerable: true,
+                configurable: false
+            });
+        };
+
+        /**
+         * Contains methods to prepare and define properties
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
          * @private
          *
-         * Contains methods to prepare and define properties
+         * @class xs.lang.Attribute.property
+         *
+         * @singleton
          */
         me.property = new function () {
             var me = this;
@@ -405,6 +416,8 @@
              * @return {Object} prepared descriptor
              */
             me.prepare = function (name, descriptor) {
+                xs.assert.string(name);
+
                 //if not descriptor - returns generated one
                 if (!_isDescriptor(descriptor)) {
 
@@ -473,21 +486,20 @@
              * @param {Object} object used object
              * @param {String} name defined property name
              * @param {Object} descriptor defined property descriptor
-             *
-             * @throws {Error} Error is thrown, when:
-             *
-             * - property with given name is already defined
              */
             me.define = function (object, name, descriptor) {
-                if (object.hasOwnProperty(name) && !_isConfigurable(object, name)) {
-                    throw new AttributeError('property "' + name + '" is already defined');
-                }
+                xs.assert.string(name);
+                xs.assert.ok(_isDescriptor(descriptor));
+
+                //assert, that object has no property "name", or it is defined, but is configurable
+                xs.assert.ok(!object.hasOwnProperty(name) || _isConfigurable(object, name), AttributeError, 'property "$name" is already defined', {
+                    $name: name
+                });
 
                 //writable, enumerable and configurable are immutable defaults
-                xs.extend(descriptor, {
-                    enumerable: true,
-                    configurable: false
-                });
+                descriptor.enumerable = true;
+                descriptor.configurable = false;
+
                 if (!descriptor.get && !descriptor.set) {
                     descriptor.writable = true;
                 }
@@ -498,14 +510,19 @@
         };
 
         /**
-         * @class xs.lang.Attribute.method
-         * @singleton
+         * Contains methods to prepare and define methods
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
          * @private
          *
-         * Contains methods to prepare and define methods
+         * @class xs.lang.Attribute.method
+         *
+         * @singleton
          */
         me.method = new function () {
             var me = this;
+
             /**
              * Prepares method descriptor
              *
@@ -531,12 +548,15 @@
              * @param {*} descriptor raw descriptor
              *
              * @return {Object} prepared method descriptor
-             *
-             * @throws {Error} Error is thrown, when:
-             *
-             * - method descriptor is incorrect
              */
             me.prepare = function (name, descriptor) {
+                xs.assert.string(name);
+
+                //assert, that descriptor is function, or is object with property "value", that is function
+                xs.assert.ok(xs.isFunction(descriptor) || (xs.isObject(descriptor) && xs.isFunction(descriptor.value)), AttributeError, 'Method "$name" descriptor "$descriptor" is incorrect', {
+                    $name: name,
+                    $descriptor: descriptor
+                });
 
                 //simple function
                 if (xs.isFunction(descriptor)) {
@@ -548,17 +568,14 @@
                         configurable: false
                     };
 
-                    //or complex object descriptor with fn in descriptor.value
-                } else if (!xs.isObject(descriptor) || !xs.isFunction(descriptor.value)) {
-                    throw new AttributeError('Incorrect method descriptor');
                 }
 
                 descriptor = xs.clone(descriptor);
-                xs.extend(descriptor, {
-                    writable: false,
-                    enumerable: true,
-                    configurable: false
-                });
+
+                //complex object descriptor with function in descriptor.value
+                descriptor.writable = false;
+                descriptor.enumerable = true;
+                descriptor.configurable = false;
 
                 return descriptor;
             };
@@ -593,15 +610,17 @@
              * @param {Object} object used object
              * @param {String} name defined method name
              * @param {Object} descriptor defined method descriptor
-             *
-             * @throws {Error} Error is thrown, when:
-             *
-             * - method with given name is already defined
              */
             me.define = function (object, name, descriptor) {
-                if (object.hasOwnProperty(name) && !_isConfigurable(object, name)) {
-                    throw new AttributeError('Method "' + name + '" is already defined');
-                }
+                xs.assert.string(name);
+                xs.assert.ok(_isDescriptor(descriptor));
+                xs.assert.fn(descriptor.value);
+
+                //assert, that object has no method "name", or it is defined, but is configurable
+                xs.assert.ok(!object.hasOwnProperty(name) || _isConfigurable(object, name), AttributeError, 'method "$name" is already defined', {
+                    $name: name
+                });
+
                 Object.defineProperty(object, name, {
                     value: descriptor.value,
                     writable: false,
