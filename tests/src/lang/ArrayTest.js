@@ -13,8 +13,13 @@ module('xs.lang.Array', function () {
     'use strict';
 
     test('shuffle', function () {
+        //non-array throws
+        throws(function () {
+            xs.Array.shuffle(null);
+        });
+        
         //init sample
-        var item = { x: 1 };
+        var item = {x: 1};
 
         //define shuffled array and it's clone
         var x, clone;

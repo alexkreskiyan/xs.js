@@ -45,6 +45,8 @@
          * @param {Array} array shuffled array
          */
         me.shuffle = function (array) {
+            xs.assert.array(array);
+
             array.sort(function () {
                 return Math.random() - 0.5;
             });
