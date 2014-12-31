@@ -47,11 +47,11 @@
          *
          * @param {*} given given value
          * @param {*} expected given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.equal = function (given, expected, Exception, message, vars) {
+        me.equal = function (given, expected, message, vars, Exception) {
             if (!message) {
                 message = 'Given "' + given + '" is not same to expected "' + expected + '"';
             }
@@ -72,13 +72,13 @@
          * @method ok
          *
          * @param {Boolean} expression evaluated expression value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.ok = function (expression, Exception, message, vars) {
+        me.ok = function (expression, message, vars, Exception) {
             if (!message) {
-                message = 'Expression "' + expression + '" failed';
+                message = 'Expression failed';
             }
 
             //assert
@@ -97,13 +97,13 @@
          * @method not
          *
          * @param {Boolean} expression evaluated expression value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.not = function (expression, Exception, message, vars) {
+        me.not = function (expression, message, vars, Exception) {
             if (!message) {
-                message = 'Expression "' + expression + '" succeed';
+                message = 'Expression succeed';
             }
 
             //assert
@@ -122,11 +122,11 @@
          * @method object
          *
          * @param {Object} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.object = function (value, Exception, message, vars) {
+        me.object = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not object';
             }
@@ -147,11 +147,11 @@
          * @method array
          *
          * @param {Array} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.array = function (value, Exception, message, vars) {
+        me.array = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not array';
             }
@@ -172,11 +172,11 @@
          * @method fn
          *
          * @param {Function} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        var _fn = me.fn = function (value, Exception, message, vars) {
+        var _fn = me.fn = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not function';
             }
@@ -197,11 +197,11 @@
          * @method string
          *
          * @param {String} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.string = function (value, Exception, message, vars) {
+        me.string = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not string';
             }
@@ -222,11 +222,11 @@
          * @method number
          *
          * @param {Number} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.number = function (value, Exception, message, vars) {
+        me.number = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not number';
             }
@@ -247,11 +247,11 @@
          * @method boolean
          *
          * @param {Boolean} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.boolean = function (value, Exception, message, vars) {
+        me.boolean = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not boolean';
             }
@@ -272,11 +272,11 @@
          * @method regExp
          *
          * @param {RegExp} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.regExp = function (value, Exception, message, vars) {
+        me.regExp = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not regular expression';
             }
@@ -297,11 +297,11 @@
          * @method error
          *
          * @param {Error} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.error = function (value, Exception, message, vars) {
+        me.error = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not error object';
             }
@@ -322,11 +322,11 @@
          * @method null
          *
          * @param {*} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.null = function (value, Exception, message, vars) {
+        me.null = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not null';
             }
@@ -347,11 +347,11 @@
          * @method iterable
          *
          * @param {*} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.iterable = function (value, Exception, message, vars) {
+        me.iterable = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not iterable';
             }
@@ -372,11 +372,11 @@
          * @method primitive
          *
          * @param {*} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.primitive = function (value, Exception, message, vars) {
+        me.primitive = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not primitive';
             }
@@ -397,11 +397,11 @@
          * @method numeric
          *
          * @param {*} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.numeric = function (value, Exception, message, vars) {
+        me.numeric = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not numeric';
             }
@@ -422,11 +422,11 @@
          * @method defined
          *
          * @param {*} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.defined = function (value, Exception, message, vars) {
+        me.defined = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not defined';
             }
@@ -447,11 +447,11 @@
          * @method empty
          *
          * @param {*} value given value
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.empty = function (value, Exception, message, vars) {
+        me.empty = function (value, message, vars, Exception) {
             if (!message) {
                 message = '"' + value + '" is not empty';
             }
@@ -472,11 +472,11 @@
          * @method Class
          *
          * @param {Function} fn given constructor
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        var _class = me.Class = function (fn, Exception, message, vars) {
+        var _class = me.Class = function (fn, message, vars, Exception) {
             //assert, that fn is function
             _fn(fn);
 
@@ -500,11 +500,11 @@
          * @method Interface
          *
          * @param {Function} fn given constructor
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        var _interface = me.Interface = function (fn, Exception, message, vars) {
+        var _interface = me.Interface = function (fn, message, vars, Exception) {
             //assert, that fn is function
             _fn(fn);
 
@@ -529,11 +529,11 @@
          *
          * @param {*} value given value
          * @param {Function} Class expected constructor
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.instance = function (value, Class, Exception, message, vars) {
+        me.instance = function (value, Class, message, vars, Exception) {
             //assert, that Class is function
             _fn(Class);
 
@@ -558,11 +558,11 @@
          *
          * @param {Function} Child expected Child class
          * @param {Function} Parent expected Parent class
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.inherits = function (Child, Parent, Exception, message, vars) {
+        me.inherits = function (Child, Parent, message, vars, Exception) {
             //assert that Child is class
             _class(Child);
 
@@ -590,11 +590,11 @@
          *
          * @param {Function} Class verified class
          * @param {Function} Interface verified interface
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.implements = function (Class, Interface, Exception, message, vars) {
+        me.implements = function (Class, Interface, message, vars, Exception) {
             //assert that Class is class
             _class(Class);
 
@@ -622,11 +622,11 @@
          *
          * @param {Function} Class verified
          * @param {Function} Mixin expected mixin class
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
          */
-        me.mixins = function (Class, Mixin, Exception, message, vars) {
+        me.mixins = function (Class, Mixin, message, vars, Exception) {
             //assert that Child is class
             _class(Class);
 
@@ -652,13 +652,13 @@
          *
          * @method raise
          *
-         * @param {Function} Exception error class
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
+         * @param {Function} Exception error class
          *
          * @throws {Error}
          */
-        var _raise = function (Exception, message, vars) {
+        var _raise = function (message, vars, Exception) {
             //default Exception to Error
             if (!xs.isFunction(Exception)) {
                 Exception = Error;
