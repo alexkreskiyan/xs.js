@@ -36,13 +36,9 @@
 
         var scripts;
 
-        //release mode
-        if (params.mode === 'release') {
-            scripts = ['/build/release/xs.js'];
-
-            //preview mode
-        } else if (params.mode === 'preview') {
-            scripts = ['/build/preview/xs.js'];
+        //built mode
+        if (params.mode) {
+            scripts = ['/build/' + params.mode + '/xs.js'];
 
             //debug mode
         } else {

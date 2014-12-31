@@ -28,6 +28,34 @@ var paths = {
     scripts: scripts
 };
 
+var pureFunctions = [
+    'xs.log',
+    'xs.assert.equal',
+    'xs.assert.ok',
+    'xs.assert.not',
+    'xs.assert.object',
+    'xs.assert.array',
+    'xs.assert.fn',
+    'xs.assert.string',
+    'xs.assert.number',
+    'xs.assert.boolean',
+    'xs.assert.regExp',
+    'xs.assert.error',
+    'xs.assert.null',
+    'xs.assert.iterable',
+    'xs.assert.primitive',
+    'xs.assert.numeric',
+    'xs.assert.defined',
+    'xs.assert.empty',
+    'xs.assert.Class',
+    'xs.assert.Interface',
+    'xs.assert.instance',
+    'xs.assert.inherits',
+    'xs.assert.implements',
+    'xs.assert.mixins'
+];
+
+
 //preview mode
 gulp.task('preview', function () {
 
@@ -38,6 +66,22 @@ gulp.task('preview', function () {
     gulp.src(paths.scripts).pipe(concat('xs.js')).pipe(gulp.dest('build/preview'));
 });
 
+//candidate mode
+gulp.task('candidate', function () {
+
+    'use strict';
+
+    //scripts processing
+    del(['build/candidate/*.js']);
+    gulp.src(paths.scripts).pipe(concat('xs.js')).pipe(uglifyJS({
+        mangle: false,
+        compress: {
+            pure_funcs: pureFunctions,
+            drop_console: true
+        }
+    })).pipe(gulp.dest('build/candidate'));
+});
+
 //release mode
 gulp.task('release', function () {
 
@@ -46,9 +90,9 @@ gulp.task('release', function () {
     //scripts processing
     del(['build/release/*.js']);
     gulp.src(paths.scripts).pipe(concat('xs.js')).pipe(uglifyJS({
-        mangle: false,
+        mangle: true,
         compress: {
-            pure_funcs: ['xs.log'],
+            pure_funcs: pureFunctions,
             drop_console: true
         }
     })).pipe(gulp.dest('build/release'));
@@ -57,5 +101,6 @@ gulp.task('release', function () {
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', [
     'preview',
+    'candidate',
     'release'
 ]);
