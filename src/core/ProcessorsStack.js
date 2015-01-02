@@ -70,10 +70,6 @@
          *
          * By default, last is used
          * @param {String} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - processor with given name is already in stack
          */
         me.add = function (name, verifier, handler, position, relativeTo) {
             //position defaults to last
@@ -81,9 +77,9 @@
                 position = 'last';
             }
 
-            if (items.hasKey(name)) {
-                throw new ProcessorsStackError('processor "' + name + '" already in stack');
-            }
+            xs.assert.not(items.hasKey(name), 'add - processor "$name" already in stack', {
+                $name: name
+            }, ProcessorsStackError);
 
             items.add(name, {
                 verifier: verifier,
@@ -126,17 +122,14 @@
          * @method remove
          *
          * @param {String} name processor name
-         *
-         * @throws {Error} Error is thrown, when:
-         *
          * - processor with given name is not found in stack
          */
         me.remove = function (name) {
-            if (items.hasKey(name)) {
-                items.removeAt(name);
-            } else {
-                throw new ProcessorsStackError('processor "' + name + '" not found in stack');
-            }
+            xs.assert.ok(items.hasKey(name), 'remove - processor "$name" not found in stack', {
+                $name: name
+            }, ProcessorsStackError);
+
+            items.removeAt(name);
         };
 
         /**
@@ -205,21 +198,16 @@
          * @param {String} name name of repositioned item
          * @param {String} position new item position
          * @param {*} relativeTo name of relativeTo positioned item
-         *
-         * @throws {Error} Error is thrown:
-         *
-         * - if incorrect position given
-         * - relativeTo item is missing in stack
          */
         var _apply = function (name, position, relativeTo) {
-            if ([
-                    'first',
-                    'last',
-                    'before',
-                    'after'
-                ].indexOf(position) < 0) {
-                throw new ProcessorsStackError('incorrect position given');
-            }
+            xs.assert.ok([
+                'first',
+                'last',
+                'before',
+                'after'
+            ].indexOf(position) >= 0, 'apply - incorrect position "$position" given', {
+                $position: position
+            }, ProcessorsStackError);
 
             //get item from items
             var item = items.at(name);
@@ -237,9 +225,10 @@
             } else {
                 var relativeKey = new xs.core.Collection(items.keys()).keyOf(relativeTo);
 
-                if (!xs.isDefined(relativeKey)) {
-                    throw new ProcessorsStackError('relative item "' + relativeTo + '" missing in stack');
-                }
+                xs.assert.defined(relativeKey, 'apply - relative key "$relativeTo" missing in stack', {
+                    $name: name
+                }, ProcessorsStackError);
+
                 if (position === 'after') {
                     relativeKey++;
                 }
