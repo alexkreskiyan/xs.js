@@ -1,12 +1,12 @@
 [
   "xs.lang.Type",
+  "xs.core.Assert",
   "xs.lang.Object",
   "xs.lang.Array",
   "xs.lang.List",
   "xs.lang.Attribute",
   "xs.lang.Function",
   "xs.lang.String",
-  "xs.core.Assert",
   "xs.core.Debug",
   "xs.core.Collection",
   "xs.core.ContractsManager",
