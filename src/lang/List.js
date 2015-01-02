@@ -58,6 +58,11 @@
          * @return {Array|Object} list shallow copy
          */
         me.clone = function (list) {
+            //assert that list either array or object
+            xs.assert.ok(xs.isArray(list) || xs.isObject(list), 'clone - given list "$list" is nor array neither object', {
+                $list: list
+            }, ListError);
+
             //handle array list
             if (xs.isArray(list)) {
 
@@ -77,6 +82,22 @@
             return copy;
         };
     };
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class ListError
+     */
+    function ListError(message) {
+        this.message = 'xs.lang.List::' + message;
+    }
+
+    ListError.prototype = new Error();
+
 
     //extend xs with list
     xs.extend(xs, list);

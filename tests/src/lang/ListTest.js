@@ -13,8 +13,12 @@ module('xs.lang.List', function () {
     'use strict';
 
     test('clone', function () {
+        throws(function () {
+            xs.clone(xs.emptyFn);
+        });
+        
         //init test variables
-        var item = { x: 1 };
+        var item = {x: 1};
         var x, clone;
 
         //test array list
