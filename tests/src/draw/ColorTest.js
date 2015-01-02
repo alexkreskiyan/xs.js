@@ -13,88 +13,224 @@ function xsDrawColorColors() {
     return [
         {
             name: 'white',
-            rgb: {red: 255, green: 255, blue: 255},
-            hsl: {hue: 0, saturation: 0, lightness: 1}
+            rgb: {
+                red: 255,
+                green: 255,
+                blue: 255
+            },
+            hsl: {
+                hue: 0,
+                saturation: 0,
+                lightness: 1
+            }
         },
         {
             name: 'silver',
-            rgb: {red: 192, green: 192, blue: 192},
-            hsl: {hue: 0, saturation: 0, lightness: 0.75}
+            rgb: {
+                red: 192,
+                green: 192,
+                blue: 192
+            },
+            hsl: {
+                hue: 0,
+                saturation: 0,
+                lightness: 0.75
+            }
         },
         {
             name: 'gray',
-            rgb: {red: 128, green: 128, blue: 128},
-            hsl: {hue: 0, saturation: 0, lightness: 0.5}
+            rgb: {
+                red: 128,
+                green: 128,
+                blue: 128
+            },
+            hsl: {
+                hue: 0,
+                saturation: 0,
+                lightness: 0.5
+            }
         },
         {
             name: 'black',
-            rgb: {red: 0, green: 0, blue: 0},
-            hsl: {hue: 0, saturation: 0, lightness: 0}
+            rgb: {
+                red: 0,
+                green: 0,
+                blue: 0
+            },
+            hsl: {
+                hue: 0,
+                saturation: 0,
+                lightness: 0
+            }
         },
         {
             name: 'maroon',
-            rgb: {red: 128, green: 0, blue: 0},
-            hsl: {hue: 0, saturation: 1, lightness: 0.25}
+            rgb: {
+                red: 128,
+                green: 0,
+                blue: 0
+            },
+            hsl: {
+                hue: 0,
+                saturation: 1,
+                lightness: 0.25
+            }
         },
         {
             name: 'red',
-            rgb: {red: 255, green: 0, blue: 0},
-            hsl: {hue: 0, saturation: 1, lightness: 0.5}
+            rgb: {
+                red: 255,
+                green: 0,
+                blue: 0
+            },
+            hsl: {
+                hue: 0,
+                saturation: 1,
+                lightness: 0.5
+            }
         },
         {
             name: 'orange',
-            rgb: {red: 255, green: 166, blue: 0},
-            hsl: {hue: 39, saturation: 1, lightness: 0.5}
+            rgb: {
+                red: 255,
+                green: 166,
+                blue: 0
+            },
+            hsl: {
+                hue: 39,
+                saturation: 1,
+                lightness: 0.5
+            }
         },
         {
             name: 'yellow',
-            rgb: {red: 255, green: 255, blue: 0},
-            hsl: {hue: 60, saturation: 1, lightness: 0.5}
+            rgb: {
+                red: 255,
+                green: 255,
+                blue: 0
+            },
+            hsl: {
+                hue: 60,
+                saturation: 1,
+                lightness: 0.5
+            }
         },
         {
             name: 'olive',
-            rgb: {red: 128, green: 128, blue: 0},
-            hsl: {hue: 60, saturation: 1, lightness: 0.25}
+            rgb: {
+                red: 128,
+                green: 128,
+                blue: 0
+            },
+            hsl: {
+                hue: 60,
+                saturation: 1,
+                lightness: 0.25
+            }
         },
         {
             name: 'lime',
-            rgb: {red: 0, green: 255, blue: 0},
-            hsl: {hue: 120, saturation: 1, lightness: 0.5}
+            rgb: {
+                red: 0,
+                green: 255,
+                blue: 0
+            },
+            hsl: {
+                hue: 120,
+                saturation: 1,
+                lightness: 0.5
+            }
         },
         {
             name: 'green',
-            rgb: {red: 0, green: 128, blue: 0},
-            hsl: {hue: 120, saturation: 1, lightness: 0.25}
+            rgb: {
+                red: 0,
+                green: 128,
+                blue: 0
+            },
+            hsl: {
+                hue: 120,
+                saturation: 1,
+                lightness: 0.25
+            }
         },
         {
             name: 'aqua',
-            rgb: {red: 0, green: 255, blue: 255},
-            hsl: {hue: 180, saturation: 1, lightness: 0.5}
+            rgb: {
+                red: 0,
+                green: 255,
+                blue: 255
+            },
+            hsl: {
+                hue: 180,
+                saturation: 1,
+                lightness: 0.5
+            }
         },
         {
             name: 'blue',
-            rgb: {red: 0, green: 0, blue: 255},
-            hsl: {hue: 240, saturation: 1, lightness: 0.5}
+            rgb: {
+                red: 0,
+                green: 0,
+                blue: 255
+            },
+            hsl: {
+                hue: 240,
+                saturation: 1,
+                lightness: 0.5
+            }
         },
         {
             name: 'navy',
-            rgb: {red: 0, green: 0, blue: 128},
-            hsl: {hue: 240, saturation: 1, lightness: 0.25}
+            rgb: {
+                red: 0,
+                green: 0,
+                blue: 128
+            },
+            hsl: {
+                hue: 240,
+                saturation: 1,
+                lightness: 0.25
+            }
         },
         {
             name: 'teal',
-            rgb: {red: 0, green: 128, blue: 128},
-            hsl: {hue: 180, saturation: 1, lightness: 0.25}
+            rgb: {
+                red: 0,
+                green: 128,
+                blue: 128
+            },
+            hsl: {
+                hue: 180,
+                saturation: 1,
+                lightness: 0.25
+            }
         },
         {
             name: 'fuchsia',
-            rgb: {red: 255, green: 0, blue: 255},
-            hsl: {hue: 300, saturation: 1, lightness: 0.5}
+            rgb: {
+                red: 255,
+                green: 0,
+                blue: 255
+            },
+            hsl: {
+                hue: 300,
+                saturation: 1,
+                lightness: 0.5
+            }
         },
         {
             name: 'purple',
-            rgb: {red: 128, green: 0, blue: 128},
-            hsl: {hue: 300, saturation: 1, lightness: 0.25}
+            rgb: {
+                red: 128,
+                green: 0,
+                blue: 128
+            },
+            hsl: {
+                hue: 300,
+                saturation: 1,
+                lightness: 0.25
+            }
         }
     ];
 }
@@ -550,13 +686,21 @@ test('factory', function () {
     });
 });
 test('creation', function () {
-    var color = xs.draw.Color.toRgb({hue: 260, saturation: 0.5, lightness: 0.8});
+    var color = xs.draw.Color.toRgb({
+        hue: 260,
+        saturation: 0.5,
+        lightness: 0.8
+    });
 
     //from color object
     strictEqual(JSON.stringify(xs.Object.pick(xs.create('xs.draw.Color', color), 'hue', 'saturation', 'lightness', 'red', 'green', 'blue')), JSON.stringify(color), 'creted from color object');
 
     //from object
-    strictEqual(JSON.stringify(xs.Object.pick(xs.create('xs.draw.Color', {hue: 260, saturation: 0.5, lightness: 0.8}), 'hue', 'saturation', 'lightness', 'red', 'green', 'blue')), JSON.stringify(color), 'created from color object');
+    strictEqual(JSON.stringify(xs.Object.pick(xs.create('xs.draw.Color', {
+        hue: 260,
+        saturation: 0.5,
+        lightness: 0.8
+    }), 'hue', 'saturation', 'lightness', 'red', 'green', 'blue')), JSON.stringify(color), 'created from color object');
 });
 test('sync', function () {
     var Color = xs.draw.Color;
@@ -636,15 +780,27 @@ test('toRgb formatting', function () {
 
     var color = xs.create('xs.draw.Color', data);
 
-    strictEqual(JSON.stringify(color.toRgb()), JSON.stringify({red: data.red, green: data.green, blue: data.blue, alpha: data.alpha}), 'empty args');
-    strictEqual(JSON.stringify(color.toRgb({alpha: false})), JSON.stringify({red: data.red, green: data.green, blue: data.blue}), 'without alpha');
+    strictEqual(JSON.stringify(color.toRgb()), JSON.stringify({
+        red: data.red,
+        green: data.green,
+        blue: data.blue,
+        alpha: data.alpha
+    }), 'empty args');
+    strictEqual(JSON.stringify(color.toRgb({alpha: false})), JSON.stringify({
+        red: data.red,
+        green: data.green,
+        blue: data.blue
+    }), 'without alpha');
     strictEqual(JSON.stringify(color.toRgb({format: 'array'})), JSON.stringify([
         data.red,
         data.green,
         data.blue,
         data.alpha
     ]), 'as array');
-    strictEqual(JSON.stringify(color.toRgb({format: 'array', alpha: false})), JSON.stringify([
+    strictEqual(JSON.stringify(color.toRgb({
+        format: 'array',
+        alpha: false
+    })), JSON.stringify([
         data.red,
         data.green,
         data.blue
@@ -663,15 +819,27 @@ test('toHsl formatting', function () {
 
     var color = xs.create('xs.draw.Color', data);
 
-    strictEqual(JSON.stringify(color.toHsl()), JSON.stringify({hue: data.hue, saturation: data.saturation, lightness: data.lightness, alpha: data.alpha}), 'empty args');
-    strictEqual(JSON.stringify(color.toHsl({alpha: false})), JSON.stringify({hue: data.hue, saturation: data.saturation, lightness: data.lightness}), 'without alpha');
+    strictEqual(JSON.stringify(color.toHsl()), JSON.stringify({
+        hue: data.hue,
+        saturation: data.saturation,
+        lightness: data.lightness,
+        alpha: data.alpha
+    }), 'empty args');
+    strictEqual(JSON.stringify(color.toHsl({alpha: false})), JSON.stringify({
+        hue: data.hue,
+        saturation: data.saturation,
+        lightness: data.lightness
+    }), 'without alpha');
     strictEqual(JSON.stringify(color.toHsl({format: 'array'})), JSON.stringify([
         data.hue,
         data.saturation,
         data.lightness,
         data.alpha
     ]), 'as array');
-    strictEqual(JSON.stringify(color.toHsl({format: 'array', alpha: false})), JSON.stringify([
+    strictEqual(JSON.stringify(color.toHsl({
+        format: 'array',
+        alpha: false
+    })), JSON.stringify([
         data.hue,
         data.saturation,
         data.lightness
@@ -692,67 +860,147 @@ test('toCss formatting', function () {
 
     var tests = [
         {
-            options: {model: 'rgb', alpha: true, hex: true, name: true},
+            options: {
+                model: 'rgb',
+                alpha: true,
+                hex: true,
+                name: true
+            },
             value: 'fuchsia'
         },
         {
-            options: {model: 'rgb', alpha: true, hex: true, name: false},
+            options: {
+                model: 'rgb',
+                alpha: true,
+                hex: true,
+                name: false
+            },
             value: '#ff00ff'
         },
         {
-            options: {model: 'rgb', alpha: true, hex: false, name: true},
+            options: {
+                model: 'rgb',
+                alpha: true,
+                hex: false,
+                name: true
+            },
             value: 'fuchsia'
         },
         {
-            options: {model: 'rgb', alpha: true, hex: false, name: false},
+            options: {
+                model: 'rgb',
+                alpha: true,
+                hex: false,
+                name: false
+            },
             value: 'rgba(255, 0, 255, 1)'
         },
         {
-            options: {model: 'rgb', alpha: false, hex: true, name: true},
+            options: {
+                model: 'rgb',
+                alpha: false,
+                hex: true,
+                name: true
+            },
             value: 'fuchsia'
         },
         {
-            options: {model: 'rgb', alpha: false, hex: true, name: false},
+            options: {
+                model: 'rgb',
+                alpha: false,
+                hex: true,
+                name: false
+            },
             value: '#ff00ff'
         },
         {
-            options: {model: 'rgb', alpha: false, hex: false, name: true},
+            options: {
+                model: 'rgb',
+                alpha: false,
+                hex: false,
+                name: true
+            },
             value: 'fuchsia'
         },
         {
-            options: {model: 'rgb', alpha: false, hex: false, name: false},
+            options: {
+                model: 'rgb',
+                alpha: false,
+                hex: false,
+                name: false
+            },
             value: 'rgb(255, 0, 255)'
         },
         {
-            options: {model: 'hsl', alpha: true, hex: true, name: true},
+            options: {
+                model: 'hsl',
+                alpha: true,
+                hex: true,
+                name: true
+            },
             value: 'fuchsia'
         },
         {
-            options: {model: 'hsl', alpha: true, hex: true, name: false},
+            options: {
+                model: 'hsl',
+                alpha: true,
+                hex: true,
+                name: false
+            },
             value: '#ff00ff'
         },
         {
-            options: {model: 'hsl', alpha: true, hex: false, name: true},
+            options: {
+                model: 'hsl',
+                alpha: true,
+                hex: false,
+                name: true
+            },
             value: 'fuchsia'
         },
         {
-            options: {model: 'hsl', alpha: true, hex: false, name: false},
+            options: {
+                model: 'hsl',
+                alpha: true,
+                hex: false,
+                name: false
+            },
             value: 'hsla(300, 100%, 50%, 1)'
         },
         {
-            options: {model: 'hsl', alpha: false, hex: true, name: true},
+            options: {
+                model: 'hsl',
+                alpha: false,
+                hex: true,
+                name: true
+            },
             value: 'fuchsia'
         },
         {
-            options: {model: 'hsl', alpha: false, hex: true, name: false},
+            options: {
+                model: 'hsl',
+                alpha: false,
+                hex: true,
+                name: false
+            },
             value: '#ff00ff'
         },
         {
-            options: {model: 'hsl', alpha: false, hex: false, name: true},
+            options: {
+                model: 'hsl',
+                alpha: false,
+                hex: false,
+                name: true
+            },
             value: 'fuchsia'
         },
         {
-            options: {model: 'hsl', alpha: false, hex: false, name: false},
+            options: {
+                model: 'hsl',
+                alpha: false,
+                hex: false,
+                name: false
+            },
             value: 'hsl(300, 100%, 50%)'
         }
     ];

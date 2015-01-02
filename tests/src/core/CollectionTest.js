@@ -122,7 +122,7 @@ module('xs.core.Collection', function () {
 
     test('clone', function () {
         //init test variables
-        var item = { x: 1 }, collection, clone;
+        var item = {x: 1}, collection, clone;
 
         //test array list
         collection = new xs.core.Collection([
@@ -198,7 +198,7 @@ module('xs.core.Collection', function () {
     test('has', function () {
         //init test variables
         var collection;
-        var item = { a: 1 };
+        var item = {a: 1};
 
         //test array list
         collection = new xs.core.Collection([
@@ -235,7 +235,7 @@ module('xs.core.Collection', function () {
     test('keyOf', function () {
         //init test variables
         var collection;
-        var item = { a: 1 };
+        var item = {a: 1};
 
         //test array list
         collection = new xs.core.Collection([
@@ -464,7 +464,7 @@ module('xs.core.Collection', function () {
             collection.insert(0);
         });
         //throws if adding with same key
-        collection = new xs.core.Collection({ a: 1 });
+        collection = new xs.core.Collection({a: 1});
         throws(function () {
             collection.insert(0, 'a', 1);
         });
@@ -505,7 +505,7 @@ module('xs.core.Collection', function () {
             collection.set(1, 1);
         });
         //object
-        collection = new xs.core.Collection({ a: 1 });
+        collection = new xs.core.Collection({a: 1});
         throws(function () {
             collection.set('b', 1);
         });
@@ -552,7 +552,7 @@ module('xs.core.Collection', function () {
 
     test('remove', function () {
         //init test variables
-        var item = { x: 1 };
+        var item = {x: 1};
         var itemString = JSON.stringify(item);
         var collection;
 
@@ -606,7 +606,7 @@ module('xs.core.Collection', function () {
 
     test('removeBy', function () {
         //init test variables
-        var item = { x: 1 };
+        var item = {x: 1};
         var itemString = JSON.stringify(item);
         var collection;
 
@@ -858,9 +858,9 @@ module('xs.core.Collection', function () {
 
         //for Array
         collection = new xs.core.Collection([
-            { x: 2 },
-            { x: 2 },
-            { x: 0 }
+            {x: 2},
+            {x: 2},
+            {x: 0}
         ]);
         //direct
         found = collection.find(function (value, key) {
@@ -882,9 +882,9 @@ module('xs.core.Collection', function () {
 
         //for Object
         collection = new xs.core.Collection({
-            aa: { x: 1 },
-            c: { x: 2 },
-            ab: { x: 3 }
+            aa: {x: 1},
+            c: {x: 2},
+            ab: {x: 3}
         });
         //direct
         found = collection.find(function (value, key) {

@@ -73,6 +73,6 @@
     });
 
     xs.extend(xs, {
-        log:debug.log
+        log: debug.log
     });
 })(window, 'xs');

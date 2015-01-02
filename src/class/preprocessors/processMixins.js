@@ -50,8 +50,8 @@
 
             return xs.isObject(mixins) && Object.keys(mixins).some(function (alias) {
 
-                return mixins[alias] === Mixin;
-            });
+                    return mixins[alias] === Mixin;
+                });
         });
 
         return descriptor.mixins.length > 0;

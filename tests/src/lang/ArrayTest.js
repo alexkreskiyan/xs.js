@@ -17,7 +17,7 @@ module('xs.lang.Array', function () {
         throws(function () {
             xs.Array.shuffle(null);
         });
-        
+
         //init sample
         var item = {x: 1};
 

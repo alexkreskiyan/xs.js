@@ -47,7 +47,9 @@ module('xs.class.preprocessors.prepareMixins', function () {
         var me = this;
         //Class
         xs.ContractsManager.remove(me.ClassName);
-        if (me.ClassSave) { xs.ContractsManager.add(me.ClassName, me.ClassSave); }
+        if (me.ClassSave) {
+            xs.ContractsManager.add(me.ClassName, me.ClassSave);
+        }
     });
 
 });

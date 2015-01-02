@@ -629,35 +629,29 @@
         engine: xs.env.engine,
         os: xs.env.os,
         device: xs.env.device,
-        cpu: xs.env.cpu,
-        //shortcuts
+        cpu: xs.env.cpu, //shortcuts
         //desktop os
         isLinux: xs.env.isLinux,
         isWindows: xs.env.isWindows,
-        isMac: xs.env.isMac,
-        //mobile os
+        isMac: xs.env.isMac, //mobile os
         isAndroid: xs.env.isAndroid,
         isiOS: xs.env.isiOS,
-        isWindowsPhone: xs.env.isWindowsPhone,
-        //engines
+        isWindowsPhone: xs.env.isWindowsPhone, //engines
         isWebkit: xs.env.isWebkit,
         isBlink: xs.env.isBlink,
         isGecko: xs.env.isGecko,
         isPresto: xs.env.isPresto,
-        isTrident: xs.env.isTrident,
-        //desktop browsers
+        isTrident: xs.env.isTrident, //desktop browsers
         isChrome: xs.env.isChrome,
         isFirefox: xs.env.isFirefox,
         isOpera: xs.env.isOpera,
         isSafari: xs.env.isSafari,
-        isIE: xs.env.isIE,
-        //mobile browsers
+        isIE: xs.env.isIE, //mobile browsers
         isChromeMobile: xs.env.isChromeMobile,
         isFirefoxMobile: xs.env.isFirefoxMobile,
         isOperaMobile: xs.env.isOperaMobile,
         isSafariMobile: xs.env.isSafariMobile,
-        isIEMobile: xs.env.isIEMobile,
-        //arch
+        isIEMobile: xs.env.isIEMobile, //arch
         is32: xs.env.is32,
         is64: xs.env.is64
     });

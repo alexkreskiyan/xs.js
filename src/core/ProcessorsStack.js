@@ -213,11 +213,11 @@
          */
         var _apply = function (name, position, relativeTo) {
             if ([
-                'first',
-                'last',
-                'before',
-                'after'
-            ].indexOf(position) < 0) {
+                    'first',
+                    'last',
+                    'before',
+                    'after'
+                ].indexOf(position) < 0) {
                 throw new ProcessorsStackError('incorrect position given');
             }
 

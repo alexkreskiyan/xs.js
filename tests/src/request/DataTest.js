@@ -43,40 +43,57 @@ test('toQueryString', function () {
     strictEqual(encode({}), '', 'from empty hash');
     //encode simple object
     strictEqual(encode({x: ''}), 'x=', 'from simple string without value 1');
-    strictEqual(encode({x: '', y: ''}), 'x=&y=', 'from simple string without value 2');
-    strictEqual(encode({x: 'тест', y: '25tsdf^*^fsdf`"'}), 'x=тест&y=25tsdf^*^fsdf`"', 'from simple string without value 2');
+    strictEqual(encode({
+        x: '',
+        y: ''
+    }), 'x=&y=', 'from simple string without value 2');
+    strictEqual(encode({
+        x: 'тест',
+        y: '25tsdf^*^fsdf`"'
+    }), 'x=тест&y=25tsdf^*^fsdf`"', 'from simple string without value 2');
     //encode simple object with URIencode
-    strictEqual(encode({x: 'тест', y: '25tsdf^*^fsdf`"'}, true), 'x=%D1%82%D0%B5%D1%81%D1%82&y=25tsdf%5E*%5Efsdf%60%22', 'from simple string without value 2');
+    strictEqual(encode({
+        x: 'тест',
+        y: '25tsdf^*^fsdf`"'
+    }, true), 'x=%D1%82%D0%B5%D1%81%D1%82&y=25tsdf%5E*%5Efsdf%60%22', 'from simple string without value 2');
     //encode complex objects
     strictEqual(encode({x: []}), 'x=', 'from complex string without value 1');
-    strictEqual(encode({x: [
-        []
-    ]}), 'x[0]=', 'from complex string without value 1');
-    strictEqual(encode({x: [
-        [
-            1,
-            2
-        ],
-        3,
-        4
-    ]}), 'x[0][0]=1&x[0][1]=2&x[1]=3&x[2]=4', 'from complex string without value 2');
+    strictEqual(encode({
+        x: [
+            []
+        ]
+    }), 'x[0]=', 'from complex string without value 1');
+    strictEqual(encode({
+        x: [
+            [
+                1,
+                2
+            ],
+            3,
+            4
+        ]
+    }), 'x[0][0]=1&x[0][1]=2&x[1]=3&x[2]=4', 'from complex string without value 2');
     //encode complex objects with URIencode
     strictEqual(encode({x: ['тест']}), 'x[0]=тест', 'from complex string without value 1');
     strictEqual(encode({x: ['тест']}, true), 'x[0]=%D1%82%D0%B5%D1%81%D1%82', 'from complex string without value 1');
     strictEqual(encode({x: {'тест': 'тест'}}), 'x[тест]=тест', 'from complex string without value 1');
     strictEqual(encode({x: {'тест': 'тест'}}, true), 'x[%D1%82%D0%B5%D1%81%D1%82]=%D1%82%D0%B5%D1%81%D1%82', 'from complex string without value 1');
-    strictEqual(encode({x: [
-        [],
-        'тест'
-    ]}, true), 'x[0]=&x[1]=%D1%82%D0%B5%D1%81%D1%82', 'from complex string without value 1');
-    strictEqual(encode({x: [
-        [
-            1,
+    strictEqual(encode({
+        x: [
+            [],
             'тест'
-        ],
-        3,
-        4
-    ]}, true), 'x[0][0]=1&x[0][1]=%D1%82%D0%B5%D1%81%D1%82&x[1]=3&x[2]=4', 'from complex string without value 2');
+        ]
+    }, true), 'x[0]=&x[1]=%D1%82%D0%B5%D1%81%D1%82', 'from complex string without value 1');
+    strictEqual(encode({
+        x: [
+            [
+                1,
+                'тест'
+            ],
+            3,
+            4
+        ]
+    }, true), 'x[0][0]=1&x[0][1]=%D1%82%D0%B5%D1%81%D1%82&x[1]=3&x[2]=4', 'from complex string without value 2');
 });
 test('constructor', function () {
     var req;

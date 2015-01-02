@@ -58,7 +58,7 @@
 
             //assert
             if (given !== expected) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -83,7 +83,7 @@
 
             //assert
             if (!expression) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -108,7 +108,7 @@
 
             //assert
             if (expression) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -133,7 +133,7 @@
 
             //assert
             if (!xs.isObject(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -158,7 +158,7 @@
 
             //assert
             if (!xs.isArray(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -183,7 +183,7 @@
 
             //assert
             if (!xs.isFunction(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -208,7 +208,7 @@
 
             //assert
             if (!xs.isString(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -233,7 +233,7 @@
 
             //assert
             if (!xs.isNumber(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -258,7 +258,7 @@
 
             //assert
             if (!xs.isBoolean(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -283,7 +283,7 @@
 
             //assert
             if (!xs.isRegExp(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -308,7 +308,7 @@
 
             //assert
             if (!xs.isError(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -333,7 +333,7 @@
 
             //assert
             if (!xs.isNull(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -358,7 +358,7 @@
 
             //assert
             if (!xs.isIterable(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -383,7 +383,7 @@
 
             //assert
             if (!xs.isPrimitive(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -408,7 +408,7 @@
 
             //assert
             if (!xs.isNumeric(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -433,7 +433,7 @@
 
             //assert
             if (!xs.isDefined(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -458,7 +458,7 @@
 
             //assert
             if (!xs.isEmpty(value)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -486,7 +486,7 @@
 
             //assert
             if (fn.contractor !== xs.Class) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -514,7 +514,7 @@
 
             //assert
             if (fn.contractor !== xs.Interface) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -543,7 +543,7 @@
 
             //assert
             if (!(value instanceof Class)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -575,7 +575,7 @@
 
             //assert
             if (!Child.inherits(Parent)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -607,7 +607,7 @@
 
             //assert
             if (!Class.implements(Interface)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -639,7 +639,7 @@
 
             //assert
             if (!Class.mixins(Mixin)) {
-                _raise(Exception, message, vars);
+                _raise(message, vars, Exception);
             }
         };
 
@@ -659,17 +659,21 @@
          * @throws {Error}
          */
         var _raise = function (message, vars, Exception) {
-            //default Exception to Error
-            if (!xs.isFunction(Exception)) {
-                Exception = Error;
+            var error;
+            if (arguments.length === 1) {
+                error = new Error(message);
+            } else if (arguments.length === 2) {
+                //if vars given
+                if (xs.isObject(vars)) {
+                    error = new Error(xs.translate(message, vars));
+                } else if (xs.isFunction(Exception)) {
+                    error = new Exception(message);
+                }
+            } else {
+                error = new Exception(xs.translate(message, vars));
             }
 
-            //throw Exception
-            if (xs.isObject(vars)) {
-                throw new Exception(xs.translate(message, vars));
-            } else {
-                throw new Exception(message);
-            }
+            throw error;
         };
     };
 

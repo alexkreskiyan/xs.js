@@ -15,23 +15,108 @@
 
         var knownColors = {
             transparent: {alpha: 0},
-            white: {red: 255, green: 255, blue: 255, alpha: 1},
-            silver: {red: 192, green: 192, blue: 192, alpha: 1},
-            gray: {red: 128, green: 128, blue: 128, alpha: 1},
-            black: {red: 0, green: 0, blue: 0, alpha: 1},
-            maroon: {red: 128, green: 0, blue: 0, alpha: 1},
-            red: {red: 255, green: 0, blue: 0, alpha: 1},
-            orange: {red: 255, green: 166, blue: 0, alpha: 1},
-            yellow: {red: 255, green: 255, blue: 255, alpha: 1},
-            olive: {red: 128, green: 128, blue: 0, alpha: 1},
-            lime: {red: 0, green: 255, blue: 0, alpha: 1},
-            green: {red: 0, green: 128, blue: 0, alpha: 1},
-            aqua: {red: 0, green: 255, blue: 255, alpha: 1},
-            blue: {red: 0, green: 0, blue: 255, alpha: 1},
-            navy: {red: 0, green: 0, blue: 128, alpha: 1},
-            teal: {red: 0, green: 128, blue: 128, alpha: 1},
-            fuchsia: {red: 255, green: 0, blue: 255, alpha: 1},
-            purple: {red: 128, green: 0, blue: 128, alpha: 1}
+            white: {
+                red: 255,
+                green: 255,
+                blue: 255,
+                alpha: 1
+            },
+            silver: {
+                red: 192,
+                green: 192,
+                blue: 192,
+                alpha: 1
+            },
+            gray: {
+                red: 128,
+                green: 128,
+                blue: 128,
+                alpha: 1
+            },
+            black: {
+                red: 0,
+                green: 0,
+                blue: 0,
+                alpha: 1
+            },
+            maroon: {
+                red: 128,
+                green: 0,
+                blue: 0,
+                alpha: 1
+            },
+            red: {
+                red: 255,
+                green: 0,
+                blue: 0,
+                alpha: 1
+            },
+            orange: {
+                red: 255,
+                green: 166,
+                blue: 0,
+                alpha: 1
+            },
+            yellow: {
+                red: 255,
+                green: 255,
+                blue: 255,
+                alpha: 1
+            },
+            olive: {
+                red: 128,
+                green: 128,
+                blue: 0,
+                alpha: 1
+            },
+            lime: {
+                red: 0,
+                green: 255,
+                blue: 0,
+                alpha: 1
+            },
+            green: {
+                red: 0,
+                green: 128,
+                blue: 0,
+                alpha: 1
+            },
+            aqua: {
+                red: 0,
+                green: 255,
+                blue: 255,
+                alpha: 1
+            },
+            blue: {
+                red: 0,
+                green: 0,
+                blue: 255,
+                alpha: 1
+            },
+            navy: {
+                red: 0,
+                green: 0,
+                blue: 128,
+                alpha: 1
+            },
+            teal: {
+                red: 0,
+                green: 128,
+                blue: 128,
+                alpha: 1
+            },
+            fuchsia: {
+                red: 255,
+                green: 0,
+                blue: 255,
+                alpha: 1
+            },
+            purple: {
+                red: 128,
+                green: 0,
+                blue: 128,
+                alpha: 1
+            }
         };
 
         var hue2rgb = function (p, q, t) {
