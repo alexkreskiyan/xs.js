@@ -247,6 +247,11 @@ module('xs.core.Collection', function () {
             item
         ]);
 
+        //incorrect flags throws
+        throws(function () {
+            collection.keyOf(5, null);
+        });
+
         strictEqual(collection.keyOf(3), 2);
         strictEqual(collection.keyOf(item), 4);
         strictEqual(collection.keyOf(item, xs.core.Collection.REVERSE), 5);
@@ -281,14 +286,24 @@ module('xs.core.Collection', function () {
         //init test variables
         var collection;
 
+        //check collection filled
+        collection = new xs.core.Collection();
+        throws(function () {
+            collection.at(0);
+        });
+
         //check key processing
         collection = new xs.core.Collection([
             1,
             3
         ]);
+
+        //incorrect key
         throws(function () {
             collection.at([]);
         });
+
+        //index out of bounds
         throws(function () {
             collection.at(3);
         });
@@ -306,6 +321,12 @@ module('xs.core.Collection', function () {
             x: 1,
             b: 2
         });
+
+        //key is missing
+        throws(function () {
+            collection.at('3');
+        });
+
         strictEqual(collection.at('x'), 1);
         strictEqual(collection.at('b'), 2);
     });
@@ -431,6 +452,10 @@ module('xs.core.Collection', function () {
         throws(function () {
             collection.add();
         });
+        //throws if key is not atring
+        throws(function () {
+            collection.add(1, 1);
+        });
         //throws if adding with existent key
         throws(function () {
             collection.add('1', 1);
@@ -455,14 +480,24 @@ module('xs.core.Collection', function () {
 
         //check object collection error handling
         collection = new xs.core.Collection();
-        //throws if no arguments
+        //throws if not enough arguments
         throws(function () {
-            collection.insert();
+            collection.insert(1);
         });
-        //throws if no value
+        //throws if index not number
         throws(function () {
-            collection.insert(0);
+            collection.insert('1', 1);
         });
+        //throws if index out of bounds
+        throws(function () {
+            collection.insert(2, 1);
+        });
+
+        //throws if adding with non-string key
+        throws(function () {
+            collection.insert(0, [], 1);
+        });
+
         //throws if adding with same key
         collection = new xs.core.Collection({a: 1});
         throws(function () {
@@ -490,21 +525,22 @@ module('xs.core.Collection', function () {
 
         //check object collection error handling
         collection = new xs.core.Collection();
-        //throws if no arguments
+        //throws if not enough arguments
         throws(function () {
-            collection.set();
+            collection.set(1);
         });
-        //throws if no value given
+        //throws if key is incorrect
         throws(function () {
-            collection.set(0);
+            collection.set([], 1);
         });
-        //throws if key is missing
-        //array
+
+        //throws if key (index) not in bounds
         collection = new xs.core.Collection([1]);
         throws(function () {
             collection.set(1, 1);
         });
-        //object
+
+        //throws if key (key) is missing
         collection = new xs.core.Collection({a: 1});
         throws(function () {
             collection.set('b', 1);
@@ -524,6 +560,25 @@ module('xs.core.Collection', function () {
     test('removeAt', function () {
         //init test variables
         var collection;
+
+        //check object collection error handling
+        collection = new xs.core.Collection();
+        //throws if key is incorrect
+        throws(function () {
+            collection.removeAt([]);
+        });
+
+        //throws if key (index) not in bounds
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.removeAt(1);
+        });
+
+        //throws if key (key) is missing
+        collection = new xs.core.Collection({a: 1});
+        throws(function () {
+            collection.removeAt('b');
+        });
 
         //test array
         collection = new xs.core.Collection([
@@ -555,6 +610,19 @@ module('xs.core.Collection', function () {
         var item = {x: 1};
         var itemString = JSON.stringify(item);
         var collection;
+
+        //check object collection error handling
+        collection = new xs.core.Collection();
+        //throws if flags given and are incorrect
+        throws(function () {
+            collection.remove([], null);
+        });
+
+        //throws if value missing in array
+        collection = new xs.core.Collection();
+        throws(function () {
+            collection.remove([]);
+        });
 
         //test array
         collection = new xs.core.Collection([
@@ -609,6 +677,17 @@ module('xs.core.Collection', function () {
         var item = {x: 1};
         var itemString = JSON.stringify(item);
         var collection;
+
+        //throws if finder is not array
+        collection = new xs.core.Collection();
+        throws(function () {
+            collection.removeBy([]);
+        });
+
+        //throws if flags given and are incorrect
+        throws(function () {
+            collection.remove([], null);
+        });
 
         //test array
         collection = new xs.core.Collection([
@@ -674,6 +753,11 @@ module('xs.core.Collection', function () {
         //init test variables
         var collection, shifted;
 
+        collection = new xs.core.Collection();
+        throws(function () {
+            collection.shift();
+        });
+
         //test array list
         collection = new xs.core.Collection([
             {
@@ -725,6 +809,11 @@ module('xs.core.Collection', function () {
         //init test variables
         var collection, popped;
 
+        collection = new xs.core.Collection();
+        throws(function () {
+            collection.pop();
+        });
+
         //test array list
         collection = new xs.core.Collection([
             {
@@ -775,6 +864,17 @@ module('xs.core.Collection', function () {
     test('each', function () {
         //init test variables
         var collection, sum;
+
+        //throws if iterator is not a function
+        collection = new xs.core.Collection();
+        throws(function () {
+            collection.each(null);
+        });
+
+        //throws if flags given and are incorrect
+        throws(function () {
+            collection.each(xs.emptyFn, null);
+        });
 
         //test array
         collection = new xs.core.Collection([
@@ -847,6 +947,17 @@ module('xs.core.Collection', function () {
         //init test variables
         var collection, found;
 
+        //throws if finder is not a function
+        collection = new xs.core.Collection();
+        throws(function () {
+            collection.find(null);
+        });
+
+        //throws if flags given and are incorrect
+        throws(function () {
+            collection.find(xs.emptyFn, null);
+        });
+
         var scope = {
             sum: function (x, y) {
                 return x + y;
@@ -912,6 +1023,12 @@ module('xs.core.Collection', function () {
             }
         }, map;
 
+        //throws if mapper is not a function
+        collection = new xs.core.Collection();
+        throws(function () {
+            collection.map(null);
+        });
+
         //for Array
         collection = new xs.core.Collection([
             1,
@@ -938,6 +1055,17 @@ module('xs.core.Collection', function () {
     test('reduce', function () {
         //init test variables
         var collection;
+
+        //throws if reducer is not a function
+        collection = new xs.core.Collection();
+        throws(function () {
+            collection.reduce(null);
+        });
+
+        //throws if flags given and are incorrect
+        throws(function () {
+            collection.reduce(xs.emptyFn, null);
+        });
 
         //test array list
         collection = new xs.core.Collection([
@@ -985,6 +1113,30 @@ module('xs.core.Collection', function () {
     test('some', function () {
         //init test variables
         var collection;
+
+        //throws if collection is empty
+        collection = new xs.core.Collection();
+        throws(function () {
+            collection.some();
+        });
+
+        //throws if tester is not a function
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.some(null);
+        });
+
+        //throws if count is not a number
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.some(xs.emptyFn, 'a');
+        });
+
+        //throws if count is out of bounds
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.some(xs.emptyFn, 2);
+        });
 
         //test array list
         collection = new xs.core.Collection([
@@ -1134,6 +1286,30 @@ module('xs.core.Collection', function () {
         //init test variables
         var collection, picked, correctKeys, correctValues;
 
+        //throws if keys list is not an array
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.pick();
+        });
+
+        //throws if some key is neither object nor string
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.pick([null]);
+        });
+
+        //throws if some key (index) is out of bounds
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.pick([2]);
+        });
+
+        //throws if some key (key) is missing
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.pick(['a']);
+        });
+
         //test array list
         collection = new xs.core.Collection([
             {
@@ -1198,6 +1374,30 @@ module('xs.core.Collection', function () {
     test('omit', function () {
         //init test variables
         var collection, omitted, correctKeys, correctValues;
+
+        //throws if keys list is not an array
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.omit();
+        });
+
+        //throws if some key is neither object nor string
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.omit([null]);
+        });
+
+        //throws if some key (index) is out of bounds
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.omit([2]);
+        });
+
+        //throws if some key (key) is missing
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.omit(['a']);
+        });
 
         //test array list
         collection = new xs.core.Collection([

@@ -34,11 +34,7 @@
      *
      * @constructor
      *
-     * @param {Array|Object} [values] collection source
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if given source is nor array neither object
+     * @param {Array|Object|Function} [values] collection source
      */
     var collection = xs.core.Collection = function (values) {
         var me = this;
@@ -51,7 +47,12 @@
             return;
         }
 
+        xs.assert.ok(xs.isArray(values) || xs.isObject(values) || xs.isFunction(values), 'constructor - source "$values" is nor array, nor object neither function', {
+            $values: values
+        }, CollectionError);
+
         var i, valuesLength;
+
 
         //handle array source
         if (xs.isArray(values)) {
@@ -66,24 +67,22 @@
                 });
             }
 
-            //handle hash source
-        } else if (xs.isObject(values) || xs.isFunction(values)) {
-            //get keys and valuesLength
-            var keys = Object.keys(values), key;
-            valuesLength = keys.length;
+            return;
+        }
 
-            for (i = 0; i < valuesLength; i++) {
-                key = keys[i];
-                //add item
-                me.items.push({
-                    key: key,
-                    value: values[key]
-                });
-            }
 
-            //otherwise - it's error
-        } else {
-            throw new CollectionError('constructor - source "' + values + '" is nor array, nor object neither function');
+        //handle hash source
+        //get keys and valuesLength
+        var keys = Object.keys(values), key;
+        valuesLength = keys.length;
+
+        for (i = 0; i < valuesLength; i++) {
+            key = keys[i];
+            //add item
+            me.items.push({
+                key: key,
+                value: values[key]
+            });
         }
     };
 
@@ -240,8 +239,10 @@
             });
         }
 
+
         var clone = new me.constructor();
         clone.items = source;
+
         return clone;
     };
 
@@ -278,25 +279,23 @@
      * @param {String|Number} key key to lookup for
      *
      * @return {Boolean} whether collection has key
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if given key is nor a string neither a number
      */
     collection.prototype.hasKey = function (key) {
         var me = this;
 
+        xs.assert.ok(xs.isNumber(key) || xs.isString(key), 'hasKey - key "$key", given for collection, is neither number nor string', {
+            $key: key
+        }, CollectionError);
+
         //if key is number - it's index
         if (xs.isNumber(key)) {
+
             //check, that key exists
             return 0 <= key && key < me.items.length;
-            //if it is string - it's key
-        } else if (xs.isString(key)) {
-            return me.keys().indexOf(key) >= 0;
-            //else - it's error
-        } else {
-            throw new CollectionError('hasKey - key "' + key + '", given for collection, is nor number neither string');
         }
+
+        //if it is string - it's key
+        return me.keys().indexOf(key) >= 0;
     };
 
     /**
@@ -335,6 +334,7 @@
      * @return {Boolean} whether collection has value
      */
     collection.prototype.has = function (value) {
+
         return this.values().indexOf(value) >= 0;
     };
 
@@ -380,10 +380,6 @@
      * - REVERSE - to lookup for value from the end of the collection
      *
      * @return {String|Number|undefined} found key, or undefined if nothing found
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if given flags list is not number
      */
     collection.prototype.keyOf = function (value, flags) {
         var me = this, key, values = me.values();
@@ -391,9 +387,10 @@
         if (arguments.length === 1) {
             key = values.indexOf(value);
         } else {
-            if (!xs.isNumber(flags)) {
-                throw new CollectionError('keyOf - given flags "' + flags + '" list is not number');
-            }
+            //assert that flags is number
+            xs.assert.number(flags, 'keyOf - given flags "$flags" list is not number', {
+                $flags: flags
+            }, CollectionError);
 
             if (flags & xs.core.Collection.REVERSE) {
                 key = values.lastIndexOf(value);
@@ -441,24 +438,30 @@
      * @param {String|Number} key value to lookup for
      *
      * @return {*} value with specified key
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if given key is not correct or doesn't exist
      */
     collection.prototype.at = function (key) {
         var me = this, index;
 
-        //if key is number - it's index
+        //assert that collection is not empty
+        xs.assert.ok(me.items.length, 'at - collection is empty', CollectionError);
+
+        xs.assert.ok(xs.isNumber(key) || xs.isString(key), 'at - key "$key", given for collection, is neither number nor string', {
+            $key: key
+        }, CollectionError);
+
+
+        //handle number - it's index
         if (xs.isNumber(key)) {
             //check that index is in bounds
-            var max = me.items.length;
+            var max = me.items.length - 1;
             //if max is 0, then min is 0
-            var min = max > 0 ? -max + 1 : 0;
+            var min = max > 0 ? -max : 0;
 
-            if (key < min || key > max) {
-                throw new CollectionError('at - index "' + key + '" is out of bounds [' + min + ',' + max + ']');
-            }
+            xs.assert.ok(min <= key && key <= max, 'at - index "$key" is out of bounds [$min,$max]', {
+                $key: key,
+                $min: min,
+                $max: max
+            }, CollectionError);
 
             //convert negative index
             if (key < 0) {
@@ -466,20 +469,18 @@
             }
 
             return me.items[key].value;
-            //if it is string - it's key
-        } else if (xs.isString(key)) {
-            index = me.keys().indexOf(key);
-
-            //check, that key exists
-            if (index < 0) {
-                throw new CollectionError('at - given key "' + key + '" doesn\'t exist');
-            }
-
-            return me.items[index].value;
-            //else - it's error
-        } else {
-            throw new CollectionError('at - key "' + key + '", given for collection, is nor number neither string');
         }
+
+
+        //handle string - it's key
+        index = me.keys().indexOf(key);
+
+        //check, that key exists
+        xs.assert.ok(index >= 0, 'at - given key "$key" doesn\'t exist', {
+            $key: key
+        }, CollectionError);
+
+        return me.items[index].value;
     };
 
     /**
@@ -536,18 +537,12 @@
      * @method first
      *
      * @return {*} first value, undefined if collection is empty
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if collection is empty
      */
     collection.prototype.first = function () {
         var me = this;
 
-        //check that collection is not empty
-        if (!me.items.length) {
-            throw new CollectionError('first - collection is empty');
-        }
+        //assert that collection is not empty
+        xs.assert.ok(me.items.length, 'first - collection is empty', CollectionError);
 
         return me.items[0].value;
     };
@@ -606,18 +601,12 @@
      * @method last
      *
      * @return {*} last value, undefined if collection is empty
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if collection is empty
      */
     collection.prototype.last = function () {
         var me = this;
 
-        //check that collection is not empty
-        if (!me.items.length) {
-            throw new CollectionError('last - collection is empty');
-        }
+        //assert that collection is not empty
+        xs.assert.ok(me.items.length, 'last - collection is empty', CollectionError);
 
         return me.items[me.items.length - 1].value;
     };
@@ -647,33 +636,30 @@
      * @param {*} [value] value, added to collection
      *
      * @chainable
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if collection already has an element with given key
      */
     collection.prototype.add = function (key, value) {
         var me = this;
-        //check arguments enough
-        if (!arguments.length) {
-            throw new CollectionError('add - empty arguments');
-        }
 
-        if (arguments.length > 1) {
-            //key must be string
-            if (!xs.isString(key)) {
-                throw new CollectionError('add - key "' + key + '", given for collection, is not a string');
-            }
+        //assert that arguments given
+        xs.assert.ok(arguments.length, 'add - empty arguments', CollectionError);
 
-            //check key is not taken yet
-            if (me.keys().indexOf(key) >= 0) {
-                throw new CollectionError('add - collection already has key "' + key + '"');
-            }
+        if (arguments.length === 1) {
             //handle autoincrement index
-        } else {
             value = key;
             key = me.items.length;
+        } else {
+
+            //assert that key is string
+            xs.assert.string(key, 'add - key "$key", given for collection, is not a string', {
+                $key: key
+            }, CollectionError);
+
+            //assert that key is not taken
+            xs.assert.ok(me.keys().indexOf(key) < 0, 'add - collection already has key "$key"', {
+                $key: key
+            }, CollectionError);
         }
+
 
         //add item
         me.items.push({
@@ -730,55 +716,45 @@
      * @param {*} [value] value, inserted to collection
      *
      * @chainable
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if not enough arguments - index and key are required
-     * - if given index is not a number
-     * - if given index is out of bounds: -collection.length < index <= collection.length
-     * - if given key is nor a number, neither a string
-     * - if collection already has an element with given key
      */
     collection.prototype.insert = function (index, key, value) {
         var me = this;
 
-        //check arguments enough
-        if (arguments.length <= 1) {
-            throw new CollectionError('insert - no enough arguments');
-        }
+        //assert that arguments enough
+        xs.assert.ok(arguments.length >= 2, 'insert - no enough arguments', CollectionError);
 
-        //check, that index is number
-        if (!xs.isNumber(index)) {
-            throw new CollectionError('insert - given index "' + index + '" is not number');
-        }
+        //assert that index is number
+        xs.assert.number(index, 'insert - given index "$index" is not number', {
+            $index: index
+        }, CollectionError);
 
-
-        //check that index is in bounds
         var max = me.items.length;
         //if max is 0, then min is 0
-        var min = max > 0 ? -max + 1 : 0;
+        var min = max > 0 ? -max : 0;
 
-        if (index < min || index > max) {
-            throw new CollectionError('insert - index "' + index + '" is out of bounds [' + min + ',' + max + ']');
-        }
+        //check that index is in bounds
+        xs.assert.ok(min <= index && index <= max, 'insert - index "$index" is out of bounds [$min, $max]', {
+            $index: index,
+            $min: min,
+            $max: max
+        }, CollectionError);
 
 
-        //check key if value given
-        if (arguments.length > 2) {
-            //key must be string
-            if (!xs.isString(key)) {
-                throw new CollectionError('insert - key "' + key + '", given for collection, is not a string');
-            }
-
-            //check key is not taken yet
-            if (me.keys().indexOf(key) >= 0) {
-                throw new CollectionError('insert - collection already has key "' + key + '"');
-            }
-
+        //check if key given
+        if (arguments.length === 2) {
             //handle autoincrement index
-        } else {
             value = key;
             key = index;
+        } else {
+            //assert that key is string
+            xs.assert.string(key, 'insert - key "$key", given for collection, is not a string', {
+                $key: key
+            }, CollectionError);
+
+            //assert that key is not taken
+            xs.assert.ok(me.keys().indexOf(key) < 0, 'insert - collection already has key "$key"', {
+                $key: key
+            }, CollectionError);
         }
 
 
@@ -840,31 +816,31 @@
      * @param {*} value value new value for item with given key
      *
      * @chainable
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if not enough arguments - key and value are required
-     * - if given key is nor a number, neither a string
-     * - if collection does not have item with given key
      */
     collection.prototype.set = function (key, value) {
         var me = this;
 
-        //check arguments enough
-        if (arguments.length <= 1) {
-            throw new CollectionError('set - no enough arguments');
-        }
+        //assert that arguments enough
+        xs.assert.ok(arguments.length >= 2, 'set - no enough arguments', CollectionError);
 
-        //if key is number - it's index
+        xs.assert.ok(xs.isNumber(key) || xs.isString(key), 'set - key "$key", given for collection, is neither number nor string', {
+            $key: key
+        }, CollectionError);
+
+
+        //handle number key - it's index
         if (xs.isNumber(key)) {
             //check that index is in bounds
-            var max = me.items.length;
+            var max = me.items.length - 1;
             //if max is 0, then min is 0
-            var min = max > 0 ? -max + 1 : 0;
+            var min = max > 0 ? -max : 0;
 
-            if (key < min || key > max) {
-                throw new CollectionError('set - index "' + key + '" is out of bounds [' + min + ',' + max + ']');
-            }
+            //assert that index is in bounds
+            xs.assert.ok(min <= key && key <= max, 'set - index "$index" is out of bounds [$min, $max]', {
+                $index: key,
+                $min: min,
+                $max: max
+            }, CollectionError);
 
             //convert negative index
             if (key < 0) {
@@ -872,20 +848,21 @@
             }
 
             me.items[key].value = value;
-            //if it is string - it's key
-        } else if (xs.isString(key)) {
-            var index = me.keys().indexOf(key);
 
-            //check, that key exists
-            if (index < 0) {
-                throw new CollectionError('set - given key "' + key + '" doesn\'t exist');
-            }
-
-            me.items[index].value = value;
-            //else - it's error
-        } else {
-            throw new CollectionError('set - key "' + key + '", given for collection, is nor number neither string');
+            return me;
         }
+
+
+        //handle string key  - it's key
+        var index = me.keys().indexOf(key);
+
+        //assert that key exists
+        xs.assert.ok(index >= 0, 'set - given key "$key" doesn\'t exist', {
+            $key: key
+        }, CollectionError);
+
+        me.items[index].value = value;
+
 
         return me;
     };
@@ -934,38 +911,45 @@
     collection.prototype.removeAt = function (key) {
         var me = this;
 
-        //if index given
+        xs.assert.ok(xs.isNumber(key) || xs.isString(key), 'removeAt - key "$key", given for collection, is neither number nor string', {
+            $key: key
+        }, CollectionError);
+
+
+        //handle number key - index given
         if (xs.isNumber(key)) {
             //check that index is in bounds
-            var max = me.items.length;
+            var max = me.items.length - 1;
             //if max is 0, then min is 0
-            var min = max > 0 ? -max + 1 : 0;
+            var min = max > 0 ? -max : 0;
 
-            if (key < min || key > max) {
-                throw new CollectionError('removeAt - index "' + key + '" is out of bounds [' + min + ',' + max + ']');
-            }
+            //assert that index is in bounds
+            xs.assert.ok(min <= key && key <= max, 'removeAt - index "$index" is out of bounds [$min, $max]', {
+                $index: key,
+                $min: min,
+                $max: max
+            }, CollectionError);
 
             //remove item by key
             me.items.splice(key, 1);
 
-            //if key given
-        } else if (xs.isString(key)) {
-            //get index
-            var index = me.keys().indexOf(key);
-
-            //check, that key exists
-            if (index < 0) {
-                throw new CollectionError('removeAt - given key doesn\'t exist in collection');
-            }
-
-
-            //remove item by key
-            me.items.splice(index, 1);
-
-            //else - it's error
-        } else {
-            throw new CollectionError('removeAt - key "' + key + '", given for collection, is nor number neither string');
+            return me;
         }
+
+
+        //handle string key - key given
+        //get index
+        var index = me.keys().indexOf(key);
+
+        //assert that key exists
+        xs.assert.ok(index >= 0, 'removeAt - given key "$key" doesn\'t exist in collection', {
+            $key: key
+        }, CollectionError);
+
+        //remove item by key
+        me.items.splice(index, 1);
+
+        //else - it's error
 
         return me;
     };
@@ -1073,11 +1057,6 @@
      * - ALL - to remove all matches
      *
      * @chainable
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if given flags list is not number
-     * - if nothing to remove in collection
      */
     collection.prototype.remove = function (value, flags) {
         var me = this, values = me.values();
@@ -1089,6 +1068,7 @@
             return me;
         }
 
+
         var index, all = false;
         //if no flags - remove first occurrence of value
         if (arguments.length === 1) {
@@ -1096,10 +1076,10 @@
 
             //handle flags
         } else {
-            //check, that flags list is a number
-            if (!xs.isNumber(flags)) {
-                throw new CollectionError('remove - given flags "' + flags + '" list is not number');
-            }
+            //assert that flags is number
+            xs.assert.number(flags, 'remove - given flags "$flags" list is not number', {
+                $flags: flags
+            }, CollectionError);
 
             //if ALL flag given - no index is needed
             if (flags & xs.core.Collection.ALL) {
@@ -1114,10 +1094,9 @@
             }
         }
 
-        //check, that item exists
-        if (index < 0) {
-            throw new CollectionError('remove - given value doesn\'t exist in collection');
-        }
+
+        //assert, that item exists
+        xs.assert.ok(index >= 0, 'remove - given value doesn\'t exist in collection', CollectionError);
 
         //if all flag is given
         if (all) {
@@ -1268,27 +1247,23 @@
      * - ALL - to remove all matches
      *
      * @chainable
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if finder is not a function
-     * - if given flags list is not number
      */
     collection.prototype.removeBy = function (finder, flags) {
         var me = this;
 
-        //check that finder is function
-        if (!xs.isFunction(finder)) {
-            throw new CollectionError('removeBy - given finder "' + finder + '" is not a function');
-        }
+        //assert that finder is function
+        xs.assert.fn(finder, 'removeBy - given finder "$finder" is not a function', {
+            $finder: finder
+        }, CollectionError);
 
         var all = false, reverse = false;
         //handle flags
         if (arguments.length > 1) {
-            //check, that flags list is a number
-            if (!xs.isNumber(flags)) {
-                throw new CollectionError('removeBy - given flags "' + flags + '" list is not number');
-            }
+
+            //assert that flags is number
+            xs.assert.number(flags, 'removeBy - given flags "$flags" list is not number', {
+                $flags: flags
+            }, CollectionError);
 
             //if ALL flag given - order does not matter
             if (flags & xs.core.Collection.ALL) {
@@ -1472,18 +1447,13 @@
      * @method shift
      *
      * @return {*} First value of collection
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if collection is empty
      */
     collection.prototype.shift = function () {
         var me = this;
 
-        //check that collection is not empty
-        if (!me.items.length) {
-            throw new CollectionError('shift - collection is empty');
-        }
+        //assert that collection is not empty
+        xs.assert.ok(me.items.length, 'shift - collection is empty', CollectionError);
+
 
         //get returned value
         var value = me.items[0].value;
@@ -1583,18 +1553,13 @@
      * @method pop
      *
      * @return {*} First value of collection
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if collection is empty
      */
     collection.prototype.pop = function () {
         var me = this;
 
-        //check that collection is not empty
-        if (!me.items.length) {
-            throw new CollectionError('pop - collection is empty');
-        }
+        //assert that collection is not empty
+        xs.assert.ok(me.items.length, 'pop - collection is empty', CollectionError);
+
 
         var index = me.items.length - 1;
 
@@ -1667,27 +1632,23 @@
      * - REVERSE - to iterate in reverse order
      *
      * @chainable
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if iterator is not a function
-     * - if given flags list is not a number
      */
     collection.prototype.each = function (iterator, flags, scope) {
         var me = this;
 
-        //check that iterator is function
-        if (!xs.isFunction(iterator)) {
-            throw new CollectionError('each - given iterator "' + iterator + '" is not a function');
-        }
+        //assert that iterator is function
+        xs.assert.fn(iterator, 'each - given iterator "$iterator" is not a function', {
+            $iterator: iterator
+        }, CollectionError);
 
         //handle flags
         var reverse = false;
         if (arguments.length >= 2) {
-            //check, that flags list is a number
-            if (!xs.isNumber(flags)) {
-                throw new CollectionError('each - given flags "' + flags + '" list is not number');
-            }
+
+            //assert that flags is number
+            xs.assert.number(flags, 'each - given flags "$flags" list is not number', {
+                $flags: flags
+            }, CollectionError);
 
             //if REVERSE flag given - last value occurrence is looked up for
             if (flags & xs.core.Collection.REVERSE) {
@@ -1785,31 +1746,28 @@
      * @method find
      *
      * @param {Function} finder function, returning true if value matches given conditions
-     * @param {Number} [flags] additional iterating flags:
+     * @param {Number} [flags] additional search flags:
      * - ALL - to find all matches
      * @param {Object} [scope] optional scope
      *
      * @return {*|xs.core.Collection} found value, undefined if nothing found, or xs.core.Collection with results if ALL flag was given
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if finder is not a function
      */
     collection.prototype.find = function (finder, flags, scope) {
         var me = this;
 
-        //check that finder is function
-        if (!xs.isFunction(finder)) {
-            throw new CollectionError('find - given finder "' + finder + '" is not a function');
-        }
+        //assert that finder is function
+        xs.assert.fn(finder, 'find - given finder "$finder" is not a function', {
+            $finder: finder
+        }, CollectionError);
 
         //handle flags
         var all = false, reverse = false;
         if (arguments.length >= 2) {
-            //check, that flags list is a number
-            if (!xs.isNumber(flags)) {
-                throw new CollectionError('find - given flags "' + flags + '" list is not number');
-            }
+
+            //assert that flags is number
+            xs.assert.number(flags, 'find - given flags "$flags" list is not number', {
+                $flags: flags
+            }, CollectionError);
 
             //if ALL flag given
             if (flags & xs.core.Collection.ALL) {
@@ -1909,18 +1867,15 @@
      * @param {Object} [scope] optional scope
      *
      * @return {Array|Object} Mapping result
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if mapper is not a function
      */
     collection.prototype.map = function (mapper, scope) {
         var me = this;
 
-        //check that finder is function
-        if (!xs.isFunction(mapper)) {
-            throw new CollectionError('map - given mapper "' + mapper + '" is not a function');
-        }
+        //assert that mapper is function
+        xs.assert.fn(mapper, 'map - given mapper "$mapper" is not a function', {
+            $mapper: mapper
+        }, CollectionError);
+
 
         //default scope to me
         if (arguments.length < 2) {
@@ -2028,32 +1983,26 @@
      * @param {*} [memo] initial value. Is optional. If omitted, first value's value is shifted from list and used as memo
      *
      * @return {*} Reducing result
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if finder is not a function
-     * - if collection is empty
      */
     collection.prototype.reduce = function (reducer, flags, scope, memo) {
         var me = this;
 
-        //check that finder is function
-        if (!xs.isFunction(reducer)) {
-            throw new CollectionError('reduce - given reducer "' + reducer + '" is not a function');
-        }
+        //assert that reducer is function
+        xs.assert.fn(reducer, 'reduce - given reducer "$reducer" is not a function', {
+            $reducer: reducer
+        }, CollectionError);
 
-        //check that collection is not empty
-        if (!me.items.length) {
-            throw new CollectionError('reduce - collection is empty');
-        }
+        //assert that collection is not empty
+        xs.assert.ok(me.items.length, 'reduce - collection is empty', CollectionError);
 
         //handle flags
         var reverse = false;
         if (arguments.length >= 2) {
-            //check, that flags list is a number
-            if (!xs.isNumber(flags)) {
-                throw new CollectionError('reduce - given flags "' + flags + '" list is not number');
-            }
+
+            //assert that flags is number
+            xs.assert.number(flags, 'reduce - given flags "$flags" list is not number', {
+                $flags: flags
+            }, CollectionError);
 
             //if REVERSE flag given
             if (flags & xs.core.Collection.REVERSE) {
@@ -2062,7 +2011,7 @@
         }
 
         //default scope to me
-        if (arguments.length < 3) {
+        if (arguments.length <= 2) {
             scope = me;
         }
 
@@ -2170,19 +2119,17 @@
      * @param {Object} [scope] optional scope
      *
      * @return {Boolean} whether some values pass tester function
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if tester is not a function
-     * - if collection is empty
      */
     collection.prototype.some = function (tester, count, scope) {
         var me = this, length = me.items.length;
 
-        //check that finder is function
-        if (!xs.isFunction(tester)) {
-            throw new CollectionError('some - given tester "' + tester + '" is not a function');
-        }
+        //assert that collection is not empty
+        xs.assert.ok(me.items.length, 'some - collection is empty', CollectionError);
+
+        //assert that tester is function
+        xs.assert.fn(tester, 'some - given tester "$tester" is not a function', {
+            $tester: tester
+        }, CollectionError);
 
         //default count to 1, if not given
         if (arguments.length < 2) {
@@ -2190,17 +2137,15 @@
         }
 
         //check, that count is number and is in bounds
-        if (!xs.isNumber(count)) {
-            throw new CollectionError('some - given count "' + count + '" is not number');
-        }
-        if (count < 0 || count > length) {
-            throw new CollectionError('some - given count "' + count + '" is out of bounds [0,' + length + ']');
-        }
+        xs.assert.number(count, 'some - given count "$count" is not number', {
+            $count: count
+        }, CollectionError);
 
-        //check that collection is not empty
-        if (!me.items.length) {
-            throw new CollectionError('some - collection is empty');
-        }
+        xs.assert.ok(0 <= count && count <= length, 'some - given count "$count" is out of bounds [$min, $max]', {
+            $count: count,
+            $min: 0,
+            $max: length
+        }, CollectionError);
 
         //default scope to me
         if (arguments.length < 3) {
@@ -2403,40 +2348,56 @@
      * @param {String[]|Number[]} keys list with keys of picked items
      *
      * @return {xs.core.Collection} collection of picked items
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if keys is not array
-     * - if any key is nor string neither number
-     * - if any key is not in collection
      */
     collection.prototype.pick = function (keys) {
         var me = this;
 
-        if (!xs.isArray(keys)) {
-            throw new CollectionError('pick - given keys list "' + keys + '" is not array');
-        }
+        //assert that keys is array
+        xs.assert.array(keys, 'pick - given keys list "$keys" is not array', {
+            $keys: keys
+        }, CollectionError);
 
-        var length = keys.length, key, i, ownKeys = me.keys(), ownLength = ownKeys.length, index, item, items = [];
+
+        var length = keys.length, key, i, ownKeys = me.keys(), index, item, items = [];
         for (i = 0; i < length; i++) {
             key = keys[i];
-            //if key is string - it's key
+
+            //assert that key is string or number
+            xs.assert.ok(xs.isString(key) || xs.isNumber(key), 'pick - key "$key", given for collection, is neither number nor string', {
+                $key: key
+            }, CollectionError);
+
+
+            //handle key string - it's key
             if (xs.isString(key)) {
                 index = ownKeys.indexOf(key);
 
-                //check, that key exists
-                if (index < 0) {
-                    throw new CollectionError('pick - given key "' + key + '" doesn\'t exist');
-                }
-                //else if it's number - it's index
-            } else if (xs.isNumber(key)) {
-                if (key < 0 || key > ownLength) {
-                    throw new CollectionError('pick - given index "' + key + '" is out of bounds [0,' + ownLength + ']');
-                }
-                index = key;
-                //else - it's error
+                //assert that key exists
+                xs.assert.ok(index >= 0, 'pick - given key "$key" doesn\'t exist', {
+                    $key: key
+                }, CollectionError);
+
+
+                //handle number key - it's index
             } else {
-                throw new CollectionError('pick - key "' + key + '", given for collection, is nor number neither string');
+                //check that index is in bounds
+                var max = me.items.length - 1;
+                //if max is 0, then min is 0
+                var min = max > 0 ? -max : 0;
+
+                //assert that index is in bounds
+                xs.assert.ok(min <= key && key <= max, 'pick - given index "$index" is out of bounds [$min, $max]', {
+                    $index: key,
+                    $min: min,
+                    $max: max
+                }, CollectionError);
+
+                //convert negative index
+                if (key < 0) {
+                    key += max;
+                }
+
+                index = key;
             }
 
             //get picked item
@@ -2448,6 +2409,7 @@
                 value: item.value
             });
         }
+
 
         //set picked items as items of picked collection
         var picked = new xs.core.Collection;
@@ -2506,43 +2468,59 @@
      * @param {String[]|Number[]} keys list with keys of omitted items
      *
      * @return {xs.core.Collection} collection of without omitted items
-     *
-     * @throws {Error} Error is thrown:
-     *
-     * - if keys is not array
-     * - if any key is nor string neither number
-     * - if any key is not in collection
      */
     collection.prototype.omit = function (keys) {
         var me = this;
 
-        if (!xs.isArray(keys)) {
-            throw new CollectionError('omit - given keys list "' + keys + '" is not array');
-        }
+        //assert that keys is array
+        xs.assert.array(keys, 'omit - given keys list "$keys" is not array', {
+            $keys: keys
+        }, CollectionError);
 
-        var length = keys.length, key, i, ownKeys = me.keys(), ownLength = ownKeys.length, index, item, items = [];
+
+        var length = keys.length, key, i, ownKeys = me.keys(), maxIndex = ownKeys.length - 1, index, item, items = [];
 
         var omittedIndexes = [];
         //remove blacklisted items
         for (i = 0; i < length; i++) {
             key = keys[i];
-            //if key is string - it's key
+
+            //assert that key is string or number
+            xs.assert.ok(xs.isString(key) || xs.isNumber(key), 'omit - key "$key", given for collection, is neither number nor string', {
+                $key: key
+            }, CollectionError);
+
+
+            //handle key string - it's key
             if (xs.isString(key)) {
                 index = ownKeys.indexOf(key);
 
-                //check, that key exists
-                if (index < 0) {
-                    throw new CollectionError('omit - given key "' + key + '" doesn\'t exist');
-                }
-                //else if it's number - it's index
-            } else if (xs.isNumber(key)) {
-                if (key < 0 || key > ownLength) {
-                    throw new CollectionError('omit - given index "' + key + '" is out of bounds [0,' + ownLength + ']');
-                }
-                index = key;
-                //else - it's error
+                //assert, that key exists
+                xs.assert.ok(index >= 0, 'omit - given key "$key" doesn\'t exist', {
+                    $key: key
+                }, CollectionError);
+
+
+                //handle number key - it's index
             } else {
-                throw new CollectionError('omit - key "' + key + '", given for collection, is nor number neither string');
+                //check that index is in bounds
+                var max = me.items.length - 1;
+                //if max is 0, then min is 0
+                var min = max > 0 ? -max : 0;
+
+                //assert that index is in bounds
+                xs.assert.ok(min <= key && key <= max, 'omit - given index "$index" is out of bounds [$min, $max]', {
+                    $index: key,
+                    $min: min,
+                    $max: max
+                }, CollectionError);
+
+                //convert negative index
+                if (key < 0) {
+                    key += max;
+                }
+
+                index = key;
             }
 
             //add omitted index
@@ -2550,7 +2528,7 @@
         }
 
         //fill items from me.items without omitted indexes
-        for (i = 0; i < ownLength; i++) {
+        for (i = 0; i <= maxIndex; i++) {
             if (omittedIndexes.indexOf(i) >= 0) {
                 continue;
             }
