@@ -52,7 +52,7 @@
          * @param {Function} [Exception] error class
          */
         me.equal = function (given, expected, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = 'Given "' + given + '" is not same to expected "' + expected + '"';
             }
 
@@ -77,7 +77,7 @@
          * @param {Function} [Exception] error class
          */
         me.ok = function (expression, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = 'Expression failed';
             }
 
@@ -102,7 +102,7 @@
          * @param {Function} [Exception] error class
          */
         me.not = function (expression, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = 'Expression succeed';
             }
 
@@ -127,7 +127,7 @@
          * @param {Function} [Exception] error class
          */
         me.object = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not object';
             }
 
@@ -152,7 +152,7 @@
          * @param {Function} [Exception] error class
          */
         me.array = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not array';
             }
 
@@ -177,7 +177,7 @@
          * @param {Function} [Exception] error class
          */
         var _fn = me.fn = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not function';
             }
 
@@ -202,7 +202,7 @@
          * @param {Function} [Exception] error class
          */
         me.string = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not string';
             }
 
@@ -227,7 +227,7 @@
          * @param {Function} [Exception] error class
          */
         me.number = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not number';
             }
 
@@ -252,7 +252,7 @@
          * @param {Function} [Exception] error class
          */
         me.boolean = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not boolean';
             }
 
@@ -277,7 +277,7 @@
          * @param {Function} [Exception] error class
          */
         me.regExp = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not regular expression';
             }
 
@@ -302,7 +302,7 @@
          * @param {Function} [Exception] error class
          */
         me.error = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not error object';
             }
 
@@ -327,7 +327,7 @@
          * @param {Function} [Exception] error class
          */
         me.null = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not null';
             }
 
@@ -352,7 +352,7 @@
          * @param {Function} [Exception] error class
          */
         me.iterable = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not iterable';
             }
 
@@ -377,7 +377,7 @@
          * @param {Function} [Exception] error class
          */
         me.primitive = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not primitive';
             }
 
@@ -402,7 +402,7 @@
          * @param {Function} [Exception] error class
          */
         me.numeric = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not numeric';
             }
 
@@ -427,7 +427,7 @@
          * @param {Function} [Exception] error class
          */
         me.defined = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not defined';
             }
 
@@ -452,7 +452,7 @@
          * @param {Function} [Exception] error class
          */
         me.empty = function (value, message, vars, Exception) {
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not empty';
             }
 
@@ -480,7 +480,7 @@
             //assert, that fn is function
             _fn(fn);
 
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + fn + '" is not Class';
             }
 
@@ -508,7 +508,7 @@
             //assert, that fn is function
             _fn(fn);
 
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + fn + '" is not Interface';
             }
 
@@ -537,7 +537,7 @@
             //assert, that Class is function
             _fn(Class);
 
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + value + '" is not instance of "' + (Class.label ? Class.label : Class.name) + '"';
             }
 
@@ -569,7 +569,7 @@
             //assert that Parent is class
             _class(Parent);
 
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = '"' + Child.label + '" does not inherit from "' + Parent.label + '"';
             }
 
@@ -601,7 +601,7 @@
             //assert that Interface is interface
             _interface(Interface);
 
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = 'Class "' + Class.label + '" does not implement interface "' + Interface.label + '"';
             }
 
@@ -633,7 +633,7 @@
             //assert that Mixin is class
             _class(Mixin);
 
-            if (!message) {
+            if (!xs.isString(message)) {
                 message = 'Class "' + Class.label + '" is not mixed with class "' + Mixin.label + '"';
             }
 
@@ -660,8 +660,10 @@
          */
         var _raise = function (message, vars, Exception) {
             var error;
+
             if (arguments.length === 1) {
                 error = new Error(message);
+
             } else if (arguments.length === 2) {
                 //if vars given
                 if (xs.isObject(vars)) {
@@ -669,9 +671,12 @@
                 } else if (xs.isFunction(Exception)) {
                     error = new Exception(message);
                 }
+
             } else {
                 error = new Exception(xs.translate(message, vars));
             }
+
+            error.vars = vars;
 
             throw error;
         };
