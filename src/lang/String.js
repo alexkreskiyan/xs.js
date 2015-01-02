@@ -51,6 +51,16 @@
          * @return {String} translated string
          */
         me.translate = function (string, replaces) {
+            //assert that first argument is string
+            xs.assert.string(string, 'translate - given "$string" is not string', {
+                $string: string
+            }, StringError);
+
+            //assert that replaces are object
+            xs.assert.object(replaces, 'translate - given replaces "$replaces" are not object', {
+                $replaces: replaces
+            }, StringError);
+
             Object.keys(replaces).forEach(function (from) {
                 var to = replaces[from];
                 string = string.split(from).join(to);
@@ -59,6 +69,21 @@
             return string;
         };
     };
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class StringError
+     */
+    function StringError(message) {
+        this.message = 'xs.lang.String::' + message;
+    }
+
+    StringError.prototype = new Error();
 
     //extend xs with string
     xs.extend(xs, string);

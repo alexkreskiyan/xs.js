@@ -23,6 +23,19 @@ module('xs.lang.String', function () {
 
     }, function () {
         var me = this;
+
+        throws(function () {
+            xs.translate();
+        });
+
+        throws(function () {
+            xs.translate('');
+        });
+
+        throws(function () {
+            xs.translate('', null);
+        });
+
         //check translation
         strictEqual(me.str, 'My bear is big and black. I love my big black bear');
     });
