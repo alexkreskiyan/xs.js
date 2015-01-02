@@ -45,12 +45,29 @@
          * @param {Array} array shuffled array
          */
         me.shuffle = function (array) {
-            xs.assert.array(array);
+            xs.assert.array(array, 'shuffle - given "$array" is not array', {
+                $array: array
+            }, ArrayError);
 
             array.sort(function () {
                 return Math.random() - 0.5;
             });
         };
     };
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class ArrayError
+     */
+    function ArrayError(message) {
+        this.message = 'xs.lang.Array::' + message;
+    }
+
+    ArrayError.prototype = new Error();
 
 })(window, 'xs');
