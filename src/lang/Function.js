@@ -53,6 +53,9 @@
          * @return {Function} bound function
          */
         var _bind = me.bind = function (fn, scope, args) {
+            xs.assert.fn(fn);
+            xs.assert.ok(arguments.length < 3 || xs.isArray(args));
+
             return _bindFunction.apply(fn, _concatenate(scope, args));
         };
 
@@ -78,6 +81,8 @@
          * @return {Function} bound function
          */
         me.memorize = function (fn) {
+            xs.assert.fn(fn);
+
             var ran = false, memo;
 
             return function () {
@@ -123,6 +128,8 @@
          * @return {Function} wrapped function
          */
         me.wrap = function (fn, wrapper, scope) {
+            xs.assert.fn(fn);
+            xs.assert.fn(wrapper);
 
             return function () {
                 var args = _slice(arguments);
@@ -151,6 +158,8 @@
          * @param {Object} scope optional execution scope
          */
         me.nextTick = function (fn, scope) {
+            xs.assert.fn(fn);
+
             if (scope) {
                 fn = _bind(fn, scope);
             }
@@ -178,6 +187,8 @@
          * @return {String} function name
          */
         me.getName = function (fn) {
+            xs.assert.fn(fn);
+
             getNameRe.lastIndex = 0;
             return getNameRe.exec(fn.toString()).pop();
         };
@@ -202,6 +213,8 @@
          * @return {Array} array with function formal params
          */
         me.getArguments = function (fn) {
+            xs.assert.fn(fn);
+
             getArgumentsRe.lastIndex = 0;
             return getArgumentsRe.exec(fn.toString()).pop().split(',').map(function (name) {
 
@@ -229,6 +242,8 @@
          * @return {String} function body
          */
         me.getBody = function (fn) {
+            xs.assert.fn(fn);
+
             var stringFn = fn.toString();
             return stringFn.substring(stringFn.indexOf('{') + 1, stringFn.length - 1);
         };
@@ -250,6 +265,8 @@
          * @return {Object} function data
          */
         me.parse = function (fn) {
+            xs.assert.fn(fn);
+
             parseRe.lastIndex = 0;
             var stringFn = fn.toString();
             var data = parseRe.exec(stringFn);

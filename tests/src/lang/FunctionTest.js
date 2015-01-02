@@ -13,13 +13,21 @@ module('xs.lang.Function', function () {
     'use strict';
 
     test('bind', function () {
+        throws(function () {
+            xs.bind([]);
+        });
+
+        throws(function () {
+            xs.bind(xs.emptyFn, null, null);
+        });
+
         //init test function
         var fn = function (a, b, c) {
             return this.x + (a - b) * c;
         };
 
         //get bind
-        var binded = xs.bind(fn, { x: 5 }, [
+        var binded = xs.bind(fn, {x: 5}, [
             2,
             3
         ]);
@@ -29,12 +37,16 @@ module('xs.lang.Function', function () {
     });
 
     test('memorize', function () {
+        throws(function () {
+            xs.memorize([]);
+        });
+
         //init memorized function
         var fn = function (obj) {
             obj.x++;
         };
         //init scope
-        var obj = { x: 1 };
+        var obj = {x: 1};
 
         //get memorized function
         var one = xs.memorize(fn);
@@ -47,6 +59,15 @@ module('xs.lang.Function', function () {
     });
 
     test('wrap', function () {
+        throws(function () {
+            xs.wrap([]);
+        });
+
+        throws(function () {
+            xs.wrap(function () {
+            }, null);
+        });
+
         //init wrapped function
         var fn = function (val) {
             return 2 * val;
@@ -55,13 +76,17 @@ module('xs.lang.Function', function () {
         //get wrapped
         var wrapped = xs.wrap(fn, function (func, a, b, c) {
             return this.x + a + func(b) + c;
-        }, { x: 1 });
+        }, {x: 1});
 
         //test wrapped
         strictEqual(wrapped(1, 2, 3), 9);
     });
 
     test('getName', function () {
+        throws(function () {
+            xs.Function.getName([]);
+        });
+
         //test anonymous function
         strictEqual(xs.Function.getName(function () {
         }), '');
@@ -72,6 +97,10 @@ module('xs.lang.Function', function () {
     });
 
     test('getArguments', function () {
+        throws(function () {
+            xs.Function.getArguments([]);
+        });
+
         //test empty arguments
         strictEqual(xs.Function.getArguments(function () {
         }).toString(), '');
@@ -82,6 +111,10 @@ module('xs.lang.Function', function () {
     });
 
     test('getBody', function () {
+        throws(function () {
+            xs.Function.getBody([]);
+        });
+
         //test empty body
         strictEqual(xs.Function.getBody(function () {
         }).trim(), '');
@@ -93,6 +126,10 @@ module('xs.lang.Function', function () {
     });
 
     test('parse', function () {
+        throws(function () {
+            xs.Function.parse([]);
+        });
+
         //get parse data
         var data = xs.Function.parse(function demo123_Asd(demo123_Asd, asd_123_ASD) {
             return demo123_Asd + asd_123_ASD + '';
