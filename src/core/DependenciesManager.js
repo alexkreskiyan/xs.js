@@ -51,10 +51,6 @@
          * @param {Object} dependent dependent Class
          * @param {xs.core.Collection} waiting collection of processed classes, dependent class is waiting for
          * @param {Function} handleReady callback, called when all waited classes were processed
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - deadLock is detected
          */
         me.add = function (dependent, waiting, handleReady) {
 
@@ -80,11 +76,8 @@
             waiting.each(function (Class) {
                 var deadLock = chains.getLock(Class);
 
-                //throw respective DependenciesManagerError if dead lock found
-                if (deadLock) {
-                    xs.log('xs.DependenciesManager::add. Lock detected');
-                    throw new DependenciesManagerError('dead lock detected: ' + _showDeadLock(deadLock));
-                }
+                //assert that no deadlock found
+                xs.assert.not(deadLock, 'dead lock detected: ' + _showDeadLock(deadLock), DependenciesManagerError);
             });
 
             xs.log('xs.DependenciesManager::add. No lock found. Adding dependency');
@@ -587,23 +580,20 @@
              *
              * @param {String[]} [waiting] waiting list. If empty - handler will be called when all pending classes will be loaded
              * @param {Function} handleReady onReady handler
-             *
-             * @throws {Error} Error is thrown, when:
-             *
-             * - incorrect params given
              */
             me.add = function (waiting, handleReady) {
-                //if waiting if function - it's handleReady and empty waiting
+
+                //assert, that correct params given
+                xs.assert.ok(xs.isFunction(waiting) || (xs.isArray(waiting) && xs.isFunction(handleReady)), 'incorrect onReady parameters', DependenciesManagerError);
+
+                //if waiting is function - it's handleReady and empty waiting
                 if (xs.isFunction(waiting)) {
                     handleReady = waiting;
                     waiting = null;
 
                     //else - waiting must be array, handleReady - function
-                } else if (xs.isArray(waiting) && xs.isFunction(handleReady)) {
-                    waiting = new xs.core.Collection(waiting);
-                    //otherwise - it's error
                 } else {
-                    throw new DependenciesManagerError('incorrect onReady parameters');
+                    waiting = new xs.core.Collection(waiting);
                 }
 
                 xs.log('xs.DependenciesManager::queue::add. Waiting', waiting.values());
