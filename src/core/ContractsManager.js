@@ -53,7 +53,7 @@
          *
          * @return {Boolean} verification result
          */
-        var _has = me.has = function (name) {
+        me.has = function (name) {
 
             return registry.hasKey(name);
         };
@@ -96,27 +96,23 @@
          *
          * @param {String} name new contract name
          * @param {Function} Contract registered contract
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - contract with given name is already registered
-         * - contract is not function
          */
         var _add = me.add = function (name, Contract) {
-            //throw error if trying to set defined
-            if (_has(name)) {
-                throw new ContractsManagerError('contract "' + name + '" is already defined');
-            }
 
-            //throw error if trying to add already added with other name
-            if (registry.has(Contract)) {
-                throw new ContractsManagerError('contract "' + Contract.label + '" can not be added as "' + name + '"');
-            }
+            //assert that Contract is function
+            xs.assert.fn(Contract, 'add - contract is not a function', ContractsManagerError);
 
-            //throw error if Contract is not function
-            if (!xs.isFunction(Contract)) {
-                throw new ContractsManagerError('contract "' + name + '" is not a function');
-            }
+            //assert no contract with that name was defined yet
+            xs.assert.not(registry.hasKey(name), 'add - contract "$name" is already defined', {
+                $name: name
+            }, ContractsManagerError);
+
+            //assert that Contract is not registered in manager yet
+            xs.assert.not(registry.has(Contract), 'add - contract "$label" can not be added as "$name"', {
+                $label: Contract.label,
+                $name: name
+            }, ContractsManagerError);
+
 
             //assign real name as label
             Contract.label = name;
@@ -154,16 +150,12 @@
          * @method remove
          *
          * @param {String} name name of unset Contract
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - contract with given name is not registered
          */
         me.remove = function (name) {
-            //throw error if trying to unset undefined
-            if (!_has(name)) {
-                throw new ContractsManagerError('contract "' + name + '" is not defined');
-            }
+            //assert contract with that name is defined
+            xs.assert.ok(registry.hasKey(name), 'remove - contract "$name" is not defined', {
+                $name: name
+            }, ContractsManagerError);
 
             //unset Contract label
             delete registry.at(name).label;
@@ -193,7 +185,7 @@
         /**
          * Creates contract via relative constructor. After that, when preprocessors
          * stack is processed, saves created contract in internal registry with given name. If contract with that name is already defined,
-         * respective error is thrown.
+         * respective error is ln.
          *
          * For example:
          *
@@ -219,10 +211,6 @@
          * preprocessors stack is processed. When called, created contract is passed as param
          *
          * @return {Function} created Contract
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - contract with given name is already registered
          */
         me.define = function (contractor, name, descFn, createdFn) {
             //create Contract and start it's processing
@@ -230,11 +218,6 @@
 
             //here contract namespace is evaluated. Evaluate real name of contract
             name = Contract.descriptor.resolveName(name);
-
-            //throw error if trying to redefine
-            if (_has(name)) {
-                throw new ContractsManagerError('contract "' + name + '" is already defined');
-            }
 
             //save Contract in registry by name
             _add(name, Contract);

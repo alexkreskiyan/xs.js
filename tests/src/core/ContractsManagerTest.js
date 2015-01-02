@@ -126,6 +126,21 @@ module('xs.ContractsManager', function () {
     }, function () {
         var me = this;
 
+        //throws when adding non-function contract
+        throws(function () {
+            xs.ContractsManager.add();
+        });
+
+        //throws when adding contract for registered name
+        throws(function () {
+            xs.ContractsManager.add('xs.class.Base', xs.Class(xs.emptyFn));
+        });
+
+        //throws when adding registered contract
+        throws(function () {
+            xs.ContractsManager.add('xs.class.Base2', xs.class.Base);
+        });
+
         //add class one
         xs.ContractsManager.add(me.classOneName, me.ClassOne);
 
@@ -268,6 +283,11 @@ module('xs.ContractsManager', function () {
     }, function () {
         var me = this;
 
+        //throws when removing unknown contract
+        throws(function () {
+            xs.ContractsManager.remove('xs.unknown');
+        });
+
         //test namespaces
         strictEqual(Object.keys(window.my.demo.first).toString(), 'ClassOne,ClassTwo');
         strictEqual(window.my.demo.first.ClassTwo, me.ClassTwo);
@@ -367,12 +387,6 @@ module('xs.ContractsManager', function () {
 
     }, function () {
         var me = this;
-
-        //not defined again
-        throws(function () {
-            xs.define(xs.Class, me.className, function () {
-            });
-        });
 
         //class is in manager
         strictEqual(xs.ContractsManager.get(me.className), me.Class);
