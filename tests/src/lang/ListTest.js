@@ -16,7 +16,7 @@ module('xs.lang.List', function () {
         throws(function () {
             xs.clone(xs.emptyFn);
         });
-        
+
         //init test variables
         var item = {x: 1};
         var x, clone;

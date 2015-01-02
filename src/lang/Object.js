@@ -61,6 +61,12 @@
          * @param {Object} object extended object
          */
         me.extend = function (object) {
+
+            //assert that index is in bounds
+            xs.assert.object(object, 'extend - given "$object" is not object', {
+                $object: object
+            }, ObjectError);
+
             var adds = _slice(arguments, 1), addsLength = adds.length;
 
             //iterate over add-ons
@@ -82,6 +88,21 @@
         };
 
     };
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class ObjectError
+     */
+    function ObjectError(message) {
+        this.message = 'xs.lang.Object::' + message;
+    }
+
+    ObjectError.prototype = new Error();
 
     //extend xs with object
     object.extend(xs, object);
