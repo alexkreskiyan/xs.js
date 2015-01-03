@@ -77,7 +77,7 @@
                 var deadLock = chains.getLock(Class);
 
                 //assert that no deadlock found
-                xs.assert.not(deadLock, 'dead lock detected: ' + _showDeadLock(deadLock), DependenciesManagerError);
+                xs.assert.not(deadLock, 'dead lock detected: ' + (deadLock ? _showDeadLock(deadLock) : ''), DependenciesManagerError);
             });
 
             xs.log('xs.DependenciesManager::add. No lock found. Adding dependency');
