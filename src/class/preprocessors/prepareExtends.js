@@ -30,15 +30,15 @@
         var extended = descriptor.extends;
 
         xs.log('xs.class.preprocessors.prepareExtends[', Class.label, ']. Extended:', extended);
-        //if extended is non-empty string - resolve parent name
-        if (xs.isString(extended) && extended) {
+        //assert that either extended is not defined or is defined as non-empty string
+        xs.assert.ok(!xs.isDefined(extended) || (xs.isString(extended) && extended), '[$Class]: given extended "$extended" is incorrect', {
+            $Class: Class.label,
+            $extended: extended
+        }, PrepareExtendsError);
+
+        //if extended is given - add it to imports
+        if (extended) {
             descriptor.imports.add(extended);
-
-            //if no parent given - extend from xs.class.Base
-        } else if (xs.isDefined(extended)) {
-
-            //if extended is not string (empty string) - throw respective error
-            throw new PrepareExtendsError('[' + Class.label + ']: incorrect extended name');
         }
     });
 
