@@ -244,10 +244,10 @@
 
                 //singleton processing
 
-                //throw exception if Class is singleton
-                if (descriptor.singleton) {
-                    throw new ClassError('can not create instance of singleton class');
-                }
+                //assert Class is not singleton
+                xs.assert.not(descriptor.singleton, 'can not create instance of singleton class "$label"', {
+                    $label: Class.label
+                }, ClassError);
 
                 //get constructor shortcut
                 var constructor = descriptor.constructor !== Object ? descriptor.constructor : undefined;
