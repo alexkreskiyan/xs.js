@@ -44,26 +44,32 @@
         descriptor.imports.each(function (imported) {
             var name;
 
-            //if imported is string - it's simply className without alias, added only to loads list
+            //assert that imported is either string or key=>value single pair
+            xs.assert.ok(xs.isString(imported) || (xs.isObject(imported) && Object.keys(imported).length === 1), '[$Class]: imported value $imported is incorrect', {
+                $Class: Class.label,
+                $imported: imported
+            }, ImportsError);
+
+            //handle imported string - it's simply className without alias, added only to loads list
             if (xs.isString(imported)) {
                 name = resolveName(imported);
                 if (!requires.has(name)) {
                     requires.add(name);
                 }
 
-                //or imported my be used class - then it is specified as object
-            } else if (xs.isObject(imported) && Object.keys(imported).length === 1) {
+                //handle imported key=>value pair
+            } else {
 
                 //get name and alias
                 var alias = Object.keys(imported)[0];
                 name = imported[alias];
 
                 //if name is non-empty string - add it to both loads and imports
-                xs.assert.ok(xs.isString(name) && name, ImportsError, '[$Class]: imported class "$name" has incorrect alias - $alias', {
+                xs.assert.ok(xs.isString(name) && name, '[$Class]: imported class "$name" has incorrect alias - $alias', {
                     $Class: Class.label,
                     $name: name,
                     $alias: alias
-                });
+                }, ImportsError);
                 name = resolveName(name);
 
                 if (!requires.has(name)) {
@@ -71,10 +77,6 @@
                 }
 
                 imports.add(name, alias);
-
-                //otherwise - incorrect imported value
-            } else {
-                throw new ImportsError('[' + Class.label + ']: incorrect imported item - ' + imported);
             }
         });
 
