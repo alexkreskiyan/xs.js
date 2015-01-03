@@ -398,9 +398,9 @@
             }, AttributeError);
 
             //assert, that object has no constant "name", or it is defined, but is configurable
-            xs.assert.ok(!object.hasOwnProperty(name) || _isConfigurable(object, name), AttributeError, 'constant "$name" is already defined', {
+            xs.assert.ok(!object.hasOwnProperty(name) || _isConfigurable(object, name), 'constant "$name" is already defined', {
                 $name: name
-            });
+            }, AttributeError);
 
             Object.defineProperty(object, name, {
                 value: value,
@@ -539,9 +539,9 @@
                 xs.assert.ok(_isDescriptor(descriptor), 'property::define - given object is not a descriptor', AttributeError);
 
                 //assert, that object has no property "name", or it is defined, but is configurable
-                xs.assert.ok(!object.hasOwnProperty(name) || _isConfigurable(object, name), AttributeError, 'property::define - property "$name" is already defined', {
+                xs.assert.ok(!object.hasOwnProperty(name) || _isConfigurable(object, name), 'property::define - property "$name" is already defined', {
                     $name: name
-                });
+                }, AttributeError);
 
                 //writable, enumerable and configurable are immutable defaults
                 descriptor.enumerable = true;
@@ -672,9 +672,9 @@
                 }, AttributeError);
 
                 //assert, that object has no method "name", or it is defined, but is configurable
-                xs.assert.ok(!object.hasOwnProperty(name) || _isConfigurable(object, name), AttributeError, 'method::define - method "$name" is already defined', {
+                xs.assert.ok(!object.hasOwnProperty(name) || _isConfigurable(object, name), 'method::define - method "$name" is already defined', {
                     $name: name
-                });
+                }, AttributeError);
 
                 Object.defineProperty(object, name, {
                     value: descriptor.value,
