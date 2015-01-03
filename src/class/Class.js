@@ -83,7 +83,9 @@
         var Contractor = function (Descriptor, createdFn) {
 
             //Descriptor must be function
-            xs.assert.fn(Descriptor, ClassError, 'descriptor must be evaluated function');
+            xs.assert.fn(Descriptor, 'given class descriptor "$descriptor" is not a function', {
+                $descriptor: Descriptor
+            }, ClassError);
 
             if (!xs.isFunction(createdFn)) {
                 createdFn = xs.emptyFn;
