@@ -50,9 +50,10 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            xs.assert.ok(name && xs.isString(name), PrepareMethodsError, '[$Class]: incorrect method name', {
-                $Class: Class.label
-            });
+            xs.assert.ok(name && xs.isString(name), '[$Class]: given method name "$name" is incorrect', {
+                $Class: Class.label,
+                $name: name
+            }, PrepareMethodsError);
 
             list.set(name, xs.Attribute.method.prepare(name, value));
         });

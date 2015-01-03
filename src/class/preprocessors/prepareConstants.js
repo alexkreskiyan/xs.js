@@ -50,8 +50,9 @@
 
         //verify own constants
         own.each(function (value, name) {
-            xs.assert.ok(name && xs.isString(name), '[$Class]: incorrect constant name', {
-                $Class: Class.label
+            xs.assert.ok(name && xs.isString(name), '[$Class]: given constant name "$name" is incorrect', {
+                $Class: Class.label,
+                $name: name
             }, PrepareConstantsError);
         });
 
