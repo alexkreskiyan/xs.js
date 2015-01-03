@@ -159,11 +159,6 @@
          * @param {xs.core.Collection} classes array with class names, that are attempted to be loaded
          *
          * @return {Object} list of classes, that have to be loaded
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - class name is not string
-         * - class name has incorrect format
          */
         function _getLoadList(classes) {
 
@@ -183,15 +178,15 @@
             xs.log('xs.core.Loader::getLoadList. Processing classes', classes.toSource());
             //process loaded and missing classes
             classes.each(function (name) {
-                //check, that name is string
-                if (!xs.isString(name)) {
-                    throw new LoaderError('loaded class name must be a string');
-                }
+                //assert, that name is string
+                xs.assert.string(name, 'getLoadList - given loaded class name "$name" is not a string', {
+                    $name: name
+                }, LoaderError);
 
-                //check, that name matches regular expression
-                if (!nameRe.test(name)) {
-                    throw new LoaderError('loaded class name has incorrect format');
-                }
+                //assert, that name matches regular expression
+                xs.assert.ok(nameRe.test(name), 'getLoadList - given loaded class name "$name" has incorrect format', {
+                    $name: name
+                }, LoaderError);
 
                 //resolve name with paths
                 var path = paths.resolve(name);
@@ -245,10 +240,6 @@
          * @method handleFail
          *
          * @param {String} path
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - failed loading url
          */
         function _handleFail(path) {
             xs.log('xs.core.Loader::handleFail. Path "' + path + '" failed');
@@ -301,26 +292,20 @@
              * @param {String} [path] Alias target path
              *
              * @chainable
-             *
-             * @throws {Error} Error is thrown:
-             *
-             * - if given alias is already registered
-             * - if given path is not a string
-             * - if given aliases list has incorrect format
              */
             me.add = function (alias, path) {
                 //single alias style
                 if (arguments.length > 1) {
 
-                    //check that alias was not defined yet
-                    if (me.has(alias)) {
-                        throw new LoaderError('alias "' + alias + '" is already registered');
-                    }
+                    //assert that alias was not defined yet
+                    xs.assert.not(me.has(alias), 'paths::add - alias "$alias" is already registered', {
+                        $alias: alias
+                    }, LoaderError);
 
-                    //check that path is string
-                    if (!xs.isString(path)) {
-                        throw new LoaderError('path must be a string');
-                    }
+                    //assert that path is string
+                    xs.assert.string(path, 'paths::add - given path "$path" is not a string', {
+                        $path: path
+                    }, LoaderError);
 
                     //register new path alias
                     paths.add(alias, path);
@@ -328,10 +313,10 @@
                     return this;
                 }
 
-                //check that pairs are given as list
-                if (!xs.isObject(alias)) {
-                    throw new LoaderError('aliases list has incorrect format');
-                }
+                //assert that paths list is object
+                xs.assert.object(alias, 'paths::add - given paths list "$paths" is not an object', {
+                    $paths: alias
+                }, LoaderError);
 
                 //add each path
                 (new xs.core.Collection(alias)).each(function (path, alias) {
@@ -356,22 +341,17 @@
              * @param {String} alias verified alias
              *
              * @return {Boolean} whether alias is already registered
-             *
-             * @throws {Error} Error is thrown:
-             *
-             * - if given alias is not a string
-             * - if given alias has incorrect format
              */
             me.has = function (alias) {
-                //check, that alias is string
-                if (!xs.isString(alias)) {
-                    throw new LoaderError('alias must be a string');
-                }
+                //assert that alias is string
+                xs.assert.string(alias, 'paths::has - given alias "$alias" is not a string', {
+                    $alias: alias
+                }, LoaderError);
 
-                //check, that alias matches regular expression
-                if (!nameRe.test(alias)) {
-                    throw new LoaderError('alias is given incorrectly');
-                }
+                //assert that alias matches regular expression
+                xs.assert.ok(nameRe.test(alias), 'paths::has - given alias "$alias" is not correct', {
+                    $alias: alias
+                }, LoaderError);
 
                 //return whether alias is in paths
                 return paths.hasKey(alias);
@@ -395,19 +375,15 @@
              * @param {String|String[]} alias Single alias or aliases array
              *
              * @chainable
-             *
-             * @throws {Error} Error is thrown:
-             *
-             * - if given alias is not registered
              */
             me.remove = function (alias) {
                 //single alias style
                 if (!xs.isArray(alias)) {
 
-                    //check that alias is registered
-                    if (!me.has(alias)) {
-                        throw new LoaderError('alias "' + alias + '" is not registered');
-                    }
+                    //assert that alias is registered
+                    xs.assert.ok(me.has(alias), 'paths::remove - alias "$alias" is not registered', {
+                        $alias: alias
+                    }, LoaderError);
 
                     //remove alias
                     paths.removeAt(alias);
@@ -454,22 +430,17 @@
              * @param {String} name resolved class name
              *
              * @return {String} resolved path
-             *
-             * @throws {Error} Error is thrown:
-             *
-             * - if given class name is not a string
-             * - if given class name has incorrect format
              */
             me.resolve = function (name) {
-                //throw LoaderError if name is not string
-                if (!xs.isString(name)) {
-                    throw new LoaderError('class name must be a string');
-                }
+                //assert that name is string
+                xs.assert.string(name, 'paths::resolve - given class name "$name" is not a string', {
+                    $name: name
+                }, LoaderError);
 
-                //check that name matches regular expression
-                if (!nameRe.test(name)) {
-                    throw new LoaderError('class name has incorrect format');
-                }
+                //assert that name matches regular expression
+                xs.assert.ok(nameRe.test(name), 'paths::resolve - given class name "$name" is not correct', {
+                    $name: name
+                }, LoaderError);
 
                 //most suitable alias for name
                 var nameAlias = '';
@@ -586,10 +557,6 @@
              * @method handleFail
              *
              * @param {String} path
-             *
-             * @throws {Error} Error is thrown:
-             *
-             * - if no handleFail is specified to handle load fail of given class
              */
             me.reject = function (path) {
                 //find rejected items
@@ -654,19 +621,15 @@
              * @param {String} path loaded path
              *
              * @chainable
-             *
-             * @throws {Error} Error is thrown:
-             *
-             * - if given path is already registered in loader
              */
             me.add = function (path) {
                 var me = this;
 
                 xs.log('xs.core.Loader::loader::add. Add path "' + path + '"');
-                //check that path was not added yet
-                if (me.has(path)) {
-                    throw new LoaderError('path "' + path + '" is already loading');
-                }
+                //assert that path was not added yet
+                xs.assert.not(me.has(path), 'loader::add - path "$path" is already loading', {
+                    $path: path
+                }, LoaderError);
 
                 //register new path alias
                 loading.add(path);
@@ -785,19 +748,16 @@
              * @param {String} path added path
              *
              * @chainable
-             *
-             * @throws {Error} Error is thrown:
-             *
-             * - if given class path is already in list
              */
             me.add = function (path) {
                 var me = this;
 
                 xs.log('xs.core.Loader::' + name + '::add. Add path "' + path + '"');
-                //check that path is not in list
-                if (me.has(path)) {
-                    throw new LoaderError('class "' + path + '" is already in ' + listName + ' list');
-                }
+                //assert that path is not in list
+                xs.assert.not(me.has(path), '$list::add - class "$path" is already in $list list', {
+                    $list: listName,
+                    $path: path
+                }, LoaderError);
 
                 //add path to list
                 list.add(path);
@@ -830,10 +790,11 @@
                 var me = this;
 
                 xs.log('xs.core.Loader::' + name + '::remove. Delete path "' + path + '"');
-                //check that path is in list
-                if (!me.has(path)) {
-                    throw new LoaderError('class "' + path + '" is not in ' + listName + ' list');
-                }
+                //assert that path is in list
+                xs.assert.ok(me.has(path), '$list::remove - class "$path" is not in $list list', {
+                    $list: listName,
+                    $path: path
+                }, LoaderError);
 
                 //remove path from list
                 list.remove(path);
