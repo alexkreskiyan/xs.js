@@ -41,10 +41,10 @@
          * - non-class given
          */
         xs.constant(Class, 'mixins', function (Mixin) {
-            xs.assert.Class(Mixin, ProcessMixinsError, '[$Class]: given non-class value "$Mixin"', {
+            xs.assert.Class(Mixin, '[$Class]: given non-class value "$Mixin"', {
                 $Class: Class.label,
                 $Mixin: Mixin
-            });
+            }, ProcessMixinsError);
 
             var mixins = this.prototype.mixins;
 
@@ -74,25 +74,25 @@
             list.set(alias, name);
 
             //assert, that mixin is defined
-            xs.assert.ok(xs.ContractsManager.has(name), ProcessMixinsError, '[$Class]: mixed class "$name" is not defined. Move it to imports section, please', {
+            xs.assert.ok(xs.ContractsManager.has(name), '[$Class]: mixed class "$name" is not defined. Move it to imports section, please', {
                 $Class: Class.label,
                 $name: name
-            });
+            }, ProcessMixinsError);
 
             //get Mixin reference
             var Mixin = xs.ContractsManager.get(name);
 
             //check that contractor is xs.Class
-            xs.assert.Class(Mixin, ProcessMixinsError, '[$Class]: given "$Mixin" is not class', {
+            xs.assert.Class(Mixin, '[$Class]: given "$Mixin" is not class', {
                 $Class: Class.label,
                 $Mixin: Mixin.label
-            });
+            }, ProcessMixinsError);
 
             //check that mixin is ready
-            xs.assert.not(Mixin.isProcessing, ProcessMixinsError, '[$Class]: mixed class "$Mixin" is not processed yet. Move it to imports section, please', {
+            xs.assert.not(Mixin.isProcessing, '[$Class]: mixed class "$Mixin" is not processed yet. Move it to imports section, please', {
                 $Class: Class.label,
                 $Mixin: Mixin.label
-            });
+            }, ProcessMixinsError);
         });
 
         //add all inherited

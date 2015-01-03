@@ -50,9 +50,10 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            xs.assert.ok(name && xs.isString(name), PrepareStaticMethodsError, '[$Class]: incorrect static method name', {
-                $Class: Class.label
-            });
+            xs.assert.ok(name && xs.isString(name), '[$Class]: given static method name "$name" is not a string', {
+                $Class: Class.label,
+                $name: name
+            }, PrepareStaticMethodsError);
 
             list.set(name, xs.Attribute.method.prepare(name, value));
         });

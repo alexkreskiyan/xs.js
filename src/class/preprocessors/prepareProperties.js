@@ -51,9 +51,10 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            xs.assert.ok(name && xs.isString(name), PreparePropertiesError, '[$Class]: incorrect property name', {
-                $Class: Class.label
-            });
+            xs.assert.ok(name && xs.isString(name), '[$Class]: given property name "$name" is not a string', {
+                $Class: Class.label,
+                $name: name
+            }, PreparePropertiesError);
 
             list.set(name, xs.Attribute.property.prepare(name, value));
         });

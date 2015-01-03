@@ -50,9 +50,10 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            xs.assert.ok(name && xs.isString(name), PrepareStaticPropertiesError, '[$Class]: incorrect static property name', {
-                $Class: Class.label
-            });
+            xs.assert.ok(name && xs.isString(name), '[$Class]: given static property name "$name" is not a string', {
+                $Class: Class.label,
+                $name: name
+            }, PrepareStaticPropertiesError);
 
             list.set(name, xs.Attribute.property.prepare(name, value));
         });

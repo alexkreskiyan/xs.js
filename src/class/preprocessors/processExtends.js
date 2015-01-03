@@ -45,25 +45,25 @@
         }
 
         //assert, that parent is defined
-        xs.assert.ok(xs.ContractsManager.has(extended), ProcessExtendsError, '[$Class]: parent class "$extended" is not defined. Move it to imports section, please', {
+        xs.assert.ok(xs.ContractsManager.has(extended), '[$Class]: parent class "$extended" is not defined. Move it to imports section, please', {
             $Class: Class.label,
             $extended: extended
-        });
+        }, ProcessExtendsError);
 
         //get parent reference
         var Parent = xs.ContractsManager.get(extended);
 
         //check that parent is class
-        xs.assert.Class(Parent, ProcessExtendsError, '[$Class]: contract "$Parent" is not Class', {
+        xs.assert.Class(Parent, '[$Class]: contract "$Parent" is not a class', {
             $Class: Class.label,
             $Parent: Parent.label
-        });
+        }, ProcessExtendsError);
 
         //check that class is ready
-        xs.assert.not(Parent.isProcessing, ProcessExtendsError, '[$Class]: parent class "$Parent" is not processed yet. Move it to imports section, please', {
+        xs.assert.not(Parent.isProcessing, '[$Class]: parent class "$Parent" is not processed yet. Move it to imports section, please', {
             $Class: Class.label,
             $Parent: Parent.label
-        });
+        }, ProcessExtendsError);
 
         xs.log('xs.class.preprocessors.extends[', Class.label, ']. Extending', Parent.label);
         //apply extends
