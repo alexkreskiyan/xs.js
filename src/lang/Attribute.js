@@ -419,6 +419,8 @@
          *
          * @class xs.lang.Attribute.property
          *
+         * @alternateClassName xs.property
+         *
          * @singleton
          */
         me.property = new function () {
@@ -564,6 +566,8 @@
          * @private
          *
          * @class xs.lang.Attribute.method
+         *
+         * @alternateClassName xs.method
          *
          * @singleton
          */

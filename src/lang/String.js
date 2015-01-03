@@ -42,7 +42,6 @@
          *     //outputs:
          *     //My bear is big and black. I love my big black bear
          *
-         *
          * @method translate
          *
          * @param {String} string translated string

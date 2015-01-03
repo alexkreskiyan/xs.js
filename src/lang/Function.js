@@ -306,9 +306,9 @@
         };
 
         /**
-         * @ignore
+         * Represents empty function. Is used internally to specify empty methods
          *
-         * Represents empty function. is used internally
+         * @method emptyFn
          */
         me.emptyFn = function () {
         };
