@@ -54,7 +54,7 @@
         var Parent = xs.ContractsManager.get(extended);
 
         //check that parent is interface
-        xs.assert.Interface(Parent, ProcessExtendsError, '[$Interface]: contract "$Parent" is not Interface', {
+        xs.assert.Interface(Parent, ProcessExtendsError, '[$Interface]: contract "$Parent" is not an interface', {
             $Interface: Interface.label,
             $Parent: Parent.label
         });

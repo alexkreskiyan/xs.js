@@ -42,10 +42,10 @@
         descriptor.imports.each(function (imported) {
             var name;
 
-            //if imported is not string - it's incorrect
-            if (!xs.isString(imported)) {
-                throw new ImportsError('[' + Interface.label + ']: incorrect imported item - ' + imported);
-            }
+            //assert imported is string
+            xs.assert.string(imported, '[$Interface]: given imported "$imported" is not a string', {
+                $Interface: Interface.label
+            }, ImportsError);
 
             //simply interfaceName without alias, added only to loads list
             name = resolveName(imported);

@@ -33,15 +33,15 @@
         descriptor.imports.remove();
 
         xs.log('xs.interface.preprocessors.prepareExtends[', Interface.label, ']. Extended:', extended);
-        //if extended is non-empty string - resolve parent name
-        if (xs.isString(extended) && extended) {
+        //assert that either extended is not defined or is defined as non-empty string
+        xs.assert.ok(!xs.isDefined(extended) || (xs.isString(extended) && extended), '[$Interface]: given extended "$extended" is incorrect', {
+            $Interface: Interface.label,
+            $extended: extended
+        }, PrepareExtendsError);
+
+        //if extended is given - add it to imports
+        if (extended) {
             descriptor.imports.add(extended);
-
-            //if no parent given - extend from xs.interface.Base
-        } else if (xs.isDefined(extended)) {
-
-            //if extended is not string (empty string) - throw respective error
-            throw new PrepareExtendsError('[' + Interface.label + ']: incorrect extended name');
         }
     });
 

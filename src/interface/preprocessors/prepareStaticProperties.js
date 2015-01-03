@@ -50,9 +50,10 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            xs.assert.ok(name && xs.isString(name), PrepareStaticPropertiesError, '[$Interface]: incorrect static property name', {
-                $Interface: Interface.label
-            });
+            xs.assert.ok(name && xs.isString(name), '[$Interface]: given static property name "$name" is incorrect', {
+                $Interface: Interface.label,
+                $name: name
+            }, PrepareStaticPropertiesError);
 
             //save descriptor basics
             var property = xs.Attribute.property.prepare(name, value);

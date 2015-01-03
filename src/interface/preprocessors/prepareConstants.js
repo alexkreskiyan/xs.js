@@ -50,9 +50,10 @@
 
         //verify own constants
         own.each(function (name) {
-            xs.assert.ok(name && xs.isString(name), PrepareConstantsError, '[$Interface]: incorrect constant name', {
-                $Interface: Interface.label
-            });
+            xs.assert.ok(name && xs.isString(name), '[$Interface]: given constant name "$name" is incorrect', {
+                $Interface: Interface.label,
+                $name: name
+            }, PrepareConstantsError);
         });
 
         //add own ones if not yet

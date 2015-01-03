@@ -50,9 +50,10 @@
 
         //verify and prepare them
         own.each(function (value, name, list) {
-            xs.assert.ok(name && xs.isString(name), PrepareStaticMethodsError, '[$Interface]: incorrect static method name', {
-                $Interface: Interface.label
-            });
+            xs.assert.ok(name && xs.isString(name), '[$Interface]: given static method name "$name" is incorrect', {
+                $Interface: Interface.label,
+                $name: name
+            }, PrepareStaticMethodsError);
 
             //save descriptor basics
             var method = xs.Attribute.method.prepare(name, value);
