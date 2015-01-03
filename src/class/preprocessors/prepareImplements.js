@@ -43,9 +43,9 @@
         xs.log('xs.class.preprocessors.prepareImplements[', Class.label, ']. Interfaces:', interfaces.toSource());
         interfaces.each(function (name) {
             //verify implemented interface name
-            xs.assert.ok(name && xs.isString(name), PrepareImplementsError, '[$Class]: incorrect implemented interface name', {
+            xs.assert.ok(name && xs.isString(name), '[$Class]: incorrect implemented interface name', {
                 $Class: Class.label
-            });
+            }, PrepareImplementsError);
 
             imports.add(name);
         });
