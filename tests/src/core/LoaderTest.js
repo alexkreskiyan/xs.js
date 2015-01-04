@@ -247,7 +247,7 @@ module('xs.Loader', function () {
 
     test('require', function () {
 
-        xs.Loader.paths.add('tests.core.Loader', '/tests/resources/core/Loader');
+        xs.Loader.paths.add('tests.core.Loader', 'resources/core/Loader');
     }, function () {
         var me = this;
 
@@ -262,8 +262,8 @@ module('xs.Loader', function () {
         ], function (loaded) {
 
             //assert all was loaded nicely
-            strictEqual(loaded['tests.core.Loader.Demo'], '/tests/resources/core/Loader/Demo.js');
-            strictEqual(loaded['tests.core.Loader.Sample'], '/tests/resources/core/Loader/Sample.js');
+            strictEqual(loaded['tests.core.Loader.Demo'], 'resources/core/Loader/Demo.js');
+            strictEqual(loaded['tests.core.Loader.Sample'], 'resources/core/Loader/Sample.js');
 
             //assert classes loaded
             strictEqual(xs.ContractsManager.has('tests.core.Loader.Demo'), true);
@@ -281,8 +281,8 @@ module('xs.Loader', function () {
             }, function (failed, loaded) {
 
                 //assert require results are correct
-                strictEqual(JSON.stringify(failed), '{"tests.core.Loader.Sample2":"/tests/resources/core/Loader/Sample2.js"}');
-                strictEqual(JSON.stringify(loaded), '{"tests.core.Loader.Demo":"/tests/resources/core/Loader/Demo.js"}');
+                strictEqual(JSON.stringify(failed), '{"tests.core.Loader.Sample2":"resources/core/Loader/Sample2.js"}');
+                strictEqual(JSON.stringify(loaded), '{"tests.core.Loader.Demo":"resources/core/Loader/Demo.js"}');
 
                 //assert classes not loaded
                 strictEqual(xs.ContractsManager.has('tests.core.Loader.Demo'), false);

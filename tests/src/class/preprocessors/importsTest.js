@@ -20,7 +20,7 @@ module('xs.class.preprocessors.imports', function () {
         xs.Loader.paths.remove(Object.keys(me.paths));
 
         //add tests path
-        xs.Loader.paths.add('tests', '/tests/resources');
+        xs.Loader.paths.add('tests', 'resources');
 
         xs.define(xs.Class, 'ns.Child', function (Class, ns, imports) {
             this.namespace = 'tests.class.preprocessors.imports';

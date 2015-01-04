@@ -30,7 +30,7 @@
     var testsList = params.tests.split(',');
 
     //get src file
-    request('/src/src.json', function (sources) {
+    request('../src/src.json', function (sources) {
         //get
         var tests = getTests(sources, testsList);
 
@@ -38,14 +38,14 @@
 
         //built mode
         if (params.mode) {
-            scripts = ['/build/' + params.mode + '/xs.js'];
+            scripts = ['../build/' + params.mode + '/xs.js'];
 
             //debug mode
         } else {
             scripts = sources.map(function (name) {
                 return resolveSourceFile(name);
             });
-            scripts.unshift('/src/xs.js');
+            scripts.unshift('../src/xs.js');
         }
 
         load(scripts, function () {
@@ -152,12 +152,12 @@
 
     //resolves source file name from class name
     function resolveSourceFile(name) {
-        return '/src/' + name.split('.').slice(1).join('/') + '.js';
+        return '../src/' + name.split('.').slice(1).join('/') + '.js';
     }
 
     //resolves test file name from class name
     function resolveTestFile(name) {
-        return '/tests/src/' + name.split('.').slice(1).join('/') + 'Test.js';
+        return '../tests/src/' + name.split('.').slice(1).join('/') + 'Test.js';
     }
 
     function request(url, callback) {
