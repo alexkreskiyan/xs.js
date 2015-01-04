@@ -667,13 +667,13 @@
             } else if (arguments.length === 2) {
                 //if vars given
                 if (xs.isObject(vars)) {
-                    error = new Error(xs.translate(message, vars));
+                    error = new Error(message);
                 } else if (xs.isFunction(Exception)) {
                     error = new Exception(message);
                 }
 
             } else {
-                error = new Exception(xs.translate(message, vars));
+                error = new Exception(message);
             }
 
             error.vars = vars;
