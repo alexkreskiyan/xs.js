@@ -21,7 +21,7 @@
  * @class xs.request.Data represents request data object
  */
 'use strict';
-xs.define('xs.request.Data', function () {
+xs.define(xs.Class, 'xs.request.Data', function () {
     return {
         constructor: function () {
             var me = this;
@@ -33,20 +33,20 @@ xs.define('xs.request.Data', function () {
                 me.__set('data', new FormData);
             }
         },
-        properties:  {
+        properties: {
             isFormData: {
                 get: function () {
                     return this.__get('data') instanceof FormData;
                 },
                 set: xs.emptyFn
             },
-            raw:        {
+            raw: {
                 get: function () {
                     return this.__get('raw');
                 },
                 set: xs.emptyFn
             },
-            data:       {
+            data: {
                 get: function () {
                     var me = this;
                     var data = me.__get('data');
@@ -55,8 +55,8 @@ xs.define('xs.request.Data', function () {
                 set: xs.emptyFn
             }
         },
-        methods:     {
-            add:    function (name, value) {
+        methods: {
+            add: function (name, value) {
                 var me = this;
                 me.__get('raw')[name] = value;
                 if (me.isFormData) {
@@ -64,11 +64,11 @@ xs.define('xs.request.Data', function () {
                 }
                 console.log(params);
             },
-            get:    function (name) {
+            get: function (name) {
                 var me = this;
                 console.log('get', name);
             },
-            delete: function () {
+            remove: function () {
                 var me = this, params = xs.Array.unique(xs.Array.union(xs.Array.clone(arguments)));
                 console.log(params);
             }

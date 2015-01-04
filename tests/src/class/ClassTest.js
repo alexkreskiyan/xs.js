@@ -1,243 +1,322 @@
-require([
-    'xs.lang.Detect',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Attribute',
-    'xs.lang.Function',
-    'xs.class.Class'
-], function () {
+/*
+ This file is core of xs.js
+
+ Copyright (c) 2013-2014, Annium Inc
+
+ Contact: http://annium.com/contact
+
+ License: http://annium.com/contact
+
+ */
+module('xs.class.Class', function () {
+
     'use strict';
-    module('xs.Class');
+
     test('create', function () {
         //test create without descriptor fails
-        throws(xs.Class.create);
+        throws(xs.Class);
 
-        var Class = xs.Class.create(function (self, ns) {
-            return {};
+        var Class = xs.Class(function (self, ns) {
         });
 
         //class is function
         strictEqual(xs.isFunction(Class), true);
     });
-    test('processors add', function () {
-        var stack = xs.Class.preprocessors;
 
-        //save stack items
-        var save = stack.get();
-
-        //clear stack
-        xs.each(save, function (item, name) {
-            stack.delete(name);
+    test('factory', function () {
+        var me = this;
+        //create simple class
+        me.Class = xs.Class(function (self, ns) {
         });
 
-        var verifier = function () {
+        //assign some constructor
+        me.Class.descriptor.constructor = function (a, b) {
+            this.a = a;
+            this.b = b;
+        };
+
+
+        //compare new and factory variants
+
+        //get instances
+        me.sampleNew = new me.Class(1, 2);
+        me.sampleFactory = me.Class.factory(1, 2);
+    }, function () {
+        var me = this;
+        //constructor is Class
+        strictEqual(me.sampleNew.constructor, me.Class);
+        strictEqual(me.sampleFactory.constructor, me.Class);
+
+        //constructor is assigned in prototype
+        strictEqual(me.sampleNew.hasOwnProperty('constructor'), false);
+        strictEqual(me.sampleFactory.hasOwnProperty('constructor'), false);
+
+        //parameters assigned correctly
+        strictEqual(me.sampleNew.a, 1);
+        strictEqual(me.sampleNew.b, 2);
+        strictEqual(me.sampleFactory.a, 1);
+        strictEqual(me.sampleFactory.b, 2);
+    });
+
+    test('processors add', function () {
+        var me = this;
+        //setUp
+        me.stack = xs.class.preprocessors;
+
+        //save stack items
+        me.save = me.stack.get();
+
+        //clear stack
+        me.save.each(function (item, name) {
+            me.stack.remove(name);
+        });
+
+        me.verifier = function () {
+
             return true;
         };
-        var handler = function () {
+        me.handler = function () {
 
         };
 
+    }, function () {
+        var me = this;
         //add processor to last
-        stack.add('one', verifier, handler);
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["one"]');
+        me.stack.add('one', me.verifier, me.handler);
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["one"]');
 
         //add processor to first
-        stack.add('two', verifier, handler, 'first');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["two","one"]');
+        me.stack.add('two', me.verifier, me.handler, 'first');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["two","one"]');
 
         //add processor before first
-        stack.add('three', verifier, handler, 'before', 'two');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["three","two","one"]');
+        me.stack.add('three', me.verifier, me.handler, 'before', 'two');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["three","two","one"]');
 
         //add processor before in middle
-        stack.add('four', verifier, handler, 'before', 'one');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["three","two","four","one"]');
+        me.stack.add('four', me.verifier, me.handler, 'before', 'one');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["three","two","four","one"]');
 
         //add processor after last
-        stack.add('five', verifier, handler, 'after', 'one');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["three","two","four","one","five"]');
+        me.stack.add('five', me.verifier, me.handler, 'after', 'one');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["three","two","four","one","five"]');
 
         //add processor after in middle
-        stack.add('six', verifier, handler, 'after', 'three');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["three","six","two","four","one","five"]');
+        me.stack.add('six', me.verifier, me.handler, 'after', 'three');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["three","six","two","four","one","five"]');
 
         //check verifiers and handlers
-        xs.each(stack.get(), function (item) {
+        me.stack.get().each(function (item) {
             //verifier assigned
-            strictEqual(item.verifier, verifier);
+            strictEqual(item.verifier, me.verifier);
 
             //handler assigned
-            strictEqual(item.handler, handler);
+            strictEqual(item.handler, me.handler);
         });
 
+    }, function () {
+        var me = this;
         //clear stack
-        xs.each(stack.get(), function (item, name) {
-            stack.delete(name);
+        me.stack.get().each(function (item, name) {
+            me.stack.remove(name);
         });
 
         //reset stack
-        xs.each(save, function (item, name) {
-            stack.add(name, item.verifier, item.handler);
+        me.save.each(function (item, name) {
+            me.stack.add(name, item.verifier, item.handler);
         });
     });
+
     test('processors reorder', function () {
-        var stack = xs.Class.preprocessors;
+        var me = this;
+        me.stack = xs.class.preprocessors;
 
         //save stack items
-        var save = stack.get();
+        me.save = me.stack.get();
 
         //clear stack
-        xs.each(save, function (item, name) {
-            stack.delete(name);
+        me.save.each(function (item, name) {
+            me.stack.remove(name);
         });
 
-        var verifier = function () {
+        me.verifier = function () {
+
             return true;
         };
-        var handler = function () {
+        me.handler = function () {
 
         };
+    }, function () {
+        var me = this;
 
         //add processors
-        stack.add('one', verifier, handler);
-        stack.add('two', verifier, handler);
-        stack.add('three', verifier, handler);
-        stack.add('four', verifier, handler);
+        me.stack.add('one', me.verifier, me.handler);
+        me.stack.add('two', me.verifier, me.handler);
+        me.stack.add('three', me.verifier, me.handler);
+        me.stack.add('four', me.verifier, me.handler);
 
         //processors added correctly
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["one","two","three","four"]');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["one","two","three","four"]');
 
         //reorder first
-        stack.reorder('three', 'first');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["three","one","two","four"]');
+        me.stack.reorder('three', 'first');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["three","one","two","four"]');
 
         //reorder last
-        stack.reorder('one', 'last');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["three","two","four","one"]');
+        me.stack.reorder('one', 'last');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["three","two","four","one"]');
 
         //reorder before to first
-        stack.reorder('two', 'before', 'three');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["two","three","four","one"]');
+        me.stack.reorder('two', 'before', 'three');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["two","three","four","one"]');
 
         //reorder before in middle
-        stack.reorder('four', 'before', 'three');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["two","four","three","one"]');
+        me.stack.reorder('four', 'before', 'three');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["two","four","three","one"]');
 
         //reorder after to last
-        stack.reorder('four', 'after', 'one');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["two","three","one","four"]');
+        me.stack.reorder('four', 'after', 'one');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["two","three","one","four"]');
 
         //reorder after in middle
-        stack.reorder('three', 'after', 'one');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["two","one","three","four"]');
+        me.stack.reorder('three', 'after', 'one');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["two","one","three","four"]');
+
+    }, function () {
+        var me = this;
 
         //clear stack
-        xs.each(stack.get(), function (item, name) {
-            stack.delete(name);
+        me.stack.get().each(function (item, name) {
+            me.stack.remove(name);
         });
 
         //reset stack
-        xs.each(save, function (item, name) {
-            stack.add(name, item.verifier, item.handler);
+        me.save.each(function (item, name) {
+            me.stack.add(name, item.verifier, item.handler);
         });
     });
-    test('processors delete', function () {
-        var stack = xs.Class.preprocessors;
+
+    test('processors remove', function () {
+        var me = this;
+        //setUp
+        me.stack = xs.class.preprocessors;
 
         //save stack items
-        var save = stack.get();
+        me.save = me.stack.get();
 
         //clear stack
-        xs.each(save, function (item, name) {
-            stack.delete(name);
+        me.save.each(function (item, name) {
+            me.stack.remove(name);
         });
 
-        var verifier = function () {
+        me.verifier = function () {
+
             return true;
         };
-        var handler = function () {
+        me.handler = function () {
 
         };
 
         //add processors
-        stack.add('one', verifier, handler);
-        stack.add('two', verifier, handler);
-        stack.add('three', verifier, handler);
-        stack.add('four', verifier, handler);
-        stack.add('five', verifier, handler);
+        me.stack.add('one', me.verifier, me.handler);
+        me.stack.add('two', me.verifier, me.handler);
+        me.stack.add('three', me.verifier, me.handler);
+        me.stack.add('four', me.verifier, me.handler);
+        me.stack.add('five', me.verifier, me.handler);
 
-        //delete undefined
+    }, function () {
+        var me = this;
+
+        //remove undefined
         throws(function () {
-            stack.delete('unknown');
+            me.stack.remove('unknown');
         });
 
-        //delete first
-        stack.delete('one');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["two","three","four","five"]');
+        //remove first
+        me.stack.remove('one');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["two","three","four","five"]');
 
-        //delete last
-        stack.delete('five');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["two","three","four"]');
+        //remove last
+        me.stack.remove('five');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["two","three","four"]');
 
-        //delete in middle
-        stack.delete('three');
-        strictEqual(JSON.stringify(xs.keys(stack.get())), '["two","four"]');
+        //remove in middle
+        me.stack.remove('three');
+        strictEqual(JSON.stringify(me.stack.get().keys()), '["two","four"]');
+
+    }, function () {
+        var me = this;
 
         //clear stack
-        xs.each(stack.get(), function (item, name) {
-            stack.delete(name);
+        me.stack.get().each(function (item, name) {
+            me.stack.remove(name);
         });
 
         //reset stack
-        xs.each(save, function (item, name) {
-            stack.add(name, item.verifier, item.handler);
+        me.save.each(function (item, name) {
+            me.stack.add(name, item.verifier, item.handler);
         });
     });
-    asyncTest('process class', function () {
-        var stack = xs.Class.preprocessors;
+
+    test('process class', function () {
+        var me = this;
+
+        me.stack = xs.class.preprocessors;
 
         //save stack items
-        var save = stack.get();
+        me.save = me.stack.get();
 
         //clear stack
-        xs.each(save, function (item, name) {
-            stack.delete(name);
+        me.save.each(function (item, name) {
+            me.stack.remove(name);
         });
 
-        var verifier = function () {
+        me.verifier = function () {
+
             return true;
         };
 
         //add processors
-        stack.add('one', verifier, function (self) {
+        me.stack.add('one', me.verifier, function (self) {
             self.descriptor.chain = 'one';
         });
-        stack.add('two', verifier, function (self, descriptor, ns, ready) {
+        me.stack.add('two', me.verifier, function (self, descriptor, ns, dependencies, ready) {
             self.descriptor.chain += 'two';
             setTimeout(ready, 100);
+
             return false;
         });
-        stack.add('three', verifier, function (self, descriptor, ns, ready) {
+        me.stack.add('three', me.verifier, function (self, descriptor, ns, dependencies, ready) {
             self.descriptor.chain += 'three';
             setTimeout(ready, 100);
+
             return false;
         });
 
-        xs.Class.create(function () {
-            return {};
+    }, function () {
+        var me = this;
+        xs.Class(function () {
+
         }, function (Class) {
-            start();
-
             strictEqual(Class.descriptor.chain, 'onetwothree');
-            //clear stack
-            xs.each(stack.get(), function (item, name) {
-                stack.delete(name);
-            });
 
-            //reset stack
-            xs.each(save, function (item, name) {
-                stack.add(name, item.verifier, item.handler);
-            });
+            //continue
+            me.done();
+        });
+
+        //return false - mark async run
+        return false;
+    }, function () {
+        var me = this;
+
+        //clear stack
+        me.stack.get().each(function (item, name) {
+            me.stack.remove(name);
+        });
+
+        //reset stack
+        me.save.each(function (item, name) {
+            me.stack.add(name, item.verifier, item.handler);
         });
     });
 });

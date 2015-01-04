@@ -1,16 +1,42 @@
-require([
-    'xs.lang.Detect',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.String'
-], function () {
-    module('xs.lang.String');
+/*
+ This file is core of xs.js
+
+ Copyright (c) 2013-2014, Annium Inc
+
+ Contact: http://annium.com/contact
+
+ License: http://annium.com/contact
+
+ */
+module('xs.lang.String', function () {
+
+    'use strict';
+
     test('translate', function () {
-        var str = xs.translate('My fox is small and brown. I love my small brown fox', {
+        var me = this;
+        //get translated version
+        me.str = xs.translate('My fox is small and brown. I love my small brown fox', {
             small: 'big',
             brown: 'black',
-            fox:   'bear'
+            fox: 'bear'
         });
-        strictEqual(str, 'My bear is big and black. I love my big black bear');
+
+    }, function () {
+        var me = this;
+
+        throws(function () {
+            xs.translate();
+        });
+
+        throws(function () {
+            xs.translate('');
+        });
+
+        throws(function () {
+            xs.translate('', null);
+        });
+
+        //check translation
+        strictEqual(me.str, 'My bear is big and black. I love my big black bear');
     });
 });

@@ -1,13 +1,27 @@
-require([
-    'xs.lang.Detect',
-    'xs.lang.List',
-    'xs.lang.Object',
-    'xs.lang.Array'
-], function () {
-    module('xs.lang.Array');
+/*
+ This file is core of xs.js
+
+ Copyright (c) 2013-2014, Annium Inc
+
+ Contact: http://annium.com/contact
+
+ License: http://annium.com/contact
+
+ */
+module('xs.lang.Array', function () {
+
+    'use strict';
 
     test('shuffle', function () {
+        //non-array throws
+        throws(function () {
+            xs.Array.shuffle(null);
+        });
+
+        //init sample
         var item = {x: 1};
+
+        //define shuffled array and it's clone
         var x, clone;
         x = [
             0,
@@ -44,20 +58,20 @@ require([
             item
         ];
 
+        //create clone
         clone = xs.clone(x);
-        xs.shuffle(x);
-        //check items all saved
-        strictEqual(true, xs.every(clone, function (value) {
-            return xs.has(x, value);
-        }));
-        //check all keys exist
-        strictEqual(true, xs.every(clone, function (value, key) {
-            return xs.hasKey(x, key);
-        }));
-        //check order is changed
-        strictEqual(false, xs.every(clone, function (value) {
-            return xs.keyOf(x, value) === xs.keyOf(clone, value);
-        }));
 
+        //shuffle original array
+        xs.Array.shuffle(x);
+
+        //check items all saved
+        Object.keys(clone).forEach(function (key) {
+            strictEqual(true, x.indexOf(clone[key]) >= 0);
+        });
+
+        //check all keys exist
+        Object.keys(clone).forEach(function (key) {
+            strictEqual(true, key in x);
+        });
     });
 });

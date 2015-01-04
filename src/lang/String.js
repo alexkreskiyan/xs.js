@@ -1,20 +1,11 @@
-/*!
+/*
  This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
- Contact:  http://annium.com/contact
+ Contact: http://annium.com/contact
 
- GNU General Public License Usage
- This file may be used under the terms of the GNU General Public License version 3.0 as
- published by the Free Software Foundation and appearing in the file LICENSE included in the
- packaging of this file.
-
- Please review the following information to ensure the GNU General Public License version 3.0
- requirements will be met: http://www.gnu.org/copyleft/gpl.html.
-
- If you are unsure which license is appropriate for your use, please contact the sales department
- at http://annium.com/contact.
+ License: http://annium.com/contact
 
  */
 (function (root, ns) {
@@ -27,15 +18,15 @@
     /**
      * xs.lang.String is private singleton, defining basic string operations.
      *
-     * @class xs.lang.String
-     *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
-     *
-     * @singleton
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @private
+     *
+     * @class xs.lang.String
+     *
+     * @singleton
      */
-    var string = new (function () {
+    var string = xs.String = new function () {
         var me = this;
 
         /**
@@ -51,20 +42,48 @@
          *     //outputs:
          *     //My bear is big and black. I love my big black bear
          *
-         *
          * @method translate
          *
          * @param {String} string translated string
          * @param {Object} replaces replaces hash, where keys are replaced strings and values are respective replaces
          *
-         * @return {string} translated string
+         * @return {String} translated string
          */
         me.translate = function (string, replaces) {
-            xs.each(replaces, function (to, from) {
+            //assert that first argument is string
+            xs.assert.string(string, 'translate - given "$string" is not string', {
+                $string: string
+            }, StringError);
+
+            //assert that replaces are object
+            xs.assert.object(replaces, 'translate - given replaces "$replaces" are not object', {
+                $replaces: replaces
+            }, StringError);
+
+            Object.keys(replaces).forEach(function (from) {
+                var to = replaces[from];
                 string = string.split(from).join(to);
             });
+
             return string;
         };
-    });
+    };
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class StringError
+     */
+    function StringError(message) {
+        this.message = 'xs.lang.String::' + message;
+    }
+
+    StringError.prototype = new Error();
+
+    //extend xs with string
     xs.extend(xs, string);
 })(window, 'xs');

@@ -76,14 +76,14 @@
  call succeeded or failed.
  */
 
-xs.define('xs.promise.Promise', function () {
+xs.define(xs.Class, 'xs.promise.Promise', function () {
     var self = function () {
         return xs.promise.Promise;
     };
 
     return {
-        requires:    ['xs.promise.Resolver'],
-        static:      {
+        requires: ['xs.promise.Resolver'],
+        static: {
             methods: {
                 /**
                  * Returns a new Promise that:
@@ -94,7 +94,7 @@ xs.define('xs.promise.Promise', function () {
                  * @param {*} promiseOrValue A Promise (or third-party Promise or then()-able) or value.
                  * @return {xs.promise.Promise} A Promise of the specified Promise or value.
                  */
-                when:      function (promiseOrValue) {
+                when: function (promiseOrValue) {
                     var deferred;
                     deferred = xs.create('xs.promise.Deferred');
                     deferred.resolve(promiseOrValue);
@@ -103,7 +103,7 @@ xs.define('xs.promise.Promise', function () {
                 /**
                  * Determines whether the specified value is a Promise (including third-party untrusted Promises or then()-ables), based on the Promises/A specification feature test.
                  *
-                 * @param {Mixed} value A potential Promise.
+                 * @param {*} value A potential Promise.
                  * @return {Boolean} A Boolean indicating whether the specified value was a Promise.
                  */
 
@@ -116,10 +116,10 @@ xs.define('xs.promise.Promise', function () {
                  * The specified map function may return either a value or a promise.
                  *
                  * @param {*[]/xs.promise.Promise[]/xs.promise.Promise} promisesOrValues An Array of values or Promises, or a Promise of an Array of values or Promises.
-                 * @param {function} mapFn A Function to call to transform each resolved value in the Array.
+                 * @param {Function} mapFn A Function to call to transform each resolved value in the Array.
                  * @return {Promise} A Promise of an Array of the mapped resolved values.
                  */
-                map:       function (promisesOrValues, mapFn) {
+                map: function (promisesOrValues, mapFn) {
                     if (!(xs.isArray(promisesOrValues) || self().isPromise(promisesOrValues))) {
                         throw new Error('Invalid parameter: expected an Array or Promise of an Array.');
                     }
@@ -168,7 +168,7 @@ xs.define('xs.promise.Promise', function () {
                  * @return {xs.promise.Promise} A Promise of an Array of the resolved values.
                  */
 
-                all:       function (promisesOrValues) {
+                all: function (promisesOrValues) {
                     if (!(xs.isArray(promisesOrValues) || self().isPromise(promisesOrValues))) {
                         throw new Error('Invalid parameter: expected an Array or Promise of an Array.');
                     }
@@ -185,7 +185,7 @@ xs.define('xs.promise.Promise', function () {
                  * @return {xs.promise.Promise} A Promise of the first resolved value.
                  */
 
-                any:       function (promisesOrValues) {
+                any: function (promisesOrValues) {
                     if (!(xs.isArray(promisesOrValues) || self().isPromise(promisesOrValues))) {
                         throw new Error('Invalid parameter: expected an Array or Promise of an Array.');
                     }
@@ -204,10 +204,10 @@ xs.define('xs.promise.Promise', function () {
         constructor: function (resolver) {
             this.resolver = resolver;
         },
-        properties:  {
+        properties: {
             resolver: null
         },
-        methods:     {
+        methods: {
             rethrowError: function (error) {
                 xs.nextTick(function () {
                     throw error;
@@ -224,7 +224,7 @@ xs.define('xs.promise.Promise', function () {
              * @param {Object} scope Optional scope for the callback(s).
              * @return {xs.promise.Promise} A Promise of the transformed future value.
              */
-            then:         function (onResolved, onRejected, onProgress, scope) {
+            then: function (onResolved, onRejected, onProgress, scope) {
                 if (arguments.length === 1 && xs.isObject(arguments[0])) {
                     var hash = arguments[0];
                     onResolved = hash.success;
@@ -248,7 +248,7 @@ xs.define('xs.promise.Promise', function () {
              * @param {Object} scope Optional scope for the callback.
              * @return {xs.promise.Promise} A Promise of the transformed future value.
              */
-            otherwise:    function (onRejected, scope) {
+            otherwise: function (onRejected, scope) {
                 if (arguments.length === 1 && xs.isObject(arguments[0])) {
                     var hash = arguments[0];
                     onRejected = hash.fn;
@@ -266,7 +266,7 @@ xs.define('xs.promise.Promise', function () {
              * @param {Object} scope Optional scope for the callback.
              * @return {xs.promise.Promise} A new "pass-through" Promise that resolves with the original value or rejects with the original reason.
              */
-            always:       function (onCompleted, scope) {
+            always: function (onCompleted, scope) {
                 if (arguments.length === 1 && xs.isObject(arguments[0])) {
                     var hash = arguments[0];
                     onCompleted = hash.fn;
@@ -295,13 +295,13 @@ xs.define('xs.promise.Promise', function () {
             /**
              * Terminates a {xs.promise.Promise} chain, ensuring that unhandled rejections will be thrown as Errors.
              */
-            done:         function () {
+            done: function () {
                 this.resolver.then(null, this.rethrowError);
             },
             /**
              * Cancels this {xs.promise.Promise} if it is still pending, triggering a rejection with a CancellationError that will propagate to any Promises originating from this Promise.
              */
-            cancel:       function (reason) {
+            cancel: function (reason) {
                 if (reason == null) {
                     reason = null;
                 }

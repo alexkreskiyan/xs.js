@@ -1,26 +1,166 @@
 (function () {
+
+    'use strict';
+
     var me = this;
     var head = document.getElementsByTagName('head')[0];
 
     var scripts = []; //all scripts sources
 
-    var sources = []; //all sources
-    var pendingSources = []; //pending sources
-
-    var tests = []; //all acquired tests files
-    var pendingTests = []; //pending tests loaded
-
     var handlers = [];
 
-    //resolves source File
-    var resolveSourceFile = function (name) {
-        return '/src/' + name.split('.').slice(1).join('/') + '.js';
-    };
-    var resolveTestFile = function (name) {
-        return '/tests/src/' + name.split('.').slice(1).join('/') + 'Test.js';
+    //fetches tests list from specified query param
+    var params = (function (key) {
+        var result = /\?([^#\?]+)/.exec(me.location.search);
+        if (!result) {
+
+            return {};
+        }
+        var paramsPairs = result.slice(1).shift().split('&');
+        var params = {}, pair;
+        for (var idx = 0; idx < paramsPairs.length; idx++) {
+            pair = paramsPairs[idx].split('=');
+            params[pair[0]] = pair[1];
+        }
+
+        return params;
+    }).call(me);
+
+    //fetches tests list from specified query param
+    var testsList = params.tests.split(',');
+
+    //get src file
+    request('/src/src.json', function (sources) {
+        //get
+        var tests = getTests(sources, testsList);
+
+        var scripts;
+
+        //built mode
+        if (params.mode) {
+            scripts = ['/build/' + params.mode + '/xs.js'];
+
+            //debug mode
+        } else {
+            scripts = sources.map(function (name) {
+                return resolveSourceFile(name);
+            });
+            scripts.unshift('/src/xs.js');
+        }
+
+        load(scripts, function () {
+            load(tests.map(function (name) {
+                return resolveTestFile(name);
+            }), runTests);
+        });
+    });
+
+    //save Qunit module method
+    var module = me.module;
+
+    //adds test module
+    me.module = function (name, run) {
+        //add module handler
+        handlers.push(function () {
+            //define module
+            module(name);
+
+            //set active module
+            me.activeModule = name;
+
+            //run tests
+            run();
+
+            //unset active module
+            delete me.activeModule;
+        });
     };
 
-    var request = function (url, callback) {
+    //save Qunit test method
+    var test = me.test;
+
+    //adds test case
+    me.test = function (name, setUp, run, tearDown) {
+        //if 2 arguments - setUp is missing
+        if (arguments.length === 2) {
+            run = setUp;
+            setUp = function () {
+            };
+            tearDown = function () {
+            };
+        } else if (arguments.length === 3) {
+            tearDown = function () {
+            };
+            //else if incorrect arguments count
+        } else if (arguments.length === 1 || arguments.length > 4) {
+            throw new Error('Incorrect test case');
+        }
+
+        //get activeModule from window
+        var module = me.activeModule;
+
+        test(name, function (assert) {
+            var scope = {};
+
+            var done = assert.async();
+
+            var handleSetUp = function () {
+                scope.done = handleRun;
+                if (setUp.call(scope) !== false) {
+                    handleRun();
+                }
+            };
+
+            var handleRun = function () {
+                scope.done = handleTearDown;
+                if (run.call(scope) !== false) {
+                    handleTearDown();
+                }
+            };
+
+            var handleTearDown = function () {
+                scope.done = handleEnd;
+                if (tearDown.call(scope) !== false) {
+                    handleEnd();
+                }
+            };
+
+            var handleEnd = function () {
+                console.timeEnd(module + '::' + name);
+                done();
+            };
+
+            console.time(module + '::' + name);
+            handleSetUp();
+        });
+    };
+
+    //get tested components
+    function getTests(sources, tests) {
+        var list = [];
+        tests.forEach(function (test) {
+            sources.forEach(function (source) {
+                if (source === test || source.indexOf(test + '.') === 0) { //either strict or namespace match
+                    if (list.indexOf(source) < 0) {
+                        list.push(source);
+                    }
+                }
+            });
+        });
+        return list;
+    }
+
+    //resolves source file name from class name
+    function resolveSourceFile(name) {
+        return '/src/' + name.split('.').slice(1).join('/') + '.js';
+    }
+
+    //resolves test file name from class name
+    function resolveTestFile(name) {
+        return '/tests/src/' + name.split('.').slice(1).join('/') + 'Test.js';
+    }
+
+    function request(url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url);
         xhr.send();
@@ -29,108 +169,73 @@
             xhr.removeEventListener('load', handleLoad);
         };
         xhr.addEventListener('load', handleLoad);
-    };
+    }
 
     //adds script to container
-    var addScript = function (container, src, onLoad, cover) {
+    function addScript(container, src, onLoad) {
+        //throw error if script was already added
         if (scripts.indexOf(src) >= 0) {
-            onLoad && onLoad();
-            return;
+            throw new Error('Script "' + src + '" is already added');
         }
+
+        //add src to scripts list
         scripts.push(src);
 
+        //create script element
         var script = document.createElement('script');
+
+        //assign type
         script.type = 'text/javascript';
+
+        //assign src attribute
         script.src = src;
-        cover && script.setAttribute('data-cover', '');
+
+        //append script to head
         container.appendChild(script);
-        if (!onLoad) {
-            return;
-        }
+
+        //create loadHandler, that will be called once
         var loadHandler = function () {
             script.removeEventListener('load', loadHandler);
             onLoad();
         };
+
+        //add load handler as event listener for script
         script.addEventListener('load', loadHandler);
-    };
+    }
 
-    var getTests = function (sources, tests) {
-        var list = [];
-        sources.forEach(function (source) {
-            tests.forEach(function (test) {
-                if (source === test || source.indexOf(test + '.') == 0) { //either strict or namespace match
-                    list.indexOf(source) < 0 && list.push(source);
-                }
-            });
-        });
-        return list;
-    };
-
-    var load = function (files, callback) {
+    //loads given files list in order
+    function load(files, callback) {
+        //if files list empty - return
         if (!files.length) {
+
             return;
         }
+
+        //get first file from files list
         var file = files.shift();
+
+        //if any files left
         if (files.length) {
             addScript(head, file, function () {
                 load(files, callback, true);
             });
+
+            //if it is last file
         } else {
-            addScript(head, file, callback, true);
+            addScript(head, file, callback);
         }
-    };
-
-    var addItems = function (list, items) {
-        for (var idx = 0; idx < items.length; idx++) {
-            var item = items[idx];
-            list.indexOf(item) < 0 && list.push(item);
-        }
-    };
-
-    // Adds sources to pending list and callback to handlers
-    me.require = function (components, callback) {
-        addItems(pendingSources, components);
-        handlers.push(callback);
-    };
-
-    var testsList = (function (key) {
-        var result = /\?([^#\?]+)/.exec(me.location.search);
-        if (!result) {
-            return [];
-        }
-        var paramsPairs = result.slice(1).shift().split('&');
-        var pair;
-        for (var idx = 0; idx < paramsPairs.length; idx++) {
-            pair = paramsPairs[idx].split('=');
-            if (pair[0] == key) {
-                return pair[1].split(',');
-            }
-        }
-    }).call(me, 'tests');
+    }
 
     var runTests = function () {
-        for (var idx = 0; idx < handlers.length; idx++) {
-            var handler = handlers[idx];
+        handlers.forEach(function (handler) {
             handler();
-        }
-    };
-
-    request('/src/src.json', function (src) {
-        sources = src;
-        tests = getTests(src, testsList);
-        tests.forEach(function (test) {
-            var name = test;
-            pendingTests.push(name);
-            addScript(head, resolveTestFile(name), function () {
-                pendingTests.splice(pendingTests.indexOf(name), 1);
-                pendingTests.length || load(pendingSources.map(function (source) {
-                    return resolveSourceFile(source);
-                }), runTests);
-            });
         });
-    });
+    };
 }).call(window);
 function benchmark(fn, n) {
+
+    'use strict';
+
     var start = Date.now();
     for (var i = 0; i < n; i++) {
         fn();

@@ -1,434 +1,130 @@
-/*!
+/*
  This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
- Contact:  http://annium.com/contact
+ Contact: http://annium.com/contact
 
- GNU General Public License Usage
- This file may be used under the terms of the GNU General Public License version 3.0 as
- published by the Free Software Foundation and appearing in the file LICENSE included in the
- packaging of this file.
-
- Please review the following information to ensure the GNU General Public License version 3.0
- requirements will be met: http://www.gnu.org/copyleft/gpl.html.
-
- If you are unsure which license is appropriate for your use, please contact the sales department
- at http://annium.com/contact.
+ License: http://annium.com/contact
 
  */
 (function (root, ns) {
 
+    'use strict';
+
     //framework shorthand
     var xs = root[ns];
 
-    /**
-     * Private internal stack class
-     *
-     * Stack is used to store ordered list of processors
-     *
-     * @class xs.Class.Stack
-     *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
-     *
-     * @singleton
-     *
-     * @private
-     */
-    var Stack = function () {
-        var me = this;
-
-        //items hash
-        var items = {};
-
-        /**
-         * Applies item in stack relative to item with given name
-         *
-         * @ignore
-         *
-         * @param {string} name name of repositioned item
-         * @param {string} position new item position
-         * @param {*} relativeTo name of relativeTo positioned item
-         *
-         * @throws {Error} Error is thrown:
-         *
-         * - if incorrect position given
-         * - relativeTo item is missing in stack
-         */
-        var _apply = function (name, position, relativeTo) {
-            if (!xs.has([
-                'first',
-                'last',
-                'before',
-                'after'
-            ], position)) {
-                throw new Error('Incorrect position given');
-            }
-
-            //get current keys
-            var keys = xs.keys(items);
-
-            //remove name from keys
-            xs.delete(keys, name);
-
-            //insert to specified position
-            if (position == 'first' || position == 'last') {
-                position == 'first' ? keys.unshift(name) : keys.push(name);
-            } else {
-                var relativeKey = xs.keyOf(keys, relativeTo);
-                if (!xs.isDefined(relativeKey)) {
-                    throw new Error('Relative item missing in stack');
-                }
-                position == 'after' && relativeKey++;
-                keys.splice(relativeKey, 0, name);
-            }
-
-            //pick items in new order
-            items = xs.pick(items, keys);
-        };
-
-        /**
-         * Returns stack items copy
-         *
-         * @method get
-         *
-         * @return {Object} stack items copy
-         */
-        me.get = function () {
-            return xs.clone(items);
-        };
-
-        /**
-         * Adds new processor to stack
-         *
-         * For example:
-         *
-         *     stack.add('addY', function() {
-         *         return true;
-         *     }, function() {
-         *        this.x = 0;
-         *     }, 'after', 'addY')
-         *
-         * @method add
-         *
-         * @param {string} name processor name
-         * @param {Function} verifier processor verifier.
-         * Returns boolean whether processor should be applied to Class. Accepts class descriptor as param
-         * @param {Function} handler processor body
-         * @param {string} [position] position, class processor is inserted at. Valid values are:
-         *
-         *  - first,
-         *  - last,
-         *  - before, (relativeTo is required)
-         *  - after (relativeTo is required)
-         *
-         * By default, last is used
-         * @param {string} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - processor with given name is already in stack
-         */
-        me.add = function (name, verifier, handler, position, relativeTo) {
-            //position defaults to last
-            position || (position = 'last');
-            if (xs.hasKey(items, name)) {
-                throw new Error('processor "' + name + '" already in stack');
-            }
-            items[name] = {
-                verifier: verifier,
-                handler:  handler
-            };
-            _apply(name, position, relativeTo);
-        };
-
-        /**
-         * Reorders processor at stack
-         *
-         * For example:
-         *
-         *     stack.reorder('addY','before','addX');
-         *
-         * @method reorder
-         *
-         * @param {string} name processor name
-         * @param {string} position position, class processor is inserted at. Valid values are:
-         *
-         *  - first,
-         *  - last,
-         *  - before, (relativeTo is required)
-         *  - after (relativeTo is required)
-         *
-         * @param {string} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
-         */
-        me.reorder = function (name, position, relativeTo) {
-            _apply(name, position, relativeTo);
-        };
-
-        /**
-         * Deletes processor from stack. If processor not found, error is thrown
-         *
-         * For example:
-         *
-         *     stack.delete('addY');
-         *
-         * @method delete
-         *
-         * @param {string} name processor name
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - processor with given name is not found in stack
-         */
-        me.delete = function (name) {
-            if (xs.hasKey(items, name)) {
-                xs.deleteAt(items, name);
-            } else {
-                throw new Error('processor "' + name + '" not found in stack');
-            }
-        };
-
-        /**
-         * Starts stack processing chain with given arguments
-         *
-         * For example:
-         *
-         *     stack.process([1, 2], [2, 3], function() {
-         *         console.log('ready');
-         *     });
-         *
-         * @method process
-         *
-         * @param {Array} verifierArgs arguments, passed to each stack item's verifier
-         * @param {Array} handlerArgs arguments, passed to each stack item's handler
-         * @param {Function} [callback] optional executed callback
-         */
-        me.process = function (verifierArgs, handlerArgs, callback) {
-            _process(xs.values(items), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
-        };
-
-        /**
-         * Internal process function
-         *
-         * @ignore
-         *
-         * @param {Array} items items stack
-         * @param {Array} verifierArgs arguments for items' verifiers
-         * @param {Array} handlerArgs arguments for items' handlers
-         * @param {Function} callback stack ready callback
-         */
-        var _process = function (items, verifierArgs, handlerArgs, callback) {
-            if (!items.length) {
-                callback();
-                return;
-            }
-            var item = xs.shift(items);
-
-            //if item.verifier allows handler execution, process next
-            if (item.verifier.apply(this, verifierArgs)) {
-
-                var ready = function () {
-                    _process(items, verifierArgs, handlerArgs, callback);
-                };
-                //if item.handler returns false, processing is async, stop processing, awaiting ready call
-                if (item.handler.apply(this, xs.union(handlerArgs, ready)) === false) {
-                    return;
-                }
-            }
-
-            _process(items, verifierArgs, handlerArgs, callback);
-        };
-    };
+    //define xs.class
+    if (!xs.class) {
+        xs.class = {};
+    }
 
     /**
-     * xs.Class is core class, that is used for class generation.
+     * xs.class.Class is core class, that is used for class generation.
      *
-     * xs.Class provides 3 stacks to register processors:
+     * xs.class.Class provides 2 stacks to register processors:
      *
-     * - {@link xs.Class#preprocessors preprocessors}
-     * - {@link xs.Class#postprocessors postprocessors}
-     * - {@link xs.Class#constructors constructors}
+     * - {@link xs.class.preprocessors preprocessors}
+     * - {@link xs.class.postprocessors postprocessors}
      *
      * Usage example:
      *
      *     //create simple Class
-     *     var Class = xs.Class.create(function (Class) {
-     *         //here is Class descriptor returned
-     *         return {
-     *         };
+     *     var Class = xs.Class(function (Class) {
+     *         //here Class descriptor is described:
+     *         var me = this;
+     *         me.imports = [];
+     *         me.constants.a = 1;
      *     });
      *
-     * @class xs.Class
+     * xs.class.Class has 2 params:
+     *
+     * 1 Descriptor (Function) -  descriptor constructor. Creates raw descriptor instance. Is called with 3 params:
+     *
+     * - self. Created class instance
+     * - ns. namespace object, where namespace references are placed
+     * - imports. namespace object, where namespace references are placed
+     *
+     * 2 createdFn ([Function]) - optional class creation callback. Is called after
+     * {@link xs.class.preprocessors preprocessors} stack is processed. When called, created class is passed as param.
+     *
+     * Errors are thrown, when:
+     *
+     * - descFn is given not as function
+     * - descFn doesn't return object
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class xs.class.Class
+     *
+     * @alternateClassName xs.Class
      *
      * @singleton
      */
-    xs.Class = (function () {
+    xs.Class = xs.class.Class = (function (dependencies) {
 
         /**
-         * Stack of processors, processing class before it's considered to be created (before createdFn is called)
-         *
-         * Provided arguments are:
-         *
-         * For verifier:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * For handler:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * @property preprocessors
-         *
-         * @type {xs.Class.Stack}
-         */
-        var preprocessors = new Stack();
-
-        /**
-         * Stack of processors, processing class after it's considered to be created (after createdFn is called)
-         *
-         * Provided arguments are:
-         *
-         * For verifier:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * For handler:
-         *
-         *  - Class
-         *  - descriptor
-         *  - namespace
-         *
-         * @property postprocessors
-         *
-         * @type {xs.Class.Stack}
-         */
-        var postprocessors = new Stack();
-
-        /**
-         * Stack of processors, processing object instance before object constructor is called
-         *
-         * Provided arguments are:
-         *
-         * For verifier:
-         *
-         *  - Class
-         *  - instance
-         *
-         * For handler:
-         *
-         *  - Class
-         *  - instance
-         *
-         * @property constructors
-         *
-         * @type {xs.Class.Stack}
-         */
-        var constructors = new Stack();
-
-        /**
-         * Returns new xClass sample
+         * Currently processing classes' list
          *
          * @ignore
          *
-         * @return {Function} new xClass
+         * @property processing
+         *
+         * @type {xs.core.Collection}
          */
-        var _create = function () {
-            var Class = function xClass() {
-                var me = this;
-
-                //define class constructor
-                var descriptor = Class.descriptor;
-
-                //get constructor shortcut
-                var constructor = xs.isFunction(descriptor.constructor) ? descriptor.constructor : undefined;
-
-                //if parent constructor - just call it
-                if (me.self && me.self !== Class) {
-                    constructor && constructor.apply(me, arguments);
-                    return;
-                }
-
-                //save class reference
-                me.self = Class;
-
-                //process constructors
-                constructors.process([
-                    Class,
-                    me
-                ], [
-                    Class,
-                    me
-                ]);
-
-                //apply constructor
-                constructor && constructor.apply(me, arguments);
-            };
-            return Class;
-        };
+        var processing = new xs.core.Collection();
 
         /**
          * Creates class sample and starts processors applying
          *
-         * For example:
-         *
-         *     //create simple Class
-         *     var Class = xs.Class.create(function (self, ns) {
-         *         //here is Class descriptor returned
-         *         return {
-         *         };
-         *     }, function(Class) {
-         *         console.log('class', Class, 'created');
-         *     );
-         *
-         * @param {Function} descFn descriptor function. Is called with 2 params:
-         *
-         * - self. Created class instance
-         * - ns. namespace object, where namespace references are placed
-         *
-         * @param {Function} createdFn class creation callback. Is called after
-         * {@link xs.Class#preprocessors preprocessors} stack is processed. When called, created class is passed as param
-         *
-         * @return {Function} created Class
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - descFn is given not as function
-         * - descFn doesn't return object
+         * @ignore
          */
-        var create = function (descFn, createdFn) {
+        var Contractor = function (Descriptor, createdFn) {
 
-            //descFn must be function
-            if (!xs.isFunction(descFn)) {
-                throw new Error('Class descriptor must be evaluated function');
+            //Descriptor must be function
+            xs.assert.fn(Descriptor, 'given class descriptor "$descriptor" is not a function', {
+                $descriptor: Descriptor
+            }, ClassError);
+
+            if (!xs.isFunction(createdFn)) {
+                createdFn = xs.emptyFn;
             }
-
-            xs.isFunction(createdFn) || (createdFn = xs.emptyFn);
 
             //create class
-            var Class = _create();
+            var Class = _createSample();
 
-            //get descriptor
-            var namespace = {};
-            var descriptor = descFn(Class, namespace);
+            //save contract type
+            xs.constant(Class, 'contractor', Contractor);
 
-            //check descriptor is object
-            if (!xs.isObject(descriptor)) {
-                throw new Error('Evaluated class descriptor must be object');
-            }
+            //assign factory for class
+            Class.factory = _createFactory(Class);
+
+            //get namespace for Class
+            var namespace = Class.namespace = {};
+
+            //get imports for Class
+            var imports = Class.imports = {};
+
+            //Fill descriptor prototype
+            Descriptor.prototype = _createPrototypeDescriptor();
+
+            //get descriptor instance
+            var descriptor = new Descriptor(Class, namespace, imports);
+            //convert descriptor
+            _convertDescriptor(descriptor);
 
             //save Class descriptor
-            xs.const(Class, 'descriptor', {});
+            xs.constant(Class, 'descriptor', _createEmptyDescriptor());
 
-            //set class not ready yet
-            Class.isReady = false;
+            //mark class as not ready yet (until preprocessors done)
+            Class.isProcessing = true;
 
-            //process preprocessors stack before createdFn called
+            //push class to processed list
+            processing.add(Class);
+
+            //process preprocessors stack before createdFn called.
+            //Normally, only namespace is processed on this tick - imports is unambiguously async
             preprocessors.process([
                 Class,
                 descriptor,
@@ -436,10 +132,27 @@
             ], [
                 Class,
                 descriptor,
-                namespace
+                namespace,
+                dependencies
             ], function () {
-                //set class ready
-                Class.isReady = true;
+                //remove isProcessing mark
+                delete Class.isProcessing;
+
+                //remove class from processing list
+                processing.remove(Class);
+
+                //remove from dependencies
+                dependencies.remove(Class);
+
+                //notify, that class is ready
+                dependencies.ready(Class.label);
+
+                //if dependencies empty - all classes processed
+                if (!processing.length) {
+
+                    //notify, that all ready
+                    dependencies.ready(null);
+                }
 
                 //call createdFn
                 createdFn(Class);
@@ -458,15 +171,323 @@
 
             return Class;
         };
+        Contractor.label = 'xs.Class';
 
-        return {
-            create:         create,
-            preprocessors:  preprocessors,
-            postprocessors: postprocessors,
-            constructors:   constructors
+        /**
+         * Stack of processors, processing class before it's considered to be created (before createdFn is called)
+         *
+         * Provided arguments are:
+         *
+         * For verifier:
+         *
+         *  - Class
+         *  - descriptor
+         *  - namespace
+         *
+         * For handler:
+         *
+         *  - Class
+         *  - descriptor
+         *  - namespace
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class xs.class.preprocessors
+         *
+         * @extends xs.core.ProcessorsStack
+         *
+         * @singleton
+         */
+        var preprocessors = xs.class.preprocessors = new xs.ProcessorsStack.Class();
+
+        /**
+         * Stack of processors, processing class after it's considered to be created (after createdFn is called)
+         *
+         * Provided arguments are:
+         *
+         * For verifier:
+         *
+         *  - Class
+         *  - descriptor
+         *  - namespace
+         *
+         * For handler:
+         *
+         *  - Class
+         *  - descriptor
+         *  - namespace
+         *
+         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+         *
+         * @class xs.class.postprocessors
+         *
+         * @extends xs.core.ProcessorsStack
+         *
+         * @singleton
+         */
+        var postprocessors = xs.class.postprocessors = new xs.ProcessorsStack.Class();
+
+        /**
+         * Returns new xClass sample
+         *
+         * @ignore
+         *
+         * @method create
+         *
+         * @return {Function} new xClass
+         */
+        var _createSample = function () {
+            var Class = function xClass() {
+                var me = this;
+
+                //define class constructor
+                var descriptor = Class.descriptor;
+
+
+                //singleton processing
+
+                //assert Class is not singleton
+                xs.assert.not(descriptor.singleton, 'can not create instance of singleton class "$label"', {
+                    $label: Class.label
+                }, ClassError);
+
+                //get constructor shortcut
+                var constructor = descriptor.constructor !== Object ? descriptor.constructor : undefined;
+
+                //if parent constructor - just call it
+                if (me.self && me.self !== Class) {
+                    if (constructor) {
+                        constructor.apply(me, arguments);
+                    }
+
+                    return;
+                }
+
+
+                //save call arguments
+                me.initArguments = arguments;
+
+                //properties processing
+
+                //init privates storage
+                me.privates = {};
+
+                //assign values
+                var properties = descriptor.properties.items; //xs.core.Collection
+                var i, length = properties.length, item;
+
+                for (i = 0; i < length; i++) {
+                    item = properties[i];
+                    if (item.value.hasOwnProperty('value')) {
+                        me[item.key] = item.value.value;
+                    }
+                }
+
+                //native constructor call
+
+                //save class reference
+                me.self = Class;
+
+                //apply constructor
+                if (constructor) {
+                    constructor.apply(me, arguments);
+                }
+            };
+
+            return Class;
         };
-    })();
 
-    //define prototype of xs.Base
-    xs.Base = new Function;
+        /**
+         * Returns factory for given Class
+         *
+         * @ignore
+         *
+         * @method createFactory
+         *
+         * @param {Function} Class
+         *
+         * @return {Function} factory for given Class
+         */
+        var _createFactory = function (Class) {
+            //this - current class
+            //arguments - new instance arguments
+
+            //create wrapper
+            var Factory = function (args) {
+                return Class.apply(this, args);
+            };
+
+            //assign prototype
+            Factory.prototype = Class.prototype;
+
+            //return factory
+            return function () {
+
+                //return instance
+                return new Factory(arguments);
+            };
+        };
+
+        /**
+         * Returns prototype for descriptor function
+         *
+         * @ignore
+         *
+         * @method _createPrototypeDescriptor
+         *
+         * @return {Object} prototype of new descriptor
+         */
+        var _createPrototypeDescriptor = function () {
+            return {
+
+                //class namespace
+                namespace: undefined,
+
+                //class imports list
+                imports: [],
+
+                //class parent
+                extends: undefined,
+
+                //class mixins list
+                mixins: {},
+
+                //class implements list
+                implements: {},
+
+                //class singleton flag
+                singleton: undefined,
+
+                //class constants list
+                constants: {},
+
+                //class statics list
+                static: {
+                    //class static methods list
+                    methods: {},
+
+                    //class static properties list
+                    properties: {}
+                },
+
+                //class constructor
+                constructor: undefined,
+
+                //class methods list
+                methods: {},
+
+                //class properties list
+                properties: {}
+            };
+        };
+
+        /**
+         * Returns class empty descriptor
+         *
+         * @ignore
+         *
+         * @method _createEmptyDescriptor
+         *
+         * @return {Object} new empty descriptor
+         */
+        var _createEmptyDescriptor = function () {
+            return {
+
+                //class namespace
+                namespace: undefined,
+
+                //class parent
+                extends: undefined,
+
+                //class mixins list
+                mixins: new xs.core.Collection(),
+
+                //class implements list
+                implements: new xs.core.Collection(),
+
+                //class singleton flag
+                singleton: undefined,
+
+                //class constants list
+                constants: new xs.core.Collection(),
+
+                //class statics list
+                static: {
+                    //class static methods list
+                    methods: new xs.core.Collection(),
+
+                    //class static properties list
+                    properties: new xs.core.Collection()
+                },
+
+                //class constructor
+                constructor: undefined,
+
+                //class methods list
+                methods: new xs.core.Collection(),
+
+                //class properties list
+                properties: new xs.core.Collection()
+            };
+        };
+
+        /**
+         * Converts prototype descriptor to use xs.core.Collection
+         *
+         * @ignore
+         *
+         * @method convertDescriptor
+         */
+        var _convertDescriptor = function (descriptor) {
+            descriptor.imports = new xs.core.Collection(descriptor.imports);
+            descriptor.mixins = new xs.core.Collection(descriptor.mixins);
+            descriptor.implements = new xs.core.Collection(descriptor.implements);
+            descriptor.constants = new xs.core.Collection(descriptor.constants);
+            descriptor.static.methods = new xs.core.Collection(descriptor.static.methods);
+            descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
+            descriptor.methods = new xs.core.Collection(descriptor.methods);
+            descriptor.properties = new xs.core.Collection(descriptor.properties);
+        };
+
+        return Contractor;
+    })(xs.DependenciesManager.Class);
+
+
+    //clean up ProcessorsStack
+    //remove ProcessorsStack reference
+    delete xs.ProcessorsStack.Class;
+    //complete if ready
+    if (!Object.keys(xs.ProcessorsStack).length) {
+        delete xs.ProcessorsStack;
+    }
+
+
+    //clean up DependenciesManager
+    //remove DependenciesManager reference
+    delete xs.DependenciesManager.Class;
+    //complete if ready
+    if (!Object.keys(xs.DependenciesManager).length) {
+        delete xs.DependenciesManager;
+    }
+
+
+    //define prototype of xs.class.Base
+    xs.class.Base = xs.Class(function () {
+    }, xs.emptyFn);
+
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class ClassError
+     */
+    function ClassError(message) {
+        this.message = 'xs.class.Class::' + message;
+    }
+
+    ClassError.prototype = new Error();
 })(window, 'xs');

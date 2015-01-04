@@ -1,5 +1,16 @@
 /.idea
+/Properties
+/Web*
+/bin
+/obj
+/*.csproj*
 *.iml
+*.sln
+*.suo
+/Properties
+/Web*
+/bin
+/obj
 .sass-cache
 .DS*
 .htaccess

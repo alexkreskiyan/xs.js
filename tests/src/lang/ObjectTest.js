@@ -1,30 +1,46 @@
-require([
-    'xs.lang.Detect',
-    'xs.lang.List',
-    'xs.lang.Object'
-], function () {
-    module('xs.lang.Object');
+/*
+ This file is core of xs.js
+
+ Copyright (c) 2013-2014, Annium Inc
+
+ Contact: http://annium.com/contact
+
+ License: http://annium.com/contact
+
+ */
+module('xs.lang.Object', function () {
+
+    'use strict';
 
     test('extend', function () {
-        var a = {a: 1};
-        var b = {b: 1};
-        var c = {c: 1};
-        var x = {
-            a: a,
-            b: b,
-            c: c,
+        var me = this;
+        //init test data
+        me.a = {a: 1};
+        me.b = {b: 1};
+        me.c = {c: 1};
+        me.x = {
+            a: me.a,
+            b: me.b,
+            c: me.c,
             d: 1,
-            e: xs.clone(a)
+            e: xs.clone(me.a)
         };
-        xs.extend(x, {a: b}, 3, [
+    }, function () {
+        var me = this;
+        throws(function () {
+            xs.extend([]);
+        });
+        //extend
+        xs.extend(me.x, {a: me.b}, 3, [
             4,
             5
-        ], {b: 1}, {e: a});
+        ], {b: 1}, {e: me.a});
+
         //check replacements
-        strictEqual(x.a, b);
-        strictEqual(x.b, 1);
-        strictEqual(x.c, c);
-        strictEqual(x.d, 1);
-        strictEqual(x.e, a);
+        strictEqual(me.x.a, me.b);
+        strictEqual(me.x.b, 1);
+        strictEqual(me.x.c, me.c);
+        strictEqual(me.x.d, 1);
+        strictEqual(me.x.e, me.a);
     });
 });

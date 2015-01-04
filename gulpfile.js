@@ -2,85 +2,105 @@ var gulp = require('gulp');
 
 var concat = require('gulp-concat');
 var uglifyJS = require('gulp-uglify');
-var minifyCSS = require('gulp-minify-css');
-var watch = require('gulp-watch');
-var compass = require('gulp-compass');
-var spritesmith = require('gulp.spritesmith');
+//var minifyCSS = require('gulp-minify-css');
+//var compass = require('gulp-compass');
+//var spritesmith = require('gulp.spritesmith');
 
 var del = require('del');
 
-var karma = require('karma').server;
 
+//get sources list
+var src = require('./src/src.json');
+
+//map sources list to scripts list
+var scripts = src.map(function (name) {
+
+    'use strict';
+
+    return name.split('xs.').join('src/').split('.').join('/') + '.js';
+});
+
+//add entry point
+scripts.unshift('src/xs.js');
+
+//define paths
 var paths = {
-    scripts: [
-        'src/xs.js',
-        'src/lang/Detect.js',
-        'src/lang/List.js',
-        'src/lang/Attribute.js',
-        'src/lang/Function.js',
-        'src/lang/String.js'
-        //        'src/Environment.js',
-        //        'src/lang/Attribute.js',
-        //        'src/lang/Date.js',
-        //        'src/lang/Error.js',
-        //        'src/lang/Function.js',
-        //        'src/lang/Number.js',
-        //        'src/lang/String.js',
-        //        'src/class/Class.js',
-        //        'src/class/ClassManager.js',
-        //        'src/class/Base.js',
-        //        'src/class/Loader.js',
-        //        'src/util/Observable.js',
-        //        'src/promise/Deferred.js',
-        //        'src/promise/Promise.js',
-        //        'src/promise/Resolver.js',
-        //        'src/data/Connection.js',
-        //        'src/draw/Color.js',
-        //        'src/Ajax.js'
-    ]
+    scripts: scripts
 };
 
-gulp.task('debug', function (done) {
+var pureFunctions = [
+    'xs.log',
+    'xs.assert.equal',
+    'xs.assert.ok',
+    'xs.assert.not',
+    'xs.assert.object',
+    'xs.assert.array',
+    'xs.assert.fn',
+    'xs.assert.string',
+    'xs.assert.number',
+    'xs.assert.boolean',
+    'xs.assert.regExp',
+    'xs.assert.error',
+    'xs.assert.null',
+    'xs.assert.iterable',
+    'xs.assert.primitive',
+    'xs.assert.numeric',
+    'xs.assert.defined',
+    'xs.assert.empty',
+    'xs.assert.Class',
+    'xs.assert.Interface',
+    'xs.assert.instance',
+    'xs.assert.inherits',
+    'xs.assert.implements',
+    'xs.assert.mixins'
+];
+
+
+//preview mode
+gulp.task('preview', function () {
+
+    'use strict';
+
     //scripts processing
-    var buildScripts = function () {
-        del(['build/debug/*.js']);
-        gulp.src(paths.scripts).pipe(concat('xs.js')).pipe(gulp.dest('build/debug'));
-    };
-
-    //initial scripts build
-    buildScripts();
-
-    //watch scripts change
-    watch(paths.scripts, {
-        name: 'JS debug compiler'
-    }, buildScripts);
+    del(['build/preview/*.js']);
+    gulp.src(paths.scripts).pipe(concat('xs.js')).pipe(gulp.dest('build/preview'));
 });
 
-gulp.task('test', function (done) {
-    karma.start({
-        configFile: __dirname + '/karma.js',
-        singleRun:  true
-    }, done);
+//candidate mode
+gulp.task('candidate', function () {
+
+    'use strict';
+
+    //scripts processing
+    del(['build/candidate/*.js']);
+    gulp.src(paths.scripts).pipe(concat('xs.js')).pipe(uglifyJS({
+        mangle: false,
+        compress: {
+            pure_funcs: pureFunctions,
+            drop_console: true
+        }
+    })).pipe(gulp.dest('build/candidate'));
 });
 
+//release mode
 gulp.task('release', function () {
+
+    'use strict';
+
     //scripts processing
-    var buildScripts = function () {
-        del(['build/release/*.js']);
-        gulp.src(paths.scripts).pipe(concat('xs.js')).pipe(uglifyJS()).pipe(gulp.dest('build/release'));
-    };
-
-    //initial scripts build
-    buildScripts();
-
-    //watch scripts change
-    watch(paths.scripts, {
-        name: 'JS debug compiler'
-    }, buildScripts);
+    del(['build/release/*.js']);
+    gulp.src(paths.scripts).pipe(concat('xs.js')).pipe(uglifyJS({
+        mangle: true,
+        compress: {
+            pure_funcs: pureFunctions,
+            drop_console: true
+        }
+    })).pipe(gulp.dest('build/release'));
 });
 
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', [
-    'debug',
+    'preview',
+    'candidate',
     'release'
 ]);

@@ -2,7 +2,7 @@
 
     //framework shorthand
     var xs = root[ns];
-    xs.define(ns + '.draw.Color', function () {
+    xs.define(xs.Class, ns + '.draw.Color', function () {
         var Color = function () {
             this.red = 0;
             this.green = 0;
@@ -15,23 +15,108 @@
 
         var knownColors = {
             transparent: {alpha: 0},
-            white:       {red: 255, green: 255, blue: 255, alpha: 1},
-            silver:      {red: 192, green: 192, blue: 192, alpha: 1},
-            gray:        {red: 128, green: 128, blue: 128, alpha: 1},
-            black:       {red: 0, green: 0, blue: 0, alpha: 1},
-            maroon:      {red: 128, green: 0, blue: 0, alpha: 1},
-            red:         {red: 255, green: 0, blue: 0, alpha: 1},
-            orange:      {red: 255, green: 166, blue: 0, alpha: 1},
-            yellow:      {red: 255, green: 255, blue: 255, alpha: 1},
-            olive:       {red: 128, green: 128, blue: 0, alpha: 1},
-            lime:        {red: 0, green: 255, blue: 0, alpha: 1},
-            green:       {red: 0, green: 128, blue: 0, alpha: 1},
-            aqua:        {red: 0, green: 255, blue: 255, alpha: 1},
-            blue:        {red: 0, green: 0, blue: 255, alpha: 1},
-            navy:        {red: 0, green: 0, blue: 128, alpha: 1},
-            teal:        {red: 0, green: 128, blue: 128, alpha: 1},
-            fuchsia:     {red: 255, green: 0, blue: 255, alpha: 1},
-            purple:      {red: 128, green: 0, blue: 128, alpha: 1}
+            white: {
+                red: 255,
+                green: 255,
+                blue: 255,
+                alpha: 1
+            },
+            silver: {
+                red: 192,
+                green: 192,
+                blue: 192,
+                alpha: 1
+            },
+            gray: {
+                red: 128,
+                green: 128,
+                blue: 128,
+                alpha: 1
+            },
+            black: {
+                red: 0,
+                green: 0,
+                blue: 0,
+                alpha: 1
+            },
+            maroon: {
+                red: 128,
+                green: 0,
+                blue: 0,
+                alpha: 1
+            },
+            red: {
+                red: 255,
+                green: 0,
+                blue: 0,
+                alpha: 1
+            },
+            orange: {
+                red: 255,
+                green: 166,
+                blue: 0,
+                alpha: 1
+            },
+            yellow: {
+                red: 255,
+                green: 255,
+                blue: 255,
+                alpha: 1
+            },
+            olive: {
+                red: 128,
+                green: 128,
+                blue: 0,
+                alpha: 1
+            },
+            lime: {
+                red: 0,
+                green: 255,
+                blue: 0,
+                alpha: 1
+            },
+            green: {
+                red: 0,
+                green: 128,
+                blue: 0,
+                alpha: 1
+            },
+            aqua: {
+                red: 0,
+                green: 255,
+                blue: 255,
+                alpha: 1
+            },
+            blue: {
+                red: 0,
+                green: 0,
+                blue: 255,
+                alpha: 1
+            },
+            navy: {
+                red: 0,
+                green: 0,
+                blue: 128,
+                alpha: 1
+            },
+            teal: {
+                red: 0,
+                green: 128,
+                blue: 128,
+                alpha: 1
+            },
+            fuchsia: {
+                red: 255,
+                green: 0,
+                blue: 255,
+                alpha: 1
+            },
+            purple: {
+                red: 128,
+                green: 0,
+                blue: 128,
+                alpha: 1
+            }
         };
 
         var hue2rgb = function (p, q, t) {
@@ -318,8 +403,8 @@
             options || (options = {});
             //default options
             xs.Object.defaults(options, {
-                name:  true,
-                hex:   true,
+                name: true,
+                hex: true,
                 model: 'rgb',
                 alpha: true
             });
@@ -453,12 +538,12 @@
         var sync = function (from) {
             var me = this;
             var color = {
-                red:        me.__get('red'),
-                green:      me.__get('green'),
-                blue:       me.__get('blue'),
-                hue:        me.__get('hue'),
+                red: me.__get('red'),
+                green: me.__get('green'),
+                blue: me.__get('blue'),
+                hue: me.__get('hue'),
                 saturation: me.__get('saturation'),
-                lightness:  me.__get('lightness')
+                lightness: me.__get('lightness')
             };
 
             if (from == 'rgb') {
@@ -477,16 +562,16 @@
         };
 
         return {
-            mixins:      {
+            mixins: {
                 observable: 'xs.util.Observable'
             },
-            const:       {
+            const: {
                 knownColors: knownColors
             },
-            static:      {
+            static: {
                 methods: {
-                    toRgb:   toRgb,
-                    toHsl:   toHsl,
+                    toRgb: toRgb,
+                    toHsl: toHsl,
                     fromRgb: function () {
                         var color = fromRgb.apply(this, arguments);
                         return color ? xs.create(ns + '.draw.Color', color) : color;
@@ -499,7 +584,7 @@
                         var color = fromCSS.apply(this, arguments);
                         return color ? xs.create(ns + '.draw.Color', color) : color;
                     },
-                    from:    function () {
+                    from: function () {
                         var color = parse.apply(this, arguments);
                         return color ? xs.create(ns + '.draw.Color', color) : color;
                     }
@@ -537,8 +622,8 @@
                 }
                 me.mixins.observable.constructor.call(me);
             },
-            properties:  {
-                red:        {
+            properties: {
+                red: {
                     set: function (value) {
                         var me = this;
                         if (!xs.isNumeric(value)) {
@@ -554,7 +639,7 @@
                         sync.call(me, 'rgb');
                     }
                 },
-                green:      {
+                green: {
                     set: function (value) {
                         var me = this;
                         if (!xs.isNumeric(value)) {
@@ -570,7 +655,7 @@
                         sync.call(me, 'rgb');
                     }
                 },
-                blue:       {
+                blue: {
                     set: function (value) {
                         var me = this;
                         if (!xs.isNumeric(value)) {
@@ -586,7 +671,7 @@
                         sync.call(me, 'rgb');
                     }
                 },
-                hue:        {
+                hue: {
                     set: function (value) {
                         var me = this;
                         if (!xs.isNumeric(value)) {
@@ -618,7 +703,7 @@
                         sync.call(me, 'hsl');
                     }
                 },
-                lightness:  {
+                lightness: {
                     set: function (value) {
                         var me = this;
                         if (!xs.isNumeric(value)) {
@@ -634,7 +719,7 @@
                         sync.call(me, 'hsl');
                     }
                 },
-                alpha:      {
+                alpha: {
                     set: function (value) {
                         var me = this;
                         if (!xs.isNumeric(value)) {
@@ -652,7 +737,7 @@
                     }
                 }
             },
-            methods:     {
+            methods: {
                 /**
                  * format: array|object(default)
                  */

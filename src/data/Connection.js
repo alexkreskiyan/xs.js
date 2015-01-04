@@ -24,7 +24,7 @@
  * Requests made by this class are asynchronous, and will return immediately. No data from the server will be available
  * to the statement immediately following the {@link #request} call.
  */
-xs.define('xs.data.Connection', function () {
+xs.define(xs.Class, 'xs.data.Connection', function () {
 
     var prepareRequest = function (request) {
         if (xs.is(request, xs.request.Request)) {
@@ -131,11 +131,11 @@ xs.define('xs.data.Connection', function () {
     };
 
     return {
-        requires:    [
+        requires: [
             'xs.promise.Deferred',
             'xs.promise.Promise'
         ],
-        mixins:      {
+        mixins: {
             observable: 'xs.util.Observable'
         },
         /**
@@ -177,76 +177,76 @@ xs.define('xs.data.Connection', function () {
             me.headers = config.headers;
             me.postContentType = config.postContentType;
         },
-        properties:  {
+        properties: {
             /**
              * @property pending {Object} pending requests
              */
-            pending:         {
+            pending: {
                 set: xs.emptyFn
             },
             /**
              * @param {xs.request.Request}, containing
              */
-            request:         {
+            request: {
                 set: function (request) {
                     request = prepareRequest(request);
                     request && this.__set('request', request);
                 }
             },
-            async:           {
-                set:     function (async) {
+            async: {
+                set: function (async) {
                     this.__set('async', Boolean(async));
                 },
                 default: true
             },
-            cache:           {
-                set:     function (cache) {
+            cache: {
+                set: function (cache) {
                     this.__set('cache', Boolean(cache));
                 },
                 default: true
             },
-            cacheParam:      {
-                set:     function (cacheParam) {
+            cacheParam: {
+                set: function (cacheParam) {
                     this.__set('cacheParam', String(cacheParam));
                 },
                 default: 'xsNoCache'
             },
-            credentials:     {
-                set:     function (credentials) {
+            credentials: {
+                set: function (credentials) {
                     this.__set('credentials', Boolean(credentials));
                 },
                 default: false
             },
-            timeout:         {
-                set:     function (timeout) {
+            timeout: {
+                set: function (timeout) {
                     xs.isNumeric(timeout) && (this.__set('timeout', Number(timeout)));
                 },
                 default: 30000
             },
-            autoAbort:       {
-                set:     function (autoAbort) {
+            autoAbort: {
+                set: function (autoAbort) {
                     this.__set('autoAbort', Boolean(autoAbort));
                 },
                 default: false
             },
-            headers:         {
+            headers: {
                 set: function (headers) {
                     xs.isObject(headers) || (headers = {});
                     this.__set('headers', headers);
                 }
             },
             postContentType: {
-                set:     function (postContentType) {
+                set: function (postContentType) {
                     xs.isString(postContentType) && this.__set('postContentType', postContentType);
                 },
                 default: 'application/x-www-form-urlencoded; charset=UTF-8'
             }
         },
-        methods:     {
+        methods: {
             /**
              * Sends an HTTP request to a remote server.
              */
-            send:              function (options) {
+            send: function (options) {
                 var me = this;
 
                 //set request options
@@ -260,7 +260,7 @@ xs.define('xs.data.Connection', function () {
                 //return request sending result
                 return sendRequest(me, request);
             },
-            request:           function (options) {
+            request: function (options) {
                 options = options || {};
                 var me = this, scope = options.scope || window, username = options.username || me.username, password = options.password || me.password || '', async, requestOptions, request, headers, xhr;
 
@@ -282,11 +282,11 @@ xs.define('xs.data.Connection', function () {
 
                 // create the transaction object
                 request = {
-                    id:      ++xs.data.Connection.requestId,
-                    xhr:     xhr,
+                    id: ++xs.data.Connection.requestId,
+                    xhr: xhr,
                     headers: headers,
                     options: options,
-                    async:   async,
+                    async: async,
                     timeout: setTimeout(function () {
                         request.timedout = true;
                         me.abort(request);
@@ -393,9 +393,9 @@ xs.define('xs.data.Connection', function () {
                 }
 
                 return {
-                    url:    url,
+                    url: url,
                     method: method,
-                    data:   params || null
+                    data: params || null
                 };
             },
 
@@ -600,7 +600,7 @@ xs.define('xs.data.Connection', function () {
                 } catch (e) {
                     // in some browsers we can't access the status if the readyState is not 4, so the request has failed
                     result = {
-                        success:     false,
+                        success: false,
                         isException: false
                     };
 
@@ -646,7 +646,7 @@ xs.define('xs.data.Connection', function () {
                     }
                 }
                 return {
-                    success:     success,
+                    success: success,
                     isException: isException
                 };
             },
@@ -656,7 +656,7 @@ xs.define('xs.data.Connection', function () {
              * @private
              * @param {Object} request
              */
-            createResponse:    function (request) {
+            createResponse: function (request) {
                 var me = this, xhr = request.xhr, isXdr = me.isXdr, headers = {}, lines = isXdr ? [] : xhr.getAllResponseHeaders().replace(/\r\n/g, '\n').split('\n'), response;
 
                 xs.eachReverse(lines, function (line) {
@@ -675,17 +675,17 @@ xs.define('xs.data.Connection', function () {
                 delete request.xhr;
 
                 response = {
-                    request:               request,
-                    requestId:             request.id,
-                    status:                xhr.status,
-                    statusText:            xhr.statusText,
-                    getResponseHeader:     function (header) {
+                    request: request,
+                    requestId: request.id,
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                    getResponseHeader: function (header) {
                         return headers[header.toLowerCase()];
                     },
                     getAllResponseHeaders: function () {
                         return headers;
                     },
-                    ok:                    true
+                    ok: true
                 };
 
                 if (isXdr) {
@@ -725,15 +725,15 @@ xs.define('xs.data.Connection', function () {
              * @private
              * @param {Object} request
              */
-            createException:   function (request) {
+            createException: function (request) {
                 return {
-                    request:    request,
-                    requestId:  request.id,
-                    status:     request.aborted ? -1 : 0,
+                    request: request,
+                    requestId: request.id,
+                    status: request.aborted ? -1 : 0,
                     statusText: request.aborted ? 'transaction aborted' : 'communication failure',
-                    aborted:    request.aborted,
-                    timedout:   request.timedout,
-                    ok:         false
+                    aborted: request.aborted,
+                    timedout: request.timedout,
+                    ok: false
                 };
             }
 

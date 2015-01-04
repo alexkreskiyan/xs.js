@@ -1,77 +1,52 @@
-/*!
- This file is core of xs.js 0.1
+/*
+ This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
- Contact:  http://annium.com/contact
+ Contact: http://annium.com/contact
 
- GNU General Public License Usage
- This file may be used under the terms of the GNU General Public License version 3.0 as
- published by the Free Software Foundation and appearing in the file LICENSE included in the
- packaging of this file.
-
- Please review the following information to ensure the GNU General Public License version 3.0
- requirements will be met: http://www.gnu.org/copyleft/gpl.html.
-
- If you are unsure which license is appropriate for your use, please contact the sales department
- at http://annium.com/contact.
+ License: http://annium.com/contact
 
  */
 /**
- * xs.Base is base class for all classes, defined by {@link xs.ClassManager xs.ClassManager}.
- * All classes, defined that way, extend xs.Base
+ * Private internal core class. All xs classes inherit xs.class.Base
  *
- * @class xs.Base
- *
- * @author Alex Kreskiyan <brutalllord@gmail.com>
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @abstract
+ *
+ * @class xs.class.Base
  */
-xs.define('xs.Base', function (self) {
-    return {
-        static:  {
-            methods: {
+xs.define(xs.Class, 'xs.class.Base', function () {
 
-                /**
-                 * Returns whether this is child of given parent
-                 *
-                 * For example:
-                 *
-                 *     Bird.inherits(Animal); //true
-                 *     Bird.inherits(Transport); //false
-                 *
-                 * @static
-                 *
-                 * @method inherits
-                 *
-                 * @param {xs.Base} parent Class, being verified to be ancestor of this Class
-                 *
-                 * @return {boolean} verification result
-                 */
-                inherits: function (parent) {
-                    return this.prototype instanceof parent;
-                }
-            }
-        },
-        methods: {
+    'use strict';
 
-            /**
-             * Returns clone of this object. Basically clone is made by xs.clone
-             *
-             * @method clone
-             *
-             * @return {xs.Base} clone object
-             */
-            clone: function () {
-                return xs.clone(this);
-            },
+    var me = this;
 
-            /**
-             * Completes internal object destruction
-             *
-             * @method destroy
-             */
-            destroy: xs.emptyFn
-        }
+    /**
+     * Returns clone of this object. Basically clone is made by factory and then extended with source properties
+     *
+     * @method clone
+     *
+     * @return {xs.class.Base} clone object
+     */
+    me.methods.clone = function () {
+        var me = this;
+
+        //create clone via factory
+        var clone = me.self.factory.apply(me, me.initArguments);
+
+        //assign properties
+        xs.extend(clone, me);
+
+        //return clone
+        return clone;
     };
+
+    /**
+     * Completes internal object destruction
+     *
+     * @method destroy
+     */
+    me.methods.destroy = xs.emptyFn;
 });

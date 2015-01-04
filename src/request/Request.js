@@ -21,7 +21,7 @@
  * @class xs.request.Request represents request object
  */
 'use strict';
-xs.define('xs.request.Request', function () {
+xs.define(xs.Class, 'xs.request.Request', function () {
     /**
      * Fetches all param indexes from param name
      * @type {RegExp}
@@ -90,7 +90,7 @@ xs.define('xs.request.Request', function () {
      * @param name
      * @param value
      * @param indexes
-     * @return {Undefined}
+     * @return {undefined}
      */
     var fromQueryObjects = function (params, name, value, indexes) {
         //assign value if no indexes
@@ -172,12 +172,12 @@ xs.define('xs.request.Request', function () {
         } else {
             if (encode) {
                 objects.push({
-                    name:  name,
+                    name: name,
                     value: encodeURIComponent(object)
                 });
             } else {
                 objects.push({
-                    name:  name,
+                    name: name,
                     value: object
                 });
             }
@@ -187,7 +187,7 @@ xs.define('xs.request.Request', function () {
     };
     /**
      * Request methods, class, class works with
-     * @type {string[]}
+     * @type {String[]}
      */
     var methods = [
         'get',
@@ -316,17 +316,17 @@ xs.define('xs.request.Request', function () {
     };
 
     return {
-        requires:    [
+        requires: [
             'xs.promise.Deferred',
             'xs.promise.Promise'
         ],
-        extends:     {
+        extends: {
             observable: 'xs.util.Observable'
         },
-        static:      {
+        static: {
             methods: {
                 fromQueryString: fromQueryString,
-                toQueryString:   toQueryString
+                toQueryString: toQueryString
             }
         },
         constructor: function (config) {
@@ -359,9 +359,9 @@ xs.define('xs.request.Request', function () {
             //Non-GET requests default content type
             me.postContentType = config.postContentType;
         },
-        properties:  {
-            method:          {
-                set:     function (method) {
+        properties: {
+            method: {
+                set: function (method) {
                     var me = this;
 
                     if (!xs.isString(method)) {
@@ -375,7 +375,7 @@ xs.define('xs.request.Request', function () {
                 },
                 default: 'get'
             },
-            url:             {
+            url: {
                 set: function (url) {
                     var me = this;
 
@@ -396,7 +396,7 @@ xs.define('xs.request.Request', function () {
                     setRequest(me);
                 }
             },
-            params:          {
+            params: {
                 set: function (params) {
                     var me = this;
 
@@ -408,7 +408,7 @@ xs.define('xs.request.Request', function () {
                     syncParams(me, 'params');
                 }
             },
-            user:            {
+            user: {
                 set: function (user) {
                     var me = this;
                     if (xs.isString(user)) {
@@ -418,7 +418,7 @@ xs.define('xs.request.Request', function () {
                     }
                 }
             },
-            password:        {
+            password: {
                 set: function (password) {
                     var me = this;
                     if (xs.isString(password)) {
@@ -428,53 +428,53 @@ xs.define('xs.request.Request', function () {
                     }
                 }
             },
-            async:           {
-                set:     function (async) {
+            async: {
+                set: function (async) {
                     xs.isDefined(async) && this.__set('async', Boolean(async));
                 },
                 default: true
             },
-            credentials:     {
-                set:     function (credentials) {
+            credentials: {
+                set: function (credentials) {
                     xs.isDefined(credentials) && this.__set('credentials', Boolean(credentials));
                 },
                 default: false
             },
-            headers:         {
+            headers: {
                 set: function (headers) {
                     xs.isObject(headers) && this.__set('headers', headers);
                 }
             },
-            timeout:         {
-                set:     function (timeout) {
+            timeout: {
+                set: function (timeout) {
                     var me = this;
                     xs.isNumeric(timeout) && me.__set('timeout', Number(timeout));
                     me.xhr && (me.xhr.timeout = me.__get('timeout'));
                 },
                 default: 30000
             },
-            timeoutId:       0,
-            xhr:             {
+            timeoutId: 0,
+            xhr: {
                 set: xs.emptyFn
             },
-            isCrossDomain:   {
+            isCrossDomain: {
                 set: xs.emptyFn
             },
-            isXhr:           {
+            isXhr: {
                 set: xs.emptyFn
             },
-            deferred:        {
+            deferred: {
                 set: xs.emptyFn
             },
             postContentType: {
-                set:     function (postContentType) {
+                set: function (postContentType) {
                     xs.isString(postContentType) && this.__set('postContentType', postContentType);
                 },
                 default: 'application/x-www-form-urlencoded; charset=UTF-8'
             }
         },
-        methods:     {
-            send:  function () {
+        methods: {
+            send: function () {
                 var me = this, data = me.method == 'get' ? '' : toQueryString(me.params, false);
 
                 open(me);

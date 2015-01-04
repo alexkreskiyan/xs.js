@@ -21,10 +21,10 @@
  * @class xs.uri.Url represents url string
  */
 'use strict';
-xs.define('xs.uri.Url', function () {
+xs.define(xs.Class, 'xs.uri.Url', function () {
     /**
      * Protocols, class works with
-     * @type {string[]}
+     * @type {String[]}
      */
     var protocols = [
         'http',
@@ -43,11 +43,11 @@ xs.define('xs.uri.Url', function () {
         //define basic data value to return
         var data = {
             protocol: null,
-            host:     '',
-            port:     null,
-            path:     '',
-            params:   {},
-            hash:     ''
+            host: '',
+            port: null,
+            path: '',
+            params: {},
+            hash: ''
         };
 
         //return data if raw is not string
@@ -117,7 +117,7 @@ xs.define('xs.uri.Url', function () {
             me.params = data.params;
             me.hash = data.hash;
         },
-        properties:  {
+        properties: {
             protocol: {
                 set: function (protocol) {
                     if (!protocol) {
@@ -127,7 +127,7 @@ xs.define('xs.uri.Url', function () {
                     }
                 }
             },
-            host:     {
+            host: {
                 set: function (host) {
                     var me = this;
                     if (!host) {
@@ -139,7 +139,7 @@ xs.define('xs.uri.Url', function () {
                     me.__set('host', host);
                 }
             },
-            port:     {
+            port: {
                 set: function (port) {
                     if (!port) {
                         this.__set('port', null);
@@ -148,7 +148,7 @@ xs.define('xs.uri.Url', function () {
                     }
                 }
             },
-            path:     {
+            path: {
                 set: function (path) {
                     if (!path) {
                         this.__set('path', '');
@@ -157,7 +157,7 @@ xs.define('xs.uri.Url', function () {
                     }
                 }
             },
-            params:   {
+            params: {
                 set: function (params) {
                     if (!params) {
                         this.__set('params', {});
@@ -166,7 +166,7 @@ xs.define('xs.uri.Url', function () {
                     }
                 }
             },
-            hash:     {
+            hash: {
                 set: function (hash) {
                     if (!hash) {
                         this.__set('hash', '');
@@ -176,7 +176,7 @@ xs.define('xs.uri.Url', function () {
                 }
             }
         },
-        methods:     {
+        methods: {
             fromString: function (raw) {
                 xs.isString(raw) || (raw = '');
 
@@ -189,7 +189,7 @@ xs.define('xs.uri.Url', function () {
                 me.params = data.params;
                 me.hash = data.hash;
             },
-            toString:   function () {
+            toString: function () {
                 var me = this, str = '';
                 if (me.host) {
                     me.protocol && (str += me.protocol + '://');
@@ -202,7 +202,7 @@ xs.define('xs.uri.Url', function () {
                 me.hash && (str += '#' + me.hash);
                 return str;
             },
-            toUri:      function () {
+            toUri: function () {
                 return encodeURI(this.toString());
             }
         }

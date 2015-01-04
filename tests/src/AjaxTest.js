@@ -14,7 +14,7 @@ var urls = {
 }
 var native = {
     local: {
-        get:  function (data) {
+        get: function (data) {
             send(urls.local, 'get', data);
         },
         post: function (data) {
@@ -22,7 +22,7 @@ var native = {
         }
     },
     cross: {
-        get:  function (data) {
+        get: function (data) {
             send(urls.cross, 'get', data);
         },
         post: function (data) {
@@ -32,32 +32,32 @@ var native = {
 };
 var ajax = {
     local: {
-        get:  function (data) {
+        get: function (data) {
             xs.Ajax.request({
-                url:    urls.local,
+                url: urls.local,
                 method: 'get',
                 params: data
             }).promise.always(onAnything).then(onResolved, onRejected);
         },
         post: function (data) {
             xs.Ajax.request({
-                url:    urls.local,
+                url: urls.local,
                 method: 'post',
                 params: data
             }).promise.always(onAnything).then(onResolved, onRejected);
         }
     },
     cross: {
-        get:  function (data) {
+        get: function (data) {
             xs.Ajax.request({
-                url:    urls.cross,
+                url: urls.cross,
                 method: 'get',
                 params: data
             }).promise.always(onAnything).then(onResolved, onRejected);
         },
         post: function (data) {
             xs.Ajax.request({
-                url:    urls.cross,
+                url: urls.cross,
                 method: 'post',
                 params: data
             }).promise.always(onAnything).then(onResolved, onRejected);
@@ -116,14 +116,14 @@ var toQueryObjects = function (name, object, recursive) {
                 objects = objects.concat(self(name + '[' + param + ']', value, true));
             } else {
                 objects.push({
-                    name:  name,
+                    name: name,
                     value: value
                 });
             }
         });
     } else {
         objects.push({
-            name:  name,
+            name: name,
             value: object
         });
     }

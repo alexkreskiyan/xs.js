@@ -1,20 +1,11 @@
-/*!
+/*
  This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
- Contact:  http://annium.com/contact
+ Contact: http://annium.com/contact
 
- GNU General Public License Usage
- This file may be used under the terms of the GNU General Public License version 3.0 as
- published by the Free Software Foundation and appearing in the file LICENSE included in the
- packaging of this file.
-
- Please review the following information to ensure the GNU General Public License version 3.0
- requirements will be met: http://www.gnu.org/copyleft/gpl.html.
-
- If you are unsure which license is appropriate for your use, please contact the sales department
- at http://annium.com/contact.
+ License: http://annium.com/contact
 
  */
 (function (root, ns) {
@@ -27,19 +18,19 @@
     /**
      * xs.lang.List is private singleton, defining basic Object operations.
      *
-     * @class xs.lang.Object
-     *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
-     *
-     * @singleton
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @private
+     *
+     * @class xs.lang.Object
+     *
+     * @singleton
      */
-    var object = new (function () {
+    var object = xs.Object = new function () {
         var me = this;
 
         // Create quick reference variables for speed access to core prototypes.
-        var slice = Function.prototype.call.bind(Array.prototype.slice);
+        var _slice = Function.prototype.call.bind(Array.prototype.slice);
 
         /**
          * Copies all properties from objects, passed as arguments to given obj
@@ -70,14 +61,49 @@
          * @param {Object} object extended object
          */
         me.extend = function (object) {
-            var adds = slice(arguments, 1);
-            xs.each(adds, function (source) {
-                xs.isObject(source) && xs.each(source, function (item, name) {
-                    object[name] = item;
-                });
-            });
+
+            //assert that index is in bounds
+            xs.assert.object(object, 'extend - given "$object" is not object', {
+                $object: object
+            }, ObjectError);
+
+            var adds = _slice(arguments, 1), addsLength = adds.length;
+
+            //iterate over add-ons
+            for (var i = 0; i < addsLength; i++) {
+                var source = adds[i];
+
+                //continue if source is not object
+                if (!xs.isObject(source)) {
+                    continue;
+                }
+
+                var sourceKeys = Object.keys(source), sourceLength = sourceKeys.length;
+
+                for (var j = 0; j < sourceLength; j++) {
+                    var key = sourceKeys[j];
+                    object[key] = source[key];
+                }
+            }
         };
 
-    });
+    };
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class ObjectError
+     */
+    function ObjectError(message) {
+        this.message = 'xs.lang.Object::' + message;
+    }
+
+    ObjectError.prototype = new Error();
+
+    //extend xs with object
     object.extend(xs, object);
 })(window, 'xs');

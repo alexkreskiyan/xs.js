@@ -1,20 +1,11 @@
-/*!
+/*
  This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
- Contact:  http://annium.com/contact
+ Contact: http://annium.com/contact
 
- GNU General Public License Usage
- This file may be used under the terms of the GNU General Public License version 3.0 as
- published by the Free Software Foundation and appearing in the file LICENSE included in the
- packaging of this file.
-
- Please review the following information to ensure the GNU General Public License version 3.0
- requirements will be met: http://www.gnu.org/copyleft/gpl.html.
-
- If you are unsure which license is appropriate for your use, please contact the sales department
- at http://annium.com/contact.
+ License: http://annium.com/contact
 
  */
 (function (root, ns) {
@@ -27,23 +18,23 @@
     /**
      * xs.lang.Function is private singleton, defining basic function operations.
      *
-     * @class xs.lang.Function
-     *
-     * @author Alex Kreskiyan <brutalllord@gmail.com>
-     *
-     * @singleton
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @private
+     *
+     * @class xs.lang.Function
+     *
+     * @singleton
      */
-    var fn = new (function () {
+    var fn = xs.Function = new function () {
         var me = this;
 
-        var functionPrototype = Function.prototype;
-        var slice = Function.prototype.call.bind(Array.prototype.slice);
-        var concatenate = Function.prototype.apply.bind(Array.prototype.concat);
+        var _bindFunction = Function.prototype.bind;
+        var _slice = Function.prototype.apply.bind(Array.prototype.slice);
+        var _concatenate = Function.prototype.apply.bind(Array.prototype.concat);
 
         /**
-         * Binds function with scope and arguments
+         * Creates binded function, that will be called with given scope and optional args, prepended to call arguments
          *
          * For example:
          *
@@ -57,43 +48,24 @@
          *
          * @param {Function} fn bound function
          * @param {Object} scope optional execution scope
-         * @param {Array} args optional additional arguments, prepended to function
+         * @param {Array} [args] optional additional arguments, prepended to function
          *
          * @return {Function} bound function
          */
         var _bind = me.bind = function (fn, scope, args) {
-            return functionPrototype.bind.apply(fn, concatenate(scope, args));
+            xs.assert.fn(fn, 'bind - given "$fn" is not a function', {
+                $fn: fn
+            }, FunctionError);
+
+            xs.assert.ok(arguments.length < 3 || xs.isArray(args), 'bind - given "$args" is not a array', {
+                $args: args
+            }, FunctionError);
+
+            return _bindFunction.apply(fn, _concatenate(scope, args));
         };
 
         /**
-         * Prefills function's arguments
-         *
-         * For example:
-         *
-         *     var fn = function (a, b, c) {
-         *         return this.x + (a - b) * c;
-         *     };
-         *     var filled = xs.prefill(fn, [1, 2, 3], {x: 5});
-         *     console.log(filled(4));//11
-         *
-         * @method prefill
-         *
-         * @param {Function} fn bound function
-         * @param {Array} defaults predefined params' defaults
-         * @param {Object} scope optional execution scope
-         *
-         * @return {Function} bound function
-         */
-        me.prefill = function (fn, defaults, scope) {
-            return function () {
-                var args = xs.values(arguments);
-                xs.defaults(args, defaults);
-                return fn.apply(scope, args);
-            }
-        };
-
-        /**
-         * Creates function, that is executed only once
+         * Creates function, that is executed only once. Result is memorized and is simply returned in later calls
          *
          * For example:
          *
@@ -101,27 +73,42 @@
          *         obj.x++;
          *     };
          *     var obj = {x: 1};
-         *     var one = xs.once(fn);
+         *     var one = xs.memorize(fn);
          *     one(obj);
          *     console.log(obj.x); //2
          *     one(obj);
          *     console.log(obj.x); //2
          *
-         * @method once
+         * @method memorize
          *
          * @param {Function} fn bound function
          *
          * @return {Function} bound function
          */
-        me.once = function (fn) {
+        me.memorize = function (fn) {
+            xs.assert.fn(fn, 'memorize - given "$fn" is not a function', {
+                $fn: fn
+            }, FunctionError);
+
             var ran = false, memo;
+
             return function () {
+                //return saved result if already ran
                 if (ran) {
+
                     return memo;
                 }
+
+                //mark, that function was run
                 ran = true;
+
+                //save result
                 memo = fn.apply(this, arguments);
+
+                //remove reference to fn
                 fn = null;
+
+                //return result
                 return memo;
             };
         };
@@ -148,11 +135,20 @@
          * @return {Function} wrapped function
          */
         me.wrap = function (fn, wrapper, scope) {
+            xs.assert.fn(fn, 'wrap - given "$fn" is not a function', {
+                $fn: fn
+            }, FunctionError);
+
+            xs.assert.fn(wrapper, 'wrap - given "$fn" is not a function', {
+                $fn: wrapper
+            }, FunctionError);
+
             return function () {
-                var args = slice(arguments);
+                var args = _slice(arguments);
                 args.unshift(fn);
+
                 return wrapper.apply(scope, args);
-            }
+            };
         };
 
         /**
@@ -170,21 +166,174 @@
          *
          * @method nextTick
          *
-         * @param fn
-         * @param scope
+         * @param {Function} fn executed function
+         * @param {Object} scope optional execution scope
          */
         me.nextTick = function (fn, scope) {
-            scope && (fn = _bind(fn, scope));
+            xs.assert.fn(fn, 'nextTick - given "$fn" is not a function', {
+                $fn: fn
+            }, FunctionError);
+
+            if (scope) {
+                fn = _bind(fn, scope);
+            }
+
             setTimeout(fn, 0);
         };
 
+        var getNameRe = /^function\s*([A-z_0-9]*)/i;
         /**
-         * @ignore
+         * Fetches name from function
          *
-         * Represents empty function. is used internally
+         * For example:
+         *
+         *     console.log(xs.Function.getName(function(){
+         *         console.log(this);
+         *     }); // ''
+         *     console.log(xs.Function.getName(function demo (){
+         *         console.log(this);
+         *     }); // 'demo'
+         *
+         * @method getName
+         *
+         * @param {Function} fn parsed function
+         *
+         * @return {String} function name
+         */
+        me.getName = function (fn) {
+            xs.assert.fn(fn, 'getName - given "$fn" is not a function', {
+                $fn: fn
+            }, FunctionError);
+
+            getNameRe.lastIndex = 0;
+            return getNameRe.exec(fn.toString()).pop();
+        };
+
+        var getArgumentsRe = /^function\s*[A-z_0-9]*\s*\(([A-z_0-9\s,]*)\)/i;
+        /**
+         * Fetches arguments list from function
+         *
+         * For example:
+         *
+         *     console.log(xs.Function.getArguments(function(){
+         *         console.log(this);
+         *     }); // []
+         *     console.log(xs.Function.getArguments(function (a,b,e){
+         *         console.log(this);
+         *     }); // ['a','b','e']
+         *
+         * @method getArguments
+         *
+         * @param {Function} fn parsed function
+         *
+         * @return {Array} array with function formal params
+         */
+        me.getArguments = function (fn) {
+            xs.assert.fn(fn, 'getArguments - given "$fn" is not a function', {
+                $fn: fn
+            }, FunctionError);
+
+            getArgumentsRe.lastIndex = 0;
+            return getArgumentsRe.exec(fn.toString()).pop().split(',').map(function (name) {
+
+                return name.trim();
+            }).filter(function (value) {
+
+                return value;
+            });
+        };
+
+        /**
+         * Fetches function body
+         *
+         * For example:
+         *
+         *     console.log(xs.Function.getBody(function(){
+         *         console.log(this);
+         *     }); // 'console.log(this);'
+         *     console.log(xs.Function.getBody(function (a,b,e){}); // ''
+         *
+         * @method getBody
+         *
+         * @param {Function} fn parsed function
+         *
+         * @return {String} function body
+         */
+        me.getBody = function (fn) {
+            xs.assert.fn(fn, 'getBody - given "$fn" is not a function', {
+                $fn: fn
+            }, FunctionError);
+
+            var stringFn = fn.toString();
+            return stringFn.substring(stringFn.indexOf('{') + 1, stringFn.length - 1);
+        };
+
+        var parseRe = /^function\s*([A-z_0-9]*)\s*\(([A-z_0-9\s,]*)\)/i;
+        /**
+         * Fetches function name, arguments and body
+         *
+         * For example:
+         *
+         *     console.log(xs.Function.parse(function asd(a,b){
+         *         console.log(this);
+         *     }); // {name:'asd', arguments: ['a','b'], body: 'console.log(this);' }
+         *
+         * @method parse
+         *
+         * @param {Function} fn parsed function
+         *
+         * @return {Object} function data
+         */
+        me.parse = function (fn) {
+            xs.assert.fn(fn, 'parse - given "$fn" is not a function', {
+                $fn: fn
+            }, FunctionError);
+
+            parseRe.lastIndex = 0;
+            var stringFn = fn.toString();
+            var data = parseRe.exec(stringFn);
+            return {
+                name: data[1],
+                args: data[2].split(',').map(function (name) {
+
+                    return name.trim();
+                }).filter(function (value) {
+
+                    return value;
+                }),
+                body: stringFn.substring(stringFn.indexOf('{') + 1, stringFn.length - 1)
+            };
+        };
+
+        /**
+         * Represents empty function. Is used internally to specify empty methods
+         *
+         * @method emptyFn
          */
         me.emptyFn = function () {
         };
+    };
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class FunctionError
+     */
+    function FunctionError(message) {
+        this.message = 'xs.lang.Function::' + message;
+    }
+
+    FunctionError.prototype = new Error();
+
+    xs.extend(xs, {
+        bind: fn.bind,
+        memorize: fn.memorize,
+        wrap: fn.wrap,
+        nextTick: fn.nextTick,
+        emptyFn: fn.emptyFn
     });
-    xs.extend(xs, fn);
 })(window, 'xs');

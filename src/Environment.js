@@ -182,33 +182,33 @@
          * @type {Object}
          */
         var browser = {
-            chrome:        'chrome',
-            chromeMobile:  'chrome mobile',
-            chromium:      'chromium',
-            firefox:       'firefox',
+            chrome: 'chrome',
+            chromeMobile: 'chrome mobile',
+            chromium: 'chromium',
+            firefox: 'firefox',
             firefoxMobile: 'firefox mobile',
-            waterfox:      'waterfox',
-            safari:        'safari',
-            safariMobile:  'safari mobile',
-            opera:         'opera',
-            operaMobile:   'opera mobile',
-            operaMini:     'opera mini',
-            ie:            'ie',
-            ieMobile:      'ie mobile',
-            yabrowser:     'yabrowser'
+            waterfox: 'waterfox',
+            safari: 'safari',
+            safariMobile: 'safari mobile',
+            opera: 'opera',
+            operaMobile: 'opera mobile',
+            operaMini: 'opera mini',
+            ie: 'ie',
+            ieMobile: 'ie mobile',
+            yabrowser: 'yabrowser'
         }, engine = {
-            webkit:  'webkit',
-            blink:   'blink',
-            gecko:   'gecko',
-            presto:  'presto',
+            webkit: 'webkit',
+            blink: 'blink',
+            gecko: 'gecko',
+            presto: 'presto',
             trident: 'trident'
         }, os = {
-            linux:        'linux',
-            windows:      'windows',
+            linux: 'linux',
+            windows: 'windows',
             windowsPhone: 'windows phone',
-            android:      'android',
-            osx:          'os x',
-            ios:          'ios'
+            android: 'android',
+            osx: 'os x',
+            ios: 'ios'
         }, device = {
             mobile: 'mobile',
             tablet: 'tablet'
@@ -338,7 +338,7 @@
                     ]
                 ]
             ],
-            engine:  [
+            engine: [
                 [
                     [engine.webkit],
                     [
@@ -391,7 +391,7 @@
                     [/msie/]
                 ]
             ],
-            os:      [
+            os: [
                 [
                     [os.linux],
                     [/android/],
@@ -470,7 +470,7 @@
                     [/iphone\sos\s([\d_\.]+)/]
                 ]
             ],
-            device:  [
+            device: [
                 [
                     [
                         'k900',
@@ -598,7 +598,7 @@
                     [/lumia\s625/]
                 ]
             ],
-            cpu:     [
+            cpu: [
                 [
                     [arch.x64],
                     [],
@@ -623,42 +623,36 @@
     });
     xs.extend(xs, {
         //commons
-        userAgent:       xs.env.userAgent,
-        location:        xs.env.location,
-        browser:         xs.env.browser,
-        engine:          xs.env.engine,
-        os:              xs.env.os,
-        device:          xs.env.device,
-        cpu:             xs.env.cpu,
-        //shortcuts
+        userAgent: xs.env.userAgent,
+        location: xs.env.location,
+        browser: xs.env.browser,
+        engine: xs.env.engine,
+        os: xs.env.os,
+        device: xs.env.device,
+        cpu: xs.env.cpu, //shortcuts
         //desktop os
-        isLinux:         xs.env.isLinux,
-        isWindows:       xs.env.isWindows,
-        isMac:           xs.env.isMac,
-        //mobile os
-        isAndroid:       xs.env.isAndroid,
-        isiOS:           xs.env.isiOS,
-        isWindowsPhone:  xs.env.isWindowsPhone,
-        //engines
-        isWebkit:        xs.env.isWebkit,
-        isBlink:         xs.env.isBlink,
-        isGecko:         xs.env.isGecko,
-        isPresto:        xs.env.isPresto,
-        isTrident:       xs.env.isTrident,
-        //desktop browsers
-        isChrome:        xs.env.isChrome,
-        isFirefox:       xs.env.isFirefox,
-        isOpera:         xs.env.isOpera,
-        isSafari:        xs.env.isSafari,
-        isIE:            xs.env.isIE,
-        //mobile browsers
-        isChromeMobile:  xs.env.isChromeMobile,
+        isLinux: xs.env.isLinux,
+        isWindows: xs.env.isWindows,
+        isMac: xs.env.isMac, //mobile os
+        isAndroid: xs.env.isAndroid,
+        isiOS: xs.env.isiOS,
+        isWindowsPhone: xs.env.isWindowsPhone, //engines
+        isWebkit: xs.env.isWebkit,
+        isBlink: xs.env.isBlink,
+        isGecko: xs.env.isGecko,
+        isPresto: xs.env.isPresto,
+        isTrident: xs.env.isTrident, //desktop browsers
+        isChrome: xs.env.isChrome,
+        isFirefox: xs.env.isFirefox,
+        isOpera: xs.env.isOpera,
+        isSafari: xs.env.isSafari,
+        isIE: xs.env.isIE, //mobile browsers
+        isChromeMobile: xs.env.isChromeMobile,
         isFirefoxMobile: xs.env.isFirefoxMobile,
-        isOperaMobile:   xs.env.isOperaMobile,
-        isSafariMobile:  xs.env.isSafariMobile,
-        isIEMobile:      xs.env.isIEMobile,
-        //arch
-        is32:            xs.env.is32,
-        is64:            xs.env.is64
+        isOperaMobile: xs.env.isOperaMobile,
+        isSafariMobile: xs.env.isSafariMobile,
+        isIEMobile: xs.env.isIEMobile, //arch
+        is32: xs.env.is32,
+        is64: xs.env.is64
     });
 })(window, 'xs');
