@@ -661,21 +661,26 @@
         var _raise = function (message, vars, Exception) {
             var error;
 
-            if (arguments.length === 1) {
-                error = new Error(message);
+            //vars given
+            if (xs.isObject(vars)) {
 
-            } else if (arguments.length === 2) {
-                //if vars given
-                if (xs.isObject(vars)) {
-                    error = new Error(message);
-                } else if (xs.isFunction(Exception)) {
-                    error = new Exception(message);
+                //if exception not given - default to error
+                if (!xs.isFunction(Exception)) {
+                    Exception = Error;
                 }
 
+                //Exception given instead of vars (vars are empty)
+            } else if (xs.isFunction(vars)) {
+                Exception = vars;
+                vars = {};
+
+                //only message given
             } else {
-                error = new Exception(message);
+                Exception = Error;
+                vars = {};
             }
 
+            error = new Exception(message);
             error.vars = vars;
 
             throw error;
