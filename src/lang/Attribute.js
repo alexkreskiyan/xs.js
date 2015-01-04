@@ -688,22 +688,22 @@
                 });
             };
         };
-
-        /**
-         * Internal error class
-         *
-         * @ignore
-         *
-         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-         *
-         * @class AttributeError
-         */
-        function AttributeError(message) {
-            this.message = 'xs.lang.Attribute::' + message;
-        }
-
-        AttributeError.prototype = new Error();
     };
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class AttributeError
+     */
+    function AttributeError(message) {
+        this.message = 'xs.lang.Attribute::' + message;
+    }
+
+    AttributeError.prototype = new Error();
 
     xs.extend(xs, {
         constant: attribute.constant,

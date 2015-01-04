@@ -802,22 +802,22 @@
                 return me;
             };
         }
-
-        /**
-         * Internal error class
-         *
-         * @ignore
-         *
-         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-         *
-         * @class LoaderError
-         */
-        function LoaderError(message) {
-            this.message = 'xs.core.Loader::' + message;
-        }
-
-        LoaderError.prototype = new Error();
     };
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class LoaderError
+     */
+    function LoaderError(message) {
+        this.message = 'xs.core.Loader::' + message;
+    }
+
+    LoaderError.prototype = new Error();
 
     xs.extend(xs, {
         require: xs.Loader.require
