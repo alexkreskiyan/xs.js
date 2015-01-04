@@ -45,6 +45,98 @@
         };
 
         /**
+         * @property isChrome
+         * @inheritdoc xs.env.Context#isChrome
+         */
+        /**
+         * @property isFirefox
+         * @inheritdoc xs.env.Context#isFirefox
+         */
+        /**
+         * @property isOpera
+         * @inheritdoc xs.env.Context#isOpera
+         */
+        /**
+         * @property isSafari
+         * @inheritdoc xs.env.Context#isSafari
+         */
+        /**
+         * @property isIE
+         * @inheritdoc xs.env.Context#isIE
+         */
+        /**
+         * @property isChromeMobile
+         * @inheritdoc xs.env.Context#isChromeMobile
+         */
+        /**
+         * @property isFirefoxMobile
+         * @inheritdoc xs.env.Context#isFirefoxMobile
+         */
+        /**
+         * @property isOperaMobile
+         * @inheritdoc xs.env.Context#isOperaMobile
+         */
+        /**
+         * @property isSafariMobile
+         * @inheritdoc xs.env.Context#isSafariMobile
+         */
+        /**
+         * @property isIEMobile
+         * @inheritdoc xs.env.Context#isIEMobile
+         */
+        /**
+         * @property isWebkit
+         * @inheritdoc xs.env.Context#isWebkit
+         */
+        /**
+         * @property isBlink
+         * @inheritdoc xs.env.Context#isBlink
+         */
+        /**
+         * @property isGecko
+         * @inheritdoc xs.env.Context#isGecko
+         */
+        /**
+         * @property isPresto
+         * @inheritdoc xs.env.Context#isPresto
+         */
+        /**
+         * @property isTrident
+         * @inheritdoc xs.env.Context#isTrident
+         */
+        /**
+         * @property isLinux
+         * @inheritdoc xs.env.Context#isLinux
+         */
+        /**
+         * @property isWindows
+         * @inheritdoc xs.env.Context#isWindows
+         */
+        /**
+         * @property isMac
+         * @inheritdoc xs.env.Context#isMac
+         */
+        /**
+         * @property isAndroid
+         * @inheritdoc xs.env.Context#isAndroid
+         */
+        /**
+         * @property isiOS
+         * @inheritdoc xs.env.Context#isiOS
+         */
+        /**
+         * @property isWindowsPhone
+         * @inheritdoc xs.env.Context#isWindowsPhone
+         */
+        /**
+         * @property is32
+         * @inheritdoc xs.env.Context#is32
+         */
+        /**
+         * @property is64
+         * @inheritdoc xs.env.Context#is64
+         */
+        /**
          * @method define
          * @inheritdoc xs.core.ContractsManager#define
          */

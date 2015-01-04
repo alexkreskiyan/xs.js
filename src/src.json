@@ -45,5 +45,6 @@
   "xs.interface.preprocessors.prepareStaticMethods",
   "xs.interface.preprocessors.prepareProperties",
   "xs.interface.preprocessors.prepareMethods",
-  "xs.interface.Base"
+  "xs.interface.Base",
+  "xs.env.Context"
 ]

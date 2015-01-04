@@ -1,20 +1,11 @@
-/**
- This file is core of xs.js 0.1
+/*
+ This file is core of xs.js
 
  Copyright (c) 2013-2014, Annium Inc
 
- Contact:  http://annium.com/contact
+ Contact: http://annium.com/contact
 
- GNU General Public License Usage
- This file may be used under the terms of the GNU General Public License version 3.0 as
- published by the Free Software Foundation and appearing in the file LICENSE included in the
- packaging of this file.
-
- Please review the following information to ensure the GNU General Public License version 3.0
- requirements will be met: http://www.gnu.org/copyleft/gpl.html.
-
- If you are unsure which license is appropriate for your use, please contact the sales department
- at http://annium.com/contact.
+ License: http://annium.com/contact
 
  */
 (function (root, ns) {
@@ -23,99 +14,114 @@
 
     //framework shorthand
     var xs = root[ns];
-    xs.isObject(env) || (xs.env = {});
+
+    //define xs.env
+    if (!xs.env) {
+        xs.env = {};
+    }
 
     /**
-     * xs.environment.Context is private singleton,provision of basic operations to determine the browser and
-     * definition of the system architecture
+     * xs.env.Context is singleton, providing basic operations to determine params of execution context
      *
-     * @class xs.lang.List
+     * @class xs.env.Context
+     *
+     * @alternateClassName xs.context
      *
      * @author Alex Kreskiyan <brutalllord@gmail.com>
      *
      * @singleton
-     *
-     * @private
      */
-    //create or update xs.env
-    xs.env.Context = new (function () {
+    xs.env.Context = xs.context = new function () {
         var me = this;
 
         /**
-         * Parsing the packet header to determine the type of browser
+         * Parses user agent, according to given rules to get verification result
          *
-         * @method defined
+         * @method parse
          *
          * @param {String} userAgent information about the web-browser
-
          * @param {Array} rules rules for check browser
-         *
          * @param {Array} params ['name', 'major', 'minor', 'version']
          *
-         * @returns {boolean} verification result
+         * @return {Object} parsing result
          */
-        var parse = function (userAgent, rules, params) {
+        var _parse = function (userAgent, rules, params) {
 
             //accumulate result of the regular expression
             var result = {};
-            xs.Array.find(rules, function (rule) {
-                var defaults = xs.Array.clone(rule[0]), negativeRegExps = rule[1], positiveRegExps = rule[2], data = [], match;
 
-                //check if userAgent doesn't match any one of negativeRegExps given in rule
-                match = xs.Array.some(negativeRegExps, function (regExp) {
+            //wrap params as collection
+            params = new xs.core.Collection(params);
+
+            (new xs.core.Collection(rules)).find(function (rule) {
+                var defaults = xs.clone(rule[0]), data = [], match;
+                var negatives = new xs.core.Collection(rule[1]);
+                var positives = new xs.core.Collection(rule[2]);
+
+                //try userAgent to match any one of negatives given in rule
+                match = negatives.length ? negatives.some(function (regExp) {
+
                     //check if userAgent matches given regExp
                     return regExp.test(userAgent);
-                });
+                }) : false;
 
-                //return false if at least one of negativeRegExps matched
+                //return false if at least one of negatives matched
                 if (match) {
+
                     return false;
                 }
 
-                //check if userAgent matches all positiveRegExps given in rule
-                match = xs.Array.every(positiveRegExps, function (regExp) {
+                //to match all regular expressions in rule need to be satisfied
+                match = positives.some(function (regExp) {
                     //check if userAgent matches given regExp
                     var result = regExp.exec(userAgent);
 
-                    //if no match - return false, that will cause xs.Array.every loop break
+                    //if no match - return false, that will cause loop break
                     if (!result) {
+
                         return false;
                     }
 
                     //shift first element - that means whole match data to gain only selected ones
                     result.shift();
-                    //if data not empty - union data with result, saving order
+
+                    //if data not empty - concat data with result, saving order
                     if (result.length) {
-                        data = xs.Array.union(data, result);
+                        data = data.concat(result);
                     }
+
                     //sign, that userAgent matched this regExp
                     return true;
-                });
+                }, positives.length);
 
-                //return false if no match established and search will be continues
+                //return false if no match established and search will continue
                 if (!match) {
+
                     return false;
                 }
 
-                //iterate result and fill it
-                xs.Array.each(params, function (param) {
-                    //if default value given - use it, else - fetch value from data
-                    if (xs.isString(defaults[0])) {
-                        result[param] = defaults.shift();
-                    } else if (xs.isArray(defaults[0])) {
-                        //defaults item contains parser rules for parsing obtained result
+                //iterate over params to fill result
+                params.each(function (param) {
+
+                    //if default item is array - it contains parser rules for parsing obtained result
+                    if (xs.isArray(defaults[0])) {
                         var raw = data.shift();
                         var parser = defaults.shift();
                         //parse raw data and assign
                         result[param] = raw.replace(parser[0], parser[1]);
+
+                        //else if default item given - use it
+                    } else if (xs.isDefined(defaults[0])) {
+                        result[param] = defaults.shift();
+
+                        //else - use data, shift empty default place
                     } else {
                         result[param] = data.shift();
-                        //shift empty default value
-                        defaults.length && defaults.shift();
+                        defaults.shift();
                     }
                 });
 
-                //return true stops search
+                //return true to stop search
                 return true;
             });
 
@@ -124,20 +130,40 @@
         };
 
         /**
-         * Detect function, that consumes userAgent from navigator and updates stored values.
+         * Consumes userAgent from navigator and updates stored values.
          * Is called automatically once on start
          *
-         * @method define
-         *
-         * @param none
+         * @method detect
          */
-        me.detect = function () {
-            //user agent string
+        var _detect = function () {
+
+            /**
+             * Lower-cased user agent string
+             *
+             * @property userAgent
+             *
+             * @readonly
+             *
+             * @type {String}
+             */
             var userAgent = me.userAgent = navigator.userAgent.toLowerCase();
-            //location
-            me.location = location;
+
+
             //set session variables with correct values
-            me.browser = parse(userAgent, rules.browser, [
+
+            /**
+             * Browser information:
+             *
+             * - name
+             * - major version
+             * - minor version
+             * - version complete string
+             *
+             * @property browser
+             *
+             * @type {Object}
+             */
+            me.browser = _parse(userAgent, rules.browser, [
                 'name',
                 'major',
                 'minor',
@@ -145,7 +171,20 @@
             ]);
             me.browser.major = Number(me.browser.major);
             me.browser.minor = Number(me.browser.minor);
-            me.engine = parse(userAgent, rules.engine, [
+
+            /**
+             * Browser engine information:
+             *
+             * - name
+             * - major version
+             * - minor version
+             * - version complete string
+             *
+             * @property engine
+             *
+             * @type {Object}
+             */
+            me.engine = _parse(userAgent, rules.engine, [
                 'name',
                 'major',
                 'minor',
@@ -153,90 +192,308 @@
             ]);
             me.engine.major = Number(me.engine.major);
             me.engine.minor = Number(me.engine.minor);
-            me.os = parse(userAgent, rules.os, [
+
+            /**
+             * Device OS information:
+             *
+             * - name
+             * - version
+             *
+             * @property os
+             *
+             * @type {Object}
+             */
+            me.os = _parse(userAgent, rules.os, [
                 'name',
                 'version'
             ]);
 
-            me.cpu = parse(userAgent, rules.cpu, ['architecture']);
+            /**
+             * CPU information:
+             *
+             * - architecture
+             *
+             * @property cpu
+             *
+             * @type {Object}
+             */
+            me.cpu = _parse(userAgent, rules.cpu, ['architecture']);
+
+
             //set shortcuts
-            //for desktop os
-            me.isLinux = me.os.name == os.linux;
-            me.isWindows = me.os.name == os.windows;
-            me.isMac = me.os.name == os.osx;
-            //mobile os
-            me.isAndroid = me.os.name == os.android;
-            me.isiOS = me.os.name == os.ios;
-            me.isWindowsPhone = me.os.name == os.windowsPhone;
-            //engines
-            me.isWebkit = me.engine.name == engine.webkit;
-            me.isBlink = me.engine.name == engine.blink;
-            me.isGecko = me.engine.name == engine.gecko;
-            me.isPresto = me.engine.name == engine.presto;
-            me.isTrident = me.engine.name == engine.trident;
+
+
             //desktop browsers
-            me.isChrome = xs.Array.has([
+
+            /**
+             * Whether browser is chrome
+             *
+             * @property isChrome
+             *
+             * @type {Object}
+             */
+            me.isChrome = [
                 browser.chrome,
                 browser.chromium
-            ], me.browser.name);
-            me.isFirefox = me.browser.name == browser.firefox;
-            me.isOpera = me.browser.name == browser.opera;
-            me.isSafari = me.browser.name == browser.safari;
-            me.isIE = me.browser.name == browser.ie;
+            ].indexOf(me.browser.name) >= 0;
+
+            /**
+             * Whether browser is Firefox
+             *
+             * @property isFirefox
+             *
+             * @type {Boolean}
+             */
+            me.isFirefox = me.browser.name === browser.firefox;
+
+            /**
+             * Whether browser is Opera
+             *
+             * @property isOpera
+             *
+             * @type {Boolean}
+             */
+            me.isOpera = me.browser.name === browser.opera;
+
+            /**
+             * Whether browser is Safari
+             *
+             * @property isSafari
+             *
+             * @type {Boolean}
+             */
+            me.isSafari = me.browser.name === browser.safari;
+
+            /**
+             * Whether browser is Internet Explorer
+             *
+             * @property isIE
+             *
+             * @type {Boolean}
+             */
+            me.isIE = me.browser.name === browser.ie;
+
             //mobile browsers
-            me.isChromeMobile = me.browser.name == browser.chromeMobile;
-            me.isFirefoxMobile = me.browser.name == browser.firefoxMobile;
-            me.isOperaMobile = (me.browser.name == browser.operaMobile || me.browser.name == browser.operaMini);
-            me.isSafariMobile = me.browser.name == browser.safariMobile;
-            me.isIEMobile = me.browser.name == browser.ieMobile;
-            //arch
-            me.is32 = me.cpu.architecture == arch.x32;
-            me.is64 = me.cpu.architecture == arch.x64;
+
+            /**
+             * Whether mobile browser is Chrome Mobile
+             *
+             * @property isChromeMobile
+             *
+             * @type {Boolean}
+             */
+            me.isChromeMobile = me.browser.name === browser.chromeMobile;
+
+            /**
+             * Whether mobile browser is Firefox Mobile
+             *
+             * @property isFirefoxMobile
+             *
+             * @type {Boolean}
+             */
+            me.isFirefoxMobile = me.browser.name === browser.firefoxMobile;
+
+            /**
+             * Whether mobile browser is Opera Mobile
+             *
+             * @property isOperaMobile
+             *
+             * @type {Boolean}
+             */
+            me.isOperaMobile = (me.browser.name === browser.operaMobile || me.browser.name === browser.operaMini);
+
+            /**
+             * Whether mobile browser is Safari Mobile
+             *
+             * @property isSafariMobile
+             *
+             * @type {Boolean}
+             */
+            me.isSafariMobile = me.browser.name === browser.safariMobile;
+
+            /**
+             * Whether mobile browser is Internet Explorer Mobile
+             *
+             * @property isIEMobile
+             *
+             * @type {Boolean}
+             */
+            me.isIEMobile = me.browser.name === browser.ieMobile;
+
+
+            //engines
+
+            /**
+             * Whether browser engine is WebKit
+             *
+             * @property isWebkit
+             *
+             * @type {Boolean}
+             */
+            me.isWebkit = me.engine.name === engine.webkit;
+
+            /**
+             * Whether browser engine is Blink
+             *
+             * @property isBlink
+             *
+             * @type {Boolean}
+             */
+            me.isBlink = me.engine.name === engine.blink;
+
+            /**
+             * Whether browser engine is Gecko
+             *
+             * @property isGecko
+             *
+             * @type {Boolean}
+             */
+            me.isGecko = me.engine.name === engine.gecko;
+
+            /**
+             * Whether browser engine is Presto
+             *
+             * @property isPresto
+             *
+             * @type {Boolean}
+             */
+            me.isPresto = me.engine.name === engine.presto;
+
+            /**
+             * Whether browser engine is Trident
+             *
+             * @property isTrident
+             *
+             * @type {Boolean}
+             */
+            me.isTrident = me.engine.name === engine.trident;
+
+
+            //desktop OS
+
+            /**
+             * Whether OS is Linux
+             *
+             * @property isLinux
+             *
+             * @type {Boolean}
+             */
+            me.isLinux = me.os.name === os.linux;
+
+            /**
+             * Whether OS is Windows
+             *
+             * @property isWindows
+             *
+             * @type {Boolean}
+             */
+            me.isWindows = me.os.name === os.windows;
+
+            /**
+             * Whether OS is Max
+             *
+             * @property isMac
+             *
+             * @type {Boolean}
+             */
+            me.isMac = me.os.name === os.osx;
+
+            //mobile OS
+
+            /**
+             * Whether mobile OS is Android
+             *
+             * @property isAndroid
+             *
+             * @type {Boolean}
+             */
+            me.isAndroid = me.os.name === os.android;
+
+            /**
+             * Whether mobile OS is iOS
+             *
+             * @property isiOS
+             *
+             * @type {Boolean}
+             */
+            me.isiOS = me.os.name === os.ios;
+
+            /**
+             * Whether mobile OS is WindowsPhone
+             *
+             * @property isWindowsPhone
+             *
+             * @type {Boolean}
+             */
+            me.isWindowsPhone = me.os.name === os.windowsPhone;
+
+
+            //CPU
+
+            /**
+             * Whether cpu architecture is x86
+             *
+             * @property is32
+             *
+             * @type {Boolean}
+             */
+            me.is32 = me.cpu.architecture === arch.x32;
+
+            /**
+             * Whether cpu architecture is x86_64
+             *
+             * @property is64
+             *
+             * @type {Boolean}
+             */
+            me.is64 = me.cpu.architecture === arch.x64;
         };
 
-        /**
+        /*
          * Rules hash for different aspects of environment detection
          * Each rule in array must have 3 items:
          *  - variables list
-         *    contains variables, being fetched from rule, written is direct fetch order
+         *    contains variables, being fetched from rule, written in direct fetch order
          *    variable can be given as default value for relative param, or empty value - then fetched data will be used,
-         *    or as array with 2 elements: variable parsing rule and it compunding string
+         *    or as array with 2 elements: variable parsing rule and it compounding string
          *  - negative regular expressions
          *    here are expressions, that have not to be executed for rule to be matched
          *  - positive and data containing regular expressions
          *    here are expressions, that have to be executed for rule to be matched. some of them contain data selections
          *    data selection order should match variables list order
-         *
          */
         var browser = {
-            chrome:        'chrome',
-            chromeMobile:  'chrome mobile',
-            chromium:      'chromium',
-            firefox:       'firefox',
+            chrome: 'chrome',
+            chromeMobile: 'chrome mobile',
+            chromium: 'chromium',
+            firefox: 'firefox',
             firefoxMobile: 'firefox mobile',
-            waterfox:      'waterfox',
-            safari:        'safari',
-            safariMobile:  'safari mobile',
-            opera:         'opera',
-            operaMobile:   'opera mobile',
-            operaMini:     'opera mini',
-            ie:            'ie',
-            ieMobile:      'ie mobile',
-            yabrowser:     'yabrowser'
-        }, engine = {
-            webkit:  'webkit',
-            blink:   'blink',
-            gecko:   'gecko',
-            presto:  'presto',
+            waterfox: 'waterfox',
+            safari: 'safari',
+            safariMobile: 'safari mobile',
+            opera: 'opera',
+            operaMobile: 'opera mobile',
+            operaMini: 'opera mini',
+            ie: 'ie',
+            ieMobile: 'ie mobile',
+            yabrowser: 'yabrowser'
+        };
+        var engine = {
+            webkit: 'webkit',
+            blink: 'blink',
+            gecko: 'gecko',
+            presto: 'presto',
             trident: 'trident'
-        }, os = {
-            linux:        'linux',
-            windows:      'windows',
+        };
+        var os = {
+            linux: 'linux',
+            windows: 'windows',
             windowsPhone: 'windows phone',
-            android:      'android',
-            osx:          'os x',
-            ios:          'ios'
-        }, arch = {
+            android: 'android',
+            osx: 'os x',
+            ios: 'ios'
+        };
+        var arch = {
             x32: '32',
             x64: '64'
         };
@@ -368,7 +625,7 @@
             ],
 
             //rules for determining the engine
-            engine:  [
+            engine: [
                 [
                     [engine.webkit],
                     [
@@ -423,7 +680,7 @@
             ],
 
             //rules for determining the operating system
-            os:      [
+            os: [
                 [
                     [os.linux],
                     [/android/],
@@ -504,7 +761,7 @@
             ],
 
             //rules for determining the processor architecture
-            cpu:     [
+            cpu: [
                 [
                     [arch.x64],
                     [],
@@ -525,47 +782,41 @@
                 ]
             ]
         };
-        me.detect();
-    });
+
+        //detect environment context
+        _detect();
+    };
 
     //Needed simple xs.extend(xs, xs.env.Context)
-    xs.extend(xs, {
-        //commons
-        userAgent:       xs.env.userAgent,
-        location:        xs.env.location,
-        browser:         xs.env.browser,
-        engine:          xs.env.engine,
-        os:              xs.env.os,
-        cpu:             xs.env.cpu,
-        //shortcuts
-        //desktop os
-        isLinux:         xs.env.isLinux,
-        isWindows:       xs.env.isWindows,
-        isMac:           xs.env.isMac,
-        //mobile os
-        isAndroid:       xs.env.isAndroid,
-        isiOS:           xs.env.isiOS,
-        isWindowsPhone:  xs.env.isWindowsPhone,
-        //engines
-        isWebkit:        xs.env.isWebkit,
-        isBlink:         xs.env.isBlink,
-        isGecko:         xs.env.isGecko,
-        isPresto:        xs.env.isPresto,
-        isTrident:       xs.env.isTrident,
+    xs.extend(xs, (new xs.core.Collection(xs.env.Context)).pick([
         //desktop browsers
-        isChrome:        xs.env.isChrome,
-        isFirefox:       xs.env.isFirefox,
-        isOpera:         xs.env.isOpera,
-        isSafari:        xs.env.isSafari,
-        isIE:            xs.env.isIE,
+        'isChrome',
+        'isFirefox',
+        'isOpera',
+        'isSafari',
+        'isIE',
         //mobile browsers
-        isChromeMobile:  xs.env.isChromeMobile,
-        isFirefoxMobile: xs.env.isFirefoxMobile,
-        isOperaMobile:   xs.env.isOperaMobile,
-        isSafariMobile:  xs.env.isSafariMobile,
-        isIEMobile:      xs.env.isIEMobile,
+        'isChromeMobile',
+        'isFirefoxMobile',
+        'isOperaMobile',
+        'isSafariMobile',
+        'isIEMobile',
+        //engine
+        'isWebkit',
+        'isBlink',
+        'isGecko',
+        'isPresto',
+        'isTrident',
+        //desktop os
+        'isLinux',
+        'isWindows',
+        'isMac',
+        //mobile os
+        'isAndroid',
+        'isiOS',
+        'isWindowsPhone',
         //arch
-        is32:            xs.env.is32,
-        is64:            xs.env.is64
-    });
+        'is32',
+        'is64'
+    ]).toSource());
 })(window, 'xs');
