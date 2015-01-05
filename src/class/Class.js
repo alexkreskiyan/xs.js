@@ -97,9 +97,6 @@
             //save contract type
             xs.constant(Class, 'contractor', Contractor);
 
-            //assign factory for class
-            Class.factory = _createFactory(Class);
-
             //get namespace for Class
             var namespace = Class.namespace = {};
 
@@ -135,6 +132,10 @@
                 namespace,
                 dependencies
             ], function () {
+
+                //create factory for class
+                Class.factory = _createFactory(Class);
+
                 //remove isProcessing mark
                 delete Class.isProcessing;
 
@@ -309,23 +310,14 @@
          * @return {Function} factory for given Class
          */
         var _createFactory = function (Class) {
-            //this - current class
-            //arguments - new instance arguments
-
-            //create wrapper
-            var Factory = function (args) {
-                return Class.apply(this, args);
+            var constructor = Class.descriptor.constructor !== Object ? Class.descriptor.constructor : undefined;
+            var args = constructor ? xs.Function.getArguments(constructor) : [];
+            var factory = function () {
             };
+            //use eval to create factory
+            eval('factory = function(' + args.join(', ') + ') { return new Class(' + args.join(', ') + '); };');
 
-            //assign prototype
-            Factory.prototype = Class.prototype;
-
-            //return factory
-            return function () {
-
-                //return instance
-                return new Factory(arguments);
-            };
+            return factory;
         };
 
         /**

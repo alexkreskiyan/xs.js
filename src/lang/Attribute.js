@@ -481,10 +481,10 @@
                 //get|set priority
                 if (descriptor.get || descriptor.set) {
                     if (!descriptor.get) {
-                        eval('descriptor.get = function () { \'use strict\'; return this.privates.' + name + ';}');
+                        eval('descriptor.get = function () { \'use strict\'; return this.privates.' + name + ';};');
                     }
                     if (!descriptor.set) {
-                        eval('descriptor.set = function (value) { \'use strict\'; this.privates.' + name + ' = value;}');
+                        eval('descriptor.set = function (value) { \'use strict\'; this.privates.' + name + ' = value;};');
                     }
                 } else {
                     if (!descriptor.hasOwnProperty('value')) {
