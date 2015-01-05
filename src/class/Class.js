@@ -363,21 +363,21 @@
 
                 //class statics list
                 static: {
-                    //class static methods list
-                    methods: {},
-
                     //class static properties list
-                    properties: {}
+                    properties: {},
+
+                    //class static methods list
+                    methods: {}
                 },
 
                 //class constructor
                 constructor: undefined,
 
-                //class methods list
-                methods: {},
-
                 //class properties list
-                properties: {}
+                properties: {},
+
+                //class methods list
+                methods: {}
             };
         };
 
@@ -413,21 +413,21 @@
 
                 //class statics list
                 static: {
-                    //class static methods list
-                    methods: new xs.core.Collection(),
-
                     //class static properties list
-                    properties: new xs.core.Collection()
+                    properties: new xs.core.Collection(),
+
+                    //class static methods list
+                    methods: new xs.core.Collection()
                 },
 
                 //class constructor
                 constructor: undefined,
 
-                //class methods list
-                methods: new xs.core.Collection(),
-
                 //class properties list
-                properties: new xs.core.Collection()
+                properties: new xs.core.Collection(),
+
+                //class methods list
+                methods: new xs.core.Collection()
             };
         };
 
@@ -443,10 +443,10 @@
             descriptor.mixins = new xs.core.Collection(descriptor.mixins);
             descriptor.implements = new xs.core.Collection(descriptor.implements);
             descriptor.constants = new xs.core.Collection(descriptor.constants);
-            descriptor.static.methods = new xs.core.Collection(descriptor.static.methods);
             descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
-            descriptor.methods = new xs.core.Collection(descriptor.methods);
+            descriptor.static.methods = new xs.core.Collection(descriptor.static.methods);
             descriptor.properties = new xs.core.Collection(descriptor.properties);
+            descriptor.methods = new xs.core.Collection(descriptor.methods);
         };
 
         return Contractor;

@@ -261,18 +261,18 @@
 
                 //interface statics list
                 static: {
-                    //interface static methods list
-                    methods: {},
-
                     //interface static properties list
-                    properties: {}
+                    properties: {},
+
+                    //interface static methods list
+                    methods: {}
                 },
 
-                //interface methods list
-                methods: {},
-
                 //interface properties list
-                properties: {}
+                properties: {},
+
+                //interface methods list
+                methods: {}
             };
         };
 
@@ -299,18 +299,18 @@
 
                 //class statics list
                 static: {
-                    //class static methods list
-                    methods: new xs.core.Collection(),
-
                     //class static properties list
-                    properties: new xs.core.Collection()
+                    properties: new xs.core.Collection(),
+
+                    //class static methods list
+                    methods: new xs.core.Collection()
                 },
 
-                //class methods list
-                methods: new xs.core.Collection(),
-
                 //class properties list
-                properties: new xs.core.Collection()
+                properties: new xs.core.Collection(),
+
+                //class methods list
+                methods: new xs.core.Collection()
             };
         };
 
@@ -324,10 +324,10 @@
         var _convertDescriptor = function (descriptor) {
             descriptor.imports = new xs.core.Collection(descriptor.imports);
             descriptor.constants = new xs.core.Collection(descriptor.constants);
-            descriptor.static.methods = new xs.core.Collection(descriptor.static.methods);
             descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
-            descriptor.methods = new xs.core.Collection(descriptor.methods);
+            descriptor.static.methods = new xs.core.Collection(descriptor.static.methods);
             descriptor.properties = new xs.core.Collection(descriptor.properties);
+            descriptor.methods = new xs.core.Collection(descriptor.methods);
         };
 
         return Contractor;
