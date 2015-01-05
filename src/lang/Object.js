@@ -26,8 +26,8 @@
      *
      * @singleton
      */
-    var object = xs.Object = new function () {
-        var me = this;
+    var object = xs.Object = (function () {
+        var me = {};
 
         // Create quick reference variables for speed access to core prototypes.
         var _slice = Function.prototype.call.bind(Array.prototype.slice);
@@ -87,7 +87,8 @@
             }
         };
 
-    };
+        return me;
+    })();
 
     /**
      * Internal error class

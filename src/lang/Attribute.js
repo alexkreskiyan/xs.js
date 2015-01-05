@@ -26,8 +26,8 @@
      *
      * @singleton
      */
-    var attribute = xs.Attribute = new function () {
-        var me = this;
+    var attribute = xs.Attribute = (function () {
+        var me = {};
 
         /**
          * Checks whether object has name, defined as own property
@@ -423,8 +423,8 @@
          *
          * @singleton
          */
-        me.property = new function () {
-            var me = this;
+        me.property = (function () {
+            var me = {};
 
             /**
              * Prepares property descriptor
@@ -556,7 +556,9 @@
                 //define property and return
                 Object.defineProperty(object, name, descriptor);
             };
-        };
+
+            return me;
+        })();
 
         /**
          * Contains methods to prepare and define methods
@@ -571,8 +573,8 @@
          *
          * @singleton
          */
-        me.method = new function () {
-            var me = this;
+        me.method = (function () {
+            var me = {};
 
             /**
              * Prepares method descriptor
@@ -687,8 +689,12 @@
                     configurable: false
                 });
             };
-        };
-    };
+
+            return me;
+        })();
+
+        return me;
+    })();
 
     /**
      * Internal error class

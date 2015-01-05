@@ -26,8 +26,8 @@
      *
      * @singleton
      */
-    var fn = xs.Function = new function () {
-        var me = this;
+    var fn = xs.Function = (function () {
+        var me = {};
 
         var _bindFunction = Function.prototype.bind;
         var _slice = Function.prototype.apply.bind(Array.prototype.slice);
@@ -312,7 +312,9 @@
          */
         me.emptyFn = function () {
         };
-    };
+
+        return me;
+    })();
 
     /**
      * Internal error class

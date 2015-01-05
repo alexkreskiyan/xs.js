@@ -54,8 +54,8 @@
      *
      * @singleton
      */
-    xs.Loader = new function () {
-        var me = this;
+    xs.Loader = (function () {
+        var me = {};
 
         /**
          * Name testing regular expression
@@ -170,9 +170,9 @@
              * @type {Object}
              */
             var loadList = {
-                unresolved: new xs.core.Collection,
-                loaded: new xs.core.Collection,
-                failed: new xs.core.Collection
+                unresolved: new xs.core.Collection(),
+                loaded: new xs.core.Collection(),
+                failed: new xs.core.Collection()
             };
 
             xs.log('xs.core.Loader::getLoadList. Processing classes', classes.toSource());
@@ -275,8 +275,8 @@
          *
          * @singleton
          */
-        var paths = me.paths = new function () {
-            var me = this;
+        var paths = me.paths = (function () {
+            var me = {};
 
             /**
              * Paths registry
@@ -285,7 +285,7 @@
              *
              * @type {xs.core.Collection}
              */
-            var paths = new xs.core.Collection;
+            var paths = new xs.core.Collection();
 
             /**
              * Adds new path alias. Has single and multiple mode
@@ -479,7 +479,9 @@
                 //return path joined with rest of name by / and suffix added
                 return namePath + '/' + name.substring(nameAlias.length + 1).split('.').join('/') + ext;
             };
-        };
+
+            return me;
+        })();
 
         /**
          * Internal resolver instance, that handles all registered callbacks.
@@ -493,15 +495,15 @@
          *
          * @singleton
          */
-        var resolver = new function () {
-            var me = this;
+        var resolver = (function () {
+            var me = {};
 
             /**
              * Awaiting handlers list
              *
              * @type {xs.core.Collection}
              */
-            var awaiting = new xs.core.Collection;
+            var awaiting = new xs.core.Collection();
 
             /**
              * Adds new awaiting item, consisting of loaded items list and ready handler
@@ -605,7 +607,9 @@
                     }
                 });
             };
-        };
+
+            return me;
+        })();
 
         /**
          * Internal loader instance
@@ -618,15 +622,15 @@
          *
          * @singleton
          */
-        var loader = new (function (handleLoad, handleFail) {
-            var me = this;
+        var loader = (function (handleLoad, handleFail) {
+            var me = {};
 
             /**
              * Loading classes list
              *
              * @type {xs.core.Collection}
              */
-            var loading = new xs.core.Collection;
+            var loading = new xs.core.Collection();
 
             /**
              * Add class to load
@@ -733,6 +737,8 @@
                 //handle load callback
                 handleFail(me.name);
             };
+
+            return me;
         })(_handleLoad, _handleFail);
 
         /**
@@ -752,7 +758,7 @@
              *
              * @type {xs.core.Collection}
              */
-            var list = new xs.core.Collection;
+            var list = new xs.core.Collection();
 
             /**
              * Store list name
@@ -823,7 +829,9 @@
                 return me;
             };
         }
-    };
+
+        return me;
+    })();
 
     /**
      * Internal error class

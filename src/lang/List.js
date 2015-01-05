@@ -26,8 +26,8 @@
      *
      * @singleton
      */
-    var list = xs.List = new function () {
-        var me = this;
+    var list = xs.List = (function () {
+        var me = {};
 
         // Create quick reference variables for speed access to core prototypes.
         var _slice = Function.prototype.call.bind(Array.prototype.slice);
@@ -81,7 +81,9 @@
 
             return copy;
         };
-    };
+
+        return me;
+    })();
 
     /**
      * Internal error class

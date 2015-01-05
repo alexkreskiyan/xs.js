@@ -30,7 +30,7 @@
         var me = this;
 
         //items hash
-        var items = new xs.core.Collection;
+        var items = new xs.core.Collection();
 
         /**
          * Returns stack items copy

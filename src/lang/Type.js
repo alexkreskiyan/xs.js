@@ -26,8 +26,8 @@
      *
      * @singleton
      */
-    var type = xs.Type = new function () {
-        var me = this;
+    var type = xs.Type = (function () {
+        var me = {};
 
         /**
          * Returns whether given value is object
@@ -343,7 +343,9 @@
 
             return type !== 'function' && type !== 'boolean';
         };
-    };
+
+        return me;
+    })();
 
     //extend xs with type
     Object.keys(type).forEach(function (method) {

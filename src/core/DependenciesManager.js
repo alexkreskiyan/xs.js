@@ -28,8 +28,8 @@
      *
      * @singleton
      */
-    var DependenciesManager = new function () {
-        var me = this;
+    var DependenciesManager = (function () {
+        var me = {};
 
         /**
          * Store of all registered dependencies
@@ -40,7 +40,7 @@
          *
          * @type {xs.core.Collection}
          */
-        var storage = new xs.core.Collection;
+        var storage = new xs.core.Collection();
 
         /**
          * Adds dependency from dependent Class to array of processed Classes.
@@ -192,8 +192,8 @@
          *
          * @class DependenciesManager.chains
          */
-        var chains = new function () {
-            var me = this;
+        var chains = (function () {
+            var me = {};
 
             /**
              * Store of all registered dependencies
@@ -204,7 +204,7 @@
              *
              * @type {xs.core.Collection}
              */
-            var storage = new xs.core.Collection;
+            var storage = new xs.core.Collection();
 
             /**
              * Adds dependent class with it waiting list to manager
@@ -233,7 +233,7 @@
                 if (chains.length) {
                     xs.log('xs.DependenciesManager::chains::add. Work chains exist. Updating...');
                     //init updated chains list
-                    var updated = new xs.core.Collection;
+                    var updated = new xs.core.Collection();
 
                     //get updated chains
                     chains.each(function (chain) {
@@ -369,7 +369,7 @@
              */
             var _createChains = function (dependent, waiting) {
                 //init created chains list
-                var created = new xs.core.Collection;
+                var created = new xs.core.Collection();
 
                 //create chain for each waiting
                 waiting.each(function (Class) {
@@ -427,7 +427,7 @@
              */
             var _updateChains = function (chain, waiting) {
                 //init updated chains list
-                var updated = new xs.core.Collection;
+                var updated = new xs.core.Collection();
 
                 //remove chain from storage
                 storage.remove(chain);
@@ -498,7 +498,7 @@
                     return Class.label;
                 }));
                 //init merged array
-                var merged = new xs.core.Collection;
+                var merged = new xs.core.Collection();
 
                 //get junction
                 var junction = chain.last();
@@ -543,7 +543,9 @@
 
                 return merged;
             };
-        };
+
+            return me;
+        })();
 
         /**
          * Private onReady manager with simplified public interface
@@ -559,8 +561,8 @@
          *
          * @class DependenciesManager.queue
          */
-        var queue = new function () {
-            var me = this;
+        var queue = (function () {
+            var me = {};
 
             /**
              * Store of all registered dependencies
@@ -571,7 +573,7 @@
              *
              * @type {xs.core.Collection}
              */
-            var storage = new xs.core.Collection;
+            var storage = new xs.core.Collection();
 
             /**
              * Adds handler for event when classes' with given names will be loaded
@@ -701,11 +703,15 @@
                     waiting.removeAt(i);
                 }
             };
-        };
+
+            return me;
+        })();
 
         me.onReady = queue.add;
         me.ready = queue.remove;
-    };
+
+        return me;
+    })();
 
     //save DependenciesManager.onReady to xs.onReady
     xs.onReady = DependenciesManager.onReady;

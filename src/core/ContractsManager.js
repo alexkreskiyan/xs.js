@@ -26,8 +26,8 @@
      *
      * @singleton
      */
-    xs.ContractsManager = new function () {
-        var me = this;
+    xs.ContractsManager = (function () {
+        var me = {};
 
         /**
          * Store of all registered contracts
@@ -38,7 +38,7 @@
          *
          * @type {xs.core.Collection}
          */
-        var registry = new xs.core.Collection;
+        var registry = new xs.core.Collection();
 
         /**
          * Checks whether contract with given name is already defined by ContractsManager
@@ -394,7 +394,9 @@
                 });
             }
         };
-    };
+
+        return me;
+    })();
 
     /**
      * Internal error class

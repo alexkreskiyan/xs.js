@@ -26,8 +26,8 @@
      *
      * @singleton
      */
-    xs.Array = new function () {
-        var me = this;
+    xs.Array = (function () {
+        var me = {};
 
         /**
          * Shuffles array items
@@ -53,7 +53,9 @@
                 return Math.random() - 0.5;
             });
         };
-    };
+
+        return me;
+    })();
 
     /**
      * Internal error class

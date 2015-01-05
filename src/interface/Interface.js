@@ -295,22 +295,22 @@
                 extends: undefined,
 
                 //class constants list
-                constants: new xs.core.Collection,
+                constants: new xs.core.Collection(),
 
                 //class statics list
                 static: {
                     //class static methods list
-                    methods: new xs.core.Collection,
+                    methods: new xs.core.Collection(),
 
                     //class static properties list
-                    properties: new xs.core.Collection
+                    properties: new xs.core.Collection()
                 },
 
                 //class methods list
-                methods: new xs.core.Collection,
+                methods: new xs.core.Collection(),
 
                 //class properties list
-                properties: new xs.core.Collection
+                properties: new xs.core.Collection()
             };
         };
 

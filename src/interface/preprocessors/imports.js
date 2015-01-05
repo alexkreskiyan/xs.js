@@ -32,7 +32,7 @@
 
         //init
         //init requires list
-        var requires = new xs.core.Collection;
+        var requires = new xs.core.Collection();
 
 
         //process imports list

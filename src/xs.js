@@ -30,8 +30,8 @@
      *
      * @singleton
      */
-    root[ns] = new function () {
-        var me = this;
+    root[ns] = (function () {
+        var me = {};
 
         /**
          * Returns unique id
@@ -248,5 +248,7 @@
          * @method isEmpty
          * @inheritdoc xs.lang.Type#isEmpty
          */
-    };
+
+        return me;
+    })();
 })(window, 'xs');

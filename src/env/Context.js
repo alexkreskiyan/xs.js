@@ -31,8 +31,8 @@
      *
      * @singleton
      */
-    xs.env.Context = xs.context = new function () {
-        var me = this;
+    xs.env.Context = xs.context = (function () {
+        var me = {};
 
         /**
          * Parses user agent, according to given rules to get verification result
@@ -785,7 +785,9 @@
 
         //detect environment context
         _detect();
-    };
+
+        return me;
+    })();
 
     //Needed simple xs.extend(xs, xs.env.Context)
     xs.extend(xs, (new xs.core.Collection(xs.env.Context)).pick([

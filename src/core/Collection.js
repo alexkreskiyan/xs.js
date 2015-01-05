@@ -2412,7 +2412,7 @@
 
 
         //set picked items as items of picked collection
-        var picked = new xs.core.Collection;
+        var picked = new xs.core.Collection();
         picked.items = items;
 
         //update indexes
@@ -2541,7 +2541,7 @@
         }
 
         //set picked items as items of omitted collection
-        var omitted = new xs.core.Collection;
+        var omitted = new xs.core.Collection();
         omitted.items = items;
 
         //update indexes

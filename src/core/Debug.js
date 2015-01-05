@@ -31,8 +31,8 @@
      *
      * @singleton
      */
-    var debug = xs.core.Debug = new function () {
-        var me = this;
+    var debug = xs.core.Debug = (function () {
+        var me = {};
 
         /**
          * Debug state
@@ -60,7 +60,9 @@
 
             console.log.apply(console, arguments);
         };
-    };
+
+        return me;
+    })();
 
     //assign debug flag
     xs.Attribute.define(xs, 'debug', {

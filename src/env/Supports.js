@@ -31,7 +31,7 @@
      *
      * @singleton
      */
-    xs.env.Supports = xs.supports = new function () {
+    xs.env.Supports = xs.supports = (function () {
 
-    };
+    })();
 })(window, 'xs');

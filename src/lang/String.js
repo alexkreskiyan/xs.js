@@ -26,8 +26,8 @@
      *
      * @singleton
      */
-    var string = xs.String = new function () {
-        var me = this;
+    var string = xs.String = (function () {
+        var me = {};
 
         /**
          * Translates string with given replacements
@@ -67,7 +67,9 @@
 
             return string;
         };
-    };
+
+        return me;
+    })();
 
     /**
      * Internal error class

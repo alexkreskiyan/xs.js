@@ -33,8 +33,8 @@
      *
      * @singleton
      */
-    xs.assert = xs.core.Assert = new function () {
-        var me = this;
+    xs.assert = xs.core.Assert = (function () {
+        var me = {};
 
         /**
          * Verifies, that two values are equal (===)
@@ -685,6 +685,8 @@
 
             throw error;
         };
-    };
+
+        return me;
+    })();
 
 })(window, 'xs');
