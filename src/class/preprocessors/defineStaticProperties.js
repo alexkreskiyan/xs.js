@@ -30,7 +30,7 @@
 
         xs.log('xs.class.preprocessors.defineStaticProperties[', Class.label, ']');
         //create privates storage in class
-        Class.privates = {};
+        Class.private = {};
 
         //apply
         Class.descriptor.static.properties.each(function (descriptor, name) {

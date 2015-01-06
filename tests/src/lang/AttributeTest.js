@@ -445,7 +445,7 @@ module('xs.lang.Attribute', function () {
 
         strictEqual(Object.keys(result).sort().toString(), 'configurable,default,enumerable,get,set');
         strictEqual(result.get, getter);
-        strictEqual(result.set.toString(), 'function (value) { \'use strict\'; this.privates.x = value;}');
+        strictEqual(result.set.toString(), 'function (value) { \'use strict\'; this.private.x = value;}');
         strictEqual(result.default, 6);
         strictEqual(result.configurable, false);
         strictEqual(result.enumerable, true);

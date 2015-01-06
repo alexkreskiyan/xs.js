@@ -46,6 +46,8 @@ xs.define(xs.Class, 'xs.class.Base', function () {
     /**
      * Completes internal object destruction
      *
+     * @template
+     *
      * @method destroy
      */
     me.methods.destroy = xs.emptyFn;

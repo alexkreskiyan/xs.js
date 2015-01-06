@@ -271,7 +271,7 @@
                 //properties processing
 
                 //init privates storage
-                me.privates = {};
+                me.private = {};
 
                 //assign values
                 var properties = descriptor.properties.items; //xs.core.Collection

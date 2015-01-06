@@ -47,13 +47,13 @@ module('xs.class.preprocessors.defineProperties', function () {
             this.properties.a = {
                 get: function () {
 
-                    return this.privates.a;
+                    return this.private.a;
                 }
             };
             this.properties.b = {
                 set: function (b) {
 
-                    this.privates.b = b + 1;
+                    this.private.b = b + 1;
                 }
             };
         });
@@ -77,11 +77,11 @@ module('xs.class.preprocessors.defineProperties', function () {
             this.properties.c = {
                 get: function () {
 
-                    return this.privates.c + '!';
+                    return this.private.c + '!';
                 },
                 set: function (c) {
 
-                    this.privates.c = '?' + c;
+                    this.private.c = '?' + c;
                 }
             };
         });
@@ -119,12 +119,12 @@ module('xs.class.preprocessors.defineProperties', function () {
         strictEqual(parent.a, undefined);
         parent.a = 2; //setter assigned
         strictEqual(parent.a, 2);
-        strictEqual(parent.privates.a, 2);
+        strictEqual(parent.private.a, 2);
         //b
         strictEqual(parent.b, undefined);
         parent.b = 2; //getter assigned
         strictEqual(parent.b, 3);
-        strictEqual(parent.privates.b, 3);
+        strictEqual(parent.private.b, 3);
 
         //Child
         var child = new ns.Child;
@@ -134,13 +134,13 @@ module('xs.class.preprocessors.defineProperties', function () {
         strictEqual(child.b, undefined);
         child.b = 2; //getter assigned
         strictEqual(child.b, 3);
-        strictEqual(child.privates.b, 3);
+        strictEqual(child.private.b, 3);
         //c
         strictEqual(child.c, 'undefined!');
-        strictEqual(child.privates.c, undefined);
+        strictEqual(child.private.c, undefined);
         child.c = 3;
         strictEqual(child.c, '?3!');
-        strictEqual(child.privates.c, '?3');
+        strictEqual(child.private.c, '?3');
 
     }, function () {
         var me = this;

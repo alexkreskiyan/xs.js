@@ -43,11 +43,11 @@ module('xs.class.preprocessors.prepareProperties', function () {
 
         me.parentAGet = function () {
 
-            return this.privates.a;
+            return this.private.a;
         };
         me.parentBSet = function (b) {
 
-            this.privates.b = b + 1;
+            this.private.b = b + 1;
         };
         //define
         me.Parent = xs.Class(function () {
@@ -75,11 +75,11 @@ module('xs.class.preprocessors.prepareProperties', function () {
 
         me.childCGet = function () {
 
-            return this.privates.c + '!';
+            return this.private.c + '!';
         };
         me.childCSet = function (c) {
 
-            this.privates.c = '?' + c;
+            this.private.c = '?' + c;
         };
         //define
         me.Child = xs.Class(function () {

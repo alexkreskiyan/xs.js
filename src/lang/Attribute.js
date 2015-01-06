@@ -447,7 +447,7 @@
              *     //outputs:
              *     //{
              *     //    get: function(){},
-             *     //    set: function(value) { this.privates.x = value },
+             *     //    set: function(value) { this.private.x = value },
              *     //    enumerable: true,
              *     //    configurable: false
              *     //}
@@ -481,10 +481,10 @@
                 //get|set priority
                 if (descriptor.get || descriptor.set) {
                     if (!descriptor.get) {
-                        eval('descriptor.get = function () { \'use strict\'; return this.privates.' + name + ';};');
+                        eval('descriptor.get = function () { \'use strict\'; return this.private.' + name + ';};');
                     }
                     if (!descriptor.set) {
-                        eval('descriptor.set = function (value) { \'use strict\'; this.privates.' + name + ' = value;};');
+                        eval('descriptor.set = function (value) { \'use strict\'; this.private.' + name + ' = value;};');
                     }
                 } else {
                     if (!descriptor.hasOwnProperty('value')) {
@@ -590,7 +590,7 @@
              *     //outputs:
              *     //{
              *     //    value: function(){},
-             *     //    writable: function(value) { this.privates.x = value },
+             *     //    writable: function(value) { this.private.x = value },
              *     //    enumerable: true,
              *     //    configurable: false
              *     //}
