@@ -151,13 +151,13 @@
         _mixinSection('static property', target.static.properties, mix.static.properties);
 
         //static methods
-        _mixinSection('static method', target.static.methods, mix.static.methods);
+        _mixinSection('static method', target.static.method, mix.static.method);
 
         //properties
         _mixinSection('property', target.properties, mix.properties);
 
         //methods
-        _mixinSection('method', target.methods, mix.methods);
+        _mixinSection('method', target.method, mix.method);
     };
 
     /**

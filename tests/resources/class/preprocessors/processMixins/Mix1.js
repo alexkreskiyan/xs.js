@@ -5,7 +5,7 @@ xs.define(xs.Class, 'ns.Mix1', function () {
     this.namespace = 'tests.class.preprocessors.processMixins';
     this.constants.a = 1;
     this.properties.a = 2;
-    this.methods.printA = function () {
+    this.method.printA = function () {
         return this.a;
     }
 });

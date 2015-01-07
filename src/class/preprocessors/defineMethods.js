@@ -30,7 +30,7 @@
 
         xs.log('xs.class.preprocessors.defineMethods[', Class.label, ']');
         //apply
-        Class.descriptor.methods.each(function (value, name) {
+        Class.descriptor.method.each(function (value, name) {
 
             //save method to prototype
             xs.Attribute.method.define(Class.prototype, name, value);

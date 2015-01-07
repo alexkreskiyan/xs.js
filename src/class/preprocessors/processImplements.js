@@ -183,9 +183,9 @@
         });
 
         //static methods
-        Interface.descriptor.static.methods.each(function (config, name) {
+        Interface.descriptor.static.method.each(function (config, name) {
             //assert, that static method is declared
-            xs.assert.ok(descriptor.static.methods.hasKey(name), '[$Class]: implemented interface "$Interface" requires static method "$name", but it is not declared', {
+            xs.assert.ok(descriptor.static.method.hasKey(name), '[$Class]: implemented interface "$Interface" requires static method "$name", but it is not declared', {
                 $Class: Class.label,
                 $Interface: Class.label,
                 $name: name
@@ -193,7 +193,7 @@
 
             //assert, that static method arguments are compatible with required
             var requiredArguments = config.args.toString();
-            var declaredArguments = xs.Function.getArguments(descriptor.static.methods.at(name).value).toString();
+            var declaredArguments = xs.Function.getArguments(descriptor.static.method.at(name).value).toString();
 
             //assert, that arguments' lists are equal
             xs.assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface "$Interface" requires static method "$name" to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
@@ -244,9 +244,9 @@
         });
 
         //methods
-        Interface.descriptor.methods.each(function (config, name) {
+        Interface.descriptor.method.each(function (config, name) {
             //assert, that method is declared
-            xs.assert.ok(descriptor.methods.hasKey(name), '[$Class]: implemented interface "$Interface" requires method "$name", but it is not declared', {
+            xs.assert.ok(descriptor.method.hasKey(name), '[$Class]: implemented interface "$Interface" requires method "$name", but it is not declared', {
                 $Class: Class.label,
                 $Interface: Class.label,
                 $name: name
@@ -254,7 +254,7 @@
 
             //assert, that method arguments are compatible with required
             var requiredArguments = config.args.toString();
-            var declaredArguments = xs.Function.getArguments(descriptor.methods.at(name).value).toString();
+            var declaredArguments = xs.Function.getArguments(descriptor.method.at(name).value).toString();
 
             //assert, that arguments' lists are equal
             xs.assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface "$Interface" requires method "$name" to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {

@@ -36,8 +36,8 @@ module('xs.class.preprocessors.processImplements', function () {
                 },
                 set: xs.emptyFn
             };
-            me.static.methods.e = xs.emptyFn;
-            me.static.methods.f = function (a, b) {
+            me.static.method.e = xs.emptyFn;
+            me.static.method.f = function (a, b) {
             };
         });
 
@@ -70,8 +70,8 @@ module('xs.class.preprocessors.processImplements', function () {
                 },
                 set: xs.emptyFn
             };
-            me.methods.j = xs.emptyFn;
-            me.methods.k = function (a, b) {
+            me.method.j = xs.emptyFn;
+            me.method.k = function (a, b) {
             };
         });
 
@@ -96,8 +96,8 @@ module('xs.class.preprocessors.processImplements', function () {
             me.static.properties.b = 1;
             me.static.properties.c = {get: xs.emptyFn};
             me.static.properties.d = {set: xs.emptyFn};
-            me.static.methods.e = xs.emptyFn;
-            me.static.methods.f = function (a, b) {
+            me.static.method.e = xs.emptyFn;
+            me.static.method.f = function (a, b) {
             };
         });
 
@@ -122,8 +122,8 @@ module('xs.class.preprocessors.processImplements', function () {
             me.properties.g = 1;
             me.properties.h = {get: xs.emptyFn};
             me.properties.i = {set: xs.emptyFn};
-            me.methods.j = xs.emptyFn;
-            me.methods.k = function (a, b) {
+            me.method.j = xs.emptyFn;
+            me.method.k = function (a, b) {
             };
         });
 

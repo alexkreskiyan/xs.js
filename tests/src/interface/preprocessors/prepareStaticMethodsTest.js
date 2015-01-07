@@ -25,7 +25,7 @@ module('xs.interface.preprocessors.prepareStaticMethods', function () {
 
         //define
         me.Base = xs.Interface(function () {
-            this.static.methods.a = me.baseA;
+            this.static.method.a = me.baseA;
         });
 
         //save
@@ -51,8 +51,8 @@ module('xs.interface.preprocessors.prepareStaticMethods', function () {
         //define
         me.Parent = xs.Interface(function () {
             this.extends = 'tests.interface.preprocessors.prepareStaticMethods.Base';
-            this.static.methods.a = me.parentA;
-            this.static.methods.b = me.parentB;
+            this.static.method.a = me.parentA;
+            this.static.method.b = me.parentB;
         });
 
         //save
@@ -74,7 +74,7 @@ module('xs.interface.preprocessors.prepareStaticMethods', function () {
         //define
         me.Child = xs.Interface(function () {
             this.extends = 'tests.interface.preprocessors.prepareStaticMethods.Parent';
-            this.static.methods.c = me.childC;
+            this.static.method.c = me.childC;
         });
 
         //save
@@ -96,24 +96,24 @@ module('xs.interface.preprocessors.prepareStaticMethods', function () {
     }, function () {
         var ns = window.tests.interface.preprocessors.prepareStaticMethods;
 
-        //init methods (will be referred to descriptor.static.methods)
+        //init methods (will be referred to descriptor.static.method)
         var methods;
 
         //check static methods definition
         //Base
-        methods = ns.Base.descriptor.static.methods;
+        methods = ns.Base.descriptor.static.method;
         //a
         strictEqual(methods.at('a').args.toString(), 'base,a');
 
         //Parent
-        methods = ns.Parent.descriptor.static.methods;
+        methods = ns.Parent.descriptor.static.method;
         //a
         strictEqual(methods.at('a').args.toString(), 'parent,a');
         //b
         strictEqual(methods.at('b').args.toString(), 'parent,b');
 
         //Child
-        methods = ns.Child.descriptor.static.methods;
+        methods = ns.Child.descriptor.static.method;
         //a
         strictEqual(methods.at('a').args.toString(), 'parent,a');
         //b

@@ -25,7 +25,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
 
         //define
         me.Base = xs.Class(function () {
-            this.static.methods.a = me.baseA;
+            this.static.method.a = me.baseA;
         });
 
         //save
@@ -51,8 +51,8 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         //define
         me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.prepareStaticMethods.Base';
-            this.static.methods.a = me.parentA;
-            this.static.methods.b = me.parentB;
+            this.static.method.a = me.parentA;
+            this.static.method.b = me.parentB;
         });
 
         //save
@@ -74,7 +74,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         //define
         me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.prepareStaticMethods.Parent';
-            this.static.methods.c = me.childC;
+            this.static.method.c = me.childC;
         });
 
         //save
@@ -98,12 +98,12 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
 
         var ns = window.tests.class.preprocessors.prepareStaticMethods;
 
-        //init methods (will be referred to descriptor.static.methods)
+        //init methods (will be referred to descriptor.static.method)
         var methods;
 
         //check static methods definition
         //Base
-        methods = ns.Base.descriptor.static.methods;
+        methods = ns.Base.descriptor.static.method;
         //a
         strictEqual(methods.at('a').value, me.baseA);
         strictEqual(methods.at('a').writable, false);
@@ -111,7 +111,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         strictEqual(methods.at('a').enumerable, true);
 
         //Parent
-        methods = ns.Parent.descriptor.static.methods;
+        methods = ns.Parent.descriptor.static.method;
         //a
         strictEqual(methods.at('a').value, me.parentA);
         strictEqual(methods.at('a').writable, false);
@@ -124,7 +124,7 @@ module('xs.class.preprocessors.prepareStaticMethods', function () {
         strictEqual(methods.at('b').enumerable, true);
 
         //Child
-        methods = ns.Child.descriptor.static.methods;
+        methods = ns.Child.descriptor.static.method;
         //a
         strictEqual(methods.at('a').value, me.parentA);
         strictEqual(methods.at('a').writable, false);

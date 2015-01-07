@@ -41,13 +41,13 @@ module('xs.class.preprocessors.processMixins', function () {
         var Mix1 = Child.prototype.mixins.mix1;
         strictEqual(Child.descriptor.constants.a, Mix1.descriptor.constants.a);
         strictEqual(Child.descriptor.properties.a, Mix1.descriptor.properties.a);
-        strictEqual(Child.descriptor.methods.printA, Mix1.descriptor.methods.printA);
+        strictEqual(Child.descriptor.method.printA, Mix1.descriptor.method.printA);
 
         //check attributes from Mix2
         var Mix2 = Child.prototype.mixins.mix2;
         strictEqual(Child.descriptor.constants.b, Mix2.descriptor.constants.b);
         strictEqual(Child.descriptor.properties.b, Mix2.descriptor.properties.b);
-        strictEqual(Child.descriptor.methods.printB, Mix2.descriptor.methods.printB);
+        strictEqual(Child.descriptor.method.printB, Mix2.descriptor.method.printB);
 
         //verify mixins function
         strictEqual(Child.mixins(ns.Mix1), true);

@@ -265,14 +265,14 @@
                     properties: {},
 
                     //interface static methods list
-                    methods: {}
+                    method: {}
                 },
 
                 //interface properties list
                 properties: {},
 
                 //interface methods list
-                methods: {}
+                method: {}
             };
         };
 
@@ -303,14 +303,14 @@
                     properties: new xs.core.Collection(),
 
                     //class static methods list
-                    methods: new xs.core.Collection()
+                    method: new xs.core.Collection()
                 },
 
                 //class properties list
                 properties: new xs.core.Collection(),
 
                 //class methods list
-                methods: new xs.core.Collection()
+                method: new xs.core.Collection()
             };
         };
 
@@ -325,9 +325,9 @@
             descriptor.imports = new xs.core.Collection(descriptor.imports);
             descriptor.constants = new xs.core.Collection(descriptor.constants);
             descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
-            descriptor.static.methods = new xs.core.Collection(descriptor.static.methods);
+            descriptor.static.method = new xs.core.Collection(descriptor.static.method);
             descriptor.properties = new xs.core.Collection(descriptor.properties);
-            descriptor.methods = new xs.core.Collection(descriptor.methods);
+            descriptor.method = new xs.core.Collection(descriptor.method);
         };
 
         return Contractor;

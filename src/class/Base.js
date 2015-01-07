@@ -30,7 +30,7 @@ xs.define(xs.Class, 'xs.class.Base', function () {
      *
      * @return {xs.class.Base} clone object
      */
-    me.methods.clone = function () {
+    me.method.clone = function () {
         var me = this;
 
         //create clone via factory
@@ -50,5 +50,5 @@ xs.define(xs.Class, 'xs.class.Base', function () {
      *
      * @method destroy
      */
-    me.methods.destroy = xs.emptyFn;
+    me.method.destroy = xs.emptyFn;
 });

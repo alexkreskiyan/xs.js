@@ -25,7 +25,7 @@ module('xs.interface.preprocessors.prepareMethods', function () {
 
         //define
         me.Base = xs.Interface(function () {
-            this.methods.a = me.baseA;
+            this.method.a = me.baseA;
         });
 
         //save
@@ -51,8 +51,8 @@ module('xs.interface.preprocessors.prepareMethods', function () {
         //define
         me.Parent = xs.Interface(function () {
             this.extends = 'tests.interface.preprocessors.prepareMethods.Base';
-            this.methods.a = me.parentA;
-            this.methods.b = me.parentB;
+            this.method.a = me.parentA;
+            this.method.b = me.parentB;
         });
 
         //save
@@ -74,7 +74,7 @@ module('xs.interface.preprocessors.prepareMethods', function () {
         //define
         me.Child = xs.Interface(function () {
             this.extends = 'tests.interface.preprocessors.prepareMethods.Parent';
-            this.methods.c = me.childC;
+            this.method.c = me.childC;
         });
 
         //save
@@ -96,24 +96,24 @@ module('xs.interface.preprocessors.prepareMethods', function () {
     }, function () {
         var ns = window.tests.interface.preprocessors.prepareMethods;
 
-        //init methods (will be referred to descriptor.methods)
+        //init methods (will be referred to descriptor.method)
         var methods;
 
         //check methods definition
         //Base
-        methods = ns.Base.descriptor.methods;
+        methods = ns.Base.descriptor.method;
         //a
         strictEqual(methods.at('a').args.toString(), 'base,a');
 
         //Parent
-        methods = ns.Parent.descriptor.methods;
+        methods = ns.Parent.descriptor.method;
         //a
         strictEqual(methods.at('a').args.toString(), 'parent,a');
         //b
         strictEqual(methods.at('b').args.toString(), 'parent,b');
 
         //Child
-        methods = ns.Child.descriptor.methods;
+        methods = ns.Child.descriptor.method;
         //a
         strictEqual(methods.at('a').args.toString(), 'parent,a');
         //b
