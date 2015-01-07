@@ -96,6 +96,80 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
     Class.constant.REJECTED = 'rejected';
 
     /**
+     * Static async control operating method. Creates aggregate promise, that is resolved when all
+     * given promises are resolved. If any promise among given is rejected, aggregate promise is rejected with that reason
+     *
+     * @method all
+     *
+     * @param {xs.ux.Promise[]} promises array of promises
+     *
+     * @return {xs.ux.Promise} aggregate promise
+     */
+    Class.static.method.all = function (promises) {
+        xs.assert.array(promises, 'all - given "$promises" are not array', {
+            $promises: promises
+        }, PromiseError);
+
+        return this.some(promises, promises.length);
+    };
+
+    /**
+     * Static async control operating method. Creates aggregate promise, that is resolved when some (count is specified by second param)
+     * of given promises are resolved. If any promise among given is rejected, aggregate promise is rejected with that reason
+     *
+     * @method some
+     *
+     * @param {xs.ux.Promise[]} promises array of promises
+     * @param {Number} count count of promises, needed for aggregate promise to resolve
+     *
+     * @return {xs.ux.Promise} aggregate promise
+     */
+    Class.static.method.some = function (promises, count) {
+        xs.assert.array(promises, 'some - given "$promises" are not array', {
+            $promises: promises
+        }, PromiseError);
+
+        xs.assert.ok(promises.length, 'some - given "$promises" array is empty', {
+            $promises: promises
+        }, PromiseError);
+
+        //assert that count is number
+        if (arguments.length === 1) {
+            count = 1;
+        } else {
+            xs.assert.number(count, 'some - given "$count" is not a number', {
+                $count: count
+            }, PromiseError);
+        }
+
+        xs.assert.ok(0 < count && count <= promises.length, 'some - given count "$count" is out of bounds [$min, $max]', {
+            $count: count,
+            $min: 0,
+            $max: promises.length
+        }, PromiseError);
+
+        //convert promises to collection
+        promises = new xs.core.Collection(promises);
+
+        //create aggregate promise
+        var aggregate = self.factory();
+
+        promises.each(function (promise) {
+            xs.assert.instance(promise, self, 'given not promise', PromiseError);
+            promise.then(function () {
+                //if count is 0 and aggregate is still pending - resolve it
+                if (--count === 0 && aggregate.state === self.PENDING) {
+                    aggregate.resolve();
+                }
+            }, function (reason) {
+                aggregate.reject(reason);
+            });
+        });
+
+        return aggregate;
+    };
+
+    /**
      * Promise state. Is changed internally from {@link #PENDING pending} to {@link #RESOLVED resolved} or {@link #REJECTED rejected}
      *
      * @property state

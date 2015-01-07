@@ -466,4 +466,88 @@ module('xs.ux.Promise', function () {
 
         return false;
     });
+
+    test('some', function () {
+        var me = this;
+
+        //promises should be non-array
+        throws(function () {
+            xs.ux.Promise.some({});
+        });
+        throws(function () {
+            xs.ux.Promise.some([]);
+        });
+
+        //count should be either omitted or be number
+        throws(function () {
+            xs.ux.Promise.some([xs.ux.Promise.factory()], null);
+        });
+
+        //count should be in bounds: 0 < count <= promises.length
+        throws(function () {
+            xs.ux.Promise.some([xs.ux.Promise.factory()], 2);
+        });
+
+
+        var total;
+        //if enough promises resolve - aggregate is resolved
+        var p1 = new xs.ux.Promise();
+        var p2 = new xs.ux.Promise();
+        var p3 = new xs.ux.Promise();
+        total = 0;
+        setTimeout(function () {
+            total += 1;
+            p1.resolve();
+        }, 0);
+        setTimeout(function () {
+            total *= 2;
+            p2.resolve();
+        }, 0);
+        setTimeout(function () {
+            total -= 5;
+            p3.resolve();
+        }, 3000);
+
+        xs.ux.Promise.some([
+            p1,
+            p2,
+            p3
+        ], 2).then(function () {
+            //only 2 first promises
+            strictEqual(total, 2);
+            total = 0;
+        });
+
+        //if any promise is rejected - aggregate is rejected
+        var p4 = new xs.ux.Promise();
+        var p5 = new xs.ux.Promise();
+        var p6 = new xs.ux.Promise();
+        total = 0;
+        setTimeout(function () {
+            total += 1;
+            p4.resolve();
+        }, 110);
+        setTimeout(function () {
+            total *= 2;
+            p5.reject('error');
+        }, 110);
+        setTimeout(function () {
+            total -= 5;
+            p6.resolve();
+        }, 110);
+
+        xs.ux.Promise.some([
+            p4,
+            p5,
+            p6
+        ], 2).then(function () {
+            //promise will not reject
+            throw new Error('this promise must not be resolved');
+        }, function (reason) {
+            strictEqual(reason, 'error');
+            me.done();
+        });
+
+        return false;
+    });
 });
