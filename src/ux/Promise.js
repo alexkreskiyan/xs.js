@@ -9,7 +9,40 @@
 
  */
 /**
- * Implementation of Futures & Promises pattern for xs.js. Promise part
+ * Implementation of Futures & Promises pattern for xs.js.
+ *
+ * Usage example:
+ *
+ *     var getData = function() {
+ *         var promise = new xs.ux.Promise();
+ *         setTimeout(function() {
+ *             promise.resolve({x: 1});
+ *         }, 500);
+ *         return promise;
+ *     };
+ *
+ *     getData().then(function(data) {
+ *         console.log('data fetched', data);
+ *
+ *         //transform data
+ *         data.message = data.x;
+ *         data.x = null;
+ *
+ *         return data;
+ *     }).then(function(data) {
+ *         console.log('transformed data:', data);
+ *         console.log('load update');
+ *         //perform new async stage
+ *         return getData().then(function(update) {
+ *             console.log('update loaded');
+ *             xs.extend(data, update);
+ *
+ *             return data;
+ *         });
+ *     }).then(function(data) {
+ *         //log result
+ *         console.log('Processing finished. Data:', data);
+ *     });
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
@@ -23,14 +56,63 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
     Class.namespace = 'xs.ux';
 
+    /**
+     * Promise "pending" state constant
+     *
+     * @static
+     *
+     * @property PENDING
+     *
+     * @readonly
+     *
+     * @type {String}
+     */
     Class.constants.PENDING = 'pending';
+
+    /**
+     * Promise "resolved" state constant
+     *
+     * @static
+     *
+     * @property RESOLVED
+     *
+     * @readonly
+     *
+     * @type {String}
+     */
     Class.constants.RESOLVED = 'resolved';
+
+    /**
+     * Promise "rejected" state constant
+     *
+     * @static
+     *
+     * @property REJECTED
+     *
+     * @readonly
+     *
+     * @type {String}
+     */
     Class.constants.REJECTED = 'rejected';
 
+    /**
+     * Promise state. Is changed internally from {@link #PENDING pending} to {@link #RESOLVED resolved} or {@link #REJECTED rejected}
+     *
+     * @property state
+     *
+     * @readonly
+     *
+     * @type {String}
+     */
     Class.properties.state = {
         set: xs.emptyFn
     };
 
+    /**
+     * Promise constructor
+     *
+     * @constructor
+     */
     Class.constructor = function () {
         var me = this;
 
@@ -42,6 +124,13 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         me.private.handlers = new xs.core.Collection();
     };
 
+    /**
+     * Promise resolve method. Resolves promise, running consequently it's handlers
+     *
+     * @method resolve
+     *
+     * @param {*} data data, promise is resolved with
+     */
     Class.methods.resolve = function (data) {
         var me = this;
 
@@ -58,6 +147,13 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         });
     };
 
+    /**
+     * Promise reject method. Rejects promise, running consequently it's handlers
+     *
+     * @method reject
+     *
+     * @param {*} reason reason, for which promise is rejected
+     */
     Class.methods.reject = function (reason) {
         var me = this;
 
@@ -74,6 +170,14 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         });
     };
 
+    /**
+     * Promise progress method. Doesn't change promise state, only consequently runs all registered progress handlers.
+     * So, this method could be run many times before promise is resolved or rejected. After that, progress method is prohibited
+     *
+     * @method progress
+     *
+     * @param {*} state some value, that means updated state of pending operation, handled by promise
+     */
     Class.methods.progress = function (state) {
         var me = this;
 
@@ -92,6 +196,19 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         });
     };
 
+    /**
+     * Core promise method. Adds handlers for promise future state, when it will be either resolved or rejected.
+     * If no handlers given, method does nothing. If any handler given, new promise object will be returned, constructing
+     * chain of promise objects, allowing to perform stack of async operations
+     *
+     * @method then
+     *
+     * @param {Function|undefined} handleResolved handler, that will be called, when promise will be resolved. Undefined, if param is omitted
+     * @param {Function|undefined} handleRejected handler, that will be called, when promise will be rejected. Undefined, if param is omitted
+     * @param {Function|undefined} handleProgress handler, that will be called, when promise will change it's progress state, but not yet resolved|rejected. Undefined, if param is omitted
+     *
+     * @return {xs.ux.Promise}
+     */
     Class.methods.then = function (handleResolved, handleRejected, handleProgress) {
         var me = this;
 
@@ -129,6 +246,18 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         return item.promise;
     };
 
+    /**
+     * Processes promise with given action
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method processPromise
+     *
+     * @param {String} action promise action
+     * @param {*} data processed data
+     */
     var _processPromise = function (action, data) {
         var me = this;
 
@@ -145,6 +274,19 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         me.destroy();
     };
 
+    /**
+     * Handles promise item.
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method handleItem
+     *
+     * @param {Object} item handled item
+     * @param {String} action promise action
+     * @param {*} data processed data
+     */
     var _handleItem = function (item, action, data) {
 
         xs.log(self.label + '::handleItem - ', action, 'with', data);
@@ -172,6 +314,19 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         }
     };
 
+    /**
+     * Resolves value of promise
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method resolveValue
+     *
+     * @param {xs.ux.Promise} promise promise, value is resolved for
+     * @param {String} action promise action
+     * @param {*} value resolved value
+     */
     var _resolveValue = function (promise, action, value) {
         xs.assert.ok(promise !== value, 'Value can not refer to the promise itself', {}, TypeError);
 
@@ -194,6 +349,21 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         promise[action](value);
     };
 
+    /**
+     * Creates promise item depending on given incoming callbacks
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method createItem
+     *
+     * @param {Function|undefined} handleResolved resolved handler
+     * @param {Function|undefined} handleRejected rejected handler
+     * @param {Function|undefined} handleProgress progress handler
+     *
+     * @return {Object|undefined} created item or undefined if no handlers given
+     */
     var _createItem = function (handleResolved, handleRejected, handleProgress) {
         //handlers must be either not defined or functions
         xs.assert.ok(!xs.isDefined(handleResolved) || xs.isFunction(handleResolved), 'createItem - given "$handleResolved" is not a function', {
@@ -236,7 +406,6 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         return item;
     };
-
 
     /**
      * Internal error class
