@@ -24,6 +24,14 @@ xs.define(xs.Class, 'xs.class.Base', function () {
     var me = this;
 
     /**
+     *
+     * @type {boolean}
+     */
+    me.properties.isDestroyed = {
+        set: xs.emptyFn
+    };
+
+    /**
      * Returns clone of this object. Basically clone is made by factory and then extended with source properties
      *
      * @method clone
@@ -50,5 +58,7 @@ xs.define(xs.Class, 'xs.class.Base', function () {
      *
      * @method destroy
      */
-    me.methods.destroy = xs.emptyFn;
+    me.methods.destroy = function () {
+        this.private.isDestroyed = true;
+    };
 });
