@@ -416,7 +416,7 @@
              *
              * @method get
              *
-             * @returns {Object} paths copy
+             * @return {Object} paths copy
              */
             me.get = function () {
                 return paths.toSource();
@@ -666,7 +666,7 @@
              *
              * @param {String} name verified name
              *
-             * @returns {Boolean} whether loader is loading that class
+             * @return {Boolean} whether loader is loading that class
              */
             me.has = function (name) {
                 return loading.hasKey(name);
@@ -797,7 +797,7 @@
              *
              * @param {String} name verified name
              *
-             * @returns {Boolean}
+             * @return {Boolean}
              */
             me.has = function (name) {
 
