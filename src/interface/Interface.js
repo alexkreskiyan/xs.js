@@ -262,14 +262,14 @@
                 //interface statics list
                 static: {
                     //interface static properties list
-                    properties: {},
+                    property: {},
 
                     //interface static methods list
                     method: {}
                 },
 
                 //interface properties list
-                properties: {},
+                property: {},
 
                 //interface methods list
                 method: {}
@@ -300,14 +300,14 @@
                 //class statics list
                 static: {
                     //class static properties list
-                    properties: new xs.core.Collection(),
+                    property: new xs.core.Collection(),
 
                     //class static methods list
                     method: new xs.core.Collection()
                 },
 
                 //class properties list
-                properties: new xs.core.Collection(),
+                property: new xs.core.Collection(),
 
                 //class methods list
                 method: new xs.core.Collection()
@@ -324,9 +324,9 @@
         var _convertDescriptor = function (descriptor) {
             descriptor.imports = new xs.core.Collection(descriptor.imports);
             descriptor.constant = new xs.core.Collection(descriptor.constant);
-            descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
+            descriptor.static.property = new xs.core.Collection(descriptor.static.property);
             descriptor.static.method = new xs.core.Collection(descriptor.static.method);
-            descriptor.properties = new xs.core.Collection(descriptor.properties);
+            descriptor.property = new xs.core.Collection(descriptor.property);
             descriptor.method = new xs.core.Collection(descriptor.method);
         };
 

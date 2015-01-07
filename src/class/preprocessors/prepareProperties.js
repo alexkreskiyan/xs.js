@@ -31,12 +31,12 @@
         xs.log('xs.class.preprocessors.prepareProperties[', Class.label, ']');
 
         //init properties reference
-        var properties = Class.descriptor.properties;
+        var properties = Class.descriptor.property;
 
 
         //inherited
         //get inherited properties from parent descriptor
-        var inherited = Class.parent.descriptor.properties;
+        var inherited = Class.parent.descriptor.property;
 
         //add all inherited
         inherited.each(function (value, name) {
@@ -45,7 +45,7 @@
 
 
         //own
-        var own = descriptor.properties;
+        var own = descriptor.property;
 
         //get own properties from raw descriptor and apply
 
@@ -79,7 +79,7 @@
      * @class PreparePropertiesError
      */
     function PreparePropertiesError(message) {
-        this.message = 'xs.class.preprocessors.properties::' + message;
+        this.message = 'xs.class.preprocessors.property::' + message;
     }
 
     PreparePropertiesError.prototype = new Error();

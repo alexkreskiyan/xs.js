@@ -24,7 +24,7 @@ module('xs.interface.preprocessors.prepareStaticProperties', function () {
         };
         //define
         me.Base = xs.Interface(function () {
-            this.static.properties.a = {
+            this.static.property.a = {
                 get: me.baseAGet
             };
         });
@@ -52,10 +52,10 @@ module('xs.interface.preprocessors.prepareStaticProperties', function () {
         //define
         me.Parent = xs.Interface(function () {
             this.extends = 'tests.interface.preprocessors.prepareStaticProperties.Base';
-            this.static.properties.a = {
+            this.static.property.a = {
                 get: me.parentAGet
             };
-            this.static.properties.b = {
+            this.static.property.b = {
                 set: me.parentBSet
             };
         });
@@ -83,8 +83,8 @@ module('xs.interface.preprocessors.prepareStaticProperties', function () {
         //define
         me.Child = xs.Interface(function () {
             this.extends = 'tests.interface.preprocessors.prepareStaticProperties.Parent';
-            this.static.properties.a = 2;
-            this.static.properties.c = {
+            this.static.property.a = 2;
+            this.static.property.c = {
                 get: me.childCGet,
                 set: me.childCSet
             };
@@ -109,18 +109,18 @@ module('xs.interface.preprocessors.prepareStaticProperties', function () {
     }, function () {
         var ns = window.tests.interface.preprocessors.prepareStaticProperties;
 
-        //init properties (will be referred to descriptor.static.properties)
+        //init properties (will be referred to descriptor.static.property)
         var properties;
 
         //check static properties definition
         //Base
-        properties = ns.Base.descriptor.static.properties;
+        properties = ns.Base.descriptor.static.property;
         //a
         strictEqual(properties.at('a').isAccessed, true);
         strictEqual(properties.at('a').isReadonly, false);
 
         //Parent
-        properties = ns.Parent.descriptor.static.properties;
+        properties = ns.Parent.descriptor.static.property;
         //a
         strictEqual(properties.at('a').isAccessed, true);
         strictEqual(properties.at('a').isReadonly, false);
@@ -129,7 +129,7 @@ module('xs.interface.preprocessors.prepareStaticProperties', function () {
         strictEqual(properties.at('b').isReadonly, false);
 
         //Child
-        properties = ns.Child.descriptor.static.properties;
+        properties = ns.Child.descriptor.static.property;
         //a
         strictEqual(properties.at('a').isAssigned, true);
         //b

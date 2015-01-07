@@ -145,16 +145,16 @@
         });
 
         //static properties
-        Interface.descriptor.static.properties.each(function (config, name) {
+        Interface.descriptor.static.property.each(function (config, name) {
             //assert, that static property is declared
-            xs.assert.ok(descriptor.static.properties.hasKey(name), '[$Class]: implemented interface "$Interface" requires static property "$name", but it is not declared', {
+            xs.assert.ok(descriptor.static.property.hasKey(name), '[$Class]: implemented interface "$Interface" requires static property "$name", but it is not declared', {
                 $Class: Class.label,
                 $Interface: Class.label,
                 $name: name
             }, ProcessImplementsError);
 
             //assert, that static property type is compatible with required
-            var property = descriptor.static.properties.at(name);
+            var property = descriptor.static.property.at(name);
 
             if (config.isAccessed) {
                 //assert, that static property is accessed
@@ -206,16 +206,16 @@
         });
 
         //properties
-        Interface.descriptor.properties.each(function (config, name) {
+        Interface.descriptor.property.each(function (config, name) {
             //assert, that static property is declared
-            xs.assert.ok(descriptor.properties.hasKey(name), '[$Class]: implemented interface "$Interface" requires property "$name", but it is not declared', {
+            xs.assert.ok(descriptor.property.hasKey(name), '[$Class]: implemented interface "$Interface" requires property "$name", but it is not declared', {
                 $Class: Class.label,
                 $Interface: Class.label,
                 $name: name
             }, ProcessImplementsError);
 
             //assert, that property type is compatible with required
-            var property = descriptor.properties.at(name);
+            var property = descriptor.property.at(name);
 
             if (config.isAccessed) {
                 //assert, that property is accessed

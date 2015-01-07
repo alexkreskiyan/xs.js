@@ -24,14 +24,14 @@ module('xs.class.preprocessors.processImplements', function () {
         me.BaseInterface = xs.Interface(function () {
             var me = this;
             me.constant = ['a'];
-            me.static.properties.b = undefined;
-            me.static.properties.c = {
+            me.static.property.b = undefined;
+            me.static.property.c = {
                 get: function () {
                 },
                 set: function () {
                 }
             };
-            me.static.properties.d = {
+            me.static.property.d = {
                 get: function () {
                 },
                 set: xs.emptyFn
@@ -58,14 +58,14 @@ module('xs.class.preprocessors.processImplements', function () {
         me.ChildInterface = xs.Interface(function () {
             var me = this;
             me.extends = ns + '.BaseInterface';
-            me.properties.g = undefined;
-            me.properties.h = {
+            me.property.g = undefined;
+            me.property.h = {
                 get: function () {
                 },
                 set: function () {
                 }
             };
-            me.properties.i = {
+            me.property.i = {
                 get: function () {
                 },
                 set: xs.emptyFn
@@ -93,9 +93,9 @@ module('xs.class.preprocessors.processImplements', function () {
             var me = this;
             me.implements = ['tests.class.preprocessors.processImplements.BaseInterface'];
             me.constant.a = 1;
-            me.static.properties.b = 1;
-            me.static.properties.c = {get: xs.emptyFn};
-            me.static.properties.d = {set: xs.emptyFn};
+            me.static.property.b = 1;
+            me.static.property.c = {get: xs.emptyFn};
+            me.static.property.d = {set: xs.emptyFn};
             me.static.method.e = xs.emptyFn;
             me.static.method.f = function (a, b) {
             };
@@ -119,9 +119,9 @@ module('xs.class.preprocessors.processImplements', function () {
             var me = this;
             me.extends = 'tests.class.preprocessors.processImplements.BaseClass';
             me.implements = ['tests.class.preprocessors.processImplements.ChildInterface'];
-            me.properties.g = 1;
-            me.properties.h = {get: xs.emptyFn};
-            me.properties.i = {set: xs.emptyFn};
+            me.property.g = 1;
+            me.property.h = {get: xs.emptyFn};
+            me.property.i = {set: xs.emptyFn};
             me.method.j = xs.emptyFn;
             me.method.k = function (a, b) {
             };

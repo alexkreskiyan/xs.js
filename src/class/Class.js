@@ -274,7 +274,7 @@
                 me.private = {};
 
                 //assign values
-                var properties = descriptor.properties.items; //xs.core.Collection
+                var properties = descriptor.property.items; //xs.core.Collection
                 var i, length = properties.length, item;
 
                 for (i = 0; i < length; i++) {
@@ -356,7 +356,7 @@
                 //class statics list
                 static: {
                     //class static properties list
-                    properties: {},
+                    property: {},
 
                     //class static methods list
                     method: {}
@@ -366,7 +366,7 @@
                 constructor: undefined,
 
                 //class properties list
-                properties: {},
+                property: {},
 
                 //class methods list
                 method: {}
@@ -406,7 +406,7 @@
                 //class statics list
                 static: {
                     //class static properties list
-                    properties: new xs.core.Collection(),
+                    property: new xs.core.Collection(),
 
                     //class static methods list
                     method: new xs.core.Collection()
@@ -416,7 +416,7 @@
                 constructor: undefined,
 
                 //class properties list
-                properties: new xs.core.Collection(),
+                property: new xs.core.Collection(),
 
                 //class methods list
                 method: new xs.core.Collection()
@@ -435,9 +435,9 @@
             descriptor.mixins = new xs.core.Collection(descriptor.mixins);
             descriptor.implements = new xs.core.Collection(descriptor.implements);
             descriptor.constant = new xs.core.Collection(descriptor.constant);
-            descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
+            descriptor.static.property = new xs.core.Collection(descriptor.static.property);
             descriptor.static.method = new xs.core.Collection(descriptor.static.method);
-            descriptor.properties = new xs.core.Collection(descriptor.properties);
+            descriptor.property = new xs.core.Collection(descriptor.property);
             descriptor.method = new xs.core.Collection(descriptor.method);
         };
 

@@ -148,13 +148,13 @@
         _mixinSection('constant', target.constant, mix.constant);
 
         //static properties
-        _mixinSection('static property', target.static.properties, mix.static.properties);
+        _mixinSection('static property', target.static.property, mix.static.property);
 
         //static methods
         _mixinSection('static method', target.static.method, mix.static.method);
 
         //properties
-        _mixinSection('property', target.properties, mix.properties);
+        _mixinSection('property', target.property, mix.property);
 
         //methods
         _mixinSection('method', target.method, mix.method);
