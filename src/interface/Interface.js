@@ -34,7 +34,7 @@
      *     var Interface = xs.Interface(function (Interface) {
      *         //here Interface descriptor is described:
      *         var me = this;
-     *         me.constants = ['a'];
+     *         me.constant = ['a'];
      *     });
      *
      * xs.interface.Interface has 2 params:
@@ -257,7 +257,7 @@
                 extends: undefined,
 
                 //interface constants list
-                constants: {},
+                constant: {},
 
                 //interface statics list
                 static: {
@@ -295,7 +295,7 @@
                 extends: undefined,
 
                 //class constants list
-                constants: new xs.core.Collection(),
+                constant: new xs.core.Collection(),
 
                 //class statics list
                 static: {
@@ -323,7 +323,7 @@
          */
         var _convertDescriptor = function (descriptor) {
             descriptor.imports = new xs.core.Collection(descriptor.imports);
-            descriptor.constants = new xs.core.Collection(descriptor.constants);
+            descriptor.constant = new xs.core.Collection(descriptor.constant);
             descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
             descriptor.static.method = new xs.core.Collection(descriptor.static.method);
             descriptor.properties = new xs.core.Collection(descriptor.properties);

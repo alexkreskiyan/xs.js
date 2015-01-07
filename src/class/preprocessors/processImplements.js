@@ -135,9 +135,9 @@
     var _verifyInterface = function (Class, Interface) {
         var descriptor = Class.descriptor;
         //verify constants
-        Interface.descriptor.constants.each(function (name) {
+        Interface.descriptor.constant.each(function (name) {
             //assert, that constant is declared
-            xs.assert.ok(descriptor.constants.hasKey(name), '[$Class]: implemented interface "$Interface" requires constant "$name", but it is not declared', {
+            xs.assert.ok(descriptor.constant.hasKey(name), '[$Class]: implemented interface "$Interface" requires constant "$name", but it is not declared', {
                 $Class: Class.label,
                 $Interface: Class.label,
                 $name: name

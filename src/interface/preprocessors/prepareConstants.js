@@ -31,12 +31,12 @@
         xs.log('xs.interface.preprocessors.prepareConstants[', Interface.label, ']');
 
         //init constants reference
-        var constants = Interface.descriptor.constants;
+        var constants = Interface.descriptor.constant;
 
 
         //inherited
         //get inherited constants from parent descriptor
-        var inherited = Interface.parent.descriptor.constants;
+        var inherited = Interface.parent.descriptor.constant;
 
         //add all inherited
         inherited.each(function (name) {
@@ -46,7 +46,7 @@
 
         //own
         //get own constants from raw descriptor and save to Interface.descriptor
-        var own = descriptor.constants;
+        var own = descriptor.constant;
 
         //verify own constants
         own.each(function (name) {
@@ -74,7 +74,7 @@
      * @class PrepareConstantsError
      */
     function PrepareConstantsError(message) {
-        this.message = 'xs.interface.preprocessors.constants::' + message;
+        this.message = 'xs.interface.preprocessors.constant::' + message;
     }
 
     PrepareConstantsError.prototype = new Error();

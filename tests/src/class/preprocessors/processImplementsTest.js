@@ -23,7 +23,7 @@ module('xs.class.preprocessors.processImplements', function () {
         //define
         me.BaseInterface = xs.Interface(function () {
             var me = this;
-            me.constants = ['a'];
+            me.constant = ['a'];
             me.static.properties.b = undefined;
             me.static.properties.c = {
                 get: function () {
@@ -92,7 +92,7 @@ module('xs.class.preprocessors.processImplements', function () {
         me.BaseClass = xs.Class(function () {
             var me = this;
             me.implements = ['tests.class.preprocessors.processImplements.BaseInterface'];
-            me.constants.a = 1;
+            me.constant.a = 1;
             me.static.properties.b = 1;
             me.static.properties.c = {get: xs.emptyFn};
             me.static.properties.d = {set: xs.emptyFn};

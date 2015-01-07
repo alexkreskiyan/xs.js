@@ -35,7 +35,7 @@
      *         //here Class descriptor is described:
      *         var me = this;
      *         me.imports = [];
-     *         me.constants.a = 1;
+     *         me.constant.a = 1;
      *     });
      *
      * xs.class.Class has 2 params:
@@ -351,7 +351,7 @@
                 singleton: undefined,
 
                 //class constants list
-                constants: {},
+                constant: {},
 
                 //class statics list
                 static: {
@@ -401,7 +401,7 @@
                 singleton: undefined,
 
                 //class constants list
-                constants: new xs.core.Collection(),
+                constant: new xs.core.Collection(),
 
                 //class statics list
                 static: {
@@ -434,7 +434,7 @@
             descriptor.imports = new xs.core.Collection(descriptor.imports);
             descriptor.mixins = new xs.core.Collection(descriptor.mixins);
             descriptor.implements = new xs.core.Collection(descriptor.implements);
-            descriptor.constants = new xs.core.Collection(descriptor.constants);
+            descriptor.constant = new xs.core.Collection(descriptor.constant);
             descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
             descriptor.static.method = new xs.core.Collection(descriptor.static.method);
             descriptor.properties = new xs.core.Collection(descriptor.properties);

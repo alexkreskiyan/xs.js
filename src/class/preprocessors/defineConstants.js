@@ -30,7 +30,7 @@
 
         xs.log('xs.class.preprocessors.defineConstants[', Class.label, ']');
         //define constants
-        Class.descriptor.constants.each(function (value, name) {
+        Class.descriptor.constant.each(function (value, name) {
 
             xs.constant(Class, name, value);
         });
