@@ -72,7 +72,7 @@
                 }
 
                 //to match all regular expressions in rule need to be satisfied
-                match = positives.some(function (regExp) {
+                match = positives.all(function (regExp) {
                     //check if userAgent matches given regExp
                     var result = regExp.exec(userAgent);
 
@@ -92,7 +92,7 @@
 
                     //sign, that userAgent matched this regExp
                     return true;
-                }, positives.length);
+                });
 
                 //return false if no match established and search will continue
                 if (!match) {
