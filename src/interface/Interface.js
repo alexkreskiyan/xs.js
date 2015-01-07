@@ -34,7 +34,7 @@
      *     var Interface = xs.Interface(function (Interface) {
      *         //here Interface descriptor is described:
      *         var me = this;
-     *         me.constants = ['a'];
+     *         me.constant = ['a'];
      *     });
      *
      * xs.interface.Interface has 2 params:
@@ -257,22 +257,22 @@
                 extends: undefined,
 
                 //interface constants list
-                constants: {},
+                constant: {},
 
                 //interface statics list
                 static: {
                     //interface static properties list
-                    properties: {},
+                    property: {},
 
                     //interface static methods list
-                    methods: {}
+                    method: {}
                 },
 
                 //interface properties list
-                properties: {},
+                property: {},
 
                 //interface methods list
-                methods: {}
+                method: {}
             };
         };
 
@@ -295,22 +295,22 @@
                 extends: undefined,
 
                 //class constants list
-                constants: new xs.core.Collection(),
+                constant: new xs.core.Collection(),
 
                 //class statics list
                 static: {
                     //class static properties list
-                    properties: new xs.core.Collection(),
+                    property: new xs.core.Collection(),
 
                     //class static methods list
-                    methods: new xs.core.Collection()
+                    method: new xs.core.Collection()
                 },
 
                 //class properties list
-                properties: new xs.core.Collection(),
+                property: new xs.core.Collection(),
 
                 //class methods list
-                methods: new xs.core.Collection()
+                method: new xs.core.Collection()
             };
         };
 
@@ -323,11 +323,11 @@
          */
         var _convertDescriptor = function (descriptor) {
             descriptor.imports = new xs.core.Collection(descriptor.imports);
-            descriptor.constants = new xs.core.Collection(descriptor.constants);
-            descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
-            descriptor.static.methods = new xs.core.Collection(descriptor.static.methods);
-            descriptor.properties = new xs.core.Collection(descriptor.properties);
-            descriptor.methods = new xs.core.Collection(descriptor.methods);
+            descriptor.constant = new xs.core.Collection(descriptor.constant);
+            descriptor.static.property = new xs.core.Collection(descriptor.static.property);
+            descriptor.static.method = new xs.core.Collection(descriptor.static.method);
+            descriptor.property = new xs.core.Collection(descriptor.property);
+            descriptor.method = new xs.core.Collection(descriptor.method);
         };
 
         return Contractor;

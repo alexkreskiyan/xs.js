@@ -31,12 +31,12 @@
         xs.log('xs.interface.preprocessors.prepareStaticProperties[', Interface.label, ']');
 
         //init properties reference
-        var properties = Interface.descriptor.static.properties;
+        var properties = Interface.descriptor.static.property;
 
 
         //inherited
         //get inherited static properties from parent descriptor
-        var inherited = Interface.parent.descriptor.static.properties;
+        var inherited = Interface.parent.descriptor.static.property;
 
         //add all inherited
         inherited.each(function (value, name) {
@@ -46,7 +46,7 @@
 
         //own
         //get own static properties from raw descriptor
-        var own = descriptor.static.properties;
+        var own = descriptor.static.property;
 
         //verify and prepare them
         own.each(function (value, name, list) {

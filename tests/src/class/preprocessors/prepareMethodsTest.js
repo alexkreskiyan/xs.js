@@ -25,7 +25,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
 
         //define
         me.Base = xs.Class(function () {
-            this.methods.a = me.baseA;
+            this.method.a = me.baseA;
         });
 
         //save
@@ -51,8 +51,8 @@ module('xs.class.preprocessors.prepareMethods', function () {
         //define
         me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.prepareMethods.Base';
-            this.methods.a = me.parentA;
-            this.methods.b = me.parentB;
+            this.method.a = me.parentA;
+            this.method.b = me.parentB;
         });
 
         //save
@@ -74,7 +74,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         //define
         me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.prepareMethods.Parent';
-            this.methods.c = me.childC;
+            this.method.c = me.childC;
         });
 
         //save
@@ -98,12 +98,12 @@ module('xs.class.preprocessors.prepareMethods', function () {
 
         var ns = window.tests.class.preprocessors.prepareMethods;
 
-        //init methods (will be referred to descriptor.methods)
+        //init methods (will be referred to descriptor.method)
         var methods;
 
         //check methods definition
         //Base
-        methods = ns.Base.descriptor.methods;
+        methods = ns.Base.descriptor.method;
         //a
         strictEqual(methods.at('a').value, me.baseA);
         strictEqual(methods.at('a').writable, false);
@@ -111,7 +111,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         strictEqual(methods.at('a').enumerable, true);
 
         //Parent
-        methods = ns.Parent.descriptor.methods;
+        methods = ns.Parent.descriptor.method;
         //a
         strictEqual(methods.at('a').value, me.parentA);
         strictEqual(methods.at('a').writable, false);
@@ -124,7 +124,7 @@ module('xs.class.preprocessors.prepareMethods', function () {
         strictEqual(methods.at('b').enumerable, true);
 
         //Child
-        methods = ns.Child.descriptor.methods;
+        methods = ns.Child.descriptor.method;
         //a
         strictEqual(methods.at('a').value, me.parentA);
         strictEqual(methods.at('a').writable, false);

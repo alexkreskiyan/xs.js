@@ -21,7 +21,7 @@ module('xs.class.preprocessors.defineProperties', function () {
 
         //define
         me.Base = xs.Class(function () {
-            this.properties.a = {
+            this.property.a = {
                 get: function () {
 
                     return 1;
@@ -44,13 +44,13 @@ module('xs.class.preprocessors.defineProperties', function () {
         //define
         me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineProperties.Base';
-            this.properties.a = {
+            this.property.a = {
                 get: function () {
 
                     return this.private.a;
                 }
             };
-            this.properties.b = {
+            this.property.b = {
                 set: function (b) {
 
                     this.private.b = b + 1;
@@ -73,8 +73,8 @@ module('xs.class.preprocessors.defineProperties', function () {
         //define
         me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineProperties.Parent';
-            this.properties.a = 2;
-            this.properties.c = {
+            this.property.a = 2;
+            this.property.c = {
                 get: function () {
 
                     return this.private.c + '!';

@@ -35,7 +35,7 @@
      *         //here Class descriptor is described:
      *         var me = this;
      *         me.imports = [];
-     *         me.constants.a = 1;
+     *         me.constant.a = 1;
      *     });
      *
      * xs.class.Class has 2 params:
@@ -274,7 +274,7 @@
                 me.private = {};
 
                 //assign values
-                var properties = descriptor.properties.items; //xs.core.Collection
+                var properties = descriptor.property.items; //xs.core.Collection
                 var i, length = properties.length, item;
 
                 for (i = 0; i < length; i++) {
@@ -351,25 +351,25 @@
                 singleton: undefined,
 
                 //class constants list
-                constants: {},
+                constant: {},
 
                 //class statics list
                 static: {
                     //class static properties list
-                    properties: {},
+                    property: {},
 
                     //class static methods list
-                    methods: {}
+                    method: {}
                 },
 
                 //class constructor
                 constructor: undefined,
 
                 //class properties list
-                properties: {},
+                property: {},
 
                 //class methods list
-                methods: {}
+                method: {}
             };
         };
 
@@ -401,25 +401,25 @@
                 singleton: undefined,
 
                 //class constants list
-                constants: new xs.core.Collection(),
+                constant: new xs.core.Collection(),
 
                 //class statics list
                 static: {
                     //class static properties list
-                    properties: new xs.core.Collection(),
+                    property: new xs.core.Collection(),
 
                     //class static methods list
-                    methods: new xs.core.Collection()
+                    method: new xs.core.Collection()
                 },
 
                 //class constructor
                 constructor: undefined,
 
                 //class properties list
-                properties: new xs.core.Collection(),
+                property: new xs.core.Collection(),
 
                 //class methods list
-                methods: new xs.core.Collection()
+                method: new xs.core.Collection()
             };
         };
 
@@ -434,11 +434,11 @@
             descriptor.imports = new xs.core.Collection(descriptor.imports);
             descriptor.mixins = new xs.core.Collection(descriptor.mixins);
             descriptor.implements = new xs.core.Collection(descriptor.implements);
-            descriptor.constants = new xs.core.Collection(descriptor.constants);
-            descriptor.static.properties = new xs.core.Collection(descriptor.static.properties);
-            descriptor.static.methods = new xs.core.Collection(descriptor.static.methods);
-            descriptor.properties = new xs.core.Collection(descriptor.properties);
-            descriptor.methods = new xs.core.Collection(descriptor.methods);
+            descriptor.constant = new xs.core.Collection(descriptor.constant);
+            descriptor.static.property = new xs.core.Collection(descriptor.static.property);
+            descriptor.static.method = new xs.core.Collection(descriptor.static.method);
+            descriptor.property = new xs.core.Collection(descriptor.property);
+            descriptor.method = new xs.core.Collection(descriptor.method);
         };
 
         return Contractor;

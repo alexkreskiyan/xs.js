@@ -24,7 +24,7 @@ module('xs.interface.preprocessors.prepareProperties', function () {
         };
         //define
         me.Base = xs.Interface(function () {
-            this.properties.a = {
+            this.property.a = {
                 get: me.baseAGet
             };
         });
@@ -52,10 +52,10 @@ module('xs.interface.preprocessors.prepareProperties', function () {
         //define
         me.Parent = xs.Interface(function () {
             this.extends = 'tests.interface.preprocessors.prepareProperties.Base';
-            this.properties.a = {
+            this.property.a = {
                 get: me.parentAGet
             };
-            this.properties.b = {
+            this.property.b = {
                 set: me.parentBSet
             };
         });
@@ -84,8 +84,8 @@ module('xs.interface.preprocessors.prepareProperties', function () {
         //define
         me.Child = xs.Interface(function () {
             this.extends = 'tests.interface.preprocessors.prepareProperties.Parent';
-            this.properties.a = 2;
-            this.properties.c = {
+            this.property.a = 2;
+            this.property.c = {
                 get: me.childCGet,
                 set: me.childCSet
             };
@@ -110,18 +110,18 @@ module('xs.interface.preprocessors.prepareProperties', function () {
     }, function () {
         var ns = window.tests.interface.preprocessors.prepareProperties;
 
-        //init properties (will be referred to descriptor.static.properties)
+        //init properties (will be referred to descriptor.static.property)
         var properties;
 
         //check properties definition
         //Base
-        properties = ns.Base.descriptor.properties;
+        properties = ns.Base.descriptor.property;
         //a
         strictEqual(properties.at('a').isAccessed, true);
         strictEqual(properties.at('a').isReadonly, false);
 
         //Parent
-        properties = ns.Parent.descriptor.properties;
+        properties = ns.Parent.descriptor.property;
         //a
         strictEqual(properties.at('a').isAccessed, true);
         strictEqual(properties.at('a').isReadonly, false);
@@ -130,7 +130,7 @@ module('xs.interface.preprocessors.prepareProperties', function () {
         strictEqual(properties.at('b').isReadonly, false);
 
         //Child
-        properties = ns.Child.descriptor.properties;
+        properties = ns.Child.descriptor.property;
         //a
         strictEqual(properties.at('a').isAssigned, true);
         //b

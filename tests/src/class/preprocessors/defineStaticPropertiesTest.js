@@ -20,7 +20,7 @@ module('xs.class.preprocessors.defineStaticProperties', function () {
 
         //define
         me.Base = xs.Class(function () {
-            this.static.properties.a = {
+            this.static.property.a = {
                 get: function () {
 
                     return 1;
@@ -43,13 +43,13 @@ module('xs.class.preprocessors.defineStaticProperties', function () {
         //define
         me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineStaticProperties.Base';
-            this.static.properties.a = {
+            this.static.property.a = {
                 get: function () {
 
                     return this.private.a;
                 }
             };
-            this.static.properties.b = {
+            this.static.property.b = {
                 set: function (b) {
 
                     this.private.b = b + 1;
@@ -72,8 +72,8 @@ module('xs.class.preprocessors.defineStaticProperties', function () {
         //define
         me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineStaticProperties.Parent';
-            this.static.properties.a = 2;
-            this.static.properties.c = {
+            this.static.property.a = 2;
+            this.static.property.c = {
                 get: function () {
 
                     return this.private.c + '!';

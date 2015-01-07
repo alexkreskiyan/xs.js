@@ -24,7 +24,7 @@ module('xs.class.preprocessors.prepareStaticProperties', function () {
         };
         //define
         me.Base = xs.Class(function () {
-            this.static.properties.a = {
+            this.static.property.a = {
                 get: me.baseAGet
             };
         });
@@ -52,10 +52,10 @@ module('xs.class.preprocessors.prepareStaticProperties', function () {
         //define
         me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.prepareStaticProperties.Base';
-            this.static.properties.a = {
+            this.static.property.a = {
                 get: me.parentAGet
             };
-            this.static.properties.b = {
+            this.static.property.b = {
                 set: me.parentBSet
             };
         });
@@ -83,8 +83,8 @@ module('xs.class.preprocessors.prepareStaticProperties', function () {
         //define
         me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.prepareStaticProperties.Parent';
-            this.static.properties.a = 2;
-            this.static.properties.c = {
+            this.static.property.a = 2;
+            this.static.property.c = {
                 get: me.childCGet,
                 set: me.childCSet
             };
@@ -111,19 +111,19 @@ module('xs.class.preprocessors.prepareStaticProperties', function () {
 
         var ns = window.tests.class.preprocessors.prepareStaticProperties;
 
-        //init properties (will be referred to descriptor.static.properties)
+        //init properties (will be referred to descriptor.static.property)
         var properties;
 
         //check static properties definition
         //Base
-        properties = ns.Base.descriptor.static.properties;
+        properties = ns.Base.descriptor.static.property;
         //a
         strictEqual(properties.at('a').get, me.baseAGet);
         strictEqual(properties.at('a').configurable, false);
         strictEqual(properties.at('a').enumerable, true);
 
         //Parent
-        properties = ns.Parent.descriptor.static.properties;
+        properties = ns.Parent.descriptor.static.property;
         //a
         strictEqual(properties.at('a').get, me.parentAGet);
         strictEqual(properties.at('a').configurable, false);
@@ -134,7 +134,7 @@ module('xs.class.preprocessors.prepareStaticProperties', function () {
         strictEqual(properties.at('b').enumerable, true);
 
         //Child
-        properties = ns.Child.descriptor.static.properties;
+        properties = ns.Child.descriptor.static.property;
         //a
         strictEqual(properties.at('a').value, 2);
         strictEqual(properties.at('a').writable, true);

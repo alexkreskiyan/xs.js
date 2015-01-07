@@ -32,7 +32,7 @@
         //apply
         var prototype = Class.prototype;
 
-        Class.descriptor.properties.each(function (descriptor, name) {
+        Class.descriptor.property.each(function (descriptor, name) {
 
             //save property to prototype
             xs.Attribute.property.define(prototype, name, descriptor);

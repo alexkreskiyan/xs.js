@@ -27,7 +27,7 @@ xs.define(xs.Class, 'xs.class.Base', function () {
      *
      * @type {boolean}
      */
-    me.properties.isDestroyed = {
+    me.property.isDestroyed = {
         set: xs.emptyFn
     };
 
@@ -38,7 +38,7 @@ xs.define(xs.Class, 'xs.class.Base', function () {
      *
      * @return {xs.class.Base} clone object
      */
-    me.methods.clone = function () {
+    me.method.clone = function () {
         var me = this;
 
         //create clone via factory
@@ -58,7 +58,7 @@ xs.define(xs.Class, 'xs.class.Base', function () {
      *
      * @method destroy
      */
-    me.methods.destroy = function () {
+    me.method.destroy = function () {
         this.private.isDestroyed = true;
     };
 });

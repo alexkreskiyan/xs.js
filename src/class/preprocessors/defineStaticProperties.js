@@ -33,7 +33,7 @@
         Class.private = {};
 
         //apply
-        Class.descriptor.static.properties.each(function (descriptor, name) {
+        Class.descriptor.static.property.each(function (descriptor, name) {
 
             //save property to class
             xs.Attribute.property.define(Class, name, descriptor);

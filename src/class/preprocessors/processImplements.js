@@ -135,9 +135,9 @@
     var _verifyInterface = function (Class, Interface) {
         var descriptor = Class.descriptor;
         //verify constants
-        Interface.descriptor.constants.each(function (name) {
+        Interface.descriptor.constant.each(function (name) {
             //assert, that constant is declared
-            xs.assert.ok(descriptor.constants.hasKey(name), '[$Class]: implemented interface "$Interface" requires constant "$name", but it is not declared', {
+            xs.assert.ok(descriptor.constant.hasKey(name), '[$Class]: implemented interface "$Interface" requires constant "$name", but it is not declared', {
                 $Class: Class.label,
                 $Interface: Class.label,
                 $name: name
@@ -145,16 +145,16 @@
         });
 
         //static properties
-        Interface.descriptor.static.properties.each(function (config, name) {
+        Interface.descriptor.static.property.each(function (config, name) {
             //assert, that static property is declared
-            xs.assert.ok(descriptor.static.properties.hasKey(name), '[$Class]: implemented interface "$Interface" requires static property "$name", but it is not declared', {
+            xs.assert.ok(descriptor.static.property.hasKey(name), '[$Class]: implemented interface "$Interface" requires static property "$name", but it is not declared', {
                 $Class: Class.label,
                 $Interface: Class.label,
                 $name: name
             }, ProcessImplementsError);
 
             //assert, that static property type is compatible with required
-            var property = descriptor.static.properties.at(name);
+            var property = descriptor.static.property.at(name);
 
             if (config.isAccessed) {
                 //assert, that static property is accessed
@@ -183,9 +183,9 @@
         });
 
         //static methods
-        Interface.descriptor.static.methods.each(function (config, name) {
+        Interface.descriptor.static.method.each(function (config, name) {
             //assert, that static method is declared
-            xs.assert.ok(descriptor.static.methods.hasKey(name), '[$Class]: implemented interface "$Interface" requires static method "$name", but it is not declared', {
+            xs.assert.ok(descriptor.static.method.hasKey(name), '[$Class]: implemented interface "$Interface" requires static method "$name", but it is not declared', {
                 $Class: Class.label,
                 $Interface: Class.label,
                 $name: name
@@ -193,7 +193,7 @@
 
             //assert, that static method arguments are compatible with required
             var requiredArguments = config.args.toString();
-            var declaredArguments = xs.Function.getArguments(descriptor.static.methods.at(name).value).toString();
+            var declaredArguments = xs.Function.getArguments(descriptor.static.method.at(name).value).toString();
 
             //assert, that arguments' lists are equal
             xs.assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface "$Interface" requires static method "$name" to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
@@ -206,16 +206,16 @@
         });
 
         //properties
-        Interface.descriptor.properties.each(function (config, name) {
+        Interface.descriptor.property.each(function (config, name) {
             //assert, that static property is declared
-            xs.assert.ok(descriptor.properties.hasKey(name), '[$Class]: implemented interface "$Interface" requires property "$name", but it is not declared', {
+            xs.assert.ok(descriptor.property.hasKey(name), '[$Class]: implemented interface "$Interface" requires property "$name", but it is not declared', {
                 $Class: Class.label,
                 $Interface: Class.label,
                 $name: name
             }, ProcessImplementsError);
 
             //assert, that property type is compatible with required
-            var property = descriptor.properties.at(name);
+            var property = descriptor.property.at(name);
 
             if (config.isAccessed) {
                 //assert, that property is accessed
@@ -244,9 +244,9 @@
         });
 
         //methods
-        Interface.descriptor.methods.each(function (config, name) {
+        Interface.descriptor.method.each(function (config, name) {
             //assert, that method is declared
-            xs.assert.ok(descriptor.methods.hasKey(name), '[$Class]: implemented interface "$Interface" requires method "$name", but it is not declared', {
+            xs.assert.ok(descriptor.method.hasKey(name), '[$Class]: implemented interface "$Interface" requires method "$name", but it is not declared', {
                 $Class: Class.label,
                 $Interface: Class.label,
                 $name: name
@@ -254,7 +254,7 @@
 
             //assert, that method arguments are compatible with required
             var requiredArguments = config.args.toString();
-            var declaredArguments = xs.Function.getArguments(descriptor.methods.at(name).value).toString();
+            var declaredArguments = xs.Function.getArguments(descriptor.method.at(name).value).toString();
 
             //assert, that arguments' lists are equal
             xs.assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface "$Interface" requires method "$name" to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {

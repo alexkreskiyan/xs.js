@@ -22,36 +22,36 @@ module('xs.class.preprocessors.prepareImplements', function () {
         //define
         me.Interface = xs.Interface(function () {
             var me = this;
-            me.constants = ['a'];
-            me.static.properties.b = undefined;
-            me.static.properties.c = {
+            me.constant = ['a'];
+            me.static.property.b = undefined;
+            me.static.property.c = {
                 get: function () {
                 },
                 set: function () {
                 }
             };
-            me.static.properties.d = {
+            me.static.property.d = {
                 get: function () {
                 },
                 set: xs.emptyFn
             };
-            me.static.methods.e = xs.emptyFn;
-            me.static.methods.f = function (a, b) {
+            me.static.method.e = xs.emptyFn;
+            me.static.method.f = function (a, b) {
             };
-            me.properties.g = undefined;
-            me.properties.h = {
+            me.property.g = undefined;
+            me.property.h = {
                 get: function () {
                 },
                 set: function () {
                 }
             };
-            me.properties.i = {
+            me.property.i = {
                 get: function () {
                 },
                 set: xs.emptyFn
             };
-            me.methods.j = xs.emptyFn;
-            me.methods.k = function (a, b) {
+            me.method.j = xs.emptyFn;
+            me.method.k = function (a, b) {
             };
         });
 
@@ -72,18 +72,18 @@ module('xs.class.preprocessors.prepareImplements', function () {
         me.Class = xs.Class(function () {
             var me = this;
             me.implements = ['tests.class.preprocessors.prepareImplements.Interface'];
-            me.constants.a = 1;
-            me.static.properties.b = 1;
-            me.static.properties.c = {get: xs.emptyFn};
-            me.static.properties.d = {set: xs.emptyFn};
-            me.static.methods.e = xs.emptyFn;
-            me.static.methods.f = function (a, b) {
+            me.constant.a = 1;
+            me.static.property.b = 1;
+            me.static.property.c = {get: xs.emptyFn};
+            me.static.property.d = {set: xs.emptyFn};
+            me.static.method.e = xs.emptyFn;
+            me.static.method.f = function (a, b) {
             };
-            me.properties.g = 1;
-            me.properties.h = {get: xs.emptyFn};
-            me.properties.i = {set: xs.emptyFn};
-            me.methods.j = xs.emptyFn;
-            me.methods.k = function (a, b) {
+            me.property.g = 1;
+            me.property.h = {get: xs.emptyFn};
+            me.property.i = {set: xs.emptyFn};
+            me.method.j = xs.emptyFn;
+            me.method.k = function (a, b) {
             };
         });
 

@@ -31,12 +31,12 @@
         xs.log('xs.class.preprocessors.prepareConstants[', Class.label, ']');
 
         //init constants reference
-        var constants = Class.descriptor.constants;
+        var constants = Class.descriptor.constant;
 
 
         //inherited
         //get inherited constants from parent descriptor
-        var inherited = Class.parent.descriptor.constants;
+        var inherited = Class.parent.descriptor.constant;
 
         //add all inherited
         inherited.each(function (value, name) {
@@ -46,7 +46,7 @@
 
         //own
         //get own constants from raw descriptor and save to Class.descriptor
-        var own = descriptor.constants;
+        var own = descriptor.constant;
 
         //verify own constants
         own.each(function (value, name) {
@@ -76,7 +76,7 @@
      * @class PrepareConstantsError
      */
     function PrepareConstantsError(message) {
-        this.message = 'xs.class.preprocessors.constants::' + message;
+        this.message = 'xs.class.preprocessors.prepareConstants::' + message;
     }
 
     PrepareConstantsError.prototype = new Error();

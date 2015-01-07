@@ -30,7 +30,7 @@
 
         xs.log('xs.class.preprocessors.defineStaticMethods[', Class.label, ']');
         //apply
-        Class.descriptor.static.methods.each(function (descriptor, name) {
+        Class.descriptor.static.method.each(function (descriptor, name) {
 
             //save method to class
             xs.Attribute.method.define(Class, name, descriptor);

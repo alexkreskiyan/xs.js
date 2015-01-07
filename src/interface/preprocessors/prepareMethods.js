@@ -31,12 +31,12 @@
         xs.log('xs.interface.preprocessors.prepareMethods[', Interface.label, ']');
 
         //init methods reference
-        var methods = Interface.descriptor.methods;
+        var methods = Interface.descriptor.method;
 
 
         //inherited
         //get inherited methods from parent descriptor
-        var inherited = Interface.parent.descriptor.methods;
+        var inherited = Interface.parent.descriptor.method;
 
         //add all inherited
         inherited.each(function (value, name) {
@@ -46,7 +46,7 @@
 
         //own
         //get own methods from raw descriptor
-        var own = descriptor.methods;
+        var own = descriptor.method;
 
         //verify and prepare them
         own.each(function (value, name, list) {
@@ -82,7 +82,7 @@
      * @class PrepareMethodsError
      */
     function PrepareMethodsError(message) {
-        this.message = 'xs.interface.preprocessors.methods::' + message;
+        this.message = 'xs.interface.preprocessors.method::' + message;
     }
 
     PrepareMethodsError.prototype = new Error();

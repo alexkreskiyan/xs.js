@@ -145,19 +145,19 @@
     var _mixinClass = function (target, mix) {
 
         //extend constants
-        _mixinSection('constant', target.constants, mix.constants);
+        _mixinSection('constant', target.constant, mix.constant);
 
         //static properties
-        _mixinSection('static property', target.static.properties, mix.static.properties);
+        _mixinSection('static property', target.static.property, mix.static.property);
 
         //static methods
-        _mixinSection('static method', target.static.methods, mix.static.methods);
+        _mixinSection('static method', target.static.method, mix.static.method);
 
         //properties
-        _mixinSection('property', target.properties, mix.properties);
+        _mixinSection('property', target.property, mix.property);
 
         //methods
-        _mixinSection('method', target.methods, mix.methods);
+        _mixinSection('method', target.method, mix.method);
     };
 
     /**

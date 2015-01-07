@@ -26,8 +26,7 @@ module('xs.class.Class', function () {
     test('factory', function () {
         var me = this;
         //create simple class
-        me.Class = xs.Class(function (self, ns) {
-        });
+        me.Class = xs.Class(xs.emptyFn, me.done);
 
         //assign some constructor
         me.Class.descriptor.constructor = function (a, b) {
@@ -35,14 +34,16 @@ module('xs.class.Class', function () {
             this.b = b;
         };
 
+        return false;
+    }, function () {
+        var me = this;
 
         //compare new and factory variants
 
         //get instances
         me.sampleNew = new me.Class(1, 2);
         me.sampleFactory = me.Class.factory(1, 2);
-    }, function () {
-        var me = this;
+
         //constructor is Class
         strictEqual(me.sampleNew.constructor, me.Class);
         strictEqual(me.sampleFactory.constructor, me.Class);

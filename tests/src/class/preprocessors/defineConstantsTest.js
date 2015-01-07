@@ -20,7 +20,7 @@ module('xs.class.preprocessors.defineConstants', function () {
 
         //define
         me.Base = xs.Class(function () {
-            this.constants.a = 1;
+            this.constant.a = 1;
         });
 
         //save
@@ -38,8 +38,8 @@ module('xs.class.preprocessors.defineConstants', function () {
         //define
         me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineConstants.Base';
-            this.constants.a = 2;
-            this.constants.b = 3;
+            this.constant.a = 2;
+            this.constant.b = 3;
         });
 
         //save
@@ -57,7 +57,7 @@ module('xs.class.preprocessors.defineConstants', function () {
         //define
         me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineConstants.Parent';
-            this.constants.c = 5;
+            this.constant.c = 5;
         });
 
         //save

@@ -31,12 +31,12 @@
         xs.log('xs.interface.preprocessors.prepareStaticMethods[', Interface.label, ']');
 
         //init methods reference
-        var methods = Interface.descriptor.static.methods;
+        var methods = Interface.descriptor.static.method;
 
 
         //inherited
         //get inherited static methods from parent descriptor
-        var inherited = Interface.parent.descriptor.static.methods;
+        var inherited = Interface.parent.descriptor.static.method;
 
         //add all inherited
         inherited.each(function (value, name) {
@@ -46,7 +46,7 @@
 
         //own
         //get own static methods from raw descriptor
-        var own = descriptor.static.methods;
+        var own = descriptor.static.method;
 
         //verify and prepare them
         own.each(function (value, name, list) {

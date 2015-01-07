@@ -20,7 +20,7 @@ module('xs.class.preprocessors.defineStaticMethods', function () {
 
         //define
         me.Base = xs.Class(function () {
-            this.static.methods.a = function () {
+            this.static.method.a = function () {
 
                 return 1;
             };
@@ -41,11 +41,11 @@ module('xs.class.preprocessors.defineStaticMethods', function () {
         //define
         me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineStaticMethods.Base';
-            this.static.methods.a = function () {
+            this.static.method.a = function () {
 
                 return 2;
             };
-            this.static.methods.b = function () {
+            this.static.method.b = function () {
 
                 return 3;
             };
@@ -66,7 +66,7 @@ module('xs.class.preprocessors.defineStaticMethods', function () {
         //define
         me.Child = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineStaticMethods.Parent';
-            this.static.methods.c = function () {
+            this.static.method.c = function () {
 
                 return 5;
             };

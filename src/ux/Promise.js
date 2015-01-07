@@ -67,7 +67,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @type {String}
      */
-    Class.constants.PENDING = 'pending';
+    Class.constant.PENDING = 'pending';
 
     /**
      * Promise "resolved" state constant
@@ -80,7 +80,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @type {String}
      */
-    Class.constants.RESOLVED = 'resolved';
+    Class.constant.RESOLVED = 'resolved';
 
     /**
      * Promise "rejected" state constant
@@ -93,7 +93,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @type {String}
      */
-    Class.constants.REJECTED = 'rejected';
+    Class.constant.REJECTED = 'rejected';
 
     /**
      * Promise state. Is changed internally from {@link #PENDING pending} to {@link #RESOLVED resolved} or {@link #REJECTED rejected}
@@ -104,7 +104,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @type {String}
      */
-    Class.properties.state = {
+    Class.property.state = {
         set: xs.emptyFn
     };
 
@@ -131,7 +131,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @param {*} data data, promise is resolved with
      */
-    Class.methods.resolve = function (data) {
+    Class.method.resolve = function (data) {
         var me = this;
 
         xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
@@ -154,7 +154,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @param {*} reason reason, for which promise is rejected
      */
-    Class.methods.reject = function (reason) {
+    Class.method.reject = function (reason) {
         var me = this;
 
         xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
@@ -178,7 +178,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @param {*} state some value, that means updated state of pending operation, handled by promise
      */
-    Class.methods.update = function (state) {
+    Class.method.update = function (state) {
         var me = this;
 
         xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
@@ -212,7 +212,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @return {xs.ux.Promise}
      */
-    Class.methods.then = function (handleResolved, handleRejected, handleProgress) {
+    Class.method.then = function (handleResolved, handleRejected, handleProgress) {
         var me = this;
 
         xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
@@ -265,7 +265,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @return {xs.ux.Promise}
      */
-    Class.methods.otherwise = function (handleRejected) {
+    Class.method.otherwise = function (handleRejected) {
         return this.then(undefined, handleRejected);
     };
 
@@ -282,7 +282,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @return {xs.ux.Promise}
      */
-    Class.methods.progress = function (handleProgress) {
+    Class.method.progress = function (handleProgress) {
         return this.then(undefined, undefined, handleProgress);
     };
 
@@ -291,7 +291,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @method destroy
      */
-    Class.methods.destroy = function () {
+    Class.method.destroy = function () {
         var me = this;
 
         //remove all handlers

@@ -124,7 +124,7 @@ test('constructor', function () {
     //isXhr
     strictEqual(req.isXhr, true, 'default isXhr set');
     //postContentType
-    strictEqual(req.postContentType, xs.request.Request.descriptor.properties.postContentType.default, 'default postContentType set');
+    strictEqual(req.postContentType, xs.request.Request.descriptor.property.postContentType.default, 'default postContentType set');
     //test constructor with all params
     //test constructor without any params
     var p = {
