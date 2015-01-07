@@ -1051,7 +1051,7 @@
      *
      * @method remove
      *
-     * @param {*} value removed value
+     * @param {*} [value] removed value. If not given - collection wil be truncated
      * @param {Number} [flags] optional remove flags:
      * - REVERSE - to lookup for value from the end of the collection
      * - ALL - to remove all matches
@@ -2193,6 +2193,134 @@
         }
 
         return false;
+    };
+
+    /**
+     * Returns whether all of list values pass tester function
+     *
+     * For example:
+     *
+     *     var scope = {
+     *        one: function(value) {
+     *            return value === 1;
+     *        },
+     *     }
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         1,
+     *         2,
+     *         2,
+     *     ]);
+     *     console.log(collection.all(function(value) {
+     *         return this.one(value);
+     *     }, scope));
+     *     //outputs:
+     *     // false
+     *     console.log(collection.all(function(value) {
+     *         return value > 0;
+     *     }));
+     *     //outputs:
+     *     // true
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         c: 1,
+     *         b: 2,
+     *         d: 2
+     *     });
+     *     console.log(collection.all(function(value) {
+     *         return this.one(value);
+     *     }, scope));
+     *     //outputs:
+     *     // false
+     *     console.log(collection.all(function(value) {
+     *         return value > 0;
+     *     }));
+     *     //outputs:
+     *     // true
+     *
+     * @method all
+     *
+     * @param {Function} tester tester function
+     * @param {Object} [scope] optional scope
+     *
+     * @return {Boolean} whether all values pass tester function
+     */
+    collection.prototype.all = function (tester, scope) {
+        var me = this;
+
+        if (arguments.length >= 2) {
+
+            return me.some(tester, me.items.length, scope);
+        }
+
+        return me.some(tester, me.items.length);
+    };
+
+    /**
+     * Returns whether none of list values pass tester function
+     *
+     * For example:
+     *
+     *     var scope = {
+     *        one: function(value) {
+     *            return value === 1;
+     *        },
+     *     }
+     *     //for Array
+     *     var collection = new xs.core.Collection([
+     *         1,
+     *         1,
+     *         2,
+     *         2,
+     *     ]);
+     *     console.log(collection.none(function(value) {
+     *         return this.one(value);
+     *     }, scope));
+     *     //outputs:
+     *     // false
+     *     console.log(collection.none(function(value) {
+     *         return value > 2;
+     *     }));
+     *     //outputs:
+     *     // true
+     *
+     *     //for Object
+     *     var collection = new xs.core.Collection({
+     *         a: 1,
+     *         c: 1,
+     *         b: 2,
+     *         d: 2
+     *     });
+     *     console.log(collection.none(function(value) {
+     *         return this.one(value);
+     *     }, scope));
+     *     //outputs:
+     *     // false
+     *     console.log(collection.none(function(value) {
+     *         return value > 2;
+     *     }));
+     *     //outputs:
+     *     // true
+     *
+     * @method none
+     *
+     * @param {Function} tester tester function
+     * @param {Object} [scope] optional scope
+     *
+     * @return {Boolean} whether none values pass tester function
+     */
+    collection.prototype.none = function (tester, scope) {
+        var me = this;
+
+        if (arguments.length >= 2) {
+
+            return me.some(tester, 0, scope);
+        }
+
+        return me.some(tester, 0);
     };
 
     /**

@@ -1230,6 +1230,158 @@ module('xs.core.Collection', function () {
         }, 2), false);
     });
 
+    test('all', function () {
+        //init test variables
+        var collection;
+
+        //throws if collection is empty
+        collection = new xs.core.Collection();
+        throws(function () {
+            collection.all();
+        });
+
+        //throws if tester is not a function
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.all(null);
+        });
+
+        //test array list
+        collection = new xs.core.Collection([
+            {
+                x: 1,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 1
+            },
+            {
+                x: 1,
+                y: 1
+            }
+        ]);
+
+        //negative
+        strictEqual(collection.all(function (value) {
+            return value.x === 1;
+        }), false);
+        //positive
+        strictEqual(collection.all(function (value) {
+            return value.x === 1 || value.x === 2;
+        }), true);
+
+
+        //test object list
+        collection = new xs.core.Collection({
+            a: {
+                x: 1,
+                y: 2
+            },
+            b: {
+                x: 2,
+                y: 2
+            },
+            c: {
+                x: 2,
+                y: 1
+            },
+            d: {
+                x: 1,
+                y: 1
+            }
+        });
+
+        //negative
+        strictEqual(collection.all(function (value) {
+            return value.x === 1;
+        }), false);
+        //positive
+        strictEqual(collection.all(function (value) {
+            return value.x === 1 || value.x === 2;
+        }), true);
+    });
+
+    test('none', function () {
+        //init test variables
+        var collection;
+
+        //throws if collection is empty
+        collection = new xs.core.Collection();
+        throws(function () {
+            collection.none();
+        });
+
+        //throws if tester is not a function
+        collection = new xs.core.Collection([1]);
+        throws(function () {
+            collection.none(null);
+        });
+        
+        //test array list
+        collection = new xs.core.Collection([
+            {
+                x: 1,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 2
+            },
+            {
+                x: 2,
+                y: 1
+            },
+            {
+                x: 1,
+                y: 1
+            }
+        ]);
+
+        //negative
+        strictEqual(collection.none(function (value) {
+            return value.x === 1 && value.y === 1;
+        }), false);
+        //positive
+        strictEqual(collection.none(function (value) {
+            return value.x === 1 && value.y === 3;
+        }), true);
+
+
+        //test object list
+        collection = new xs.core.Collection({
+            a: {
+                x: 1,
+                y: 2
+            },
+            b: {
+                x: 2,
+                y: 2
+            },
+            c: {
+                x: 2,
+                y: 1
+            },
+            d: {
+                x: 1,
+                y: 1
+            }
+        });
+
+        //negative
+        strictEqual(collection.none(function (value) {
+            return value.x === 1 && value.y === 1;
+        }), false);
+        //positive
+        strictEqual(collection.none(function (value) {
+            return value.x === 1 && value.y === 3;
+        }), true);
+    });
+
     test('unique', function () {
         //init test variables
         var arr = [];
