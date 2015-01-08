@@ -24,6 +24,17 @@ xs.define(xs.Class, 'xs.class.Base', function () {
     var me = this;
 
     /**
+     * Class string representation
+     *
+     * @template
+     *
+     * @method toString
+     */
+    me.static.method.toString = function () {
+        return '[class ' + (this.label ? this.label : 'xClass') + ']';
+    };
+
+    /**
      *
      * @type {boolean}
      */
@@ -60,5 +71,16 @@ xs.define(xs.Class, 'xs.class.Base', function () {
      */
     me.method.destroy = function () {
         this.private.isDestroyed = true;
+    };
+
+    /**
+     * Object string representation
+     *
+     * @template
+     *
+     * @method toString
+     */
+    me.method.toString = function () {
+        return '[instance ' + (this.constructor.label ? this.constructor.label : 'xClass') + ']';
     };
 });

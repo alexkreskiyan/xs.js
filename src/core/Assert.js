@@ -664,6 +664,9 @@
             //vars given
             if (xs.isObject(vars)) {
 
+                //translate message
+                message = xs.translate(message, vars);
+
                 //if exception not given - default to error
                 if (!xs.isFunction(Exception)) {
                     Exception = Error;
