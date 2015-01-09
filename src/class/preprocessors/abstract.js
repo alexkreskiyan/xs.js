@@ -16,18 +16,18 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor singleton
-     * Is used to mark class as singleton
+     * Preprocessor abstract
+     * Is used to mark class as abstract
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.class.preprocessors.add('singleton', function () {
+    xs.class.preprocessors.add('abstract', function () {
 
         return true;
     }, function (Class, descriptor) {
-        xs.log('xs.class.preprocessors.singleton[', Class.label, ']');
-        Class.descriptor.singleton = Boolean(descriptor.singleton);
+        xs.log('xs.class.preprocessors.abstract[', Class.label, ']');
+        Class.descriptor.abstract = Boolean(descriptor.abstract);
     });
 })(window, 'xs');

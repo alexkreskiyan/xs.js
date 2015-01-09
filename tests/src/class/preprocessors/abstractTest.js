@@ -8,15 +8,15 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.preprocessors.singleton', function () {
+module('xs.class.preprocessors.abstract', function () {
 
     'use strict';
 
-    test('singleton chain', function () {
+    test('abstract chain', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'tests.class.preprocessors.singleton.Base';
+        me.BaseName = 'tests.class.preprocessors.abstract.Base';
 
         //define
         me.Base = xs.Class(function () {
@@ -32,12 +32,12 @@ module('xs.class.preprocessors.singleton', function () {
         xs.ContractsManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'tests.class.preprocessors.singleton.Parent';
+        me.ParentName = 'tests.class.preprocessors.abstract.Parent';
 
         //define
         me.Parent = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.singleton.Base';
-            this.singleton = true;
+            this.extends = 'tests.class.preprocessors.abstract.Base';
+            this.abstract = true;
         });
 
         //save
@@ -50,11 +50,11 @@ module('xs.class.preprocessors.singleton', function () {
         xs.ContractsManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'tests.class.preprocessors.singleton.Child';
+        me.ChildName = 'tests.class.preprocessors.abstract.Child';
 
         //define
         me.Child = xs.Class(function () {
-            this.extends = 'tests.class.preprocessors.singleton.Parent';
+            this.extends = 'tests.class.preprocessors.abstract.Parent';
         });
 
         //save
@@ -74,7 +74,7 @@ module('xs.class.preprocessors.singleton', function () {
 
         return false;
     }, function () {
-        var ns = window.tests.class.preprocessors.singleton;
+        var ns = window.tests.class.preprocessors.abstract;
 
         //Base
         new ns.Base;

@@ -245,10 +245,10 @@
                 var descriptor = Class.descriptor;
 
 
-                //singleton processing
+                //abstract processing
 
-                //assert Class is not singleton
-                xs.assert.not(descriptor.singleton, 'can not create instance of singleton class "$label"', {
+                //assert Class is not abstract
+                xs.assert.not(descriptor.abstract, 'can not create instance of abstract class "$label"', {
                     $label: Class.label
                 }, ClassError);
 
@@ -347,8 +347,8 @@
                 //class implements list
                 implements: {},
 
-                //class singleton flag
-                singleton: undefined,
+                //class abstract flag
+                abstract: undefined,
 
                 //class constants list
                 constant: {},
@@ -397,8 +397,8 @@
                 //class implements list
                 implements: new xs.core.Collection(),
 
-                //class singleton flag
-                singleton: undefined,
+                //class abstract flag
+                abstract: undefined,
 
                 //class constants list
                 constant: new xs.core.Collection(),
