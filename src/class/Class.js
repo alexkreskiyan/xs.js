@@ -244,14 +244,6 @@
                 //define class constructor
                 var descriptor = Class.descriptor;
 
-
-                //abstract processing
-
-                //assert Class is not abstract
-                xs.assert.not(descriptor.abstract, 'can not create instance of abstract class "$label"', {
-                    $label: Class.label
-                }, ClassError);
-
                 //get constructor shortcut
                 var constructor = descriptor.constructor !== Object ? descriptor.constructor : undefined;
 
@@ -263,6 +255,14 @@
 
                     return;
                 }
+
+
+                //abstract processing
+
+                //assert Class is not abstract
+                xs.assert.not(descriptor.abstract, 'can not create instance of abstract class "$label"', {
+                    $label: Class.label
+                }, ClassError);
 
 
                 //save call arguments
