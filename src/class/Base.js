@@ -26,6 +26,8 @@ xs.define(xs.Class, 'xs.class.Base', function () {
     /**
      * Class string representation
      *
+     * @static
+     *
      * @template
      *
      * @method toString
