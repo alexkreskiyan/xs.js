@@ -13,8 +13,6 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @abstract
- *
  * @class xs.uri.QueryString
  */
 xs.define(xs.Class, 'ns.QueryString', function () {
@@ -60,6 +58,13 @@ xs.define(xs.Class, 'ns.QueryString', function () {
         }
     };
 
+    /**
+     * Query string params object
+     *
+     * @property params
+     *
+     * @type {Object}
+     */
     Class.property.params = {
         set: function (params) {
             var me = this;
@@ -72,6 +77,15 @@ xs.define(xs.Class, 'ns.QueryString', function () {
         }
     };
 
+    /**
+     * Returns string representation of QueryString
+     *
+     * @method toString
+     *
+     * @param {Boolean} encode whether to perform encodeURIComponent method over QueryString parts
+     *
+     * @returns {String}
+     */
     Class.method.toString = function (encode) {
         xs.assert.ok(!arguments.length || xs.isBoolean(encode), 'Given encode "$encode" is not boolean', {
             $encode: encode
@@ -147,17 +161,23 @@ xs.define(xs.Class, 'ns.QueryString', function () {
 
     /**
      * Processes object to query object according to given indexes
-     * @param params
-     * @param name
-     * @param value
-     * @param indexes
-     * @return {undefined}
+     *
+     * @ignore
+     *
+     * @method fromQueryObjects
+     *
+     * @param {Array|Object} params
+     * @param {String|Number} name
+     * @param {*} value
+     * @param {Number[]} indexes
      */
     var _fromQueryObjects = function (params, name, value, indexes) {
 
         //assign value if no indexes
         if (!indexes || !indexes.length) {
             value = decodeURIComponent(value);
+
+            //JSON.parse is used to process from string to JS natives
             try {
                 params[name] = JSON.parse(value);
             } catch (e) {
@@ -196,6 +216,10 @@ xs.define(xs.Class, 'ns.QueryString', function () {
 
     /**
      * Gets next number index for array/object params
+     *
+     * @ignore
+     *
+     * @method getNextIndex
      *
      * @param {Array|Object} params
      *
@@ -278,7 +302,7 @@ xs.define(xs.Class, 'ns.QueryString', function () {
 
             if (encode) {
                 object.each(function (value, param) {
-                    objects = objects.concat(_toQueryObjects(name + '[' + encodeURIComponent(param) + ']', value, encode));
+                    objects = objects.concat(_toQueryObjects(name + encodeURIComponent('[' + param + ']'), value, encode));
                 });
             } else {
                 object.each(function (value, param) {

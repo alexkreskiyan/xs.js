@@ -47,5 +47,8 @@
   "xs.interface.preprocessors.prepareMethods",
   "xs.interface.Base",
   "xs.env.Context",
+  "xs.uri.URI",
+  "xs.uri.QueryString",
+  "xs.uri.HTTP",
   "xs.ux.Promise"
 ]
