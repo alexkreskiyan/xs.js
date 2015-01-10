@@ -13,6 +13,8 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
+ * @abstract
+ *
  * @class xs.uri.URI
  */
 xs.define(xs.Class, 'ns.URI', function () {
@@ -39,13 +41,29 @@ xs.define(xs.Class, 'ns.URI', function () {
      *
      * @constructor
      *
-     * @param {String} [uri] uri, object is created from, or undefined, if starting from the beginning
+     * @param {String} [URI] URI, object is created from, or undefined, if starting from the beginning
      */
-    Class.constructor = function (uri) {
+    Class.constructor = function (URI) {
         var me = this;
 
         //assert, that uri is either undefined or string
-        xs.assert.ok(!arguments.length || xs.isString(uri));
-    };
+        xs.assert.ok(!arguments.length || xs.isString(URI), 'Given URI "$URI" is not a string', {
+            $URI: URI
+        }, URIError);
 
+        //convert undefined to empty string
+        if (!URI) {
+            URI = '';
+        }
+
+        //save raw parsing info
+        var data = parseRe.exec(decodeURI(URI));
+        me.private.raw = {
+            scheme: data[1],
+            namespace: data[2],
+            path: data[3],
+            query: data[4],
+            fragment: data[5]
+        };
+    };
 });
