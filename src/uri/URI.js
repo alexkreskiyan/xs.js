@@ -58,12 +58,17 @@ xs.define(xs.Class, 'ns.URI', function () {
 
         //save raw parsing info
         var data = parseRe.exec(decodeURI(URI));
+
+        xs.assert.array(data, 'Given string "$URI" is correct URI', {
+            $URI: URI
+        }, URIError);
+
         me.private.raw = {
             scheme: data[1],
             namespace: data[2],
             path: data[3],
             query: data[4],
-            fragment: data[5]
+            hash: data[5]
         };
     };
 });
