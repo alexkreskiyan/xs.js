@@ -310,14 +310,34 @@
          * @return {Function} factory for given Class
          */
         var _createFactory = function (Class) {
-            var constructor = Class.descriptor.constructor !== Object ? Class.descriptor.constructor : undefined;
-            var args = constructor ? xs.Function.getArguments(constructor) : [];
-            var factory = function () {
-            };
-            //use eval to create factory
-            eval('factory = function(' + args.join(', ') + ') { return new Class(' + args.join(', ') + '); };');
 
-            return factory;
+            //return factory
+            return function () {
+                var instance;
+                eval('instance = new Class(' + _getArgumentsList(arguments.length) + ')');
+
+                return instance;
+            };
+        };
+
+        /**
+         * Returns arguments list (used in factory)
+         *
+         * @ignore
+         *
+         * @method
+         *
+         * @param {Number} count arguments count
+         *
+         * @return {String} arguments list for given count of arguments
+         */
+        var _getArgumentsList = function (count) {
+            var list = [];
+            for (var i = 0; i < count; i++) {
+                list.push('arguments[' + i + ']');
+            }
+
+            return list.join(', ');
         };
 
         /**
