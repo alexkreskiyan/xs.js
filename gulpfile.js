@@ -9,19 +9,29 @@ var uglifyJS = require('gulp-uglify');
 var del = require('del');
 
 
-//get sources list
-var src = require('./src/src.json');
+//get core sources list
+var core = require('./src/core.json');
 
-//map sources list to scripts list
-var scripts = src.map(function (name) {
+//get modules sources list
+var modules = require('./src/modules.json');
+
+var scripts = ['src/xs.js'];
+
+//add core scripts
+scripts = scripts.concat(core.map(function (name) {
 
     'use strict';
 
     return name.split('xs.').join('src/').split('.').join('/') + '.js';
-});
+}));
 
-//add entry point
-scripts.unshift('src/xs.js');
+//add modules scripts
+scripts = scripts.concat(modules.map(function (name) {
+
+    'use strict';
+
+    return name.split('xs.').join('src/').split('.').join('/') + '.js';
+}));
 
 //define paths
 var paths = {

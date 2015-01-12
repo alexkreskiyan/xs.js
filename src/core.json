@@ -46,6 +46,5 @@
   "xs.interface.preprocessors.prepareProperties",
   "xs.interface.preprocessors.prepareMethods",
   "xs.interface.Base",
-  "xs.env.Context",
-  "xs.ux.Promise"
+  "xs.env.Context"
 ]
