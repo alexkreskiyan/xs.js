@@ -38,8 +38,10 @@ var paths = {
     scripts: scripts
 };
 
-var pureFunctions = [
-    'xs.log',
+var pureFunctions = {
+    candidate: ['xs.log']
+};
+pureFunctions.release = pureFunctions.candidate.concat([
     'xs.assert.equal',
     'xs.assert.ok',
     'xs.assert.not',
@@ -63,7 +65,7 @@ var pureFunctions = [
     'xs.assert.inherits',
     'xs.assert.implements',
     'xs.assert.mixins'
-];
+]);
 
 
 //preview mode
@@ -84,9 +86,9 @@ gulp.task('candidate', function () {
     //scripts processing
     del(['build/candidate/*.js']);
     gulp.src(paths.scripts).pipe(concat('xs.js')).pipe(uglifyJS({
-        mangle: false,
+        mangle: true,
         compress: {
-            pure_funcs: pureFunctions,
+            pure_funcs: pureFunctions.candidate,
             drop_console: true
         }
     })).pipe(gulp.dest('build/candidate'));
@@ -102,7 +104,7 @@ gulp.task('release', function () {
     gulp.src(paths.scripts).pipe(concat('xs.js')).pipe(uglifyJS({
         mangle: true,
         compress: {
-            pure_funcs: pureFunctions,
+            pure_funcs: pureFunctions.release,
             drop_console: true
         }
     })).pipe(gulp.dest('build/release'));
