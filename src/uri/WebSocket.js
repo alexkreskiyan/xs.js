@@ -9,13 +9,13 @@
 
  */
 /**
- * Object notation for http(s) protocol url
+ * Object notation for ws(s) protocol url
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.uri.HTTP
+ * @class xs.uri.WebSocket
  */
-xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
+xs.define(xs.Class, 'ns.WebSocket', function (self, ns, imports) {
 
     'use strict';
 
@@ -56,9 +56,6 @@ xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
         if (raw.namespace) {
             var namespace = _parseNamespace(raw.namespace);
 
-            //user
-            me.user = namespace.user;
-
             //host
             me.host = namespace.host;
 
@@ -71,9 +68,6 @@ xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
 
         //parse query into params
         me.query = raw.query ? new imports.QueryString(raw.query) : new imports.QueryString();
-
-        //hash
-        me.hash = raw.hash;
     };
 
     /**
@@ -84,8 +78,8 @@ xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
      * @type {String[]}
      */
     var schemes = [
-        'http',
-        'https'
+        'ws',
+        'wss'
     ];
 
     /**
@@ -101,49 +95,15 @@ xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
 
             xs.assert.ok(!xs.isDefined(scheme) || xs.isString(scheme), 'Given scheme "$scheme" is not a string', {
                 $scheme: scheme
-            }, HTTPError);
+            }, WebSocketError);
 
             xs.assert.ok(!xs.isDefined(scheme) || schemes.indexOf(scheme) >= 0, 'Given scheme "$scheme" is not supported. Allowed are: $allowed', {
                 $scheme: scheme,
                 $allowed: schemes.join(', ')
-            }, HTTPError);
+            }, WebSocketError);
 
             //assign scheme
             me.private.scheme = scheme;
-        }
-    };
-
-    /**
-     * Regular expression for matching correct user name
-     *
-     * @ignore
-     *
-     * @type {RegExp}
-     */
-    var userRe = /^[^@]+$/;
-
-    /**
-     * URL username
-     *
-     * @property user
-     *
-     * @type {String}
-     */
-    Class.property.user = {
-        set: function (user) {
-            var me = this;
-
-            xs.assert.ok(!xs.isDefined(user) || xs.isString(user), 'Given user "$user" is not a string', {
-                $user: user
-            }, HTTPError);
-
-            //check user if string
-            xs.assert.ok(!xs.isDefined(user) || userRe.test(user), 'Given host "$user" is incorrect', {
-                $user: user
-            }, HTTPError);
-
-            //assign user
-            me.private.user = user;
         }
     };
 
@@ -169,12 +129,12 @@ xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
 
             xs.assert.ok(!xs.isDefined(host) || xs.isString(host), 'Given host "$host" is neither string nor undefined', {
                 $host: host
-            }, HTTPError);
+            }, WebSocketError);
 
             //check host if string
             xs.assert.ok(!xs.isDefined(host) || hostRe.test(host), 'Given host "$host" is incorrect', {
                 $host: host
-            }, HTTPError);
+            }, WebSocketError);
 
             //assign host
             me.private.host = host;
@@ -194,7 +154,7 @@ xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
 
             xs.assert.ok(!xs.isDefined(port) || xs.isNumber(port), 'Given port "$port" is not a number', {
                 $port: port
-            }, HTTPError);
+            }, WebSocketError);
 
             //assign port
             me.private.port = port;
@@ -223,12 +183,12 @@ xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
 
             xs.assert.string(path, 'Given path "$path" is not a string', {
                 $path: path
-            }, HTTPError);
+            }, WebSocketError);
 
             //check path
             xs.assert.ok(pathRe.test(path), 'Given path "$path" is incorrect', {
                 $path: path
-            }, HTTPError);
+            }, WebSocketError);
 
             //assign path
             me.private.path = path;
@@ -249,30 +209,10 @@ xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
             xs.assert.instance(query, imports.QueryString, 'Given query "$query" is not instance of "$QueryString"', {
                 $query: query,
                 $QueryString: imports.QueryString
-            }, HTTPError);
+            }, WebSocketError);
 
             //assign query
             me.private.query = query;
-        }
-    };
-
-    /**
-     * URL hash
-     *
-     * @property hash
-     *
-     * @type {String}
-     */
-    Class.property.hash = {
-        set: function (hash) {
-            var me = this;
-
-            xs.assert.ok(!xs.isDefined(hash) || xs.isString(hash), 'Given hash "$hash" is not a string', {
-                $hash: hash
-            }, HTTPError);
-
-            //assign hash
-            me.private.hash = hash;
         }
     };
 
@@ -286,11 +226,6 @@ xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
             //scheme
             if (me.private.scheme) {
                 string += me.private.scheme + '://';
-            }
-
-            //user
-            if (me.private.user) {
-                string += me.private.user + '@';
             }
 
             string += me.private.host;
@@ -310,29 +245,23 @@ xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
                 var queryString = arguments.length ? me.private.query.toString(encode) : me.private.query.toString();
                 string += '?' + queryString;
             }
-
-            //hash
-            if (me.private.hash) {
-                string += '#' + me.private.hash;
-            }
         }
 
         return string;
     };
 
-    var namespaceParseRe = /^(?:([^@:]+)@)?([^@:]+)(?::(\d+))?$/;
+    var namespaceParseRe = /^([^@:]+)(?::(\d+))?$/;
 
     var _parseNamespace = function (namespace) {
         var raw = namespaceParseRe.exec(namespace);
 
         xs.assert.array(raw, 'Given namespace part "$namespace" is not correct', {
             $namespace: namespace
-        }, HTTPError);
+        }, WebSocketError);
 
         return {
-            user: raw[1],
-            host: raw[2],
-            port: raw[3] ? Number(raw[3]) : undefined
+            host: raw[1],
+            port: raw[2] ? Number(raw[2]) : undefined
         };
     };
 
@@ -343,12 +272,12 @@ xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class HTTPError
+     * @class WebSocketError
      */
-    function HTTPError(message) {
+    function WebSocketError(message) {
         this.message = self.label + '::' + message;
     }
 
-    HTTPError.prototype = new Error();
+    WebSocketError.prototype = new Error();
 
 });
