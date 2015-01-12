@@ -30,28 +30,36 @@
     var testsList = params.tests.split(',');
 
     //get src file
-    request('../src/src.json', function (sources) {
-        //get
-        var tests = getTests(sources, testsList);
+    request('../src/core.json', function (core) {
+        request('../src/modules.json', function (modules) {
 
-        var scripts;
+            var scripts;
 
-        //built mode
-        if (params.mode) {
-            scripts = ['../build/' + params.mode + '/xs.js'];
+            //built mode
+            if (params.mode) {
+                scripts = ['../build/' + params.mode + '/xs.js'];
 
-            //debug mode
-        } else {
-            scripts = sources.map(function (name) {
-                return resolveSourceFile(name);
+                //debug mode
+            } else {
+                scripts = ['../src/xs.js'];
+                scripts = scripts.concat(core.map(function (name) {
+                    return resolveSourceFile(name);
+                }));
+                scripts = scripts.concat(modules.map(function (name) {
+                    return resolveSourceFile(name);
+                }));
+            }
+            load(scripts, function () {
+                //add path to loader
+                xs.Loader.paths.add('xs', '../src/');
+
+                //get tests list
+                var tests = getTests(core, testsList).concat(getTests(modules, testsList));
+
+                load(tests.map(function (name) {
+                    return resolveTestFile(name);
+                }), runTests);
             });
-            scripts.unshift('../src/xs.js');
-        }
-
-        load(scripts, function () {
-            load(tests.map(function (name) {
-                return resolveTestFile(name);
-            }), runTests);
         });
     });
 
