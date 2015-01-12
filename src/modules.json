@@ -1,0 +1,6 @@
+[
+  "xs.uri.URI",
+  "xs.uri.QueryString",
+  "xs.uri.HTTP",
+  "xs.ux.Promise"
+]

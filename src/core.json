@@ -15,6 +15,7 @@
   "xs.core.ProcessorsStack",
   "xs.class.Class",
   "xs.class.preprocessors.namespace",
+  "xs.class.preprocessors.abstract",
   "xs.class.preprocessors.prepareExtends",
   "xs.class.preprocessors.prepareMixins",
   "xs.class.preprocessors.prepareImplements",
@@ -27,7 +28,6 @@
   "xs.class.preprocessors.prepareMethods",
   "xs.class.preprocessors.processMixins",
   "xs.class.preprocessors.processImplements",
-  "xs.class.preprocessors.singleton",
   "xs.class.preprocessors.defineConstants",
   "xs.class.preprocessors.defineStaticProperties",
   "xs.class.preprocessors.defineStaticMethods",
@@ -46,6 +46,5 @@
   "xs.interface.preprocessors.prepareProperties",
   "xs.interface.preprocessors.prepareMethods",
   "xs.interface.Base",
-  "xs.env.Context",
-  "xs.ux.Promise"
+  "xs.env.Context"
 ]
