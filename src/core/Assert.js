@@ -126,7 +126,7 @@
          * @param {Object} [vars] error optional vars
          * @param {Function} [Exception] error class
          */
-        me.object = function (value, message, vars, Exception) {
+        var _object = me.object = function (value, message, vars, Exception) {
             if (!xs.isString(message)) {
                 message = '"' + value + '" is not object';
             }
@@ -548,97 +548,36 @@
         };
 
         /**
-         * Verifies, that given Child class inherits from given Parent class
+         * Verifies, that given object is instance of Class, that implements given Interface
          *
          * For example:
          *
-         *     xs.assert.inherits(Child, Parent);
-         *
-         * @method inherits
-         *
-         * @param {Function} Child expected Child class
-         * @param {Function} Parent expected Parent class
-         * @param {String} message error message
-         * @param {Object} [vars] error optional vars
-         * @param {Function} [Exception] error class
-         */
-        me.inherits = function (Child, Parent, message, vars, Exception) {
-            //assert that Child is class
-            _class(Child);
-
-            //assert that Parent is class
-            _class(Parent);
-
-            if (!xs.isString(message)) {
-                message = '"' + Child.label + '" does not inherit from "' + Parent.label + '"';
-            }
-
-            //assert
-            if (!Child.inherits(Parent)) {
-                _raise(message, vars, Exception);
-            }
-        };
-
-        /**
-         * Verifies, that given Class implements given Interface
-         *
-         * For example:
-         *
-         *     xs.assert.implements(Class, Inteface);
+         *     xs.assert.implements(object, Interface);
          *
          * @method implements
          *
-         * @param {Function} Class verified class
+         * @param {Object} object verified object
          * @param {Function} Interface verified interface
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
          * @param {Function} [Exception] error class
          */
-        me.implements = function (Class, Interface, message, vars, Exception) {
-            //assert that Class is class
-            _class(Class);
+        me.implements = function (object, Interface, message, vars, Exception) {
+            //assert that object is object
+            _object(object);
 
             //assert that Interface is interface
             _interface(Interface);
 
+            //assert that object.self is class
+            _class(object.self);
+
             if (!xs.isString(message)) {
-                message = 'Class "' + Class.label + '" does not implement interface "' + Interface.label + '"';
+                message = 'Class "' + object.self.label + '" does not implement interface "' + Interface.label + '"';
             }
 
             //assert
-            if (!Class.implements(Interface)) {
-                _raise(message, vars, Exception);
-            }
-        };
-
-        /**
-         * Verifies, that given Class is mixed with given Mixin
-         *
-         * For example:
-         *
-         *     xs.assert.mixins(Base, Mix);
-         *
-         * @method mixins
-         *
-         * @param {Function} Class verified
-         * @param {Function} Mixin expected mixin class
-         * @param {String} message error message
-         * @param {Object} [vars] error optional vars
-         * @param {Function} [Exception] error class
-         */
-        me.mixins = function (Class, Mixin, message, vars, Exception) {
-            //assert that Child is class
-            _class(Class);
-
-            //assert that Mixin is class
-            _class(Mixin);
-
-            if (!xs.isString(message)) {
-                message = 'Class "' + Class.label + '" is not mixed with class "' + Mixin.label + '"';
-            }
-
-            //assert
-            if (!Class.mixins(Mixin)) {
+            if (!object.self.implements(Interface)) {
                 _raise(message, vars, Exception);
             }
         };

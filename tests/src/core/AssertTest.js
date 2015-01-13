@@ -212,22 +212,6 @@ module('xs.assert', function () {
         xs.assert.instance([], Array);
     });
 
-    test('inherits', function () {
-        var me = this;
-        //incorrect throws
-        throws(function () {
-            xs.assert.inherits(xs.emptyFn, xs.emptyFn);
-        });
-
-        me.Class = xs.Class(xs.emptyFn, me.done);
-
-        return false;
-    }, function () {
-        var me = this;
-        //correct is silent
-        xs.assert.inherits(me.Class, xs.class.Base);
-    });
-
     test('implements', function () {
         var me = this;
         //incorrect throws
@@ -243,24 +227,6 @@ module('xs.assert', function () {
     }, function () {
         var me = this;
         //correct is silent
-        xs.assert.implements(me.Class, xs.interface.Base);
-    });
-
-    test('mixins', function () {
-        var me = this;
-        //incorrect throws
-        throws(function () {
-            xs.assert.mixins(xs.emptyFn, xs.emptyFn);
-        });
-
-        me.Class = xs.Class(function () {
-            this.mixins.base = 'xs.class.Base';
-        }, me.done);
-
-        return false;
-    }, function () {
-        var me = this;
-        //correct is silent
-        xs.assert.mixins(me.Class, xs.class.Base);
+        xs.assert.implements(new me.Class(), xs.interface.Base);
     });
 });
