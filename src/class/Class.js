@@ -156,7 +156,7 @@
                 }
 
                 //call createdFn
-                createdFn(Class);
+                createdFn(Class, namespace, imports);
 
                 //process postprocessors stack after createdFn called
                 postprocessors.process([
