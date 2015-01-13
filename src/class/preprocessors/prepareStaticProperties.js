@@ -78,7 +78,7 @@
      * @class PrepareStaticPropertiesError
      */
     function PrepareStaticPropertiesError(message) {
-        this.message = 'xs.class.preprocessors.staticProperties::' + message;
+        this.message = 'xs.class.preprocessors.prepareStaticProperties::' + message;
     }
 
     PrepareStaticPropertiesError.prototype = new Error();

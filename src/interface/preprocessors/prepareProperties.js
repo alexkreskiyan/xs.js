@@ -92,7 +92,7 @@
      * @class PreparePropertiesError
      */
     function PreparePropertiesError(message) {
-        this.message = 'xs.interface.preprocessors.property::' + message;
+        this.message = 'xs.interface.preprocessors.prepareProperties::' + message;
     }
 
     PreparePropertiesError.prototype = new Error();

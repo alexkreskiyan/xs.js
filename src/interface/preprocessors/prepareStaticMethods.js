@@ -82,7 +82,7 @@
      * @class PrepareStaticMethodsError
      */
     function PrepareStaticMethodsError(message) {
-        this.message = 'xs.interface.preprocessors.staticMethods::' + message;
+        this.message = 'xs.interface.preprocessors.prepareStaticMethods::' + message;
     }
 
     PrepareStaticMethodsError.prototype = new Error();

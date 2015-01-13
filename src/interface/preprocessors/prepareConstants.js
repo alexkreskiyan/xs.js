@@ -74,7 +74,7 @@
      * @class PrepareConstantsError
      */
     function PrepareConstantsError(message) {
-        this.message = 'xs.interface.preprocessors.constant::' + message;
+        this.message = 'xs.interface.preprocessors.prepareConstants::' + message;
     }
 
     PrepareConstantsError.prototype = new Error();
