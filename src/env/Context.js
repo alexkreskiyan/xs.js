@@ -468,6 +468,17 @@
              * @type {Boolean}
              */
             me.is64 = me.cpu.architecture === arch.x64;
+
+
+            //Others
+            /**
+             * Whether device is touch-capable
+             *
+             * @property isTouch
+             *
+             * @type {Boolean}
+             */
+            me.isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
         };
 
         /*
@@ -843,6 +854,8 @@
         'isWindowsPhone',
         //arch
         'is32',
-        'is64'
+        'is64',
+        //other
+        'isTouch'
     ]).toSource());
 })(window, 'xs');

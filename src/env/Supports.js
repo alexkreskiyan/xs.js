@@ -76,6 +76,28 @@
         var me = {};
 
         /**
+         * Touch events support flag
+         *
+         * @readonly
+         *
+         * @property touchEvents
+         *
+         * @type {Boolean}
+         */
+        me.touchEvents = navigator.hasOwnProperty('maxTouchPoints') && navigator.maxTouchPoints > 0;
+
+        /**
+         * Pointer events support flag
+         *
+         * @readonly
+         *
+         * @property pointerEvents
+         *
+         * @type {Boolean}
+         */
+        me.pointerEvents = navigator.hasOwnProperty('msMaxTouchPoints') && navigator.msMaxTouchPoints > 0;
+
+        /**
          * WebGL support flag
          *
          * @readonly
