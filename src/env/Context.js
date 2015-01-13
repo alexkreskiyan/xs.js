@@ -321,6 +321,27 @@
             me.isIEMobile = me.browser.name === browser.ieMobile;
 
 
+            //Platform type (based on browser)
+
+            /**
+             * Whether platform is desktop
+             *
+             * @property isDesktop
+             *
+             * @type {Boolean}
+             */
+            me.isDesktop = me.isChrome || me.isFirefox || me.isOpera || me.isSafari || me.isIE;
+
+            /**
+             * Whether platform is mobile
+             *
+             * @property isMobile
+             *
+             * @type {Boolean}
+             */
+            me.isMobile = !me.isDesktop;
+
+
             //engines
 
             /**
@@ -803,6 +824,9 @@
         'isOperaMobile',
         'isSafariMobile',
         'isIEMobile',
+        //platform type
+        'isDesktop',
+        'isMobile',
         //engine
         'isWebkit',
         'isBlink',
