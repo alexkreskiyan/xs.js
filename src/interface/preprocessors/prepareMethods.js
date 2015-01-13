@@ -82,7 +82,7 @@
      * @class PrepareMethodsError
      */
     function PrepareMethodsError(message) {
-        this.message = 'xs.interface.preprocessors.method::' + message;
+        this.message = 'xs.interface.preprocessors.prepareMethods::' + message;
     }
 
     PrepareMethodsError.prototype = new Error();

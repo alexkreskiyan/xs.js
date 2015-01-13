@@ -58,6 +58,8 @@ module('xs.class.preprocessors.processImplements', function () {
         me.ChildInterface = xs.Interface(function () {
             var me = this;
             me.extends = ns + '.BaseInterface';
+            me.constructor = function (a, b) {
+            };
             me.property.g = undefined;
             me.property.h = {
                 get: function () {
@@ -119,6 +121,9 @@ module('xs.class.preprocessors.processImplements', function () {
             var me = this;
             me.extends = 'tests.class.preprocessors.processImplements.BaseClass';
             me.implements = ['tests.class.preprocessors.processImplements.ChildInterface'];
+            me.constructor = function (a, b) {
+
+            };
             me.property.g = 1;
             me.property.h = {get: xs.emptyFn};
             me.property.i = {set: xs.emptyFn};

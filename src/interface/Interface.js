@@ -268,6 +268,9 @@
                     method: {}
                 },
 
+                //interface constructor
+                constructor: undefined,
+
                 //interface properties list
                 property: {},
 
@@ -305,6 +308,9 @@
                     //class static methods list
                     method: new xs.core.Collection()
                 },
+
+                //interface constructor
+                constructor: undefined,
 
                 //class properties list
                 property: new xs.core.Collection(),

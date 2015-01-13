@@ -139,7 +139,7 @@
             //assert, that constant is declared
             xs.assert.ok(descriptor.constant.hasKey(name), '[$Class]: implemented interface "$Interface" requires constant "$name", but it is not declared', {
                 $Class: Class.label,
-                $Interface: Class.label,
+                $Interface: Interface.label,
                 $name: name
             }, ProcessImplementsError);
         });
@@ -149,7 +149,7 @@
             //assert, that static property is declared
             xs.assert.ok(descriptor.static.property.hasKey(name), '[$Class]: implemented interface "$Interface" requires static property "$name", but it is not declared', {
                 $Class: Class.label,
-                $Interface: Class.label,
+                $Interface: Interface.label,
                 $name: name
             }, ProcessImplementsError);
 
@@ -160,7 +160,7 @@
                 //assert, that static property is accessed
                 xs.assert.not(property.hasOwnProperty('value'), '[$Class]: implemented interface "$Interface" requires static property "$name" to be accessed property, but it is declared as assigned one', {
                     $Class: Class.label,
-                    $Interface: Class.label,
+                    $Interface: Interface.label,
                     $name: name
                 }, ProcessImplementsError);
 
@@ -168,7 +168,7 @@
                 if (config.isReadonly) {
                     xs.assert.equal(property.set, xs.emptyFn, '[$Class]: implemented interface "$Interface" requires static property "$name" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
                         $Class: Class.label,
-                        $Interface: Class.label,
+                        $Interface: Interface.label,
                         $name: name
                     }, ProcessImplementsError);
                 }
@@ -176,7 +176,7 @@
                 //assert, that static property is assigned
                 xs.assert.ok(property.hasOwnProperty('value'), '[$Class]: implemented interface "$Interface" requires static property "$name" to be assigned property, but it is declared as accessed one', {
                     $Class: Class.label,
-                    $Interface: Class.label,
+                    $Interface: Interface.label,
                     $name: name
                 }, ProcessImplementsError);
             }
@@ -187,7 +187,7 @@
             //assert, that static method is declared
             xs.assert.ok(descriptor.static.method.hasKey(name), '[$Class]: implemented interface "$Interface" requires static method "$name", but it is not declared', {
                 $Class: Class.label,
-                $Interface: Class.label,
+                $Interface: Interface.label,
                 $name: name
             }, ProcessImplementsError);
 
@@ -198,19 +198,40 @@
             //assert, that arguments' lists are equal
             xs.assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface "$Interface" requires static method "$name" to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
                 $Class: Class.label,
-                $Interface: Class.label,
+                $Interface: Interface.label,
                 $name: name,
                 $requiredArguments: requiredArguments,
                 $declaredArguments: declaredArguments
             }, ProcessImplementsError);
         });
 
+        //constructor, if given
+        if (Interface.descriptor.constructor) {
+            //assert, that constructor id declared
+            xs.assert.ok(descriptor.constructor, '[$Class]: implemented interface "$Interface" requires constructor declared, but it is not declared', {
+                $Class: Class.label,
+                $Interface: Interface.label
+            }, ProcessImplementsError);
+
+            //assert, that constructor arguments are compatible with required
+            var requiredArguments = Interface.descriptor.constructor.args.toString();
+            var declaredArguments = xs.Function.getArguments(descriptor.constructor).toString();
+
+            //assert, that arguments' lists are equal
+            xs.assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface "$Interface" requires constructor to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
+                $Class: Class.label,
+                $Interface: Interface.label,
+                $requiredArguments: requiredArguments,
+                $declaredArguments: declaredArguments
+            }, ProcessImplementsError);
+        }
+
         //properties
         Interface.descriptor.property.each(function (config, name) {
             //assert, that static property is declared
             xs.assert.ok(descriptor.property.hasKey(name), '[$Class]: implemented interface "$Interface" requires property "$name", but it is not declared', {
                 $Class: Class.label,
-                $Interface: Class.label,
+                $Interface: Interface.label,
                 $name: name
             }, ProcessImplementsError);
 
@@ -221,7 +242,7 @@
                 //assert, that property is accessed
                 xs.assert.not(property.hasOwnProperty('value'), '[$Class]: implemented interface "$Interface" requires property "$name" to be accessed property, but it is declared as assigned one', {
                     $Class: Class.label,
-                    $Interface: Class.label,
+                    $Interface: Interface.label,
                     $name: name
                 }, ProcessImplementsError);
 
@@ -229,7 +250,7 @@
                 if (config.isReadonly) {
                     xs.assert.equal(property.set, xs.emptyFn, '[$Class]: implemented interface "$Interface" requires property "$name" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
                         $Class: Class.label,
-                        $Interface: Class.label,
+                        $Interface: Interface.label,
                         $name: name
                     }, ProcessImplementsError);
                 }
@@ -237,7 +258,7 @@
                 //assert, that property is assigned
                 xs.assert.ok(property.hasOwnProperty('value'), '[$Class]: implemented interface "$Interface" requires property "$name" to be assigned property, but it is declared as accessed one', {
                     $Class: Class.label,
-                    $Interface: Class.label,
+                    $Interface: Interface.label,
                     $name: name
                 }, ProcessImplementsError);
             }
@@ -248,7 +269,7 @@
             //assert, that method is declared
             xs.assert.ok(descriptor.method.hasKey(name), '[$Class]: implemented interface "$Interface" requires method "$name", but it is not declared', {
                 $Class: Class.label,
-                $Interface: Class.label,
+                $Interface: Interface.label,
                 $name: name
             }, ProcessImplementsError);
 
@@ -259,7 +280,7 @@
             //assert, that arguments' lists are equal
             xs.assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface "$Interface" requires method "$name" to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
                 $Class: Class.label,
-                $Interface: Class.label,
+                $Interface: Interface.label,
                 $name: name,
                 $requiredArguments: requiredArguments,
                 $declaredArguments: declaredArguments

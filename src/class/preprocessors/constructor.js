@@ -35,13 +35,13 @@
 
 
         //own
-        //get own methods from raw descriptor
+        //get own constructor from raw descriptor
         var own = descriptor.hasOwnProperty('constructor') ? descriptor.constructor : undefined;
 
         //verify, that own constructor is undefined or is function
         xs.assert.ok(!xs.isDefined(own) || xs.isFunction(own), 'own constructor is defined and is not a function', ConstructorError);
 
-        //apply (comparison to Object guarantees, that constructor was really assigned)
+        //apply if undefined - no own constructor property given
         if (own) {
             Class.descriptor.constructor = own;
         } else if (inherited) {
