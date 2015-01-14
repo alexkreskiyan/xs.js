@@ -62,9 +62,7 @@ pureFunctions.release = pureFunctions.candidate.concat([
     'xs.assert.Class',
     'xs.assert.Interface',
     'xs.assert.instance',
-    'xs.assert.inherits',
-    'xs.assert.implements',
-    'xs.assert.mixins'
+    'xs.assert.implements'
 ]);
 
 
