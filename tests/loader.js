@@ -30,36 +30,37 @@
     var testsList = params.tests.split(',');
 
     //get src file
-    request('../src/core.json', function (core) {
-        request('../src/modules.json', function (modules) {
+    request('../src/src.json', function (src) {
 
-            var scripts;
+        var scripts;
 
-            //built mode
-            if (params.mode) {
-                scripts = ['../build/' + params.mode + '/xs.js'];
+        //built mode
+        if (params.mode) {
+            scripts = ['../build/' + params.mode + '/xs.js'];
 
-                //debug mode
-            } else {
-                scripts = ['../src/xs.js'];
-                scripts = scripts.concat(core.map(function (name) {
-                    return resolveSourceFile(name);
-                }));
-                scripts = scripts.concat(modules.map(function (name) {
-                    return resolveSourceFile(name);
-                }));
-            }
-            load(scripts, function () {
-                //add path to loader
-                xs.Loader.paths.add('xs', '../src/');
+            //debug mode
+        } else {
+            scripts = ['../src/xs.js'];
+            scripts = scripts.concat(src.core.map(function (name) {
+                return resolveSourceFile(name);
+            }));
+            scripts = scripts.concat(Object.keys(src.modules).map(function (name) {
+                return resolveSourceFile(name);
+            }));
+        }
+        load(scripts, function () {
+            //add path to loader
+            xs.Loader.paths.add('xs', '../src/');
 
-                //get tests list
-                var tests = getTests(core, testsList).concat(getTests(modules, testsList));
+            //get tests list
+            var tests = getTests(src.core, testsList).concat(getTests(Object.keys(src.modules).filter(function (name) {
+                var config = src.modules[name];
+                return config.type === 'class' && config.test !== false;
+            }), testsList));
 
-                load(tests.map(function (name) {
-                    return resolveTestFile(name);
-                }), runTests);
-            });
+            load(tests.map(function (name) {
+                return resolveTestFile(name);
+            }), runTests);
         });
     });
 

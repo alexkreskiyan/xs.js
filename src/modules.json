@@ -1,7 +1,0 @@
-[
-  "xs.uri.URI",
-  "xs.uri.QueryString",
-  "xs.uri.HTTP",
-  "xs.uri.WebSocket",
-  "xs.ux.Promise"
-]
