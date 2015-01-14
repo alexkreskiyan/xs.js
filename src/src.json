@@ -52,6 +52,12 @@
     "xs.env.Supports"
   ],
   "modules": {
+    "xs.event.IEvent": {
+      "type": "interface"
+    },
+    "xs.event.Observable": {
+      "type": "class"
+    },
     "xs.uri.URI": {
       "type": "class"
     },

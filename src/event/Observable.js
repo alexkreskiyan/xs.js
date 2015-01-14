@@ -33,12 +33,57 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
     /**
      * Observable is abstract class - can be only mixed
      *
-     * @type {boolean}
+     * @ignore
      */
     Class.abstract = true;
 
-    Class.const.events = {};
+    /**
+     * Class registered events list. Must be declared in mixing class.
+     *
+     * For example:
+     *
+     *     var Class = xs.define(xs.Class, function(self, ns, imports) {
+     *
+     *         'use strict';
+     *
+     *         var Class = this;
+     *
+     *         Class.imports= [
+     *             { SampleEvent: 'ns.SampleEvent' } //TODO needed to use xs.event.Base
+     *         ];
+     *
+     *         Class.constant.events = {
+     *             add: {
+     *                 type: 'SampleEvent',
+     *                 preventable: true
+     *             },
+     *             remove: {
+     *                 type: 'SampleEvent'
+     *             }
+     *         };
+     *     });
+     *
+     * As it is clear from example, events hash' properties' names are considered to be events names and values - events configurations
+     * All fired object must be specified in events hash. Event configuration options:
+     *
+     *  - type ({@link String}). Each event specifies event type, that contains string, specifying name of imported Event class ({@link xs.event.IEvent} must be implemented).
+     *  - preventable ({@link Boolean}). Specifies, whether event processing can be prevented by event handler, returning false, or not
+     *
+     * @static
+     *
+     * @readonly
+     *
+     * @property events
+     *
+     * @type {Object}
+     */
+    Class.constant.events = {};
 
+    /**
+     * Observable constructor
+     *
+     * @constructor
+     */
     Class.constructor = function () {
         var me = this;
 
@@ -49,10 +94,23 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
         });
     };
 
-    Class.property.eventsHandlers = {
-        set: xs.emptyFn
-    };
-
+    /**
+     * Events firing method.
+     *
+     * For example:
+     *
+     *     //with data
+     *     object.fire('add', {
+     *         item: item
+     *     });
+     *     //without data
+     *     object.fire('reset');
+     *
+     * @method fire
+     *
+     * @param {String} event name of registered event
+     * @param {Object} [data] optional object data
+     */
     Class.method.fire = function (event, data) {
         var me = this;
 
@@ -147,6 +205,30 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
         }
     };
 
+    /**
+     * Registers event listener for event
+     *
+     * For example:
+     *
+     *     object.on('add', function(event) {
+     *         console.log('add', event);
+     *     }, {
+     *         buffer: 200,
+     *         calls: 2,
+     *         scope: {},
+     *         priority: 0
+     *     });
+     *
+     * @param {String} event registered event name
+     * @param {Function} handler event handler
+     * @param {Object} [options] Optional options for new handler
+     * Valid options are:
+     *
+     * - buffer ({@link Number}). Event handling delay in milliseconds. Is useful, for example, to handle keyboard input events
+     * - calls ({@link Number}). Count of handler calls before it will be removed from handlers list.
+     *
+     * @chainable
+     */
     Class.method.on = function (event, handler, options) {
         var me = this;
 
@@ -214,26 +296,31 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
             buffer = false;
         }
 
-        //check single
-        var single;
-        if (options.hasOwnProperty('single')) {
-            single = options.single;
+        //check calls
+        var calls;
+        if (options.hasOwnProperty('calls')) {
+            calls = options.calls;
 
-            //assert that buffer is number
-            xs.assert.boolean(single, 'on - given single flag "$single" is not a boolean', {
-                $single: single
+            //assert that calls is number
+            xs.assert.number(calls, 'on - given calls "$calls" is not a number', {
+                $calls: calls
+            }, ObservableError);
+
+            //assert that calls is positive whole number
+            xs.assert.ok(calls > 0 && Math.round(calls) === calls, 'on - given calls "$calls" is not a number', {
+                $calls: calls
             }, ObservableError);
         } else {
-            single = false;
+            calls = 0;
         }
 
 
-        //combine single and buffer
+        //combine calls and buffer
         var realHandler; //real handler called when event is fired
         //create reference to event name
         var eventName = event;
         if (buffer) {
-            if (single) {
+            if (calls) {
                 realHandler = function (event) {
                     //item is eventsHandler[event] collection item
                     var item = this;
@@ -247,12 +334,23 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
                     if (item.timeout) {
                         clearTimeout(item.timeout);
                     }
+
                     item.timeout = setTimeout(function (item, event) {
-                        //turn off event by all name, handler and scope
-                        me.off(eventName, item.handler, scope);
+                        //decrease item.calls
+                        item.calls--;
+
+                        var handler = item.handler;
+
+                        //disable handler if calls is 0
+                        if (!item.calls) {
+                            //turn off event by all name, handler and scope
+                            me.off(eventName, function (item) {
+                                return item.handler === handler && item.scope === scope;
+                            }, xs.core.Collection.ALL);
+                        }
 
                         //call raw handler
-                        item.handler.call(scope, event);
+                        handler.call(scope, event);
                     }, buffer, item, event);
                 };
             } else {
@@ -277,7 +375,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
                 };
             }
         } else {
-            if (single) {
+            if (calls) {
                 realHandler = function (event) {
                     //item is eventsHandler[event] collection item
                     var item = this;
@@ -288,8 +386,18 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
                         return;
                     }
 
-                    //turn off event by all name, handler and scope
-                    me.off(eventName, item.handler, scope);
+                    //decrease item.calls
+                    item.calls--;
+
+                    var handler = item.handler;
+
+                    //disable handler if calls is 0
+                    if (!item.calls) {
+                        //turn off event by all name, handler and scope
+                        me.off(eventName, function (item) {
+                            return item.handler === handler && item.scope === scope;
+                        }, xs.core.Collection.ALL);
+                    }
 
                     //call raw handler
                     item.handler.call(scope, event);
@@ -344,6 +452,24 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
         return me;
     };
 
+    /**
+     * Removes event handlers.
+     *
+     * For example:
+     *
+     *     //to remove all event handlers
+     *     object.off('add');
+     *     //removing with selector
+     *     object.off('add', function(item) {
+     *         return item.suspended;
+     *     });
+     *
+     * @param {String} event name of registered event
+     * @param {Function} [selector] handlers selector function
+     * @param {Number} [flags] handlers selector flags
+     *
+     * @chainable
+     */
     Class.method.off = function (event, selector, flags) {
         var me = this;
 
@@ -379,11 +505,33 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
         }
 
         //selector given
-        handlers.removeBy(selector, flags);
+        if (arguments.length === 2) {
+            handlers.removeBy(selector);
+        } else {
+            handlers.removeBy(selector, flags);
+        }
 
         return me;
     };
 
+    /**
+     * Suspends event handlers by selector
+     *
+     * For example:
+     *
+     *     //to suspend all event handlers
+     *     object.suspend('add');
+     *     //suspend with selector
+     *     object.suspend('add', function(item) {
+     *         return !item.suspended;
+     *     });
+     *
+     * @param {String} event name of registered event
+     * @param {Function} [selector] handlers selector function
+     * @param {Number} [flags] handlers selector flags
+     *
+     * @chainable
+     */
     Class.method.suspend = function (event, selector, flags) {
         var me = this;
 
@@ -415,7 +563,11 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
         if (arguments.length === 1) {
 
             //get handlers subset
-            handlers = me.private.eventsHandlers[event].find(selector, flags);
+            if (arguments.length === 2) {
+                handlers = me.private.eventsHandlers[event].find(selector);
+            } else {
+                handlers = me.private.eventsHandlers[event].find(selector, flags);
+            }
 
             //all handlers suspended
         } else {
@@ -430,6 +582,24 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
         return me;
     };
 
+    /**
+     * Resumes event handlers by selector
+     *
+     * For example:
+     *
+     *     //to resume all event handlers
+     *     object.resume('add');
+     *     //resume with selector
+     *     object.resume('add', function(item) {
+     *         return item.suspended;
+     *     });
+     *
+     * @param {String} event name of registered event
+     * @param {Function} [selector] handlers selector function
+     * @param {Number} [flags] handlers selector flags
+     *
+     * @chainable
+     */
     Class.method.resume = function (event, selector, flags) {
         var me = this;
 
@@ -461,7 +631,11 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
         if (arguments.length === 1) {
 
             //get handlers subset
-            handlers = me.private.eventsHandlers[event].find(selector, flags);
+            if (arguments.length === 2) {
+                handlers = me.private.eventsHandlers[event].find(selector);
+            } else {
+                handlers = me.private.eventsHandlers[event].find(selector, flags);
+            }
 
             //all handlers resumed
         } else {
