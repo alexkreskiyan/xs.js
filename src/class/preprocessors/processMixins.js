@@ -172,22 +172,43 @@
      * @param {Object} mixin mixin data
      */
     var _mixinSection = function (type, target, mixin) {
-        //find differing intersections
-        target.each(function (targetValue, targetName) {
-            //continue if not intersection
-            if (!mixin.hasKey(targetName)) {
+        //assert that there are no intersections
+        //block is included into another assert to exclude it completely from release version
+        xs.assert.ok((function (type, target, mixin) {
+            var name = '';
 
-                return;
-            }
+            //try to find already declared item
+            target.find(function (targetValue, targetName) {
+                //continue if not intersection
+                if (!mixin.hasKey(targetName)) {
 
-            //get mixed value
-            var mixinValue = mixin.at(targetName);
+                    return;
+                }
 
-            //if values differ - its error
-            if (mixinValue !== targetValue) {
-                throw new ProcessMixinsError(type + ' "' + targetName + '" is already declared');
-            }
-        });
+                //get mixed value
+                var mixinValue = mixin.at(targetName);
+
+                //if values equal - it's ok, continue
+                if (mixinValue === targetValue) {
+
+                    return;
+                }
+
+                //error, save name of already declared item
+                name = targetName;
+
+                return true;
+            });
+
+            xs.assert.not(name, '"$type" "$name" is already declared', {
+                $type: type,
+                $name: name
+            }, ProcessMixinsError);
+
+            //return true, all ok
+
+            return true;
+        })(type, target, mixin));
 
         //extend target with mixin
         xs.extend(target, mixin);
