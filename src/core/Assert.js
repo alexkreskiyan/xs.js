@@ -523,26 +523,32 @@
          *
          * For example:
          *
-         *     xs.assert.instanceof({}, Object);
+         *     xs.assert.instanceof(object, Class);
          *
          * @method instance
          *
-         * @param {*} value given value
+         * @param {object} object given instance
          * @param {Function} Class expected constructor
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
          * @param {Function} [Exception] error class
          */
-        me.instance = function (value, Class, message, vars, Exception) {
-            //assert, that Class is function
-            _fn(Class);
+        me.instance = function (object, Class, message, vars, Exception) {
+            //assert that object is object
+            _object(object);
+
+            //assert, that Class is class
+            _class(Class);
+
+            //assert that object.self is class
+            _class(object.self);
 
             if (!xs.isString(message)) {
-                message = '"' + value + '" is not instance of "' + (Class.label ? Class.label : Class.name) + '"';
+                message = '"' + object + '" is not instance of "' + (Class.label ? Class.label : Class.name) + '"';
             }
 
             //assert
-            if (!(value instanceof Class)) {
+            if (!(object instanceof Class) && !(object.self.mixins(Class))) {
                 _raise(message, vars, Exception);
             }
         };
