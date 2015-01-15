@@ -46,32 +46,39 @@
                 $Mixin: Mixin
             }, ProcessMixinsError);
 
-            var mixins = this.prototype.mixins;
+            var mixins = this.descriptor.allMixins;
 
-            return xs.isObject(mixins) && Object.keys(mixins).some(function (alias) {
-
-                    return mixins[alias] === Mixin;
-                });
+            return xs.isObject(mixins) && mixins.has(Mixin.label);
         });
 
         return descriptor.mixins.length > 0;
-    }, function (Class) {
+    }, function (Class, descriptor) {
 
         xs.log('xs.class.preprocessors.processMixins[', Class.label, ']');
 
         //init
-        //get mixins list
+        //own mixins initial list
+        var own = descriptor.mixins;
+        //inherited mixins initial list  - empty collection if missing, existing on (clone is use less) - if exists
+        var inherited = Class.parent.descriptor.allMixins ? Class.parent.descriptor.allMixins : new xs.core.Collection();
+        //Class mixins list (is empty by default)
         var mixins = Class.descriptor.mixins;
+        //Class aggregate mixins list - mixins clone
+        var allMixins = Class.descriptor.allMixins = inherited.clone();
 
-        //process mixins list
-        xs.log('xs.class.preprocessors.processMixins[', Class.label, ']. Mixins:', mixins.toSource());
+
+        //Mixins are separated:
+        //1. join own and inherited into allMixins list
+        //2. subtract own from inherited into pure class mixins list
+
+        //process own mixins list
+        xs.log('xs.class.preprocessors.processMixins[', Class.label, ']. Mixins:', own.toSource());
         //namespace shortcut
         var resolveName = Class.descriptor.resolveName;
-        mixins.each(function (name, alias, list) {
+        own.each(function (name, alias) {
 
-            //resolve name with namespace and update list
+            //resolve name with namespace
             name = resolveName(name);
-            list.set(alias, name);
 
             //assert, that mixin is defined
             xs.assert.ok(xs.ContractsManager.has(name), '[$Class]: mixed class "$name" is not defined. Move it to imports section, please', {
@@ -93,11 +100,15 @@
                 $Class: Class.label,
                 $Mixin: Mixin.label
             }, ProcessMixinsError);
-        });
 
-        //add all inherited
-        Class.parent.descriptor.mixins.each(function (value, name) {
-            mixins.add(name, value);
+            //if name not in allMixins collection - add it to mixins and allMixins
+            if (!allMixins.has(name)) {
+                //add aliased name to mixins collection
+                mixins.add(alias, name);
+
+                //add name to allMixins collection
+                allMixins.add(name);
+            }
         });
 
         //apply mixins to Class.descriptor

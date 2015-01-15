@@ -50,13 +50,13 @@
         });
 
         return true;
-    }, function (Class) {
+    }, function (Class, descriptor) {
 
         xs.log('xs.class.preprocessors.processImplements[', Class.label, ']');
 
         //init
         //get interfaces list
-        var interfaces = Class.descriptor.implements;
+        var interfaces = Class.descriptor.implements = descriptor.implements;
 
 
         //process interfaces list

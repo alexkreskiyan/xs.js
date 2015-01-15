@@ -32,7 +32,7 @@
 
         //init
         //init mixins list with own values
-        var mixins = Class.descriptor.mixins = descriptor.mixins;
+        var mixins = descriptor.mixins;
 
 
         //process

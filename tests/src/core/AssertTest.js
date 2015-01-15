@@ -209,7 +209,7 @@ module('xs.assert', function () {
         });
 
         //correct is silent
-        xs.assert.instance([], Array);
+        xs.assert.instance(new xs.class.Base(), xs.class.Base);
     });
 
     test('implements', function () {

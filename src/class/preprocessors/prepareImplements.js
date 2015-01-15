@@ -32,7 +32,7 @@
 
         //init
         //init interfaces list with own values
-        var interfaces = Class.descriptor.implements = descriptor.implements;
+        var interfaces = descriptor.implements;
 
 
         //process
