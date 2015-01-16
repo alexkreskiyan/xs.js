@@ -43,6 +43,10 @@
     "xs.event.IEvent": {
       "type": "interface"
     },
+    "xs.event.Event": {
+      "type": "class",
+      "test": false
+    },
     "xs.event.Observable": {
       "type": "class"
     },

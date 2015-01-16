@@ -24,4 +24,15 @@ xs.define(xs.Interface, 'ns.IEvent', function () {
     var Interface = this;
 
     Interface.namespace = 'xs.event';
+
+    /**
+     * Event data property. Event data must be stored here, when event is constructed
+     *
+     * @property data
+     *
+     * @type {Object}
+     */
+    Interface.property.data = {
+        set: xs.emptyFn
+    };
 });

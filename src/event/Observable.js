@@ -11,9 +11,6 @@
 /**
  * Observable mixin
  *
- * Usage example:
- *
- *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.event.Observable
@@ -49,12 +46,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
      *         var Class = this;
      *
      *         Class.imports= [
-     *             { SampleEvent: 'ns.SampleEvent' } //TODO needed to use xs.event.Base
+     *             { Event: 'ns.Event' } //For general purposes, xs.event.Event may be used
      *         ];
      *
      *         Class.constant.events = {
      *             add: {
-     *                 type: 'SampleEvent',
+     *                 type: 'ns.Event',
      *                 preventable: true
      *             },
      *             remove: {
@@ -89,7 +86,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
 
         //register eventHandlers collections
         var handlers = me.private.eventsHandlers = {};
-        Object.keys(self.events).forEach(function (name) {
+        Object.keys(me.self.events).forEach(function (name) {
             handlers[name] = new xs.core.Collection();
         });
     };
@@ -121,11 +118,6 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
             $event: event
         }, ObservableError);
 
-        //assert that given event is registered
-        xs.assert.ok(self.events.hasOwnProperty(event), 'fire - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
-            $event: event
-        }, ObservableError);
-
 
         //check data
         //assert that data is either not given or is object
@@ -136,8 +128,13 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
 
 
         //check event options
+        //assert that given event is registered
+        xs.assert.ok(me.self.events.hasOwnProperty(event), 'fire - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+            $event: event
+        }, ObservableError);
+
         //assert that given event options are object
-        var options = self.events[event];
+        var options = me.self.events[event];
         xs.assert.object(options, 'fire - given event "$event" options "$options" are not an object', {
             $event: event,
             $options: options
@@ -154,7 +151,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
             $event: event
         }, ObservableError);
 
-        var EventClass = imports[options.type];
+        var EventClass = xs.ContractsManager.get(me.self.descriptor.resolveName(options.type));
 
         //assert that EventClass is class
         xs.assert.Class(EventClass, 'fire - given event "$event" type "$Event" is not a class', {
@@ -240,7 +237,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
         }, ObservableError);
 
         //assert that given event is registered
-        xs.assert.ok(self.events.hasOwnProperty(event), 'on - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        xs.assert.ok(me.self.events.hasOwnProperty(event), 'on - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
             $event: event
         }, ObservableError);
 
@@ -264,7 +261,19 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
 
             me.private.eventsHandlers[event].add({
                 handler: handler,
-                realHandler: handler,
+                realHandler: function (event) {
+                    //item is eventsHandler[event] collection item
+                    var item = this;
+
+                    //nothing done if item is suspended
+                    if (item.suspended) {
+
+                        return;
+                    }
+
+                    //call raw handler
+                    return item.handler(event);
+                },
                 suspended: false,
                 scope: undefined
             });
@@ -400,7 +409,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
                     }
 
                     //call raw handler
-                    item.handler.call(scope, event);
+                    return item.handler.call(scope, event);
                 };
             } else {
                 realHandler = function (event) {
@@ -414,7 +423,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
                     }
 
                     //call raw handler
-                    item.handler.call(scope, event);
+                    return item.handler.call(scope, event);
                 };
             }
         }
@@ -457,16 +466,18 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
      *
      * For example:
      *
-     *     //to remove all event handlers
+     *     //to remove all event handlers for all events
+     *     object.off();
+     *     //to remove all event handlers for event
      *     object.off('add');
      *     //removing with selector
      *     object.off('add', function(item) {
      *         return item.suspended;
      *     });
      *
-     * @param {String} event name of registered event
+     * @param {String} [event] name of registered event
      * @param {Function} [selector] handlers selector function
-     * @param {Number} [flags] handlers selector flags
+     * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#removeBy}
      *
      * @chainable
      */
@@ -474,21 +485,21 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
         var me = this;
 
 
-        //check event
+        //check event (if given)
         //assert event name is string
-        xs.assert.string(event, 'off - given event name "$event" is not a string', {
+        xs.assert.ok(!arguments.length || xs.isString(event), 'off - given event name "$event" is not a string', {
             $event: event
         }, ObservableError);
 
         //assert that given event is registered
-        xs.assert.ok(self.events.hasOwnProperty(event), 'off - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        xs.assert.ok(!arguments.length || me.self.events.hasOwnProperty(event), 'off - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
             $event: event
         }, ObservableError);
 
 
         //check selector
         //assert that selector is function if given
-        xs.assert.ok(arguments.length === 1 || xs.isFunction(selector), 'off - given event "$event" selector "$selector" is not a function', {
+        xs.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'off - given event "$event" selector "$selector" is not a function', {
             $event: event,
             $selector: selector
         }, ObservableError);
@@ -496,6 +507,17 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
 
         //handle different scenarios
 
+        //complete truncate of all handlers
+        if (!arguments.length) {
+            var eventsHandlers = me.private.eventsHandlers;
+            Object.keys(eventsHandlers).forEach(function (name) {
+                eventsHandlers[name].remove();
+            });
+
+            return me;
+        }
+
+        //working with single event
         var handlers = me.private.eventsHandlers[event];
         //truncate
         if (arguments.length === 1) {
@@ -528,7 +550,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
      *
      * @param {String} event name of registered event
      * @param {Function} [selector] handlers selector function
-     * @param {Number} [flags] handlers selector flags
+     * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#find}
      *
      * @chainable
      */
@@ -543,14 +565,14 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
         }, ObservableError);
 
         //assert that given event is registered
-        xs.assert.ok(self.events.hasOwnProperty(event), 'suspend - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        xs.assert.ok(me.self.events.hasOwnProperty(event), 'suspend - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
             $event: event
         }, ObservableError);
 
 
         //check selector
         //assert that selector is function if given
-        xs.assert.ok(arguments.length === 1 || xs.isFunction(selector), 'suspend - given event "$event" selector "$selector" is not a function', {
+        xs.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'suspend - given event "$event" selector "$selector" is not a function', {
             $event: event,
             $selector: selector
         }, ObservableError);
@@ -560,7 +582,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
 
         var handlers;
         //selector given
-        if (arguments.length === 1) {
+        if (arguments.length === 2) {
 
             //get handlers subset
             if (arguments.length === 2) {
@@ -574,10 +596,18 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
             handlers = me.private.eventsHandlers[event];
         }
 
-        //mark each item as suspended
-        handlers.each(function (item) {
-            item.suspended = true;
-        });
+        //if handlers collection found
+        if (handlers instanceof xs.core.Collection) {
+            //mark each item as suspended
+            handlers.each(function (item) {
+                item.suspended = true;
+            });
+
+
+            //else if single handler found
+        } else if (xs.isObject(handlers)) {
+            handlers.suspended = true;
+        }
 
         return me;
     };
@@ -596,7 +626,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
      *
      * @param {String} event name of registered event
      * @param {Function} [selector] handlers selector function
-     * @param {Number} [flags] handlers selector flags
+     * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#find}
      *
      * @chainable
      */
@@ -611,14 +641,14 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
         }, ObservableError);
 
         //assert that given event is registered
-        xs.assert.ok(self.events.hasOwnProperty(event), 'resume - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        xs.assert.ok(me.self.events.hasOwnProperty(event), 'resume - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
             $event: event
         }, ObservableError);
 
 
         //check selector
         //assert that selector is function if given
-        xs.assert.ok(arguments.length === 1 || xs.isFunction(selector), 'resume - given event "$event" selector "$selector" is not a function', {
+        xs.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'resume - given event "$event" selector "$selector" is not a function', {
             $event: event,
             $selector: selector
         }, ObservableError);
@@ -628,7 +658,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
 
         var handlers;
         //selector given
-        if (arguments.length === 1) {
+        if (arguments.length === 2) {
 
             //get handlers subset
             if (arguments.length === 2) {
@@ -642,10 +672,18 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
             handlers = me.private.eventsHandlers[event];
         }
 
-        //mark each item as resumed
-        handlers.each(function (item) {
-            item.suspended = false;
-        });
+        //if handlers collection found
+        if (handlers instanceof xs.core.Collection) {
+            //mark each item as resumed
+            handlers.each(function (item) {
+                item.suspended = false;
+            });
+
+
+            //else if single handler found
+        } else if (xs.isObject(handlers)) {
+            handlers.suspended = false;
+        }
 
         return me;
     };

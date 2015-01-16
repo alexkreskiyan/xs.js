@@ -527,7 +527,7 @@
          *
          * @method instance
          *
-         * @param {object} object given instance
+         * @param {Object} object given instance
          * @param {Function} Class expected constructor
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
