@@ -2,6 +2,15 @@
     "--title": "xs.js framework docs",
     "--output": "docs",
     "--": [
+	"src/class",
+	"src/core",
+	"src/env",
+	"src/event",
+	"src/interface",
+	"src/lang",
+	"src/uri",
+	"src/ux",
+	"src/xs.js"
     ],
     "--builtin-classes": true
 }
