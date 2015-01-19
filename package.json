@@ -4,6 +4,7 @@
     "devDependencies": {
         "blanket": "latest",
         "del": "latest",
+        "forever": "latest",
         "gulp": "latest",
         "gulp-compass": "latest",
         "gulp-concat": "latest",
@@ -11,6 +12,7 @@
         "gulp-uglify": "latest",
         "gulp-watch": "latest",
         "gulp.spritesmith": "latest",
-        "qunitjs": "latest"
+        "qunitjs": "latest",
+        "socket.io": "latest"
     }
 }
