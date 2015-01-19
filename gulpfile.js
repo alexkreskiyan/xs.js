@@ -14,7 +14,15 @@ var src = require('./src/src.json');
 
 var scripts = ['src/xs.js'];
 
-//add core scripts
+//add core
+scripts = scripts.concat(src.core.map(function (name) {
+
+    'use strict';
+
+    return name.split('xs.').join('src/').split('.').join('/') + '.js';
+}));
+
+//add modules
 scripts = scripts.concat(Object.keys(src.modules).map(function (name) {
 
     'use strict';
