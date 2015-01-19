@@ -10,7 +10,7 @@
     var handlers = [];
 
     //fetches tests list from specified query param
-    var params = (function (key) {
+    var params = (function () {
         var result = /\?([^#\?]+)/.exec(me.location.search);
         if (!result) {
 
