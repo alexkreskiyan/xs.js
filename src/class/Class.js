@@ -46,6 +46,21 @@
      * - ns. namespace object, where namespace references are placed
      * - imports. namespace object, where namespace references are placed
      *
+     * Supported descriptor instance properties:
+     *
+     * - {@link xs.class.preprocessors#namespace namespace}
+     * - imports
+     * - extends
+     * - mixins
+     * - implements
+     * - abstract
+     * - constant
+     * - static.property
+     * - static.method
+     * - constructor
+     * - property
+     * - method
+     *
      * 2 createdFn ([Function]) - optional class creation callback. Is called after
      * {@link xs.class.preprocessors preprocessors} stack is processed. When called, created class is passed as param.
      *
