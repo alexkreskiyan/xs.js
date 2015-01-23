@@ -56,7 +56,7 @@
          *
          * @type {Boolean}
          */
-        me.dataAttributes = Boolean(root.document.body.dataset);
+        me.dataAttributes = Boolean(document.querySelector('body').dataset);
 
         return me;
     })();
