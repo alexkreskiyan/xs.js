@@ -30,7 +30,7 @@
     var testsList = params.tests.split(',');
 
     //get src file
-    request('../src/src.json', function (src) {
+    request('../source.json', function (src) {
 
         var scripts;
 

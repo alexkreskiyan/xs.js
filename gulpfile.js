@@ -10,7 +10,7 @@ var del = require('del');
 
 
 //get sources file
-var src = require('./src/src.json');
+var src = require('./source.json');
 
 var scripts = ['src/xs.js'];
 
