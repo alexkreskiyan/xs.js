@@ -135,11 +135,11 @@
             };
 
             var handleEnd = function () {
-                console.timeEnd(module + '::' + name);
+                console.info(module + '::' + name, '-', (new Date).valueOf() - time);
                 done();
             };
 
-            console.time(module + '::' + name);
+            var time = (new Date).valueOf();
             handleSetUp();
         });
     };
@@ -186,7 +186,7 @@
         if (scripts.indexOf(src) >= 0) {
             throw new Error('Script "' + src + '" is already added');
         }
-
+        me.write.info('loading ' + src);
         //add src to scripts list
         scripts.push(src);
 
@@ -205,11 +205,22 @@
         //create loadHandler, that will be called once
         var loadHandler = function () {
             script.removeEventListener('load', loadHandler);
+            me.write.info('loaded ' + src);
             onLoad();
         };
 
         //add load handler as event listener for script
         script.addEventListener('load', loadHandler);
+
+        //create errorHandler, that will be called once
+        var errorHandler = function () {
+            script.removeEventListener('error', errorHandler);
+            me.write.info('failed ' + src);
+            onLoad();
+        };
+
+        //add error handler as event listener for script
+        script.addEventListener('error', errorHandler);
     }
 
     //loads given files list in order
