@@ -18,10 +18,56 @@
     /**
      * Preprocessor imports
      * Is used to process class imports
+     * Allows to declare and preload all classes, used by current class, including specific ones:
      *
-     * @ignore
+     * - extended class name
+     * - class mixins' names
+     * - implemented interfaces' names
      *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     * Syntax rules:
+     *
+     * - imports list is an Array
+     * - anonymously imported contract is declared with absolute/relative string name
+     * - alias-basing used imported contract is declared with object of single property,
+     * which names means alias and value - name of imported contract
+     *
+     * Actually, extended, mixed and implemented contracts (classes & interfaces) are automatically added to imports list, so
+     * developer has no reason to duplicate them explicitly.
+     *
+     * Imported classes are saved into second param of descriptor constructor.
+     *
+     * For example:
+     *
+     *     xs.define(xs.Class, 'ns.Customer', function(self, imports) {
+     *
+     *         'use strict';
+     *
+     *         this.namespace = 'app.start.login';
+     *
+     *         this.imports = [
+     *             {'store.Users': 'ns.store.Users'}, //Some used store. Resolved for usage as imports.store.Users
+     *             {'store.Groups': 'ns.store.Groups'}, //Some used store. Resolved for usage as imports.store.Groups
+     *             {'view.Users': 'ns.view.Users'},  //Some used view. Resolved for usage as imports.view.Users
+     *             {'Auth': 'ns.model.Auth'}, //Used Auth model. Is resolved as imports.Auth
+     *             'SomeClass' //Is not resolved into any reference in imports object. Is required and imported anonymously
+     *         ];
+     *
+     *
+     *         this.extends = 'ns.User'; //Extended base model class. Is automatically anonymously imported
+     *
+     *         this.mixins = 'ns.mixins.CanBuy'; //Name of some used mixin. Is automatically anonymously imported
+     *
+     *         this.implements = ['ns.IUser'];   //Name of implemented interface. Is automatically anonymously imported
+     *
+     *     });
+     *
+     * @member xs.class.preprocessors
+     *
+     * @private
+     *
+     * @abstract
+     *
+     * @property imports
      */
     xs.class.preprocessors.add('imports', function () {
 

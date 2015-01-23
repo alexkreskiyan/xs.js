@@ -49,7 +49,7 @@
      * Supported descriptor instance properties:
      *
      * - {@link xs.class.preprocessors#namespace namespace}
-     * - imports
+     * - {@link xs.class.preprocessors#imports imports}
      * - extends
      * - mixins
      * - implements
