@@ -139,10 +139,6 @@
          * @param {Function} Parent verified Parent class
          *
          * @return {Boolean} whether given Parent class is parent according to this Class
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - non-class given
          */
         xs.constant(child, 'inherits', function (Parent) {
             //assert, that Parent is class

@@ -17,11 +17,27 @@
 
     /**
      * Preprocessor processImplements
-     * Is used to process class mixins
+     * Is used to process class implements list.
      *
-     * @ignore
+     * Directive is used to list interfaces, class' signature is matched against. For detailed info, look to {@link xs.interface.Interface}
      *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     * For example:
+     *
+     *     xs.define(xs.Class, 'ns.Customer', function(self, imports) {
+     *
+     *         'use strict';
+     *
+     *         this.implements = ['ns.IUser'];   //Name of implemented interface. Class must specify it's methods like ns.IUser interface needs
+     *
+     *     });
+     *
+     * @member xs.class.preprocessors
+     *
+     * @private
+     *
+     * @abstract
+     *
+     * @property implements
      */
     xs.class.preprocessors.add('processImplements', function (Class) {
 
@@ -35,10 +51,6 @@
          * @param {Function} Interface verified interface
          *
          * @return {Boolean} whether Class.descriptor.implements collection contains label of given interface
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - non-interface given
          */
         xs.constant(Class, 'implements', function (Interface) {
             xs.assert.Interface(Interface, '[$Class]: given "$Interface" is not an interface', {

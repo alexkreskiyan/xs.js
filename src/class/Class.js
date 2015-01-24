@@ -52,7 +52,7 @@
      * - {@link xs.class.preprocessors#imports imports}
      * - {@link xs.class.preprocessors#extends extends}
      * - {@link xs.class.preprocessors#mixins mixins}
-     * - implements
+     * - {@link xs.class.preprocessors#implements implements}
      * - abstract
      * - constant
      * - static.property

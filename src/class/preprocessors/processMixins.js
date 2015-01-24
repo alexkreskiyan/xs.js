@@ -53,10 +53,6 @@
          * @param {Function} Mixin verified mixin class
          *
          * @return {Boolean} whether given Mixin class is stored with some alias in Class.prototype.mixins
-         *
-         * @throws {Error} Error is thrown, when:
-         *
-         * - non-class given
          */
         xs.constant(Class, 'mixins', function (Mixin) {
             xs.assert.Class(Mixin, '[$Class]: given non-class value "$Mixin"', {
