@@ -30,6 +30,12 @@
 
         xs.log('xs.class.preprocessors.prepareMixins[', Class.label, ']');
 
+        //assert, that mixins is object
+        xs.assert.object(descriptor.mixins, '[$Class]: given mixins list "$mixins" is not an object', {
+            $Class: Class.label,
+            $name: name
+        }, PrepareMixinsError);
+
         //init
         //init mixins list with own values
         var mixins = descriptor.mixins;
@@ -49,7 +55,7 @@
             }, PrepareMixinsError);
 
             //verify mixed class alias
-            xs.assert.ok(alias, '[$Class]: given empty mixed class alias', {
+            xs.assert.ok(alias && xs.isString(name), '[$Class]: given empty mixed class alias', {
                 $Class: Class.label
             }, PrepareMixinsError);
 
