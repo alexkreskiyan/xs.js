@@ -19,9 +19,25 @@
      * Preprocessor processExtends
      * Is used to extend child class from parent class
      *
-     * @ignore
+     * For example:
      *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *     xs.define(xs.Class, 'ns.Customer', function(self, imports) {
+     *
+     *         'use strict';
+     *
+     *         this.namespace = 'app.start.login';
+     *
+     *         this.extends = 'ns.User'; //Extended base model class. If no extended specified {@link xs.class.Base} is extended
+     *
+     *     });
+     *
+     * @member xs.class.preprocessors
+     *
+     * @private
+     *
+     * @abstract
+     *
+     * @property extends
      */
     xs.class.preprocessors.add('processExtends', function () {
 

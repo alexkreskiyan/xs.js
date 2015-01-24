@@ -1321,7 +1321,7 @@ module('xs.core.Collection', function () {
         throws(function () {
             collection.none(null);
         });
-        
+
         //test array list
         collection = new xs.core.Collection([
             {

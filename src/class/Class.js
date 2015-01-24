@@ -50,7 +50,7 @@
      *
      * - {@link xs.class.preprocessors#namespace namespace}
      * - {@link xs.class.preprocessors#imports imports}
-     * - extends
+     * - {@link xs.class.preprocessors#extends extends}
      * - mixins
      * - implements
      * - abstract
