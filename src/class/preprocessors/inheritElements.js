@@ -29,62 +29,76 @@
     }, function (Class) {
 
         xs.log('xs.class.preprocessors.inheritElements[', Class.label, ']');
-        var own;
-
 
         //constants
+        _processConstants(Class);
+
+        //static properties
+        _processStaticProperties(Class);
+
+        //static methods
+        _processStaticMethods(Class);
+
+        //properties
+        _processProperties(Class);
+
+        //methods
+        _processMethods(Class);
+    });
+
+    var _processConstants = function (Class) {
 
         //init reference
-        own = Class.descriptor.constant;
+        var own = Class.descriptor.constant;
 
         //add all inherited
         Class.parent.descriptor.constant.each(function (value, name) {
             own.add(name, value);
         });
+    };
 
-
-        //static properties
+    var _processStaticProperties = function (Class) {
 
         //init reference
-        own = Class.descriptor.static.property;
+        var own = Class.descriptor.static.property;
 
         //add all inherited
         Class.parent.descriptor.static.property.each(function (value, name) {
             own.add(name, value);
         });
+    };
 
-
-        //static methods
+    var _processStaticMethods = function (Class) {
 
         //init reference
-        own = Class.descriptor.static.method;
+        var own = Class.descriptor.static.method;
 
         //add all inherited
         Class.parent.descriptor.static.method.each(function (value, name) {
             own.add(name, value);
         });
+    };
 
-
-        //properties
+    var _processProperties = function (Class) {
 
         //init reference
-        own = Class.descriptor.property;
+        var own = Class.descriptor.property;
 
         //add all inherited
         Class.parent.descriptor.property.each(function (value, name) {
             own.add(name, value);
         });
+    };
 
-
-        //methods
+    var _processMethods = function (Class) {
 
         //init reference
-        own = Class.descriptor.method;
+        var own = Class.descriptor.method;
 
         //add all inherited
         Class.parent.descriptor.method.each(function (value, name) {
             own.add(name, value);
         });
-    });
+    };
 
 })(window, 'xs');

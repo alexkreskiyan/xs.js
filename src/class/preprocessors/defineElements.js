@@ -30,15 +30,30 @@
 
         xs.log('xs.class.preprocessors.defineElements[', Class.label, ']');
 
-
         //constants
+        _processConstants(Class);
+
+        //static properties
+        _processStaticProperties(Class);
+
+        //static methods
+        _processStaticMethods(Class);
+
+        //properties
+        _processProperties(Class);
+
+        //methods
+        _processMethods(Class);
+    });
+
+    var _processConstants = function (Class) {
         Class.descriptor.constant.each(function (value, name) {
 
             xs.constant(Class, name, value);
         });
+    };
 
-
-        //static properties
+    var _processStaticProperties = function (Class) {
         //create privates storage in class
         Class.private = {};
 
@@ -48,17 +63,17 @@
             //save property to class
             xs.Attribute.property.define(Class, name, descriptor);
         });
+    };
 
-
-        //static methods
+    var _processStaticMethods = function (Class) {
         Class.descriptor.static.method.each(function (descriptor, name) {
 
             //save method to class
             xs.Attribute.method.define(Class, name, descriptor);
         });
+    };
 
-
-        //properties
+    var _processProperties = function (Class) {
         var prototype = Class.prototype;
 
         Class.descriptor.property.each(function (descriptor, name) {
@@ -71,14 +86,14 @@
                 prototype[name] = undefined;
             }
         });
+    };
 
-
-        //methods
+    var _processMethods = function (Class) {
         Class.descriptor.method.each(function (value, name) {
 
             //save method to prototype
             xs.Attribute.method.define(Class.prototype, name, value);
         });
-    });
+    };
 
 })(window, 'xs');

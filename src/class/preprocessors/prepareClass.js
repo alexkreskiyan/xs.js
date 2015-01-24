@@ -30,8 +30,20 @@
 
         xs.log('xs.class.preprocessors.prepareClass[', Class.label, ']');
 
-
         //prepare imports
+        _processImports(Class, descriptor);
+
+        //prepare extends
+        _processExtends(Class, descriptor);
+
+        //prepare mixins
+        _processMixins(Class, descriptor);
+
+        //prepare implements
+        _processImplements(Class, descriptor);
+    });
+
+    var _processImports = function (Class, descriptor) {
 
         //assert that imports are an array
         xs.assert.array(descriptor.imports, '[$Class]: given imports list "$imports" is not an array', {
@@ -40,10 +52,10 @@
         }, PrepareClassError);
 
         //convert to xs.core.Collection and save reference
-        var imports = descriptor.imports = new xs.core.Collection(descriptor.imports);
+        descriptor.imports = new xs.core.Collection(descriptor.imports);
+    };
 
-
-        //prepare extends
+    var _processExtends = function (Class, descriptor) {
 
         var extended = descriptor.extends;
         xs.log('xs.class.preprocessors.prepareClass[', Class.label, ']. Extended:', extended);
@@ -58,9 +70,9 @@
         if (extended) {
             descriptor.imports.add(extended);
         }
+    };
 
-
-        //prepare mixins
+    var _processMixins = function (Class, descriptor) {
 
         //assert that mixins are an object
         xs.assert.object(descriptor.mixins, '[$Class]: given mixins list "$mixins" is not an object', {
@@ -70,6 +82,9 @@
 
         //init mixins list with own values, converted to xs.core.Collection
         var mixins = descriptor.mixins = new xs.core.Collection(descriptor.mixins);
+
+        //get imports reference
+        var imports = descriptor.imports;
 
         //process mixins list
         xs.log('xs.class.preprocessors.prepareClass[', Class.label, ']. Mixins:', mixins.toSource());
@@ -87,9 +102,9 @@
 
             imports.add(name);
         });
+    };
 
-
-        //prepare implements
+    var _processImplements = function (Class, descriptor) {
 
         //assert that implements are an array
         xs.assert.array(descriptor.implements, '[$Class]: given interfaces list "$implements" is not an array', {
@@ -99,6 +114,9 @@
 
         //init interfaces list with own values, converted to xs.core.Collection
         var interfaces = descriptor.implements = new xs.core.Collection(descriptor.implements);
+
+        //get imports reference
+        var imports = descriptor.imports;
 
         //process interfaces list
         xs.log('xs.class.preprocessors.prepareClass[', Class.label, ']. Interfaces:', interfaces.toSource());
@@ -111,8 +129,7 @@
 
             imports.add(name);
         });
-
-    });
+    };
 
     /**
      * Internal error class

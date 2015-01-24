@@ -30,11 +30,23 @@
 
         xs.log('xs.class.preprocessors.addOwnElements[', Class.label, ']');
 
-        var own;
-
-
         //constants
+        _processConstants(Class, descriptor);
 
+        //static properties
+        _processStaticProperties(Class, descriptor);
+
+        //static methods
+        _processStaticMethods(Class, descriptor);
+
+        //properties
+        _processProperties(Class, descriptor);
+
+        //methods
+        _processMethods(Class, descriptor);
+    });
+
+    var _processConstants = function (Class, descriptor) {
         //assert, that constants list is an object
         xs.assert.object(descriptor.constant, '[$Class]: constants list "$constants" is not an object', {
             $Class: Class.label,
@@ -45,7 +57,7 @@
         descriptor.constant = new xs.core.Collection(descriptor.constant);
 
         //get reference to descriptor
-        own = Class.descriptor.constant;
+        var own = Class.descriptor.constant;
 
         //add constants from raw descriptor
         descriptor.constant.each(function (value, name) {
@@ -62,9 +74,9 @@
                 own.add(name, value);
             }
         });
+    };
 
-
-        //static properties
+    var _processStaticProperties = function (Class, descriptor) {
 
         //assert, that static properties list is an object
         xs.assert.object(descriptor.static.property, '[$Class]: static properties list "$properties" is not an object', {
@@ -76,7 +88,7 @@
         descriptor.static.property = new xs.core.Collection(descriptor.static.property);
 
         //get reference to descriptor
-        own = Class.descriptor.static.property;
+        var own = Class.descriptor.static.property;
 
         //add static properties from raw descriptor
         descriptor.static.property.each(function (value, name) {
@@ -96,9 +108,9 @@
                 own.add(name, value);
             }
         });
+    };
 
-
-        //static methods
+    var _processStaticMethods = function (Class, descriptor) {
 
         //assert, that static methods list is an object
         xs.assert.object(descriptor.static.method, '[$Class]: static methods list "$methods" is not an object', {
@@ -110,7 +122,7 @@
         descriptor.static.method = new xs.core.Collection(descriptor.static.method);
 
         //get reference to descriptor
-        own = Class.descriptor.static.method;
+        var own = Class.descriptor.static.method;
 
         //add static methods from raw descriptor
         descriptor.static.method.each(function (value, name) {
@@ -130,9 +142,9 @@
                 own.add(name, value);
             }
         });
+    };
 
-
-        //properties
+    var _processProperties = function (Class, descriptor) {
 
         //assert, that properties list is an object
         xs.assert.object(descriptor.property, '[$Class]: static properties list "$properties" is not an object', {
@@ -144,7 +156,7 @@
         descriptor.property = new xs.core.Collection(descriptor.property);
 
         //get reference to descriptor
-        own = Class.descriptor.property;
+        var own = Class.descriptor.property;
 
         //add properties from raw descriptor
         descriptor.property.each(function (value, name) {
@@ -164,9 +176,9 @@
                 own.add(name, value);
             }
         });
+    };
 
-
-        //methods
+    var _processMethods = function (Class, descriptor) {
 
         //assert, that methods list is an object
         xs.assert.object(descriptor.method, '[$Class]: methods list "$methods" is not an object', {
@@ -178,7 +190,7 @@
         descriptor.method = new xs.core.Collection(descriptor.method);
 
         //get reference to descriptor
-        own = Class.descriptor.method;
+        var own = Class.descriptor.method;
 
         //add methods from raw descriptor
         descriptor.method.each(function (value, name) {
@@ -198,7 +210,7 @@
                 own.add(name, value);
             }
         });
-    });
+    };
 
     /**
      * Internal error class
