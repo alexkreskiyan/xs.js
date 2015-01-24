@@ -51,7 +51,7 @@
      * - {@link xs.class.preprocessors#namespace namespace}
      * - {@link xs.class.preprocessors#imports imports}
      * - {@link xs.class.preprocessors#extends extends}
-     * - mixins
+     * - {@link xs.class.preprocessors#mixins mixins}
      * - implements
      * - abstract
      * - constant

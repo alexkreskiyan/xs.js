@@ -19,6 +19,8 @@
      * Preprocessor processMixins
      * Is used to process class mixins. Mixins list is given as hash of alias:name pairs.
      *
+     * Be careful about using mixins, because framework is strict about that and doesn't allow multiple declarations between Class and it's mixins
+     *
      * For example:
      *
      *     xs.define(xs.Class, 'ns.Customer', function(self, imports) {
@@ -31,9 +33,13 @@
      *
      *     });
      *
-     * @ignore
+     * @member xs.class.preprocessors
      *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     * @private
+     *
+     * @abstract
+     *
+     * @property mixins
      */
     xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
 
