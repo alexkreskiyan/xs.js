@@ -33,13 +33,17 @@
      *
      *         this.namespace = 'app.start.login';
      *
-     *         this.abstract = true; //Typic mixin class is specified as abstract
+     *         this.abstract = true; //Typical mixin class is specified as abstract
      *
      *     });
      *
-     * @ignore
+     * @member xs.class.preprocessors
      *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     * @private
+     *
+     * @abstract
+     *
+     * @property abstract
      */
     xs.class.preprocessors.add('abstract', function () {
 
