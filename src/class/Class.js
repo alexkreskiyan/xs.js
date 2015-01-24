@@ -123,8 +123,6 @@
 
             //get descriptor instance
             var descriptor = new Descriptor(Class, namespace, imports);
-            //convert descriptor
-            _convertDescriptor(descriptor);
 
             //save Class descriptor
             xs.constant(Class, 'descriptor', _createEmptyDescriptor());
@@ -380,7 +378,7 @@
                 mixins: {},
 
                 //class implements list
-                implements: {},
+                implements: [],
 
                 //class abstract flag
                 abstract: undefined,
@@ -456,24 +454,6 @@
                 //class methods list
                 method: new xs.core.Collection()
             };
-        };
-
-        /**
-         * Converts prototype descriptor to use xs.core.Collection
-         *
-         * @ignore
-         *
-         * @method convertDescriptor
-         */
-        var _convertDescriptor = function (descriptor) {
-            descriptor.imports = new xs.core.Collection(descriptor.imports);
-            descriptor.mixins = new xs.core.Collection(descriptor.mixins);
-            descriptor.implements = new xs.core.Collection(descriptor.implements);
-            descriptor.constant = new xs.core.Collection(descriptor.constant);
-            descriptor.static.property = new xs.core.Collection(descriptor.static.property);
-            descriptor.static.method = new xs.core.Collection(descriptor.static.method);
-            descriptor.property = new xs.core.Collection(descriptor.property);
-            descriptor.method = new xs.core.Collection(descriptor.method);
         };
 
         return Contractor;

@@ -17,7 +17,19 @@
 
     /**
      * Preprocessor processMixins
-     * Is used to process class mixins
+     * Is used to process class mixins. Mixins list is given as hash of alias:name pairs.
+     *
+     * For example:
+     *
+     *     xs.define(xs.Class, 'ns.Customer', function(self, imports) {
+     *
+     *         'use strict';
+     *
+     *         this.namespace = 'app.start.login';
+     *
+     *         this.mixins = 'ns.mixins.CanBuy'; //Name of some used mixin. Is automatically anonymously imported
+     *
+     *     });
      *
      * @ignore
      *

@@ -506,7 +506,7 @@ module('xs.ux.Promise', function () {
         setTimeout(function () {
             total -= 5;
             p3.resolve();
-        }, 3000);
+        }, 30000);
 
         xs.ux.Promise.some([
             p1,

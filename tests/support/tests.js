@@ -49,7 +49,7 @@
         var root = document.querySelector('body');
         root.insertBefore(logContainer, root.firstChild);
         window.onerror = function () {
-            error.apply(undefined, JSON.stringify(arguments));
+            error.call(undefined, JSON.stringify(arguments));
         };
 
         run();

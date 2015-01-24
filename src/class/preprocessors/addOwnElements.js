@@ -35,8 +35,18 @@
 
         //constants
 
+        //assert, that constants list is an object
+        xs.assert.object(descriptor.constant, '[$Class]: constants list "$constants" is not an object', {
+            $Class: Class.label,
+            $constants: descriptor.constant
+        }, AddOwnElementsError);
+
+        //convert to xs.core.Collection
+        descriptor.constant = new xs.core.Collection(descriptor.constant);
+
         //get reference to descriptor
         own = Class.descriptor.constant;
+
         //add constants from raw descriptor
         descriptor.constant.each(function (value, name) {
             //assert that constant name is not empty
@@ -56,8 +66,18 @@
 
         //static properties
 
+        //assert, that static properties list is an object
+        xs.assert.object(descriptor.static.property, '[$Class]: static properties list "$properties" is not an object', {
+            $Class: Class.label,
+            $properties: descriptor.static.property
+        }, AddOwnElementsError);
+
+        //convert to xs.core.Collection
+        descriptor.static.property = new xs.core.Collection(descriptor.static.property);
+
         //get reference to descriptor
         own = Class.descriptor.static.property;
+
         //add static properties from raw descriptor
         descriptor.static.property.each(function (value, name) {
             //assert that static property name is not empty
@@ -80,8 +100,18 @@
 
         //static methods
 
+        //assert, that static methods list is an object
+        xs.assert.object(descriptor.static.method, '[$Class]: static methods list "$methods" is not an object', {
+            $Class: Class.label,
+            $methods: descriptor.static.method
+        }, AddOwnElementsError);
+
+        //convert to xs.core.Collection
+        descriptor.static.method = new xs.core.Collection(descriptor.static.method);
+
         //get reference to descriptor
         own = Class.descriptor.static.method;
+
         //add static methods from raw descriptor
         descriptor.static.method.each(function (value, name) {
             //assert that static method name is not empty
@@ -104,8 +134,18 @@
 
         //properties
 
+        //assert, that properties list is an object
+        xs.assert.object(descriptor.property, '[$Class]: static properties list "$properties" is not an object', {
+            $Class: Class.label,
+            $properties: descriptor.property
+        }, AddOwnElementsError);
+
+        //convert to xs.core.Collection
+        descriptor.property = new xs.core.Collection(descriptor.property);
+
         //get reference to descriptor
         own = Class.descriptor.property;
+
         //add properties from raw descriptor
         descriptor.property.each(function (value, name) {
             //assert that property name is not empty
@@ -128,8 +168,18 @@
 
         //methods
 
+        //assert, that methods list is an object
+        xs.assert.object(descriptor.method, '[$Class]: methods list "$methods" is not an object', {
+            $Class: Class.label,
+            $methods: descriptor.method
+        }, AddOwnElementsError);
+
+        //init reference to methods list, converted to xs.core.Collection
+        descriptor.method = new xs.core.Collection(descriptor.method);
+
         //get reference to descriptor
         own = Class.descriptor.method;
+
         //add methods from raw descriptor
         descriptor.method.each(function (value, name) {
             //assert that method name is not empty
