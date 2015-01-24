@@ -27,7 +27,7 @@
      *
      *         this.namespace = 'app.start.login';
      *
-     *         this.mixins = 'ns.mixins.CanBuy'; //Name of some used mixin. Is automatically anonymously imported
+     *         this.mixins.CanBuy = 'ns.mixins.CanBuy'; //Name of some used mixin. Can not be empty
      *
      *     });
      *
