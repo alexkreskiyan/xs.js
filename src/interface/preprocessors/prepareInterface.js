@@ -34,7 +34,7 @@
         //prepare imports
 
         //create new empty collection
-        var imports = descriptor.imports = new xs.core.Collection();
+        descriptor.imports = new xs.core.Collection();
 
 
         //prepare extends
