@@ -55,7 +55,8 @@
      *
      *         this.extends = 'ns.User'; //Extended base model class. Is automatically anonymously imported
      *
-     *         this.mixins = 'ns.mixins.CanBuy'; //Name of some used mixin. Is automatically anonymously imported
+     *         this.mixins.CanBuy = 'ns.mixins.CanBuy'; //Name of some used mixin. Perhaps, mixin 'app.start.login.mixins.CanBuy'
+     *                                                  //allows Customer to buy something
      *
      *         this.implements = ['ns.IUser'];   //Name of implemented interface. Is automatically anonymously imported
      *

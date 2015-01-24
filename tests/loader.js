@@ -186,7 +186,6 @@
         if (scripts.indexOf(src) >= 0) {
             throw new Error('Script "' + src + '" is already added');
         }
-        me.write.info('loading ' + src);
         //add src to scripts list
         scripts.push(src);
 
@@ -205,7 +204,6 @@
         //create loadHandler, that will be called once
         var loadHandler = function () {
             script.removeEventListener('load', loadHandler);
-            me.write.info('loaded ' + src);
             onLoad();
         };
 
@@ -215,7 +213,7 @@
         //create errorHandler, that will be called once
         var errorHandler = function () {
             script.removeEventListener('error', errorHandler);
-            me.write.info('failed ' + src);
+            me.write.error('failed ' + src);
             onLoad();
         };
 
