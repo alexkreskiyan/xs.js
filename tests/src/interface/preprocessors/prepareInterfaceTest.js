@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.interface.preprocessors.prepareExtends', function () {
+module('xs.interface.preprocessors.prepareInterface', function () {
 
     'use strict';
 
@@ -25,7 +25,7 @@ module('xs.interface.preprocessors.prepareExtends', function () {
         var me = this;
 
         //Base
-        me.BaseName = 'tests.interface.preprocessors.prepareExtends.Base';
+        me.BaseName = 'tests.interface.preprocessors.prepareInterface.Base';
 
         //define
         me.Base = xs.Interface(function () {
@@ -41,11 +41,11 @@ module('xs.interface.preprocessors.prepareExtends', function () {
         xs.ContractsManager.add(me.BaseName, me.Base);
 
         //Parent
-        me.ParentName = 'tests.interface.preprocessors.prepareExtends.Parent';
+        me.ParentName = 'tests.interface.preprocessors.prepareInterface.Parent';
 
         //define
         me.Parent = xs.Interface(function () {
-            this.extends = 'tests.interface.preprocessors.prepareExtends.Base';
+            this.extends = 'tests.interface.preprocessors.prepareInterface.Base';
         });
 
         //save
@@ -58,11 +58,11 @@ module('xs.interface.preprocessors.prepareExtends', function () {
         xs.ContractsManager.add(me.ParentName, me.Parent);
 
         //Child
-        me.ChildName = 'tests.interface.preprocessors.prepareExtends.Child';
+        me.ChildName = 'tests.interface.preprocessors.prepareInterface.Child';
 
         //define
         me.Child = xs.Interface(function () {
-            this.extends = 'tests.interface.preprocessors.prepareExtends.Parent';
+            this.extends = 'tests.interface.preprocessors.prepareInterface.Parent';
         });
 
         //save
@@ -82,7 +82,7 @@ module('xs.interface.preprocessors.prepareExtends', function () {
 
         return false;
     }, function () {
-        var ns = window.tests.interface.preprocessors.prepareExtends;
+        var ns = window.tests.interface.preprocessors.prepareInterface;
 
         //check chain
         strictEqual(ns.Base.parent, xs.interface.Base);

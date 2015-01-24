@@ -16,47 +16,57 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor prepareExtends
-     * Is used to get extended interface name and add it to imports
+     * Preprocessor prepareInterface
+     * Implements basic interface prepare operation
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.interface.preprocessors.add('prepareExtends', function () {
+    xs.interface.preprocessors.add('prepareInterface', function () {
 
         return true;
     }, function (Interface, descriptor) {
+
+        xs.log('xs.interface.preprocessors.prepareInterface[', Interface.label, ']');
+
+
+        //prepare imports
+
+        //create new empty collection
+        var imports = descriptor.imports = new xs.core.Collection();
+
+
+        //prepare extends
+
         var extended = descriptor.extends;
+        xs.log('xs.interface.preprocessors.prepareInterface[', Interface.label, ']. Extended:', extended);
 
-        //reset imports collection
-        descriptor.imports.remove();
-
-        xs.log('xs.interface.preprocessors.prepareExtends[', Interface.label, ']. Extended:', extended);
         //assert that either extended is not defined or is defined as non-empty string
         xs.assert.ok(!xs.isDefined(extended) || (xs.isString(extended) && extended), '[$Interface]: given extended "$extended" is incorrect', {
             $Interface: Interface.label,
             $extended: extended
-        }, PrepareExtendsError);
+        }, PrepareInterfaceError);
 
         //if extended is given - add it to imports
         if (extended) {
             descriptor.imports.add(extended);
         }
+
     });
 
     /**
-     * Internal error class
+     * Internal error interface
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class PrepareExtendsError
+     * @class PrepareInterfaceError
      */
-    function PrepareExtendsError(message) {
-        this.message = 'xs.interface.preprocessors.prepareExtends::' + message;
+    function PrepareInterfaceError(message) {
+        this.message = 'xs.interface.preprocessors.prepareInterface::' + message;
     }
 
-    PrepareExtendsError.prototype = new Error();
+    PrepareInterfaceError.prototype = new Error();
 })(window, 'xs');

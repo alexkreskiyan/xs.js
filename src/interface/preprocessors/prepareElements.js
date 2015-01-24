@@ -29,11 +29,39 @@
     }, function (Interface, descriptor) {
 
         xs.log('xs.interface.preprocessors.prepareConstants[', Interface.label, ']');
-        var own;
-
 
         //constants
-        own = Interface.descriptor.constant;
+        _processConstants(Interface, descriptor);
+
+        //static properties
+        _processStaticProperties(Interface, descriptor);
+
+        //static methods
+        _processStaticMethods(Interface, descriptor);
+
+        //constructor
+        _processConstructor(Interface, descriptor);
+
+        //properties
+        _processProperties(Interface, descriptor);
+
+        //methods
+        _processMethods(Interface, descriptor);
+    });
+
+    var _processConstants = function (Interface, descriptor) {
+
+        //assert, that constants list is an object
+        xs.assert.array(descriptor.constant, '[$Interface]: constants list "$constants" is not an array', {
+            $Interface: Interface.label,
+            $constants: descriptor.constant
+        }, PrepareElementsError);
+
+        //convert to xs.core.Collection
+        descriptor.constant = new xs.core.Collection(descriptor.constant);
+
+        //get reference to descriptor
+        var own = Interface.descriptor.constant;
 
         //add all inherited
         Interface.parent.descriptor.constant.each(function (name) {
@@ -52,9 +80,21 @@
             }
         });
 
+    };
 
-        //static properties
-        own = Interface.descriptor.static.property;
+    var _processStaticProperties = function (Interface, descriptor) {
+
+        //assert, that static properties list is an object
+        xs.assert.object(descriptor.static.property, '[$Interface]: static properties list "$properties" is not an object', {
+            $Interface: Interface.label,
+            $properties: descriptor.static.property
+        }, PrepareElementsError);
+
+        //convert to xs.core.Collection
+        descriptor.static.property = new xs.core.Collection(descriptor.static.property);
+
+        //get reference to descriptor
+        var own = Interface.descriptor.static.property;
 
         //add all inherited
         Interface.parent.descriptor.static.property.each(function (value, name) {
@@ -90,10 +130,21 @@
                 own.add(name, scheme);
             }
         });
+    };
 
+    var _processStaticMethods = function (Interface, descriptor) {
 
-        //static methods
-        own = Interface.descriptor.static.method;
+        //assert, that static methods list is an object
+        xs.assert.object(descriptor.static.method, '[$Interface]: static methods list "$methods" is not an object', {
+            $Interface: Interface.label,
+            $methods: descriptor.static.method
+        }, PrepareElementsError);
+
+        //convert to xs.core.Collection
+        descriptor.static.method = new xs.core.Collection(descriptor.static.method);
+
+        //get reference to descriptor
+        var own = Interface.descriptor.static.method;
 
         //add all inherited
         Interface.parent.descriptor.static.method.each(function (value, name) {
@@ -121,12 +172,13 @@
             }
         });
 
+    };
 
-        //constructor
+    var _processConstructor = function (Interface, descriptor) {
         var inherited = Interface.parent.descriptor.hasOwnProperty('constructor') ? Interface.parent.descriptor.constructor : undefined;
 
         //get own constructor from raw descriptor
-        own = descriptor.hasOwnProperty('constructor') ? descriptor.constructor : undefined;
+        var own = descriptor.hasOwnProperty('constructor') ? descriptor.constructor : undefined;
 
         //verify, that own constructor is undefined or is function
         xs.assert.ok(!xs.isDefined(own) || xs.isFunction(own), 'own constructor is defined and is not a function', PrepareElementsError);
@@ -139,10 +191,21 @@
         } else if (inherited) {
             Interface.descriptor.constructor = inherited;
         }
+    };
 
+    var _processProperties = function (Interface, descriptor) {
 
-        //properties
-        own = Interface.descriptor.property;
+        //assert, that properties list is an object
+        xs.assert.object(descriptor.property, '[$Interface]: static properties list "$properties" is not an object', {
+            $Interface: Interface.label,
+            $properties: descriptor.property
+        }, PrepareElementsError);
+
+        //convert to xs.core.Collection
+        descriptor.property = new xs.core.Collection(descriptor.property);
+
+        //get reference to descriptor
+        var own = Interface.descriptor.property;
 
         //add all inherited
         Interface.parent.descriptor.property.each(function (value, name) {
@@ -179,10 +242,21 @@
                 own.add(name, scheme);
             }
         });
+    };
 
+    var _processMethods = function (Interface, descriptor) {
 
-        //methods
-        own = Interface.descriptor.method;
+        //assert, that methods list is an object
+        xs.assert.object(descriptor.method, '[$Interface]: methods list "$methods" is not an object', {
+            $Interface: Interface.label,
+            $methods: descriptor.method
+        }, PrepareElementsError);
+
+        //init reference to methods list, converted to xs.core.Collection
+        descriptor.method = new xs.core.Collection(descriptor.method);
+
+        //get reference to descriptor
+        var own = Interface.descriptor.method;
 
         //add all inherited
         Interface.parent.descriptor.method.each(function (value, name) {
@@ -210,7 +284,7 @@
                 own.add(name, scheme);
             }
         });
-    });
+    };
 
     /**
      * Internal error class

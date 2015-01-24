@@ -103,8 +103,6 @@
 
             //get descriptor instance
             var descriptor = new Descriptor(Interface, namespace);
-            //convert descriptor
-            _convertDescriptor(descriptor);
 
             //save Interface descriptor
             xs.constant(Interface, 'descriptor', _createEmptyDescriptor());
@@ -257,7 +255,7 @@
                 extends: undefined,
 
                 //interface constants list
-                constant: {},
+                constant: [],
 
                 //interface statics list
                 static: {
@@ -318,22 +316,6 @@
                 //class methods list
                 method: new xs.core.Collection()
             };
-        };
-
-        /**
-         * Converts prototype descriptor to use xs.core.Collection
-         *
-         * @ignore
-         *
-         * @method convertDescriptor
-         */
-        var _convertDescriptor = function (descriptor) {
-            descriptor.imports = new xs.core.Collection(descriptor.imports);
-            descriptor.constant = new xs.core.Collection(descriptor.constant);
-            descriptor.static.property = new xs.core.Collection(descriptor.static.property);
-            descriptor.static.method = new xs.core.Collection(descriptor.static.method);
-            descriptor.property = new xs.core.Collection(descriptor.property);
-            descriptor.method = new xs.core.Collection(descriptor.method);
         };
 
         return Contractor;

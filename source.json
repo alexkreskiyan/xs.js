@@ -29,7 +29,7 @@
     "xs.class.Base",
     "xs.interface.Interface",
     "xs.interface.preprocessors.namespace",
-    "xs.interface.preprocessors.prepareExtends",
+    "xs.interface.preprocessors.prepareInterface",
     "xs.interface.preprocessors.imports",
     "xs.interface.preprocessors.processExtends",
     "xs.interface.preprocessors.prepareElements",
