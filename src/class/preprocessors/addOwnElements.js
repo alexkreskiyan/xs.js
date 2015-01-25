@@ -99,6 +99,31 @@
         });
     };
 
+    /**
+     * Directive static.property
+     *
+     * Is used to declare class static properties. Class static properties are declared as name:value pairs within static.property directive.
+     *
+     * Properties are declared in propertyDescriptor compatible format. See {@link xs.lang.Attribute.property#prepare} for details
+     *
+     * For example:
+     *
+     *     xs.define(xs.Class, 'ns.Customer', function(self, imports) {
+     *
+     *         'use strict';
+     *
+     *         this.static.property.a = 'A';
+     *
+     *     });
+     *
+     * @member xs.class.preprocessors
+     *
+     * @private
+     *
+     * @abstract
+     *
+     * @property staticProperty
+     */
     var _processStaticProperties = function (Class, descriptor) {
 
         //assert, that static properties list is an object
@@ -133,6 +158,33 @@
         });
     };
 
+    /**
+     * Directive static.method
+     *
+     * Is used to declare class static methods. Class static methods are declared as name:value pairs within static.method directive.
+     *
+     * Methods are declared in propertyDescriptor compatible format. See {@link xs.lang.Attribute.method#prepare} for details
+     *
+     * For example:
+     *
+     *     xs.define(xs.Class, 'ns.Customer', function(self, imports) {
+     *
+     *         'use strict';
+     *
+     *         this.static.method.echo = function(message) {
+     *             return message;
+     *         };
+     *
+     *     });
+     *
+     * @member xs.class.preprocessors
+     *
+     * @private
+     *
+     * @abstract
+     *
+     * @property staticMethod
+     */
     var _processStaticMethods = function (Class, descriptor) {
 
         //assert, that static methods list is an object
@@ -167,6 +219,33 @@
         });
     };
 
+    /**
+     * Directive property
+     *
+     * Is used to declare class properties. Class properties are declared as name:value pairs within property directive.
+     *
+     * Properties are declared in propertyDescriptor compatible format. See {@link xs.lang.Attribute.property#prepare} for details.
+     *
+     * Note, that all value-based properties are applied as default to each new instance before {@link #constructor} is called
+     *
+     * For example:
+     *
+     *     xs.define(xs.Class, 'ns.Customer', function(self, imports) {
+     *
+     *         'use strict';
+     *
+     *         this.property.a = 'A';
+     *
+     *     });
+     *
+     * @member xs.class.preprocessors
+     *
+     * @private
+     *
+     * @abstract
+     *
+     * @property property
+     */
     var _processProperties = function (Class, descriptor) {
 
         //assert, that properties list is an object
@@ -201,6 +280,33 @@
         });
     };
 
+    /**
+     * Directive method
+     *
+     * Is used to declare class methods. Class methods are declared as name:value pairs within method directive.
+     *
+     * Methods are declared in propertyDescriptor compatible format. See {@link xs.lang.Attribute.method#prepare} for details
+     *
+     * For example:
+     *
+     *     xs.define(xs.Class, 'ns.Customer', function(self, imports) {
+     *
+     *         'use strict';
+     *
+     *         this.method.echo = function(message) {
+     *             return message;
+     *         };
+     *
+     *     });
+     *
+     * @member xs.class.preprocessors
+     *
+     * @private
+     *
+     * @abstract
+     *
+     * @property method
+     */
     var _processMethods = function (Class, descriptor) {
 
         //assert, that methods list is an object

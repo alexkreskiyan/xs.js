@@ -46,7 +46,7 @@
      * - ns. namespace object, where namespace references are placed
      * - imports. namespace object, where namespace references are placed
      *
-     * Supported descriptor instance properties:
+     * Supported descriptor instance directives:
      *
      * - {@link xs.class.preprocessors#namespace namespace}
      * - {@link xs.class.preprocessors#imports imports}
@@ -55,11 +55,13 @@
      * - {@link xs.class.preprocessors#implements implements}
      * - {@link xs.class.preprocessors#abstract abstract}
      * - {@link xs.class.preprocessors#constant constant}
-     * - static.property
-     * - static.method
-     * - constructor
-     * - property
-     * - method
+     * - {@link xs.class.preprocessors#staticProperty static.property}
+     * - {@link xs.class.preprocessors#staticMethod static.method}
+     * - {@link xs.class.preprocessors#constructor constructor}
+     * - {@link xs.class.preprocessors#property property}
+     * - {@link xs.class.preprocessors#method method}
+     *
+     * Important! Directives, specified above are recommended to be specified in class exactly in the above order.
      *
      * 2 createdFn ([Function]) - optional class creation callback. Is called after
      * {@link xs.class.preprocessors preprocessors} stack is processed. When called, created class is passed as param.

@@ -16,12 +16,32 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor constructor
-     * Is used to work with class constructor
+     * Directive constructor
      *
-     * @ignore
+     * Is used to declare class instance constructor
      *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     * Constructor is used to make some work under created object after framework's internal constructor has finished it's work.
+     * That way, this element is optional. If you miss it, simply nothing will be done with created class instance
+     *
+     * For example:
+     *
+     *     xs.define(xs.Class, 'ns.Customer', function(self, imports) {
+     *
+     *         'use strict';
+     *
+     *         this.constructor = function(message) {
+     *             console.log('created!');
+     *         };
+     *
+     *     });
+     *
+     * @member xs.class.preprocessors
+     *
+     * @private
+     *
+     * @abstract
+     *
+     * @property constructor
      */
     xs.class.preprocessors.add('constructor', function () {
 
