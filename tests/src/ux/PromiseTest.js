@@ -489,50 +489,53 @@ module('xs.ux.Promise', function () {
         });
 
 
-        var total;
         //if enough promises resolve - aggregate is resolved
         var p1 = new xs.ux.Promise();
         var p2 = new xs.ux.Promise();
         var p3 = new xs.ux.Promise();
-        total = 0;
+        var totalResolved = 0;
         setTimeout(function () {
-            total += 1;
+            console.warn('1');
+            totalResolved += 1;
             p1.resolve();
         }, 0);
         setTimeout(function () {
-            total *= 2;
+            console.warn('2');
+            totalResolved *= 2;
             p2.resolve();
         }, 0);
         setTimeout(function () {
-            total -= 5;
+            console.warn('3');
+            totalResolved -= 5;
             p3.resolve();
-        }, 30000);
+        }, 10000);
 
         xs.ux.Promise.some([
             p1,
             p2,
             p3
         ], 2).then(function () {
+            console.warn('some');
             //only 2 first promises
-            strictEqual(total, 2);
-            total = 0;
+            strictEqual(totalResolved, 2);
+            totalResolved = 0;
         });
 
         //if any promise is rejected - aggregate is rejected
         var p4 = new xs.ux.Promise();
         var p5 = new xs.ux.Promise();
         var p6 = new xs.ux.Promise();
-        total = 0;
+        var totalRejected = 0;
         setTimeout(function () {
-            total += 1;
+            totalRejected += 1;
             p4.resolve();
         }, 110);
         setTimeout(function () {
-            total *= 2;
+            totalRejected *= 2;
             p5.reject('error');
         }, 110);
         setTimeout(function () {
-            total -= 5;
+            totalRejected -= 5;
             p6.resolve();
         }, 110);
 
