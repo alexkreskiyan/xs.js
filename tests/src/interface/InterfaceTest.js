@@ -245,13 +245,13 @@ module('xs.interface.Interface', function () {
         me.stack.add('one', me.verifier, function (self) {
             self.descriptor.chain = 'one';
         });
-        me.stack.add('two', me.verifier, function (self, descriptor, ns, dependencies, ready) {
+        me.stack.add('two', me.verifier, function (self, descriptor, dependencies, ready) {
             self.descriptor.chain += 'two';
             setTimeout(ready, 100);
 
             return false;
         });
-        me.stack.add('three', me.verifier, function (self, descriptor, ns, dependencies, ready) {
+        me.stack.add('three', me.verifier, function (self, descriptor, dependencies, ready) {
             self.descriptor.chain += 'three';
             setTimeout(ready, 100);
 

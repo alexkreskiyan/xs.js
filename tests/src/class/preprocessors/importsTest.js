@@ -22,7 +22,7 @@ module('xs.class.preprocessors.imports', function () {
         //add tests path
         xs.Loader.paths.add('tests', 'resources');
 
-        xs.define(xs.Class, 'ns.Child', function (Class, ns, imports) {
+        xs.define(xs.Class, 'ns.Child', function (Class, imports) {
             this.namespace = 'tests.class.preprocessors.imports';
             this.extends = 'ns.Base';
             this.imports = [

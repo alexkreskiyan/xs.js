@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.preprocessors.prepareClass.extends', function () {
+module('xs.class.preprocessors.prepareClass', function () {
 
     'use strict';
 
