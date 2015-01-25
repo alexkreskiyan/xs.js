@@ -170,8 +170,14 @@
     var _applyImports = function (target, imports) {
         //assign imports
         imports.each(function (alias, name) {
+            //get alias short part
+            var shortAlias = xs.ContractsManager.getName(alias);
+
+            //get namespace
+            var namespace = xs.ContractsManager.getNamespace(target.imports, xs.ContractsManager.getPath(alias));
+
             //save class by alias in imports list
-            target.imports[alias] = xs.ContractsManager.get(name);
+            namespace[shortAlias] = xs.ContractsManager.get(name);
         });
 
         //remove imports from Class

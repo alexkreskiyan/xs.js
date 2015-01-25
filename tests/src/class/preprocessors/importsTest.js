@@ -26,9 +26,10 @@ module('xs.class.preprocessors.imports', function () {
             this.namespace = 'tests.class.preprocessors.imports';
             this.extends = 'ns.Base';
             this.imports = [
-                {one: 'ns.One'},
-                'ns.Two',
-                {three: 'ns.Three'}
+                {'sample.One': 'ns.One'},
+                'ns.Base',
+                {Two: 'ns.Two'},
+                {'sample.Three': 'ns.Three'}
             ];
 
             //save imports reference
@@ -50,9 +51,9 @@ module('xs.class.preprocessors.imports', function () {
         var ns = window.tests.class.preprocessors.imports;
 
         //check imports
-        strictEqual(Object.keys(me.imports).toString(), 'one,three');
-        strictEqual(me.imports.one, ns.One);
-        strictEqual(me.imports.three, ns.Three);
+        strictEqual(Object.keys(me.imports).toString(), 'sample,Two');
+        strictEqual(me.imports.sample.One, ns.One);
+        strictEqual(me.imports.sample.Three, ns.Three);
 
     }, function () {
         var me = this;
