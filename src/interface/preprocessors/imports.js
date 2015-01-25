@@ -42,11 +42,6 @@
         descriptor.imports.each(function (imported) {
             var name;
 
-            //assert imported is string
-            xs.assert.string(imported, '[$Interface]: given imported "$imported" is not a string', {
-                $Interface: Interface.label
-            }, ImportsError);
-
             //simply interfaceName without alias, added only to loads list
             name = resolveName(imported);
 
@@ -61,7 +56,7 @@
         }, xs.core.Collection.ALL);
 
         if (loads.length) {
-            //load imported interfacees
+            //load imported interfaces
             xs.log('xs.interface.preprocessors.imports[', Interface.label, ']. Loading', loads.values());
             //require async
             xs.require(loads.values(), _process);
@@ -93,18 +88,4 @@
         return false;
     });
 
-    /**
-     * Internal error interface
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class ImportsError
-     */
-    function ImportsError(message) {
-        this.message = 'xs.interface.preprocessors.imports::' + message;
-    }
-
-    ImportsError.prototype = new Error();
 })(window, 'xs');

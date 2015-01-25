@@ -43,7 +43,7 @@
         xs.log('xs.interface.preprocessors.prepareInterface[', Interface.label, ']. Extended:', extended);
 
         //assert that either extended is not defined or is defined as non-empty string
-        xs.assert.ok(!xs.isDefined(extended) || (xs.isString(extended) && extended), '[$Interface]: given extended "$extended" is incorrect', {
+        xs.assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '[$Interface]: given extended "$extended" is incorrect', {
             $Interface: Interface.label,
             $extended: extended
         }, PrepareInterfaceError);
