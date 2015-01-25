@@ -98,6 +98,7 @@
                 $imported: imported
             }, ImportsError);
 
+
             //handle imported string - it's simply className without alias, added only to loads list
             if (xs.isString(imported)) {
                 name = resolveName(imported);
@@ -105,27 +106,29 @@
                     requires.add(name);
                 }
 
-                //handle imported key=>value pair
-            } else {
-
-                //get name and alias
-                var alias = Object.keys(imported)[0];
-                name = imported[alias];
-
-                //if name is non-empty string - add it to both loads and imports
-                xs.assert.ok(xs.isString(name) && name, '[$Class]: imported class "$name" has incorrect alias - $alias', {
-                    $Class: Class.label,
-                    $name: name,
-                    $alias: alias
-                }, ImportsError);
-                name = resolveName(name);
-
-                if (!requires.has(name)) {
-                    requires.add(name);
-                }
-
-                imports.add(name, alias);
+                return;
             }
+
+
+            //handle imported key=>value pair
+
+            //get name and alias
+            var alias = Object.keys(imported)[0];
+            name = imported[alias];
+
+            //if name is non-empty string - add it to both loads and imports
+            xs.assert.ok(xs.isString(name) && name, '[$Class]: imported class "$name" has incorrect alias - $alias', {
+                $Class: Class.label,
+                $name: name,
+                $alias: alias
+            }, ImportsError);
+            name = resolveName(name);
+
+            if (!requires.has(name)) {
+                requires.add(name);
+            }
+
+            imports.add(name, alias);
         });
 
         //filter loads to find out already loaded ones
