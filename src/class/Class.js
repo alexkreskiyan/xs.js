@@ -54,7 +54,7 @@
      * - {@link xs.class.preprocessors#mixins mixins}
      * - {@link xs.class.preprocessors#implements implements}
      * - {@link xs.class.preprocessors#abstract abstract}
-     * - constant
+     * - {@link xs.class.preprocessors#constant constant}
      * - static.property
      * - static.method
      * - constructor

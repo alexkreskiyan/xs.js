@@ -17,7 +17,7 @@
 
     /**
      * Preprocessor addOwnElements
-     * Is used to process class constants
+     * Is used to process class elements
      *
      * @ignore
      *
@@ -46,6 +46,29 @@
         _processMethods(Class, descriptor);
     });
 
+    /**
+     * Directive constant
+     *
+     * Is used to declare class constants. Class constants are declared as name:value pairs within constant directive.
+     *
+     * For example:
+     *
+     *     xs.define(xs.Class, 'ns.Customer', function(self, imports) {
+     *
+     *         'use strict';
+     *
+     *         this.constant.a = 'A';
+     *
+     *     });
+     *
+     * @member xs.class.preprocessors
+     *
+     * @private
+     *
+     * @abstract
+     *
+     * @property constant
+     */
     var _processConstants = function (Class, descriptor) {
         //assert, that constants list is an object
         xs.assert.object(descriptor.constant, '[$Class]: constants list "$constants" is not an object', {
