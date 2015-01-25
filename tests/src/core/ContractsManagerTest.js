@@ -405,6 +405,24 @@ module('xs.ContractsManager', function () {
         strictEqual(xs.ContractsManager.isName('A5b'), true);
     });
 
+    test('isShortName', function () {
+        //name should be string
+        throws(function () {
+            xs.ContractsManager.isShortName();
+        });
+        throws(function () {
+            xs.ContractsManager.isShortName(1);
+        });
+
+        //full name is incorrect
+        strictEqual(xs.ContractsManager.isShortName('a.b'), false);
+
+        //incorrect name returns false
+        strictEqual(xs.ContractsManager.isName('A_b'), false);
+        //correct name returns true
+        strictEqual(xs.ContractsManager.isName('A5b'), true);
+    });
+
     test('getName', function () {
         //path must be correct name
         throws(function () {

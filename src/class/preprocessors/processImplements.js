@@ -110,7 +110,8 @@
         });
 
         //verify interfaces implementation
-        _verifyImplements(Class, interfaces);
+        //assert, that target implements all interfaces
+        xs.assert.ok(_verifyImplements(Class, interfaces));
     });
 
     /**
@@ -133,6 +134,8 @@
             //verify, that target implements Interface
             _verifyInterface(Class, Interface);
         });
+
+        return true;
     };
 
     /**
@@ -299,6 +302,8 @@
                 $declaredArguments: declaredArguments
             }, ProcessImplementsError);
         });
+
+        return true;
     };
 
     /**

@@ -92,14 +92,8 @@
         descriptor.imports.each(function (imported) {
             var name;
 
-            //assert that imported is either string or key=>value single pair
-            xs.assert.ok(xs.isString(imported) || (xs.isObject(imported) && Object.keys(imported).length === 1), '[$Class]: imported value $imported is incorrect', {
-                $Class: Class.label,
-                $imported: imported
-            }, ImportsError);
-
-
             //handle imported string - it's simply className without alias, added only to loads list
+
             if (xs.isString(imported)) {
                 name = resolveName(imported);
                 if (!requires.has(name)) {
@@ -114,15 +108,7 @@
 
             //get name and alias
             var alias = Object.keys(imported)[0];
-            name = imported[alias];
-
-            //if name is non-empty string - add it to both loads and imports
-            xs.assert.ok(xs.isString(name) && name, '[$Class]: imported class "$name" has incorrect alias - $alias', {
-                $Class: Class.label,
-                $name: name,
-                $alias: alias
-            }, ImportsError);
-            name = resolveName(name);
+            name = resolveName(imported[alias]);
 
             if (!requires.has(name)) {
                 requires.add(name);
@@ -192,18 +178,4 @@
         delete target.imports;
     };
 
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class ImportsError
-     */
-    function ImportsError(message) {
-        this.message = 'xs.class.preprocessors.imports::' + message;
-    }
-
-    ImportsError.prototype = new Error();
 })(window, 'xs');

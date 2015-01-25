@@ -39,6 +39,15 @@
         var nameRe = /^[A-Za-z]{1}[A-Za-z0-9]*(?:\.{1}[A-Za-z]{1}[A-Za-z0-9]*)*$/;
 
         /**
+         * Short name testing regular expression
+         *
+         * @ignore
+         *
+         * @type {RegExp}
+         */
+        var shortNameRe = /^[A-Za-z]{1}[A-Za-z0-9]*$/;
+
+        /**
          * Store of all registered contracts
          *
          * @private
@@ -255,7 +264,7 @@
         };
 
         /**
-         * Returns whether given string is correct name
+         * Returns whether given string is correct full name
          *
          * For example:
          *
@@ -277,6 +286,32 @@
             }, ContractsManagerError);
 
             return nameRe.test(name);
+        };
+
+        /**
+         * Returns whether given string is correct short name
+         *
+         * For example:
+         *
+         *     xs.ContractsManager.isShortName('xs.module.my.Class'); //false
+         *     xs.ContractsManager.isShortName('Class'); //true
+         *
+         * @private
+         *
+         * @method isShortName
+         *
+         * @param {String} name verified name
+         *
+         * @return {String} whether name is correct short name
+         */
+        me.isShortName = function (name) {
+
+            //assert that name is a string
+            xs.assert.string(name, 'isShortName - given name "$name" is not a string', {
+                $name: name
+            }, ContractsManagerError);
+
+            return shortNameRe.test(name);
         };
 
         /**

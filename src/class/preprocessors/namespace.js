@@ -58,7 +58,17 @@
     }, function (Class, descriptor, dependencies, ready) {
 
         xs.log('xs.class.preprocessors.namespace');
-        var namespace = (xs.isString(descriptor.namespace) && descriptor.namespace.length) ? descriptor.namespace : undefined;
+        var namespace;
+
+        //if namespace specified, it must be valid
+        if (xs.isDefined(descriptor.namespace)) {
+            xs.assert.ok(xs.ContractsManager.isName(descriptor.namespace), 'given namespace "$namespace" is not a valid name', {
+                $namespace: descriptor.namespace
+            }, NamespaceError);
+
+            namespace = descriptor.namespace;
+        }
+
         //save namespace
         Class.descriptor.resolveName = function (path) {
 
@@ -84,4 +94,19 @@
         //return false to sign async processor
         return false;
     });
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class NamespaceError
+     */
+    function NamespaceError(message) {
+        this.message = 'xs.class.preprocessors.namespace::' + message;
+    }
+
+    NamespaceError.prototype = new Error();
 })(window, 'xs');

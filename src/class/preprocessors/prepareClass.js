@@ -53,6 +53,42 @@
 
         //convert to xs.core.Collection and save reference
         descriptor.imports = new xs.core.Collection(descriptor.imports);
+
+        //verify imports
+        descriptor.imports.each(function (imported) {
+
+            //assert that imported is either string or key=>value single pair
+            xs.assert.ok(xs.isString(imported) || (xs.isObject(imported) && Object.keys(imported).length === 1), '[$Class]: imported value $imported is incorrect', {
+                $Class: Class.label,
+                $imported: imported
+            }, PrepareClassError);
+
+            if (xs.isString(imported)) {
+                //verify imported name
+                xs.assert.ok(xs.ContractsManager.isName(imported), '[$Class]: given imported name "$name" is not correct', {
+                    $Class: Class.label,
+                    $name: imported
+                }, PrepareClassError);
+
+                return;
+            }
+
+            //get name and alias
+            var alias = Object.keys(imported)[0];
+            var name = imported[alias];
+
+            //verify imported name
+            xs.assert.ok(xs.ContractsManager.isName(name), '[$Class]: given imported name "$name" is not correct', {
+                $Class: Class.label,
+                $name: name
+            }, PrepareClassError);
+
+            //verify imported alias
+            xs.assert.ok(xs.ContractsManager.isName(alias), '[$Class]: given imported alias "$alias" is not correct', {
+                $Class: Class.label,
+                $alias: alias
+            }, PrepareClassError);
+        });
     };
 
     var _processExtends = function (Class, descriptor) {
@@ -61,7 +97,7 @@
         xs.log('xs.class.preprocessors.prepareClass[', Class.label, ']. Extended:', extended);
 
         //assert that either extended is not defined or is defined as non-empty string
-        xs.assert.ok(!xs.isDefined(extended) || (xs.isString(extended) && extended), '[$Class]: given extended "$extended" is incorrect', {
+        xs.assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '[$Class]: given extended "$extended" is incorrect', {
             $Class: Class.label,
             $extended: extended
         }, PrepareClassError);
@@ -90,14 +126,15 @@
         xs.log('xs.class.preprocessors.prepareClass[', Class.label, ']. Mixins:', mixins.toSource());
         mixins.each(function (name, alias) {
             //verify mixed class name
-            xs.assert.ok(name && xs.isString(name), '[$Class]: given mixed class name "$name" is not a string', {
+            xs.assert.ok(xs.ContractsManager.isName(name), '[$Class]: given mixed class name "$name" is not a string', {
                 $Class: Class.label,
                 $name: name
             }, PrepareClassError);
 
             //verify mixed class alias
-            xs.assert.ok(alias && xs.isString(name), '[$Class]: given empty mixed class alias', {
-                $Class: Class.label
+            xs.assert.ok(xs.ContractsManager.isShortName(alias), '[$Class]: given mixed class alias "$alias" is not correct', {
+                $Class: Class.label,
+                $alias: alias
             }, PrepareClassError);
 
             imports.add(name);
@@ -122,7 +159,7 @@
         xs.log('xs.class.preprocessors.prepareClass[', Class.label, ']. Interfaces:', interfaces.toSource());
         interfaces.each(function (name) {
             //verify implemented interface name
-            xs.assert.ok(name && xs.isString(name), '[$Class]: given implemented interface name "$name" is incorrect', {
+            xs.assert.ok(xs.ContractsManager.isName(name), '[$Class]: given implemented interface name "$name" is incorrect', {
                 $Class: Class.label,
                 $name: name
             }, PrepareClassError);
