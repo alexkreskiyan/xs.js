@@ -16,7 +16,8 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor processMixins
+     * Directive mixins
+     *
      * Is used to process class mixins. Mixins list is given as hash of alias:name pairs.
      *
      * Be careful about using mixins, because framework is strict about that and doesn't allow multiple declarations between Class and it's mixins

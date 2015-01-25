@@ -16,7 +16,8 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor processImplements
+     * Directive implements
+     *
      * Is used to process class implements list.
      *
      * Directive is used to list interfaces, class' signature is matched against. For detailed info, look to {@link xs.interface.Interface}

@@ -16,7 +16,8 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor abstract
+     * Directive abstract
+     *
      * Is used to mark class as abstract. Abstract class can not be instantiated.
      *
      * Possible use cases are:

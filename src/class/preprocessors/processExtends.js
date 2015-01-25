@@ -16,7 +16,8 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor processExtends
+     * Directive extends
+     *
      * Is used to extend child class from parent class
      *
      * For example:

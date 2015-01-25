@@ -16,7 +16,8 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor imports
+     * Directive imports
+     *
      * Is used to process class imports
      * Allows to declare and preload all classes, used by current class, including specific ones:
      *

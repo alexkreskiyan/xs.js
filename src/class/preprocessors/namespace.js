@@ -16,7 +16,8 @@
     var xs = root[ns];
 
     /**
-     * Preprocessor namespace
+     * Directive namespace
+     *
      * Is used to work with class namespace.
      * Allows to setup class' namespace before it is registered by contracts manager and processed by other preprocessors.
      * Actually, allows to specify namespace, class is defined within, to use relative names of other classes.
