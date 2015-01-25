@@ -58,15 +58,6 @@
         var me = {};
 
         /**
-         * Name testing regular expression
-         *
-         * @ignore
-         *
-         * @type {RegExp}
-         */
-        var nameRe = /^[A-z_]{1}[A-z0-9_]*(?:\.{1}[A-z_]{1}[A-z0-9_]*)*$/;
-
-        /**
          * Internal loaded files list
          *
          * @ignore
@@ -178,13 +169,8 @@
             xs.log('xs.core.Loader::getLoadList. Processing classes', classes.toSource());
             //process loaded and missing classes
             classes.each(function (name) {
-                //assert, that name is string
-                xs.assert.string(name, 'getLoadList - given loaded class name "$name" is not a string', {
-                    $name: name
-                }, LoaderError);
-
-                //assert, that name matches regular expression
-                xs.assert.ok(nameRe.test(name), 'getLoadList - given loaded class name "$name" has incorrect format', {
+                //assert, that name is correct
+                xs.assert.ok(xs.ContractsManager.isName(name), 'getLoadList - given loaded class name "$name" has incorrect format', {
                     $name: name
                 }, LoaderError);
 
@@ -357,13 +343,9 @@
              * @return {Boolean} whether alias is already registered
              */
             me.has = function (alias) {
-                //assert that alias is string
-                xs.assert.string(alias, 'paths::has - given alias "$alias" is not a string', {
-                    $alias: alias
-                }, LoaderError);
 
-                //assert that alias matches regular expression
-                xs.assert.ok(nameRe.test(alias), 'paths::has - given alias "$alias" is not correct', {
+                //assert that alias is correct name
+                xs.assert.ok(xs.ContractsManager.isName(alias), 'paths::has - given alias "$alias" is not correct', {
                     $alias: alias
                 }, LoaderError);
 
@@ -446,13 +428,9 @@
              * @return {String} resolved path
              */
             me.resolve = function (name) {
-                //assert that name is string
-                xs.assert.string(name, 'paths::resolve - given class name "$name" is not a string', {
-                    $name: name
-                }, LoaderError);
 
-                //assert that name matches regular expression
-                xs.assert.ok(nameRe.test(name), 'paths::resolve - given class name "$name" is not correct', {
+                //assert that name is correct
+                xs.assert.ok(xs.ContractsManager.isName(name), 'paths::resolve - given class name "$name" is not correct', {
                     $name: name
                 }, LoaderError);
 
