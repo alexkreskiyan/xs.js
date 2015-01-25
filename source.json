@@ -1,67 +1,71 @@
 {
-  "core": [
-    "xs.lang.Type",
-    "xs.core.Assert",
-    "xs.lang.Object",
-    "xs.lang.Array",
-    "xs.lang.List",
-    "xs.lang.Attribute",
-    "xs.lang.Function",
-    "xs.lang.String",
-    "xs.core.Debug",
-    "xs.core.Collection",
-    "xs.core.ContractsManager",
-    "xs.core.DependenciesManager",
-    "xs.core.Loader",
-    "xs.core.ProcessorsStack",
-    "xs.class.Class",
-    "xs.class.preprocessors.namespace",
-    "xs.class.preprocessors.abstract",
-    "xs.class.preprocessors.prepareClass",
-    "xs.class.preprocessors.imports",
-    "xs.class.preprocessors.processExtends",
-    "xs.class.preprocessors.inheritElements",
-    "xs.class.preprocessors.processMixins",
-    "xs.class.preprocessors.constructor",
-    "xs.class.preprocessors.addOwnElements",
-    "xs.class.preprocessors.processImplements",
-    "xs.class.preprocessors.defineElements",
-    "xs.class.Base",
-    "xs.interface.Interface",
-    "xs.interface.preprocessors.namespace",
-    "xs.interface.preprocessors.prepareInterface",
-    "xs.interface.preprocessors.imports",
-    "xs.interface.preprocessors.processExtends",
-    "xs.interface.preprocessors.prepareElements",
-    "xs.interface.Base",
-    "xs.env.Context",
-    "xs.env.Supports"
-  ],
-  "modules": {
-    "xs.event.IEvent": {
-      "type": "interface"
-    },
-    "xs.event.Event": {
-      "type": "class",
-      "test": false
-    },
-    "xs.event.Observable": {
-      "type": "class"
-    },
-    "xs.uri.URI": {
-      "type": "class"
-    },
-    "xs.uri.QueryString": {
-      "type": "class"
-    },
-    "xs.uri.HTTP": {
-      "type": "class"
-    },
-    "xs.uri.WebSocket": {
-      "type": "class"
-    },
-    "xs.ux.Promise": {
-      "type": "class"
+    "core": [
+        "xs.lang.Type",
+        "xs.core.Assert",
+        "xs.lang.Object",
+        "xs.lang.Array",
+        "xs.lang.List",
+        "xs.lang.Attribute",
+        "xs.lang.Function",
+        "xs.lang.String",
+        "xs.core.Debug",
+        "xs.core.Collection",
+        "xs.core.ContractsManager",
+        "xs.core.DependenciesManager",
+        "xs.core.Loader",
+        "xs.core.ProcessorsStack",
+        "xs.class.Class",
+        "xs.class.preprocessors.namespace",
+        "xs.class.preprocessors.abstract",
+        "xs.class.preprocessors.prepareClass",
+        "xs.class.preprocessors.imports",
+        "xs.class.preprocessors.processExtends",
+        "xs.class.preprocessors.inheritElements",
+        "xs.class.preprocessors.processMixins",
+        "xs.class.preprocessors.constructor",
+        "xs.class.preprocessors.addOwnElements",
+        "xs.class.preprocessors.processImplements",
+        "xs.class.preprocessors.defineElements",
+        "xs.class.Base",
+        "xs.interface.Interface",
+        "xs.interface.preprocessors.namespace",
+        "xs.interface.preprocessors.prepareInterface",
+        "xs.interface.preprocessors.imports",
+        "xs.interface.preprocessors.processExtends",
+        "xs.interface.preprocessors.prepareElements",
+        "xs.interface.Base",
+        "xs.env.Context",
+        "xs.env.Supports"
+    ],
+    "modules": {
+        "xs.event.IEvent": {
+            "type": "interface"
+        },
+        "xs.event.Event": {
+            "type": "class",
+            "test": false
+        },
+        "xs.event.Observable": {
+            "type": "class"
+        },
+        "xs.uri.URI": {
+            "type": "class"
+        },
+        "xs.uri.QueryString": {
+            "type": "class"
+        },
+        "xs.uri.HTTP": {
+            "type": "class"
+        },
+        "xs.uri.WebSocket": {
+            "type": "class"
+        },
+        "xs.ux.Promise": {
+            "type": "class"
+        },
+        "xs.ux.View": {
+            "type": "class",
+            "test": false
+        }
     }
-  }
 }
