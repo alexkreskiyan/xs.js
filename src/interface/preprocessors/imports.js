@@ -26,7 +26,7 @@
     xs.interface.preprocessors.add('imports', function () {
 
         return true;
-    }, function (Interface, descriptor, ns, dependencies, ready) {
+    }, function (Interface, descriptor, dependencies, ready) {
 
         xs.log('xs.interface.preprocessors.imports[', Interface.label, ']');
 

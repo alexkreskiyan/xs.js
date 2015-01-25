@@ -15,7 +15,7 @@
  *
  * @class xs.uri.HTTP
  */
-xs.define(xs.Class, 'ns.HTTP', function (self, ns, imports) {
+xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
 
     'use strict';
 

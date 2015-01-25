@@ -15,7 +15,7 @@
  *
  * @class xs.event.Observable
  */
-xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
+xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
     'use strict';
 
@@ -39,7 +39,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, ns, imports) {
      *
      * For example:
      *
-     *     var Class = xs.define(xs.Class, function(self, ns, imports) {
+     *     var Class = xs.define(xs.Class, function(self, imports) {
      *
      *         'use strict';
      *

@@ -39,10 +39,7 @@
      *
      * xs.interface.Interface has 2 params:
      *
-     * 1 Descriptor (Function) -  descriptor constructor. Creates raw descriptor instance. Is called with 3 params:
-     *
-     * - self. Created interface instance
-     * - ns. namespace object, where namespace references are placed
+     * 1 Descriptor (Function) -  descriptor constructor. Creates raw descriptor instance. Is called without params
      *
      * 2 createdFn ([Function]) - optional interface creation callback. Is called after
      * {@link xs.interface.preprocessors preprocessors} stack is processed. When called, created interface is passed as param.
@@ -95,14 +92,11 @@
             //save contract type
             xs.constant(Interface, 'contractor', Contractor);
 
-            //get namespace for Interface
-            var namespace = Interface.namespace = {};
-
             //Fill descriptor prototype
             Descriptor.prototype = _createPrototypeDescriptor();
 
             //get descriptor instance
-            var descriptor = new Descriptor(Interface, namespace);
+            var descriptor = new Descriptor();
 
             //save Interface descriptor
             xs.constant(Interface, 'descriptor', _createEmptyDescriptor());
@@ -117,12 +111,10 @@
             //Normally, only namespace is processed on this tick - imports is unambiguously async
             preprocessors.process([
                 Interface,
-                descriptor,
-                namespace
+                descriptor
             ], [
                 Interface,
                 descriptor,
-                namespace,
                 dependencies
             ], function () {
                 //remove isProcessing mark
@@ -150,12 +142,10 @@
                 //process postprocessors stack after createdFn called
                 postprocessors.process([
                     Interface,
-                    descriptor,
-                    namespace
+                    descriptor
                 ], [
                     Interface,
-                    descriptor,
-                    namespace
+                    descriptor
                 ]);
             });
 
@@ -172,13 +162,12 @@
          *
          *  - Interface
          *  - descriptor
-         *  - namespace
          *
          * For handler:
          *
          *  - Interface
          *  - descriptor
-         *  - namespace
+         *  - dependencies
          *
          * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
          *
@@ -199,13 +188,11 @@
          *
          *  - Interface
          *  - descriptor
-         *  - namespace
          *
          * For handler:
          *
          *  - Interface
          *  - descriptor
-         *  - namespace
          *
          * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
          *

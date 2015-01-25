@@ -55,7 +55,7 @@
     xs.class.preprocessors.add('namespace', function () {
 
         return true;
-    }, function (Class, descriptor, ns, dependencies, ready) {
+    }, function (Class, descriptor, dependencies, ready) {
 
         xs.log('xs.class.preprocessors.namespace');
         var namespace = (xs.isString(descriptor.namespace) && descriptor.namespace.length) ? descriptor.namespace : undefined;

@@ -74,7 +74,7 @@
     xs.class.preprocessors.add('imports', function () {
 
         return true;
-    }, function (Class, descriptor, ns, dependencies, ready) {
+    }, function (Class, descriptor, dependencies, ready) {
 
         xs.log('xs.class.preprocessors.imports[', Class.label, ']');
 

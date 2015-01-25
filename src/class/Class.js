@@ -40,10 +40,9 @@
      *
      * xs.class.Class has 2 params:
      *
-     * 1 Descriptor (Function) -  descriptor constructor. Creates raw descriptor instance. Is called with 3 params:
+     * 1 Descriptor (Function) -  descriptor constructor. Creates raw descriptor instance. Is called with 2 params:
      *
      * - self. Created class instance
-     * - ns. namespace object, where namespace references are placed
      * - imports. namespace object, where namespace references are placed
      *
      * Supported descriptor instance directives:
@@ -114,9 +113,6 @@
             //save contract type
             xs.constant(Class, 'contractor', Contractor);
 
-            //get namespace for Class
-            var namespace = Class.namespace = {};
-
             //get imports for Class
             var imports = Class.imports = {};
 
@@ -124,7 +120,7 @@
             Descriptor.prototype = _createPrototypeDescriptor();
 
             //get descriptor instance
-            var descriptor = new Descriptor(Class, namespace, imports);
+            var descriptor = new Descriptor(Class, imports);
 
             //save Class descriptor
             xs.constant(Class, 'descriptor', _createEmptyDescriptor());
@@ -139,12 +135,10 @@
             //Normally, only namespace is processed on this tick - imports is unambiguously async
             preprocessors.process([
                 Class,
-                descriptor,
-                namespace
+                descriptor
             ], [
                 Class,
                 descriptor,
-                namespace,
                 dependencies
             ], function () {
 
@@ -171,17 +165,15 @@
                 }
 
                 //call createdFn
-                createdFn(Class, namespace, imports);
+                createdFn(Class, imports);
 
                 //process postprocessors stack after createdFn called
                 postprocessors.process([
                     Class,
-                    descriptor,
-                    namespace
+                    descriptor
                 ], [
                     Class,
-                    descriptor,
-                    namespace
+                    descriptor
                 ]);
             });
 
@@ -198,13 +190,12 @@
          *
          *  - Class
          *  - descriptor
-         *  - namespace
          *
          * For handler:
          *
          *  - Class
          *  - descriptor
-         *  - namespace
+         *  - dependencies
          *
          * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
          *
@@ -225,13 +216,11 @@
          *
          *  - Class
          *  - descriptor
-         *  - namespace
          *
          * For handler:
          *
          *  - Class
          *  - descriptor
-         *  - namespace
          *
          * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
          *

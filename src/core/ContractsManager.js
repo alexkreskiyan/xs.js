@@ -128,9 +128,6 @@
 
             //save Contract to registry
             registry.add(name, Contract);
-
-            //sync namespaces
-            _syncNamespaces(namespace, 'add', label);
         };
 
         /**
@@ -169,9 +166,6 @@
             //get Contract namespace by path
             var namespace = _namespace(root, path);
 
-            //sync namespaces
-            _syncNamespaces(namespace, 'remove', label);
-
             //unset Contract from namespace
             delete namespace[label];
 
@@ -190,7 +184,7 @@
          * For example:
          *
          *     //define simple class
-         *     xs.define(xs.Class, 'myClass', function (self, ns) {
+         *     xs.define(xs.Class, 'myClass', function (self, imports) {
          *         //here is Class descriptor returned
          *         return {
          *         };
@@ -205,7 +199,7 @@
          * @param {Function} descFn descriptor function. Is called with 2 params:
          *
          * - self. Created contract instance
-         * - ns. namespace object, where namespace references are placed
+         * - imports. namespace object, where imported references are placed
          *
          * @param {Function} createdFn contract creation callback. Is called after
          * preprocessors stack is processed. When called, created contract is passed as param
@@ -347,51 +341,6 @@
 
                 //try to clean parent
                 _cleanNamespace(root, path);
-            }
-        };
-
-        /**
-         * Updates internal namespaces of all contracts, registered in namespace
-         *
-         * For example:
-         *
-         *     _syncNamespaces(window, 'add', 'Demo');
-         *
-         * @ignore
-         *
-         * @method syncNamespaces
-         *
-         * @param {Object|Function} namespace synchronized namespace
-         * @param {String} operation operation name
-         * @param {String} name name of changed contract
-         */
-        var _syncNamespaces = function (namespace, operation, name) {
-            var contracts = new xs.core.Collection(namespace).find(function (value) {
-                return xs.isFunction(value) && xs.isObject(value.namespace);
-            }, xs.core.Collection.ALL);
-            var changedContract = contracts.at(name);
-
-            //add new contract to all namespaces
-            if (operation === 'add') {
-                //add all contracts to new contract' namespace
-                contracts.each(function (Contract, name) {
-                    changedContract.namespace[name] = Contract;
-                });
-
-                //add new contract to all namespaces
-                contracts.each(function (Contract) {
-                    Contract.namespace[name] = contracts.at(name);
-                });
-            } else if (operation === 'remove') {
-                //empty old contract' namespace
-                Object.keys(changedContract.namespace).forEach(function (key) {
-                    delete changedContract.namespace[key];
-                });
-
-                //remove old contract from all namespaces
-                contracts.each(function (Contract) {
-                    delete Contract.namespace[name];
-                });
             }
         };
 

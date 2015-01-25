@@ -15,7 +15,7 @@
  *
  * @class xs.uri.WebSocket
  */
-xs.define(xs.Class, 'ns.WebSocket', function (self, ns, imports) {
+xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
 
     'use strict';
 
