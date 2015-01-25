@@ -56,7 +56,7 @@
     });
 
     var run = function () {
-        testOnline();
+        //testOnline();
     };
 
     var testOnline = function () {

@@ -389,4 +389,64 @@ module('xs.ContractsManager', function () {
             xs.ContractsManager.add(me.className, me.save);
         }
     });
+
+    test('isName', function () {
+        //name should be string
+        throws(function () {
+            xs.ContractsManager.isName();
+        });
+        throws(function () {
+            xs.ContractsManager.isName(1);
+        });
+
+        //incorrect name returns false
+        strictEqual(xs.ContractsManager.isName('A_b'), false);
+        //correct name returns true
+        strictEqual(xs.ContractsManager.isName('A5b'), true);
+    });
+
+    test('getName', function () {
+        //path must be correct name
+        throws(function () {
+            xs.ContractsManager.getName('a.b.c.');
+        });
+
+        //name is part of path after last dot
+        strictEqual(xs.ContractsManager.getName('a.b.c'), 'c');
+    });
+
+    test('getPath', function () {
+        //path must be correct name
+        throws(function () {
+            xs.ContractsManager.getPath('a.b.c.');
+        });
+
+        //name is part of path after last dot
+        strictEqual(xs.ContractsManager.getPath('a.b.c'), 'a.b');
+    });
+
+    test('getNamespace', function () {
+        //root must be an object
+        throws(function () {
+            xs.ContractsManager.getNamespace('a.b.c');
+        });
+
+        var root = {};
+
+        //path must be valid name or empty string
+        throws(function () {
+            xs.ContractsManager.getNamespace(root, '_');
+        });
+
+        //empty path returns root
+        strictEqual(xs.ContractsManager.getNamespace(root, ''), root);
+
+        //normal path resolves correctly
+        var root1 = xs.ContractsManager.getNamespace(root, 'a.b.c');
+        strictEqual(root1, root.a.b.c);
+
+        //coherent call doesn't recreate namespace
+        var root2 = xs.ContractsManager.getNamespace(root, 'a.b');
+        strictEqual(root2.c, root1);
+    });
 });
