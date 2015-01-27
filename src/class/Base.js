@@ -72,6 +72,9 @@ xs.define(xs.Class, 'xs.class.Base', function () {
      * @method destroy
      */
     me.method.destroy = function () {
+        //assert, that destructor was not called yet
+        xs.assert.not(this.private.isDestroyed, 'Object is already destroyed');
+
         this.private.isDestroyed = true;
     };
 
