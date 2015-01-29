@@ -222,6 +222,15 @@ module('xs.event.Observable', function () {
             object.on('add', {});
         });
 
+        //check duplicate handler denied
+        var duplicateHandler = function () {
+        };
+        object.on('add', duplicateHandler);
+        throws(function () {
+            object.on('add', duplicateHandler);
+        });
+        object.off();
+
         //check options must be either given as object or not given
         throws(function () {
             object.on('add', xs.emptyFn, undefined);
@@ -413,7 +422,8 @@ module('xs.event.Observable', function () {
         });
 
         //check complete truncate scenario
-        object.on('add', xs.emptyFn);
+        object.on('add', function () {
+        });
         object.on('add', xs.emptyFn);
         object.on('remove', xs.emptyFn);
         strictEqual(object.private.eventsHandlers.add.length, 2);
@@ -422,7 +432,8 @@ module('xs.event.Observable', function () {
         strictEqual(object.private.eventsHandlers.add.length, 0);
         strictEqual(object.private.eventsHandlers.remove.length, 0);
         //check event truncate scenario
-        object.on('add', xs.emptyFn);
+        object.on('add', function () {
+        });
         object.on('add', xs.emptyFn);
         object.on('remove', xs.emptyFn);
         strictEqual(object.private.eventsHandlers.add.length, 2);
@@ -432,7 +443,8 @@ module('xs.event.Observable', function () {
         strictEqual(object.private.eventsHandlers.remove.length, 1);
         object.off();
         //check selector scenario
-        object.on('add', xs.emptyFn);
+        object.on('add', function () {
+        });
         object.on('add', xs.emptyFn);
         object.on('remove', xs.emptyFn);
         strictEqual(object.private.eventsHandlers.add.length, 2);

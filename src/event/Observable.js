@@ -251,6 +251,14 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             $handler: handler
         }, ObservableError);
 
+        //assert that given handler was not assigned yet
+        xs.assert.not(me.private.eventsHandlers[event].find(function (item) {
+            return item.handler === handler;
+        }), 'on - given event "$event" handler "$handler" is already assigned', {
+            $event: event,
+            $handler: handler
+        }, ObservableError);
+
 
         //check options (if given)
         xs.assert.ok(arguments.length === 2 || xs.isObject(options), 'on - given options "$options" are not an object', {
