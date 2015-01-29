@@ -703,6 +703,15 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     };
 
     /**
+     * Destroys observable object
+     *
+     * @method destroy
+     */
+    Class.method.destroy = function () {
+        this.off();
+    };
+
+    /**
      * Internal error class
      *
      * @ignore
