@@ -86,6 +86,9 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     Class.constructor = function () {
         var me = this;
 
+        //assert that events are given
+        xs.assert.object(me.self.events, 'constructor - events are given incorrectly. Class constant event must be an object', ObservableError);
+
         //register eventHandlers collections
         var handlers = me.private.eventsHandlers = {};
         Object.keys(me.self.events).forEach(function (name) {
@@ -115,8 +118,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
 
         //check event
-        //assert event name is string
-        xs.assert.string(event, 'fire - given event name "$event" is not a string', {
+        //assert event name is non-empty string
+        xs.assert.ok(event && xs.isString(event), 'fire - given event name "$event" is not a string', {
             $event: event
         }, ObservableError);
 
@@ -148,11 +151,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             $event: event
         }, ObservableError);
 
-        //assert that type is string
-        xs.assert.string(options.type, 'fire - given event "$event" type "$type" is not a string', {
+        //assert that type is non-empty string
+        xs.assert.ok(options.type && xs.isString(options.type), 'fire - given event "$event" type "$type" is not a string', {
             $event: event
         }, ObservableError);
 
+        //try to get EventClass
         var EventClass = xs.ContractsManager.get(me.self.descriptor.resolveName(options.type));
 
         //assert that EventClass is class
@@ -172,7 +176,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         //fire
 
         //create event object
-        var eventObject = data ? new EventClass(data) : new EventClass;
+        var eventObject = data ? new EventClass(data) : new EventClass();
 
         //handle stoppable option
         var stoppable;
@@ -233,8 +237,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
 
         //check event
-        //assert event name is string
-        xs.assert.string(event, 'on - given event name "$event" is not a string', {
+        //assert event name is non-empty string
+        xs.assert.ok(event && xs.isString(event), 'on - given event name "$event" is not a string', {
             $event: event
         }, ObservableError);
 
@@ -496,8 +500,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
 
         //check event (if given)
-        //assert event name is string
-        xs.assert.ok(!arguments.length || xs.isString(event), 'off - given event name "$event" is not a string', {
+        //assert event name is non-empty string (if given)
+        xs.assert.ok(!arguments.length || (event && xs.isString(event)), 'off - given event name "$event" is not a string', {
             $event: event
         }, ObservableError);
 
@@ -569,8 +573,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
 
         //check event
-        //assert event name is string
-        xs.assert.string(event, 'suspend - given event name "$event" is not a string', {
+        //assert event name is non-empty string
+        xs.assert.ok(event && xs.isString(event), 'suspend - given event name "$event" is not a string', {
             $event: event
         }, ObservableError);
 
@@ -645,8 +649,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
 
         //check event
-        //assert event name is string
-        xs.assert.string(event, 'resume - given event name "$event" is not a string', {
+        //assert event name is non-empty string
+        xs.assert.ok(event && xs.isString(event), 'resume - given event name "$event" is not a string', {
             $event: event
         }, ObservableError);
 
