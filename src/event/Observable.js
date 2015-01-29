@@ -27,6 +27,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         {IEvent: 'ns.IEvent'}
     ];
 
+    Class.implements = ['ns.IObservable'];
+
     /**
      * Observable is abstract class - can be only mixed
      *
