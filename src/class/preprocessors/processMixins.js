@@ -66,7 +66,7 @@
             return xs.isObject(mixins) && mixins.has(Mixin.label);
         });
 
-        return descriptor.mixins.length > 0;
+        return true;
     }, function (Class, descriptor) {
 
         xs.log('xs.class.preprocessors.processMixins[', Class.label, ']');
@@ -237,7 +237,13 @@
         })(type, target, mixin));
 
         //extend target with mixin
-        xs.extend(target, mixin);
+        mixin.each(function (descriptor, name) {
+            if (target.hasKey(name)) {
+                target.set(name, descriptor);
+            } else {
+                target.add(name, descriptor);
+            }
+        });
     };
 
     /**
