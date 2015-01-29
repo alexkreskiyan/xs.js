@@ -71,13 +71,17 @@
 
         xs.log('xs.class.preprocessors.processMixins[', Class.label, ']');
 
+
         //init
         //own mixins initial list
         var own = descriptor.mixins;
+
         //inherited mixins initial list  - empty collection if missing, existing on (clone is use less) - if exists
         var inherited = Class.parent.descriptor.allMixins ? Class.parent.descriptor.allMixins : new xs.core.Collection();
+
         //Class mixins list (is empty by default)
         var mixins = Class.descriptor.mixins;
+
         //Class aggregate mixins list - mixins clone
         var allMixins = Class.descriptor.allMixins = inherited.clone();
 
@@ -88,6 +92,7 @@
 
         //process own mixins list
         xs.log('xs.class.preprocessors.processMixins[', Class.label, ']. Mixins:', own.toSource());
+
         //namespace shortcut
         var resolveName = Class.descriptor.resolveName;
         own.each(function (name, alias) {
@@ -198,49 +203,10 @@
      * @param {Object} mixin mixin data
      */
     var _mixinSection = function (type, target, mixin) {
-        //assert that there are no intersections
-        //block is included into another assert to exclude it completely from release version
-        xs.assert.ok((function (type, target, mixin) {
-            var name = '';
 
-            //try to find already declared item
-            target.find(function (targetValue, targetName) {
-                //continue if not intersection
-                if (!mixin.hasKey(targetName)) {
-
-                    return;
-                }
-
-                //get mixed value
-                var mixinValue = mixin.at(targetName);
-
-                //if values equal - it's ok, continue
-                if (mixinValue === targetValue) {
-
-                    return;
-                }
-
-                //error, save name of already declared item
-                name = targetName;
-
-                return true;
-            });
-
-            xs.assert.not(name, '"$type" "$name" is already declared', {
-                $type: type,
-                $name: name
-            }, ProcessMixinsError);
-
-            //return true, all ok
-
-            return true;
-        })(type, target, mixin));
-
-        //extend target with mixin
+        //default target with mixin
         mixin.each(function (descriptor, name) {
-            if (target.hasKey(name)) {
-                target.set(name, descriptor);
-            } else {
+            if (!target.hasKey(name)) {
                 target.add(name, descriptor);
             }
         });
