@@ -31,7 +31,7 @@ module('xs.event.Observable', function () {
                 },
                 remove: {
                     type: 'xs.event.Event',
-                    preventable: false
+                    stoppable: false
                 },
                 eventWithoutOptions: undefined,
                 eventWithoutType: {},
@@ -44,9 +44,9 @@ module('xs.event.Observable', function () {
                 eventWithClassNotEvent: {
                     type: 'xs.class.Base'
                 },
-                eventWithIncorrectPreventable: {
+                eventWithIncorrectStoppable: {
                     type: 'xs.event.Event',
-                    preventable: null
+                    stoppable: null
                 }
             };
 
@@ -107,46 +107,46 @@ module('xs.event.Observable', function () {
             object.fire('eventWithClassNotEvent');
         });
 
-        //check preventable, if given, is boolean
+        //check stoppable, if given, is boolean
         throws(function () {
-            object.fire('eventWithIncorrectPreventable');
+            object.fire('eventWithIncorrectStoppable');
         });
 
-        //check preventable event firing
-        var preventableSum = 5;
+        //check stoppable event firing
+        var stoppableSum = 5;
         object.on('add', function (event) {
-            preventableSum *= event.data.mod;
+            stoppableSum *= event.data.mod;
         });
         object.on('add', function (event) {
-            preventableSum -= event.data.mod;
+            stoppableSum -= event.data.mod;
 
             return false;
         });
         object.on('add', function (event) {
-            preventableSum /= event.data.mod;
+            stoppableSum /= event.data.mod;
         });
         object.fire('add', {
             mod: 5
         });
-        strictEqual(preventableSum, 20);
+        strictEqual(stoppableSum, 20);
 
-        //check non-preventable event firing
-        var unpreventableSum = 5;
+        //check non-stoppable event firing
+        var unstoppableSum = 5;
         object.on('remove', function (event) {
-            unpreventableSum *= event.data.mod;
+            unstoppableSum *= event.data.mod;
         });
         object.on('remove', function (event) {
-            unpreventableSum -= event.data.mod;
+            unstoppableSum -= event.data.mod;
 
             return false;
         });
         object.on('remove', function (event) {
-            unpreventableSum /= event.data.mod;
+            unstoppableSum /= event.data.mod;
         });
         object.fire('remove', {
             mod: 5
         });
-        strictEqual(unpreventableSum, 4);
+        strictEqual(unstoppableSum, 4);
     });
 
     test('on', function () {
@@ -168,7 +168,7 @@ module('xs.event.Observable', function () {
                 },
                 remove: {
                     type: 'xs.event.Event',
-                    preventable: false
+                    stoppable: false
                 },
                 eventWithoutOptions: undefined,
                 eventWithoutType: {},
@@ -181,9 +181,9 @@ module('xs.event.Observable', function () {
                 eventWithClassNotEvent: {
                     type: 'xs.class.Base'
                 },
-                eventWithIncorrectPreventable: {
+                eventWithIncorrectStoppable: {
                     type: 'xs.event.Event',
-                    preventable: null
+                    stoppable: null
                 }
             };
 
@@ -373,7 +373,7 @@ module('xs.event.Observable', function () {
                 },
                 remove: {
                     type: 'xs.event.Event',
-                    preventable: false
+                    stoppable: false
                 },
                 eventWithoutOptions: undefined,
                 eventWithoutType: {},
@@ -386,9 +386,9 @@ module('xs.event.Observable', function () {
                 eventWithClassNotEvent: {
                     type: 'xs.class.Base'
                 },
-                eventWithIncorrectPreventable: {
+                eventWithIncorrectStoppable: {
                     type: 'xs.event.Event',
-                    preventable: null
+                    stoppable: null
                 }
             };
 
@@ -475,7 +475,7 @@ module('xs.event.Observable', function () {
                 },
                 remove: {
                     type: 'xs.event.Event',
-                    preventable: false
+                    stoppable: false
                 },
                 eventWithoutOptions: undefined,
                 eventWithoutType: {},
@@ -488,9 +488,9 @@ module('xs.event.Observable', function () {
                 eventWithClassNotEvent: {
                     type: 'xs.class.Base'
                 },
-                eventWithIncorrectPreventable: {
+                eventWithIncorrectStoppable: {
                     type: 'xs.event.Event',
-                    preventable: null
+                    stoppable: null
                 }
             };
 
@@ -580,7 +580,7 @@ module('xs.event.Observable', function () {
                 },
                 remove: {
                     type: 'xs.event.Event',
-                    preventable: false
+                    stoppable: false
                 },
                 eventWithoutOptions: undefined,
                 eventWithoutType: {},
@@ -593,9 +593,9 @@ module('xs.event.Observable', function () {
                 eventWithClassNotEvent: {
                     type: 'xs.class.Base'
                 },
-                eventWithIncorrectPreventable: {
+                eventWithIncorrectStoppable: {
                     type: 'xs.event.Event',
-                    preventable: null
+                    stoppable: null
                 }
             };
 

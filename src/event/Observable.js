@@ -54,7 +54,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *         Class.constant.events = {
      *             add: {
      *                 type: 'ns.Event',
-     *                 preventable: true
+     *                 stoppable: true
      *             },
      *             remove: {
      *                 type: 'SampleEvent'
@@ -66,7 +66,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      * All fired object must be specified in events hash. Event configuration options:
      *
      *  - type ({@link String}). Each event specifies event type, that contains string, specifying name of imported Event class ({@link xs.event.IEvent} must be implemented).
-     *  - preventable ({@link Boolean}). Specifies, whether event processing can be prevented by event handler, returning false, or not
+     *  - stoppable ({@link Boolean}). Specifies, whether event processing can be stopped by event handler, returning false, or not
      *
      * @static
      *
@@ -174,25 +174,25 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         //create event object
         var eventObject = data ? new EventClass(data) : new EventClass;
 
-        //handle preventable option
-        var preventable;
-        if (options.hasOwnProperty('preventable')) {
-            preventable = options.preventable;
+        //handle stoppable option
+        var stoppable;
+        if (options.hasOwnProperty('stoppable')) {
+            stoppable = options.stoppable;
 
-            //assert that preventable is boolean
-            xs.assert.boolean(preventable, 'fire - given event "$event" preventable option value "$preventable" is not a boolean', {
-                $preventable: preventable
+            //assert that stoppable is boolean
+            xs.assert.boolean(stoppable, 'fire - given event "$event" stoppable option value "$stoppable" is not a boolean', {
+                $stoppable: stoppable
             }, ObservableError);
 
         } else {
-            preventable = true;
+            stoppable = true;
         }
 
 
         //handle fire
         //handlers
         var handlers = me.private.eventsHandlers[event];
-        if (preventable) {
+        if (stoppable) {
             handlers.find(function (item) {
 
                 return item.realHandler(eventObject) === false;
