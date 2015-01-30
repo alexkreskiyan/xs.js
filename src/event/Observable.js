@@ -116,6 +116,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     Class.method.fire = function (event, data) {
         var me = this;
 
+        xs.log(self.label + '::fire - event', event, ', data:', data);
 
         //check event
         //assert event name is non-empty string
@@ -192,6 +193,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             stoppable = true;
         }
 
+        xs.log(self.label + '::fire - event is ' + (stoppable ? 'stoppable' : 'not stoppable') + ', processing');
 
         //handle fire
         //handlers
@@ -235,6 +237,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     Class.method.on = function (event, handler, options) {
         var me = this;
 
+        xs.log(self.label + '::on - ', arguments.length, 'arguments: event', event, ', handler:', handler, ', options:', options);
 
         //check event
         //assert event name is non-empty string
@@ -272,6 +275,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //if no options given - simply add
         if (!options) {
+            xs.log(self.label + '::on - no options given, simply adding handler');
 
             me.private.eventsHandlers[event].add({
                 handler: handler,
@@ -319,6 +323,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             buffer = false;
         }
 
+        xs.log(self.label + '::on - handler is', (buffer ? 'buffered' : 'not buffered'));
+
         //check calls
         var calls;
         if (options.hasOwnProperty('calls')) {
@@ -337,6 +343,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             calls = 0;
         }
 
+        xs.log(self.label + '::on - handler has', (calls ? calls : 'infinite'), 'calls');
 
         //combine calls and buffer
         var realHandler; //real handler called when event is fired
@@ -463,6 +470,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             priority = false;
         }
 
+        xs.log(self.label + '::on - handler is', (priority === false ? 'added to the end of the handlers stack' : 'inserted at the ' + priority + ' position'));
+
         //if priority not given - add, else - insert
         if (priority === false) {
             //add item to collection
@@ -498,6 +507,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     Class.method.off = function (event, selector, flags) {
         var me = this;
 
+        xs.log(self.label + '::off - ', arguments.length, 'arguments: event', event, ', selector:', selector, ', flags:', flags);
 
         //check event (if given)
         //assert event name is non-empty string (if given)
@@ -523,6 +533,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //complete truncate of all handlers
         if (!arguments.length) {
+            xs.log(self.label + '::off - truncate scenario: removing all listeners on all events');
+
             var eventsHandlers = me.private.eventsHandlers;
             Object.keys(eventsHandlers).forEach(function (name) {
                 eventsHandlers[name].remove();
@@ -535,6 +547,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         var handlers = me.private.eventsHandlers[event];
         //truncate
         if (arguments.length === 1) {
+            xs.log(self.label + '::off - event truncate scenario: removing all listeners on', event, 'event');
+
             handlers.remove();
 
             return me;
@@ -542,8 +556,10 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //selector given
         if (arguments.length === 2) {
+            xs.log(self.label + '::off - selector removing scenario: removing all listeners on', event, ', that match selector:', selector);
             handlers.removeBy(selector);
         } else {
+            xs.log(self.label + '::off - selector removing scenario: removing all listeners on', event, ', that match selector:', selector, 'with flags:', flags);
             handlers.removeBy(selector, flags);
         }
 
@@ -571,6 +587,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     Class.method.suspend = function (event, selector, flags) {
         var me = this;
 
+        xs.log(self.label + '::suspend - ', arguments.length, 'arguments: event', event, ', selector:', selector, ', flags:', flags);
 
         //check event
         //assert event name is non-empty string
@@ -600,13 +617,16 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
             //get handlers subset
             if (arguments.length === 2) {
+                xs.log(self.label + '::suspend - selector suspending scenario: suspending all listeners on', event, ', that match selector:', selector);
                 handlers = me.private.eventsHandlers[event].find(selector);
             } else {
+                xs.log(self.label + '::suspend - selector suspending scenario: suspending all listeners on', event, ', that match selector:', selector, 'with flags:', flags);
                 handlers = me.private.eventsHandlers[event].find(selector, flags);
             }
 
             //all handlers suspended
         } else {
+            xs.log(self.label + '::suspend - event truncate scenario: removing all listeners on', event, 'event');
             handlers = me.private.eventsHandlers[event];
         }
 
@@ -647,6 +667,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     Class.method.resume = function (event, selector, flags) {
         var me = this;
 
+        xs.log(self.label + '::resume - ', arguments.length, 'arguments: event', event, ', selector:', selector, ', flags:', flags);
 
         //check event
         //assert event name is non-empty string
@@ -676,13 +697,16 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
             //get handlers subset
             if (arguments.length === 2) {
+                xs.log(self.label + '::resume - selector suspending scenario: suspending all listeners on', event, ', that match selector:', selector);
                 handlers = me.private.eventsHandlers[event].find(selector);
             } else {
+                xs.log(self.label + '::resume - selector suspending scenario: suspending all listeners on', event, ', that match selector:', selector, 'with flags:', flags);
                 handlers = me.private.eventsHandlers[event].find(selector, flags);
             }
 
             //all handlers resumed
         } else {
+            xs.log(self.label + '::resume - event truncate scenario: removing all listeners on', event, 'event');
             handlers = me.private.eventsHandlers[event];
         }
 
