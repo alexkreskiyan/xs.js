@@ -732,6 +732,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      * @method destroy
      */
     Class.method.destroy = function () {
+        xs.log(self.label + '::destroy - destroying observable');
         this.off();
     };
 
