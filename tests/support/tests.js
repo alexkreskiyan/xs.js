@@ -14,6 +14,11 @@
         run();
     });
 
+    var logBrowser = function () {
+        log('navigator.userAgent');
+        log(navigator.userAgent);
+    };
+
     var windowApplicationCache = function () {
         log('window.applicationCache');
         if ('applicationCache' in window) {
@@ -114,6 +119,12 @@
         } else {
             warn('window.performance.now missing');
         }
+
+        if (window.performance.getEntries) {
+            info('window.performance.getEntries supported');
+        } else {
+            warn('window.performance.getEntries missing');
+        }
     };
 
     var windowScreen = function () {
@@ -147,24 +158,6 @@
             info('window.screenY supported: ' + window.screenY);
         } else {
             warn('window.screenY missing');
-        }
-    };
-
-    var windowScrollMaxX = function () {
-        log('window.scrollMaxX');
-        if ('scrollMaxX' in window) {
-            info('window.scrollMaxX supported: ' + window.scrollMaxX);
-        } else {
-            warn('window.scrollMaxX missing');
-        }
-    };
-
-    var windowScrollMaxY = function () {
-        log('window.scrollMaxY');
-        if ('scrollMaxY' in window) {
-            info('window.scrollMaxY supported: ' + window.scrollMaxY);
-        } else {
-            warn('window.scrollMaxY missing');
         }
     };
 
@@ -436,6 +429,7 @@
     };
 
     var run = function () {
+        logBrowser();
         windowApplicationCache();
         windowDevicePixelRatio();
         windowHistory();
@@ -449,8 +443,6 @@
         windowScreen();
         windowScreenX();
         windowScreenY();
-        windowScrollMaxX();
-        windowScrollMaxY();
         windowScrollX();
         windowScrollY();
         windowSessionStorage();
