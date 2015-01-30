@@ -32,6 +32,9 @@
     //get src file
     request('../source.json', function (src) {
 
+        var modules = {};
+        assemblyModules(modules, src.modules);
+
         var scripts;
 
         //built mode
@@ -44,7 +47,7 @@
             scripts = scripts.concat(src.core.map(function (name) {
                 return resolveSourceFile(name);
             }));
-            scripts = scripts.concat(Object.keys(src.modules).map(function (name) {
+            scripts = scripts.concat(Object.keys(modules).map(function (name) {
                 return resolveSourceFile(name);
             }));
         }
@@ -53,8 +56,8 @@
             xs.Loader.paths.add('xs', '../src/');
 
             //get tests list
-            var tests = getTests(src.core, testsList).concat(getTests(Object.keys(src.modules).filter(function (name) {
-                var config = src.modules[name];
+            var tests = getTests(src.core, testsList).concat(getTests(Object.keys(modules).filter(function (name) {
+                var config = modules[name];
                 return config.type === 'class' && config.test !== false;
             }), testsList));
 
@@ -63,6 +66,21 @@
             }), runTests);
         });
     });
+
+    function assemblyModules(list, modules, name) {
+        //modules is node, if given string type
+        if (typeof modules.type === 'string') {
+            list[name] = modules;
+
+            return;
+        }
+
+        //modules is category
+        Object.keys(modules).forEach(function (key) {
+            assemblyModules(list, modules[key], name ? (name + '.' + key) : key);
+        });
+    }
+
 
     //save Qunit module method
     var module = me.module;

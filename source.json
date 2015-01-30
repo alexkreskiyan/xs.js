@@ -38,37 +38,45 @@
         "xs.env.Supports"
     ],
     "modules": {
-        "xs.event.IEvent": {
-            "type": "interface"
-        },
-        "xs.event.Event": {
-            "type": "class",
-            "test": false
-        },
-        "xs.event.IObservable": {
-            "type": "interface"
-        },
-        "xs.event.Observable": {
-            "type": "class"
-        },
-        "xs.uri.URI": {
-            "type": "class"
-        },
-        "xs.uri.QueryString": {
-            "type": "class"
-        },
-        "xs.uri.HTTP": {
-            "type": "class"
-        },
-        "xs.uri.WebSocket": {
-            "type": "class"
-        },
-        "xs.ux.Promise": {
-            "type": "class"
-        },
-        "xs.ux.View": {
-            "type": "class",
-            "test": false
+        "xs": {
+            "event": {
+                "IEvent": {
+                    "type": "interface"
+                },
+                "Event": {
+                    "type": "class",
+                    "test": false
+                },
+                "IObservable": {
+                    "type": "interface"
+                },
+                "Observable": {
+                    "type": "class"
+                }
+            },
+            "uri": {
+                "URI": {
+                    "type": "class"
+                },
+                "QueryString": {
+                    "type": "class"
+                },
+                "HTTP": {
+                    "type": "class"
+                },
+                "WebSocket": {
+                    "type": "class"
+                }
+            },
+            "ux": {
+                "Promise": {
+                    "type": "class"
+                },
+                "View": {
+                    "type": "class",
+                    "test": false
+                }
+            }
         }
     }
 }
