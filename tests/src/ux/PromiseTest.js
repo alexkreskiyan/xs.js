@@ -495,17 +495,14 @@ module('xs.ux.Promise', function () {
         var p3 = new xs.ux.Promise();
         var totalResolved = 0;
         setTimeout(function () {
-            console.warn('1');
             totalResolved += 1;
             p1.resolve();
         }, 0);
         setTimeout(function () {
-            console.warn('2');
             totalResolved *= 2;
             p2.resolve();
         }, 0);
         setTimeout(function () {
-            console.warn('3');
             totalResolved -= 5;
             p3.resolve();
         }, 10000);
@@ -515,7 +512,6 @@ module('xs.ux.Promise', function () {
             p2,
             p3
         ], 2).then(function () {
-            console.warn('some');
             //only 2 first promises
             strictEqual(totalResolved, 2);
             totalResolved = 0;
