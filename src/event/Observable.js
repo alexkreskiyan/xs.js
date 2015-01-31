@@ -376,7 +376,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
                             //turn off event by all name, handler and scope
                             me.off(eventName, function (item) {
                                 return item.handler === handler && item.scope === scope;
-                            }, xs.core.Collection.ALL);
+                            }, xs.core.Collection.All);
                         }
 
                         //call raw handler
@@ -426,7 +426,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
                         //turn off event by all name, handler and scope
                         me.off(eventName, function (item) {
                             return item.handler === handler && item.scope === scope;
-                        }, xs.core.Collection.ALL);
+                        }, xs.core.Collection.All);
                     }
 
                     //call raw handler

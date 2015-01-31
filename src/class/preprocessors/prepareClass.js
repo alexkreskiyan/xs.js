@@ -54,7 +54,7 @@
         //convert to xs.core.Collection and save reference
         descriptor.imports = new xs.core.Collection(descriptor.imports);
 
-        //verify imports
+        //verify imports (tester is useless here - collection is temporary)
         descriptor.imports.each(function (imported) {
 
             //assert that imported is either string or key=>value single pair

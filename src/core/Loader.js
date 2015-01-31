@@ -531,7 +531,7 @@
                     }
 
                     return false;
-                }, xs.core.Collection.ALL);
+                }, xs.core.Collection.All);
 
                 xs.log('xs.core.Loader::resolver::resolve. Handling items:');
                 resolved.each(function (item) {
@@ -560,7 +560,7 @@
 
                     //item is rejected, if item.pending has name
                     return item.pending.has(name);
-                }, xs.core.Collection.ALL);
+                }, xs.core.Collection.All);
 
                 xs.log('xs.core.Loader::resolver::reject. Handling items', rejected.toSource());
                 rejected.each(function (item) {

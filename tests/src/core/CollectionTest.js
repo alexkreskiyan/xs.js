@@ -272,7 +272,7 @@ module('xs.core.Collection', function () {
 
         strictEqual(collection.keyOf(3), 2);
         strictEqual(collection.keyOf(item), 4);
-        strictEqual(collection.keyOf(item, xs.core.Collection.REVERSE), 5);
+        strictEqual(collection.keyOf(item, xs.core.Collection.Reverse), 5);
         strictEqual(collection.keyOf('1'), undefined);
 
         //test empty array list
@@ -291,7 +291,7 @@ module('xs.core.Collection', function () {
         });
         strictEqual(collection.keyOf(1), 'x');
         strictEqual(collection.keyOf(item), 'a');
-        strictEqual(collection.keyOf(item, xs.core.Collection.REVERSE), 'b');
+        strictEqual(collection.keyOf(item, xs.core.Collection.Reverse), 'b');
         strictEqual(collection.keyOf('1'), undefined);
 
         //test empty object list
@@ -751,11 +751,11 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5,6]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2,' + itemString + ']');
 
-        collection.remove(item, xs.core.Collection.REVERSE);
+        collection.remove(item, xs.core.Collection.Reverse);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
-        collection.remove(item, xs.core.Collection.ALL);
+        collection.remove(item, xs.core.Collection.All);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
 
@@ -774,11 +774,11 @@ module('xs.core.Collection', function () {
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g","h"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2,' + itemString + ']');
 
-        collection.remove(item, xs.core.Collection.REVERSE);
+        collection.remove(item, xs.core.Collection.Reverse);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
-        collection.remove(item, xs.core.Collection.ALL);
+        collection.remove(item, xs.core.Collection.All);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","e","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
     });
@@ -820,13 +820,13 @@ module('xs.core.Collection', function () {
 
         collection.removeBy(function (value) {
             return value === item;
-        }, xs.core.Collection.REVERSE);
+        }, xs.core.Collection.Reverse);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
         collection.removeBy(function (value) {
             return value === item;
-        }, xs.core.Collection.ALL);
+        }, xs.core.Collection.All);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
 
@@ -849,13 +849,13 @@ module('xs.core.Collection', function () {
 
         collection.removeBy(function (value) {
             return value === item;
-        }, xs.core.Collection.REVERSE);
+        }, xs.core.Collection.Reverse);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
         collection.removeBy(function (value) {
             return value === item;
-        }, xs.core.Collection.ALL);
+        }, xs.core.Collection.All);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","e","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
     });
@@ -1002,7 +1002,7 @@ module('xs.core.Collection', function () {
         sum = '';
         collection.each(function (value) {
             sum += value;
-        }, xs.core.Collection.REVERSE);
+        }, xs.core.Collection.Reverse);
         strictEqual(sum, '21');
 
         //test empty array
@@ -1017,7 +1017,7 @@ module('xs.core.Collection', function () {
         sum = '';
         collection.each(function (value) {
             sum += value;
-        }, xs.core.Collection.REVERSE);
+        }, xs.core.Collection.Reverse);
         strictEqual(sum, '');
 
         //test object
@@ -1035,7 +1035,7 @@ module('xs.core.Collection', function () {
         sum = '';
         collection.each(function (value) {
             sum += value;
-        }, xs.core.Collection.REVERSE);
+        }, xs.core.Collection.Reverse);
         strictEqual(sum, '21');
 
         //test empty object
@@ -1050,7 +1050,7 @@ module('xs.core.Collection', function () {
         sum = '';
         collection.each(function (value) {
             sum += value;
-        }, xs.core.Collection.REVERSE);
+        }, xs.core.Collection.Reverse);
         strictEqual(sum, '');
     });
 
@@ -1092,12 +1092,12 @@ module('xs.core.Collection', function () {
         //reverse
         found = collection.find(function (value, key) {
             return this.sum(key, value.x) === 2;
-        }, xs.core.Collection.REVERSE, scope);
+        }, xs.core.Collection.Reverse, scope);
         strictEqual(found, collection.at(2));
         //all
         found = collection.find(function (value, key) {
             return this.sum(key, value.x) >= 2;
-        }, xs.core.Collection.ALL, scope);
+        }, xs.core.Collection.All, scope);
         strictEqual(found.at(0), collection.at(0));
         strictEqual(found.at(1), collection.at(1));
         strictEqual(found.at(2), collection.at(2));
@@ -1116,12 +1116,12 @@ module('xs.core.Collection', function () {
         //reverse
         found = collection.find(function (value, key) {
             return this.first(key) === 'a';
-        }, xs.core.Collection.REVERSE, scope);
+        }, xs.core.Collection.Reverse, scope);
         strictEqual(found, collection.at('ab'));
         //all
         found = collection.find(function (value, key) {
             return this.first(key) === 'a';
-        }, xs.core.Collection.ALL, scope);
+        }, xs.core.Collection.All, scope);
         strictEqual(found.at('aa'), collection.at('aa'));
         strictEqual(found.at('ab'), collection.at('ab'));
     });
@@ -1194,10 +1194,10 @@ module('xs.core.Collection', function () {
         //reverse
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, xs.core.Collection.REVERSE), 27);
+        }, xs.core.Collection.Reverse), 27);
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, xs.core.Collection.REVERSE, undefined, -3), 30);
+        }, xs.core.Collection.Reverse, undefined, -3), 30);
 
         //test object
         collection = new xs.core.Collection({
@@ -1215,10 +1215,10 @@ module('xs.core.Collection', function () {
         //reverse
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, xs.core.Collection.REVERSE), '7b2x');
+        }, xs.core.Collection.Reverse), '7b2x');
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, xs.core.Collection.REVERSE, undefined, -3), '3a4b2x');
+        }, xs.core.Collection.Reverse, undefined, -3), '3a4b2x');
     });
 
     test('some', function () {

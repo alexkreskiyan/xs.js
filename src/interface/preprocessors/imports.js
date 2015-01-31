@@ -53,7 +53,7 @@
         //filter loads to find out already loaded ones
         var loads = requires.find(function (name) {
             return !xs.ContractsManager.has(name);
-        }, xs.core.Collection.ALL);
+        }, xs.core.Collection.All);
 
         if (loads.length) {
             //load imported interfaces

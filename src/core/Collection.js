@@ -145,26 +145,26 @@
      *
      * @static
      *
-     * @property REVERSE
+     * @property Reverse
      *
      * @readonly
      *
      * @type {Number}
      */
-    collection.REVERSE = 0x1;
+    collection.Reverse = 0x1;
 
     /**
      * Collection flag, meaning, that operation is made for all matches.
      *
      * @static
      *
-     * @property ALL
+     * @property All
      *
      * @readonly
      *
      * @type {Number}
      */
-    collection.ALL = 0x2;
+    collection.All = 0x2;
 
     /**
      * Collection length
@@ -393,7 +393,7 @@
     };
 
     /**
-     * Returns key of collection value, equal to given. Supports REVERSE flag, that will perform lookup from the end of the collection
+     * Returns key of collection value, equal to given. Supports Reverse flag, that will perform lookup from the end of the collection
      *
      * For example:
      *
@@ -411,7 +411,7 @@
      *     console.log(collection.keyOf(0)); //undefined - no value
      *     console.log(collection.keyOf({})); //undefined - another object in array
      *     console.log(collection.keyOf(1)); //0
-     *     console.log(collection.keyOf(value, xs.core.Collection.REVERSE)); //5
+     *     console.log(collection.keyOf(value, xs.core.Collection.Reverse)); //5
      *
      *     //for Object
      *     var collection = new xs.core.Collection({
@@ -425,13 +425,13 @@
      *     console.log(collection.keyOf(0)); //undefined - no value
      *     console.log(collection.keyOf({})); //undefined - another object in array
      *     console.log(collection.keyOf(1)); //'a'
-     *     console.log(collection.keyOf(value, xs.core.Collection.REVERSE)); //'e'
+     *     console.log(collection.keyOf(value, xs.core.Collection.Reverse)); //'e'
      *
      * @method keyOf
      *
      * @param {*} value value to lookup for
      * @param {Number} [flags] optional lookup flags:
-     * - REVERSE - to lookup for value from the end of the collection
+     * - Reverse - to lookup for value from the end of the collection
      *
      * @return {String|Number|undefined} found key, or undefined if nothing found
      */
@@ -446,7 +446,7 @@
                 $flags: flags
             }, CollectionError);
 
-            if (flags & xs.core.Collection.REVERSE) {
+            if (flags & xs.core.Collection.Reverse) {
                 key = values.lastIndexOf(value);
             } else {
                 key = values.indexOf(value);
@@ -1061,7 +1061,7 @@
      *     //    1,
      *     //    value
      *     //]
-     *     collection.remove(value, xs.core.Collection.REVERSE);
+     *     collection.remove(value, xs.core.Collection.Reverse);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1072,7 +1072,7 @@
      *     //    value
      *     //    1
      *     //]
-     *     collection.remove(value, xs.core.Collection.ALL);
+     *     collection.remove(value, xs.core.Collection.All);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1104,7 +1104,7 @@
      *     //    1,
      *     //    value
      *     //]
-     *     collection.remove(value, xs.core.Collection.REVERSE);
+     *     collection.remove(value, xs.core.Collection.Reverse);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1115,7 +1115,7 @@
      *     //    value
      *     //    1
      *     //]
-     *     collection.remove(value, xs.core.Collection.ALL);
+     *     collection.remove(value, xs.core.Collection.All);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1129,8 +1129,8 @@
      *
      * @param {*} [value] removed value. If not given - collection wil be truncated
      * @param {Number} [flags] optional remove flags:
-     * - REVERSE - to lookup for value from the end of the collection
-     * - ALL - to remove all matches
+     * - Reverse - to lookup for value from the end of the collection
+     * - All - to remove all matches
      *
      * @chainable
      */
@@ -1157,12 +1157,12 @@
                 $flags: flags
             }, CollectionError);
 
-            //if ALL flag given - no index is needed
-            if (flags & xs.core.Collection.ALL) {
+            //if All flag given - no index is needed
+            if (flags & xs.core.Collection.All) {
                 index = values.indexOf(value);
                 all = true;
-                //if REVERSE flag given - last value occurrence is looked up for
-            } else if (flags & xs.core.Collection.REVERSE) {
+                //if Reverse flag given - last value occurrence is looked up for
+            } else if (flags & xs.core.Collection.Reverse) {
                 index = values.lastIndexOf(value);
                 //else - first value occurrence is looked up for
             } else {
@@ -1243,7 +1243,7 @@
      *     //]
      *     collection.removeBy(function(val){
      *         return val === value;
-     *     }, xs.core.Collection.REVERSE);
+     *     }, xs.core.Collection.Reverse);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1256,7 +1256,7 @@
      *     //]
      *     collection.removeBy(function(val){
      *         return val === value;
-     *     }, xs.core.Collection.ALL);
+     *     }, xs.core.Collection.All);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1292,7 +1292,7 @@
      *     //]
      *     collection.removeBy(function(val){
      *         return val === value;
-     *     }, xs.core.Collection.REVERSE);
+     *     }, xs.core.Collection.Reverse);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1305,7 +1305,7 @@
      *     //]
      *     collection.removeBy(function(val){
      *         return val === value;
-     *     }, xs.core.Collection.ALL);
+     *     }, xs.core.Collection.All);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1319,8 +1319,8 @@
      *
      * @param {Function} finder function, that returns whether to remove value or not
      * @param {Number} [flags] optional remove flags:
-     * - REVERSE - to lookup for value from the end of the collection
-     * - ALL - to remove all matches
+     * - Reverse - to lookup for value from the end of the collection
+     * - All - to remove all matches
      *
      * @chainable
      */
@@ -1341,11 +1341,11 @@
                 $flags: flags
             }, CollectionError);
 
-            //if ALL flag given - order does not matter
-            if (flags & xs.core.Collection.ALL) {
+            //if All flag given - order does not matter
+            if (flags & xs.core.Collection.All) {
                 all = true;
-                //if REVERSE flag given - last value occurrence is looked up for
-            } else if (flags & xs.core.Collection.REVERSE) {
+                //if Reverse flag given - last value occurrence is looked up for
+            } else if (flags & xs.core.Collection.Reverse) {
                 reverse = true;
             }
         }
@@ -1673,7 +1673,7 @@
      *     // {x:1}, {}, 2, collection
      *     collection.each(function(value, key, collection) {
      *         console.log(this, value, key, collection);
-     *     }, scope, xs.core.Collection.REVERSE);
+     *     }, scope, xs.core.Collection.Reverse);
      *     //outputs:
      *     // {x:1}, {}, 2, collection
      *     // {x:1}, 2, 1, collection
@@ -1694,7 +1694,7 @@
      *     // {x:1}, {}, b, collection
      *     collection.each(function(value, key, collection) {
      *         console.log(this, value, key, collection);
-     *     }, scope, xs.core.Collection.REVERSE);
+     *     }, scope, xs.core.Collection.Reverse);
      *     //outputs:
      *     // {x:1}, {}, b, collection
      *     // {x:1}, 2, c, collection
@@ -1705,7 +1705,7 @@
      * @param {Function} iterator list iterator
      * @param {Number} [flags] additional iterating flags:
      * @param {Object} [scope] optional scope
-     * - REVERSE - to iterate in reverse order
+     * - Reverse - to iterate in reverse order
      *
      * @chainable
      */
@@ -1726,8 +1726,8 @@
                 $flags: flags
             }, CollectionError);
 
-            //if REVERSE flag given - last value occurrence is looked up for
-            if (flags & xs.core.Collection.REVERSE) {
+            //if Reverse flag given - last value occurrence is looked up for
+            if (flags & xs.core.Collection.Reverse) {
                 reverse = true;
             }
         }
@@ -1781,12 +1781,12 @@
      *     // {x: 2}, reference to collection[0], first value, passed finder function
      *     console.log(collection.find(function(value, key) {
      *         return this.sum(key, value.x) === 2;
-     *     }, scope, xs.core.Collection.REVERSE));
+     *     }, scope, xs.core.Collection.Reverse));
      *     //outputs:
      *     // {x: 0}, reference to collection[2], first value, passed finder function
      *     console.log(collection.find(function(value, key) {
      *         return this.sum(key, value.x) >= 2;
-     *     }, scope, xs.core.Collection.ALL));
+     *     }, scope, xs.core.Collection.All));
      *     //outputs:
      *     //[
      *     //    {x: 2},
@@ -1807,12 +1807,12 @@
      *     // {x: 2}, reference to collection[0], first value, passed finder function
      *     console.log(collection.find(function(value, key) {
      *         return this.first(key) === 'a';
-     *     }, scope, xs.core.Collection.REVERSE));
+     *     }, scope, xs.core.Collection.Reverse));
      *     //outputs:
      *     // {x: 0}, reference to collection[2], first value, passed finder function
      *     console.log(collection.find(function(value, key) {
      *         return this.first(key) === 'a';
-     *     }, scope, xs.core.Collection.ALL));
+     *     }, scope, xs.core.Collection.All));
      *     //outputs:
      *     //{
      *     //    aa: {x: 2},
@@ -1823,10 +1823,10 @@
      *
      * @param {Function} finder function, returning true if value matches given conditions
      * @param {Number} [flags] additional search flags:
-     * - ALL - to find all matches
+     * - All - to find all matches
      * @param {Object} [scope] optional scope
      *
-     * @return {*|xs.core.Collection} found value, undefined if nothing found, or xs.core.Collection with results if ALL flag was given
+     * @return {*|xs.core.Collection} found value, undefined if nothing found, or xs.core.Collection with results if All flag was given
      */
     collection.prototype.find = function (finder, flags, scope) {
         var me = this;
@@ -1845,11 +1845,11 @@
                 $flags: flags
             }, CollectionError);
 
-            //if ALL flag given
-            if (flags & xs.core.Collection.ALL) {
+            //if All flag given
+            if (flags & xs.core.Collection.All) {
                 all = true;
-                //else - if REVERSE flag given
-            } else if (flags & xs.core.Collection.REVERSE) {
+                //else - if Reverse flag given
+            } else if (flags & xs.core.Collection.Reverse) {
                 reverse = true;
             }
         }
@@ -2010,12 +2010,12 @@
      *     //reverse
      *     console.log(collection.reduce(function(memo, value, key) {
      *         return memo + key + this.twice(value);
-     *     }, scope, xs.core.Collection.REVERSE, 5));
+     *     }, scope, xs.core.Collection.Reverse, 5));
      *     //outputs:
      *     // 22, evaluated as 5 + (2 + 4 * 2) + (1 + 2 * 2) + (0 + 1 * 2)
      *     console.log(collection.reduce(function(memo, value, key) {
      *         return memo + key + 2 * value;
-     *     }, scope, xs.core.Collection.REVERSE));
+     *     }, scope, xs.core.Collection.Reverse));
      *     //outputs:
      *     // 11, evaluated as 4 + (1 + 2 * 2) + (0 + 1 * 2)
      *
@@ -2041,12 +2041,12 @@
      *     //direct
      *     console.log(collection.reduce(function(memo, value, key) {
      *         return memo + key + this.twice(value);
-     *     }, scope, xs.core.Collection.REVERSE, 5));
+     *     }, scope, xs.core.Collection.Reverse, 5));
      *     //outputs:
      *     // '5b8c4a2', evaluated as 5 + ('b' + 2 * 4) + ('c' + 2 * 2) + ('a' + 1 * 2)
      *     console.log(collection.reduce(function(memo, value, key) {
      *         return memo + key + 2 * value;
-     *     }, scope, xs.core.Collection.REVERSE));
+     *     }, scope, xs.core.Collection.Reverse));
      *     //outputs:
      *     // '4c4a2', evaluated as 4 + ('c' + 2 * 2) + ('a' + 1 * 2)
      *
@@ -2054,7 +2054,7 @@
      *
      * @param {Function} reducer reducing function
      * @param {Number} [flags] additional iterating flags:
-     * - REVERSE - to reduce in reverse order
+     * - Reverse - to reduce in reverse order
      * @param {Object} [scope] optional scope
      * @param {*} [memo] initial value. Is optional. If omitted, first value's value is shifted from list and used as memo
      *
@@ -2080,8 +2080,8 @@
                 $flags: flags
             }, CollectionError);
 
-            //if REVERSE flag given
-            if (flags & xs.core.Collection.REVERSE) {
+            //if Reverse flag given
+            if (flags & xs.core.Collection.Reverse) {
                 reverse = true;
             }
         }

@@ -111,7 +111,7 @@
 
                 //dependency is resolved, if waiting is empty
                 return !dependency.waiting.length;
-            }, xs.core.Collection.ALL);
+            }, xs.core.Collection.All);
 
             xs.log('xs.DependenciesManager::remove. Resolved dependencies', resolved.toSource());
             //process resolved dependencies to remove them from stack
@@ -325,7 +325,7 @@
                     first = chain.keyOf(dependent);
 
                     //last occurrence key
-                    last = chain.keyOf(dependent, xs.core.Collection.REVERSE);
+                    last = chain.keyOf(dependent, xs.core.Collection.Reverse);
 
                     return first !== last;
                 });
@@ -349,12 +349,12 @@
 
                     return storage.find(function (chain) {
                         return chain.last() === dependent;
-                    }, xs.core.Collection.ALL);
+                    }, xs.core.Collection.All);
                 }
 
                 return storage.find(function (chain) {
                     return chain.has(dependent);
-                }, xs.core.Collection.ALL);
+                }, xs.core.Collection.All);
             };
 
             /**
@@ -640,7 +640,7 @@
                         //item is resolved, if waiting list is null
 
                         return item.waiting === null;
-                    }, xs.core.Collection.ALL);
+                    }, xs.core.Collection.All);
                 } else {
                     resolved = storage.find(function (item) {
                         //items with waiting null are not resolved
@@ -659,7 +659,7 @@
 
                         //item is resolved, if waiting is empty
                         return !item.waiting.length;
-                    }, xs.core.Collection.ALL);
+                    }, xs.core.Collection.All);
                 }
 
                 xs.log('xs.DependenciesManager::queue::remove. Resolved items', resolved.toSource());

@@ -407,6 +407,7 @@
          * @return {Object} new empty descriptor
          */
         var _createEmptyDescriptor = function () {
+            //internal class collections are not testable as they are supposed to be protected
             return {
 
                 //class namespace
