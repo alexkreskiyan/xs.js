@@ -34,24 +34,43 @@
      *
      * @constructor
      *
-     * @param {Array|Object|Function} [values] collection source
+     * @param {Array|Object} [values] collection source
+     * @param {Function} [tester] collection value tester. Is called on each added value to verify it
      */
-    var collection = xs.core.Collection = function (values) {
+    var collection = xs.core.Collection = function (values, tester) {
         var me = this;
 
         //init items array
         me.items = [];
 
+        //handle no arguments
         if (!arguments.length) {
 
             return;
         }
 
-        xs.assert.ok(xs.isArray(values) || xs.isObject(values) || xs.isFunction(values), 'constructor - source "$values" is nor array, nor object neither function', {
+        //handle 1 argument - tester
+        if (arguments.length === 1 && xs.isFunction(values)) {
+            me.tester = values;
+
+            return;
+        }
+
+        //values is not a tester - it must be source
+        xs.assert.ok(xs.isArray(values) || xs.isObject(values), 'constructor - source "$values" is nor array, neither object', {
             $values: values
         }, CollectionError);
 
-        var i, valuesLength;
+        //tester is not given or is function
+        xs.assert.ok(arguments.length === 1 || xs.isFunction(tester), 'constructor - tester "$tester" is not a function', {
+            $tester: tester
+        }, CollectionError);
+
+        //save tester reference
+        me.tester = tester;
+
+
+        var i, value, valuesLength;
 
 
         //handle array source
@@ -59,13 +78,31 @@
             //get valuesLength
             valuesLength = values.length;
 
-            for (i = 0; i < valuesLength; i++) {
-                //add item
-                me.items.push({
-                    key: i,
-                    value: values[i]
-                });
+            //if tester given - verify initial items as (value,key,index) set with tester
+            if (me.tester) {
+
+                for (i = 0; i < valuesLength; i++) {
+                    value = values[i];
+
+                    //add item, if it passes tester
+                    if (me.tester(value, i, i)) {
+                        me.items.push({
+                            key: i,
+                            value: value
+                        });
+                    }
+                }
+            } else {
+
+                for (i = 0; i < valuesLength; i++) {
+                    //add item
+                    me.items.push({
+                        key: i,
+                        value: values[i]
+                    });
+                }
             }
+
 
             return;
         }
@@ -76,13 +113,30 @@
         var keys = Object.keys(values), key;
         valuesLength = keys.length;
 
-        for (i = 0; i < valuesLength; i++) {
-            key = keys[i];
-            //add item
-            me.items.push({
-                key: key,
-                value: values[key]
-            });
+        //if tester given - verify initial items as (value,key,index) set with tester
+        if (me.tester) {
+            for (i = 0; i < valuesLength; i++) {
+                key = keys[i];
+                value = values[key];
+
+                //add item, if it passes tester
+                if (me.tester(value, key, i)) {
+                    me.items.push({
+                        key: key,
+                        value: value
+                    });
+                }
+            }
+        } else {
+            for (i = 0; i < valuesLength; i++) {
+                key = keys[i];
+
+                //add item
+                me.items.push({
+                    key: key,
+                    value: values[key]
+                });
+            }
         }
     };
 
@@ -660,6 +714,11 @@
             }, CollectionError);
         }
 
+        //if tester given and (value,key,index) set doesn't pass tester - return
+        if (me.tester && !me.tester(value, key, me.items.length)) {
+
+            return me;
+        }
 
         //add item
         me.items.push({
@@ -757,6 +816,11 @@
             }, CollectionError);
         }
 
+        //if tester given and (value,key,index) set doesn't pass tester - return
+        if (me.tester && !me.tester(value, key, index)) {
+
+            return me;
+        }
 
         //insert
         //insert new item
@@ -847,6 +911,12 @@
                 key += max;
             }
 
+            //if tester given and (value,key,index) set doesn't pass tester - return
+            if (me.tester && !me.tester(value, key, key)) {
+
+                return me;
+            }
+
             me.items[key].value = value;
 
             return me;
@@ -860,6 +930,12 @@
         xs.assert.ok(index >= 0, 'set - given key "$key" doesn\'t exist', {
             $key: key
         }, CollectionError);
+
+        //if tester given and (value,key,index) set doesn't pass tester - return
+        if (me.tester && !me.tester(value, key, index)) {
+
+            return me;
+        }
 
         me.items[index].value = value;
 

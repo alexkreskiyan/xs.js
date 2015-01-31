@@ -21,14 +21,26 @@ module('xs.core.Collection', function () {
             return new xs.core.Collection(true);
         });
 
+        //check incorrect tester
+        throws(function () {
+            return new xs.core.Collection([], true);
+        });
+
         //check array list
         x = [
             1,
             3
         ];
+        //simple
         collection = new xs.core.Collection(x);
         strictEqual(collection.items[0].value, x[0]);
         strictEqual(collection.items[1].value, x[1]);
+        //tested
+        collection = new xs.core.Collection(x, function (value) {
+
+            return value > 1;
+        });
+        strictEqual(collection.items[0].value, x[1]);
 
         //check object list
         x = {
@@ -38,6 +50,12 @@ module('xs.core.Collection', function () {
         collection = new xs.core.Collection(x);
         strictEqual(collection.items[0].value, x.a);
         strictEqual(collection.items[1].value, x.b);
+        //tested
+        collection = new xs.core.Collection(x, function (value) {
+
+            return value > 1;
+        });
+        strictEqual(collection.items[0].value, x.b);
     });
 
     test('length', function () {
@@ -452,7 +470,7 @@ module('xs.core.Collection', function () {
         throws(function () {
             collection.add();
         });
-        //throws if key is not atring
+        //throws if key is not string
         throws(function () {
             collection.add(1, 1);
         });
@@ -470,6 +488,37 @@ module('xs.core.Collection', function () {
         collection.add('a', 3);
         strictEqual(collection.last(), 3);
         strictEqual(collection.at('a'), 3);
+
+
+        //verified collection
+
+        var attempts = [];
+
+        //collection is capped with 2 items
+        collection = new xs.core.Collection(function (value, key, index) {
+            attempts.push([
+                value,
+                key,
+                index
+            ]);
+
+            return this.length < 2;
+        });
+
+        //first item added
+        collection.add(5);
+        strictEqual(collection.length, 1);
+
+        //second item added
+        collection.add('a', 'b');
+        strictEqual(collection.length, 2);
+
+        //third item is not added
+        collection.add('x');
+        strictEqual(collection.length, 2);
+
+        //verify attempts list
+        strictEqual(JSON.stringify(attempts), '[[5,0,0],["b","a",1],["x",2,2]]');
     });
 
     test('insert', function () {
@@ -515,6 +564,37 @@ module('xs.core.Collection', function () {
         collection.insert(-1, 'b', 3);
         strictEqual(collection.keys().toString(), 'a,b,2');
         strictEqual(collection.at('b'), 3);
+
+
+        //verified collection
+
+        var attempts = [];
+
+        //collection is capped with 2 items
+        collection = new xs.core.Collection(function (value, key, index) {
+            attempts.push([
+                value,
+                key,
+                index
+            ]);
+
+            return this.length < 2;
+        });
+
+        //first item inserted
+        collection.insert(0, 5);
+        strictEqual(collection.length, 1);
+
+        //second item inserted
+        collection.insert(0, 'a', 'b');
+        strictEqual(collection.length, 2);
+
+        //third item is not inserted
+        collection.insert(1, 'x');
+        strictEqual(collection.length, 2);
+
+        //verify attempts list
+        strictEqual(JSON.stringify(attempts), '[[5,0,0],["b","a",0],["x",1,1]]');
     });
 
     test('set', function () {
@@ -555,6 +635,37 @@ module('xs.core.Collection', function () {
         strictEqual(collection.keyOf(2), 'a');
         collection.set('a', 5);
         strictEqual(collection.at('a'), 5);
+
+
+        //verified collection
+
+        var attempts = [];
+
+        //collection is limited to contain numbers only
+        collection = new xs.core.Collection([
+            1,
+            2,
+            3
+        ], function (value, key, index) {
+            attempts.push([
+                value,
+                key,
+                index
+            ]);
+
+            return xs.isNumber(value);
+        });
+
+        //first item change - ok
+        collection.set(0, 5);
+        strictEqual(collection.at(0), 5);
+
+        //second item change - ignored
+        collection.set(1, 'a');
+        strictEqual(collection.at(1), 2);
+
+        //verify attempts list
+        strictEqual(JSON.stringify(attempts), '[[1,0,0],[2,1,1],[3,2,2],[5,0,0],["a",1,1]]');
     });
 
     test('removeAt', function () {
