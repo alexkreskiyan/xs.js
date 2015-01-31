@@ -55,7 +55,7 @@
         descriptor.imports = new xs.core.Collection(descriptor.imports);
 
         //verify imports (tester is useless here - collection is temporary)
-        descriptor.imports.each(function (imported) {
+        xs.assert.ok(descriptor.imports.all(function (imported) {
 
             //assert that imported is either string or key=>value single pair
             xs.assert.ok(xs.isString(imported) || (xs.isObject(imported) && Object.keys(imported).length === 1), '[$Class]: imported value $imported is incorrect', {
@@ -88,7 +88,9 @@
                 $Class: Class.label,
                 $alias: alias
             }, PrepareClassError);
-        });
+
+            return true;
+        }));
     };
 
     var _processExtends = function (Class, descriptor) {
