@@ -28,7 +28,7 @@
         return true;
     }, function (Class) {
 
-        xs.log('xs.class.preprocessors.defineElements[', Class.label, ']');
+        xs.logToConsole('xs.class.preprocessors.defineElements[', Class.label, ']');
 
         //constants
         _processConstants(Class);

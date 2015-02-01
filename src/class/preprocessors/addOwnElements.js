@@ -28,7 +28,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.log('xs.class.preprocessors.addOwnElements[', Class.label, ']');
+        xs.logToConsole('xs.class.preprocessors.addOwnElements[', Class.label, ']');
 
         //constants
         _processConstants(Class, descriptor);

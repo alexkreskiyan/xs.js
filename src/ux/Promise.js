@@ -190,7 +190,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
     Class.constructor = function () {
         var me = this;
 
-        xs.log(self.label + '::constructor');
+        xs.logToConsole(self.label + '::constructor');
         //initially - PENDING state
         me.private.state = self.PENDING;
 
@@ -209,7 +209,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         var me = this;
 
         xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
-        xs.log(self.label + '::resolve - data:', data);
+        xs.logToConsole(self.label + '::resolve - data:', data);
         xs.assert.equal(me.private.state, self.PENDING, 'Promise is already resolved', PromiseError);
 
         //set new state
@@ -232,7 +232,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         var me = this;
 
         xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
-        xs.log(self.label + '::reject - reason:', reason);
+        xs.logToConsole(self.label + '::reject - reason:', reason);
         xs.assert.equal(me.private.state, self.PENDING, 'Promise is already rejected', PromiseError);
 
         //set new state
@@ -256,7 +256,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         var me = this;
 
         xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
-        xs.log(self.label + '::update - state:', state);
+        xs.logToConsole(self.label + '::update - state:', state);
         xs.assert.equal(me.private.state, self.PENDING, 'Promise is already ' + me.private.state, PromiseError);
 
         //process promise on next tick
@@ -290,20 +290,20 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         var me = this;
 
         xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
-        xs.log(self.label + '::then');
+        xs.logToConsole(self.label + '::then');
 
         var item = _createItem(handleResolved, handleRejected, handleProgress);
 
 
         //if not handling - return me
         if (!item) {
-            xs.log(self.label + '::then - no handlers given, returning self');
+            xs.logToConsole(self.label + '::then - no handlers given, returning self');
 
             return me;
         }
 
 
-        xs.log(self.label + '::then - some handlers given, handling new item');
+        xs.logToConsole(self.label + '::then - some handlers given, handling new item');
         //create new promise as item.promise
         item.promise = self.factory();
 
@@ -419,7 +419,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      */
     var _handleItem = function (item, action, data) {
 
-        xs.log(self.label + '::handleItem - ', action, 'with', data);
+        xs.logToConsole(self.label + '::handleItem - ', action, 'with', data);
 
         //get handler for given type
         var handler = item[action];
@@ -429,17 +429,17 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         try {
             //get handler result
-            xs.log(self.label + '::handleItem - get result from', action, 'handler', handler, ',called with data:', data);
+            xs.logToConsole(self.label + '::handleItem - get result from', action, 'handler', handler, ',called with data:', data);
             var result = handler(data);
 
             //resolve item.promise with fetched result
-            xs.log(self.label + '::handleItem - process item.promise with action "', action, '" and value', result);
+            xs.logToConsole(self.label + '::handleItem - process item.promise with action "', action, '" and value', result);
             _resolveValue(promise, action, result);
 
 
             //reject if error happened
         } catch (e) {
-            xs.log(self.label + '::handleItem - reject item.promise with exception:', e);
+            xs.logToConsole(self.label + '::handleItem - reject item.promise with exception:', e);
             promise.reject(e);
         }
     };
@@ -462,7 +462,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         //handle value, that is promise
         if (value instanceof self) {
-            xs.log(self.label + '::resolveValue - value is', self.label, 'instance, continue with value.then');
+            xs.logToConsole(self.label + '::resolveValue - value is', self.label, 'instance, continue with value.then');
             value.then(function (data) {
                 promise.resolve(data);
             }, function (reason) {
@@ -475,7 +475,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         }
 
-        xs.log(self.label + '::resolveValue - value', value, ' is simple, ', action, ' promise with it');
+        xs.logToConsole(self.label + '::resolveValue - value', value, ' is simple, ', action, ' promise with it');
         promise[action](value);
     };
 
@@ -508,7 +508,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         //if something given - return item
         if (handleResolved || handleRejected || handleProgress) {
-            xs.log(self.label + '::createItem - some handlers given');
+            xs.logToConsole(self.label + '::createItem - some handlers given');
 
             return {
                 resolve: handleResolved,
@@ -517,7 +517,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
             };
         }
 
-        xs.log(self.label + '::createItem - no handlers given');
+        xs.logToConsole(self.label + '::createItem - no handlers given');
 
         return undefined;
     };

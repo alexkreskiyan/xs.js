@@ -28,7 +28,7 @@
         return true;
     }, function (Interface, descriptor, dependencies, ready) {
 
-        xs.log('xs.interface.preprocessors.imports[', Interface.label, ']');
+        xs.logToConsole('xs.interface.preprocessors.imports[', Interface.label, ']');
 
         //init
         //init requires list
@@ -57,12 +57,12 @@
 
         if (loads.length) {
             //load imported interfaces
-            xs.log('xs.interface.preprocessors.imports[', Interface.label, ']. Loading', loads.values());
+            xs.logToConsole('xs.interface.preprocessors.imports[', Interface.label, ']. Loading', loads.values());
             //require async
             xs.require(loads.values(), _process);
         } else {
             //nothing to load
-            xs.log('xs.interface.preprocessors.imports[', Interface.label, ']. Nothing to load');
+            xs.logToConsole('xs.interface.preprocessors.imports[', Interface.label, ']. Nothing to load');
             _process();
         }
 
@@ -73,11 +73,11 @@
                 return xs.ContractsManager.get(name);
             });
 
-            xs.log('xs.interface.preprocessors.imports[', Interface.label, ']. Imports', loads.values(), 'loaded, applying dependency');
+            xs.logToConsole('xs.interface.preprocessors.imports[', Interface.label, ']. Imports', loads.values(), 'loaded, applying dependency');
             //create new dependency
             dependencies.add(Interface, waiting, function () {
 
-                xs.log('xs.interface.preprocessors.imports[', Interface.label, ']. Imports', loads.values(), 'processed');
+                xs.logToConsole('xs.interface.preprocessors.imports[', Interface.label, ']. Imports', loads.values(), 'processed');
 
                 //call ready to notify processor stack, that import succeed
                 ready();

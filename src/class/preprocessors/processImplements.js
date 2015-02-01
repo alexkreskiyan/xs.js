@@ -65,7 +65,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.log('xs.class.preprocessors.processImplements[', Class.label, ']');
+        xs.logToConsole('xs.class.preprocessors.processImplements[', Class.label, ']');
 
         //init
         //get interfaces list
@@ -73,7 +73,7 @@
 
 
         //process interfaces list
-        xs.log('xs.class.preprocessors.processImplements[', Class.label, ']. Interfaces:', interfaces.toSource());
+        xs.logToConsole('xs.class.preprocessors.processImplements[', Class.label, ']. Interfaces:', interfaces.toSource());
         //namespace shortcut
         var resolveName = Class.descriptor.resolveName;
         interfaces.each(function (name, index, list) {
@@ -130,7 +130,7 @@
 
             var Interface = xs.ContractsManager.get(name);
 
-            xs.log('xs.class.preprocessors.processImplements[', Class.label, ']. Verifying implementation of', Interface.label);
+            xs.logToConsole('xs.class.preprocessors.processImplements[', Class.label, ']. Verifying implementation of', Interface.label);
             //verify, that target implements Interface
             _verifyInterface(Class, Interface);
         });

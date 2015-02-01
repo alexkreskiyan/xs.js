@@ -28,7 +28,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.log('xs.class.preprocessors.prepareClass[', Class.label, ']');
+        xs.logToConsole('xs.class.preprocessors.prepareClass[', Class.label, ']');
 
         //prepare imports
         _processImports(Class, descriptor);
@@ -94,7 +94,7 @@
     var _processExtends = function (Class, descriptor) {
 
         var extended = descriptor.extends;
-        xs.log('xs.class.preprocessors.prepareClass[', Class.label, ']. Extended:', extended);
+        xs.logToConsole('xs.class.preprocessors.prepareClass[', Class.label, ']. Extended:', extended);
 
         //assert that either extended is not defined or is defined as non-empty string
         xs.assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '[$Class]: given extended "$extended" is incorrect', {
@@ -123,7 +123,7 @@
         var imports = descriptor.imports;
 
         //process mixins list
-        xs.log('xs.class.preprocessors.prepareClass[', Class.label, ']. Mixins:', mixins.toSource());
+        xs.logToConsole('xs.class.preprocessors.prepareClass[', Class.label, ']. Mixins:', mixins.toSource());
         mixins.each(function (name, alias) {
             //verify mixed class name
             xs.assert.ok(xs.ContractsManager.isName(name), '[$Class]: given mixed class name "$name" is not a string', {
@@ -156,7 +156,7 @@
         var imports = descriptor.imports;
 
         //process interfaces list
-        xs.log('xs.class.preprocessors.prepareClass[', Class.label, ']. Interfaces:', interfaces.toSource());
+        xs.logToConsole('xs.class.preprocessors.prepareClass[', Class.label, ']. Interfaces:', interfaces.toSource());
         interfaces.each(function (name) {
             //verify implemented interface name
             xs.assert.ok(xs.ContractsManager.isName(name), '[$Class]: given implemented interface name "$name" is incorrect', {

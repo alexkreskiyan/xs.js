@@ -28,7 +28,7 @@
         return true;
     }, function (Interface, descriptor, dependencies, ready) {
 
-        xs.log('xs.interface.preprocessors.namespace');
+        xs.logToConsole('xs.interface.preprocessors.namespace');
         var namespace;
 
         //if namespace specified, it must be valid

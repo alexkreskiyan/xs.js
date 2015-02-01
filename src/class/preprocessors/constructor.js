@@ -48,7 +48,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.log('xs.class.preprocessors.constructor[', Class.label, ']');
+        xs.logToConsole('xs.class.preprocessors.constructor[', Class.label, ']');
         //inherited
         //get inherited constructor from parent descriptor
         var inherited = Class.parent.descriptor.hasOwnProperty('constructor') ? Class.parent.descriptor.constructor : undefined;

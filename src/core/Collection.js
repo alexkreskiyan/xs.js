@@ -1133,7 +1133,7 @@
     };
 
     /**
-     * Deletes value from collection, if it matches given function. Function's arguments are: value, key
+     * Deletes value from collection, if it matches given finder function. Function's arguments are: value, key
      *
      * For example:
      *
@@ -1574,7 +1574,7 @@
     };
 
     /**
-     * Iterates over collection in direct or reverse order
+     * Iterates over collection in direct or reverse order via calling given iterator function
      *
      * For example:
      *
@@ -1628,8 +1628,8 @@
      *
      * @param {Function} iterator list iterator
      * @param {Number} [flags] additional iterating flags:
-     * @param {Object} [scope] optional scope
      * - Reverse - to iterate in reverse order
+     * @param {Object} [scope] optional scope
      *
      * @chainable
      */
@@ -1679,7 +1679,7 @@
     };
 
     /**
-     * Returns collection item|items, that passed given test function
+     * Returns collection item|items, that passed given finder function
      *
      * For example:
      *

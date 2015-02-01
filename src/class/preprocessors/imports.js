@@ -76,7 +76,7 @@
         return true;
     }, function (Class, descriptor, dependencies, ready) {
 
-        xs.log('xs.class.preprocessors.imports[', Class.label, ']');
+        xs.logToConsole('xs.class.preprocessors.imports[', Class.label, ']');
 
         //init
         //init requires list
@@ -124,12 +124,12 @@
 
         if (loads.length) {
             //load imported classes
-            xs.log('xs.class.preprocessors.imports[', Class.label, ']. Loading', loads.values());
+            xs.logToConsole('xs.class.preprocessors.imports[', Class.label, ']. Loading', loads.values());
             //require async
             xs.require(loads.values(), _process);
         } else {
             //nothing to load
-            xs.log('xs.class.preprocessors.imports[', Class.label, ']. Nothing to load');
+            xs.logToConsole('xs.class.preprocessors.imports[', Class.label, ']. Nothing to load');
             _process();
         }
 
@@ -140,11 +140,11 @@
                 return xs.ContractsManager.get(name);
             });
 
-            xs.log('xs.class.preprocessors.imports[', Class.label, ']. Imports', loads.values(), 'loaded, applying dependency');
+            xs.logToConsole('xs.class.preprocessors.imports[', Class.label, ']. Imports', loads.values(), 'loaded, applying dependency');
             //create new dependency
             dependencies.add(Class, waiting, function () {
 
-                xs.log('xs.class.preprocessors.imports[', Class.label, ']. Imports', loads.values(), 'processed, applying imports:', imports.toSource());
+                xs.logToConsole('xs.class.preprocessors.imports[', Class.label, ']. Imports', loads.values(), 'processed, applying imports:', imports.toSource());
                 //apply imports
                 _applyImports(Class, imports);
 

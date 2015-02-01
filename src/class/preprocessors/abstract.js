@@ -50,7 +50,7 @@
 
         return true;
     }, function (Class, descriptor) {
-        xs.log('xs.class.preprocessors.abstract[', Class.label, ']');
+        xs.logToConsole('xs.class.preprocessors.abstract[', Class.label, ']');
         Class.descriptor.abstract = Boolean(descriptor.abstract);
     });
 })(window, 'xs');

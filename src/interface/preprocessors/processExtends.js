@@ -29,10 +29,10 @@
     }, function (Interface, descriptor) {
         var extended = descriptor.extends;
 
-        xs.log('xs.interface.preprocessors.processExtends[', Interface.label, ']. Extended:', extended);
+        xs.logToConsole('xs.interface.preprocessors.processExtends[', Interface.label, ']. Extended:', extended);
         //if no parent given - extend from xs.interface.Base
         if (!xs.isDefined(extended)) {
-            xs.log('xs.interface.preprocessors.extends[', Interface.label, ']. Extending xs.interface.Base');
+            xs.logToConsole('xs.interface.preprocessors.extends[', Interface.label, ']. Extending xs.interface.Base');
             _extend(Interface, xs.interface.Base);
 
             return;
@@ -65,7 +65,7 @@
             $Parent: Parent.label
         });
 
-        xs.log('xs.interface.preprocessors.extends[', Interface.label, ']. Extending', Parent.label);
+        xs.logToConsole('xs.interface.preprocessors.extends[', Interface.label, ']. Extending', Parent.label);
         //apply extends
         _applyExtends(Interface, Parent);
     });

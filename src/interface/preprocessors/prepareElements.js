@@ -28,7 +28,7 @@
         return true;
     }, function (Interface, descriptor) {
 
-        xs.log('xs.interface.preprocessors.prepareConstants[', Interface.label, ']');
+        xs.logToConsole('xs.interface.preprocessors.prepareConstants[', Interface.label, ']');
 
         //constants
         _processConstants(Interface, descriptor);

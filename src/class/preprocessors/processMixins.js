@@ -69,7 +69,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.log('xs.class.preprocessors.processMixins[', Class.label, ']');
+        xs.logToConsole('xs.class.preprocessors.processMixins[', Class.label, ']');
 
 
         //init
@@ -91,7 +91,7 @@
         //2. subtract own from inherited into pure class mixins list
 
         //process own mixins list
-        xs.log('xs.class.preprocessors.processMixins[', Class.label, ']. Mixins:', own.toSource());
+        xs.logToConsole('xs.class.preprocessors.processMixins[', Class.label, ']. Mixins:', own.toSource());
 
         //namespace shortcut
         var resolveName = Class.descriptor.resolveName;
@@ -154,7 +154,7 @@
 
             var Mixin = xs.ContractsManager.get(name);
 
-            xs.log('xs.class.preprocessors.processMixins[', Class.label, ']. Mixing in:', Mixin.label, 'as', alias);
+            xs.logToConsole('xs.class.preprocessors.processMixins[', Class.label, ']. Mixing in:', Mixin.label, 'as', alias);
             //mix mixed class descriptor into target descriptor
             _mixinClass(Class.descriptor, Mixin.descriptor);
 
