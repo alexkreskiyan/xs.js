@@ -128,7 +128,7 @@
          */
         var _object = me.object = function (value, message, vars, Exception) {
             if (!xs.isString(message)) {
-                message = '"' + value + '" is not object';
+                message = '"' + value + '" is not an object';
             }
 
             //assert
@@ -153,7 +153,7 @@
          */
         me.array = function (value, message, vars, Exception) {
             if (!xs.isString(message)) {
-                message = '"' + value + '" is not array';
+                message = '"' + value + '" is not an array';
             }
 
             //assert
@@ -178,7 +178,7 @@
          */
         var _fn = me.fn = function (value, message, vars, Exception) {
             if (!xs.isString(message)) {
-                message = '"' + value + '" is not function';
+                message = '"' + value + '" is not a function';
             }
 
             //assert
@@ -203,7 +203,7 @@
          */
         me.string = function (value, message, vars, Exception) {
             if (!xs.isString(message)) {
-                message = '"' + value + '" is not string';
+                message = '"' + value + '" is not a string';
             }
 
             //assert
@@ -228,7 +228,7 @@
          */
         me.number = function (value, message, vars, Exception) {
             if (!xs.isString(message)) {
-                message = '"' + value + '" is not number';
+                message = '"' + value + '" is not a number';
             }
 
             //assert
@@ -253,7 +253,7 @@
          */
         me.boolean = function (value, message, vars, Exception) {
             if (!xs.isString(message)) {
-                message = '"' + value + '" is not boolean';
+                message = '"' + value + '" is not a boolean';
             }
 
             //assert
@@ -278,7 +278,7 @@
          */
         me.regExp = function (value, message, vars, Exception) {
             if (!xs.isString(message)) {
-                message = '"' + value + '" is not regular expression';
+                message = '"' + value + '" is not a regular expression';
             }
 
             //assert
@@ -303,7 +303,7 @@
          */
         me.error = function (value, message, vars, Exception) {
             if (!xs.isString(message)) {
-                message = '"' + value + '" is not error object';
+                message = '"' + value + '" is not an error object';
             }
 
             //assert
@@ -478,10 +478,12 @@
          */
         var _class = me.Class = function (fn, message, vars, Exception) {
             //assert, that fn is function
-            _fn(fn);
+            _fn(fn, 'Class "$Class" is not a function', {
+                $Class: fn
+            }, Exception);
 
             if (!xs.isString(message)) {
-                message = '"' + fn + '" is not Class';
+                message = '"' + fn + '" is not a Class';
             }
 
             //assert
@@ -506,7 +508,9 @@
          */
         var _interface = me.Interface = function (fn, message, vars, Exception) {
             //assert, that fn is function
-            _fn(fn);
+            _fn(fn, 'Interface "$Interface" is not a function', {
+                $Interface: fn
+            }, Exception);
 
             if (!xs.isString(message)) {
                 message = '"' + fn + '" is not Interface';
@@ -535,13 +539,19 @@
          */
         me.instance = function (object, Class, message, vars, Exception) {
             //assert that object is object
-            _object(object);
+            _object(object, 'Instance "$instance" is not an object', {
+                $instance: object
+            }, Exception);
 
             //assert, that Class is class
-            _class(Class);
+            _class(Class, 'Class "$Class" is not a class', {
+                $Class: Class
+            }, Exception);
 
             //assert that object.self is class
-            _class(object.self);
+            _class(object.self, 'Instance.self "$Class" is not a class', {
+                $Class: object.self
+            }, Exception);
 
             if (!xs.isString(message)) {
                 message = '"' + object + '" is not instance of "' + (Class.label ? Class.label : Class.name) + '"';
@@ -570,13 +580,19 @@
          */
         me.implements = function (object, Interface, message, vars, Exception) {
             //assert that object is object
-            _object(object);
+            _object(object, 'Instance "$instance" is not an object', {
+                $instance: object
+            }, Exception);
 
-            //assert that Interface is interface
-            _interface(Interface);
+            //assert, that Interface is interface
+            _interface(Interface, 'Interface "$Interface" is not an interface', {
+                $Interface: Interface
+            }, Exception);
 
             //assert that object.self is class
-            _class(object.self);
+            _class(object.self, 'Instance.self "$Class" is not a class', {
+                $Class: object.self
+            }, Exception);
 
             if (!xs.isString(message)) {
                 message = 'Class "' + object.self.label + '" does not implement interface "' + Interface.label + '"';
