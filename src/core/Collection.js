@@ -47,7 +47,7 @@
             return;
         }
 
-        xs.assert.ok(xs.isArray(values) || xs.isObject(values), 'constructor - source "$values" is nor array, nor object neither function', {
+        xs.assert.ok(xs.isArray(values) || xs.isObject(values), 'constructor - source "$values" is nor array neither object', {
             $values: values
         }, CollectionError);
 

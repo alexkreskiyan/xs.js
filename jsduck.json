@@ -8,6 +8,7 @@
         "src/event",
         "src/interface",
         "src/lang",
+        "src/log",
         "src/uri",
         "src/ux",
         "src/xs.js"

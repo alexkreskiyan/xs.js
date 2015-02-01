@@ -141,10 +141,6 @@
          * @inheritdoc xs.core.ContractsManager#define
          */
         /**
-         * @method log
-         * @inheritdoc xs.core.Debug#log
-         */
-        /**
          * Adds handler for event when classes' with given names will be loaded
          *
          * @method onReady

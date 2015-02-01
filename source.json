@@ -8,12 +8,13 @@
         "xs.lang.Attribute",
         "xs.lang.Function",
         "xs.lang.String",
-        "xs.core.Debug",
         "xs.core.Collection",
         "xs.core.ContractsManager",
         "xs.core.DependenciesManager",
         "xs.core.Loader",
         "xs.core.ProcessorsStack",
+        "xs.log.Router",
+        "xs.log.Logger",
         "xs.class.Class",
         "xs.class.preprocessors.namespace",
         "xs.class.preprocessors.abstract",
@@ -52,6 +53,21 @@
                 },
                 "Observable": {
                     "type": "class"
+                }
+            },
+            "log": {
+                "route": {
+                    "IRoute": {
+                        "type": "interface"
+                    },
+                    "Route": {
+                        "type": "class",
+                        "test": false
+                    },
+                    "Console": {
+                        "type": "class",
+                        "test": false
+                    }
                 }
             },
             "uri": {
