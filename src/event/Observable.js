@@ -21,8 +21,6 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
     var Class = this;
 
-    var logger = new xs.log.Logger('xs.event.Observable');
-
     Class.namespace = 'xs.event';
 
     Class.imports = [
@@ -118,7 +116,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     Class.method.fire = function (event, data) {
         var me = this;
 
-        logger.trace('fire - event ' + event, {
+        self.log.trace('fire - event ' + event, {
             data: data
         });
 
@@ -197,7 +195,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             stoppable = true;
         }
 
-        logger.trace('fire - event is ' + (stoppable ? 'stoppable' : 'not stoppable') + ', processing');
+        self.log.trace('fire - event is ' + (stoppable ? 'stoppable' : 'not stoppable') + ', processing');
 
         //handle fire
         //handlers
@@ -241,7 +239,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     Class.method.on = function (event, handler, options) {
         var me = this;
 
-        logger.trace('on - ' + arguments.length + ' arguments given', {
+        self.log.trace('on - ' + arguments.length + ' arguments given', {
             event: event,
             handler: handler,
             options: options
@@ -283,7 +281,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //if no options given - simply add
         if (!options) {
-            logger.trace('on - no options given, simply adding handler');
+            self.log.trace('on - no options given, simply adding handler');
 
             me.private.eventsHandlers[event].add({
                 handler: handler,
@@ -331,7 +329,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             buffer = false;
         }
 
-        logger.trace('on - handler is ' + (buffer ? 'buffered' : 'not buffered'));
+        self.log.trace('on - handler is ' + (buffer ? 'buffered' : 'not buffered'));
 
         //check calls
         var calls;
@@ -351,7 +349,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             calls = 0;
         }
 
-        logger.trace('on - handler has ' + (calls ? calls : 'infinite') + ' calls');
+        self.log.trace('on - handler has ' + (calls ? calls : 'infinite') + ' calls');
 
         //combine calls and buffer
         var realHandler; //real handler called when event is fired
@@ -478,7 +476,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             priority = false;
         }
 
-        logger.trace('on - handler is ' + (priority === false ? 'added to the end of the handlers stack' : 'inserted at the ' + priority + ' position'));
+        self.log.trace('on - handler is ' + (priority === false ? 'added to the end of the handlers stack' : 'inserted at the ' + priority + ' position'));
 
         //if priority not given - add, else - insert
         if (priority === false) {
@@ -515,7 +513,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     Class.method.off = function (event, selector, flags) {
         var me = this;
 
-        logger.trace('off - ' + arguments.length + ' arguments given', {
+        self.log.trace('off - ' + arguments.length + ' arguments given', {
             event: event,
             selector: selector,
             flags: flags
@@ -545,7 +543,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //complete truncate of all handlers
         if (!arguments.length) {
-            logger.trace('off - truncate scenario: removing all listeners on all events');
+            self.log.trace('off - truncate scenario: removing all listeners on all events');
 
             var eventsHandlers = me.private.eventsHandlers;
             Object.keys(eventsHandlers).forEach(function (name) {
@@ -559,7 +557,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         var handlers = me.private.eventsHandlers[event];
         //truncate
         if (arguments.length === 1) {
-            logger.trace('off - event truncate scenario: removing all listeners on ' + event + ' event');
+            self.log.trace('off - event truncate scenario: removing all listeners on ' + event + ' event');
 
             handlers.remove();
 
@@ -568,12 +566,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //selector given
         if (arguments.length === 2) {
-            logger.trace('off - selector removing scenario: removing all listeners on ' + event + ', that match selector', {
+            self.log.trace('off - selector removing scenario: removing all listeners on ' + event + ', that match selector', {
                 selector: selector
             });
             handlers.removeBy(selector);
         } else {
-            logger.trace('off - selector removing scenario: removing all listeners on ' + event + ', that match selector width flags', {
+            self.log.trace('off - selector removing scenario: removing all listeners on ' + event + ', that match selector width flags', {
                 selector: selector,
                 flags: flags
             });
@@ -604,7 +602,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     Class.method.suspend = function (event, selector, flags) {
         var me = this;
 
-        logger.trace('suspend - ' + arguments.length + ' arguments given', {
+        self.log.trace('suspend - ' + arguments.length + ' arguments given', {
             event: event,
             selector: selector,
             flags: flags
@@ -638,12 +636,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
             //get handlers subset
             if (arguments.length === 2) {
-                logger.trace('suspend - selector suspending scenario: suspending all listeners on ' + event + ', that match selector', {
+                self.log.trace('suspend - selector suspending scenario: suspending all listeners on ' + event + ', that match selector', {
                     selector: selector
                 });
                 handlers = me.private.eventsHandlers[event].find(selector);
             } else {
-                logger.trace('suspend - selector suspending scenario: suspending all listeners on ' + event + ', that match selector with flags', {
+                self.log.trace('suspend - selector suspending scenario: suspending all listeners on ' + event + ', that match selector with flags', {
                     selector: selector,
                     flags: flags
                 });
@@ -652,7 +650,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
             //all handlers suspended
         } else {
-            logger.trace('suspend - event truncate scenario: removing all listeners on ' + event + ' event');
+            self.log.trace('suspend - event truncate scenario: removing all listeners on ' + event + ' event');
             handlers = me.private.eventsHandlers[event];
         }
 
@@ -693,7 +691,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     Class.method.resume = function (event, selector, flags) {
         var me = this;
 
-        logger.trace('resume - ' + arguments.length + ' arguments given', {
+        self.log.trace('resume - ' + arguments.length + ' arguments given', {
             event: event,
             selector: selector,
             flags: flags
@@ -727,12 +725,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
             //get handlers subset
             if (arguments.length === 2) {
-                logger.trace('resume - selector suspending scenario: suspending all listeners on ' + event + ', that match selector', {
+                self.log.trace('resume - selector suspending scenario: suspending all listeners on ' + event + ', that match selector', {
                     selector: selector
                 });
                 handlers = me.private.eventsHandlers[event].find(selector);
             } else {
-                logger.trace('resume - selector suspending scenario: suspending all listeners on ' + event + ', that match selector with flags', {
+                self.log.trace('resume - selector suspending scenario: suspending all listeners on ' + event + ', that match selector with flags', {
                     selector: selector,
                     flags: flags
                 });
@@ -741,7 +739,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
             //all handlers resumed
         } else {
-            logger.trace('resume - event truncate scenario: removing all listeners on ' + event + ' event');
+            self.log.trace('resume - event truncate scenario: removing all listeners on ' + event + ' event');
             handlers = me.private.eventsHandlers[event];
         }
 
@@ -767,7 +765,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      * @method destroy
      */
     Class.method.destroy = function () {
-        logger.trace('destroy - destroying observable');
+        self.log.trace('destroy - destroying observable');
         this.off();
     };
 

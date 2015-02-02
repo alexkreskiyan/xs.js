@@ -19,8 +19,6 @@ xs.define(xs.Class, 'ns.View', function (self) {
 
     'use strict';
 
-    var logger = new xs.log.Logger('xs.ux.View');
-
     var Class = this;
 
     Class.namespace = 'xs.ux';
@@ -69,7 +67,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
     Class.constructor = function (template) {
         var me = this;
 
-        logger.trace('constructor - creating new view from template "' + template + '"');
+        self.log.trace('constructor - creating new view from template "' + template + '"');
 
         //assert, that template is string
         xs.assert.string(template, 'constructor - given template "$template" is not a string', {
@@ -102,7 +100,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
     Class.method.on = function (event, handler, options) {
         var me = this;
 
-        logger.trace('on - ' + arguments.length + ' arguments given', {
+        self.log.trace('on - ' + arguments.length + ' arguments given', {
             event: event,
             handler: handler,
             options: options
@@ -134,13 +132,13 @@ xs.define(xs.Class, 'ns.View', function (self) {
 
         //if not domEvent - simply call observable.on and return
         if (!eventConfig.domEvent) {
-            logger.trace('on - not DOM event, calling Observable.on');
+            self.log.trace('on - not DOM event, calling Observable.on');
             me.mixins.observable.prototype.on.apply(me, arguments);
 
             return me;
         }
 
-        logger.trace('on - DOM event, calling Observable.on');
+        self.log.trace('on - DOM event, calling Observable.on');
 
 
         //init
@@ -157,12 +155,12 @@ xs.define(xs.Class, 'ns.View', function (self) {
 
         //return if no dom listener needed
         if (hasListener) {
-            logger.trace('on - DOM event, listener is already created');
+            self.log.trace('on - DOM event, listener is already created');
 
             return me;
         }
 
-        logger.trace('on - DOM event, creating listener');
+        self.log.trace('on - DOM event, creating listener');
 
 
         //add single handler to DOM
@@ -189,7 +187,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
     Class.method.destroy = function () {
         var me = this;
 
-        logger.trace('destroy - destroying view');
+        self.log.trace('destroy - destroying view');
 
         //remove domHandlers
         var nodes = me.private.nodes;
@@ -221,7 +219,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
      */
     var _getNodesCollection = function (template) {
 
-        logger.trace('getNodesCollection - fetching nodes from template "' + template + '"');
+        self.log.trace('getNodesCollection - fetching nodes from template "' + template + '"');
 
         //create container div element to parse html into
         var container = document.createElement('div');
