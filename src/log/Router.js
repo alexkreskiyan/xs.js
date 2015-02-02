@@ -234,16 +234,15 @@
              *
              * For example:
              *
-             *     xs.log.Router.routes.add('console', new xs.log.route.Console());
+             *     xs.log.Router.routes.add(new xs.log.route.Console('console'));
              *
              * @method add
              *
-             * @param {String} name route name
              * @param {xs.log.route.Route} route instance of class, derived from xs.log.route.Route
              *
              * @chainable
              */
-            me.add = function (name, route) {
+            me.add = function (route) {
 
                 //assert, that route is instance of xs.log.route.Route base route class
                 xs.assert.instance(route, xs.log.route.Route, 'routes.add - given route "$route" is not instance of xs.log.route.Route', {
@@ -251,7 +250,7 @@
                 }, RouterError);
 
                 //add route to storage
-                storage.add(name, route);
+                storage.add(route);
 
                 //if not ready - process route with all buffered log entries
                 buffer.each(function (entry) {
@@ -313,6 +312,17 @@
              * @chainable
              */
             me.remove = function (route, flags) {
+
+                //if route given
+                if (arguments.length) {
+
+                    //assert, that route is instance of xs.log.route.Route base route class
+                    xs.assert.instance(route, xs.log.route.Route, 'routes.remove - given route "$route" is not instance of xs.log.route.Route', {
+                        $route: route
+                    }, RouterError);
+
+                }
+
                 storage.remove.apply(storage, arguments);
 
                 return me;

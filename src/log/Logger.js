@@ -206,9 +206,9 @@
         }, LoggerError);
 
         if (data) {
-            _process(me.category, xs.log.Info, message, data);
+            _process(me.category, xs.log.Trace, message, data);
         } else {
-            _process(me.category, xs.log.Info, message);
+            _process(me.category, xs.log.Trace, message);
         }
     };
 
