@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.interface.preprocessors.processExtends');
+
     /**
      * Preprocessor processExtends
      * Is used to extend child interface from parent interface
@@ -29,10 +31,10 @@
     }, function (Interface, descriptor) {
         var extended = descriptor.extends;
 
-        xs.logToConsole('xs.interface.preprocessors.processExtends[', Interface.label, ']. Extended:', extended);
+        logger.trace((Interface.label ? Interface.label : 'undefined') + '. Extended ' + extended);
         //if no parent given - extend from xs.interface.Base
         if (!xs.isDefined(extended)) {
-            xs.logToConsole('xs.interface.preprocessors.extends[', Interface.label, ']. Extending xs.interface.Base');
+            logger.trace((Interface.label ? Interface.label : 'undefined') + '. Extending xs.interface.Base');
             _extend(Interface, xs.interface.Base);
 
             return;
@@ -65,7 +67,7 @@
             $Parent: Parent.label
         });
 
-        xs.logToConsole('xs.interface.preprocessors.extends[', Interface.label, ']. Extending', Parent.label);
+        logger.trace((Interface.label ? Interface.label : 'undefined') + '. Extending ' + Parent.label);
         //apply extends
         _applyExtends(Interface, Parent);
     });

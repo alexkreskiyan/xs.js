@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.interface.preprocessors.prepareElements');
+
     /**
      * Preprocessor prepareConstants
      * Is used to process interface constants
@@ -28,7 +30,7 @@
         return true;
     }, function (Interface, descriptor) {
 
-        xs.logToConsole('xs.interface.preprocessors.prepareConstants[', Interface.label, ']');
+        logger.trace(Interface.label ? Interface.label : 'undefined');
 
         //constants
         _processConstants(Interface, descriptor);

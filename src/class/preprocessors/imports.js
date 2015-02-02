@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.class.preprocessors.imports');
+
     /**
      * Directive imports
      *
@@ -76,7 +78,7 @@
         return true;
     }, function (Class, descriptor, dependencies, ready) {
 
-        xs.logToConsole('xs.class.preprocessors.imports[', Class.label, ']');
+        logger.trace(Class.label ? Class.label : 'undefined');
 
         //init
         //init requires list
@@ -124,12 +126,14 @@
 
         if (loads.length) {
             //load imported classes
-            xs.logToConsole('xs.class.preprocessors.imports[', Class.label, ']. Loading', loads.values());
+            logger.trace((Class.label ? Class.label : 'undefined') + '. Loading', {
+                loads: loads.values()
+            });
             //require async
             xs.require(loads.values(), _process);
         } else {
             //nothing to load
-            xs.logToConsole('xs.class.preprocessors.imports[', Class.label, ']. Nothing to load');
+            logger.trace((Class.label ? Class.label : 'undefined') + '. Nothing to load');
             _process();
         }
 
@@ -140,11 +144,16 @@
                 return xs.ContractsManager.get(name);
             });
 
-            xs.logToConsole('xs.class.preprocessors.imports[', Class.label, ']. Imports', loads.values(), 'loaded, applying dependency');
+            logger.trace((Class.label ? Class.label : 'undefined') + '. Imports loaded, applying dependency', {
+                loads: loads.values()
+            });
             //create new dependency
             dependencies.add(Class, waiting, function () {
 
-                xs.logToConsole('xs.class.preprocessors.imports[', Class.label, ']. Imports', loads.values(), 'processed, applying imports:', imports.toSource());
+                logger.trace((Class.label ? Class.label : 'undefined') + '. Imports loads processed, applying imports', {
+                    loads: loads.values(),
+                    imports: imports.toSource()
+                });
                 //apply imports
                 _applyImports(Class, imports);
 

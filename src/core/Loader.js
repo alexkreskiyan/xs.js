@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.core.Loader');
+
     /**
      * xs.core.Loader is core class, that is used for class loading
      *
@@ -92,15 +94,19 @@
          * - some of required classes' already failed to load
          */
         me.require = function (name, handleLoad, handleFail) {
-            xs.logToConsole('xs.core.Loader::require. Acquired:', name);
+            logger.trace('require. Acquired ' + name);
 
             //init loaded classes list
             var loadList = _getLoadList(new xs.core.Collection(xs.isArray(name) ? name : [name]));
-            xs.logToConsole('xs.core.Loader::require. LoadList: loaded:', loadList.loaded.toSource(), ', failed:', loadList.failed.toSource(), ', unresolved:', loadList.unresolved.toSource());
+            logger.trace('require. LoadList formed', {
+                loaded: loadList.loaded.toSource(),
+                failed: loadList.failed.toSource(),
+                unresolved: loadList.unresolved.toSource()
+            });
 
             //if failed section is not empty - handle fail
             if (loadList.failed.length) {
-                xs.logToConsole('xs.core.Loader::require. LoadList has failed classes. Handle fail');
+                logger.trace('require. LoadList has failed classes. Handle fail');
                 //use handleFail method if given
                 if (handleFail) {
                     xs.nextTick(function () {
@@ -119,7 +125,7 @@
 
             //if new section is empty - handle load - all classes are in loaded section
             if (!loadList.unresolved.length) {
-                xs.logToConsole('xs.core.Loader::require. LoadList has only loaded classes. Handle load');
+                logger.trace('require. LoadList has only loaded classes. Handle load');
                 xs.nextTick(function () {
                     handleLoad(loadList.loaded.toSource());
                 });
@@ -127,11 +133,11 @@
                 return;
             }
 
-            xs.logToConsole('xs.core.Loader::require. Add loadList to resolver');
+            logger.trace('require. Add loadList to resolver');
             //add loadList to resolver
             resolver.add(loadList, handleLoad, handleFail);
 
-            xs.logToConsole('xs.core.Loader::require. Add each of loadList to loader');
+            logger.trace('require. Add each of loadList to loader');
             //add each of loadList.unresolved to loader
             loadList.unresolved.each(function (path, name) {
                 if (!loader.has(name)) {
@@ -166,7 +172,9 @@
                 failed: new xs.core.Collection()
             };
 
-            xs.logToConsole('xs.core.Loader::getLoadList. Processing classes', classes.toSource());
+            logger.trace('getLoadList. Processing classes', {
+                classes: classes.toSource()
+            });
             //process loaded and missing classes
             classes.each(function (name) {
                 //assert, that name is correct
@@ -177,11 +185,11 @@
                 //resolve name with paths
                 var path = paths.resolve(name);
 
-                xs.logToConsole('xs.core.Loader::getLoadList. Resolved class "' + name + '" as path"' + path + '"');
-                xs.logToConsole('xs.core.Loader::getLoadList. Check class "' + name + '"');
+                logger.trace('getLoadList. Resolved class "' + name + '" as path"' + path + '"');
+                logger.trace('getLoadList. Check class "' + name + '"');
                 //if the class is already loaded - add it to loaded section
                 if (loaded.has(name)) {
-                    xs.logToConsole('xs.core.Loader::getLoadList. Class "' + name + '" is already loaded');
+                    logger.trace('getLoadList. Class "' + name + '" is already loaded');
                     loadList.loaded.add(name, path);
 
                     //if the class was already attempted to load, but load failed - add it to failed section
@@ -194,7 +202,11 @@
                 }
             });
 
-            xs.logToConsole('xs.core.Loader::getLoadList. Result loadList: loaded:', loadList.loaded.toSource(), ', failed:', loadList.failed.toSource(), ', unresolved:', loadList.unresolved.toSource());
+            logger.trace('getLoadList. Result loadList formed', {
+                loaded: loadList.loaded.toSource(),
+                failed: loadList.failed.toSource(),
+                unresolved: loadList.unresolved.toSource()
+            });
 
             //return loadList
             return loadList;
@@ -213,7 +225,7 @@
             //handle load if class was loaded
             if (xs.ContractsManager.has(name)) {
 
-                xs.logToConsole('xs.core.Loader::handleLoad. Class "' + name + '" loaded');
+                logger.trace('handleLoad. Class "' + name + '" loaded');
                 //add loaded path
                 loaded.add(name);
 
@@ -223,7 +235,7 @@
                 //handle fail if class is missing
             } else {
 
-                xs.logToConsole('xs.core.Loader::handleFail. Class "' + name + '" failed to load');
+                logger.trace('handleFail. Class "' + name + '" failed to load');
                 //add failed path
                 failed.add(name);
 
@@ -242,7 +254,7 @@
          * @param {String} name name of failed class
          */
         function _handleFail(name) {
-            xs.logToConsole('xs.core.Loader::handleFail. Class "' + name + '" failed to load');
+            logger.trace('handleFail. Class "' + name + '" failed to load');
             //add failed path
             failed.add(name);
 
@@ -493,7 +505,11 @@
              * @param {Function} [handleFail] handler for one of files failed.
              */
             me.add = function (list, handleLoad, handleFail) {
-                xs.logToConsole('xs.core.Loader::resolver::add. Add list loaded:', list.loaded.toSource(), ', failed:', list.failed.toSource(), ', unresolved:', list.unresolved.toSource());
+                logger.trace('resolver::add. Add list loaded', {
+                    loaded: list.loaded.toSource(),
+                    failed: list.failed.toSource(),
+                    unresolved: list.unresolved.toSource()
+                });
                 awaiting.add({
                     list: list,
                     pending: new xs.core.Collection(list.unresolved.keys()),
@@ -513,9 +529,11 @@
              */
             me.resolve = function (name) {
                 //find resolved items
-                xs.logToConsole('xs.core.Loader::resolver::resolve. Handle class "' + name + '"');
+                logger.trace('resolver::resolve. Handle class "' + name + '"');
                 var resolved = awaiting.find(function (item) {
-                    xs.logToConsole('xs.core.Loader::resolver::resolve. Clean up item.pending', item.pending.toSource());
+                    logger.trace('resolver::resolve. Clean up item.pending', {
+                        pending: item.pending.toSource()
+                    });
 
                     //item is resolved, if item.pending had name, and after name was removed from pending, item.pending became empty
                     if (item.pending.has(name)) {
@@ -533,9 +551,13 @@
                     return false;
                 }, xs.core.Collection.All);
 
-                xs.logToConsole('xs.core.Loader::resolver::resolve. Handling items:');
+                logger.trace('resolver::resolve. Handling items:');
                 resolved.each(function (item) {
-                    xs.logToConsole('xs.core.Loader::resolver::resolve. loaded:', item.list.loaded.toSource(), ', failed:', item.list.failed.toSource(), ', unresolved:', item.list.unresolved.toSource());
+                    logger.trace('resolver::resolve. loadList', {
+                        loaded: item.list.loaded.toSource(),
+                        failed: item.list.failed.toSource(),
+                        unresolved: item.list.unresolved.toSource()
+                    });
                 });
 
                 //handle each resolved item
@@ -554,17 +576,25 @@
              */
             me.reject = function (name) {
                 //find rejected items
-                xs.logToConsole('xs.core.Loader::resolver::reject. Handle name "' + name + '"');
+                logger.trace('resolver::reject. Handle name "' + name + '"');
                 var rejected = awaiting.find(function (item) {
-                    xs.logToConsole('xs.core.Loader::resolver::reject. Check item.pending', item.pending.toSource());
+                    logger.trace('resolver::reject. Check item.pending', {
+                        pending: item.pending.toSource()
+                    });
 
                     //item is rejected, if item.pending has name
                     return item.pending.has(name);
                 }, xs.core.Collection.All);
 
-                xs.logToConsole('xs.core.Loader::resolver::reject. Handling items', rejected.toSource());
+                logger.trace('resolver::reject. Handling items', {
+                    rejected: rejected.toSource()
+                });
                 rejected.each(function (item) {
-                    xs.logToConsole('xs.core.Loader::resolver::reject. Rejected: loaded:', item.list.loaded, ', failed:', item.list.failed, ', unresolved:', item.list.unresolved);
+                    logger.trace('resolver::reject. Rejected:', {
+                        loaded: item.list.loaded,
+                        failed: item.list.failed,
+                        unresolved: item.list.unresolved
+                    });
                 });
 
                 //handle each rejected item
@@ -623,7 +653,7 @@
             me.add = function (name, path) {
                 var me = this;
 
-                xs.logToConsole('xs.core.Loader::loader::add. Add class "' + name + '" with path "' + path + '"');
+                logger.trace('loader::add. Add class "' + name + '" with path "' + path + '"');
                 //assert that path was not added yet
                 xs.assert.not(me.has(path), 'loader::add - class "$Class" with path "$path" is already loading', {
                     $Class: name,
@@ -664,7 +694,7 @@
                 //create script element
                 var script = document.createElement('script');
 
-                xs.logToConsole('xs.core.Loader::loader::load. Add script for class "' + name + '" with path "' + path + '"');
+                logger.trace('loader::load. Add script for class "' + name + '" with path "' + path + '"');
                 //set name - class name
                 script.name = name;
 
@@ -757,7 +787,7 @@
             me.add = function (name) {
                 var me = this;
 
-                xs.logToConsole('xs.core.Loader::' + listName + '::add. Add name "' + name + '"');
+                logger.trace('' + listName + '::add. Add name "' + name + '"');
                 //assert that name is not in list
                 xs.assert.not(me.has(name), '$list::add - class "$name" is already in $list list', {
                     $list: listName,
@@ -794,7 +824,7 @@
             me.remove = function (name) {
                 var me = this;
 
-                xs.logToConsole('xs.core.Loader::' + listName + '::remove. Delete name "' + name + '"');
+                logger.trace('' + listName + '::remove. Delete name "' + name + '"');
                 //assert that name is in list
                 xs.assert.ok(me.has(name), '$list::remove - class "$name" is not in $list list', {
                     $list: listName,

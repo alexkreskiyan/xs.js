@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.class.preprocessors.processExtends');
+
     /**
      * Directive extends
      *
@@ -46,10 +48,12 @@
     }, function (Class, descriptor) {
         var extended = descriptor.extends;
 
-        xs.logToConsole('xs.class.preprocessors.processExtends[', Class.label, ']. Extended:', extended);
+        logger.trace((Class.label ? Class.label : 'undefined') + '. Preparing to extend', {
+            extended: extended
+        });
         //if no parent given - extend from xs.class.Base
         if (!xs.isDefined(extended)) {
-            xs.logToConsole('xs.class.preprocessors.extends[', Class.label, ']. Extending xs.class.Base');
+            logger.trace((Class.label ? Class.label : 'undefined') + '. Extending xs.class.Base');
             _extend(Class, xs.class.Base);
 
             return;
@@ -82,7 +86,7 @@
             $Parent: Parent.label
         }, ProcessExtendsError);
 
-        xs.logToConsole('xs.class.preprocessors.extends[', Class.label, ']. Extending', Parent.label);
+        logger.trace((Class.label ? Class.label : 'undefined') + '. Extending ' + Parent.label);
         //apply extends
         _applyExtends(Class, Parent);
     });

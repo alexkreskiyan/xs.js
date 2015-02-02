@@ -18,11 +18,6 @@
     //define xs.log
     if (!xs.log) {
 
-        //TODO remove
-        xs.logToConsole = function () {
-            (new xs.log.Logger('demo')).info('message');
-            //console.log.apply(console, arguments);
-        };
         xs.log = {};
     }
 
@@ -256,7 +251,7 @@
                 }, RouterError);
 
                 //add route to storage
-                storage.add(route);
+                storage.add(name, route);
 
                 //if not ready - process route with all buffered log entries
                 buffer.each(function (entry) {

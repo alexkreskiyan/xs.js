@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.interface.preprocessors.imports');
+
     /**
      * Preprocessor imports
      * Is used to process interface imports
@@ -28,7 +30,7 @@
         return true;
     }, function (Interface, descriptor, dependencies, ready) {
 
-        xs.logToConsole('xs.interface.preprocessors.imports[', Interface.label, ']');
+        logger.trace(Interface.label ? Interface.label : 'undefined');
 
         //init
         //init requires list
@@ -57,12 +59,14 @@
 
         if (loads.length) {
             //load imported interfaces
-            xs.logToConsole('xs.interface.preprocessors.imports[', Interface.label, ']. Loading', loads.values());
+            logger.trace((Interface.label ? Interface.label : 'undefined') + '. Loading', {
+                loads: loads.values()
+            });
             //require async
             xs.require(loads.values(), _process);
         } else {
             //nothing to load
-            xs.logToConsole('xs.interface.preprocessors.imports[', Interface.label, ']. Nothing to load');
+            logger.trace((Interface.label ? Interface.label : 'undefined') + '. Nothing to load');
             _process();
         }
 
@@ -73,11 +77,15 @@
                 return xs.ContractsManager.get(name);
             });
 
-            xs.logToConsole('xs.interface.preprocessors.imports[', Interface.label, ']. Imports', loads.values(), 'loaded, applying dependency');
+            logger.trace((Interface.label ? Interface.label : 'undefined') + '. Imports loaded, applying dependency', {
+                loads: loads.values()
+            });
             //create new dependency
             dependencies.add(Interface, waiting, function () {
 
-                xs.logToConsole('xs.interface.preprocessors.imports[', Interface.label, ']. Imports', loads.values(), 'processed');
+                logger.trace((Interface.label ? Interface.label : 'undefined') + '. Imports processed', {
+                    loads: loads.values()
+                });
 
                 //call ready to notify processor stack, that import succeed
                 ready();

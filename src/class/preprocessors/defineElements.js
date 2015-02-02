@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.class.preprocessors.defineElements');
+
     /**
      * Preprocessor defineElements
      * Is used to inherit parent elements to class descriptor
@@ -28,7 +30,7 @@
         return true;
     }, function (Class) {
 
-        xs.logToConsole('xs.class.preprocessors.defineElements[', Class.label, ']');
+        logger.trace(Class.label ? Class.label : 'undefined');
 
         //constants
         _processConstants(Class);

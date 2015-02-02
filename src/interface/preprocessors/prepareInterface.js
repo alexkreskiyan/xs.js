@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.interface.preprocessors.prepareInterface');
+
     /**
      * Preprocessor prepareInterface
      * Implements basic interface prepare operation
@@ -28,7 +30,7 @@
         return true;
     }, function (Interface, descriptor) {
 
-        xs.logToConsole('xs.interface.preprocessors.prepareInterface[', Interface.label, ']');
+        logger.trace(Interface.label ? Interface.label : 'undefined');
 
 
         //prepare imports
@@ -40,7 +42,9 @@
         //prepare extends
 
         var extended = descriptor.extends;
-        xs.logToConsole('xs.interface.preprocessors.prepareInterface[', Interface.label, ']. Extended:', extended);
+        logger.trace((Interface.label ? Interface.label : 'undefined') + '. Extended ', {
+            extended: extended
+        });
 
         //assert that either extended is not defined or is defined as non-empty string
         xs.assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '[$Interface]: given extended "$extended" is incorrect', {

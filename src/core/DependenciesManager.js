@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.core.DependenciesManager');
+
     /**
      * Private internal core class.
      *
@@ -54,15 +56,18 @@
          */
         me.add = function (dependent, waiting, handleReady) {
 
-            xs.logToConsole('xs.DependenciesManager::add. Adding dependency for', dependent.label, 'from', waiting.values().map(function (Class) {
-                return Class.label;
-            }));
+            logger.trace('add. Adding dependency for ' + dependent.label + ' from classes', {
+                classes: waiting.values().map(function (Class) {
+                    return Class.label;
+                })
+            });
+
             //filter waiting classes to exclude processed ones
             _filterWaiting(waiting);
 
             //if empty waiting list - apply handleReady immediately
             if (!waiting.length) {
-                xs.logToConsole('xs.DependenciesManager::add. Filtered list is empty. Handling');
+                logger.trace('add. Filtered list is empty. Handling');
                 handleReady();
 
                 return;
@@ -71,7 +76,7 @@
             //add dependency to chains
             chains.add(dependent, waiting);
 
-            xs.logToConsole('xs.DependenciesManager::add. Try to find lock');
+            logger.trace('add. Try to find lock');
             //try to find dead lock
             waiting.each(function (Class) {
                 var deadLock = chains.getLock(Class);
@@ -80,7 +85,7 @@
                 xs.assert.not(deadLock, 'dead lock detected: ' + (deadLock ? _showDeadLock(deadLock) : ''), DependenciesManagerError);
             });
 
-            xs.logToConsole('xs.DependenciesManager::add. No lock found. Adding dependency');
+            logger.trace('add. No lock found. Adding dependency');
             //save dependency
             storage.add({
                 waiting: waiting,
@@ -96,7 +101,7 @@
          * @param {Object} processed processed class
          */
         me.remove = function (processed) {
-            xs.logToConsole('xs.DependenciesManager::remove. Resolving dependencies, because', processed.label, 'has been processed');
+            logger.trace('remove. Resolving dependencies, because ' + processed.label + ' has been processed');
             //remove processed from chains
             chains.remove(processed);
 
@@ -113,7 +118,9 @@
                 return !dependency.waiting.length;
             }, xs.core.Collection.All);
 
-            xs.logToConsole('xs.DependenciesManager::remove. Resolved dependencies', resolved.toSource());
+            logger.trace('remove. Resolved dependencies', {
+                dependencies: resolved.toSource()
+            });
             //process resolved dependencies to remove them from stack
             resolved.each(function (dependency) {
                 storage.remove(dependency);
@@ -131,9 +138,11 @@
         var _filterWaiting = function (waiting) {
             var Class, i = 0;
 
-            xs.logToConsole('xs.DependenciesManager::filterWaiting. Filtering list:', waiting.values().map(function (Class) {
-                return Class.label;
-            }));
+            logger.trace('filterWaiting. Filtering waiting list', {
+                waiting: waiting.values().map(function (Class) {
+                    return Class.label;
+                })
+            });
 
             //iterate over waiting
             while (i < waiting.length) {
@@ -148,12 +157,14 @@
                 }
 
                 //Class is processed - remove it class from waiting
-                xs.logToConsole('xs.DependenciesManager::filterWaiting. Class:', Class.label, 'is already processed, removing it from waiting');
+                logger.trace('filterWaiting. Class ' + Class.label + ' is already processed, removing it from waiting');
                 waiting.removeAt(i);
             }
-            xs.logToConsole('xs.DependenciesManager::filterWaiting. Filtered list:', waiting.values().map(function (Class) {
-                return Class.label;
-            }));
+            logger.trace('filterWaiting. Filtered list', {
+                filtered: waiting.values().map(function (Class) {
+                    return Class.label;
+                })
+            });
         };
 
         /**
@@ -216,22 +227,26 @@
              */
             me.add = function (dependent, waiting) {
 
-                xs.logToConsole('xs.DependenciesManager::chains::add. Adding dependency chain for', dependent.label, 'from', waiting.values().map(function (Class) {
-                    return Class.label;
-                }));
+                logger.trace('chains::add. Adding dependency chain for ' + dependent.label + ' from classes', {
+                    classes: waiting.values().map(function (Class) {
+                        return Class.label;
+                    })
+                });
                 //get existing chains, where dependent class was in waiting list
                 var chains = _getChains(dependent, true);
 
-                xs.logToConsole('xs.DependenciesManager::chains::add. Work chains:');
+                logger.trace('chains::add. Work chains:');
                 chains.each(function (chain) {
-                    xs.logToConsole('xs.DependenciesManager::chains::add.', chain.values().map(function (Class) {
-                        return Class.label;
-                    }));
+                    logger.trace('chains::add.', {
+                        chain: chain.values().map(function (Class) {
+                            return Class.label;
+                        })
+                    });
                 });
 
                 //if working chains found - split each to include waiting
                 if (chains.length) {
-                    xs.logToConsole('xs.DependenciesManager::chains::add. Work chains exist. Updating...');
+                    logger.trace('chains::add. Work chains exist. Updating...');
                     //init updated chains list
                     var updated = new xs.core.Collection();
 
@@ -249,7 +264,7 @@
 
                     //else - create chain for each waiting
                 } else {
-                    xs.logToConsole('xs.DependenciesManager::chains::add. No work chains found. Creating...');
+                    logger.trace('chains::add. No work chains found. Creating...');
 
                     //add created chains to storage
                     _createChains(dependent, waiting).each(function (chain) {
@@ -257,11 +272,13 @@
                     });
                 }
 
-                xs.logToConsole('xs.DependenciesManager::chains::add. Chains after add:');
+                logger.trace('chains::add. Chains after add:');
                 storage.each(function (chain) {
-                    xs.logToConsole('xs.DependenciesManager::chains::add.', chain.values().map(function (Class) {
-                        return Class.label;
-                    }));
+                    logger.trace('chains::add.', {
+                        chain: chain.values().map(function (Class) {
+                            return Class.label;
+                        })
+                    });
                 });
             };
 
@@ -274,15 +291,17 @@
              */
             me.remove = function (processed) {
 
-                xs.logToConsole('xs.DependenciesManager::chains::remove.', processed.label, 'resolved');
+                logger.trace('chains::remove. ' + processed.label + ' resolved');
 
                 //get work chains, that contain processed class
                 var chains = _getChains(processed);
-                xs.logToConsole('xs.DependenciesManager::chains::remove. Work chains:');
+                logger.trace('chains::remove. Work chains:');
                 chains.each(function (chain) {
-                    xs.logToConsole('xs.DependenciesManager::chains::remove.', chain.values().map(function (Class) {
-                        return Class.label;
-                    }));
+                    logger.trace('chains::remove.', {
+                        chain: chain.values().map(function (Class) {
+                            return Class.label;
+                        })
+                    });
                 });
 
                 //remove processed class from each work chain
@@ -296,11 +315,13 @@
                         storage.remove(chain);
                     }
                 });
-                xs.logToConsole('xs.DependenciesManager::chains::remove. Chains left:');
+                logger.trace('chains::remove. Chains left:');
                 storage.each(function (chain) {
-                    xs.logToConsole('xs.DependenciesManager::chains::remove.', chain.values().map(function (Class) {
-                        return Class.label;
-                    }));
+                    logger.trace('chains::remove.', {
+                        chain: chain.values().map(function (Class) {
+                            return Class.label;
+                        })
+                    });
                 });
             };
 
@@ -314,7 +335,7 @@
              * @return {Object[]} first found dead lock
              */
             me.getLock = function (dependent) {
-                xs.logToConsole('xs.DependenciesManager::chains::getLock. Get lock for', dependent.label);
+                logger.trace('chains::getLock. Get lock for ' + dependent.label);
                 //first and last dependent occurrences indexes
                 var first = 0, last = 0;
 
@@ -379,18 +400,20 @@
                         Class
                     ]);
 
-                    xs.logToConsole('xs.DependenciesManager::chains::createChains. Try to find merges for:');
-                    xs.logToConsole('xs.DependenciesManager::chains::createChains.', [dependent.label], '->', Class.label);
+                    logger.trace('chains::createChains. Try to find merges for:');
+                    logger.trace('chains::createChains. [' + dependent.label + ']->' + Class.label);
                     //get merged chains
                     var merged = _getMergedChains(chain);
 
                     //if any merged chains - add them to storage
                     if (merged.length) {
-                        xs.logToConsole('xs.DependenciesManager::chains::createChains. Adding merged:');
+                        logger.trace('chains::createChains. Adding merged:');
                         merged.each(function (chain) {
-                            xs.logToConsole('xs.DependenciesManager::chains::createChains.', chain.values().map(function (Class) {
-                                return Class.label;
-                            }));
+                            logger.trace('chains::createChains.', {
+                                chain: chain.values().map(function (Class) {
+                                    return Class.label;
+                                })
+                            });
                         });
                         merged.each(function (chain) {
                             created.add(chain);
@@ -398,19 +421,23 @@
 
                         //else - add chain
                     } else {
-                        xs.logToConsole('xs.DependenciesManager::chains::createChains. Adding single:');
-                        xs.logToConsole('xs.DependenciesManager::chains::createChains.', chain.values().map(function (Class) {
-                            return Class.label;
-                        }));
+                        logger.trace('chains::createChains. Adding single:');
+                        logger.trace('chains::createChains.', {
+                            chain: chain.values().map(function (Class) {
+                                return Class.label;
+                            })
+                        });
                         created.add(chain);
                     }
                 });
 
-                xs.logToConsole('xs.DependenciesManager::chains::createChains. ', dependent.label, ' created chains:');
+                logger.trace('chains::createChains. ' + dependent.label + ' created chains:');
                 created.each(function (chain) {
-                    xs.logToConsole('xs.DependenciesManager::chains::createChains.', chain.values().map(function (Class) {
-                        return Class.label;
-                    }));
+                    logger.trace('chains::createChains.', {
+                        chain: chain.values().map(function (Class) {
+                            return Class.label;
+                        })
+                    });
                 });
 
                 //return created chains array
@@ -441,20 +468,24 @@
                     //add Class to chain
                     copy.add(Class);
 
-                    xs.logToConsole('xs.DependenciesManager::chains::updateChains. Try to find merges for:');
-                    xs.logToConsole('xs.DependenciesManager::chains::updateChains.', chain.values().map(function (Class) {
-                        return Class.label;
-                    }), '->', Class.label);
+                    logger.trace('chains::updateChains. Try to find merges for:');
+                    logger.trace('chains::updateChains.chains->' + Class.label, {
+                        chains: chain.values().map(function (Class) {
+                            return Class.label;
+                        })
+                    });
                     //get merged chains
                     var merged = _getMergedChains(copy);
 
                     //if any merged chains - add them to storage
                     if (merged.length) {
-                        xs.logToConsole('xs.DependenciesManager::chains::updateChains. Adding merged:');
+                        logger.trace('chains::updateChains. Adding merged:');
                         merged.each(function (chain) {
-                            xs.logToConsole('xs.DependenciesManager::chains::updateChains.', chain.values().map(function (Class) {
-                                return Class.label;
-                            }));
+                            logger.trace('chains::updateChains.', {
+                                chain: chain.values().map(function (Class) {
+                                    return Class.label;
+                                })
+                            });
                         });
                         merged.each(function (chain) {
                             updated.add(chain);
@@ -462,21 +493,25 @@
 
                         //else - add chain
                     } else {
-                        xs.logToConsole('xs.DependenciesManager::chains::updateChains. Adding single:');
-                        xs.logToConsole('xs.DependenciesManager::chains::updateChains.', copy.values().map(function (Class) {
-                            return Class.label;
-                        }));
+                        logger.trace('chains::updateChains. Adding single:');
+                        logger.trace('chains::updateChains.', {
+                            chain: copy.values().map(function (Class) {
+                                return Class.label;
+                            })
+                        });
                         updated.add(copy);
                     }
                 });
 
                 //get junction
                 var junction = chain.last();
-                xs.logToConsole('xs.DependenciesManager::chains::updateChains. ', junction.label, ' updated chains:');
+                logger.trace('chains::updateChains. ' + junction.label + ' updated chains:');
                 updated.each(function (chain) {
-                    xs.logToConsole('xs.DependenciesManager::chains::updateChains.', chain.values().map(function (Class) {
-                        return Class.label;
-                    }));
+                    logger.trace('chains::updateChains.', {
+                        chain: chain.values().map(function (Class) {
+                            return Class.label;
+                        })
+                    });
                 });
 
                 //return updated chains array
@@ -494,22 +529,24 @@
              */
             var _getMergedChains = function (chain) {
 
-                xs.logToConsole('xs.DependenciesManager::chains::getMergedChains. For ', chain.values().map(function (Class) {
-                    return Class.label;
-                }));
+                logger.trace('chains::getMergedChains. For chain', {
+                    chain: chain.values().map(function (Class) {
+                        return Class.label;
+                    })
+                });
                 //init merged array
                 var merged = new xs.core.Collection();
 
                 //get junction
                 var junction = chain.last();
-                xs.logToConsole('xs.DependenciesManager::chains::getMergedChains. Junction: ', junction.label);
+                logger.trace('chains::getMergedChains. Junction ' + junction.label);
 
                 //get work chains for junction
                 var chains = _getChains(junction);
 
                 //merge if any chains found
                 if (chains.length) {
-                    xs.logToConsole('xs.DependenciesManager::chains::getMergedChains. Merging...');
+                    logger.trace('chains::getMergedChains. Merging...');
                     //fill merged list
                     chains.each(function (source) {
                         //get sliced part
@@ -522,23 +559,29 @@
                             merge.add(item);
                         });
 
-                        xs.logToConsole('xs.DependenciesManager::chains::getMergedChains. Source:', source.values().map(function (Class) {
-                            return Class.label;
-                        }));
+                        logger.trace('chains::getMergedChains. Source', {
+                            source: source.values().map(function (Class) {
+                                return Class.label;
+                            })
+                        });
 
-                        xs.logToConsole('xs.DependenciesManager::chains::getMergedChains. Slice:', slice.values().map(function (Class) {
-                            return Class.label;
-                        }));
+                        logger.trace('chains::getMergedChains. Slice', {
+                            slice: slice.values().map(function (Class) {
+                                return Class.label;
+                            })
+                        });
 
-                        xs.logToConsole('xs.DependenciesManager::chains::getMergedChains. Merge:', merge.values().map(function (Class) {
-                            return Class.label;
-                        }));
+                        logger.trace('chains::getMergedChains. Merge', {
+                            merge: merge.values().map(function (Class) {
+                                return Class.label;
+                            })
+                        });
 
                         //push merged to list
                         merged.add(merge);
                     });
                 } else {
-                    xs.logToConsole('xs.DependenciesManager::chains::getMergedChains. Nothing to merge with');
+                    logger.trace('chains::getMergedChains. Nothing to merge with');
                 }
 
                 return merged;
@@ -598,11 +641,13 @@
                     waiting = new xs.core.Collection(waiting);
                 }
 
-                xs.logToConsole('xs.DependenciesManager::queue::add. Waiting', waiting.values());
+                logger.trace('queue::add. Waiting', {
+                    waiting: waiting.values()
+                });
                 //waiting: null means, that all classes must be loaded
                 if (!waiting) {
 
-                    xs.logToConsole('xs.DependenciesManager::queue::add. Waiting is empty. Wait for all');
+                    logger.trace('queue::add. Waiting is empty. Wait for all');
                     //add item to storage
                     storage.add({
                         waiting: null,
@@ -612,11 +657,13 @@
                     return;
                 }
 
-                xs.logToConsole('xs.DependenciesManager::queue::add. Waiting is not empty - filter');
+                logger.trace('queue::add. Waiting is not empty - filter');
                 //filter waiting classes
                 _filterWaiting(waiting);
 
-                xs.logToConsole('xs.DependenciesManager::queue::add. Wait for filtered:', waiting.values());
+                logger.trace('queue::add. Wait for filtered:', {
+                    waiting: waiting.values()
+                });
                 //add item to storage
                 storage.add({
                     waiting: waiting,
@@ -632,7 +679,7 @@
              * @param {String|Null} processed name of processed class or null if all classes processed
              */
             me.remove = function (processed) {
-                xs.logToConsole('xs.DependenciesManager::queue::remove. Resolve:', processed);
+                logger.trace('queue::remove. Resolve ' + processed);
                 //get resolved queue lists. If processed given - with non-null waiting list. If no processed given - with null lists only
                 var resolved;
                 if (processed === null) {
@@ -662,7 +709,9 @@
                     }, xs.core.Collection.All);
                 }
 
-                xs.logToConsole('xs.DependenciesManager::queue::remove. Resolved items', resolved.toSource());
+                logger.trace('queue::remove. Resolved', {
+                    resolved: resolved.toSource()
+                });
                 //process resolved dependencies to remove them from stack
                 resolved.each(function (item) {
                     storage.remove(item);

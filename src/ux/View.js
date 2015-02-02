@@ -19,6 +19,8 @@ xs.define(xs.Class, 'ns.View', function (self) {
 
     'use strict';
 
+    var logger = new xs.log.Logger('xs.ux.View');
+
     var Class = this;
 
     Class.namespace = 'xs.ux';
@@ -67,7 +69,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
     Class.constructor = function (template) {
         var me = this;
 
-        xs.logToConsole(self.label + '::constructor - creating new view from template "' + template + '"');
+        logger.trace('constructor - creating new view from template "' + template + '"');
 
         //assert, that template is string
         xs.assert.string(template, 'constructor - given template "$template" is not a string', {
@@ -100,7 +102,11 @@ xs.define(xs.Class, 'ns.View', function (self) {
     Class.method.on = function (event, handler, options) {
         var me = this;
 
-        xs.logToConsole(self.label + '::on - ', arguments.length, 'arguments: event', event, ', handler:', handler, ', options:', options);
+        logger.trace('on - ' + arguments.length + ' arguments given', {
+            event: event,
+            handler: handler,
+            options: options
+        });
 
         //check event
         //assert event name is non-empty string
@@ -128,13 +134,13 @@ xs.define(xs.Class, 'ns.View', function (self) {
 
         //if not domEvent - simply call observable.on and return
         if (!eventConfig.domEvent) {
-            xs.logToConsole(self.label + '::on - not DOM event, calling Observable.on');
+            logger.trace('on - not DOM event, calling Observable.on');
             me.mixins.observable.prototype.on.apply(me, arguments);
 
             return me;
         }
 
-        xs.logToConsole(self.label + '::on - DOM event, calling Observable.on');
+        logger.trace('on - DOM event, calling Observable.on');
 
 
         //init
@@ -151,12 +157,12 @@ xs.define(xs.Class, 'ns.View', function (self) {
 
         //return if no dom listener needed
         if (hasListener) {
-            xs.logToConsole(self.label + '::on - DOM event, listener is already created');
+            logger.trace('on - DOM event, listener is already created');
 
             return me;
         }
 
-        xs.logToConsole(self.label + '::on - DOM event, creating listener');
+        logger.trace('on - DOM event, creating listener');
 
 
         //add single handler to DOM
@@ -183,7 +189,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
     Class.method.destroy = function () {
         var me = this;
 
-        xs.logToConsole(self.label + '::destroy - destroying view');
+        logger.trace('destroy - destroying view');
 
         //remove domHandlers
         var nodes = me.private.nodes;
@@ -215,7 +221,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
      */
     var _getNodesCollection = function (template) {
 
-        xs.logToConsole(self.label + '::getNodesCollection - fetching nodes from template "' + template + '"');
+        logger.trace('getNodesCollection - fetching nodes from template "' + template + '"');
 
         //create container div element to parse html into
         var container = document.createElement('div');

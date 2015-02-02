@@ -8,9 +8,18 @@
  License: http://annium.com/contact
 
  */
-xs.define(xs.Class,'C',function(){this.extends='B';this.method.on=function(){debugger;};});
-xs.define(xs.Class,'B',function(){this.extends='A';});
-xs.define(xs.Class,'A',function(){this.mixins.observable='xs.event.Observable';});
+xs.define(xs.Class, 'C', function () {
+    this.extends = 'B';
+    this.method.on = function () {
+        debugger;
+    };
+});
+xs.define(xs.Class, 'B', function () {
+    this.extends = 'A';
+});
+xs.define(xs.Class, 'A', function () {
+    this.mixins.observable = 'xs.event.Observable';
+});
 
 var str = '<div class="container"><div class="base"><div class="parent"><div class="child"></div></div></div></div>';
 var view = new xs.ux.View(str);

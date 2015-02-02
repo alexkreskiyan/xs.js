@@ -15,6 +15,7 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.class.preprocessors.addOwnElements');
     /**
      * Preprocessor addOwnElements
      * Is used to process class elements
@@ -28,7 +29,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.logToConsole('xs.class.preprocessors.addOwnElements[', Class.label, ']');
+        logger.trace(Class.label ? Class.label : 'undefined');
 
         //constants
         _processConstants(Class, descriptor);

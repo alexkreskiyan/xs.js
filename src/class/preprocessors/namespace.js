@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.class.preprocessors.namespace');
+
     /**
      * Directive namespace
      *
@@ -57,7 +59,7 @@
         return true;
     }, function (Class, descriptor, dependencies, ready) {
 
-        xs.logToConsole('xs.class.preprocessors.namespace');
+        logger.trace('');
         var namespace;
 
         //if namespace specified, it must be valid

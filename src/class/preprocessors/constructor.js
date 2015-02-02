@@ -15,6 +15,7 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.class.preprocessors.constructor');
     /**
      * Directive constructor
      *
@@ -48,7 +49,8 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.logToConsole('xs.class.preprocessors.constructor[', Class.label, ']');
+        logger.trace(Class.label ? Class.label : 'undefined');
+
         //inherited
         //get inherited constructor from parent descriptor
         var inherited = Class.parent.descriptor.hasOwnProperty('constructor') ? Class.parent.descriptor.constructor : undefined;

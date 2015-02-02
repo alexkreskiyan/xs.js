@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.interface.preprocessors.namespace');
+
     /**
      * Preprocessor namespace
      * Is used to work with interface namespace
@@ -28,7 +30,7 @@
         return true;
     }, function (Interface, descriptor, dependencies, ready) {
 
-        xs.logToConsole('xs.interface.preprocessors.namespace');
+        logger.trace('');
         var namespace;
 
         //if namespace specified, it must be valid

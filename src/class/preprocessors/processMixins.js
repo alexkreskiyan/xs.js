@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.class.preprocessors.processMixins');
+
     /**
      * Directive mixins
      *
@@ -69,8 +71,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.logToConsole('xs.class.preprocessors.processMixins[', Class.label, ']');
-
+        logger.trace(Class.label ? Class.label : 'undefined');
 
         //init
         //own mixins initial list
@@ -91,7 +92,9 @@
         //2. subtract own from inherited into pure class mixins list
 
         //process own mixins list
-        xs.logToConsole('xs.class.preprocessors.processMixins[', Class.label, ']. Mixins:', own.toSource());
+        logger.trace((Class.label ? Class.label : 'undefined') + '. Processed mixins', {
+            mixins: own.toSource()
+        });
 
         //namespace shortcut
         var resolveName = Class.descriptor.resolveName;
@@ -154,7 +157,7 @@
 
             var Mixin = xs.ContractsManager.get(name);
 
-            xs.logToConsole('xs.class.preprocessors.processMixins[', Class.label, ']. Mixing in:', Mixin.label, 'as', alias);
+            logger.trace((Class.label ? Class.label : 'undefined') + '. Mixining ' + Mixin.label + 'as ' + alias);
             //mix mixed class descriptor into target descriptor
             _mixinClass(Class.descriptor, Mixin.descriptor);
 

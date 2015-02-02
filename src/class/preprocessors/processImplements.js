@@ -15,6 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
+    var logger = new xs.log.Logger('xs.class.preprocessors.processImplements');
+
     /**
      * Directive implements
      *
@@ -65,7 +67,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        xs.logToConsole('xs.class.preprocessors.processImplements[', Class.label, ']');
+        logger.trace(Class.label ? Class.label : 'undefined');
 
         //init
         //get interfaces list
@@ -73,7 +75,9 @@
 
 
         //process interfaces list
-        xs.logToConsole('xs.class.preprocessors.processImplements[', Class.label, ']. Interfaces:', interfaces.toSource());
+        logger.trace((Class.label ? Class.label : 'undefined') + '. Declared interfaces', {
+            interfaces: interfaces.toSource()
+        });
         //namespace shortcut
         var resolveName = Class.descriptor.resolveName;
         interfaces.each(function (name, index, list) {
@@ -130,7 +134,7 @@
 
             var Interface = xs.ContractsManager.get(name);
 
-            xs.logToConsole('xs.class.preprocessors.processImplements[', Class.label, ']. Verifying implementation of', Interface.label);
+            logger.trace((Class.label ? Class.label : 'undefined') + '. Verifying implementation of ' + Interface.label);
             //verify, that target implements Interface
             _verifyInterface(Class, Interface);
         });
