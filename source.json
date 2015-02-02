@@ -61,8 +61,7 @@
                         "type": "interface"
                     },
                     "Route": {
-                        "type": "class",
-                        "test": false
+                        "type": "class"
                     },
                     "Console": {
                         "type": "class",
