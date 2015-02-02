@@ -63,7 +63,7 @@
             });
 
             //filter waiting classes to exclude processed ones
-            _filterWaiting(waiting);
+            _filterWaitingDependencies(waiting);
 
             //if empty waiting list - apply handleReady immediately
             if (!waiting.length) {
@@ -131,11 +131,11 @@
         /**
          * Filter waiting classes to exclude those ones which are already processed
          *
-         * @method filterWaiting
+         * @method filterWaitingDependencies
          *
          * @param {xs.core.Collection} waiting array of waiting classes
          */
-        var _filterWaiting = function (waiting) {
+        var _filterWaitingDependencies = function (waiting) {
             var Class, i = 0;
 
             logger.trace('filterWaiting. Filtering waiting list', {
@@ -642,7 +642,7 @@
                 }
 
                 logger.trace('queue::add. Waiting', {
-                    waiting: waiting.values()
+                    waiting: waiting ? waiting.values() : waiting
                 });
                 //waiting: null means, that all classes must be loaded
                 if (!waiting) {
@@ -659,7 +659,7 @@
 
                 logger.trace('queue::add. Waiting is not empty - filter');
                 //filter waiting classes
-                _filterWaiting(waiting);
+                _filterWaitingClasses(waiting);
 
                 logger.trace('queue::add. Wait for filtered:', {
                     waiting: waiting.values()
@@ -722,11 +722,11 @@
             /**
              * Filter waiting classes to exclude those ones which are already processed
              *
-             * @method filterWaiting
+             * @method filterWaitingClasses
              *
              * @param {xs.core.Collection} waiting collection of waiting classes' names
              */
-            var _filterWaiting = function (waiting) {
+            var _filterWaitingClasses = function (waiting) {
                 var i = 0, Class, name;
 
                 //iterate over waiting
