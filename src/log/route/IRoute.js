@@ -30,9 +30,10 @@ xs.define(xs.Interface, 'ns.IRoute', function () {
      *
      * @constructor
      *
-     * @param {Array} rules
+     * @param {String} name
+     * @param {Array} [rules]
      */
-    Class.constructor = function (rules) {
+    Class.constructor = function (name, rules) {
 
     };
 

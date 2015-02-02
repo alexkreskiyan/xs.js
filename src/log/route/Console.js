@@ -43,15 +43,16 @@ xs.define(xs.Class, 'ns.Console', function (self) {
      *
      * @constructor
      *
+     * @param {String} name route name
      * @param {Array} rules route processing rules
      */
-    Class.constructor = function (rules) {
+    Class.constructor = function (name, rules) {
         var me = this;
 
-        if (arguments.length) {
-            self.parent.call(me, rules);
+        if (arguments.length > 1) {
+            self.parent.call(me, name, rules);
         } else {
-            self.parent.call(me);
+            self.parent.call(me, name);
         }
     };
 
@@ -96,5 +97,5 @@ xs.define(xs.Class, 'ns.Console', function (self) {
     'use strict';
 
     //add new empty console.route
-    xs.log.Router.routes.add('console', new Class());
+    xs.log.Router.routes.add(new Class('console'));
 });

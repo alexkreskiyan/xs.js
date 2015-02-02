@@ -45,16 +45,25 @@ xs.define(xs.Class, 'ns.Route', function () {
      *
      * @constructor
      *
+     * @param {String} name route name
      * @param {Array} [rules] processing rules. If no given, all log entries are processed
      */
-    Class.constructor = function (rules) {
+    Class.constructor = function (name, rules) {
         var me = this;
 
+        //assert, that name is non-empty string
+        xs.assert.ok(name && xs.isString(name), 'constructor - given route name "$name" is not correct', {
+            $name: name
+        }, RouteError);
+
         //assert, that rules are ok (if given)
-        xs.assert.ok(!arguments.length || _verifyRules(rules));
+        xs.assert.ok(arguments.length === 1 || _verifyRules(rules));
+
+        //save name
+        me.name = name;
 
         //save rules, wrapping them into xs.core.Collection
-        me.rules = arguments.length ? new xs.core.Collection(rules) : new xs.core.Collection();
+        me.rules = rules ? new xs.core.Collection(rules) : new xs.core.Collection();
     };
 
     /**
