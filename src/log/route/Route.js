@@ -148,8 +148,26 @@ xs.define(xs.Class, 'ns.Route', function () {
         //rule needs processing if there are no rules, or at least one rule, that matches category and level
         return !me.rules.length || me.rules.some(function (rule) {
 
-                //to match, category must start with rule.category and level must match rule.level
-                return (level & rule.level) && (category.indexOf(rule.category) === 0);
+                //to match, category must start with rule.category (if given) and level must match rule.level (if given)
+
+                //init as true
+                var match = true;
+
+                //check level if rule.level given
+                if (rule.hasOwnProperty('level')) {
+                    if (!(level & rule.level)) {
+                        match = false;
+                    }
+                }
+
+                //check category if rule.category given
+                if (rule.hasOwnProperty('category')) {
+                    if (category.indexOf(rule.category) !== 0) {
+                        match = false;
+                    }
+                }
+
+                return match;
             });
     };
 
