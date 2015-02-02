@@ -27,7 +27,7 @@
         "xs.class.preprocessors.addOwnElements",
         "xs.class.preprocessors.processImplements",
         "xs.class.preprocessors.defineElements",
-        "xs.class.postprocessors.logging",
+        "xs.class.postprocessors.logger",
         "xs.class.Base",
         "xs.interface.Interface",
         "xs.interface.preprocessors.namespace",

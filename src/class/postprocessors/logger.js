@@ -15,12 +15,12 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.class.postprocessors.logging');
+    var logger = new xs.log.Logger('xs.class.postprocessors.logger');
 
     /**
      * This postprocessor automatically creates and saves logger instance for this class as Class.log
      *
-     * This is made to automatically create logging instances, that use Class.label as category.
+     * This is made to automatically create logger instances, that use Class.label as category.
      *
      * Later, logger can be accessed via self.label
      *
@@ -30,9 +30,9 @@
      *
      * @abstract
      *
-     * @property logging
+     * @property logger
      */
-    xs.class.postprocessors.add('logging', function () {
+    xs.class.postprocessors.add('logger', function () {
 
         return true;
     }, function (Class) {
