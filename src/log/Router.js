@@ -109,6 +109,8 @@
         /**
          * Processes log entry
          *
+         * @ignore
+         *
          * @method process
          *
          * @param {String} category
@@ -150,12 +152,23 @@
          * Internal router ready state. When router is not ready yet, all logs are buffered, so when some route is added to router,
          * all buffered logs are passed to it. When ready, all buffered logs are removed
          *
+         * @readonly
+         *
+         * @property isReady
+         *
          * @type {Boolean}
          */
         var ready = false;
 
+        xs.Attribute.property.define(me, 'isReady', {
+            get: function () {
+                return ready;
+            },
+            set: xs.emptyFn
+        });
+
         /**
-         * Method, that marks router as ready
+         * Method, that marks router as ready, changing {@link #isReady isReady} state
          */
         me.ready = function () {
             //mark router as ready

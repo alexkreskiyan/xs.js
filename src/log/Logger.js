@@ -48,6 +48,17 @@
      *
      * @class xs.log.Logger
      */
+
+    /**
+     * Logger constructor. Logger category is given as single argument
+     *
+     * For example:
+     *
+     *     //create logger instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     * @constructor
+     */
     var logger = xs.log.Logger = function (category) {
         var me = this;
 

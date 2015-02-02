@@ -26,7 +26,7 @@ xs.define(xs.Interface, 'ns.IRoute', function () {
     Class.namespace = 'xs.log.route';
 
     /**
-     * Constructor must achieve rules array as first argument
+     * Constructor must achieve route name as first argument, and, optionally, rules array as second argument
      *
      * @constructor
      *

@@ -30,7 +30,7 @@ xs.define(xs.Class, 'ns.Console', function (self) {
      *
      * For example:
      *
-     *     var route = new MyRoute([
+     *     var route = new xs.log.route.Console([
      *         {
      *             category: 'xs',
      *             level: xs.log.Info | xs.log.Warning
@@ -57,7 +57,9 @@ xs.define(xs.Class, 'ns.Console', function (self) {
     };
 
     /**
-     * Process method
+     * Process method. Must not be called manually!
+     *
+     * @private
      *
      * @method process
      *
