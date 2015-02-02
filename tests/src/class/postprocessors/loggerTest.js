@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.class.postprocessors.logging', function () {
+module('xs.class.postprocessors.logger', function () {
 
     'use strict';
 
