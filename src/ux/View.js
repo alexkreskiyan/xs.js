@@ -204,6 +204,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
         //call parent destroy
         self.parent.prototype.destroy.call(me);
     };
+
     /**
      * Returns template parsed into nodes collection
      *
@@ -259,3 +260,9 @@ xs.define(xs.Class, 'ns.View', function (self) {
 
     ViewError.prototype = new Error();
 });
+/*
+ Dom events must be declared globally.
+ View first verifies local events list, after that - global DOM events list
+ Attributes have own events
+
+ */
