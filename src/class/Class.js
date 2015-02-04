@@ -278,7 +278,7 @@
                 me.private = {};
 
                 //assign values
-                var properties = descriptor.property.items; //xs.core.Collection
+                var properties = descriptor.property.private.items; //xs.core.Collection
                 var i, length = properties.length, item;
 
                 for (i = 0; i < length; i++) {

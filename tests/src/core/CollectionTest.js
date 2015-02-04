@@ -27,8 +27,8 @@ module('xs.core.Collection', function () {
             3
         ];
         collection = new xs.core.Collection(x);
-        strictEqual(collection.items[0].value, x[0]);
-        strictEqual(collection.items[1].value, x[1]);
+        strictEqual(collection.private.items[0].value, x[0]);
+        strictEqual(collection.private.items[1].value, x[1]);
 
         //check object list
         x = {
@@ -36,8 +36,8 @@ module('xs.core.Collection', function () {
             b: 3
         };
         collection = new xs.core.Collection(x);
-        strictEqual(collection.items[0].value, x.a);
-        strictEqual(collection.items[1].value, x.b);
+        strictEqual(collection.private.items[0].value, x.a);
+        strictEqual(collection.private.items[1].value, x.b);
     });
 
     test('length', function () {
@@ -136,7 +136,7 @@ module('xs.core.Collection', function () {
         //values are equal
         strictEqual(JSON.stringify(clone.values()), JSON.stringify(collection.values()));
         //links are saved
-        strictEqual(collection.items[2].value === clone.items[2].value, true);
+        strictEqual(collection.private.items[2].value === clone.private.items[2].value, true);
 
         //test object list
         collection = new xs.core.Collection({
@@ -150,7 +150,7 @@ module('xs.core.Collection', function () {
         //values are equal
         strictEqual(JSON.stringify(clone.values()), JSON.stringify(collection.values()));
         //links are saved
-        strictEqual(collection.items[2].value === clone.items[2].value, true);
+        strictEqual(collection.private.items[2].value === clone.private.items[2].value, true);
     });
 
     test('hasKey', function () {

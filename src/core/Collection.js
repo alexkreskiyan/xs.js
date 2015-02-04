@@ -40,7 +40,9 @@
         var me = this;
 
         //init items array
-        me.items = [];
+        me.private = {
+            items: []
+        };
 
         if (!arguments.length) {
 
@@ -61,7 +63,7 @@
 
             for (i = 0; i < valuesLength; i++) {
                 //add item
-                me.items.push({
+                me.private.items.push({
                     key: i,
                     value: values[i]
                 });
@@ -79,7 +81,7 @@
         for (i = 0; i < valuesLength; i++) {
             key = keys[i];
             //add item
-            me.items.push({
+            me.private.items.push({
                 key: key,
                 value: values[key]
             });
@@ -123,7 +125,7 @@
      */
     xs.Attribute.property.define(collection.prototype, 'length', {
         get: function () {
-            return this.items.length;
+            return this.private.items.length;
         },
         set: xs.emptyFn
     });
@@ -156,10 +158,10 @@
     collection.prototype.keys = function () {
         var me = this;
 
-        var keys = [], length = me.items.length;
+        var keys = [], length = me.private.items.length;
 
         for (var i = 0; i < length; i++) {
-            keys.push(me.items[i].key);
+            keys.push(me.private.items[i].key);
         }
 
         return keys;
@@ -193,10 +195,10 @@
     collection.prototype.values = function () {
         var me = this;
 
-        var values = [], length = me.items.length;
+        var values = [], length = me.private.items.length;
 
         for (var i = 0; i < length; i++) {
-            values.push(me.items[i].value);
+            values.push(me.private.items[i].value);
         }
 
         return values;
@@ -229,10 +231,10 @@
      */
     collection.prototype.clone = function () {
         var me = this;
-        var source = [], length = me.items.length, item;
+        var source = [], length = me.private.items.length, item;
 
         for (var i = 0; i < length; i++) {
-            item = me.items[i];
+            item = me.private.items[i];
             source.push({
                 key: item.key,
                 value: item.value
@@ -241,7 +243,7 @@
 
 
         var clone = new me.constructor();
-        clone.items = source;
+        clone.private.items = source;
 
         return clone;
     };
@@ -291,7 +293,7 @@
         if (xs.isNumber(key)) {
 
             //check, that key exists
-            return 0 <= key && key < me.items.length;
+            return 0 <= key && key < me.private.items.length;
         }
 
         //if it is string - it's key
@@ -399,7 +401,7 @@
             }
         }
 
-        return key >= 0 ? me.items[key].key : undefined;
+        return key >= 0 ? me.private.items[key].key : undefined;
     };
 
     /**
@@ -443,7 +445,7 @@
         var me = this, index;
 
         //assert that collection is not empty
-        xs.assert.ok(me.items.length, 'at - collection is empty', CollectionError);
+        xs.assert.ok(me.private.items.length, 'at - collection is empty', CollectionError);
 
         xs.assert.ok(xs.isNumber(key) || xs.isString(key), 'at - key "$key", given for collection, is neither number nor string', {
             $key: key
@@ -453,7 +455,7 @@
         //handle number - it's index
         if (xs.isNumber(key)) {
             //check that index is in bounds
-            var max = me.items.length - 1;
+            var max = me.private.items.length - 1;
             //if max is 0, then min is 0
             var min = max > 0 ? -max : 0;
 
@@ -468,7 +470,7 @@
                 key += max;
             }
 
-            return me.items[key].value;
+            return me.private.items[key].value;
         }
 
 
@@ -480,7 +482,7 @@
             $key: key
         }, CollectionError);
 
-        return me.items[index].value;
+        return me.private.items[index].value;
     };
 
     /**
@@ -542,9 +544,9 @@
         var me = this;
 
         //assert that collection is not empty
-        xs.assert.ok(me.items.length, 'first - collection is empty', CollectionError);
+        xs.assert.ok(me.private.items.length, 'first - collection is empty', CollectionError);
 
-        return me.items[0].value;
+        return me.private.items[0].value;
     };
 
     /**
@@ -606,9 +608,9 @@
         var me = this;
 
         //assert that collection is not empty
-        xs.assert.ok(me.items.length, 'last - collection is empty', CollectionError);
+        xs.assert.ok(me.private.items.length, 'last - collection is empty', CollectionError);
 
-        return me.items[me.items.length - 1].value;
+        return me.private.items[me.private.items.length - 1].value;
     };
 
     /**
@@ -646,7 +648,7 @@
         if (arguments.length === 1) {
             //handle autoincrement index
             value = key;
-            key = me.items.length;
+            key = me.private.items.length;
         } else {
 
             //assert that key is string
@@ -662,7 +664,7 @@
 
 
         //add item
-        me.items.push({
+        me.private.items.push({
             key: key,
             value: value
         });
@@ -728,7 +730,7 @@
             $index: index
         }, CollectionError);
 
-        var max = me.items.length;
+        var max = me.private.items.length;
         //if max is 0, then min is 0
         var min = max > 0 ? -max : 0;
 
@@ -760,7 +762,7 @@
 
         //insert
         //insert new item
-        me.items.splice(index, 0, {
+        me.private.items.splice(index, 0, {
             key: key,
             value: value
         });
@@ -831,7 +833,7 @@
         //handle number key - it's index
         if (xs.isNumber(key)) {
             //check that index is in bounds
-            var max = me.items.length - 1;
+            var max = me.private.items.length - 1;
             //if max is 0, then min is 0
             var min = max > 0 ? -max : 0;
 
@@ -847,7 +849,7 @@
                 key += max;
             }
 
-            me.items[key].value = value;
+            me.private.items[key].value = value;
 
             return me;
         }
@@ -861,7 +863,7 @@
             $key: key
         }, CollectionError);
 
-        me.items[index].value = value;
+        me.private.items[index].value = value;
 
 
         return me;
@@ -919,7 +921,7 @@
         //handle number key - index given
         if (xs.isNumber(key)) {
             //check that index is in bounds
-            var max = me.items.length - 1;
+            var max = me.private.items.length - 1;
             //if max is 0, then min is 0
             var min = max > 0 ? -max : 0;
 
@@ -931,7 +933,7 @@
             }, CollectionError);
 
             //remove item by key
-            me.items.splice(key, 1);
+            me.private.items.splice(key, 1);
 
             return me;
         }
@@ -947,7 +949,7 @@
         }, CollectionError);
 
         //remove item by key
-        me.items.splice(index, 1);
+        me.private.items.splice(index, 1);
 
         //else - it's error
 
@@ -1063,7 +1065,7 @@
 
         //remove all if no value given
         if (!arguments.length) {
-            me.items.splice(0, me.items.length);
+            me.private.items.splice(0, me.private.items.length);
 
             return me;
         }
@@ -1115,7 +1117,7 @@
                 values.splice(i, 1);
 
                 //remove item from collection
-                me.items.splice(i, 1);
+                me.private.items.splice(i, 1);
 
                 //decrement valuesLength
                 valuesLength--;
@@ -1123,7 +1125,7 @@
         } else {
 
             //remove item from items
-            me.items.splice(index, 1);
+            me.private.items.splice(index, 1);
         }
 
         //update indexes
@@ -1275,13 +1277,13 @@
         }
 
         //init variables
-        var values = me.values(), i, item, length = me.items.length;
+        var values = me.values(), i, item, length = me.private.items.length;
 
         if (all) {
             i = 0;
             //remove all matched occurrences from collection
             while (i < length) {
-                item = me.items[i];
+                item = me.private.items[i];
 
                 //if item does not match - continue with next item
                 if (!finder(item.value, item.key)) {
@@ -1295,7 +1297,7 @@
                 values.splice(i, 1);
 
                 //remove item from collection
-                me.items.splice(i, 1);
+                me.private.items.splice(i, 1);
 
                 //decrement valuesLength
                 length--;
@@ -1304,7 +1306,7 @@
             i = length - 1;
             //remove all matched occurrences from collection
             while (i >= 0) {
-                item = me.items[i];
+                item = me.private.items[i];
 
                 //if item does not match - continue with next item
                 if (!finder(item.value, item.key)) {
@@ -1318,7 +1320,7 @@
                 values.splice(i, 1);
 
                 //remove item from collection
-                me.items.splice(i, 1);
+                me.private.items.splice(i, 1);
 
                 //decrement valuesLength
                 length--;
@@ -1332,7 +1334,7 @@
             i = 0;
             //remove first matched occurrence from collection
             while (i < length) {
-                item = me.items[i];
+                item = me.private.items[i];
 
                 //if item does not match - continue with next item
                 if (!finder(item.value, item.key)) {
@@ -1346,7 +1348,7 @@
                 values.splice(i, 1);
 
                 //remove item from collection
-                me.items.splice(i, 1);
+                me.private.items.splice(i, 1);
 
                 //decrement valuesLength
                 length--;
@@ -1452,14 +1454,14 @@
         var me = this;
 
         //assert that collection is not empty
-        xs.assert.ok(me.items.length, 'shift - collection is empty', CollectionError);
+        xs.assert.ok(me.private.items.length, 'shift - collection is empty', CollectionError);
 
 
         //get returned value
-        var value = me.items[0].value;
+        var value = me.private.items[0].value;
 
         //remove first item from collection
-        me.items.splice(0, 1);
+        me.private.items.splice(0, 1);
 
         _updateIndexes.call(me, 0);
 
@@ -1558,16 +1560,16 @@
         var me = this;
 
         //assert that collection is not empty
-        xs.assert.ok(me.items.length, 'pop - collection is empty', CollectionError);
+        xs.assert.ok(me.private.items.length, 'pop - collection is empty', CollectionError);
 
 
-        var index = me.items.length - 1;
+        var index = me.private.items.length - 1;
 
         //get returned value
-        var value = me.items[index].value;
+        var value = me.private.items[index].value;
 
         //remove last item from collection
-        me.items.splice(-1, 1);
+        me.private.items.splice(-1, 1);
 
         //return value
         return value;
@@ -1662,15 +1664,15 @@
         }
 
         //iterate
-        var i, item, length = me.items.length;
+        var i, item, length = me.private.items.length;
         if (reverse) {
             for (i = length - 1; i >= 0; i--) {
-                item = me.items[i];
+                item = me.private.items[i];
                 iterator.call(scope, item.value, item.key, me);
             }
         } else {
             for (i = 0; i < length; i++) {
-                item = me.items[i];
+                item = me.private.items[i];
                 iterator.call(scope, item.value, item.key, me);
             }
         }
@@ -1784,14 +1786,14 @@
         }
 
         //init variables
-        var i, item, length = me.items.length, found;
+        var i, item, length = me.private.items.length, found;
 
         if (all) {
             //copies of matched items
             var items = [];
 
             for (i = 0; i < length; i++) {
-                item = me.items[i];
+                item = me.private.items[i];
                 if (finder.call(scope, item.value, item.key, me)) {
                     //add index
                     items.push({
@@ -1802,10 +1804,10 @@
             }
 
             found = new me.constructor();
-            found.items = items;
+            found.private.items = items;
         } else if (reverse) {
             for (i = length - 1; i >= 0; i--) {
-                item = me.items[i];
+                item = me.private.items[i];
                 if (finder.call(scope, item.value, item.key, me)) {
                     found = item.value;
                     break;
@@ -1813,7 +1815,7 @@
             }
         } else {
             for (i = 0; i < length; i++) {
-                item = me.items[i];
+                item = me.private.items[i];
                 if (finder.call(scope, item.value, item.key, me)) {
                     found = item.value;
                     break;
@@ -1883,12 +1885,12 @@
         }
 
         //init variables
-        var i, item, length = me.items.length;
+        var i, item, length = me.private.items.length;
 
         //mapped items
         var items = [];
         for (i = 0; i < length; i++) {
-            item = me.items[i];
+            item = me.private.items[i];
             items.push({
                 key: item.key,
                 value: mapper.call(scope, item.value, item.key, me)
@@ -1896,7 +1898,7 @@
         }
 
         var collection = new me.constructor();
-        collection.items = items;
+        collection.private.items = items;
 
         return collection;
     };
@@ -1993,7 +1995,7 @@
         }, CollectionError);
 
         //assert that collection is not empty
-        xs.assert.ok(me.items.length, 'reduce - collection is empty', CollectionError);
+        xs.assert.ok(me.private.items.length, 'reduce - collection is empty', CollectionError);
 
         //handle flags
         var reverse = false;
@@ -2022,7 +2024,7 @@
         }
 
         //init variables
-        var result, i, item, length = me.items.length;
+        var result, i, item, length = me.private.items.length;
 
         //reduce
         if (reverse) {
@@ -2031,11 +2033,11 @@
                 result = memo;
             } else {
                 i = length - 2;
-                result = me.items[length - 1].value;
+                result = me.private.items[length - 1].value;
             }
 
             for (; i >= 0; i--) {
-                item = me.items[i];
+                item = me.private.items[i];
                 result = reducer.call(scope, result, item.value, item.key, me);
             }
         } else {
@@ -2044,11 +2046,11 @@
                 result = memo;
             } else {
                 i = 1;
-                result = me.items[0].value;
+                result = me.private.items[0].value;
             }
 
             for (; i < length; i++) {
-                item = me.items[i];
+                item = me.private.items[i];
                 result = reducer.call(scope, result, item.value, item.key, me);
             }
         }
@@ -2121,10 +2123,10 @@
      * @return {Boolean} whether some values pass tester function
      */
     collection.prototype.some = function (tester, count, scope) {
-        var me = this, length = me.items.length;
+        var me = this, length = me.private.items.length;
 
         //assert that collection is not empty
-        xs.assert.ok(me.items.length, 'some - collection is empty', CollectionError);
+        xs.assert.ok(me.private.items.length, 'some - collection is empty', CollectionError);
 
         //assert that tester is function
         xs.assert.fn(tester, 'some - given tester "$tester" is not a function', {
@@ -2156,9 +2158,9 @@
 
         //handle negative scenario
         if (count === 0) {
-            //iterate over me.items to find matches
+            //iterate over me.private.items to find matches
             for (i = 0; i < length; i++) {
-                item = me.items[i];
+                item = me.private.items[i];
 
                 //increment found if tester returns true
                 if (tester.call(scope, item.value, item.key, me)) {
@@ -2176,9 +2178,9 @@
         }
 
         //handle positive scenario
-        //iterate over me.items to find matches
+        //iterate over me.private.items to find matches
         for (i = 0; i < length; i++) {
-            item = me.items[i];
+            item = me.private.items[i];
 
             //increment found if tester returns true
             if (tester.call(scope, item.value, item.key, me)) {
@@ -2253,10 +2255,10 @@
 
         if (arguments.length >= 2) {
 
-            return me.some(tester, me.items.length, scope);
+            return me.some(tester, me.private.items.length, scope);
         }
 
-        return me.some(tester, me.items.length);
+        return me.some(tester, me.private.items.length);
     };
 
     /**
@@ -2393,10 +2395,10 @@
      * @chainable
      */
     collection.prototype.unique = function () {
-        var me = this, values = [], i = 0, item, length = me.items.length;
+        var me = this, values = [], i = 0, item, length = me.private.items.length;
 
         while (i < length) {
-            item = me.items[i];
+            item = me.private.items[i];
 
             //continue to next if no match
             if (values.indexOf(item.value) < 0) {
@@ -2410,8 +2412,8 @@
                 continue;
             }
 
-            //remove item from me.items
-            me.items.splice(i, 1);
+            //remove item from me.private.items
+            me.private.items.splice(i, 1);
 
             //decrement length
             length--;
@@ -2509,7 +2511,7 @@
                 //handle number key - it's index
             } else {
                 //check that index is in bounds
-                var max = me.items.length - 1;
+                var max = me.private.items.length - 1;
                 //if max is 0, then min is 0
                 var min = max > 0 ? -max : 0;
 
@@ -2529,7 +2531,7 @@
             }
 
             //get picked item
-            item = me.items[index];
+            item = me.private.items[index];
 
             //copy it to items
             items.push({
@@ -2541,7 +2543,7 @@
 
         //set picked items as items of picked collection
         var picked = new xs.core.Collection();
-        picked.items = items;
+        picked.private.items = items;
 
         //update indexes
         _updateIndexes.call(picked, 0);
@@ -2632,7 +2634,7 @@
                 //handle number key - it's index
             } else {
                 //check that index is in bounds
-                var max = me.items.length - 1;
+                var max = me.private.items.length - 1;
                 //if max is 0, then min is 0
                 var min = max > 0 ? -max : 0;
 
@@ -2655,13 +2657,13 @@
             omittedIndexes.push(index);
         }
 
-        //fill items from me.items without omitted indexes
+        //fill items from me.private.items without omitted indexes
         for (i = 0; i <= maxIndex; i++) {
             if (omittedIndexes.indexOf(i) >= 0) {
                 continue;
             }
 
-            item = me.items[i];
+            item = me.private.items[i];
             items.push({
                 key: item.key,
                 value: item.value
@@ -2670,7 +2672,7 @@
 
         //set picked items as items of omitted collection
         var omitted = new xs.core.Collection();
-        omitted.items = items;
+        omitted.private.items = items;
 
         //update indexes
         _updateIndexes.call(omitted, 0);
@@ -2706,10 +2708,10 @@
     collection.prototype.toSource = function () {
         var me = this;
 
-        var source = {}, length = me.items.length, item;
+        var source = {}, length = me.private.items.length, item;
 
         for (var i = 0; i < length; i++) {
-            item = me.items[i];
+            item = me.private.items[i];
             source[item.key] = item.value;
         }
 
@@ -2727,11 +2729,11 @@
      * @param {Number} index index, update starts from
      */
     var _updateIndexes = function (index) {
-        var me = this, length = me.items.length;
+        var me = this, length = me.private.items.length;
 
         //updated indexes for all items, starting from given index
         for (var i = index; i < length; i++) {
-            var item = me.items[i];
+            var item = me.private.items[i];
 
             //update if is number
             if (xs.isNumber(item.key)) {

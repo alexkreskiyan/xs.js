@@ -237,7 +237,7 @@
              */
             xs.Attribute.property.define(me, 'length', {
                 get: function () {
-                    return storage.items.length;
+                    return storage.private.items.length;
                 },
                 set: xs.emptyFn
             });
