@@ -773,6 +773,7 @@
      */
     xs.DependenciesManager = {
         Class: DependenciesManager,
+        Enum: DependenciesManager,
         Interface: DependenciesManager
     };
 

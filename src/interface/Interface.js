@@ -31,7 +31,7 @@
      * Usage example:
      *
      *     //create simple Interface
-     *     var Interface = xs.Interface(function (Interface) {
+     *     var Interface = xs.Interface(function () {
      *         //here Interface descriptor is described:
      *         var me = this;
      *         me.constant = ['a'];

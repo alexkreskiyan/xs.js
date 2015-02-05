@@ -18,14 +18,14 @@
     var logger = new xs.log.Logger('xs.interface.preprocessors.prepareElements');
 
     /**
-     * Preprocessor prepareConstants
-     * Is used to process interface constants
+     * Preprocessor prepareElements
+     * Is used to process interface elements
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.interface.preprocessors.add('prepareConstants', function () {
+    xs.interface.preprocessors.add('prepareElements', function () {
 
         return true;
     }, function (Interface, descriptor) {
@@ -53,7 +53,7 @@
 
     var _processConstants = function (Interface, descriptor) {
 
-        //assert, that constants list is an object
+        //assert, that constants list is an array
         xs.assert.array(descriptor.constant, '[$Interface]: constants list "$constants" is not an array', {
             $Interface: Interface.label,
             $constants: descriptor.constant
@@ -298,7 +298,7 @@
      * @class PrepareElementsError
      */
     function PrepareElementsError(message) {
-        this.message = 'xs.interface.preprocessors.prepareConstants::' + message;
+        this.message = 'xs.interface.preprocessors.prepareElements::' + message;
     }
 
     PrepareElementsError.prototype = new Error();

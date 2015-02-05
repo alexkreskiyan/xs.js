@@ -5,6 +5,7 @@
         "src/class",
         "src/core",
         "src/env",
+        "src/enum",
         "src/event",
         "src/interface",
         "src/lang",
