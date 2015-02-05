@@ -29,6 +29,7 @@
         "xs.class.preprocessors.defineElements",
         "xs.class.postprocessors.logger",
         "xs.class.Base",
+        "xs.enum.Enum",
         "xs.interface.Interface",
         "xs.interface.preprocessors.namespace",
         "xs.interface.preprocessors.prepareInterface",

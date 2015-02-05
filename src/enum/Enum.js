@@ -23,31 +23,24 @@
     /**
      * xs.enum.Enum is core class, that is used for enum generation.
      *
-     * xs.enum.Enum provides 2 stacks to register processors:
+     * xs.enum.Enum provides 1 stacks to register processors:
      *
      * - {@link xs.enum.preprocessors preprocessors}
-     * - {@link xs.enum.postprocessors postprocessors}
      *
      * Usage example:
      *
      *     //create simple Enum
-     *     var Enum = xs.Enum(function () {
-     *         //here Enum descriptor is described:
-     *         var me = this;
-     *         me.constant = ['a'];
+     *     var Enum = xs.Enum({
+     *         Get: 1,
+     *         Post: 2
      *     });
      *
-     * xs.enum.Enum has 2 params:
+     * xs.enum.Enum has 1 param:
      *
-     * 1 Descriptor (Function) -  descriptor constructor. Creates raw descriptor instance. Is called without params
+     * 1 Hash (Object) -  enum variables hash
      *
      * 2 createdFn ([Function]) - optional enum creation callback. Is called after
      * {@link xs.enum.preprocessors preprocessors} stack is processed. When called, created enum is passed as param.
-     *
-     * Errors are thrown, when:
-     *
-     * - descFn is given not as function
-     * - descFn doesn't return object
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
@@ -75,11 +68,11 @@
          *
          * @ignore
          */
-        var Contractor = function (Descriptor, createdFn) {
+        var Contractor = function (values, createdFn) {
 
             //Descriptor must be function
-            xs.assert.fn(Descriptor, 'given enum descriptor "$descriptor" is not a function', {
-                $descriptor: Descriptor
+            xs.assert.object(values, 'given values object "$values" is not an object', {
+                $values: values
             }, EnumError);
 
             if (!xs.isFunction(createdFn)) {
@@ -91,12 +84,6 @@
 
             //save contract type
             xs.constant(Enum, 'contractor', Contractor);
-
-            //Fill descriptor prototype
-            Descriptor.prototype = _createPrototypeDescriptor();
-
-            //get descriptor instance
-            var descriptor = new Descriptor();
 
             //save Enum descriptor
             xs.constant(Enum, 'descriptor', _createEmptyDescriptor());
@@ -111,11 +98,10 @@
             //Normally, only namespace is processed on this tick - imports is unambiguously async
             preprocessors.process([
                 Enum,
-                descriptor
+                values
             ], [
                 Enum,
-                descriptor,
-                dependencies
+                values
             ], function () {
                 //remove isProcessing mark
                 delete Enum.isProcessing;
@@ -138,15 +124,6 @@
 
                 //call createdFn
                 createdFn(Enum);
-
-                //process postprocessors stack after createdFn called
-                postprocessors.process([
-                    Enum,
-                    descriptor
-                ], [
-                    Enum,
-                    descriptor
-                ]);
             });
 
             return Enum;
@@ -167,7 +144,6 @@
          *
          *  - Enum
          *  - descriptor
-         *  - dependencies
          *
          * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
          *
@@ -178,31 +154,6 @@
          * @singleton
          */
         var preprocessors = xs.enum.preprocessors = new xs.ProcessorsStack.Enum();
-
-        /**
-         * Stack of processors, processing enum after it's considered to be created (after createdFn is called)
-         *
-         * Provided arguments are:
-         *
-         * For verifier:
-         *
-         *  - Enum
-         *  - descriptor
-         *
-         * For handler:
-         *
-         *  - Enum
-         *  - descriptor
-         *
-         * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-         *
-         * @class xs.enum.postprocessors
-         *
-         * @extends xs.core.ProcessorsStack
-         *
-         * @singleton
-         */
-        var postprocessors = xs.enum.postprocessors = new xs.ProcessorsStack.Enum();
 
         /**
          * Returns new xEnum sample
@@ -221,50 +172,6 @@
         };
 
         /**
-         * Returns prototype for descriptor function
-         *
-         * @ignore
-         *
-         * @method createPrototypeDescriptor
-         *
-         * @return {Object} prototype of new descriptor
-         */
-        var _createPrototypeDescriptor = function () {
-            return {
-
-                //enum namespace
-                namespace: undefined,
-
-                //enum imports list
-                imports: [],
-
-                //enum parent
-                extends: undefined,
-
-                //enum constants list
-                constant: [],
-
-                //enum statics list
-                static: {
-                    //enum static properties list
-                    property: {},
-
-                    //enum static methods list
-                    method: {}
-                },
-
-                //enum constructor
-                constructor: undefined,
-
-                //enum properties list
-                property: {},
-
-                //enum methods list
-                method: {}
-            };
-        };
-
-        /**
          * Returns class empty descriptor
          *
          * @ignore
@@ -276,32 +183,11 @@
         var _createEmptyDescriptor = function () {
             return {
 
-                //class namespace
+                //enum namespace
                 namespace: undefined,
 
-                //class parent
-                extends: undefined,
-
-                //class constants list
-                constant: new xs.core.Collection(),
-
-                //class statics list
-                static: {
-                    //class static properties list
-                    property: new xs.core.Collection(),
-
-                    //class static methods list
-                    method: new xs.core.Collection()
-                },
-
-                //enum constructor
-                constructor: undefined,
-
-                //class properties list
-                property: new xs.core.Collection(),
-
-                //class methods list
-                method: new xs.core.Collection()
+                //enum values list
+                value: new xs.core.Collection()
             };
         };
 
@@ -328,8 +214,7 @@
 
 
     //define prototype of xs.enum.Base
-    xs.enum.Base = xs.Enum(function () {
-    }, xs.emptyFn);
+    xs.enum.Base = xs.Enum({}, xs.emptyFn);
 
 
     /**
