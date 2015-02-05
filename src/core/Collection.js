@@ -2701,7 +2701,7 @@
      *     });
      *     console.log(collection.toSource()); //{a: 1, b: 2, c: 3}
      *
-     * @method asHash
+     * @method toSource
      *
      * @return {Object} collection as hash
      */
