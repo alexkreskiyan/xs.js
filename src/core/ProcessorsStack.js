@@ -245,6 +245,7 @@
      */
     xs.ProcessorsStack = {
         Class: ProcessorsStack,
+        Enum: ProcessorsStack,
         Interface: ProcessorsStack
     };
 
