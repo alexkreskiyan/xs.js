@@ -10,6 +10,7 @@
         "src/lang",
         "src/log",
         "src/uri",
+        "src/util",
         "src/ux",
         "src/xs.js"
     ],
