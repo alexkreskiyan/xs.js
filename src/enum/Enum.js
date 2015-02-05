@@ -80,7 +80,7 @@
             }
 
             //create enum
-            var Enum = _createSample();
+            var Enum = {};
 
             //save contract type
             xs.constant(Enum, 'contractor', Contractor);
@@ -154,22 +154,6 @@
          * @singleton
          */
         var preprocessors = xs.enum.preprocessors = new xs.ProcessorsStack.Enum();
-
-        /**
-         * Returns new xEnum sample
-         *
-         * @ignore
-         *
-         * @method create
-         *
-         * @return {Function} new xEnum
-         */
-        var _createSample = function () {
-
-            return function xEnum() {
-                throw new EnumError('Enum must not be called');
-            };
-        };
 
         /**
          * Returns class empty descriptor
