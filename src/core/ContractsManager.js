@@ -132,8 +132,8 @@
                 $name: name
             }, ContractsManagerError);
 
-            //assert that Contract is function
-            xs.assert.fn(Contract, 'add - contract is not a function', ContractsManagerError);
+            //assert that Contract is function or object
+            xs.assert.ok(xs.isObject(Contract) || xs.isFunction(Contract), 'add - contract is nor a function, neither an object', ContractsManagerError);
 
             //assert no contract with that name was defined yet
             xs.assert.not(registry.hasKey(name), 'add - contract "$name" is already defined', {
