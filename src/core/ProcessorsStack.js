@@ -86,7 +86,7 @@
                 handler: handler
             });
 
-            _apply(name, position, relativeTo);
+            apply(name, position, relativeTo);
         };
 
         /**
@@ -109,7 +109,7 @@
          * @param {String} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
          */
         me.reorder = function (name, position, relativeTo) {
-            _apply(name, position, relativeTo);
+            apply(name, position, relativeTo);
         };
 
         /**
@@ -148,7 +148,7 @@
          * @param {Function} [callback] optional executed callback
          */
         me.process = function (verifierArgs, handlerArgs, callback) {
-            _process(items.clone(), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
+            process(items.clone(), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
         };
 
         /**
@@ -163,7 +163,7 @@
          * @param {Array} handlerArgs arguments for items' handlers
          * @param {Function} callback stack ready callback
          */
-        var _process = function (items, verifierArgs, handlerArgs, callback) {
+        var process = function (items, verifierArgs, handlerArgs, callback) {
             var me = this;
             if (!items.length) {
                 callback();
@@ -176,7 +176,7 @@
             if (item.verifier.apply(me, verifierArgs)) {
 
                 var ready = function () {
-                    _process(items, verifierArgs, handlerArgs, callback);
+                    process(items, verifierArgs, handlerArgs, callback);
                 };
 
                 //if item.handler returns false, processing is async, stop processing, awaiting ready call
@@ -186,7 +186,7 @@
                 }
             }
 
-            _process(items, verifierArgs, handlerArgs, callback);
+            process(items, verifierArgs, handlerArgs, callback);
         };
 
 
@@ -199,7 +199,7 @@
          * @param {String} position new item position
          * @param {*} relativeTo name of relativeTo positioned item
          */
-        var _apply = function (name, position, relativeTo) {
+        var apply = function (name, position, relativeTo) {
             xs.assert.ok([
                 'first',
                 'last',

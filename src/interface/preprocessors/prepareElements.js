@@ -33,25 +33,25 @@
         logger.trace(Interface.label ? Interface.label : 'undefined');
 
         //constants
-        _processConstants(Interface, descriptor);
+        processConstants(Interface, descriptor);
 
         //static properties
-        _processStaticProperties(Interface, descriptor);
+        processStaticProperties(Interface, descriptor);
 
         //static methods
-        _processStaticMethods(Interface, descriptor);
+        processStaticMethods(Interface, descriptor);
 
         //constructor
-        _processConstructor(Interface, descriptor);
+        processConstructor(Interface, descriptor);
 
         //properties
-        _processProperties(Interface, descriptor);
+        processProperties(Interface, descriptor);
 
         //methods
-        _processMethods(Interface, descriptor);
+        processMethods(Interface, descriptor);
     });
 
-    var _processConstants = function (Interface, descriptor) {
+    var processConstants = function (Interface, descriptor) {
 
         //assert, that constants list is an array
         xs.assert.array(descriptor.constant, '[$Interface]: constants list "$constants" is not an array', {
@@ -84,7 +84,7 @@
 
     };
 
-    var _processStaticProperties = function (Interface, descriptor) {
+    var processStaticProperties = function (Interface, descriptor) {
 
         //assert, that static properties list is an object
         xs.assert.object(descriptor.static.property, '[$Interface]: static properties list "$properties" is not an object', {
@@ -134,7 +134,7 @@
         });
     };
 
-    var _processStaticMethods = function (Interface, descriptor) {
+    var processStaticMethods = function (Interface, descriptor) {
 
         //assert, that static methods list is an object
         xs.assert.object(descriptor.static.method, '[$Interface]: static methods list "$methods" is not an object', {
@@ -176,7 +176,7 @@
 
     };
 
-    var _processConstructor = function (Interface, descriptor) {
+    var processConstructor = function (Interface, descriptor) {
         var inherited = Interface.parent.descriptor.hasOwnProperty('constructor') ? Interface.parent.descriptor.constructor : undefined;
 
         //get own constructor from raw descriptor
@@ -195,7 +195,7 @@
         }
     };
 
-    var _processProperties = function (Interface, descriptor) {
+    var processProperties = function (Interface, descriptor) {
 
         //assert, that properties list is an object
         xs.assert.object(descriptor.property, '[$Interface]: static properties list "$properties" is not an object', {
@@ -246,7 +246,7 @@
         });
     };
 
-    var _processMethods = function (Interface, descriptor) {
+    var processMethods = function (Interface, descriptor) {
 
         //assert, that methods list is an object
         xs.assert.object(descriptor.method, '[$Interface]: methods list "$methods" is not an object', {

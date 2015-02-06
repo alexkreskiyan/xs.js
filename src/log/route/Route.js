@@ -57,7 +57,7 @@ xs.define(xs.Class, 'ns.Route', function () {
         }, RouteError);
 
         //assert, that rules are ok (if given)
-        xs.assert.ok(arguments.length === 1 || _verifyRules(rules));
+        xs.assert.ok(arguments.length === 1 || verifyRules(rules));
 
         //save name
         me.name = name;
@@ -80,7 +80,7 @@ xs.define(xs.Class, 'ns.Route', function () {
      */
     Class.method.process = function (category, level, message, data) {
         //return whether processing is needed
-        return _needsProcessing.call(this, category, level);
+        return needsProcessing.call(this, category, level);
     };
 
     /**
@@ -96,7 +96,7 @@ xs.define(xs.Class, 'ns.Route', function () {
      *
      * @return {Boolean} true is returned if rules are correct
      */
-    var _verifyRules = function (rules) {
+    var verifyRules = function (rules) {
 
         //assert, that rules are an array
         xs.assert.array(rules, 'verifyRules - given rules "$rules" are not an array');
@@ -151,7 +151,7 @@ xs.define(xs.Class, 'ns.Route', function () {
      *
      * @return {Boolean} whether to process this log entry or not
      */
-    var _needsProcessing = function (category, level) {
+    var needsProcessing = function (category, level) {
         var me = this;
 
         //rule needs processing if there are no rules, or at least one rule, that matches category and level

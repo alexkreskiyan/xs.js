@@ -50,7 +50,7 @@ xs.define(xs.Class, 'ns.QueryString', function () {
                 $queryString: params
             });
 
-            me.private.params = _fromQueryString(decodeURI(params));
+            me.private.params = fromQueryString(decodeURI(params));
 
             //handle empty params
         } else {
@@ -91,7 +91,7 @@ xs.define(xs.Class, 'ns.QueryString', function () {
             $encode: encode
         }, QueryStringError);
 
-        return _toQueryString(this.private.params, Boolean(encode));
+        return toQueryString(this.private.params, Boolean(encode));
     };
 
     var queryStringRe = /^[^?#]+$/;
@@ -107,7 +107,7 @@ xs.define(xs.Class, 'ns.QueryString', function () {
      *
      * @return {Object}
      */
-    var _fromQueryString = function (string) {
+    var fromQueryString = function (string) {
         var params = {}, rawParams = new xs.core.Collection(string.split('&'));
 
         rawParams.each(function (param) {
@@ -135,7 +135,7 @@ xs.define(xs.Class, 'ns.QueryString', function () {
             }) : null;
 
             //process data
-            _fromQueryObjects(params, name, value, indexes);
+            fromQueryObjects(params, name, value, indexes);
         });
 
         return params;
@@ -171,7 +171,7 @@ xs.define(xs.Class, 'ns.QueryString', function () {
      * @param {*} value
      * @param {Number[]} indexes
      */
-    var _fromQueryObjects = function (params, name, value, indexes) {
+    var fromQueryObjects = function (params, name, value, indexes) {
 
         //assign value if no indexes
         if (!indexes || !indexes.length) {
@@ -203,7 +203,7 @@ xs.define(xs.Class, 'ns.QueryString', function () {
                 index = Number(index);
             }
         } else {
-            index = _getNextIndex(param);
+            index = getNextIndex(param);
         }
 
         //convert array to object if needed
@@ -211,7 +211,7 @@ xs.define(xs.Class, 'ns.QueryString', function () {
             params[name] = (new xs.core.Collection(param)).toSource();
         }
 
-        _fromQueryObjects(params[name], index, value, indexes);
+        fromQueryObjects(params[name], index, value, indexes);
     };
 
     /**
@@ -225,7 +225,7 @@ xs.define(xs.Class, 'ns.QueryString', function () {
      *
      * @return {Number}
      */
-    var _getNextIndex = function (params) {
+    var getNextIndex = function (params) {
         //return length if params are array
         if (xs.isArray(params)) {
 
@@ -254,7 +254,7 @@ xs.define(xs.Class, 'ns.QueryString', function () {
      *
      * @return {String} query string
      */
-    var _toQueryString = function (object, encode) {
+    var toQueryString = function (object, encode) {
         var paramObjects = [], params = [];
 
         //use object as collection
@@ -263,12 +263,12 @@ xs.define(xs.Class, 'ns.QueryString', function () {
         //encode name if encode specified
         if (encode) {
             object.each(function (value, name) {
-                paramObjects = paramObjects.concat(_toQueryObjects(encodeURIComponent(name), value, encode));
+                paramObjects = paramObjects.concat(toQueryObjects(encodeURIComponent(name), value, encode));
             });
 
         } else {
             object.each(function (value, name) {
-                paramObjects = paramObjects.concat(_toQueryObjects(name, value, encode));
+                paramObjects = paramObjects.concat(toQueryObjects(name, value, encode));
             });
         }
 
@@ -292,7 +292,7 @@ xs.define(xs.Class, 'ns.QueryString', function () {
      *
      * @return {Array}
      */
-    var _toQueryObjects = function (name, object, encode) {
+    var toQueryObjects = function (name, object, encode) {
         var objects = [];
 
         if (xs.isIterable(object) && Object.keys(object).length) {
@@ -302,11 +302,11 @@ xs.define(xs.Class, 'ns.QueryString', function () {
 
             if (encode) {
                 object.each(function (value, param) {
-                    objects = objects.concat(_toQueryObjects(name + encodeURIComponent('[' + param + ']'), value, encode));
+                    objects = objects.concat(toQueryObjects(name + encodeURIComponent('[' + param + ']'), value, encode));
                 });
             } else {
                 object.each(function (value, param) {
-                    objects = objects.concat(_toQueryObjects(name + '[' + param + ']', value, encode));
+                    objects = objects.concat(toQueryObjects(name + '[' + param + ']', value, encode));
                 });
             }
         } else {

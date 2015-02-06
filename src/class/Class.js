@@ -108,7 +108,7 @@
             }
 
             //create class
-            var Class = _createSample();
+            var Class = createSample();
 
             //save contract type
             xs.constant(Class, 'contractor', Contractor);
@@ -117,13 +117,13 @@
             var imports = Class.imports = {};
 
             //Fill descriptor prototype
-            Descriptor.prototype = _createPrototypeDescriptor();
+            Descriptor.prototype = createPrototypeDescriptor();
 
             //get descriptor instance
             var descriptor = new Descriptor(Class, imports);
 
             //save Class descriptor
-            xs.constant(Class, 'descriptor', _createEmptyDescriptor());
+            xs.constant(Class, 'descriptor', createEmptyDescriptor());
 
             //mark class as not ready yet (until preprocessors done)
             Class.isProcessing = true;
@@ -143,7 +143,7 @@
             ], function () {
 
                 //create factory for class
-                Class.factory = _createFactory(Class);
+                Class.factory = createFactory(Class);
 
                 //remove isProcessing mark
                 delete Class.isProcessing;
@@ -241,7 +241,7 @@
          *
          * @return {Function} new xClass
          */
-        var _createSample = function () {
+        var createSample = function () {
             var Class = function xClass() {
                 var me = this;
 
@@ -313,12 +313,12 @@
          *
          * @return {Function} factory for given Class
          */
-        var _createFactory = function (Class) {
+        var createFactory = function (Class) {
 
             //return factory
             return function () {
                 var instance;
-                eval('instance = new Class(' + _getArgumentsList(arguments.length) + ')');
+                eval('instance = new Class(' + getArgumentsList(arguments.length) + ')');
 
                 return instance;
             };
@@ -335,7 +335,7 @@
          *
          * @return {String} arguments list for given count of arguments
          */
-        var _getArgumentsList = function (count) {
+        var getArgumentsList = function (count) {
             var list = [];
             for (var i = 0; i < count; i++) {
                 list.push('arguments[' + i + ']');
@@ -349,11 +349,11 @@
          *
          * @ignore
          *
-         * @method _createPrototypeDescriptor
+         * @method createPrototypeDescriptor
          *
          * @return {Object} prototype of new descriptor
          */
-        var _createPrototypeDescriptor = function () {
+        var createPrototypeDescriptor = function () {
             return {
 
                 //class namespace
@@ -402,11 +402,11 @@
          *
          * @ignore
          *
-         * @method _createEmptyDescriptor
+         * @method createEmptyDescriptor
          *
          * @return {Object} new empty descriptor
          */
-        var _createEmptyDescriptor = function () {
+        var createEmptyDescriptor = function () {
             //internal class collections are not testable as they are supposed to be protected
             return {
 

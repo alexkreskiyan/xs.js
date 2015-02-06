@@ -35,7 +35,7 @@
         //if no parent given - extend from xs.interface.Base
         if (!xs.isDefined(extended)) {
             logger.trace((Interface.label ? Interface.label : 'undefined') + '. Extending xs.interface.Base');
-            _extend(Interface, xs.interface.Base);
+            extend(Interface, xs.interface.Base);
 
             return;
 
@@ -69,7 +69,7 @@
 
         logger.trace((Interface.label ? Interface.label : 'undefined') + '. Extending ' + Parent.label);
         //apply extends
-        _applyExtends(Interface, Parent);
+        applyExtends(Interface, Parent);
     });
 
     /**
@@ -82,9 +82,9 @@
      * @param {Function} target target interface
      * @param {Function} parent extended interface
      */
-    var _applyExtends = function (target, parent) {
+    var applyExtends = function (target, parent) {
         //extend
-        _extend(target, parent);
+        extend(target, parent);
 
         //save extends to descriptor
         target.descriptor.extends = parent.label;
@@ -98,7 +98,7 @@
      * @param {Function} child child interface
      * @param {Function} parent parent interface
      */
-    var _extend = function (child, parent) {
+    var extend = function (child, parent) {
         //create fake constructor
         var Fn = function () {
         };

@@ -225,7 +225,7 @@
          *
          * @return {Boolean} whether property is configurable
          */
-        var _isConfigurable = me.isConfigurable = function (object, name) {
+        var isConfigurable = me.isConfigurable = function (object, name) {
             xs.assert.string(name, 'isConfigurable - given "$name" is not a string', {
                 $name: name
             }, AttributeError);
@@ -281,7 +281,7 @@
          *
          * @return {Boolean} whether descriptor given
          */
-        var _isDescriptor = me.isDescriptor = function (descriptor) {
+        var isDescriptor = me.isDescriptor = function (descriptor) {
             //false if descriptor is not object
             if (!xs.isObject(descriptor)) {
 
@@ -335,7 +335,7 @@
          *
          * @return {Object} corrected descriptor copy
          */
-        var _prepareDescriptor = me.prepareDescriptor = function (descriptor) {
+        var prepareDescriptor = me.prepareDescriptor = function (descriptor) {
             xs.assert.object(descriptor, 'prepareDescriptor - given "$descriptor" is not an object', {
                 $descriptor: descriptor
             }, AttributeError);
@@ -398,7 +398,7 @@
             }, AttributeError);
 
             //assert, that object has no constant "name", or it is defined, but is configurable
-            xs.assert.ok(!object.hasOwnProperty(name) || _isConfigurable(object, name), 'constant "$name" is already defined', {
+            xs.assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'constant "$name" is already defined', {
                 $name: name
             }, AttributeError);
 
@@ -465,7 +465,7 @@
                 }, AttributeError);
 
                 //if not descriptor - returns generated one
-                if (!_isDescriptor(descriptor)) {
+                if (!isDescriptor(descriptor)) {
 
                     return {
                         value: descriptor,
@@ -476,7 +476,7 @@
                 }
 
                 //prepares descriptor
-                descriptor = _prepareDescriptor(descriptor);
+                descriptor = prepareDescriptor(descriptor);
 
                 //get|set priority
                 if (descriptor.get || descriptor.set) {
@@ -538,10 +538,10 @@
                     $name: name
                 }, AttributeError);
 
-                xs.assert.ok(_isDescriptor(descriptor), 'property::define - given object is not a descriptor', AttributeError);
+                xs.assert.ok(isDescriptor(descriptor), 'property::define - given object is not a descriptor', AttributeError);
 
                 //assert, that object has no property "name", or it is defined, but is configurable
-                xs.assert.ok(!object.hasOwnProperty(name) || _isConfigurable(object, name), 'property::define - property "$name" is already defined', {
+                xs.assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'property::define - property "$name" is already defined', {
                     $name: name
                 }, AttributeError);
 
@@ -671,14 +671,14 @@
                     $name: name
                 }, AttributeError);
 
-                xs.assert.ok(_isDescriptor(descriptor), 'method::define - given object is not a descriptor', AttributeError);
+                xs.assert.ok(isDescriptor(descriptor), 'method::define - given object is not a descriptor', AttributeError);
 
                 xs.assert.fn(descriptor.value, 'method::define - given "$value" is not a function', {
                     $value: descriptor.value
                 }, AttributeError);
 
                 //assert, that object has no method "name", or it is defined, but is configurable
-                xs.assert.ok(!object.hasOwnProperty(name) || _isConfigurable(object, name), 'method::define - method "$name" is already defined', {
+                xs.assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'method::define - method "$name" is already defined', {
                     $name: name
                 }, AttributeError);
 

@@ -58,7 +58,7 @@
 
             //assert
             if (given !== expected) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -83,7 +83,7 @@
 
             //assert
             if (!expression) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -108,7 +108,7 @@
 
             //assert
             if (expression) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -126,14 +126,14 @@
          * @param {Object} [vars] error optional vars
          * @param {Function} [Exception] error class
          */
-        var _object = me.object = function (value, message, vars, Exception) {
+        var object = me.object = function (value, message, vars, Exception) {
             if (!xs.isString(message)) {
                 message = '"' + value + '" is not an object';
             }
 
             //assert
             if (!xs.isObject(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -158,7 +158,7 @@
 
             //assert
             if (!xs.isArray(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -176,14 +176,14 @@
          * @param {Object} [vars] error optional vars
          * @param {Function} [Exception] error class
          */
-        var _fn = me.fn = function (value, message, vars, Exception) {
+        var fn = me.fn = function (value, message, vars, Exception) {
             if (!xs.isString(message)) {
                 message = '"' + value + '" is not a function';
             }
 
             //assert
             if (!xs.isFunction(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -208,7 +208,7 @@
 
             //assert
             if (!xs.isString(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -233,7 +233,7 @@
 
             //assert
             if (!xs.isNumber(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -258,7 +258,7 @@
 
             //assert
             if (!xs.isBoolean(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -283,7 +283,7 @@
 
             //assert
             if (!xs.isRegExp(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -308,7 +308,7 @@
 
             //assert
             if (!xs.isError(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -333,7 +333,7 @@
 
             //assert
             if (!xs.isNull(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -358,7 +358,7 @@
 
             //assert
             if (!xs.isIterable(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -383,7 +383,7 @@
 
             //assert
             if (!xs.isPrimitive(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -408,7 +408,7 @@
 
             //assert
             if (!xs.isNumeric(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -433,7 +433,7 @@
 
             //assert
             if (!xs.isDefined(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -458,7 +458,7 @@
 
             //assert
             if (!xs.isEmpty(value)) {
-                _raise(message, vars, Exception);
+                raise(message, vars, Exception);
             }
         };
 
@@ -471,24 +471,24 @@
          *
          * @method Class
          *
-         * @param {Function} fn given constructor
+         * @param {Function} Class given constructor
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
          * @param {Function} [Exception] error class
          */
-        var _class = me.Class = function (fn, message, vars, Exception) {
-            //assert, that fn is function
-            _fn(fn, 'Class "$Class" is not a function', {
-                $Class: fn
+        var cls = me.Class = function (Class, message, vars, Exception) {
+            //assert, that Class is function
+            fn(Class, 'Class "$Class" is not a function', {
+                $Class: Class
             }, Exception);
 
             if (!xs.isString(message)) {
-                message = '"' + fn + '" is not a Class';
+                message = '"' + Class + '" is not a Class';
             }
 
             //assert
-            if (fn.contractor !== xs.Class) {
-                _raise(message, vars, Exception);
+            if (Class.contractor !== xs.Class) {
+                raise(message, vars, Exception);
             }
         };
 
@@ -501,24 +501,24 @@
          *
          * @method Interface
          *
-         * @param {Function} fn given constructor
+         * @param {Function} Interface given constructor
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
          * @param {Function} [Exception] error class
          */
-        var _interface = me.Interface = function (fn, message, vars, Exception) {
+        var iface = me.Interface = function (Interface, message, vars, Exception) {
             //assert, that fn is function
-            _fn(fn, 'Interface "$Interface" is not a function', {
-                $Interface: fn
+            fn(Interface, 'Interface "$Interface" is not a function', {
+                $Interface: Interface
             }, Exception);
 
             if (!xs.isString(message)) {
-                message = '"' + fn + '" is not Interface';
+                message = '"' + Interface + '" is not an Interface';
             }
 
             //assert
-            if (fn.contractor !== xs.Interface) {
-                _raise(message, vars, Exception);
+            if (Interface.contractor !== xs.Interface) {
+                raise(message, vars, Exception);
             }
         };
 
@@ -531,35 +531,35 @@
          *
          * @method instance
          *
-         * @param {Object} object given instance
+         * @param {Object} instance given instance
          * @param {Function} Class expected constructor
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
          * @param {Function} [Exception] error class
          */
-        me.instance = function (object, Class, message, vars, Exception) {
+        me.instance = function (instance, Class, message, vars, Exception) {
             //assert that object is object
-            _object(object, 'Instance "$instance" is not an object', {
-                $instance: object
+            object(instance, 'Instance "$instance" is not an object', {
+                $instance: instance
             }, Exception);
 
             //assert, that Class is class
-            _class(Class, 'Class "$Class" is not a class', {
+            cls(Class, 'Class "$Class" is not a class', {
                 $Class: Class
             }, Exception);
 
             //assert that object.self is class
-            _class(object.self, 'Instance.self "$Class" is not a class', {
-                $Class: object.self
+            cls(instance.self, 'Instance.self "$Class" is not a class', {
+                $Class: instance.self
             }, Exception);
 
             if (!xs.isString(message)) {
-                message = '"' + object + '" is not instance of "' + (Class.label ? Class.label : Class.name) + '"';
+                message = '"' + instance + '" is not instance of "' + (Class.label ? Class.label : Class.name) + '"';
             }
 
             //assert
-            if (!(object instanceof Class) && !(object.self.mixins(Class))) {
-                _raise(message, vars, Exception);
+            if (!(instance instanceof Class) && !(instance.self.mixins(Class))) {
+                raise(message, vars, Exception);
             }
         };
 
@@ -572,35 +572,35 @@
          *
          * @method implements
          *
-         * @param {Object} object verified object
+         * @param {Object} instance verified object
          * @param {Function} Interface verified interface
          * @param {String} message error message
          * @param {Object} [vars] error optional vars
          * @param {Function} [Exception] error class
          */
-        me.implements = function (object, Interface, message, vars, Exception) {
-            //assert that object is object
-            _object(object, 'Instance "$instance" is not an object', {
-                $instance: object
+        me.implements = function (instance, Interface, message, vars, Exception) {
+            //assert that instance is object
+            object(instance, 'Instance "$instance" is not an object', {
+                $instance: instance
             }, Exception);
 
             //assert, that Interface is interface
-            _interface(Interface, 'Interface "$Interface" is not an interface', {
+            iface(Interface, 'Interface "$Interface" is not an interface', {
                 $Interface: Interface
             }, Exception);
 
-            //assert that object.self is class
-            _class(object.self, 'Instance.self "$Class" is not a class', {
-                $Class: object.self
+            //assert that instance.self is class
+            cls(instance.self, 'Instance.self "$Class" is not a class', {
+                $Class: instance.self
             }, Exception);
 
             if (!xs.isString(message)) {
-                message = 'Class "' + object.self.label + '" does not implement interface "' + Interface.label + '"';
+                message = 'Class "' + instance.self.label + '" does not implement interface "' + Interface.label + '"';
             }
 
             //assert
-            if (!object.self.implements(Interface)) {
-                _raise(message, vars, Exception);
+            if (!instance.self.implements(Interface)) {
+                raise(message, vars, Exception);
             }
         };
 
@@ -619,7 +619,7 @@
          *
          * @throws {Error}
          */
-        var _raise = function (message, vars, Exception) {
+        var raise = function (message, vars, Exception) {
             var error;
 
             //vars given

@@ -63,7 +63,7 @@
             });
 
             //filter waiting classes to exclude processed ones
-            _filterWaitingDependencies(waiting);
+            filterWaitingDependencies(waiting);
 
             //if empty waiting list - apply handleReady immediately
             if (!waiting.length) {
@@ -82,7 +82,7 @@
                 var deadLock = chains.getLock(Class);
 
                 //assert that no deadlock found
-                xs.assert.not(deadLock, 'dead lock detected: ' + (deadLock ? _showDeadLock(deadLock) : ''), DependenciesManagerError);
+                xs.assert.not(deadLock, 'dead lock detected: ' + (deadLock ? showDeadLock(deadLock) : ''), DependenciesManagerError);
             });
 
             logger.trace('add. No lock found. Adding dependency');
@@ -135,7 +135,7 @@
          *
          * @param {xs.core.Collection} waiting array of waiting classes
          */
-        var _filterWaitingDependencies = function (waiting) {
+        var filterWaitingDependencies = function (waiting) {
             var Class, i = 0;
 
             logger.trace('filterWaiting. Filtering waiting list', {
@@ -176,7 +176,7 @@
          *
          * @return {String} deadLock string representation
          */
-        var _showDeadLock = function (deadLock) {
+        var showDeadLock = function (deadLock) {
             //self lock
             if (deadLock.length === 1) {
                 return 'Class "' + deadLock[0].label + '" imports itself';
@@ -233,7 +233,7 @@
                     })
                 });
                 //get existing chains, where dependent class was in waiting list
-                var chains = _getChains(dependent, true);
+                var chains = getChains(dependent, true);
 
                 logger.trace('chains::add. Work chains:');
                 chains.each(function (chain) {
@@ -252,7 +252,7 @@
 
                     //get updated chains
                     chains.each(function (chain) {
-                        _updateChains(chain, waiting).each(function (chain) {
+                        updateChains(chain, waiting).each(function (chain) {
                             updated.add(chain);
                         });
                     });
@@ -267,7 +267,7 @@
                     logger.trace('chains::add. No work chains found. Creating...');
 
                     //add created chains to storage
-                    _createChains(dependent, waiting).each(function (chain) {
+                    createChains(dependent, waiting).each(function (chain) {
                         storage.add(chain);
                     });
                 }
@@ -294,7 +294,7 @@
                 logger.trace('chains::remove. ' + processed.label + ' resolved');
 
                 //get work chains, that contain processed class
-                var chains = _getChains(processed);
+                var chains = getChains(processed);
                 logger.trace('chains::remove. Work chains:');
                 chains.each(function (chain) {
                     logger.trace('chains::remove.', {
@@ -365,7 +365,7 @@
              *
              * @return {Array} found working chains
              */
-            var _getChains = function (dependent, lastOnly) {
+            var getChains = function (dependent, lastOnly) {
                 if (lastOnly) {
 
                     return storage.find(function (chain) {
@@ -388,7 +388,7 @@
              *
              * @return {xs.core.Collection} created chains
              */
-            var _createChains = function (dependent, waiting) {
+            var createChains = function (dependent, waiting) {
                 //init created chains list
                 var created = new xs.core.Collection();
 
@@ -403,7 +403,7 @@
                     logger.trace('chains::createChains. Try to find merges for:');
                     logger.trace('chains::createChains. [' + dependent.label + ']->' + Class.label);
                     //get merged chains
-                    var merged = _getMergedChains(chain);
+                    var merged = getMergedChains(chain);
 
                     //if any merged chains - add them to storage
                     if (merged.length) {
@@ -452,7 +452,7 @@
              * @param {xs.core.Collection} chain
              * @param {xs.core.Collection} waiting
              */
-            var _updateChains = function (chain, waiting) {
+            var updateChains = function (chain, waiting) {
                 //init updated chains list
                 var updated = new xs.core.Collection();
 
@@ -475,7 +475,7 @@
                         })
                     });
                     //get merged chains
-                    var merged = _getMergedChains(copy);
+                    var merged = getMergedChains(copy);
 
                     //if any merged chains - add them to storage
                     if (merged.length) {
@@ -527,7 +527,7 @@
              *
              * @return {xs.core.Collection} merged chains array
              */
-            var _getMergedChains = function (chain) {
+            var getMergedChains = function (chain) {
 
                 logger.trace('chains::getMergedChains. For chain', {
                     chain: chain.values().map(function (Class) {
@@ -542,7 +542,7 @@
                 logger.trace('chains::getMergedChains. Junction ' + junction.label);
 
                 //get work chains for junction
-                var chains = _getChains(junction);
+                var chains = getChains(junction);
 
                 //merge if any chains found
                 if (chains.length) {
@@ -659,7 +659,7 @@
 
                 logger.trace('queue::add. Waiting is not empty - filter');
                 //filter waiting classes
-                _filterWaitingClasses(waiting);
+                filterWaitingClasses(waiting);
 
                 logger.trace('queue::add. Wait for filtered:', {
                     waiting: waiting.values()
@@ -726,7 +726,7 @@
              *
              * @param {xs.core.Collection} waiting collection of waiting classes' names
              */
-            var _filterWaitingClasses = function (waiting) {
+            var filterWaitingClasses = function (waiting) {
                 var i = 0, Class, name;
 
                 //iterate over waiting

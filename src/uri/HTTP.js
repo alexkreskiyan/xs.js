@@ -54,7 +54,7 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
 
         //parse given namespace into user, host and port
         if (raw.namespace) {
-            var namespace = _parseNamespace(raw.namespace);
+            var namespace = parseNamespace(raw.namespace);
 
             //user
             me.user = namespace.user;
@@ -322,7 +322,7 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
 
     var namespaceParseRe = /^(?:([^@:]+)@)?([^@:]+)(?::(\d+))?$/;
 
-    var _parseNamespace = function (namespace) {
+    var parseNamespace = function (namespace) {
         var raw = namespaceParseRe.exec(namespace);
 
         xs.assert.array(raw, 'Given namespace part "$namespace" is not correct', {

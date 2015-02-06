@@ -73,8 +73,8 @@
         //create profiling access object
         me.profile = {
             category: category,
-            start: _profileStart,
-            end: _profileEnd
+            start: profileStart,
+            end: profileEnd
         };
     };
 
@@ -108,9 +108,9 @@
         }, LoggerError);
 
         if (data) {
-            _process(me.category, xs.log.Error, message, data);
+            processEntry(me.category, xs.log.Error, message, data);
         } else {
-            _process(me.category, xs.log.Error, message);
+            processEntry(me.category, xs.log.Error, message);
         }
     };
 
@@ -144,9 +144,9 @@
         }, LoggerError);
 
         if (data) {
-            _process(me.category, xs.log.Warning, message, data);
+            processEntry(me.category, xs.log.Warning, message, data);
         } else {
-            _process(me.category, xs.log.Warning, message);
+            processEntry(me.category, xs.log.Warning, message);
         }
     };
 
@@ -180,9 +180,9 @@
         }, LoggerError);
 
         if (data) {
-            _process(me.category, xs.log.Info, message, data);
+            processEntry(me.category, xs.log.Info, message, data);
         } else {
-            _process(me.category, xs.log.Info, message);
+            processEntry(me.category, xs.log.Info, message);
         }
     };
 
@@ -217,9 +217,9 @@
         }, LoggerError);
 
         if (data) {
-            _process(me.category, xs.log.Trace, message, data);
+            processEntry(me.category, xs.log.Trace, message, data);
         } else {
-            _process(me.category, xs.log.Trace, message);
+            processEntry(me.category, xs.log.Trace, message);
         }
     };
 
@@ -238,7 +238,7 @@
      *
      * @param {String} mark profiling mark
      */
-    var _profileStart = function (mark) {
+    var profileStart = function (mark) {
         var me = this;
 
         //assert, that mark is string
@@ -270,7 +270,7 @@
      *
      * @param {String} mark profiling mark
      */
-    var _profileEnd = function (mark) {
+    var profileEnd = function (mark) {
         var me = this;
 
         //assert, that mark is string
@@ -291,11 +291,11 @@
         profiles.remove(profile);
 
         //process profiling message (mark) with profile as data
-        _process(me.category, xs.log.Profile, mark, profile);
+        processEntry(me.category, xs.log.Profile, mark, profile);
     };
 
     //create reference to xs.log.Router.process and remove it
-    var _process = xs.log.Router.process;
+    var processEntry = xs.log.Router.process;
     delete xs.log.Router.process;
     /**
      * Internal error class

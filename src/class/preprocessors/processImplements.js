@@ -115,7 +115,7 @@
 
         //verify interfaces implementation
         //assert, that target implements all interfaces
-        xs.assert.ok(_verifyImplements(Class, interfaces));
+        xs.assert.ok(verifyImplements(Class, interfaces));
     });
 
     /**
@@ -128,7 +128,7 @@
      * @param {Object} Class target class
      * @param {Object} interfaces interfaces list
      */
-    var _verifyImplements = function (Class, interfaces) {
+    var verifyImplements = function (Class, interfaces) {
         //apply each interface
         interfaces.each(function (name) {
 
@@ -136,7 +136,7 @@
 
             logger.trace((Class.label ? Class.label : 'undefined') + '. Verifying implementation of ' + Interface.label);
             //verify, that target implements Interface
-            _verifyInterface(Class, Interface);
+            verifyInterface(Class, Interface);
         });
 
         return true;
@@ -152,7 +152,7 @@
      * @param {Object} Class target class
      * @param {Object} Interface verified interface
      */
-    var _verifyInterface = function (Class, Interface) {
+    var verifyInterface = function (Class, Interface) {
         var descriptor = Class.descriptor;
         //verify constants
         Interface.descriptor.constant.each(function (name) {

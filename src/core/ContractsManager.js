@@ -74,7 +74,7 @@
         me.has = function (name) {
 
             //assert, that name is valid string
-            xs.assert.ok(_isName(name), 'has - given name "$name" is not valid', {
+            xs.assert.ok(isName(name), 'has - given name "$name" is not valid', {
                 $name: name
             }, ContractsManagerError);
 
@@ -97,7 +97,7 @@
         me.get = function (name) {
 
             //assert, that name is valid string
-            xs.assert.ok(_isName(name), 'get - given name "$name" is not valid', {
+            xs.assert.ok(isName(name), 'get - given name "$name" is not valid', {
                 $name: name
             }, ContractsManagerError);
 
@@ -125,10 +125,10 @@
          * @param {String} name new contract name
          * @param {Function} Contract registered contract
          */
-        var _add = me.add = function (name, Contract) {
+        var add = me.add = function (name, Contract) {
 
             //assert, that name is valid string
-            xs.assert.ok(_isName(name), 'add - given name "$name" is not valid', {
+            xs.assert.ok(isName(name), 'add - given name "$name" is not valid', {
                 $name: name
             }, ContractsManagerError);
 
@@ -151,10 +151,10 @@
             Contract.label = name;
 
             //get short name of Contract
-            var label = _getName(name);
+            var label = getName(name);
 
             //get Contract namespace by path
-            var namespace = _getNamespace(root, _getPath(name));
+            var namespace = getNamespace(root, getPath(name));
 
             //save Contract to namespace
             namespace[label] = Contract;
@@ -191,19 +191,19 @@
             delete registry.at(name).label;
 
             //get short name of Contract
-            var label = _getName(name);
+            var label = getName(name);
 
             //get path of Contract
-            var path = _getPath(name);
+            var path = getPath(name);
 
             //get Contract namespace by path
-            var namespace = _getNamespace(root, path);
+            var namespace = getNamespace(root, path);
 
             //unset Contract from namespace
             delete namespace[label];
 
             //clean namespace
-            _cleanNamespace(root, path);
+            cleanNamespace(root, path);
 
             //remove Contract from registry
             registry.removeAt(name);
@@ -242,7 +242,7 @@
         me.define = function (contractor, name, descFn, createdFn) {
 
             //assert, that name is valid string
-            xs.assert.ok(_isName(name), 'define - given name "$name" is not valid', {
+            xs.assert.ok(isName(name), 'define - given name "$name" is not valid', {
                 $name: name
             }, ContractsManagerError);
 
@@ -258,7 +258,7 @@
             name = Contract.descriptor.resolveName(name);
 
             //save Contract in registry by name
-            _add(name, Contract);
+            add(name, Contract);
 
             return Contract;
         };
@@ -278,7 +278,7 @@
          *
          * @return {String} whether name is correct
          */
-        var _isName = me.isName = function (name) {
+        var isName = me.isName = function (name) {
 
             //assert that name is a string
             xs.assert.string(name, 'isName - given name "$name" is not a string', {
@@ -329,10 +329,10 @@
          *
          * @return {String} short name
          */
-        var _getName = me.getName = function (name) {
+        var getName = me.getName = function (name) {
 
             //assert, that name is valid string
-            xs.assert.ok(_isName(name), 'getName - given name "$name" is not valid', {
+            xs.assert.ok(isName(name), 'getName - given name "$name" is not valid', {
                 $name: name
             }, ContractsManagerError);
 
@@ -354,10 +354,10 @@
          *
          * @return {String} path
          */
-        var _getPath = me.getPath = function (name) {
+        var getPath = me.getPath = function (name) {
 
             //assert, that name is valid string
-            xs.assert.ok(_isName(name), 'getPath - given name "$name" is not valid', {
+            xs.assert.ok(isName(name), 'getPath - given name "$name" is not valid', {
                 $name: name
             }, ContractsManagerError);
 
@@ -380,7 +380,7 @@
          *
          * @return {Object|Function} namespace for given path
          */
-        var _getNamespace = me.getNamespace = function (root, path) {
+        var getNamespace = me.getNamespace = function (root, path) {
 
             //assert, that root is object
             xs.assert.object(root, 'getNamespace - given root "$root" is not an object', {
@@ -388,7 +388,7 @@
             }, ContractsManagerError);
 
             //assert, that path is empty string or valid name
-            xs.assert.ok(path === '' || _isName(path), 'getNamespace - given name "$name" is not valid', {
+            xs.assert.ok(path === '' || isName(path), 'getNamespace - given name "$name" is not valid', {
                 $name: path
             }, ContractsManagerError);
 
@@ -411,7 +411,7 @@
             //process down or return
             if (parts.length) {
 
-                return _getNamespace(root[part], parts.join('.'));
+                return getNamespace(root[part], parts.join('.'));
             }
 
             return root[part];
@@ -422,7 +422,7 @@
          *
          * For example:
          *
-         *     _cleanNamespace(window, 'xs.module.my');
+         *     cleanNamespace(window, 'xs.module.my');
          *
          * @ignore
          *
@@ -431,7 +431,7 @@
          * @param {Object|Function} root namespace relative root
          * @param {String} path relative path to root
          */
-        var _cleanNamespace = function (root, path) {
+        var cleanNamespace = function (root, path) {
             //return if path is empty
             if (!path) {
                 return;
@@ -447,7 +447,7 @@
             path = parts.join('.');
 
             //get parent namespace
-            var namespace = _getNamespace(root, path);
+            var namespace = getNamespace(root, path);
 
             //remove namespace if empty
             if (xs.isEmpty(namespace[part])) {
@@ -456,7 +456,7 @@
                 delete namespace[part];
 
                 //try to clean parent
-                _cleanNamespace(root, path);
+                cleanNamespace(root, path);
             }
         };
 

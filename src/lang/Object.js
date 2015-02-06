@@ -30,7 +30,7 @@
         var me = {};
 
         // Create quick reference variables for speed access to core prototypes.
-        var _slice = Function.prototype.call.bind(Array.prototype.slice);
+        var slice = Function.prototype.call.bind(Array.prototype.slice);
 
         /**
          * Copies all properties from objects, passed as arguments to given obj
@@ -67,7 +67,7 @@
                 $object: object
             }, ObjectError);
 
-            var adds = _slice(arguments, 1), addsLength = adds.length;
+            var adds = slice(arguments, 1), addsLength = adds.length;
 
             //iterate over add-ons
             for (var i = 0; i < addsLength; i++) {
