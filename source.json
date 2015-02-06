@@ -87,6 +87,11 @@
                     "type": "class"
                 }
             },
+            "util": {
+                "Collection": {
+                    "type": "class"
+                }
+            },
             "ux": {
                 "Promise": {
                     "type": "class"
