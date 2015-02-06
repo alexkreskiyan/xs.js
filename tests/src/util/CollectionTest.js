@@ -53,7 +53,7 @@ module('xs.util.Collection', function () {
         strictEqual(collection.private.items[0].key, 0);
         strictEqual(collection.private.items[0].value, 1);
         //type is assigned
-        strictEqual(collection.private.type, xs.isNumber);
+        strictEqual(collection.private.type, Number);
 
         //incorrect initial value must fail
         //primitive
