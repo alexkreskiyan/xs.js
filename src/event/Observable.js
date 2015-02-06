@@ -112,6 +112,13 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *
      * @param {String} event name of registered event
      * @param {Object} [data] optional object data
+     *
+     * @return {Boolean} whether event processing was not stopped.
+     *
+     * Notice, that:
+     *
+     * - if event is not stoppable, method will always return true
+     * - if method is stoppable, it will return true, if no handler stopped processing and false - otherwise
      */
     Class.method.fire = function (event, data) {
         var me = this;
@@ -197,19 +204,28 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         self.log.trace('fire - event is ' + (stoppable ? 'stoppable' : 'not stoppable') + ', processing');
 
-        //handle fire
-        //handlers
-        var handlers = me.private.eventsHandlers[event];
-        if (stoppable) {
-            handlers.find(function (item) {
 
-                return item.realHandler(eventObject) === false;
-            });
-        } else {
+        //handle fire
+
+        //get handlers list for event
+        var handlers = me.private.eventsHandlers[event];
+
+        //non-stoppable event always returns true
+        if (!stoppable) {
             handlers.each(function (item) {
                 item.realHandler(eventObject);
             });
+
+            return true;
         }
+
+        //if event is stoppable - result is opposite to whether some handler found:
+        //if any handler returns false, find return relative item, and that true-like value is returned as false
+        //if no handler returns false, find return undefined, and that false-like value is returned as true
+        return !handlers.find(function (item) {
+
+            return item.realHandler(eventObject) === false;
+        });
     };
 
     /**
