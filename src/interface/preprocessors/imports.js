@@ -63,15 +63,15 @@
                 loads: loads.values()
             });
             //require async
-            xs.require(loads.values(), _process);
+            xs.require(loads.values(), processImports);
         } else {
             //nothing to load
             logger.trace((Interface.label ? Interface.label : 'undefined') + '. Nothing to load');
-            _process();
+            processImports();
         }
 
         //define process function
-        function _process() {
+        function processImports() {
 
             var waiting = requires.map(function (name) {
                 return xs.ContractsManager.get(name);

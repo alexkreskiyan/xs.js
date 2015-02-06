@@ -130,15 +130,15 @@
                 loads: loads.values()
             });
             //require async
-            xs.require(loads.values(), _process);
+            xs.require(loads.values(), processImport);
         } else {
             //nothing to load
             logger.trace((Class.label ? Class.label : 'undefined') + '. Nothing to load');
-            _process();
+            processImport();
         }
 
         //define process function
-        function _process() {
+        function processImport() {
 
             var waiting = requires.map(function (name) {
                 return xs.ContractsManager.get(name);
@@ -155,7 +155,7 @@
                     imports: imports.toSource()
                 });
                 //apply imports
-                _applyImports(Class, imports);
+                applyImports(Class, imports);
 
                 //call ready to notify processor stack, that import succeed
                 ready();
@@ -176,7 +176,7 @@
      * @param {Object} target target class
      * @param {Object} imports mixins imports
      */
-    var _applyImports = function (target, imports) {
+    var applyImports = function (target, imports) {
         //assign imports
         imports.each(function (alias, name) {
             //get alias short part

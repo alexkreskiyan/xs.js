@@ -87,19 +87,19 @@
             }
 
             //create interface
-            var Interface = _createSample();
+            var Interface = createSample();
 
             //save contract type
             xs.constant(Interface, 'contractor', Contractor);
 
             //Fill descriptor prototype
-            Descriptor.prototype = _createPrototypeDescriptor();
+            Descriptor.prototype = createPrototypeDescriptor();
 
             //get descriptor instance
             var descriptor = new Descriptor();
 
             //save Interface descriptor
-            xs.constant(Interface, 'descriptor', _createEmptyDescriptor());
+            xs.constant(Interface, 'descriptor', createEmptyDescriptor());
 
             //mark interface as not ready yet (until preprocessors done)
             Interface.isProcessing = true;
@@ -213,7 +213,7 @@
          *
          * @return {Function} new xInterface
          */
-        var _createSample = function () {
+        var createSample = function () {
 
             return function xInterface() {
                 throw new InterfaceError('Interface must not be called');
@@ -229,7 +229,7 @@
          *
          * @return {Object} prototype of new descriptor
          */
-        var _createPrototypeDescriptor = function () {
+        var createPrototypeDescriptor = function () {
             return {
 
                 //interface namespace
@@ -269,11 +269,11 @@
          *
          * @ignore
          *
-         * @method _createEmptyDescriptor
+         * @method createEmptyDescriptor
          *
          * @return {Object} new empty descriptor
          */
-        var _createEmptyDescriptor = function () {
+        var createEmptyDescriptor = function () {
             return {
 
                 //class namespace

@@ -97,7 +97,7 @@
             logger.trace('require. Acquired ' + name);
 
             //init loaded classes list
-            var loadList = _getLoadList(new xs.core.Collection(xs.isArray(name) ? name : [name]));
+            var loadList = getLoadList(new xs.core.Collection(xs.isArray(name) ? name : [name]));
             logger.trace('require. LoadList formed', {
                 loaded: loadList.loaded.toSource(),
                 failed: loadList.failed.toSource(),
@@ -157,7 +157,7 @@
          *
          * @return {Object} list of classes, that have to be loaded
          */
-        function _getLoadList(classes) {
+        function getLoadList(classes) {
 
             /**
              * Load list
@@ -221,7 +221,7 @@
          *
          * @param {String} name name of loaded class
          */
-        function _handleLoad(name) {
+        function processLoad(name) {
             //handle load if class was loaded
             if (xs.ContractsManager.has(name)) {
 
@@ -253,7 +253,7 @@
          *
          * @param {String} name name of failed class
          */
-        function _handleFail(name) {
+        function processFail(name) {
             logger.trace('handleFail. Class "' + name + '" failed to load');
             //add failed path
             failed.add(name);
@@ -664,7 +664,7 @@
                 loading.add(name, path);
 
                 //execute load
-                _load(name, path);
+                load(name, path);
 
                 return me;
             };
@@ -690,7 +690,7 @@
              * @param {String} name loaded class name
              * @param {String} path loaded path
              */
-            var _load = function (name, path) {
+            var load = function (name, path) {
                 //create script element
                 var script = document.createElement('script');
 
@@ -705,10 +705,10 @@
                 script.async = true;
 
                 //add load event listener
-                script.addEventListener('load', _handleLoad);
+                script.addEventListener('load', processLoad);
 
                 //add error event listener
-                script.addEventListener('error', _handleFail);
+                script.addEventListener('error', processFail);
 
                 //append script to head
                 document.head.appendChild(script);
@@ -717,11 +717,11 @@
             /**
              * Internal handler, that wraps external handleLoad
              */
-            var _handleLoad = function () {
+            var processLoad = function () {
                 var me = this;
 
                 //remove handler after call
-                me.removeEventListener('load', _handleLoad);
+                me.removeEventListener('load', processLoad);
 
                 //remove src from loading list
                 loading.removeAt(me.name);
@@ -733,11 +733,11 @@
             /**
              * Internal handler, that wraps external handleFail
              */
-            var _handleFail = function () {
+            var processFail = function () {
                 var me = this;
 
                 //remove handler after call
-                me.removeEventListener('load', _handleFail);
+                me.removeEventListener('load', processFail);
 
                 //remove src from loading list
                 loading.removeAt(me.name);
@@ -747,7 +747,7 @@
             };
 
             return me;
-        })(_handleLoad, _handleFail);
+        })(processLoad, processFail);
 
         /**
          * Internal list class

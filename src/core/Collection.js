@@ -768,7 +768,7 @@
         });
 
         //updated indexes
-        _updateIndexes.call(me, index + 1);
+        updateIndexes.call(me, index + 1);
 
         return me;
     };
@@ -1129,7 +1129,7 @@
         }
 
         //update indexes
-        _updateIndexes.call(me, index);
+        updateIndexes.call(me, index);
 
         return me;
     };
@@ -1358,7 +1358,7 @@
         }
 
         //update indexes
-        _updateIndexes.call(me, 0);
+        updateIndexes.call(me, 0);
 
         return me;
     };
@@ -1463,7 +1463,7 @@
         //remove first item from collection
         me.private.items.splice(0, 1);
 
-        _updateIndexes.call(me, 0);
+        updateIndexes.call(me, 0);
 
         //return value
         return value;
@@ -2420,7 +2420,7 @@
         }
 
         //update indexes
-        _updateIndexes.call(me, 0);
+        updateIndexes.call(me, 0);
 
         return me;
     };
@@ -2546,7 +2546,7 @@
         picked.private.items = items;
 
         //update indexes
-        _updateIndexes.call(picked, 0);
+        updateIndexes.call(picked, 0);
 
         return picked;
     };
@@ -2675,7 +2675,7 @@
         omitted.private.items = items;
 
         //update indexes
-        _updateIndexes.call(omitted, 0);
+        updateIndexes.call(omitted, 0);
 
         return omitted;
     };
@@ -2728,7 +2728,7 @@
      *
      * @param {Number} index index, update starts from
      */
-    var _updateIndexes = function (index) {
+    var updateIndexes = function (index) {
         var me = this, length = me.private.items.length;
 
         //updated indexes for all items, starting from given index

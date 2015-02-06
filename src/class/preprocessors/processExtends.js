@@ -54,7 +54,7 @@
         //if no parent given - extend from xs.class.Base
         if (!xs.isDefined(extended)) {
             logger.trace((Class.label ? Class.label : 'undefined') + '. Extending xs.class.Base');
-            _extend(Class, xs.class.Base);
+            extend(Class, xs.class.Base);
 
             return;
 
@@ -88,7 +88,7 @@
 
         logger.trace((Class.label ? Class.label : 'undefined') + '. Extending ' + Parent.label);
         //apply extends
-        _applyExtends(Class, Parent);
+        applyExtends(Class, Parent);
     });
 
     /**
@@ -101,9 +101,9 @@
      * @param {Function} target target class
      * @param {Function} parent extended class
      */
-    var _applyExtends = function (target, parent) {
+    var applyExtends = function (target, parent) {
         //extend
-        _extend(target, parent);
+        extend(target, parent);
 
         //save extends to descriptor
         target.descriptor.extends = parent.label;
@@ -117,7 +117,7 @@
      * @param {Function} child child class
      * @param {Function} parent parent class
      */
-    var _extend = function (child, parent) {
+    var extend = function (child, parent) {
         //create fake constructor
         var Fn = function () {
         };

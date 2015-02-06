@@ -45,7 +45,7 @@
          *
          * @return {Object} parsing result
          */
-        var _parse = function (userAgent, rules, params) {
+        var parse = function (userAgent, rules, params) {
 
             //accumulate result of the regular expression
             var result = {};
@@ -135,7 +135,7 @@
          *
          * @method detect
          */
-        var _detect = function () {
+        var detect = function () {
 
             /**
              * Lower-cased user agent string
@@ -163,7 +163,7 @@
              *
              * @type {Object}
              */
-            me.browser = _parse(userAgent, rules.browser, [
+            me.browser = parse(userAgent, rules.browser, [
                 'name',
                 'major',
                 'minor',
@@ -184,7 +184,7 @@
              *
              * @type {Object}
              */
-            me.engine = _parse(userAgent, rules.engine, [
+            me.engine = parse(userAgent, rules.engine, [
                 'name',
                 'major',
                 'minor',
@@ -203,7 +203,7 @@
              *
              * @type {Object}
              */
-            me.os = _parse(userAgent, rules.os, [
+            me.os = parse(userAgent, rules.os, [
                 'name',
                 'version'
             ]);
@@ -217,7 +217,7 @@
              *
              * @type {Object}
              */
-            me.cpu = _parse(userAgent, rules.cpu, ['architecture']);
+            me.cpu = parse(userAgent, rules.cpu, ['architecture']);
 
 
             //set shortcuts
@@ -816,7 +816,7 @@
         };
 
         //detect environment context
-        _detect();
+        detect();
 
         return me;
     })();

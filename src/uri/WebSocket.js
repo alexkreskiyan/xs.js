@@ -54,7 +54,7 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
 
         //parse given namespace into user, host and port
         if (raw.namespace) {
-            var namespace = _parseNamespace(raw.namespace);
+            var namespace = parseNamespace(raw.namespace);
 
             //host
             me.host = namespace.host;
@@ -252,7 +252,7 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
 
     var namespaceParseRe = /^([^@:]+)(?::(\d+))?$/;
 
-    var _parseNamespace = function (namespace) {
+    var parseNamespace = function (namespace) {
         var raw = namespaceParseRe.exec(namespace);
 
         xs.assert.array(raw, 'Given namespace part "$namespace" is not correct', {

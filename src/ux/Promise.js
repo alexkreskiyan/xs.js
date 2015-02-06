@@ -219,7 +219,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         //process promise on next tick
         xs.nextTick(function () {
-            _processPromise.call(me, 'resolve', data);
+            processPromise.call(me, 'resolve', data);
         });
     };
 
@@ -244,7 +244,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         //process promise on next tick
         xs.nextTick(function () {
-            _processPromise.call(me, 'reject', reason);
+            processPromise.call(me, 'reject', reason);
         });
     };
 
@@ -271,7 +271,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
             //process promise handlers
             me.private.handlers.each(function (item) {
                 if (item.update) {
-                    _handleItem(item, 'update', state);
+                    handleItem(item, 'update', state);
                 }
             });
         });
@@ -298,7 +298,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
         self.log.trace('then');
 
-        var item = _createItem(handleResolved, handleRejected, handleProgress);
+        var item = createItem(handleResolved, handleRejected, handleProgress);
 
 
         //if not handling - return me
@@ -324,7 +324,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         //resolve item on next tick
         xs.nextTick(function () {
-            _handleItem(item, me.private.state === self.RESOLVED ? 'resolve' : 'reject', me.private.data);
+            handleItem(item, me.private.state === self.RESOLVED ? 'resolve' : 'reject', me.private.data);
         });
 
         //if promise is pending - add item to handlers
@@ -393,7 +393,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      * @param {String} action promise action
      * @param {*} data processed data
      */
-    var _processPromise = function (action, data) {
+    var processPromise = function (action, data) {
         var me = this;
 
         //set promise data
@@ -402,7 +402,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         //process promise handlers
         me.private.handlers.each(function (item) {
             if (item[action]) {
-                _handleItem(item, action, data);
+                handleItem(item, action, data);
             }
         });
 
@@ -423,7 +423,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      * @param {String} action promise action
      * @param {*} data processed data
      */
-    var _handleItem = function (item, action, data) {
+    var handleItem = function (item, action, data) {
 
         self.log.trace('handleItem - ' + action + 'with data', {
             data: data
@@ -447,7 +447,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
             self.log.trace('handleItem - process item.promise with action ' + action + ' and value', {
                 value: result
             });
-            _resolveValue(promise, action, result);
+            resolveValue(promise, action, result);
 
 
             //reject if error happened
@@ -472,7 +472,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      * @param {String} action promise action
      * @param {*} value resolved value
      */
-    var _resolveValue = function (promise, action, value) {
+    var resolveValue = function (promise, action, value) {
         xs.assert.ok(promise !== value, 'Value can not refer to the promise itself', {}, TypeError);
 
         //handle value, that is promise
@@ -511,7 +511,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @return {Object|undefined} created item or undefined if no handlers given
      */
-    var _createItem = function (handleResolved, handleRejected, handleProgress) {
+    var createItem = function (handleResolved, handleRejected, handleProgress) {
         //handlers must be either not defined or functions
         xs.assert.ok(!xs.isDefined(handleResolved) || xs.isFunction(handleResolved), 'createItem - given "$handleResolved" is not a function', {
             $handleResolved: handleResolved

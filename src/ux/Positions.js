@@ -52,7 +52,7 @@ xs.define(xs.Class, 'ns.view.PositionsCollection', function (self) {
         }, PositionsCollectionError);
 
         //get template positions
-        var items = _getTemplatePositions(template);
+        var items = getTemplatePositions(template);
 
         //convert it to xs.core.Collection format
         me.items = (new xs.core.Collection(items)).items;
@@ -71,7 +71,7 @@ xs.define(xs.Class, 'ns.view.PositionsCollection', function (self) {
      *
      * @return {String} processed template
      */
-    var _getTemplatePositions = function (template) {
+    var getTemplatePositions = function (template) {
 
         //try to match positions
         var positions = template.match(positionRe);

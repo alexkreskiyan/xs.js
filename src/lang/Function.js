@@ -29,9 +29,9 @@
     var fn = xs.Function = (function () {
         var me = {};
 
-        var _bindFunction = Function.prototype.bind;
-        var _slice = Function.prototype.apply.bind(Array.prototype.slice);
-        var _concatenate = Function.prototype.apply.bind(Array.prototype.concat);
+        var bindFunction = Function.prototype.bind;
+        var slice = Function.prototype.apply.bind(Array.prototype.slice);
+        var concatenate = Function.prototype.apply.bind(Array.prototype.concat);
 
         /**
          * Creates binded function, that will be called with given scope and optional args, prepended to call arguments
@@ -52,7 +52,7 @@
          *
          * @return {Function} bound function
          */
-        var _bind = me.bind = function (fn, scope, args) {
+        var bind = me.bind = function (fn, scope, args) {
             xs.assert.fn(fn, 'bind - given "$fn" is not a function', {
                 $fn: fn
             }, FunctionError);
@@ -61,7 +61,7 @@
                 $args: args
             }, FunctionError);
 
-            return _bindFunction.apply(fn, _concatenate(scope, args));
+            return bindFunction.apply(fn, concatenate(scope, args));
         };
 
         /**
@@ -144,7 +144,7 @@
             }, FunctionError);
 
             return function () {
-                var args = _slice(arguments);
+                var args = slice(arguments);
                 args.unshift(fn);
 
                 return wrapper.apply(scope, args);
@@ -175,7 +175,7 @@
             }, FunctionError);
 
             if (scope) {
-                fn = _bind(fn, scope);
+                fn = bind(fn, scope);
             }
 
             setTimeout(fn, 0);

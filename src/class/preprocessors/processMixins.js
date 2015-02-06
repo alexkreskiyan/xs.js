@@ -135,7 +135,7 @@
         });
 
         //apply mixins to Class.descriptor
-        _applyMixins(Class, mixins);
+        applyMixins(Class, mixins);
     });
 
     /**
@@ -148,7 +148,7 @@
      * @param {Object} Class target class
      * @param {Object} mixins mixins list
      */
-    var _applyMixins = function (Class, mixins) {
+    var applyMixins = function (Class, mixins) {
         //create mixins property in target.prototype
         Class.prototype.mixins = {};
 
@@ -159,7 +159,7 @@
 
             logger.trace((Class.label ? Class.label : 'undefined') + '. Mixining ' + Mixin.label + 'as ' + alias);
             //mix mixed class descriptor into target descriptor
-            _mixinClass(Class.descriptor, Mixin.descriptor);
+            mixinClass(Class.descriptor, Mixin.descriptor);
 
             //save mixed into Class.prototype.mixins
             Class.prototype.mixins[alias] = Mixin;
@@ -176,22 +176,22 @@
      * @param {Object} target target class descriptor
      * @param {Object} mix mixin class descriptor
      */
-    var _mixinClass = function (target, mix) {
+    var mixinClass = function (target, mix) {
 
         //extend constants
-        _mixinSection('constant', target.constant, mix.constant);
+        mixinSection('constant', target.constant, mix.constant);
 
         //static properties
-        _mixinSection('static property', target.static.property, mix.static.property);
+        mixinSection('static property', target.static.property, mix.static.property);
 
         //static methods
-        _mixinSection('static method', target.static.method, mix.static.method);
+        mixinSection('static method', target.static.method, mix.static.method);
 
         //properties
-        _mixinSection('property', target.property, mix.property);
+        mixinSection('property', target.property, mix.property);
 
         //methods
-        _mixinSection('method', target.method, mix.method);
+        mixinSection('method', target.method, mix.method);
     };
 
     /**
@@ -205,7 +205,7 @@
      * @param {Object} target target data
      * @param {Object} mixin mixin data
      */
-    var _mixinSection = function (type, target, mixin) {
+    var mixinSection = function (type, target, mixin) {
 
         //default target with mixin
         mixin.each(function (descriptor, name) {

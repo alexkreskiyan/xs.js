@@ -81,7 +81,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
         me.private.domHandlers = new xs.core.Collection();
 
         //parse view template into nodes collection
-        me.private.nodes = _getNodesCollection(template);
+        me.private.nodes = getNodesCollection(template);
     };
 
     /**
@@ -217,7 +217,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
      *
      * @return {xs.core.Collection} collection of nodes in parsed template
      */
-    var _getNodesCollection = function (template) {
+    var getNodesCollection = function (template) {
 
         self.log.trace('getNodesCollection - fetching nodes from template "' + template + '"');
 

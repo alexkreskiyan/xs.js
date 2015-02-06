@@ -33,29 +33,29 @@
         logger.trace(Class.label ? Class.label : 'undefined');
 
         //constants
-        _processConstants(Class);
+        processConstants(Class);
 
         //static properties
-        _processStaticProperties(Class);
+        processStaticProperties(Class);
 
         //static methods
-        _processStaticMethods(Class);
+        processStaticMethods(Class);
 
         //properties
-        _processProperties(Class);
+        processProperties(Class);
 
         //methods
-        _processMethods(Class);
+        processMethods(Class);
     });
 
-    var _processConstants = function (Class) {
+    var processConstants = function (Class) {
         Class.descriptor.constant.each(function (value, name) {
 
             xs.constant(Class, name, value);
         });
     };
 
-    var _processStaticProperties = function (Class) {
+    var processStaticProperties = function (Class) {
         //create privates storage in class
         Class.private = {};
 
@@ -67,7 +67,7 @@
         });
     };
 
-    var _processStaticMethods = function (Class) {
+    var processStaticMethods = function (Class) {
         Class.descriptor.static.method.each(function (descriptor, name) {
 
             //save method to class
@@ -75,7 +75,7 @@
         });
     };
 
-    var _processProperties = function (Class) {
+    var processProperties = function (Class) {
         var prototype = Class.prototype;
 
         Class.descriptor.property.each(function (descriptor, name) {
@@ -90,7 +90,7 @@
         });
     };
 
-    var _processMethods = function (Class) {
+    var processMethods = function (Class) {
         Class.descriptor.method.each(function (value, name) {
 
             //save method to prototype

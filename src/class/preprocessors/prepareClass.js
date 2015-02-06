@@ -33,19 +33,19 @@
         logger.trace(Class.label ? Class.label : 'undefined');
 
         //prepare imports
-        _processImports(Class, descriptor);
+        processImports(Class, descriptor);
 
         //prepare extends
-        _processExtends(Class, descriptor);
+        processExtends(Class, descriptor);
 
         //prepare mixins
-        _processMixins(Class, descriptor);
+        processMixins(Class, descriptor);
 
         //prepare implements
-        _processImplements(Class, descriptor);
+        processImplements(Class, descriptor);
     });
 
-    var _processImports = function (Class, descriptor) {
+    var processImports = function (Class, descriptor) {
 
         //assert that imports are an array
         xs.assert.array(descriptor.imports, '[$Class]: given imports list "$imports" is not an array', {
@@ -93,7 +93,7 @@
         }));
     };
 
-    var _processExtends = function (Class, descriptor) {
+    var processExtends = function (Class, descriptor) {
 
         var extended = descriptor.extends;
         logger.trace((Class.label ? Class.label : 'undefined') + '. Extended:' + extended);
@@ -110,7 +110,7 @@
         }
     };
 
-    var _processMixins = function (Class, descriptor) {
+    var processMixins = function (Class, descriptor) {
 
         //assert that mixins are an object
         xs.assert.object(descriptor.mixins, '[$Class]: given mixins list "$mixins" is not an object', {
@@ -145,7 +145,7 @@
         });
     };
 
-    var _processImplements = function (Class, descriptor) {
+    var processImplements = function (Class, descriptor) {
 
         //assert that implements are an array
         xs.assert.array(descriptor.implements, '[$Class]: given interfaces list "$implements" is not an array', {

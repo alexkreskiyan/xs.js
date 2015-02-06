@@ -30,7 +30,7 @@
         var me = {};
 
         // Create quick reference variables for speed access to core prototypes.
-        var _slice = Function.prototype.call.bind(Array.prototype.slice);
+        var slice = Function.prototype.call.bind(Array.prototype.slice);
 
         /**
          * Returns shallow copy of list
@@ -66,7 +66,7 @@
             //handle array list
             if (xs.isArray(list)) {
 
-                return _slice(list);
+                return slice(list);
             }
 
             //init variables

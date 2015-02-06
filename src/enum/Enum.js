@@ -86,7 +86,7 @@
             xs.constant(Enum, 'contractor', Contractor);
 
             //save Enum descriptor
-            xs.constant(Enum, 'descriptor', _createEmptyDescriptor());
+            xs.constant(Enum, 'descriptor', createEmptyDescriptor());
 
             //mark enum as not ready yet (until preprocessors done)
             Enum.isProcessing = true;
@@ -160,11 +160,11 @@
          *
          * @ignore
          *
-         * @method _createEmptyDescriptor
+         * @method createEmptyDescriptor
          *
          * @return {Object} new empty descriptor
          */
-        var _createEmptyDescriptor = function () {
+        var createEmptyDescriptor = function () {
             return {
 
                 //enum namespace

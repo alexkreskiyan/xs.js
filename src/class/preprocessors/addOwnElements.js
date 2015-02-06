@@ -32,19 +32,19 @@
         logger.trace(Class.label ? Class.label : 'undefined');
 
         //constants
-        _processConstants(Class, descriptor);
+        processConstants(Class, descriptor);
 
         //static properties
-        _processStaticProperties(Class, descriptor);
+        processStaticProperties(Class, descriptor);
 
         //static methods
-        _processStaticMethods(Class, descriptor);
+        processStaticMethods(Class, descriptor);
 
         //properties
-        _processProperties(Class, descriptor);
+        processProperties(Class, descriptor);
 
         //methods
-        _processMethods(Class, descriptor);
+        processMethods(Class, descriptor);
     });
 
     /**
@@ -70,7 +70,7 @@
      *
      * @property constant
      */
-    var _processConstants = function (Class, descriptor) {
+    var processConstants = function (Class, descriptor) {
         //assert, that constants list is an object
         xs.assert.object(descriptor.constant, '[$Class]: constants list "$constants" is not an object', {
             $Class: Class.label,
@@ -125,7 +125,7 @@
      *
      * @property staticProperty
      */
-    var _processStaticProperties = function (Class, descriptor) {
+    var processStaticProperties = function (Class, descriptor) {
 
         //assert, that static properties list is an object
         xs.assert.object(descriptor.static.property, '[$Class]: static properties list "$properties" is not an object', {
@@ -186,7 +186,7 @@
      *
      * @property staticMethod
      */
-    var _processStaticMethods = function (Class, descriptor) {
+    var processStaticMethods = function (Class, descriptor) {
 
         //assert, that static methods list is an object
         xs.assert.object(descriptor.static.method, '[$Class]: static methods list "$methods" is not an object', {
@@ -247,7 +247,7 @@
      *
      * @property property
      */
-    var _processProperties = function (Class, descriptor) {
+    var processProperties = function (Class, descriptor) {
 
         //assert, that properties list is an object
         xs.assert.object(descriptor.property, '[$Class]: static properties list "$properties" is not an object', {
@@ -308,7 +308,7 @@
      *
      * @property method
      */
-    var _processMethods = function (Class, descriptor) {
+    var processMethods = function (Class, descriptor) {
 
         //assert, that methods list is an object
         xs.assert.object(descriptor.method, '[$Class]: methods list "$methods" is not an object', {
