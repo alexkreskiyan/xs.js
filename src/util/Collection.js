@@ -2752,10 +2752,10 @@ xs.define(xs.Class, 'ns.Collection', function () {
     };
 
     var getTypeKind = function (type) {
-        if (type.contractor === xs.Class) {
+        if (xs.isClass(type)) {
 
             return 'class';
-        } else if (type.contractor === xs.Interface) {
+        } else if (xs.isInterface(type)) {
 
             return 'interface';
         }
@@ -2886,20 +2886,12 @@ xs.define(xs.Class, 'ns.Collection', function () {
 
         var type = me.private.type;
 
-        //assert, that value is object
-        xs.assert.object(value, 'isClassInstance - given value "$value" is not an object', {
-            $value: value
+        xs.assert.instance(value, type, 'isClassInstance - given value "$value" is not an instance of class "$Class"', {
+            $value: value,
+            $Class: type
         }, CollectionError);
 
-        //assert, that value is instance of some class
-        xs.assert.ok(xs.isFunction(value.self) && value.self.contractor === xs.Class, 'isClassInstance - given value "$value" is not an instance of any xs.Class', {
-            $value: value
-        }, CollectionError);
-
-        //get Class reference
-        Class = value.self;
-
-        return (Class === type) || Class.mixins(type);
+        return true;
     };
 
     var isImplementation = function (value) {
@@ -2907,14 +2899,10 @@ xs.define(xs.Class, 'ns.Collection', function () {
 
         var type = me.private.type;
 
-        //assert, that value is object
-        xs.assert.object(value, 'isImplementation - given value "$value" is not an object', {
-            $value: value
-        }, CollectionError);
-
         //assert, that value is instance of some class
-        xs.assert.ok(xs.isFunction(value.self) && value.self.contractor === xs.Class, 'isImplementation - given value "$value" is not an instance of any xs.Class', {
-            $value: value
+        xs.assert.implements(value, type, 'isImplementation - given value "$value" is not an instance of class, that implements interface "$Interface"', {
+            $value: value,
+            $Interface: type
         }, CollectionError);
 
         //get Class reference
