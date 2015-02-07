@@ -145,6 +145,22 @@ xs.define(xs.Class, 'ns.Collection', function () {
     Class.constant.All = 0x2;
 
     /**
+     * Collection length
+     *
+     * @property length
+     *
+     * @readonly
+     *
+     * @type Number
+     */
+    Class.property.length = {
+        get: function () {
+            return this.private.items.length;
+        },
+        set: xs.emptyFn
+    };
+
+    /**
      * Returns all collection keys
      *
      * For example:
@@ -216,54 +232,6 @@ xs.define(xs.Class, 'ns.Collection', function () {
         }
 
         return values;
-    };
-
-    /**
-     * Returns shallow copy of collection
-     *
-     * For example:
-     *
-     *     //for Array
-     *     var collection = new xs.util.Collection([
-     *         1,
-     *         2,
-     *         3
-     *     ]);
-     *     var clone = collection.clone();
-     *
-     *     //for Object
-     *     var collection = new xs.util.Collection({
-     *         a: 1,
-     *         c: 2,
-     *         b: 3
-     *     });
-     *     var clone = collection.clone();
-     *
-     * @method clone
-     *
-     * @return {xs.util.Collection} collection shallow copy
-     */
-    Class.method.clone = function () {
-        var me = this;
-        var source = [], length = me.private.items.length, item;
-
-        for (var i = 0; i < length; i++) {
-            item = me.private.items[i];
-            source.push({
-                key: item.key,
-                value: item.value
-            });
-        }
-
-
-        var clone = new me.constructor();
-        clone.private.items = source;
-        if (me.private.kind) {
-            clone.private.kind = me.private.kind;
-            clone.private.type = me.private.type;
-        }
-
-        return clone;
     };
 
     /**
@@ -860,6 +828,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
 
 
         //handle number key - it's index
+        var index;
         if (xs.isNumber(key)) {
             //check that index is in bounds
             var max = me.private.items.length - 1;
@@ -878,19 +847,18 @@ xs.define(xs.Class, 'ns.Collection', function () {
                 key += max;
             }
 
-            me.private.items[key].value = value;
+            index = key;
 
-            return me;
+            //handle string key  - it's key
+        } else {
+
+            index = me.keys().indexOf(key);
+
+            //assert that key exists
+            xs.assert.ok(index >= 0, 'set - given key "$key" doesn\'t exist', {
+                $key: key
+            }, CollectionError);
         }
-
-
-        //handle string key  - it's key
-        var index = me.keys().indexOf(key);
-
-        //assert that key exists
-        xs.assert.ok(index >= 0, 'set - given key "$key" doesn\'t exist', {
-            $key: key
-        }, CollectionError);
 
         //assert, that value is valid
         xs.assert.ok(isValid.call(me, value));
