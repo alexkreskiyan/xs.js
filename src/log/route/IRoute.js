@@ -16,6 +16,8 @@
  * @abstract
  *
  * @class xs.log.route.IRoute
+ *
+ * @extends xs.interface.Base
  */
 xs.define(xs.Interface, 'ns.IRoute', function () {
 

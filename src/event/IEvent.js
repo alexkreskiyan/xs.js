@@ -16,6 +16,8 @@
  * @abstract
  *
  * @class xs.event.IEvent
+ *
+ * @extends xs.interface.Base
  */
 xs.define(xs.Interface, 'ns.IEvent', function () {
 
