@@ -463,66 +463,6 @@
         };
 
         /**
-         * Verifies, that given fn is Class
-         *
-         * For example:
-         *
-         *     xs.assert.Class(xs.Class(xs.emptyFn));
-         *
-         * @method Class
-         *
-         * @param {Function} Class given constructor
-         * @param {String} message error message
-         * @param {Object} [vars] error optional vars
-         * @param {Function} [Exception] error class
-         */
-        var cls = me.Class = function (Class, message, vars, Exception) {
-            //assert, that Class is function
-            fn(Class, 'Class "$Class" is not a function', {
-                $Class: Class
-            }, Exception);
-
-            if (!xs.isString(message)) {
-                message = '"' + Class + '" is not a Class';
-            }
-
-            //assert
-            if (Class.contractor !== xs.Class) {
-                raise(message, vars, Exception);
-            }
-        };
-
-        /**
-         * Verifies, that given fn is Interface
-         *
-         * For example:
-         *
-         *     xs.assert.Interface(xs.Interface(xs.emptyFn));
-         *
-         * @method Interface
-         *
-         * @param {Function} Interface given constructor
-         * @param {String} message error message
-         * @param {Object} [vars] error optional vars
-         * @param {Function} [Exception] error class
-         */
-        var iface = me.Interface = function (Interface, message, vars, Exception) {
-            //assert, that fn is function
-            fn(Interface, 'Interface "$Interface" is not a function', {
-                $Interface: Interface
-            }, Exception);
-
-            if (!xs.isString(message)) {
-                message = '"' + Interface + '" is not an Interface';
-            }
-
-            //assert
-            if (Interface.contractor !== xs.Interface) {
-                raise(message, vars, Exception);
-            }
-        };
-
-        /**
          * Verifies, that given value is instance of given constructor
          *
          * For example:
@@ -559,6 +499,66 @@
 
             //assert
             if (!(instance instanceof Class) && !(instance.self.mixins(Class))) {
+                raise(message, vars, Exception);
+            }
+        };
+
+        /**
+         * Verifies, that given fn is Class
+         *
+         * For example:
+         *
+         *     xs.assert.Class(xs.Class(xs.emptyFn));
+         *
+         * @method Class
+         *
+         * @param {Function} Class given constructor
+         * @param {String} message error message
+         * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
+         */
+        var cls = me.Class = function (Class, message, vars, Exception) {
+            //assert, that Class is function
+            fn(Class, 'Class "$Class" is not a function', {
+                $Class: Class
+            }, Exception);
+
+            if (!xs.isString(message)) {
+                message = '"' + Class + '" is not a Class';
+            }
+
+            //assert
+            if (!xs.isClass(Class)) {
+                raise(message, vars, Exception);
+            }
+        };
+
+        /**
+         * Verifies, that given fn is Interface
+         *
+         * For example:
+         *
+         *     xs.assert.Interface(xs.Interface(xs.emptyFn));
+         *
+         * @method Interface
+         *
+         * @param {Function} Interface given constructor
+         * @param {String} message error message
+         * @param {Object} [vars] error optional vars
+         * @param {Function} [Exception] error class
+         */
+        var iface = me.Interface = function (Interface, message, vars, Exception) {
+            //assert, that fn is function
+            fn(Interface, 'Interface "$Interface" is not a function', {
+                $Interface: Interface
+            }, Exception);
+
+            if (!xs.isString(message)) {
+                message = '"' + Interface + '" is not an Interface';
+            }
+
+            //assert
+            if (!xs.isInterface(Interface)) {
                 raise(message, vars, Exception);
             }
         };
