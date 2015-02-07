@@ -14,6 +14,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.util.Collection
+ *
+ * @extends xs.class.Base
  */
 xs.define(xs.Class, 'ns.Collection', function () {
 

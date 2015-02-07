@@ -57,8 +57,17 @@ xs.define(xs.Class, 'xs.class.Base', function () {
         //create clone via factory
         var clone = me.self.factory.apply(me, me.initArguments);
 
+        //get private backup
+        var privates = clone.private;
+
         //assign properties
         xs.extend(clone, me);
+
+        //restore private
+        clone.private = privates;
+
+        //assign privates
+        xs.extend(clone.private, me.private);
 
         //return clone
         return clone;

@@ -14,6 +14,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.event.Event
+ *
+ * @extends xs.class.Base
  */
 xs.define(xs.Class, 'ns.Event', function (self) {
 

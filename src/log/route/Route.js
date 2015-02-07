@@ -16,6 +16,8 @@
  * @abstract
  *
  * @class xs.log.route.Route
+ *
+ * @extends xs.class.Base
  */
 xs.define(xs.Class, 'ns.Route', function () {
 

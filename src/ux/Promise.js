@@ -47,6 +47,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.ux.Promise
+ *
+ * @extends xs.class.Base
  */
 xs.define(xs.Class, 'ns.Promise', function (self) {
 

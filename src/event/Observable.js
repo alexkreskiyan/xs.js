@@ -14,6 +14,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.event.Observable
+ *
+ * @extends xs.class.Base
  */
 xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 

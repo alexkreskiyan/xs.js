@@ -16,6 +16,8 @@
  * @abstract
  *
  * @class xs.uri.URI
+ *
+ * @extends xs.class.Base
  */
 xs.define(xs.Class, 'ns.URI', function () {
 

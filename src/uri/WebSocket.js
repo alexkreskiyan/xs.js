@@ -14,6 +14,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.uri.WebSocket
+ *
+ * @extends xs.uri.URI
  */
 xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
 

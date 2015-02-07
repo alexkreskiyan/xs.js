@@ -14,6 +14,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.ux.View
+ *
+ * @extends xs.class.Base
  */
 xs.define(xs.Class, 'ns.View', function (self) {
 

@@ -14,6 +14,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.log.route.Console
+ *
+ * @extends xs.log.route.Route
  */
 xs.define(xs.Class, 'ns.Console', function (self) {
 
