@@ -88,8 +88,10 @@
                 }
             },
             "util": {
-                "Collection": {
-                    "type": "class"
+                "collection": {
+                    "Collection": {
+                        "type": "class"
+                    }
                 }
             },
             "ux": {
