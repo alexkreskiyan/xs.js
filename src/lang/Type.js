@@ -344,6 +344,67 @@
             return type !== 'function' && type !== 'boolean';
         };
 
+        /**
+         * Returns whether given value is an instance of some class
+         *
+         * For example:
+         *
+         *     console.log(xs.isInstance({})); //false
+         *     console.log(xs.isInstance(nex xs.class.Base())); //true
+         *
+         * @method isInstance
+         *
+         * @param {*} value verified value
+         *
+         * @return {Boolean} verification result
+         */
+        me.isInstance = function (value) {
+            if (value === null || Array.isArray(value)) {
+
+                return false;
+            }
+
+            return (typeof value === 'object') && (typeof value.self === 'function') && (value.self.contractor === xs.Class);
+        };
+
+        /**
+         * Returns whether given value is a class
+         *
+         * For example:
+         *
+         *     console.log(xs.isClass(xs.class.Base)); //true
+         *     console.log(xs.isClass(xs.interface.Base)); //false
+         *
+         * @method isClass
+         *
+         * @param {*} value verified value
+         *
+         * @return {Boolean} verification result
+         */
+        me.isClass = function (value) {
+
+            return (typeof value === 'function') && (value.contractor === xs.Class);
+        };
+
+        /**
+         * Returns whether given value is an interface
+         *
+         * For example:
+         *
+         *     console.log(xs.isInterface(xs.interface.Base)); //true
+         *     console.log(xs.isInterface(xs.class.Base)); //false
+         *
+         * @method isInterface
+         *
+         * @param {*} value verified value
+         *
+         * @return {Boolean} verification result
+         */
+        me.isInterface = function (value) {
+
+            return (typeof value === 'function') && (value.contractor === xs.Interface);
+        };
+
         return me;
     })();
 

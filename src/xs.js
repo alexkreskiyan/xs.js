@@ -244,6 +244,18 @@
          * @method isEmpty
          * @inheritdoc xs.lang.Type#isEmpty
          */
+        /**
+         * @method isInstance
+         * @inheritdoc xs.lang.Type#isInstance
+         */
+        /**
+         * @method isClass
+         * @inheritdoc xs.lang.Type#isClass
+         */
+        /**
+         * @method isInterface
+         * @inheritdoc xs.lang.Type#isInterface
+         */
 
         return me;
     })();
