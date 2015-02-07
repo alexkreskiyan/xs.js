@@ -399,12 +399,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
                         if (!item.calls) {
                             //turn off event by all name, handler and scope
                             me.off(eventName, function (item) {
-                                return item.handler === handler && item.scope === scope;
-                            }, xs.core.Collection.All);
+                                return item.handler === handler;
+                            });
                         }
 
                         //call raw handler
-                        handler.call(scope, event);
+                        handler.call(item.scope, event);
                     }, buffer, item, event);
                 };
             } else {
@@ -424,7 +424,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
                     item.timeout = setTimeout(function (item, event) {
 
                         //call raw handler
-                        item.handler.call(scope, event);
+                        item.handler.call(item.scope, event);
                     }, buffer, item, event);
                 };
             }
@@ -449,12 +449,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
                     if (!item.calls) {
                         //turn off event by all name, handler and scope
                         me.off(eventName, function (item) {
-                            return item.handler === handler && item.scope === scope;
-                        }, xs.core.Collection.All);
+                            return item.handler === handler;
+                        });
                     }
 
                     //call raw handler
-                    return item.handler.call(scope, event);
+                    return item.handler.call(item.scope, event);
                 };
             } else {
                 realHandler = function (event) {
@@ -468,7 +468,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
                     }
 
                     //call raw handler
-                    return item.handler.call(scope, event);
+                    return item.handler.call(item.scope, event);
                 };
             }
         }
