@@ -15,7 +15,9 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.enum.preprocessors.values');
+    var log = new xs.log.Logger('xs.enum.preprocessors.values');
+
+    var assert = new xs.assert.Asserter(log, ValuesError);
 
     /**
      * Preprocessor values
@@ -30,16 +32,16 @@
         return true;
     }, function (Enum, values) {
 
-        logger.trace(Enum.label ? Enum.label : 'undefined');
+        log.trace(Enum.label ? Enum.label : 'undefined');
 
 
         //values
 
         //assert, that values list is an object
-        xs.assert.object(values, '[$Enum]: values list "$values" is not an object', {
+        assert.object(values, '[$Enum]: values list "$values" is not an object', {
             $Enum: Enum.label,
             $value: values
-        }, ValuesError);
+        });
 
         //convert to xs.core.Collection
         values = new xs.core.Collection(values);
@@ -49,10 +51,10 @@
 
         //add values from raw descriptor and save to Enum.descriptor, define values as constants
         values.each(function (value, name) {
-            xs.assert.ok(name && xs.isString(name), '[$Enum]: given value name "$name" is incorrect', {
+            assert.ok(name && xs.isString(name), '[$Enum]: given value name "$name" is incorrect', {
                 $Enum: Enum.label,
                 $name: name
-            }, ValuesError);
+            });
 
             //add value to collection
             own.add(name);

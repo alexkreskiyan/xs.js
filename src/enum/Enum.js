@@ -20,6 +20,10 @@
         xs.enum = {};
     }
 
+    var log = new xs.log.Logger('xs.enum.Enum');
+
+    var assert = new xs.assert.Asserter(log, EnumError);
+
     /**
      * xs.enum.Enum is core class, that is used for enum generation.
      *
@@ -71,9 +75,9 @@
         var Contractor = function (values, createdFn) {
 
             //Descriptor must be function
-            xs.assert.object(values, 'given values object "$values" is not an object', {
+            assert.object(values, 'given values object "$values" is not an object', {
                 $values: values
-            }, EnumError);
+            });
 
             if (!xs.isFunction(createdFn)) {
                 createdFn = xs.emptyFn;

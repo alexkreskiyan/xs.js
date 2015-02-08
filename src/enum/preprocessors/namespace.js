@@ -15,7 +15,7 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.enum.preprocessors.namespace');
+    var log = new xs.log.Logger('xs.enum.preprocessors.namespace');
 
     /**
      * Preprocessor namespace
@@ -30,8 +30,7 @@
         return true;
     }, function (Enum, values, ready) {
 
-        logger.trace('');
-        var namespace;
+        log.trace('');
 
         //save namespace
         Enum.descriptor.resolveName = function (path) {
