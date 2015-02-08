@@ -29,6 +29,7 @@
         "xs.class.preprocessors.processImplements",
         "xs.class.preprocessors.defineElements",
         "xs.class.postprocessors.logger",
+        "xs.class.postprocessors.asserter",
         "xs.class.Base",
         "xs.enum.Enum",
         "xs.enum.preprocessors.namespace",
