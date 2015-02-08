@@ -27,12 +27,12 @@
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @class xs.log
+     *
+     * @singleton
      */
 
     /**
      * Error level. Is used to log application errors
-     *
-     * @static
      *
      * @readonly
      *
@@ -45,8 +45,6 @@
     /**
      * Warning level. Is used to log application warnings
      *
-     * @static
-     *
      * @readonly
      *
      * @property Warning
@@ -57,8 +55,6 @@
 
     /**
      * Info level. Is used for application status logging
-     *
-     * @static
      *
      * @readonly
      *
@@ -71,8 +67,6 @@
     /**
      * Trace level. Is used for development stage logging
      *
-     * @static
-     *
      * @readonly
      *
      * @property Trace
@@ -83,8 +77,6 @@
 
     /**
      * Profile level. Is used for application profiling messages
-     *
-     * @static
      *
      * @readonly
      *
