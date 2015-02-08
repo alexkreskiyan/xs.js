@@ -15,6 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
+    var log = new xs.log.Logger('xs.interface.Interface');
+
+    var assert = new xs.assert.Asserter(log, ArrayError);
+
     /**
      * xs.lang.Array is private singleton, defining basic Array operations.
      *
@@ -45,9 +49,9 @@
          * @param {Array} array shuffled array
          */
         me.shuffle = function (array) {
-            xs.assert.array(array, 'shuffle - given "$array" is not array', {
+            assert.array(array, 'shuffle - given "$array" is not array', {
                 $array: array
-            }, ArrayError);
+            });
 
             array.sort(function () {
                 return Math.random() - 0.5;

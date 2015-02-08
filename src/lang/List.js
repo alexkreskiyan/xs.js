@@ -15,6 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
+    var log = new xs.log.Logger('xs.interface.Interface');
+
+    var assert = new xs.assert.Asserter(log, ListError);
+
     /**
      * xs.lang.List is private singleton, defining basic list operations, for both Array and Object.
      *
@@ -59,9 +63,9 @@
          */
         me.clone = function (list) {
             //assert that list either array or object
-            xs.assert.ok(xs.isArray(list) || xs.isObject(list), 'clone - given list "$list" is nor array neither object', {
+            assert.ok(xs.isArray(list) || xs.isObject(list), 'clone - given list "$list" is nor array neither object', {
                 $list: list
-            }, ListError);
+            });
 
             //handle array list
             if (xs.isArray(list)) {

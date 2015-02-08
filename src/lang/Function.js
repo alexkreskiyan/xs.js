@@ -15,6 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
+    var log = new xs.log.Logger('xs.interface.Interface');
+
+    var assert = new xs.assert.Asserter(log, FunctionError);
+
     /**
      * xs.lang.Function is private singleton, defining basic function operations.
      *
@@ -53,13 +57,13 @@
          * @return {Function} bound function
          */
         var bind = me.bind = function (fn, scope, args) {
-            xs.assert.fn(fn, 'bind - given "$fn" is not a function', {
+            assert.fn(fn, 'bind - given "$fn" is not a function', {
                 $fn: fn
-            }, FunctionError);
+            });
 
-            xs.assert.ok(arguments.length < 3 || xs.isArray(args), 'bind - given "$args" is not a array', {
+            assert.ok(arguments.length < 3 || xs.isArray(args), 'bind - given "$args" is not a array', {
                 $args: args
-            }, FunctionError);
+            });
 
             return bindFunction.apply(fn, concatenate(scope, args));
         };
@@ -86,9 +90,9 @@
          * @return {Function} bound function
          */
         me.memorize = function (fn) {
-            xs.assert.fn(fn, 'memorize - given "$fn" is not a function', {
+            assert.fn(fn, 'memorize - given "$fn" is not a function', {
                 $fn: fn
-            }, FunctionError);
+            });
 
             var ran = false, memo;
 
@@ -135,13 +139,13 @@
          * @return {Function} wrapped function
          */
         me.wrap = function (fn, wrapper, scope) {
-            xs.assert.fn(fn, 'wrap - given "$fn" is not a function', {
+            assert.fn(fn, 'wrap - given "$fn" is not a function', {
                 $fn: fn
-            }, FunctionError);
+            });
 
-            xs.assert.fn(wrapper, 'wrap - given "$fn" is not a function', {
+            assert.fn(wrapper, 'wrap - given "$fn" is not a function', {
                 $fn: wrapper
-            }, FunctionError);
+            });
 
             return function () {
                 var args = slice(arguments);
@@ -170,9 +174,9 @@
          * @param {Object} scope optional execution scope
          */
         me.nextTick = function (fn, scope) {
-            xs.assert.fn(fn, 'nextTick - given "$fn" is not a function', {
+            assert.fn(fn, 'nextTick - given "$fn" is not a function', {
                 $fn: fn
-            }, FunctionError);
+            });
 
             if (scope) {
                 fn = bind(fn, scope);
@@ -201,9 +205,9 @@
          * @return {String} function name
          */
         me.getName = function (fn) {
-            xs.assert.fn(fn, 'getName - given "$fn" is not a function', {
+            assert.fn(fn, 'getName - given "$fn" is not a function', {
                 $fn: fn
-            }, FunctionError);
+            });
 
             getNameRe.lastIndex = 0;
             return getNameRe.exec(fn.toString()).pop();
@@ -229,9 +233,9 @@
          * @return {Array} array with function formal params
          */
         me.getArguments = function (fn) {
-            xs.assert.fn(fn, 'getArguments - given "$fn" is not a function', {
+            assert.fn(fn, 'getArguments - given "$fn" is not a function', {
                 $fn: fn
-            }, FunctionError);
+            });
 
             getArgumentsRe.lastIndex = 0;
             return getArgumentsRe.exec(fn.toString()).pop().split(',').map(function (name) {
@@ -260,9 +264,9 @@
          * @return {String} function body
          */
         me.getBody = function (fn) {
-            xs.assert.fn(fn, 'getBody - given "$fn" is not a function', {
+            assert.fn(fn, 'getBody - given "$fn" is not a function', {
                 $fn: fn
-            }, FunctionError);
+            });
 
             var stringFn = fn.toString();
             return stringFn.substring(stringFn.indexOf('{') + 1, stringFn.length - 1);
@@ -285,9 +289,9 @@
          * @return {Object} function data
          */
         me.parse = function (fn) {
-            xs.assert.fn(fn, 'parse - given "$fn" is not a function', {
+            assert.fn(fn, 'parse - given "$fn" is not a function', {
                 $fn: fn
-            }, FunctionError);
+            });
 
             parseRe.lastIndex = 0;
             var stringFn = fn.toString();

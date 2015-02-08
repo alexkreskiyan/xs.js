@@ -15,6 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
+    var log = new xs.log.Logger('xs.interface.Interface');
+
+    var assert = new xs.assert.Asserter(log, ObjectError);
+
     /**
      * xs.lang.List is private singleton, defining basic Object operations.
      *
@@ -63,9 +67,9 @@
         me.extend = function (object) {
 
             //assert that index is in bounds
-            xs.assert.object(object, 'extend - given "$object" is not object', {
+            assert.object(object, 'extend - given "$object" is not object', {
                 $object: object
-            }, ObjectError);
+            });
 
             var adds = slice(arguments, 1), addsLength = adds.length;
 

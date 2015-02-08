@@ -15,6 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
+    var log = new xs.log.Logger('xs.interface.Interface');
+
+    var assert = new xs.assert.Asserter(log, AttributeError);
+
     /**
      * xs.lang.Attribute is private singleton, providing basic attributes' operations
      *
@@ -48,9 +52,9 @@
          * @return {Boolean} verification result
          */
         me.defined = function (object, name) {
-            xs.assert.string(name, 'defined - given "$name" is not a string', {
+            assert.string(name, 'defined - given "$name" is not a string', {
                 $name: name
-            }, AttributeError);
+            });
 
             return object.hasOwnProperty(name);
         };
@@ -80,13 +84,13 @@
          * @param {Object} descriptor descriptor of new property
          */
         me.define = function (object, name, descriptor) {
-            xs.assert.string(name, 'define - given "$name" is not a string', {
+            assert.string(name, 'define - given "$name" is not a string', {
                 $name: name
-            }, AttributeError);
+            });
 
-            xs.assert.object(descriptor, 'define - given "$descriptor" is not an object', {
+            assert.object(descriptor, 'define - given "$descriptor" is not an object', {
                 $descriptor: descriptor
-            }, AttributeError);
+            });
 
             Object.defineProperty(object, name, descriptor);
         };
@@ -106,13 +110,13 @@
          * @return {Object} property descriptor
          */
         me.getDescriptor = function (object, name) {
-            xs.assert.string(name, 'getDescriptor - given "$name" is not a string', {
+            assert.string(name, 'getDescriptor - given "$name" is not a string', {
                 $name: name
-            }, AttributeError);
+            });
 
-            xs.assert.ok(object.hasOwnProperty(name), 'getDescriptor - given object does not have own property "$name"', {
+            assert.ok(object.hasOwnProperty(name), 'getDescriptor - given object does not have own property "$name"', {
                 $name: name
-            }, AttributeError);
+            });
 
             return Object.getOwnPropertyDescriptor(object, name);
         };
@@ -136,13 +140,13 @@
          * @return {Boolean} whether property is assigned
          */
         me.isAssigned = function (object, name) {
-            xs.assert.string(name, 'isAssigned - given "$name" is not a string', {
+            assert.string(name, 'isAssigned - given "$name" is not a string', {
                 $name: name
-            }, AttributeError);
+            });
 
-            xs.assert.ok(object.hasOwnProperty(name), 'isAssigned - given object does not have own property "$name"', {
+            assert.ok(object.hasOwnProperty(name), 'isAssigned - given object does not have own property "$name"', {
                 $name: name
-            }, AttributeError);
+            });
 
             return Object.getOwnPropertyDescriptor(object, name).hasOwnProperty('value');
         };
@@ -166,13 +170,13 @@
          * @return {Boolean} whether property is accessed
          */
         me.isAccessed = function (object, name) {
-            xs.assert.string(name, 'isAccessed - given "$name" is not a string', {
+            assert.string(name, 'isAccessed - given "$name" is not a string', {
                 $name: name
-            }, AttributeError);
+            });
 
-            xs.assert.ok(object.hasOwnProperty(name), 'isAccessed - given object does not have own property "$name"', {
+            assert.ok(object.hasOwnProperty(name), 'isAccessed - given object does not have own property "$name"', {
                 $name: name
-            }, AttributeError);
+            });
 
             return Object.getOwnPropertyDescriptor(object, name).hasOwnProperty('get');
         };
@@ -196,13 +200,13 @@
          * @return {Boolean} whether property is writable
          */
         me.isWritable = function (object, name) {
-            xs.assert.string(name, 'isWritable - given "$name" is not a string', {
+            assert.string(name, 'isWritable - given "$name" is not a string', {
                 $name: name
-            }, AttributeError);
+            });
 
-            xs.assert.ok(object.hasOwnProperty(name), 'isWritable - given object does not have own property "$name"', {
+            assert.ok(object.hasOwnProperty(name), 'isWritable - given object does not have own property "$name"', {
                 $name: name
-            }, AttributeError);
+            });
 
             return Boolean(Object.getOwnPropertyDescriptor(object, name).writable);
         };
@@ -226,13 +230,13 @@
          * @return {Boolean} whether property is configurable
          */
         var isConfigurable = me.isConfigurable = function (object, name) {
-            xs.assert.string(name, 'isConfigurable - given "$name" is not a string', {
+            assert.string(name, 'isConfigurable - given "$name" is not a string', {
                 $name: name
-            }, AttributeError);
+            });
 
-            xs.assert.ok(object.hasOwnProperty(name), 'isConfigurable - given object does not have own property "$name"', {
+            assert.ok(object.hasOwnProperty(name), 'isConfigurable - given object does not have own property "$name"', {
                 $name: name
-            }, AttributeError);
+            });
 
             return Boolean(Object.getOwnPropertyDescriptor(object, name).configurable);
         };
@@ -256,13 +260,13 @@
          * @return {Boolean} whether property is enumerable
          */
         me.isEnumerable = function (object, name) {
-            xs.assert.string(name, 'isEnumerable - given "$name" is not a string', {
+            assert.string(name, 'isEnumerable - given "$name" is not a string', {
                 $name: name
-            }, AttributeError);
+            });
 
-            xs.assert.ok(object.hasOwnProperty(name), 'isEnumerable - given object does not have own property "$name"', {
+            assert.ok(object.hasOwnProperty(name), 'isEnumerable - given object does not have own property "$name"', {
                 $name: name
-            }, AttributeError);
+            });
 
             return Boolean(Object.getOwnPropertyDescriptor(object, name).enumerable);
         };
@@ -336,9 +340,9 @@
          * @return {Object} corrected descriptor copy
          */
         var prepareDescriptor = me.prepareDescriptor = function (descriptor) {
-            xs.assert.object(descriptor, 'prepareDescriptor - given "$descriptor" is not an object', {
+            assert.object(descriptor, 'prepareDescriptor - given "$descriptor" is not an object', {
                 $descriptor: descriptor
-            }, AttributeError);
+            });
 
             //clone descriptor
             descriptor = xs.clone(descriptor);
@@ -393,14 +397,14 @@
          * @param {*} value constant value
          */
         me.constant = function (object, name, value) {
-            xs.assert.string(name, 'constant - given "$name" is not a string', {
+            assert.string(name, 'constant - given "$name" is not a string', {
                 $name: name
-            }, AttributeError);
+            });
 
             //assert, that object has no constant "name", or it is defined, but is configurable
-            xs.assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'constant "$name" is already defined', {
+            assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'constant "$name" is already defined', {
                 $name: name
-            }, AttributeError);
+            });
 
             Object.defineProperty(object, name, {
                 value: value,
@@ -460,9 +464,9 @@
              * @return {Object} prepared descriptor
              */
             me.prepare = function (name, descriptor) {
-                xs.assert.string(name, 'property::prepare - given "$name" is not a string', {
+                assert.string(name, 'property::prepare - given "$name" is not a string', {
                     $name: name
-                }, AttributeError);
+                });
 
                 //if not descriptor - returns generated one
                 if (!isDescriptor(descriptor)) {
@@ -534,16 +538,16 @@
              * @param {Object} descriptor defined property descriptor
              */
             me.define = function (object, name, descriptor) {
-                xs.assert.string(name, 'property::define - given "$name" is not a string', {
+                assert.string(name, 'property::define - given "$name" is not a string', {
                     $name: name
-                }, AttributeError);
+                });
 
-                xs.assert.ok(isDescriptor(descriptor), 'property::define - given object is not a descriptor', AttributeError);
+                assert.ok(isDescriptor(descriptor), 'property::define - given object is not a descriptor');
 
                 //assert, that object has no property "name", or it is defined, but is configurable
-                xs.assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'property::define - property "$name" is already defined', {
+                assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'property::define - property "$name" is already defined', {
                     $name: name
-                }, AttributeError);
+                });
 
                 //writable, enumerable and configurable are immutable defaults
                 descriptor.enumerable = true;
@@ -603,12 +607,12 @@
              * @return {Object} prepared method descriptor
              */
             me.prepare = function (name, descriptor) {
-                xs.assert.string(name, 'method::prepare - given "$name" is not a string', {
+                assert.string(name, 'method::prepare - given "$name" is not a string', {
                     $name: name
-                }, AttributeError);
+                });
 
                 //assert, that descriptor is function, or is object with property "value", that is function
-                xs.assert.ok(xs.isFunction(descriptor) || (xs.isObject(descriptor) && xs.isFunction(descriptor.value)), AttributeError, 'method::prepare - Method "$name" descriptor "$descriptor" is incorrect', {
+                assert.ok(xs.isFunction(descriptor) || (xs.isObject(descriptor) && xs.isFunction(descriptor.value)), 'method::prepare - Method "$name" descriptor "$descriptor" is incorrect', {
                     $name: name,
                     $descriptor: descriptor
                 });
@@ -667,20 +671,20 @@
              * @param {Object} descriptor defined method descriptor
              */
             me.define = function (object, name, descriptor) {
-                xs.assert.string(name, 'method::define - given "$name" is not a string', {
+                assert.string(name, 'method::define - given "$name" is not a string', {
                     $name: name
-                }, AttributeError);
+                });
 
-                xs.assert.ok(isDescriptor(descriptor), 'method::define - given object is not a descriptor', AttributeError);
+                assert.ok(isDescriptor(descriptor), 'method::define - given object is not a descriptor');
 
-                xs.assert.fn(descriptor.value, 'method::define - given "$value" is not a function', {
+                assert.fn(descriptor.value, 'method::define - given "$value" is not a function', {
                     $value: descriptor.value
-                }, AttributeError);
+                });
 
                 //assert, that object has no method "name", or it is defined, but is configurable
-                xs.assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'method::define - method "$name" is already defined', {
+                assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'method::define - method "$name" is already defined', {
                     $name: name
-                }, AttributeError);
+                });
 
                 Object.defineProperty(object, name, {
                     value: descriptor.value,
