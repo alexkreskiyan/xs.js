@@ -95,7 +95,7 @@
      *
      * @singleton
      */
-    xs.log.Router = (function () {
+    var router = xs.log.Router = (function () {
         var me = {};
 
         /**
@@ -197,9 +197,9 @@
         me.isCategory = function (category) {
 
             //assert that category is a string
-            xs.assert.string(category, 'isCategory - given category "$category" is not a string', {
+            assert.string(category, 'isCategory - given category "$category" is not a string', {
                 $category: category
-            }, RouterError);
+            });
 
             return categoryRe.test(category);
         };
@@ -250,9 +250,9 @@
             me.add = function (route) {
 
                 //assert, that route is instance of xs.log.route.Route base route class
-                xs.assert.instance(route, xs.log.route.Route, 'routes.add - given route "$route" is not instance of xs.log.route.Route', {
+                assert.instance(route, xs.log.route.Route, 'routes.add - given route "$route" is not instance of xs.log.route.Route', {
                     $route: route
-                }, RouterError);
+                });
 
                 //add route to storage
                 storage.add(route);
@@ -322,9 +322,9 @@
                 if (arguments.length) {
 
                     //assert, that route is instance of xs.log.route.Route base route class
-                    xs.assert.instance(route, xs.log.route.Route, 'routes.remove - given route "$route" is not instance of xs.log.route.Route', {
+                    assert.instance(route, xs.log.route.Route, 'routes.remove - given route "$route" is not instance of xs.log.route.Route', {
                         $route: route
-                    }, RouterError);
+                    });
 
                 }
 
@@ -354,4 +354,14 @@
 
     RouterError.prototype = new Error();
 
+    //hook method to create asserter. here fake assert is needed for first call
+    var assert = {
+        string: function () {
+
+        }
+    };
+    router.ready = function () {
+        assert = new xs.assert.Asserter(new xs.log.Logger('xs.log.Router'), RouterError);
+        delete router.ready;
+    };
 })(window, 'xs');

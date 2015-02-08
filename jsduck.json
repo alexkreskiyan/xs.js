@@ -2,6 +2,7 @@
     "--title": "xs.js framework docs",
     "--output": "docs",
     "--": [
+        "src/assert",
         "src/class",
         "src/core",
         "src/env",

@@ -20,283 +20,814 @@
         xs.assert = {};
     }
 
+    var slice = Function.prototype.call.bind(Array.prototype.slice);
+
     /**
-     * Store of all registered profiling records
+     * xs.assert.Asserter is key system element, that performs asserting operations within classes and other logged instances
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     //assert equality (note about logs)
+     *     asserter.ok(1 === 2, 'Values x($x) and y($y) are not equal', {
+     *         $x: 1,
+     *         $y: 2
+     *     });
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class xs.assert.Asserter
+     */
+
+    /**
+     * Asserter constructor. Logger category is given as single argument
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     * @constructor
+     *
+     * @param {xs.log.Logger} logger instance of xs.log.Logger, asserter reports it's exceptions to
+     * @param {Function} Exception Exception class, used by asserter to generate exceptions
+     */
+    var asserter = xs.assert.Asserter = function (logger, Exception) {
+        var me = this;
+
+        //assert, that logger is an instance of xs.log.Logger
+        assert.ok(logger instanceof xs.log.Logger, 'Given logger "$logger" is not an instance of xs.log.Logger', {
+            $logger: logger
+        });
+
+        //assert, that  Exception is function
+        assert.fn(Exception, 'Given Exception class "$Exception" is not a function', {
+            $Exception: Exception
+        });
+
+        //save logger
+        me.logger = logger;
+
+        //save Exception
+        me.Exception = Exception;
+    };
+
+    /**
+     * Verifies, that two values are equal (===)
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.equal(1, '1');
+     *
+     * @method equal
+     *
+     * @param {*} given given value
+     * @param {*} expected given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.equal = function (given, expected, message, vars) {
+        var me = this;
+
+        //assert
+        if (given === expected) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 2));
+    };
+
+    /**
+     * Verifies, that given expression if true-like
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.ok(1 == 1);
+     *
+     * @method ok
+     *
+     * @param {Boolean} expression evaluated expression value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.ok = function (expression, message, vars) {
+        var me = this;
+
+        //assert
+        if (expression) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given expression if false-like
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.not( 1 === 2);
+     *
+     * @method not
+     *
+     * @param {Boolean} expression evaluated expression value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.not = function (expression, message, vars) {
+        var me = this;
+
+        //assert
+        if (!expression) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is object
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.object({});
+     *
+     * @method object
+     *
+     * @param {Object} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.object = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isObject(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is array
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.array([]);
+     *
+     * @method array
+     *
+     * @param {Array} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.array = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isArray(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is function
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.fn(xs.emptyFn);
+     *
+     * @method fn
+     *
+     * @param {Function} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.fn = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isFunction(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is string
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.string('');
+     *
+     * @method string
+     *
+     * @param {String} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.string = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isString(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is number
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.number(1);
+     *
+     * @method number
+     *
+     * @param {Number} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.number = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isNumber(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is boolean
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.boolean(true);
+     *
+     * @method boolean
+     *
+     * @param {Boolean} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.boolean = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isBoolean(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is regular expression
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.regExp(/a/);
+     *
+     * @method regExp
+     *
+     * @param {RegExp} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.regExp = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isRegExp(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is error instance
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.error(new Error);
+     *
+     * @method error
+     *
+     * @param {Error} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.error = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isError(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is null
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.null(null);
+     *
+     * @method null
+     *
+     * @param {*} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.null = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isNull(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is iterable
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.iterable({});
+     *
+     * @method iterable
+     *
+     * @param {*} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.iterable = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isIterable(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is primitive
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.primitive(1);
+     *
+     * @method primitive
+     *
+     * @param {*} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.primitive = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isPrimitive(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is numeric
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.numeric('1');
+     *
+     * @method numeric
+     *
+     * @param {*} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.numeric = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isNumeric(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is defined
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.defined({});
+     *
+     * @method defined
+     *
+     * @param {*} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.defined = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isDefined(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is empty
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.empty([]);
+     *
+     * @method empty
+     *
+     * @param {*} value given value
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.empty = function (value, message, vars) {
+        var me = this;
+
+        //assert
+        if (xs.isEmpty(value)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given fn is Class
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.Class(xs.Class(xs.emptyFn));
+     *
+     * @method Class
+     *
+     * @param {Function} Class given constructor
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.Class = function (Class, message, vars) {
+        var me = this;
+
+        //assert, that Class is function
+        me.fn(Class, 'Class "$Class" is not a function', {
+            $Class: Class
+        });
+
+        //assert
+        if (xs.isClass(Class)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given fn is Interface
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.Interface(xs.Interface(xs.emptyFn));
+     *
+     * @method Interface
+     *
+     * @param {Function} Interface given constructor
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.Interface = function (Interface, message, vars) {
+        var me = this;
+
+        //assert, that fn is function
+        me.fn(Interface, 'Interface "$Interface" is not a function', {
+            $Interface: Interface
+        });
+
+        //assert
+        if (xs.isInterface(Interface)) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 1));
+    };
+
+    /**
+     * Verifies, that given value is instance of given constructor
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.instance(object, Class);
+     *
+     * @method instance
+     *
+     * @param {Object} instance given instance
+     * @param {Function} Class expected constructor
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.instance = function (instance, Class, message, vars) {
+        var me = this;
+
+        //assert that object is object
+        me.object(instance, 'Instance "$instance" is not an object', {
+            $instance: instance
+        });
+
+        //assert, that Class is class
+        me.Class(Class, 'Class "$Class" is not a class', {
+            $Class: Class
+        });
+
+        //assert that object.self is class
+        me.Class(instance.self, 'Instance.self "$Class" is not a class', {
+            $Class: instance.self
+        });
+
+        //assert
+        if ((instance instanceof Class) || (instance.self.mixins(Class))) {
+
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 2));
+    };
+
+    /**
+     * Verifies, that given object is instance of Class, that implements given Interface
+     *
+     * For example:
+     *
+     *     //create asserter instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //create asserter instance
+     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *
+     *     asserter.implements(object, Interface);
+     *
+     * @method implements
+     *
+     * @param {Object} instance verified object
+     * @param {Function} Interface verified interface
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     */
+    asserter.prototype.implements = function (instance, Interface, message, vars) {
+        var me = this;
+
+        //assert that instance is object
+        me.object(instance, 'Instance "$instance" is not an object', {
+            $instance: instance
+        });
+
+        //assert, that Interface is interface
+        me.Interface(Interface, 'Interface "$Interface" is not an interface', {
+            $Interface: Interface
+        });
+
+        //assert that instance.self is class
+        me.Class(instance.self, 'Instance.self "$Class" is not a class', {
+            $Class: instance.self
+        });
+
+        //assert
+        if (instance.self.implements(Interface)) {
+            return;
+        }
+
+        raise.apply(me, slice(arguments, 2));
+    };
+
+    /**
+     * Raises error of given type with given
      *
      * @ignore
      *
      * @private
      *
-     * @property profiles
+     * @method raise
      *
-     * @type {xs.core.Collection}
+     * @param {String} message error message
+     * @param {Object} [vars] error optional vars
+     *
+     * @throws {Error}
      */
-    var profiles = new xs.core.Collection();
-
-    /**
-     * xs.log.Logger is key system element, that performs logging operations.
-     *
-     * For example:
-     *
-     *     //create logger instance
-     *     var logger = new xs.log.Logger('xs');
-     *
-     *     //log message to "xs" category
-     *     logger.log('some message');
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class xs.log.Logger
-     */
-
-    /**
-     * Logger constructor. Logger category is given as single argument
-     *
-     * For example:
-     *
-     *     //create logger instance
-     *     var logger = new xs.log.Logger('xs');
-     *
-     * @constructor
-     */
-    var logger = xs.log.Logger = function (category) {
+    var raise = function (message, vars) {
         var me = this;
 
-        //assert, that category is valid (via xs.log.Router.isCategory)
-        xs.assert.ok(xs.log.Router.isCategory(category), 'Given category "$category" is not a valid category', {
-            $category: category
-        }, LoggerError);
+        var error;
 
-        //save category
-        me.category = category;
+        //if message is not a string - throw SyntaxError
+        if (!xs.isString(message)) {
+            //default message
+            message = 'xs.assert.Asserter achieved no error message';
 
-        //create profiling access object
-        me.profile = {
-            category: category,
-            start: profileStart,
-            end: profileEnd
-        };
-    };
+            //create syntax error
+            error = new SyntaxError(message);
 
-    /**
-     * Adds error log entry via this logger
-     *
-     * For example:
-     *
-     *     //create logger instance
-     *     var logger = new xs.log.Logger('xs');
-     *
-     *     //add log entry
-     *     logger.error('error happened');
-     *
-     * @method error
-     *
-     * @param {String} message log message
-     * @param {Object} [data] message data
-     */
-    logger.prototype.error = function (message, data) {
-        var me = this;
+            //process it with logger
+            me.logger.error(message);
 
-        //assert, that message is string
-        xs.assert.string(message, 'error - given message "$message" is not a string', {
-            $message: message
-        }, LoggerError);
-
-        //assert, that data is either not given or is an object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'error - given data "$data" is not an object', {
-            $data: data
-        }, LoggerError);
-
-        if (data) {
-            processEntry(me.category, xs.log.Error, message, data);
-        } else {
-            processEntry(me.category, xs.log.Error, message);
+            //throw asserter syntax error
+            throw error;
         }
-    };
 
-    /**
-     * Adds warning log entry via this logger
-     *
-     * For example:
-     *
-     *     //create logger instance
-     *     var logger = new xs.log.Logger('xs');
-     *
-     *     //add log entry
-     *     logger.warning('waning');
-     *
-     * @method warn
-     *
-     * @param {String} message log message
-     * @param {Object} [data] message data
-     */
-    logger.prototype.warn = function (message, data) {
-        var me = this;
+        //vars given
+        if (xs.isObject(vars)) {
 
-        //assert, that message is string
-        xs.assert.string(message, 'warn - given message "$message" is not a string', {
-            $message: message
-        }, LoggerError);
+            //translate message
+            message = xs.translate(message, vars);
 
-        //assert, that data is either not given or is an object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'warn - given data "$data" is not an object', {
-            $data: data
-        }, LoggerError);
-
-        if (data) {
-            processEntry(me.category, xs.log.Warning, message, data);
+            //only message given
         } else {
-            processEntry(me.category, xs.log.Warning, message);
+            vars = {};
         }
+
+        //create new me.Exception
+        error = new me.Exception(message);
+        error.vars = vars;
+
+        //process it with logger
+        me.logger.error(message, vars);
+
+        throw error;
     };
 
-    /**
-     * Adds info log entry via this logger
-     *
-     * For example:
-     *
-     *     //create logger instance
-     *     var logger = new xs.log.Logger('xs');
-     *
-     *     //add log entry
-     *     logger.info('start');
-     *
-     * @method info
-     *
-     * @param {String} message log message
-     * @param {Object} [data] message data
-     */
-    logger.prototype.info = function (message, data) {
-        var me = this;
-
-        //assert, that message is string
-        xs.assert.string(message, 'info - given message "$message" is not a string', {
-            $message: message
-        }, LoggerError);
-
-        //assert, that data is either not given or is an object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
-            $data: data
-        }, LoggerError);
-
-        if (data) {
-            processEntry(me.category, xs.log.Info, message, data);
-        } else {
-            processEntry(me.category, xs.log.Info, message);
-        }
-    };
-
-    /**
-     * Adds log entry with specific {@link xs.log#Trace} log level via this logger.
-     * That level is used in development stage instead of info and this calls should be removed in production mode
-     *
-     * For example:
-     *
-     *     //create logger instance
-     *     var logger = new xs.log.Logger('xs');
-     *
-     *     //add log entry
-     *     logger.log('start');
-     *
-     * @method log
-     *
-     * @param {String} message log message
-     * @param {Object} [data] message data
-     */
-    logger.prototype.trace = function (message, data) {
-        var me = this;
-
-        //assert, that message is string
-        xs.assert.string(message, 'info - given message "$message" is not a string', {
-            $message: message
-        }, LoggerError);
-
-        //assert, that data is either not given or is an object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
-            $data: data
-        }, LoggerError);
-
-        if (data) {
-            processEntry(me.category, xs.log.Trace, message, data);
-        } else {
-            processEntry(me.category, xs.log.Trace, message);
-        }
-    };
-
-    /**
-     * Begins profiling with given mark.
-     *
-     * For example:
-     *
-     *     //create logger instance
-     *     var logger = new xs.log.Logger('xs');
-     *
-     *     //start profiling
-     *     logger.profile.start('test');
-     *
-     * @method start
-     *
-     * @param {String} mark profiling mark
-     */
-    var profileStart = function (mark) {
-        var me = this;
-
-        //assert, that mark is string
-        xs.assert.string(mark, 'profile.start - given mark "$mark" is not a string', {
-            $mark: mark
-        }, LoggerError);
-
-        //add new entry to storage
-        profiles.add(me.category + '.' + mark, {
-            time: (new Date()).valueOf()
-        });
-    };
-
-    /**
-     * Ends profiling for given mark.
-     *
-     * For example:
-     *
-     *     //create logger instance
-     *     var logger = new xs.log.Logger('xs');
-     *
-     *     //start profiling
-     *     logger.profile.start('test');
-     *
-     *     //end profiling
-     *     logger.profile.end('test');
-     *
-     * @method end
-     *
-     * @param {String} mark profiling mark
-     */
-    var profileEnd = function (mark) {
-        var me = this;
-
-        //assert, that mark is string
-        xs.assert.string(mark, 'profile.end - given mark "$mark" is not a string', {
-            $mark: mark
-        }, LoggerError);
-
-        //evaluate storage key
-        var key = me.category + '.' + mark;
-
-        //get profile record
-        var profile = profiles.at(key);
-
-        //evaluate execution time
-        profile.time = (new Date()).valueOf() - profile.time;
-
-        //remove profile from storage
-        profiles.remove(profile);
-
-        //process profiling message (mark) with profile as data
-        processEntry(me.category, xs.log.Profile, mark, profile);
-    };
-
-    //create reference to xs.log.Router.process and remove it
-    var processEntry = xs.log.Router.process;
-    delete xs.log.Router.process;
     /**
      * Internal error class
      *
@@ -304,12 +835,27 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class LoggerError
+     * @class AsserterError
      */
-    function LoggerError(message) {
-        this.message = 'xs.log.Logger::' + message;
+    function AsserterError(message) {
+        this.message = 'xs.assert.Asserter::' + message;
     }
 
-    LoggerError.prototype = new Error();
+    AsserterError.prototype = new Error();
 
+    //create assert. here fake assert is needed for first call
+    var assert = {
+        ok: function () {
+
+        },
+        fn: function () {
+
+        }
+    };
+    assert = new xs.assert.Asserter(new xs.log.Logger('xs'), AsserterError);
+
+    //call hooks
+    xs.log.Router.ready();
+    xs.log.Logger.ready();
+    xs.core.Collection.ready();
 })(window, 'xs');

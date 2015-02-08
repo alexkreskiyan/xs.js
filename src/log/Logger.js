@@ -63,9 +63,9 @@
         var me = this;
 
         //assert, that category is valid (via xs.log.Router.isCategory)
-        xs.assert.ok(xs.log.Router.isCategory(category), 'Given category "$category" is not a valid category', {
+        assert.ok(xs.log.Router.isCategory(category), 'Given category "$category" is not a valid category', {
             $category: category
-        }, LoggerError);
+        });
 
         //save category
         me.category = category;
@@ -98,14 +98,14 @@
         var me = this;
 
         //assert, that message is string
-        xs.assert.string(message, 'error - given message "$message" is not a string', {
+        assert.string(message, 'error - given message "$message" is not a string', {
             $message: message
-        }, LoggerError);
+        });
 
         //assert, that data is either not given or is an object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'error - given data "$data" is not an object', {
+        assert.ok(arguments.length === 1 || xs.isObject(data), 'error - given data "$data" is not an object', {
             $data: data
-        }, LoggerError);
+        });
 
         if (data) {
             processEntry(me.category, xs.log.Error, message, data);
@@ -134,14 +134,14 @@
         var me = this;
 
         //assert, that message is string
-        xs.assert.string(message, 'warn - given message "$message" is not a string', {
+        assert.string(message, 'warn - given message "$message" is not a string', {
             $message: message
-        }, LoggerError);
+        });
 
         //assert, that data is either not given or is an object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'warn - given data "$data" is not an object', {
+        assert.ok(arguments.length === 1 || xs.isObject(data), 'warn - given data "$data" is not an object', {
             $data: data
-        }, LoggerError);
+        });
 
         if (data) {
             processEntry(me.category, xs.log.Warning, message, data);
@@ -170,14 +170,14 @@
         var me = this;
 
         //assert, that message is string
-        xs.assert.string(message, 'info - given message "$message" is not a string', {
+        assert.string(message, 'info - given message "$message" is not a string', {
             $message: message
-        }, LoggerError);
+        });
 
         //assert, that data is either not given or is an object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
+        assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
             $data: data
-        }, LoggerError);
+        });
 
         if (data) {
             processEntry(me.category, xs.log.Info, message, data);
@@ -207,14 +207,14 @@
         var me = this;
 
         //assert, that message is string
-        xs.assert.string(message, 'info - given message "$message" is not a string', {
+        assert.string(message, 'info - given message "$message" is not a string', {
             $message: message
-        }, LoggerError);
+        });
 
         //assert, that data is either not given or is an object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
+        assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
             $data: data
-        }, LoggerError);
+        });
 
         if (data) {
             processEntry(me.category, xs.log.Trace, message, data);
@@ -242,9 +242,9 @@
         var me = this;
 
         //assert, that mark is string
-        xs.assert.string(mark, 'profile.start - given mark "$mark" is not a string', {
+        assert.string(mark, 'profile.start - given mark "$mark" is not a string', {
             $mark: mark
-        }, LoggerError);
+        });
 
         //add new entry to storage
         profiles.add(me.category + '.' + mark, {
@@ -274,9 +274,9 @@
         var me = this;
 
         //assert, that mark is string
-        xs.assert.string(mark, 'profile.end - given mark "$mark" is not a string', {
+        assert.string(mark, 'profile.end - given mark "$mark" is not a string', {
             $mark: mark
-        }, LoggerError);
+        });
 
         //evaluate storage key
         var key = me.category + '.' + mark;
@@ -297,6 +297,7 @@
     //create reference to xs.log.Router.process and remove it
     var processEntry = xs.log.Router.process;
     delete xs.log.Router.process;
+
     /**
      * Internal error class
      *
@@ -312,4 +313,13 @@
 
     LoggerError.prototype = new Error();
 
+    //hook method to create asserter. here fake assert is needed for first call
+    var assert = {
+        ok: function () {
+        }
+    };
+    logger.ready = function () {
+        assert = new xs.assert.Asserter(new xs.log.Logger('xs.log.Logger'), LoggerError);
+        delete logger.ready;
+    };
 })(window, 'xs');

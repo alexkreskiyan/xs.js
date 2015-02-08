@@ -8,215 +8,257 @@
  License: http://annium.com/contact
 
  */
-module('xs.assert.Assert', function () {
+module('xs.assert.Asserter', function () {
 
     'use strict';
 
     test('equal', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.equal([], []);
+            assert.equal([], []);
         });
 
         //correct is silent
-        xs.assert.equal(1, 1);
+        assert.equal(1, 1);
     });
 
     test('ok', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.ok(1 === '1');
+            assert.ok(1 === '1');
         });
 
         //correct is silent
-        xs.assert.ok(1 < 2);
+        assert.ok(1 < 2);
     });
 
     test('not', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.not(1 === 1);
+            assert.not(1 === 1);
         });
 
         //correct is silent
-        xs.assert.not(1 === 2);
+        assert.not(1 === 2);
     });
 
     test('object', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.object([]);
+            assert.object([]);
         });
 
         //correct is silent
-        xs.assert.object({});
+        assert.object({});
     });
 
     test('array', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.array({});
+            assert.array({});
         });
 
         //correct is silent
-        xs.assert.array([]);
+        assert.array([]);
     });
 
     test('fn', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.fn([]);
+            assert.fn([]);
         });
 
         //correct is silent
-        xs.assert.fn(xs.emptyFn);
+        assert.fn(xs.emptyFn);
     });
 
     test('string', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.string([]);
+            assert.string([]);
         });
 
         //correct is silent
-        xs.assert.string('');
+        assert.string('');
     });
 
     test('number', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.number('1');
+            assert.number('1');
         });
 
         //correct is silent
-        xs.assert.number(1);
+        assert.number(1);
     });
 
     test('boolean', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.boolean(undefined);
+            assert.boolean(undefined);
         });
 
         //correct is silent
-        xs.assert.boolean(true);
+        assert.boolean(true);
     });
 
     test('regExp', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.regExp([]);
+            assert.regExp([]);
         });
 
         //correct is silent
-        xs.assert.regExp(/1/);
+        assert.regExp(/1/);
     });
 
     test('error', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.error([]);
+            assert.error([]);
         });
 
         //correct is silent
-        xs.assert.error(new Error);
+        assert.error(new Error);
     });
 
     test('null', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.null(undefined);
+            assert.null(undefined);
         });
 
         //correct is silent
-        xs.assert.null(null);
+        assert.null(null);
     });
 
     test('iterable', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.iterable(null);
+            assert.iterable(null);
         });
 
         //correct is silent
-        xs.assert.iterable({});
+        assert.iterable({});
     });
 
     test('primitive', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.primitive([]);
+            assert.primitive([]);
         });
 
         //correct is silent
-        xs.assert.primitive(1);
+        assert.primitive(1);
     });
 
     test('numeric', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.numeric('a');
+            assert.numeric('a');
         });
 
         //correct is silent
-        xs.assert.numeric('1e-1');
+        assert.numeric('1e-1');
     });
 
     test('defined', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.defined(undefined);
+            assert.defined(undefined);
         });
 
         //correct is silent
-        xs.assert.defined(null);
+        assert.defined(null);
     });
 
     test('empty', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.empty([1]);
+            assert.empty([1]);
         });
 
         //correct is silent
-        xs.assert.empty({});
+        assert.empty({});
     });
 
     test('Class', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.Class(xs.emptyFn);
+            assert.Class(xs.emptyFn);
         });
 
         //correct is silent
-        xs.assert.Class(xs.Class(xs.emptyFn));
+        assert.Class(xs.Class(xs.emptyFn));
     });
 
     test('Interface', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.Class(xs.emptyFn);
+            assert.Class(xs.emptyFn);
         });
 
         //correct is silent
-        xs.assert.Interface(xs.Interface(xs.emptyFn));
+        assert.Interface(xs.Interface(xs.emptyFn));
     });
 
     test('instance', function () {
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.instance([], {});
+            assert.instance([], {});
         });
 
         //correct is silent
-        xs.assert.instance(new xs.class.Base(), xs.class.Base);
+        assert.instance(new xs.class.Base(), xs.class.Base);
     });
 
     test('implements', function () {
         var me = this;
+        me.assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+
         //incorrect throws
         throws(function () {
-            xs.assert.implements(xs.emptyFn, xs.emptyFn);
+            me.assert.implements(xs.emptyFn, xs.emptyFn);
         });
 
         me.Class = xs.Class(function () {
@@ -227,6 +269,6 @@ module('xs.assert.Assert', function () {
     }, function () {
         var me = this;
         //correct is silent
-        xs.assert.implements(new me.Class(), xs.interface.Base);
+        me.assert.implements(new me.Class(), xs.interface.Base);
     });
 });

@@ -1,10 +1,11 @@
 {
     "core": [
+        "xs.lang.Type",
         "xs.core.Collection",
         "xs.log.Router",
         "xs.log.Logger",
+        "xs.assert.Asserter",
         "xs.assert.Assert",
-        "xs.lang.Type",
         "xs.lang.Object",
         "xs.lang.Array",
         "xs.lang.List",
