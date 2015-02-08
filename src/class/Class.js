@@ -20,6 +20,10 @@
         xs.class = {};
     }
 
+    var log = new xs.log.Logger('xs.class.Class');
+
+    var assert = new xs.assert.Asserter(log, ClassError);
+
     /**
      * xs.class.Class is core class, that is used for class generation.
      *
@@ -99,9 +103,9 @@
         var Contractor = function (Descriptor, createdFn) {
 
             //Descriptor must be function
-            xs.assert.fn(Descriptor, 'given class descriptor "$descriptor" is not a function', {
+            assert.fn(Descriptor, 'given class descriptor "$descriptor" is not a function', {
                 $descriptor: Descriptor
-            }, ClassError);
+            });
 
             if (!xs.isFunction(createdFn)) {
                 createdFn = xs.emptyFn;
@@ -264,9 +268,9 @@
                 //abstract processing
 
                 //assert Class is not abstract
-                xs.assert.not(descriptor.abstract, 'can not create instance of abstract class "$label"', {
+                assert.not(descriptor.abstract, 'can not create instance of abstract class "$label"', {
                     $label: Class.label
-                }, ClassError);
+                });
 
 
                 //save call arguments
