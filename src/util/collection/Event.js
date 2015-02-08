@@ -46,9 +46,9 @@ xs.define(xs.Class, 'ns.Event', function (self) {
 
         //check data
         //assert that data is object
-        xs.assert.ok(xs.isObject(data), 'constructor - given data "$data" is not an object', {
+        self.assert.ok(xs.isObject(data), 'constructor - given data "$data" is not an object', {
             $data: data
-        }, EventError);
+        });
 
         //assign attributes
         me.private.data = data;
@@ -100,19 +100,4 @@ xs.define(xs.Class, 'ns.Event', function (self) {
     Class.property.index = {
         set: xs.emptyFn
     };
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class EventError
-     */
-    function EventError(message) {
-        this.message = self.label + '::' + message;
-    }
-
-    EventError.prototype = new Error();
 });

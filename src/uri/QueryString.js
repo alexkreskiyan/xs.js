@@ -17,7 +17,7 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.QueryString', function () {
+xs.define(xs.Class, 'ns.QueryString', function (self) {
 
     'use strict';
 
@@ -35,9 +35,9 @@ xs.define(xs.Class, 'ns.QueryString', function () {
     Class.constructor = function (params) {
         var me = this;
 
-        xs.assert.ok(!arguments.length || xs.isObject(params) || xs.isString(params), 'Given params "$params" are nor object neither string', {
+        self.assert.ok(!arguments.length || xs.isObject(params) || xs.isString(params), 'Given params "$params" are nor object neither string', {
             $params: params
-        }, QueryStringError);
+        });
 
         //handler object params
         if (xs.isObject(params)) {
@@ -48,7 +48,7 @@ xs.define(xs.Class, 'ns.QueryString', function () {
             //decode
             params = decodeURI(params);
 
-            xs.assert.ok(queryStringRe.test(params), 'Given query string "$queryString" is not correct', {
+            self.assert.ok(queryStringRe.test(params), 'Given query string "$queryString" is not correct', {
                 $queryString: params
             });
 
@@ -71,9 +71,9 @@ xs.define(xs.Class, 'ns.QueryString', function () {
         set: function (params) {
             var me = this;
 
-            xs.assert.object(params, 'Given params "$params" are not an object', {
+            self.assert.object(params, 'Given params "$params" are not an object', {
                 $params: params
-            }, QueryStringError);
+            });
 
             me.private.params = params;
         }
@@ -89,9 +89,9 @@ xs.define(xs.Class, 'ns.QueryString', function () {
      * @returns {String}
      */
     Class.method.toString = function (encode) {
-        xs.assert.ok(!arguments.length || xs.isBoolean(encode), 'Given encode "$encode" is not boolean', {
+        self.assert.ok(!arguments.length || xs.isBoolean(encode), 'Given encode "$encode" is not boolean', {
             $encode: encode
-        }, QueryStringError);
+        });
 
         return toQueryString(this.private.params, Boolean(encode));
     };
@@ -327,20 +327,4 @@ xs.define(xs.Class, 'ns.QueryString', function () {
 
         return objects;
     };
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class QueryStringError
-     */
-    function QueryStringError(message) {
-        this.message = self.label + '::' + message;
-    }
-
-    QueryStringError.prototype = new Error();
-
 });

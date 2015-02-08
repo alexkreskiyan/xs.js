@@ -17,7 +17,7 @@
  *
  * @class xs.class.Base
  */
-xs.define(xs.Class, 'xs.class.Base', function () {
+xs.define(xs.Class, 'xs.class.Base', function (self) {
 
     'use strict';
 
@@ -82,7 +82,7 @@ xs.define(xs.Class, 'xs.class.Base', function () {
      */
     me.method.destroy = function () {
         //assert, that destructor was not called yet
-        xs.assert.not(this.private.isDestroyed, 'Object is already destroyed');
+        self.assert.not(this.private.isDestroyed, 'Object is already destroyed');
 
         this.private.isDestroyed = true;
     };

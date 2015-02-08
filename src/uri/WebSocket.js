@@ -95,14 +95,14 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
         set: function (scheme) {
             var me = this;
 
-            xs.assert.ok(!xs.isDefined(scheme) || xs.isString(scheme), 'Given scheme "$scheme" is not a string', {
+            self.assert.ok(!xs.isDefined(scheme) || xs.isString(scheme), 'Given scheme "$scheme" is not a string', {
                 $scheme: scheme
-            }, WebSocketError);
+            });
 
-            xs.assert.ok(!xs.isDefined(scheme) || schemes.indexOf(scheme) >= 0, 'Given scheme "$scheme" is not supported. Allowed are: $allowed', {
+            self.assert.ok(!xs.isDefined(scheme) || schemes.indexOf(scheme) >= 0, 'Given scheme "$scheme" is not supported. Allowed are: $allowed', {
                 $scheme: scheme,
                 $allowed: schemes.join(', ')
-            }, WebSocketError);
+            });
 
             //assign scheme
             me.private.scheme = scheme;
@@ -129,14 +129,14 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
         set: function (host) {
             var me = this;
 
-            xs.assert.ok(!xs.isDefined(host) || xs.isString(host), 'Given host "$host" is neither string nor undefined', {
+            self.assert.ok(!xs.isDefined(host) || xs.isString(host), 'Given host "$host" is neither string nor undefined', {
                 $host: host
-            }, WebSocketError);
+            });
 
             //check host if string
-            xs.assert.ok(!xs.isDefined(host) || hostRe.test(host), 'Given host "$host" is incorrect', {
+            self.assert.ok(!xs.isDefined(host) || hostRe.test(host), 'Given host "$host" is incorrect', {
                 $host: host
-            }, WebSocketError);
+            });
 
             //assign host
             me.private.host = host;
@@ -154,9 +154,9 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
         set: function (port) {
             var me = this;
 
-            xs.assert.ok(!xs.isDefined(port) || xs.isNumber(port), 'Given port "$port" is not a number', {
+            self.assert.ok(!xs.isDefined(port) || xs.isNumber(port), 'Given port "$port" is not a number', {
                 $port: port
-            }, WebSocketError);
+            });
 
             //assign port
             me.private.port = port;
@@ -183,14 +183,14 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
         set: function (path) {
             var me = this;
 
-            xs.assert.string(path, 'Given path "$path" is not a string', {
+            self.assert.string(path, 'Given path "$path" is not a string', {
                 $path: path
-            }, WebSocketError);
+            });
 
             //check path
-            xs.assert.ok(pathRe.test(path), 'Given path "$path" is incorrect', {
+            self.assert.ok(pathRe.test(path), 'Given path "$path" is incorrect', {
                 $path: path
-            }, WebSocketError);
+            });
 
             //assign path
             me.private.path = path;
@@ -208,10 +208,10 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
         set: function (query) {
             var me = this;
 
-            xs.assert.instance(query, imports.QueryString, 'Given query "$query" is not instance of "$QueryString"', {
+            self.assert.instance(query, imports.QueryString, 'Given query "$query" is not instance of "$QueryString"', {
                 $query: query,
                 $QueryString: imports.QueryString
-            }, WebSocketError);
+            });
 
             //assign query
             me.private.query = query;
@@ -257,29 +257,13 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
     var parseNamespace = function (namespace) {
         var raw = namespaceParseRe.exec(namespace);
 
-        xs.assert.array(raw, 'Given namespace part "$namespace" is not correct', {
+        self.assert.array(raw, 'Given namespace part "$namespace" is not correct', {
             $namespace: namespace
-        }, WebSocketError);
+        });
 
         return {
             host: raw[1],
             port: raw[2] ? Number(raw[2]) : undefined
         };
     };
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class WebSocketError
-     */
-    function WebSocketError(message) {
-        this.message = self.label + '::' + message;
-    }
-
-    WebSocketError.prototype = new Error();
-
 });

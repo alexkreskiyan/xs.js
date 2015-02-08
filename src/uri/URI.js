@@ -19,7 +19,7 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.URI', function () {
+xs.define(xs.Class, 'ns.URI', function (self) {
 
     'use strict';
 
@@ -49,9 +49,9 @@ xs.define(xs.Class, 'ns.URI', function () {
         var me = this;
 
         //assert, that uri is either undefined or string
-        xs.assert.ok(!arguments.length || xs.isString(URI), 'Given URI "$URI" is not a string', {
+        self.assert.ok(!arguments.length || xs.isString(URI), 'Given URI "$URI" is not a string', {
             $URI: URI
-        }, URIError);
+        });
 
         //convert undefined to empty string
         if (!URI) {
@@ -61,9 +61,9 @@ xs.define(xs.Class, 'ns.URI', function () {
         //save raw parsing info
         var data = parseRe.exec(decodeURI(URI));
 
-        xs.assert.array(data, 'Given string "$URI" is correct URI', {
+        self.assert.array(data, 'Given string "$URI" is correct URI', {
             $URI: URI
-        }, URIError);
+        });
 
         me.private.raw = {
             scheme: data[1],

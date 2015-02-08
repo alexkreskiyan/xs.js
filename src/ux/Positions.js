@@ -47,9 +47,9 @@ xs.define(xs.Class, 'ns.view.PositionsCollection', function (self) {
         var me = this;
 
         //assert, that template is string
-        xs.assert.string(template, 'constructor - given template "$template" is not a string', {
+        self.assert.string(template, 'constructor - given template "$template" is not a string', {
             $template: template
-        }, PositionsCollectionError);
+        });
 
         //get template positions
         var items = getTemplatePositions(template);
@@ -87,19 +87,4 @@ xs.define(xs.Class, 'ns.view.PositionsCollection', function (self) {
             return index.slice(2, index.length - 2);
         });
     };
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class PositionsCollectionError
-     */
-    function PositionsCollectionError(message) {
-        this.message = self.label + '::' + message;
-    }
-
-    PositionsCollectionError.prototype = new Error();
 });

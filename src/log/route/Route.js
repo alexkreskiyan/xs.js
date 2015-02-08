@@ -19,7 +19,7 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Route', function () {
+xs.define(xs.Class, 'ns.Route', function (self) {
 
     'use strict';
 
@@ -54,12 +54,12 @@ xs.define(xs.Class, 'ns.Route', function () {
         var me = this;
 
         //assert, that name is non-empty string
-        xs.assert.ok(name && xs.isString(name), 'constructor - given route name "$name" is not correct', {
+        self.assert.ok(name && xs.isString(name), 'constructor - given route name "$name" is not correct', {
             $name: name
-        }, RouteError);
+        });
 
         //assert, that rules are ok (if given)
-        xs.assert.ok(arguments.length === 1 || verifyRules(rules));
+        self.assert.ok(arguments.length === 1 || verifyRules(rules));
 
         //save name
         me.name = name;
@@ -101,37 +101,37 @@ xs.define(xs.Class, 'ns.Route', function () {
     var verifyRules = function (rules) {
 
         //assert, that rules are an array
-        xs.assert.array(rules, 'verifyRules - given rules "$rules" are not an array');
+        self.assert.array(rules, 'verifyRules - given rules "$rules" are not an array');
 
         //verify each rule individually
         rules.forEach(function (rule) {
 
             //assert, that rule is an object
-            xs.assert.object(rule, 'verifyRules - given rule "$rule" is not an object', {
+            self.assert.object(rule, 'verifyRules - given rule "$rule" is not an object', {
                 $rule: rule
-            }, RouteError);
+            });
 
             //assert that category or level given
-            xs.assert.ok(rule.hasOwnProperty('category') || rule.hasOwnProperty('level'), 'verifyRules - given rule "$rule" is not informative: nor category neither level given', {
+            self.assert.ok(rule.hasOwnProperty('category') || rule.hasOwnProperty('level'), 'verifyRules - given rule "$rule" is not informative: nor category neither level given', {
                 $rule: rule
-            }, RouteError);
+            });
 
             //verify category if given
             if (rule.hasOwnProperty('category')) {
 
                 //assert, that category has correct format
-                xs.assert.ok(xs.log.Router.isCategory(rule.category), 'verifyRules - given category "$category" is not correct', {
+                self.assert.ok(xs.log.Router.isCategory(rule.category), 'verifyRules - given category "$category" is not correct', {
                     $category: rule.category
-                }, RouteError);
+                });
             }
 
             //verify level if given
             if (rule.hasOwnProperty('level')) {
 
                 //assert, that level is number
-                xs.assert.number(rule.level, 'verifyRules - given level "$level" list is not a number', {
+                self.assert.number(rule.level, 'verifyRules - given level "$level" list is not a number', {
                     $level: rule.level
-                }, RouteError);
+                });
             }
         });
 
@@ -181,19 +181,4 @@ xs.define(xs.Class, 'ns.Route', function () {
                 return match;
             });
     };
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class RouteError
-     */
-    function RouteError(message) {
-        this.message = 'xs.log.Router::' + message;
-    }
-
-    RouteError.prototype = new Error();
 });
