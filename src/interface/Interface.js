@@ -20,6 +20,10 @@
         xs.interface = {};
     }
 
+    var log = new xs.log.Logger('xs.interface.Interface');
+
+    var assert = new xs.assert.Asserter(log, InterfaceError);
+
     /**
      * xs.interface.Interface is core class, that is used for interface generation.
      *
@@ -78,7 +82,7 @@
         var Contractor = function (Descriptor, createdFn) {
 
             //Descriptor must be function
-            xs.assert.fn(Descriptor, 'given interface descriptor "$descriptor" is not a function', {
+            assert.fn(Descriptor, 'given interface descriptor "$descriptor" is not a function', {
                 $descriptor: Descriptor
             }, InterfaceError);
 

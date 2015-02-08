@@ -15,7 +15,9 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.interface.preprocessors.prepareInterface');
+    var log = new xs.log.Logger('xs.interface.preprocessors.prepareInterface');
+
+    var assert = new xs.assert.Asserter(log, PrepareInterfaceError);
 
     /**
      * Preprocessor prepareInterface
@@ -30,7 +32,7 @@
         return true;
     }, function (Interface, descriptor) {
 
-        logger.trace(Interface.label ? Interface.label : 'undefined');
+        log.trace(Interface.label ? Interface.label : 'undefined');
 
 
         //prepare imports
@@ -42,15 +44,15 @@
         //prepare extends
 
         var extended = descriptor.extends;
-        logger.trace((Interface.label ? Interface.label : 'undefined') + '. Extended ', {
+        log.trace((Interface.label ? Interface.label : 'undefined') + '. Extended ', {
             extended: extended
         });
 
         //assert that either extended is not defined or is defined as non-empty string
-        xs.assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '[$Interface]: given extended "$extended" is incorrect', {
+        assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '[$Interface]: given extended "$extended" is incorrect', {
             $Interface: Interface.label,
             $extended: extended
-        }, PrepareInterfaceError);
+        });
 
         //if extended is given - add it to imports
         if (extended) {
