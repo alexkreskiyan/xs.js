@@ -19,7 +19,7 @@
  *
  * @mixins xs.event.Observable
  */
-xs.define(xs.Class, 'ns.Collection', function () {
+xs.define(xs.Class, 'ns.Collection', function (self) {
 
     'use strict';
 
@@ -450,7 +450,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
                 $flags: flags
             }, CollectionError);
 
-            if (flags & xs.util.collection.Collection.Reverse) {
+            if (flags & self.Reverse) {
                 index = values.lastIndexOf(value);
             } else {
                 index = values.indexOf(value);
@@ -1231,11 +1231,11 @@ xs.define(xs.Class, 'ns.Collection', function () {
             }, CollectionError);
 
             //if All flag given - no index is needed
-            if (flags & xs.util.collection.Collection.All) {
+            if (flags & self.All) {
                 index = values.indexOf(value);
                 all = true;
                 //if Reverse flag given - last value occurrence is looked up for
-            } else if (flags & xs.util.collection.Collection.Reverse) {
+            } else if (flags & self.Reverse) {
                 index = values.lastIndexOf(value);
                 //else - first value occurrence is looked up for
             } else {
@@ -1454,10 +1454,10 @@ xs.define(xs.Class, 'ns.Collection', function () {
             }, CollectionError);
 
             //if All flag given - order does not matter
-            if (flags & xs.util.collection.Collection.All) {
+            if (flags & self.All) {
                 all = true;
                 //if Reverse flag given - last value occurrence is looked up for
-            } else if (flags & xs.util.collection.Collection.Reverse) {
+            } else if (flags & self.Reverse) {
                 reverse = true;
             }
         }
@@ -1661,7 +1661,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
             }, CollectionError);
 
             //if Reverse flag given - last value occurrence is looked up for
-            if (flags & xs.util.collection.Collection.Reverse) {
+            if (flags & self.Reverse) {
                 reverse = true;
             }
         }
@@ -1780,10 +1780,10 @@ xs.define(xs.Class, 'ns.Collection', function () {
             }, CollectionError);
 
             //if All flag given
-            if (flags & xs.util.collection.Collection.All) {
+            if (flags & self.All) {
                 all = true;
                 //else - if Reverse flag given
-            } else if (flags & xs.util.collection.Collection.Reverse) {
+            } else if (flags & self.Reverse) {
                 reverse = true;
             }
         }
@@ -1811,7 +1811,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
                 }
             }
 
-            found = new me.constructor();
+            found = me.clone();
             found.private.items = items;
         } else if (reverse) {
             for (i = length - 1; i >= 0; i--) {
@@ -1905,7 +1905,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
             });
         }
 
-        var collection = new me.constructor();
+        var collection = me.clone();
         collection.private.items = items;
 
         return collection;
@@ -2015,7 +2015,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
             }, CollectionError);
 
             //if Reverse flag given
-            if (flags & xs.util.collection.Collection.Reverse) {
+            if (flags & self.Reverse) {
                 reverse = true;
             }
         }
@@ -2450,7 +2450,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
 
 
         //set picked items as items of picked collection
-        var picked = new xs.util.collection.Collection();
+        var picked = me.clone();
         picked.private.items = items;
 
         //update indexes
@@ -2579,7 +2579,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
         }
 
         //set picked items as items of omitted collection
-        var omitted = new xs.util.collection.Collection();
+        var omitted = me.clone();
         omitted.private.items = items;
 
         //update indexes
