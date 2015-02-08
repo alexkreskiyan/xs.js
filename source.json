@@ -91,6 +91,10 @@
                 "collection": {
                     "Collection": {
                         "type": "class"
+                    },
+                    "Event": {
+                        "type": "class",
+                        "test": false
                     }
                 }
             },

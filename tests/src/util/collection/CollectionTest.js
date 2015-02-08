@@ -549,6 +549,32 @@ module('xs.util.collection.Collection', function () {
         collection.add('a', 3);
         strictEqual(collection.last(), 3);
         strictEqual(collection.at('a'), 3);
+
+
+        //test events
+        collection = new xs.util.collection.Collection(Number);
+        var str = '';
+
+        //add:before - add only values, that are greater than five
+        collection.on('add:before', function (event) {
+            return event.value > 5 && event.value < 10;
+        });
+
+        //add - post-processing added values
+        collection.on('add', function (event) {
+            str += event.value + event.key + event.index + ':';
+        });
+
+        collection.add('a', 4);
+        collection.add('b', 6);
+        collection.add('c', 6);
+        collection.add('d', 8);
+        collection.add('e', 8);
+        collection.add('f', 8);
+        collection.add('g', 10);
+        strictEqual(JSON.stringify(collection.toSource()), '{"b":6,"c":6,"d":8,"e":8,"f":8}');
+
+        strictEqual(str, '6b0:6c1:8d2:8e3:8f4:');
     });
 
     test('insert', function () {
@@ -608,7 +634,33 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.at(0), 2);
         collection.insert(-1, 1);
         strictEqual(collection.values().toString(), '2,1,3');
-        strictEqual(collection.at(-1), 1);
+        strictEqual(collection.at(-1), 3);
+
+
+        //test events
+        collection = new xs.util.collection.Collection(Number);
+        var str = '';
+
+        //add:before - insert only values, that are greater than five
+        collection.on('add:before', function (event) {
+            return event.value > 5 && event.value < 10;
+        });
+
+        //add - post-processing inserted values
+        collection.on('add', function (event) {
+            str += event.value + event.key + event.index + ':';
+        });
+
+        collection.insert(0, 'a', 4);
+        collection.insert(0, 'b', 6);
+        collection.insert(1, 'c', 6);
+        collection.insert(-1, 'd', 8);
+        collection.insert(2, 'e', 8);
+        collection.insert(-3, 'f', 8);
+        collection.insert(4, 'g', 10);
+        strictEqual(JSON.stringify(collection.toSource()), '{"b":6,"f":8,"d":8,"e":8,"c":6}');
+
+        strictEqual(str, '6b0:6c1:8d1:8e2:8f1:');
     });
 
     test('set', function () {
@@ -662,6 +714,40 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.keyOf(2), 'a');
         collection.set('a', 4);
         strictEqual(collection.at('a'), 4);
+
+
+        //test events
+        collection = new xs.util.collection.Collection({
+            a: 10,
+            b: 8,
+            c: 7,
+            d: 8,
+            e: 6,
+            f: 4,
+            g: 5
+        }, Number);
+        var str = '';
+
+        //set:before - set only values, that are greater than five
+        collection.on('set:before', function (event) {
+            return event.value > 5 && event.value < 10;
+        });
+
+        //set - post-processing of set values
+        collection.on('set', function (event) {
+            str += event.value + event.key + event.index + ':';
+        });
+
+        collection.set('c', 6);
+        collection.set('a', 3);
+        collection.set('d', 6);
+        collection.set('g', 10);
+        collection.set('b', 5);
+        collection.set('f', 8);
+        collection.set('e', 8);
+        strictEqual(JSON.stringify(collection.toSource()), '{"a":10,"b":8,"c":6,"d":6,"e":8,"f":8,"g":5}');
+
+        strictEqual(str, '6c2:6d3:8f5:8e4:');
     });
 
     test('removeAt', function () {
@@ -710,6 +796,45 @@ module('xs.util.collection.Collection', function () {
         collection.removeAt(-1);
         strictEqual(collection.keys().toString(), 'a');
         strictEqual(collection.values().toString(), '1');
+
+
+        //test events
+        collection = new xs.util.collection.Collection({
+            a: 4,
+            b: 6,
+            c: 6,
+            d: 8,
+            e: 8,
+            f: 8,
+            g: 10
+        }, Number);
+        var str = '';
+
+        //remove:before - remove only values, that are greater than five
+        collection.on('remove:before', function (event) {
+            return event.value > 5 && event.value < 10;
+        });
+
+        //remove - post-processing removed values
+        collection.on('remove', function (event) {
+            str += event.value + event.key + event.index + ':';
+        });
+
+        //clear - when all items removed
+        collection.on('clear', function () {
+            str += '!!!';
+        });
+
+        collection.removeAt(5);
+        collection.removeAt(1);//abcdeg
+        collection.removeAt(4);//acdeg
+        collection.removeAt(0);//acdeg
+        collection.removeAt(2);//acdeg
+        collection.removeAt(0);//aceg
+        collection.removeAt(0);//aceg
+        strictEqual(JSON.stringify(collection.toSource()), '{"a":4,"c":6,"e":8,"g":10}');
+
+        strictEqual(str, '8f5:6b1:8d2:');
     });
 
     test('remove', function () {
@@ -789,6 +914,45 @@ module('xs.util.collection.Collection', function () {
         });
         collection.remove(2);
         strictEqual(JSON.stringify(collection.values()), '[1,3]');
+
+
+        //test events
+        collection = new xs.util.collection.Collection({
+            a: 4,
+            b: 6,
+            c: 6,
+            d: 8,
+            e: 8,
+            f: 8,
+            g: 10
+        }, Number);
+        var str = '';
+
+        //remove:before - remove only values, that are greater than five
+        collection.on('remove:before', function (event) {
+            return event.value > 5 && event.value < 10;
+        });
+
+        //remove - post-processing removed values
+        collection.on('remove', function (event) {
+            str += event.value + event.key + event.index + ':';
+        });
+
+        //clear - when all items removed
+        collection.on('clear', function () {
+            str += '!!!';
+        });
+
+        collection.remove(4, xs.util.collection.Collection.All);
+        collection.remove(6, xs.util.collection.Collection.All);
+        collection.remove(8);
+        collection.remove(8, xs.util.collection.Collection.Reverse);
+        collection.remove(10);
+        strictEqual(JSON.stringify(collection.toSource()), '{"a":4,"e":8,"g":10}');
+
+        collection.off('remove').off('remove:before').remove();
+
+        strictEqual(str, '6b1:6c1:8d1:8f2:!!!');
     });
 
     test('removeBy', function () {
@@ -866,118 +1030,57 @@ module('xs.util.collection.Collection', function () {
         }, xs.util.collection.Collection.All);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","e","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
-    });
 
-    test('shift', function () {
-        //init test variables
-        var collection, shifted;
 
-        collection = new xs.util.collection.Collection();
-        throws(function () {
-            collection.shift();
-        });
-
-        //test array list
-        collection = new xs.util.collection.Collection([
-            {
-                x: 1,
-                y: 2
-            },
-            {
-                x: 2,
-                y: 2
-            },
-            {
-                x: 2,
-                y: 1
-            },
-            {
-                x: 1,
-                y: 1
-            }
-        ]);
-        shifted = collection.at(0);
-        strictEqual(collection.shift(), shifted);
-        strictEqual(JSON.stringify(collection.keys()), '[0,1,2]');
-
-        //test object list
+        //test events
         collection = new xs.util.collection.Collection({
-            a: {
-                x: 1,
-                y: 2
-            },
-            b: {
-                x: 2,
-                y: 2
-            },
-            c: {
-                x: 2,
-                y: 1
-            },
-            d: {
-                x: 1,
-                y: 1
-            }
-        });
-        shifted = collection.at('a');
-        strictEqual(collection.shift(), shifted);
-        strictEqual(JSON.stringify(collection.keys()), '["b","c","d"]');
-    });
+            a: 4,
+            b: 6,
+            c: 6,
+            d: 8,
+            e: 8,
+            f: 8,
+            g: 10
+        }, Number);
+        var str = '';
 
-    test('pop', function () {
-        //init test variables
-        var collection, popped;
-
-        collection = new xs.util.collection.Collection();
-        throws(function () {
-            collection.pop();
+        //remove:before - remove only values, that are greater than five
+        collection.on('remove:before', function (event) {
+            return event.value > 5 && event.value < 10;
         });
 
-        //test array list
-        collection = new xs.util.collection.Collection([
-            {
-                x: 1,
-                y: 2
-            },
-            {
-                x: 2,
-                y: 2
-            },
-            {
-                x: 2,
-                y: 1
-            },
-            {
-                x: 1,
-                y: 1
-            }
-        ]);
-        popped = collection.at(3);
-        strictEqual(collection.pop(), popped);
-        strictEqual(JSON.stringify(collection.keys()), '[0,1,2]');
-
-        //test object list
-        collection = new xs.util.collection.Collection({
-            a: {
-                x: 1,
-                y: 2
-            },
-            b: {
-                x: 2,
-                y: 2
-            },
-            c: {
-                x: 2,
-                y: 1
-            },
-            d: {
-                x: 1,
-                y: 1
-            }
+        //remove - post-processing removed values
+        collection.on('remove', function (event) {
+            str += event.value + event.key + event.index + ':';
         });
-        popped = collection.at('d');
-        strictEqual(collection.pop(), popped);
-        strictEqual(JSON.stringify(collection.keys()), '["a","b","c"]');
+
+        //clear - when all items removed
+        collection.on('clear', function () {
+            str += '!!!';
+        });
+
+        collection.removeBy(function (value) {
+            return value === 4;
+        }, xs.util.collection.Collection.All);
+        collection.removeBy(function (value) {
+            return value === 6;
+        }, xs.util.collection.Collection.All);
+        collection.removeBy(function (value) {
+            return value === 8;
+        });
+        collection.removeBy(function (value) {
+            return value === 8;
+        }, xs.util.collection.Collection.Reverse);
+        collection.removeBy(function (value) {
+            return value === 10;
+        });
+        strictEqual(JSON.stringify(collection.toSource()), '{"a":4,"e":8,"g":10}');
+
+        collection.off('remove').off('remove:before').removeBy(function () {
+            return true;
+        },xs.util.collection.Collection.All);
+
+        strictEqual(str, '6b1:6c1:8d1:8f2:!!!');
     });
 
     test('each', function () {
@@ -1499,58 +1602,6 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.none(function (value) {
             return value.x === 1 && value.y === 3;
         }), true);
-    });
-
-    test('unique', function () {
-        //init test variables
-        var arr = [];
-        var obj = {};
-        var collection;
-
-        //test array
-        collection = new xs.util.collection.Collection([
-            1,
-            1,
-            2,
-            2,
-            obj,
-            null,
-            true,
-            false,
-            '',
-            obj,
-            arr
-        ]);
-        collection.unique();
-        strictEqual(JSON.stringify(collection.values()), '[1,2,{},null,true,false,"",[]]');
-        strictEqual(collection.has(arr), true);
-        strictEqual(collection.has(obj), true);
-
-        //test empty array
-        collection = new xs.util.collection.Collection([]);
-        collection.unique();
-        strictEqual(JSON.stringify(collection.values()), '[]');
-
-        //test object
-        collection = new xs.util.collection.Collection({
-            a: 1,
-            b: 1,
-            c: true,
-            d: arr,
-            e: arr,
-            f: obj,
-            g: obj
-        });
-        collection.unique();
-        strictEqual(JSON.stringify(collection.keys()), '["a","c","d","f"]');
-        strictEqual(JSON.stringify(collection.values()), '[1,true,[],{}]');
-        strictEqual(collection.has(arr), true);
-        strictEqual(collection.has(obj), true);
-
-        //test empty object
-        collection = new xs.util.collection.Collection({});
-        collection.unique();
-        strictEqual(JSON.stringify(collection.values()), '[]');
     });
 
     test('pick', function () {

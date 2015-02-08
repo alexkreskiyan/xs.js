@@ -16,6 +16,8 @@
  * @class xs.util.collection.Collection
  *
  * @extends xs.class.Base
+ *
+ * @mixins xs.event.Observable
  */
 xs.define(xs.Class, 'ns.Collection', function () {
 
@@ -27,7 +29,64 @@ xs.define(xs.Class, 'ns.Collection', function () {
 
     Class.mixins.observable = 'xs.event.Observable';
 
-    Class.constant.events = {};
+    Class.constant.events = {
+        /**
+         * add:before event. Is fired before new value added/inserted into collection. Stopping that event prevents adding item to collection
+         *
+         * @event add:before
+         */
+        'add:before': {
+            type: 'ns.Event'
+        },
+        /**
+         * add event. Is fired after new value added/inserted into collection
+         *
+         * @event add
+         */
+        'add': {
+            type: 'ns.Event'
+        },
+        /**
+         * set:before event. Is fired before new value set to collection item. Stopping that event prevents changing value of collection item
+         *
+         * @event set:before
+         */
+        'set:before': {
+            type: 'ns.Event'
+        },
+        /**
+         * set event. Is fired after new value set to collection item
+         *
+         * @event set
+         */
+        'set': {
+            type: 'ns.Event'
+        },
+        /**
+         * remove:before event. Is fired before item is removed from collection. Stopping that event prevents removing item from collection
+         *
+         * @event remove:before
+         */
+        'remove:before': {
+            type: 'ns.Event'
+        },
+        /**
+         * remove event. Is fired after item is removed from collection
+         *
+         * @event remove
+         */
+        'remove': {
+            type: 'ns.Event'
+        },
+        /**
+         * clear event. Is fired after all items are removed from collection
+         *
+         * @event clear
+         */
+        'clear': {
+            type: 'ns.Event'
+        }
+    };
 
     /**
      * xs.util.collection.Collection constructor
@@ -46,6 +105,8 @@ xs.define(xs.Class, 'ns.Collection', function () {
      */
     Class.constructor = function (values, type) {
         var me = this;
+
+        me.mixins.observable.call(me);
 
         //init items array
         me.private.items = [];
@@ -82,15 +143,15 @@ xs.define(xs.Class, 'ns.Collection', function () {
         //verify values (if type given)
         xs.assert.ok(!type || verifySourceValues.call(me, xs.isArray(values) ? values : (new xs.core.Collection(values)).values()));
 
-        var i, valuesLength;
+        var i, length;
 
         //handle array source
         if (xs.isArray(values)) {
 
-            //get valuesLength
-            valuesLength = values.length;
+            //get length
+            length = values.length;
 
-            for (i = 0; i < valuesLength; i++) {
+            for (i = 0; i < length; i++) {
 
                 //add item
                 me.private.items.push({
@@ -105,11 +166,11 @@ xs.define(xs.Class, 'ns.Collection', function () {
 
         //handle hash source
 
-        //get keys and valuesLength
+        //get keys and length
         var keys = Object.keys(values), key;
-        valuesLength = keys.length;
+        length = keys.length;
 
-        for (i = 0; i < valuesLength; i++) {
+        for (i = 0; i < length; i++) {
             key = keys[i];
 
             //add item
@@ -376,13 +437,13 @@ xs.define(xs.Class, 'ns.Collection', function () {
      * @return {String|Number|undefined} found key, or undefined if nothing found
      */
     Class.method.keyOf = function (value, flags) {
-        var me = this, key, values = me.values();
+        var me = this, index, values = me.values();
 
         //assert, that value is valid
         xs.assert.ok(isValid.call(me, value));
 
         if (arguments.length === 1) {
-            key = values.indexOf(value);
+            index = values.indexOf(value);
         } else {
             //assert that flags is number
             xs.assert.number(flags, 'keyOf - given flags "$flags" list is not number', {
@@ -390,13 +451,13 @@ xs.define(xs.Class, 'ns.Collection', function () {
             }, CollectionError);
 
             if (flags & xs.util.collection.Collection.Reverse) {
-                key = values.lastIndexOf(value);
+                index = values.lastIndexOf(value);
             } else {
-                key = values.indexOf(value);
+                index = values.indexOf(value);
             }
         }
 
-        return key >= 0 ? me.private.items[key].key : undefined;
+        return index >= 0 ? me.private.items[index].key : undefined;
     };
 
     /**
@@ -437,7 +498,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
      * @return {*} value with specified key
      */
     Class.method.at = function (key) {
-        var me = this, index;
+        var me = this;
 
         //assert that collection is not empty
         xs.assert.ok(me.private.items.length, 'at - collection is empty', CollectionError);
@@ -447,35 +508,37 @@ xs.define(xs.Class, 'ns.Collection', function () {
         }, CollectionError);
 
 
+        var index;
         //handle number - it's index
         if (xs.isNumber(key)) {
+            index = key;
+
             //check that index is in bounds
             var max = me.private.items.length - 1;
             //if max is 0, then min is 0
             var min = max > 0 ? -max : 0;
 
-            xs.assert.ok(min <= key && key <= max, 'at - index "$key" is out of bounds [$min,$max]', {
-                $key: key,
+            xs.assert.ok(min <= index && index <= max, 'at - index "$index" is out of bounds [$min,$max]', {
+                $index: index,
                 $min: min,
                 $max: max
             }, CollectionError);
 
             //convert negative index
-            if (key < 0) {
-                key += max;
+            if (index < 0) {
+                index += max + 1;
             }
 
-            return me.private.items[key].value;
+            //handle string - it's key
+        } else {
+
+            index = me.keys().indexOf(key);
+
+            //check, that key exists
+            xs.assert.ok(index >= 0, 'at - given key "$key" doesn\'t exist', {
+                $key: key
+            }, CollectionError);
         }
-
-
-        //handle string - it's key
-        index = me.keys().indexOf(key);
-
-        //check, that key exists
-        xs.assert.ok(index >= 0, 'at - given key "$key" doesn\'t exist', {
-            $key: key
-        }, CollectionError);
 
         return me.private.items[index].value;
     };
@@ -660,11 +723,26 @@ xs.define(xs.Class, 'ns.Collection', function () {
         //assert, that value is valid
         xs.assert.ok(isValid.call(me, value));
 
+        var data = {
+            key: key,
+            value: value,
+            index: me.private.items.length
+        };
+
+        //call preventable "add:before" event, that can prevent adding value to collection
+        if (!me.fire('add:before', data)) {
+
+            return me;
+        }
+
         //add item
         me.private.items.push({
             key: key,
             value: value
         });
+
+        //call closing "add" event
+        me.fire('add', data);
 
         return me;
     };
@@ -738,6 +816,11 @@ xs.define(xs.Class, 'ns.Collection', function () {
             $max: max
         }, CollectionError);
 
+        //convert negative index
+        if (index < 0) {
+            index += max;
+        }
+
 
         //check if key given
         if (arguments.length === 2) {
@@ -759,6 +842,18 @@ xs.define(xs.Class, 'ns.Collection', function () {
         //assert, that value is valid
         xs.assert.ok(isValid.call(me, value));
 
+        var data = {
+            key: key,
+            value: value,
+            index: index
+        };
+
+        //call preventable "add:before" event, that can prevent insert value into collection
+        if (!me.fire('add:before', data)) {
+
+            return me;
+        }
+
         //insert
         //insert new item
         me.private.items.splice(index, 0, {
@@ -768,6 +863,9 @@ xs.define(xs.Class, 'ns.Collection', function () {
 
         //updated indexes
         updateIndexes.call(me, index + 1);
+
+        //call closing "add" event
+        me.fire('add', data);
 
         return me;
     };
@@ -832,24 +930,24 @@ xs.define(xs.Class, 'ns.Collection', function () {
         //handle number key - it's index
         var index;
         if (xs.isNumber(key)) {
+            index = key;
+
             //check that index is in bounds
             var max = me.private.items.length - 1;
             //if max is 0, then min is 0
             var min = max > 0 ? -max : 0;
 
             //assert that index is in bounds
-            xs.assert.ok(min <= key && key <= max, 'set - index "$index" is out of bounds [$min, $max]', {
-                $index: key,
+            xs.assert.ok(min <= index && index <= max, 'set - index "$index" is out of bounds [$min, $max]', {
+                $index: index,
                 $min: min,
                 $max: max
             }, CollectionError);
 
             //convert negative index
-            if (key < 0) {
-                key += max;
+            if (index < 0) {
+                index += max + 1;
             }
-
-            index = key;
 
             //handle string key  - it's key
         } else {
@@ -865,7 +963,22 @@ xs.define(xs.Class, 'ns.Collection', function () {
         //assert, that value is valid
         xs.assert.ok(isValid.call(me, value));
 
+        var data = {
+            key: key,
+            value: value,
+            index: index
+        };
+
+        //call preventable "set:before" event, that can prevent setting value for collection item
+        if (!me.fire('set:before', data)) {
+
+            return me;
+        }
+
         me.private.items[index].value = value;
+
+        //call closing "set" event
+        me.fire('set', data);
 
         return me;
     };
@@ -918,41 +1031,69 @@ xs.define(xs.Class, 'ns.Collection', function () {
             $key: key
         }, CollectionError);
 
+        var index;
 
         //handle number key - index given
         if (xs.isNumber(key)) {
+            index = key;
+
             //check that index is in bounds
             var max = me.private.items.length - 1;
+
             //if max is 0, then min is 0
             var min = max > 0 ? -max : 0;
 
             //assert that index is in bounds
-            xs.assert.ok(min <= key && key <= max, 'removeAt - index "$index" is out of bounds [$min, $max]', {
-                $index: key,
+            xs.assert.ok(min <= index && index <= max, 'removeAt - index "$index" is out of bounds [$min, $max]', {
+                $index: index,
                 $min: min,
                 $max: max
             }, CollectionError);
 
-            //remove item by key
-            me.private.items.splice(key, 1);
+            //convert negative index
+            if (index < 0) {
+                index += max + 1;
+            }
+
+            //handle string key - key given
+        } else {
+
+            //get index
+            index = me.keys().indexOf(key);
+
+            //assert that key exists
+            xs.assert.ok(index >= 0, 'removeAt - given key "$key" doesn\'t exist in collection', {
+                $key: key
+            }, CollectionError);
+        }
+
+        var item = me.private.items[index];
+
+        var data = {
+            key: item.key,
+            value: item.value,
+            index: index
+        };
+
+        //call preventable "remove:before" event, that can prevent removing value for collection
+        if (!me.fire('remove:before', data)) {
 
             return me;
         }
 
-
-        //handle string key - key given
-        //get index
-        var index = me.keys().indexOf(key);
-
-        //assert that key exists
-        xs.assert.ok(index >= 0, 'removeAt - given key "$key" doesn\'t exist in collection', {
-            $key: key
-        }, CollectionError);
-
-        //remove item by key
+        //remove item from items
         me.private.items.splice(index, 1);
 
-        //else - it's error
+        //update indexes
+        updateIndexes.call(me, index);
+
+        //call closing "remove" event
+        me.fire('remove', data);
+
+        //if no items left - fire clear event
+        if (!me.private.items.length) {
+            me.fire('clear');
+        }
 
         return me;
     };
@@ -1068,6 +1209,9 @@ xs.define(xs.Class, 'ns.Collection', function () {
         if (!arguments.length) {
             me.private.items.splice(0, me.private.items.length);
 
+            //fire clear event
+            me.fire('clear');
+
             return me;
         }
 
@@ -1103,36 +1247,75 @@ xs.define(xs.Class, 'ns.Collection', function () {
         //assert, that item exists
         xs.assert.ok(index >= 0, 'remove - given value doesn\'t exist in collection', CollectionError);
 
+        var data, item;
         //if all flag is given
         if (all) {
-            var i = 0, valuesLength = values.length;
+            var i = 0, items = me.private.items;
 
             //remove all occurrences of value in collection
-            while (i < valuesLength) {
+            while (i < items.length) {
+                item = items[i];
 
                 //if item.value is not equal to value - continue with next item
-                if (values[i] !== value) {
+                if (item.value !== value) {
                     i++;
                     continue;
                 }
 
-                //remove item from values
-                values.splice(i, 1);
+                data = {
+                    key: item.key,
+                    value: value,
+                    index: i
+                };
+
+                //call preventable "remove:before" event, that can prevent removing value for collection. if happens - continue with next item
+                if (!me.fire('remove:before', data)) {
+                    i++;
+                    continue;
+                }
 
                 //remove item from collection
                 me.private.items.splice(i, 1);
 
-                //decrement valuesLength
-                valuesLength--;
+                //call closing "remove" event
+                me.fire('remove', data);
+            }
+
+            //update indexes if anything removed
+            if (me.private.items.length < values.length) {
+                updateIndexes.call(me, index);
             }
         } else {
 
+            item = me.private.items[index];
+
+            data = {
+                key: item.key,
+                value: value,
+                index: index
+            };
+
+            //call preventable "remove:before" event, that can prevent removing value for collection
+            if (!me.fire('remove:before', data)) {
+
+                return me;
+            }
+
             //remove item from items
             me.private.items.splice(index, 1);
+
+            //call closing "remove" event
+            me.fire('remove', data);
+
+            //update indexes
+            updateIndexes.call(me, index);
         }
 
-        //update indexes
-        updateIndexes.call(me, index);
+
+        //if no items left - fire clear event
+        if (!me.private.items.length) {
+            me.fire('clear');
+        }
 
         return me;
     };
@@ -1280,13 +1463,13 @@ xs.define(xs.Class, 'ns.Collection', function () {
         }
 
         //init variables
-        var values = me.values(), i, item, length = me.private.items.length;
+        var items = me.private.items, i, item, data, length = items.length;
 
         if (all) {
             i = 0;
             //remove all matched occurrences from collection
-            while (i < length) {
-                item = me.private.items[i];
+            while (i < items.length) {
+                item = items[i];
 
                 //if item does not match - continue with next item
                 if (!finder(item.value, item.key)) {
@@ -1296,20 +1479,30 @@ xs.define(xs.Class, 'ns.Collection', function () {
                     continue;
                 }
 
-                //remove item from values
-                values.splice(i, 1);
+                data = {
+                    key: item.key,
+                    value: item.value,
+                    index: i
+                };
+
+                //call preventable "remove:before" event, that can prevent removing value for collection. if happens - continue with next item
+                if (!me.fire('remove:before', data)) {
+                    i++;
+
+                    continue;
+                }
 
                 //remove item from collection
-                me.private.items.splice(i, 1);
+                items.splice(i, 1);
 
-                //decrement valuesLength
-                length--;
+                //call closing "remove" event
+                me.fire('remove', data);
             }
         } else if (reverse) {
-            i = length - 1;
+            i = items.length - 1;
             //remove all matched occurrences from collection
             while (i >= 0) {
-                item = me.private.items[i];
+                item = items[i];
 
                 //if item does not match - continue with next item
                 if (!finder(item.value, item.key)) {
@@ -1319,25 +1512,32 @@ xs.define(xs.Class, 'ns.Collection', function () {
                     continue;
                 }
 
-                //remove item from values
-                values.splice(i, 1);
+                data = {
+                    key: item.key,
+                    value: item.value,
+                    index: i
+                };
+
+                //call preventable "remove:before" event, that can prevent removing value for collection. if happens - continue with next item
+                if (!me.fire('remove:before', data)) {
+                    i--;
+
+                    continue;
+                }
 
                 //remove item from collection
-                me.private.items.splice(i, 1);
+                items.splice(i, 1);
 
-                //decrement valuesLength
-                length--;
-
-                //decrement index
-                i--;
+                //call closing "remove" event
+                me.fire('remove', data);
 
                 break;
             }
         } else {
             i = 0;
             //remove first matched occurrence from collection
-            while (i < length) {
-                item = me.private.items[i];
+            while (i < items.length) {
+                item = items[i];
 
                 //if item does not match - continue with next item
                 if (!finder(item.value, item.key)) {
@@ -1347,235 +1547,40 @@ xs.define(xs.Class, 'ns.Collection', function () {
                     continue;
                 }
 
-                //remove item from values
-                values.splice(i, 1);
+                data = {
+                    key: item.key,
+                    value: item.value,
+                    index: i
+                };
+
+                //call preventable "remove:before" event, that can prevent removing value for collection. if happens - continue with next item
+                if (!me.fire('remove:before', data)) {
+                    i++;
+
+                    continue;
+                }
 
                 //remove item from collection
-                me.private.items.splice(i, 1);
+                items.splice(i, 1);
 
-                //decrement valuesLength
-                length--;
+                //call closing "remove" event
+                me.fire('remove', data);
 
                 break;
             }
         }
 
-        //update indexes
-        updateIndexes.call(me, 0);
+        //update indexes if anything removed
+        if (items.length < length) {
+            updateIndexes.call(me, 0);
+        }
+
+        //fire clear event if no items left
+        if (!items.length) {
+            me.fire('clear');
+        }
 
         return me;
-    };
-
-    /**
-     * Shifts and returns first value from collection
-     *
-     * For example:
-     *
-     *     //for Array
-     *     var collection = new xs.util.collection.Collection([
-     *         {
-     *             x: 1,
-     *             y: 2
-     *         },
-     *         {
-     *             x: 2,
-     *             y: 2
-     *         },
-     *         {
-     *             x: 2,
-     *             y: 1
-     *         },
-     *         {
-     *             x: 1,
-     *             y: 1
-     *         }
-     *     ]);
-     *     console.log(collection.shift());
-     *     //outputs:
-     *     // {x: 1, y: 2, reference to collection[0] respectively
-     *     console.log(collection.values());
-     *     //outputs:
-     *     //[
-     *     //    {
-     *     //        x: 2,
-     *     //        y: 2
-     *     //    },
-     *     //    {
-     *     //        x: 2,
-     *     //        y: 1
-     *     //    },
-     *     //    {
-     *     //        x: 1,
-     *     //        y: 1
-     *     //    }
-     *     //];
-     *
-     *     //for Object
-     *     var collection = new xs.util.collection.Collection({
-     *         a: {
-     *             x: 1,
-     *             y: 2
-     *         },
-     *         c: {
-     *             x: 2,
-     *             y: 2
-     *         },
-     *         b: {
-     *             x: 2,
-     *             y: 1
-     *         },
-     *         d: {
-     *             x: 1,
-     *             y: 1
-     *         }
-     *     });
-     *     console.log(collection.shift());
-     *     //outputs:
-     *     // {x: 1, y: 2}, reference to collection.a respectively
-     *     console.log(collection.values());
-     *     //outputs:
-     *     //[
-     *     //    {
-     *     //        x: 2,
-     *     //        y: 2
-     *     //    },
-     *     //    {
-     *     //        x: 2,
-     *     //        y: 1
-     *     //    },
-     *     //    {
-     *     //        x: 1,
-     *     //        y: 1
-     *     //    }
-     *     //];
-     *
-     * @method shift
-     *
-     * @return {*} First value of collection
-     */
-    Class.method.shift = function () {
-        var me = this;
-
-        //assert that collection is not empty
-        xs.assert.ok(me.private.items.length, 'shift - collection is empty', CollectionError);
-
-
-        //get returned value
-        var value = me.private.items[0].value;
-
-        //remove first item from collection
-        me.private.items.splice(0, 1);
-
-        updateIndexes.call(me, 0);
-
-        //return value
-        return value;
-    };
-
-    /**
-     * Pops and returns last value from collection
-     *
-     * For example:
-     *
-     *     //for Array
-     *     var collection = new xs.util.collection.Collection([
-     *         {
-     *             x: 1,
-     *             y: 2
-     *         },
-     *         {
-     *             x: 2,
-     *             y: 2
-     *         },
-     *         {
-     *             x: 2,
-     *             y: 1
-     *         },
-     *         {
-     *             x: 1,
-     *             y: 1
-     *         }
-     *     ]);
-     *     console.log(collection.pop());
-     *     //outputs:
-     *     // {x: 1, y: 1}, reference to collection[3] respectively
-     *     console.log(collection.values());
-     *     //outputs:
-     *     //[
-     *     //    {
-     *     //        x: 1,
-     *     //        y: 2
-     *     //    },
-     *     //    {
-     *     //        x: 2,
-     *     //        y: 2
-     *     //    },
-     *     //    {
-     *     //        x: 2,
-     *     //        y: 1
-     *     //    }
-     *     //];
-     *
-     *     //for Object
-     *     var collection = new xs.util.collection.Collection({
-     *         a: {
-     *             x: 1,
-     *             y: 2
-     *         },
-     *         c: {
-     *             x: 2,
-     *             y: 2
-     *         },
-     *         b: {
-     *             x: 2,
-     *             y: 1
-     *         },
-     *         d: {
-     *             x: 1,
-     *             y: 1
-     *         }
-     *     });
-     *     console.log(collection.pop());
-     *     //outputs:
-     *     // {x: 1, y: 1}, reference to collection.a respectively
-     *     console.log(collection.values());
-     *     //outputs:
-     *     //[
-     *     //    {
-     *     //        x: 1,
-     *     //        y: 2
-     *     //    },
-     *     //    {
-     *     //        x: 2,
-     *     //        y: 2
-     *     //    },
-     *     //    {
-     *     //        x: 2,
-     *     //        y: 1
-     *     //    }
-     *     //];
-     *
-     * @method pop
-     *
-     * @return {*} First value of collection
-     */
-    Class.method.pop = function () {
-        var me = this;
-
-        //assert that collection is not empty
-        xs.assert.ok(me.private.items.length, 'pop - collection is empty', CollectionError);
-
-
-        var index = me.private.items.length - 1;
-
-        //get returned value
-        var value = me.private.items[index].value;
-
-        //remove last item from collection
-        me.private.items.splice(-1, 1);
-
-        //return value
-        return value;
     };
 
     /**
@@ -2329,106 +2334,6 @@ xs.define(xs.Class, 'ns.Collection', function () {
     };
 
     /**
-     * Removes all duplicates from collection
-     *
-     * For example:
-     *
-     *     //for Array
-     *     console.log(new xs.util.collection.Collection([
-     *         1,
-     *         0,
-     *         1,
-     *         2,
-     *         {},
-     *         {},
-     *         3,
-     *         3,
-     *         1,
-     *         4
-     *     ]).unique().values());
-     *     //outputs:
-     *     //[
-     *     //    1,
-     *     //    0,
-     *     //    2,
-     *     //    {},
-     *     //    {},
-     *     //    3,
-     *     //    4
-     *     //]
-     *
-     *     //for Object
-     *     var collection = new xs.util.collection.Collection({
-     *         a: 1,
-     *         g: 0,
-     *         b: 1,
-     *         f: 2,
-     *         i: {},
-     *         m: {},
-     *         d: 3,
-     *         e: 3,
-     *         c: 1,
-     *         h: 4
-     *     }).unique();
-     *     console.log(collection.keys());
-     *     //outputs:
-     *     //[
-     *     //    'a',
-     *     //    'g',
-     *     //    'f',
-     *     //    'i',
-     *     //    'm',
-     *     //    'd',
-     *     //    'h'
-     *     //]
-     *     console.log(collection.values());
-     *     //outputs:
-     *     //[
-     *     //    1,
-     *     //    0,
-     *     //    2,
-     *     //    {},
-     *     //    {},
-     *     //    3,
-     *     //    4
-     *     //]
-     *
-     * @method unique
-     *
-     * @chainable
-     */
-    Class.method.unique = function () {
-        var me = this, values = [], i = 0, item, length = me.private.items.length;
-
-        while (i < length) {
-            item = me.private.items[i];
-
-            //continue to next if no match
-            if (values.indexOf(item.value) < 0) {
-
-                //add value to values
-                values.push(item.value);
-
-                //increment index
-                i++;
-
-                continue;
-            }
-
-            //remove item from me.private.items
-            me.private.items.splice(i, 1);
-
-            //decrement length
-            length--;
-        }
-
-        //update indexes
-        updateIndexes.call(me, 0);
-
-        return me;
-    };
-
-    /**
      * Returns collection's subset with only white-listed keys, passed in array
      *
      * For example:
@@ -2527,7 +2432,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
 
                 //convert negative index
                 if (key < 0) {
-                    key += max;
+                    key += max + 1;
                 }
 
                 index = key;
@@ -2650,7 +2555,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
 
                 //convert negative index
                 if (key < 0) {
-                    key += max;
+                    key += max + 1;
                 }
 
                 index = key;
@@ -2744,12 +2649,12 @@ xs.define(xs.Class, 'ns.Collection', function () {
     var verifySourceValues = function (values) {
         var me = this;
 
-        var type = me.private.type, kind = me.private.kind, i, valuesLength = values.length;
+        var type = me.private.type, kind = me.private.kind, i, length = values.length;
 
         //if class
         if (kind === 'class') {
 
-            for (i = 0; i < valuesLength; i++) {
+            for (i = 0; i < length; i++) {
 
                 //assert, that value is instance of type or Class, that mixes type
                 xs.assert.ok(isClassInstance.call(me, values[i]), 'verifySourceValues - given value "$value" is not an instance of "$Class" of instance of class, that mixins "$Class"', {
@@ -2761,7 +2666,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
             //if interface
         } else if (kind === 'interface') {
 
-            for (i = 0; i < valuesLength; i++) {
+            for (i = 0; i < length; i++) {
 
                 //assert, that value is instance of Class that implements type
                 xs.assert.ok(isImplementation.call(me, values[i]), 'verifySourceValues - given value "$value" is not an instance of class, that implements interface "$Interface"', {
@@ -2773,7 +2678,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
             //if constructor
         } else if (kind === 'constructor') {
 
-            for (i = 0; i < valuesLength; i++) {
+            for (i = 0; i < length; i++) {
 
                 //assert, that value is instance of given constructor
                 xs.assert.ok(isInstance.call(me, values[i]), 'verifySourceValues - given value "$value" is not an instance of "$Class"', {
@@ -2785,7 +2690,7 @@ xs.define(xs.Class, 'ns.Collection', function () {
             //if primitive
         } else {
 
-            for (i = 0; i < valuesLength; i++) {
+            for (i = 0; i < length; i++) {
 
                 //assert, that value passes given primitive verifier
                 xs.assert.ok(isType.call(me, values[i]), 'verifySourceValues - given value "$value" is not an instance of "$Class"', {
