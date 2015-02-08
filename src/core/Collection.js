@@ -384,10 +384,10 @@
      * @return {String|Number|undefined} found key, or undefined if nothing found
      */
     collection.prototype.keyOf = function (value, flags) {
-        var me = this, key, values = me.values();
+        var me = this, index, values = me.values();
 
         if (arguments.length === 1) {
-            key = values.indexOf(value);
+            index = values.indexOf(value);
         } else {
             //assert that flags is number
             xs.assert.number(flags, 'keyOf - given flags "$flags" list is not number', {
@@ -395,13 +395,13 @@
             }, CollectionError);
 
             if (flags & xs.core.Collection.Reverse) {
-                key = values.lastIndexOf(value);
+                index = values.lastIndexOf(value);
             } else {
-                key = values.indexOf(value);
+                index = values.indexOf(value);
             }
         }
 
-        return key >= 0 ? me.private.items[key].key : undefined;
+        return index >= 0 ? me.private.items[index].key : undefined;
     };
 
     /**
@@ -442,7 +442,7 @@
      * @return {*} value with specified key
      */
     collection.prototype.at = function (key) {
-        var me = this, index;
+        var me = this;
 
         //assert that collection is not empty
         xs.assert.ok(me.private.items.length, 'at - collection is empty', CollectionError);
@@ -452,35 +452,37 @@
         }, CollectionError);
 
 
+        var index;
         //handle number - it's index
         if (xs.isNumber(key)) {
+            index = key;
+
             //check that index is in bounds
             var max = me.private.items.length - 1;
             //if max is 0, then min is 0
             var min = max > 0 ? -max : 0;
 
-            xs.assert.ok(min <= key && key <= max, 'at - index "$key" is out of bounds [$min,$max]', {
-                $key: key,
+            xs.assert.ok(min <= index && index <= max, 'at - index "$index" is out of bounds [$min,$max]', {
+                $index: index,
                 $min: min,
                 $max: max
             }, CollectionError);
 
             //convert negative index
-            if (key < 0) {
-                key += max;
+            if (index < 0) {
+                index += max + 1;
             }
 
-            return me.private.items[key].value;
+            //handle string - it's key
+        } else {
+
+            index = me.keys().indexOf(key);
+
+            //check, that key exists
+            xs.assert.ok(index >= 0, 'at - given key "$key" doesn\'t exist', {
+                $key: key
+            }, CollectionError);
         }
-
-
-        //handle string - it's key
-        index = me.keys().indexOf(key);
-
-        //check, that key exists
-        xs.assert.ok(index >= 0, 'at - given key "$key" doesn\'t exist', {
-            $key: key
-        }, CollectionError);
 
         return me.private.items[index].value;
     };
@@ -741,6 +743,11 @@
             $max: max
         }, CollectionError);
 
+        //convert negative index
+        if (index < 0) {
+            index += max;
+        }
+
 
         //check if key given
         if (arguments.length === 2) {
@@ -831,40 +838,40 @@
 
 
         //handle number key - it's index
+        var index;
         if (xs.isNumber(key)) {
+            index = key;
+
             //check that index is in bounds
             var max = me.private.items.length - 1;
             //if max is 0, then min is 0
             var min = max > 0 ? -max : 0;
 
             //assert that index is in bounds
-            xs.assert.ok(min <= key && key <= max, 'set - index "$index" is out of bounds [$min, $max]', {
-                $index: key,
+            xs.assert.ok(min <= index && index <= max, 'set - index "$index" is out of bounds [$min, $max]', {
+                $index: index,
                 $min: min,
                 $max: max
             }, CollectionError);
 
             //convert negative index
-            if (key < 0) {
-                key += max;
+            if (index < 0) {
+                index += max + 1;
             }
 
-            me.private.items[key].value = value;
+            //handle string key  - it's key
+        } else {
 
-            return me;
+            index = me.keys().indexOf(key);
+
+            //assert that key exists
+            xs.assert.ok(index >= 0, 'set - given key "$key" doesn\'t exist', {
+                $key: key
+            }, CollectionError);
         }
 
 
-        //handle string key  - it's key
-        var index = me.keys().indexOf(key);
-
-        //assert that key exists
-        xs.assert.ok(index >= 0, 'set - given key "$key" doesn\'t exist', {
-            $key: key
-        }, CollectionError);
-
         me.private.items[index].value = value;
-
 
         return me;
     };
@@ -917,41 +924,47 @@
             $key: key
         }, CollectionError);
 
+        var index;
 
         //handle number key - index given
         if (xs.isNumber(key)) {
+            index = key;
+
             //check that index is in bounds
             var max = me.private.items.length - 1;
+
             //if max is 0, then min is 0
             var min = max > 0 ? -max : 0;
 
             //assert that index is in bounds
-            xs.assert.ok(min <= key && key <= max, 'removeAt - index "$index" is out of bounds [$min, $max]', {
-                $index: key,
+            xs.assert.ok(min <= index && index <= max, 'removeAt - index "$index" is out of bounds [$min, $max]', {
+                $index: index,
                 $min: min,
                 $max: max
             }, CollectionError);
 
-            //remove item by key
-            me.private.items.splice(key, 1);
+            //convert negative index
+            if (index < 0) {
+                index += max + 1;
+            }
 
-            return me;
+            //handle string key - key given
+        } else {
+
+            //get index
+            index = me.keys().indexOf(key);
+
+            //assert that key exists
+            xs.assert.ok(index >= 0, 'removeAt - given key "$key" doesn\'t exist in collection', {
+                $key: key
+            }, CollectionError);
         }
 
-
-        //handle string key - key given
-        //get index
-        var index = me.keys().indexOf(key);
-
-        //assert that key exists
-        xs.assert.ok(index >= 0, 'removeAt - given key "$key" doesn\'t exist in collection', {
-            $key: key
-        }, CollectionError);
-
-        //remove item by key
+        //remove item from items
         me.private.items.splice(index, 1);
 
-        //else - it's error
+        //update indexes
+        updateIndexes.call(me, index);
 
         return me;
     };
@@ -1070,7 +1083,6 @@
             return me;
         }
 
-
         var index, all = false;
         //if no flags - remove first occurrence of value
         if (arguments.length === 1) {
@@ -1100,36 +1112,37 @@
         //assert, that item exists
         xs.assert.ok(index >= 0, 'remove - given value doesn\'t exist in collection', CollectionError);
 
+        var item;
         //if all flag is given
         if (all) {
-            var i = 0, valuesLength = values.length;
+            var i = 0, items = me.private.items;
 
             //remove all occurrences of value in collection
-            while (i < valuesLength) {
+            while (i < items.length) {
+                item = items[i];
 
                 //if item.value is not equal to value - continue with next item
-                if (values[i] !== value) {
+                if (item.value !== value) {
                     i++;
                     continue;
                 }
 
-                //remove item from values
-                values.splice(i, 1);
-
                 //remove item from collection
                 me.private.items.splice(i, 1);
+            }
 
-                //decrement valuesLength
-                valuesLength--;
+            //update indexes if anything removed
+            if (me.private.items.length < values.length) {
+                updateIndexes.call(me, index);
             }
         } else {
 
             //remove item from items
             me.private.items.splice(index, 1);
-        }
 
-        //update indexes
-        updateIndexes.call(me, index);
+            //update indexes
+            updateIndexes.call(me, index);
+        }
 
         return me;
     };
@@ -1277,13 +1290,13 @@
         }
 
         //init variables
-        var values = me.values(), i, item, length = me.private.items.length;
+        var items = me.private.items, i, item, length = items.length;
 
         if (all) {
             i = 0;
             //remove all matched occurrences from collection
-            while (i < length) {
-                item = me.private.items[i];
+            while (i < items.length) {
+                item = items[i];
 
                 //if item does not match - continue with next item
                 if (!finder(item.value, item.key)) {
@@ -1293,20 +1306,14 @@
                     continue;
                 }
 
-                //remove item from values
-                values.splice(i, 1);
-
                 //remove item from collection
-                me.private.items.splice(i, 1);
-
-                //decrement valuesLength
-                length--;
+                items.splice(i, 1);
             }
         } else if (reverse) {
-            i = length - 1;
+            i = items.length - 1;
             //remove all matched occurrences from collection
             while (i >= 0) {
-                item = me.private.items[i];
+                item = items[i];
 
                 //if item does not match - continue with next item
                 if (!finder(item.value, item.key)) {
@@ -1316,25 +1323,16 @@
                     continue;
                 }
 
-                //remove item from values
-                values.splice(i, 1);
-
                 //remove item from collection
-                me.private.items.splice(i, 1);
-
-                //decrement valuesLength
-                length--;
-
-                //decrement index
-                i--;
+                items.splice(i, 1);
 
                 break;
             }
         } else {
             i = 0;
             //remove first matched occurrence from collection
-            while (i < length) {
-                item = me.private.items[i];
+            while (i < items.length) {
+                item = items[i];
 
                 //if item does not match - continue with next item
                 if (!finder(item.value, item.key)) {
@@ -1344,21 +1342,17 @@
                     continue;
                 }
 
-                //remove item from values
-                values.splice(i, 1);
-
                 //remove item from collection
-                me.private.items.splice(i, 1);
-
-                //decrement valuesLength
-                length--;
+                items.splice(i, 1);
 
                 break;
             }
         }
 
-        //update indexes
-        updateIndexes.call(me, 0);
+        //update indexes if anything removed
+        if (items.length < length) {
+            updateIndexes.call(me, 0);
+        }
 
         return me;
     };
@@ -1897,7 +1891,7 @@
             });
         }
 
-        var collection = new me.constructor();
+        var collection = me.clone();
         collection.private.items = items;
 
         return collection;
@@ -2524,7 +2518,7 @@
 
                 //convert negative index
                 if (key < 0) {
-                    key += max;
+                    key += max + 1;
                 }
 
                 index = key;
@@ -2542,7 +2536,7 @@
 
 
         //set picked items as items of picked collection
-        var picked = new xs.core.Collection();
+        var picked = me.clone();
         picked.private.items = items;
 
         //update indexes
@@ -2647,7 +2641,7 @@
 
                 //convert negative index
                 if (key < 0) {
-                    key += max;
+                    key += max + 1;
                 }
 
                 index = key;
@@ -2671,7 +2665,7 @@
         }
 
         //set picked items as items of omitted collection
-        var omitted = new xs.core.Collection();
+        var omitted = me.clone();
         omitted.private.items = items;
 
         //update indexes
