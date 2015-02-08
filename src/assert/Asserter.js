@@ -1,0 +1,315 @@
+/*
+ This file is core of xs.js
+
+ Copyright (c) 2013-2014, Annium Inc
+
+ Contact: http://annium.com/contact
+
+ License: http://annium.com/contact
+
+ */
+(function (root, ns) {
+
+    'use strict';
+
+    //framework shorthand
+    var xs = root[ns];
+
+    //define xs.assert
+    if (!xs.assert) {
+        xs.assert = {};
+    }
+
+    /**
+     * Store of all registered profiling records
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @property profiles
+     *
+     * @type {xs.core.Collection}
+     */
+    var profiles = new xs.core.Collection();
+
+    /**
+     * xs.log.Logger is key system element, that performs logging operations.
+     *
+     * For example:
+     *
+     *     //create logger instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //log message to "xs" category
+     *     logger.log('some message');
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class xs.log.Logger
+     */
+
+    /**
+     * Logger constructor. Logger category is given as single argument
+     *
+     * For example:
+     *
+     *     //create logger instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     * @constructor
+     */
+    var logger = xs.log.Logger = function (category) {
+        var me = this;
+
+        //assert, that category is valid (via xs.log.Router.isCategory)
+        xs.assert.ok(xs.log.Router.isCategory(category), 'Given category "$category" is not a valid category', {
+            $category: category
+        }, LoggerError);
+
+        //save category
+        me.category = category;
+
+        //create profiling access object
+        me.profile = {
+            category: category,
+            start: profileStart,
+            end: profileEnd
+        };
+    };
+
+    /**
+     * Adds error log entry via this logger
+     *
+     * For example:
+     *
+     *     //create logger instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //add log entry
+     *     logger.error('error happened');
+     *
+     * @method error
+     *
+     * @param {String} message log message
+     * @param {Object} [data] message data
+     */
+    logger.prototype.error = function (message, data) {
+        var me = this;
+
+        //assert, that message is string
+        xs.assert.string(message, 'error - given message "$message" is not a string', {
+            $message: message
+        }, LoggerError);
+
+        //assert, that data is either not given or is an object
+        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'error - given data "$data" is not an object', {
+            $data: data
+        }, LoggerError);
+
+        if (data) {
+            processEntry(me.category, xs.log.Error, message, data);
+        } else {
+            processEntry(me.category, xs.log.Error, message);
+        }
+    };
+
+    /**
+     * Adds warning log entry via this logger
+     *
+     * For example:
+     *
+     *     //create logger instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //add log entry
+     *     logger.warning('waning');
+     *
+     * @method warn
+     *
+     * @param {String} message log message
+     * @param {Object} [data] message data
+     */
+    logger.prototype.warn = function (message, data) {
+        var me = this;
+
+        //assert, that message is string
+        xs.assert.string(message, 'warn - given message "$message" is not a string', {
+            $message: message
+        }, LoggerError);
+
+        //assert, that data is either not given or is an object
+        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'warn - given data "$data" is not an object', {
+            $data: data
+        }, LoggerError);
+
+        if (data) {
+            processEntry(me.category, xs.log.Warning, message, data);
+        } else {
+            processEntry(me.category, xs.log.Warning, message);
+        }
+    };
+
+    /**
+     * Adds info log entry via this logger
+     *
+     * For example:
+     *
+     *     //create logger instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //add log entry
+     *     logger.info('start');
+     *
+     * @method info
+     *
+     * @param {String} message log message
+     * @param {Object} [data] message data
+     */
+    logger.prototype.info = function (message, data) {
+        var me = this;
+
+        //assert, that message is string
+        xs.assert.string(message, 'info - given message "$message" is not a string', {
+            $message: message
+        }, LoggerError);
+
+        //assert, that data is either not given or is an object
+        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
+            $data: data
+        }, LoggerError);
+
+        if (data) {
+            processEntry(me.category, xs.log.Info, message, data);
+        } else {
+            processEntry(me.category, xs.log.Info, message);
+        }
+    };
+
+    /**
+     * Adds log entry with specific {@link xs.log#Trace} log level via this logger.
+     * That level is used in development stage instead of info and this calls should be removed in production mode
+     *
+     * For example:
+     *
+     *     //create logger instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //add log entry
+     *     logger.log('start');
+     *
+     * @method log
+     *
+     * @param {String} message log message
+     * @param {Object} [data] message data
+     */
+    logger.prototype.trace = function (message, data) {
+        var me = this;
+
+        //assert, that message is string
+        xs.assert.string(message, 'info - given message "$message" is not a string', {
+            $message: message
+        }, LoggerError);
+
+        //assert, that data is either not given or is an object
+        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
+            $data: data
+        }, LoggerError);
+
+        if (data) {
+            processEntry(me.category, xs.log.Trace, message, data);
+        } else {
+            processEntry(me.category, xs.log.Trace, message);
+        }
+    };
+
+    /**
+     * Begins profiling with given mark.
+     *
+     * For example:
+     *
+     *     //create logger instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //start profiling
+     *     logger.profile.start('test');
+     *
+     * @method start
+     *
+     * @param {String} mark profiling mark
+     */
+    var profileStart = function (mark) {
+        var me = this;
+
+        //assert, that mark is string
+        xs.assert.string(mark, 'profile.start - given mark "$mark" is not a string', {
+            $mark: mark
+        }, LoggerError);
+
+        //add new entry to storage
+        profiles.add(me.category + '.' + mark, {
+            time: (new Date()).valueOf()
+        });
+    };
+
+    /**
+     * Ends profiling for given mark.
+     *
+     * For example:
+     *
+     *     //create logger instance
+     *     var logger = new xs.log.Logger('xs');
+     *
+     *     //start profiling
+     *     logger.profile.start('test');
+     *
+     *     //end profiling
+     *     logger.profile.end('test');
+     *
+     * @method end
+     *
+     * @param {String} mark profiling mark
+     */
+    var profileEnd = function (mark) {
+        var me = this;
+
+        //assert, that mark is string
+        xs.assert.string(mark, 'profile.end - given mark "$mark" is not a string', {
+            $mark: mark
+        }, LoggerError);
+
+        //evaluate storage key
+        var key = me.category + '.' + mark;
+
+        //get profile record
+        var profile = profiles.at(key);
+
+        //evaluate execution time
+        profile.time = (new Date()).valueOf() - profile.time;
+
+        //remove profile from storage
+        profiles.remove(profile);
+
+        //process profiling message (mark) with profile as data
+        processEntry(me.category, xs.log.Profile, mark, profile);
+    };
+
+    //create reference to xs.log.Router.process and remove it
+    var processEntry = xs.log.Router.process;
+    delete xs.log.Router.process;
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class LoggerError
+     */
+    function LoggerError(message) {
+        this.message = 'xs.log.Logger::' + message;
+    }
+
+    LoggerError.prototype = new Error();
+
+})(window, 'xs');

@@ -15,25 +15,25 @@
     //framework shorthand
     var xs = root[ns];
 
-    //define xs.core
-    if (!xs.core) {
-        xs.core = {};
+    //define xs.assert
+    if (!xs.assert) {
+        xs.assert = {};
     }
 
     /**
-     * xs.core.Assert is singleton, providing functionality to perform asserts for widely used verifications
+     * xs.assert.Assert is singleton, providing functionality to perform asserts for widely used verifications
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @private
      *
-     * @class xs.core.Assert
+     * @class xs.assert.Assert
      *
      * @alternateClassName xs.assert
      *
      * @singleton
      */
-    xs.assert = xs.core.Assert = (function () {
+    xs.assert = xs.assert.Assert = (function () {
         var me = {};
 
         /**

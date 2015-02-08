@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.assert', function () {
+module('xs.assert.Assert', function () {
 
     'use strict';
 
