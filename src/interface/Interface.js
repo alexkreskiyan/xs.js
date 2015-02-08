@@ -22,7 +22,7 @@
 
     var log = new xs.log.Logger('xs.interface.Interface');
 
-    var assert = new xs.assert.Asserter(log, InterfaceError);
+    var assert = new xs.core.Asserter(log, InterfaceError);
 
     /**
      * xs.interface.Interface is core class, that is used for interface generation.

@@ -22,7 +22,7 @@
 
     var log = new xs.log.Logger('xs.class.Class');
 
-    var assert = new xs.assert.Asserter(log, ClassError);
+    var assert = new xs.core.Asserter(log, ClassError);
 
     /**
      * xs.class.Class is core class, that is used for class generation.

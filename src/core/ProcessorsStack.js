@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.core.ProcessorsStack');
 
-    var assert = new xs.assert.Asserter(log, ProcessorsStackError);
+    var assert = new xs.core.Asserter(log, ProcessorsStackError);
 
     /**
      * Private internal stack class

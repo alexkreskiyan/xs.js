@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.interface.Interface');
 
-    var assert = new xs.assert.Asserter(log, ListError);
+    var assert = new xs.core.Asserter(log, ListError);
 
     /**
      * xs.lang.List is private singleton, defining basic list operations, for both Array and Object.

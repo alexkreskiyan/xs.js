@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.class.preprocessors.processMixins');
 
-    var assert = new xs.assert.Asserter(log, ProcessMixinsError);
+    var assert = new xs.core.Asserter(log, ProcessMixinsError);
 
     /**
      * Directive mixins

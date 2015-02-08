@@ -23,7 +23,7 @@
     var slice = Function.prototype.call.bind(Array.prototype.slice);
 
     /**
-     * xs.assert.Asserter is key system element, that performs asserting operations within classes and other logged instances
+     * xs.core.Asserter is key system element, that performs asserting operations within classes and other logged instances
      *
      * For example:
      *
@@ -31,7 +31,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     //assert equality (note about logs)
      *     asserter.ok(1 === 2, 'Values x($x) and y($y) are not equal', {
@@ -41,7 +41,7 @@
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class xs.assert.Asserter
+     * @class xs.core.Asserter
      */
 
     /**
@@ -53,14 +53,14 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      * @constructor
      *
      * @param {xs.log.Logger} logger instance of xs.log.Logger, asserter reports it's exceptions to
      * @param {Function} Exception Exception class, used by asserter to generate exceptions
      */
-    var asserter = xs.assert.Asserter = function (logger, Exception) {
+    var asserter = xs.core.Asserter = function (logger, Exception) {
         var me = this;
 
         //assert, that logger is an instance of xs.log.Logger
@@ -89,7 +89,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.equal(1, '1');
      *
@@ -121,7 +121,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.ok(1 == 1);
      *
@@ -152,7 +152,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.not( 1 === 2);
      *
@@ -183,7 +183,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.object({});
      *
@@ -214,7 +214,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.array([]);
      *
@@ -245,7 +245,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.fn(xs.emptyFn);
      *
@@ -276,7 +276,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.string('');
      *
@@ -307,7 +307,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.number(1);
      *
@@ -338,7 +338,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.boolean(true);
      *
@@ -369,7 +369,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.regExp(/a/);
      *
@@ -400,7 +400,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.error(new Error);
      *
@@ -431,7 +431,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.null(null);
      *
@@ -462,7 +462,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.iterable({});
      *
@@ -493,7 +493,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.primitive(1);
      *
@@ -524,7 +524,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.numeric('1');
      *
@@ -555,7 +555,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.defined({});
      *
@@ -586,7 +586,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.empty([]);
      *
@@ -617,7 +617,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.Class(xs.Class(xs.emptyFn));
      *
@@ -653,7 +653,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.Interface(xs.Interface(xs.emptyFn));
      *
@@ -689,7 +689,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.instance(object, Class);
      *
@@ -736,7 +736,7 @@
      *     var logger = new xs.log.Logger('xs');
      *
      *     //create asserter instance
-     *     var asserter = new xs.assert.Asserter(logger, Error);
+     *     var asserter = new xs.core.Asserter(logger, Error);
      *
      *     asserter.implements(object, Interface);
      *
@@ -795,7 +795,7 @@
         //if message is not a string - throw SyntaxError
         if (!xs.isString(message)) {
             //default message
-            message = 'xs.assert.Asserter achieved no error message';
+            message = 'xs.core.Asserter achieved no error message';
 
             //create syntax error
             error = new SyntaxError(message);
@@ -838,7 +838,7 @@
      * @class AsserterError
      */
     function AsserterError(message) {
-        this.message = 'xs.assert.Asserter::' + message;
+        this.message = 'xs.core.Asserter::' + message;
     }
 
     AsserterError.prototype = new Error();
@@ -852,7 +852,7 @@
 
         }
     };
-    assert = new xs.assert.Asserter(new xs.log.Logger('xs'), AsserterError);
+    assert = new xs.core.Asserter(new xs.log.Logger('xs'), AsserterError);
 
     //call hooks
     xs.log.Router.ready();

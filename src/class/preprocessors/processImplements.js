@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.class.preprocessors.processImplements');
 
-    var assert = new xs.assert.Asserter(log, ProcessImplementsError);
+    var assert = new xs.core.Asserter(log, ProcessImplementsError);
 
     /**
      * Directive implements

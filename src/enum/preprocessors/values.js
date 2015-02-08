@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.enum.preprocessors.values');
 
-    var assert = new xs.assert.Asserter(log, ValuesError);
+    var assert = new xs.core.Asserter(log, ValuesError);
 
     /**
      * Preprocessor values

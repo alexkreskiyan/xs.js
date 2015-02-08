@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.interface.preprocessors.prepareInterface');
 
-    var assert = new xs.assert.Asserter(log, PrepareInterfaceError);
+    var assert = new xs.core.Asserter(log, PrepareInterfaceError);
 
     /**
      * Preprocessor prepareInterface

@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.class.preprocessors.constructor');
 
-    var assert = new xs.assert.Asserter(log, ConstructorError);
+    var assert = new xs.core.Asserter(log, ConstructorError);
 
     /**
      * Directive constructor

@@ -4,7 +4,7 @@
         "xs.core.Collection",
         "xs.log.Router",
         "xs.log.Logger",
-        "xs.assert.Asserter",
+        "xs.core.Asserter",
         "xs.lang.Object",
         "xs.lang.Array",
         "xs.lang.List",

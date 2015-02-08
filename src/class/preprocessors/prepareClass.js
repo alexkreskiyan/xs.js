@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.class.preprocessors.prepareClass');
 
-    var assert = new xs.assert.Asserter(log, PrepareClassError);
+    var assert = new xs.core.Asserter(log, PrepareClassError);
 
     /**
      * Preprocessor prepareClass

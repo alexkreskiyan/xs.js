@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.core.Loader');
 
-    var assert = new xs.assert.Asserter(log, LoaderError);
+    var assert = new xs.core.Asserter(log, LoaderError);
 
     /**
      * xs.core.Loader is core class, that is used for class loading

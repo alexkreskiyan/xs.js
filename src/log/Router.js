@@ -361,7 +361,7 @@
         }
     };
     router.ready = function () {
-        assert = new xs.assert.Asserter(new xs.log.Logger('xs.log.Router'), RouterError);
+        assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Router'), RouterError);
         delete router.ready;
     };
 })(window, 'xs');

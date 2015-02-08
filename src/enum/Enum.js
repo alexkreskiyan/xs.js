@@ -22,7 +22,7 @@
 
     var log = new xs.log.Logger('xs.enum.Enum');
 
-    var assert = new xs.assert.Asserter(log, EnumError);
+    var assert = new xs.core.Asserter(log, EnumError);
 
     /**
      * xs.enum.Enum is core class, that is used for enum generation.

@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.class.preprocessors.addOwnElements');
 
-    var assert = new xs.assert.Asserter(log, AddOwnElementsError);
+    var assert = new xs.core.Asserter(log, AddOwnElementsError);
 
     /**
      * Preprocessor addOwnElements

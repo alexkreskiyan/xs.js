@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.core.DependenciesManager');
 
-    var assert = new xs.assert.Asserter(log, DependenciesManagerError);
+    var assert = new xs.core.Asserter(log, DependenciesManagerError);
 
     /**
      * Private internal core class.

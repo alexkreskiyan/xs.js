@@ -30,8 +30,8 @@ module('xs.class.postprocessors.asserter', function () {
             //assert must be defined
             strictEqual(me.Class.hasOwnProperty('assert'), true);
 
-            //assert must be xs.assert.Asserter instance
-            strictEqual(me.Class.assert instanceof xs.assert.Asserter, true);
+            //assert must be xs.core.Asserter instance
+            strictEqual(me.Class.assert instanceof xs.core.Asserter, true);
 
             me.done();
 

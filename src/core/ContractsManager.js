@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.core.ContractsManager');
 
-    var assert = new xs.assert.Asserter(log, ContractsManagerError);
+    var assert = new xs.core.Asserter(log, ContractsManagerError);
 
     /**
      * xs.core.ContractsManager is core class, that is used to manage created contracts

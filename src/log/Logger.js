@@ -321,7 +321,7 @@
         }
     };
     logger.ready = function () {
-        assert = new xs.assert.Asserter(new xs.log.Logger('xs.log.Logger'), LoggerError);
+        assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Logger'), LoggerError);
         delete logger.ready;
     };
 })(window, 'xs');

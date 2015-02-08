@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.interface.Interface');
 
-    var assert = new xs.assert.Asserter(log, StringError);
+    var assert = new xs.core.Asserter(log, StringError);
 
     /**
      * xs.lang.String is private singleton, defining basic string operations.

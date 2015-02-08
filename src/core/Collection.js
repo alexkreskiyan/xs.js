@@ -2755,7 +2755,7 @@
     //hook method to create asserter
     var assert;
     collection.ready = function () {
-        assert = new xs.assert.Asserter(new xs.log.Logger('xs.core.Collection'), CollectionError);
+        assert = new xs.core.Asserter(new xs.log.Logger('xs.core.Collection'), CollectionError);
         delete collection.ready;
     };
 })(window, 'xs');

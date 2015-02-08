@@ -17,7 +17,7 @@
 
     var log = new xs.log.Logger('xs.class.preprocessors.namespace');
 
-    var assert = new xs.assert.Asserter(log, NamespaceError);
+    var assert = new xs.core.Asserter(log, NamespaceError);
 
     /**
      * Directive namespace

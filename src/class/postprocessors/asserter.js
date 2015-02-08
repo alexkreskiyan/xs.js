@@ -45,6 +45,6 @@
         Class.Error.prototype = new Error();
 
         //assign asserter instance
-        Class.assert = new xs.assert.Asserter(Class.log, Class.Error);
+        Class.assert = new xs.core.Asserter(Class.log, Class.Error);
     });
 })(window, 'xs');
