@@ -5,7 +5,6 @@
         "xs.log.Router",
         "xs.log.Logger",
         "xs.assert.Asserter",
-        "xs.assert.Assert",
         "xs.lang.Object",
         "xs.lang.Array",
         "xs.lang.List",
