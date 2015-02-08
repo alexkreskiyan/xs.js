@@ -152,7 +152,7 @@
          */
         var ready = false;
 
-        xs.Attribute.property.define(me, 'isReady', {
+        Object.defineProperty(me, 'isReady', {
             get: function () {
                 return ready;
             },
@@ -227,7 +227,7 @@
              *
              * @type Number
              */
-            xs.Attribute.property.define(me, 'length', {
+            Object.defineProperty(me, 'length', {
                 get: function () {
                     return storage.private.items.length;
                 },

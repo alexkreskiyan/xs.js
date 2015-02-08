@@ -331,11 +331,9 @@
 
     FunctionError.prototype = new Error();
 
-    xs.extend(xs, {
-        bind: fn.bind,
-        memorize: fn.memorize,
-        wrap: fn.wrap,
-        nextTick: fn.nextTick,
-        emptyFn: fn.emptyFn
-    });
+    xs.bind = fn.bind;
+    xs.memorize = fn.memorize;
+    xs.wrap = fn.wrap;
+    xs.nextTick = fn.nextTick;
+    xs.emptyFn = fn.emptyFn;
 })(window, 'xs');

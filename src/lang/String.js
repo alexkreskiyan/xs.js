@@ -87,5 +87,7 @@
     StringError.prototype = new Error();
 
     //extend xs with string
-    xs.extend(xs, string);
+    Object.keys(string).forEach(function (key) {
+        xs[key] = string[key];
+    });
 })(window, 'xs');

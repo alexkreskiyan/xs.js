@@ -123,7 +123,7 @@
      *
      * @type Number
      */
-    xs.Attribute.property.define(collection.prototype, 'length', {
+    Object.defineProperty(collection.prototype, 'length', {
         get: function () {
             return this.private.items.length;
         },

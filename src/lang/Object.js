@@ -106,5 +106,7 @@
     ObjectError.prototype = new Error();
 
     //extend xs with object
-    object.extend(xs, object);
+    Object.keys(object).forEach(function (key) {
+        xs[key] = object[key];
+    });
 })(window, 'xs');

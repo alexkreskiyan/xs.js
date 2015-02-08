@@ -102,5 +102,7 @@
 
 
     //extend xs with list
-    xs.extend(xs, list);
+    Object.keys(list).forEach(function (key) {
+        xs[key] = list[key];
+    });
 })(window, 'xs');

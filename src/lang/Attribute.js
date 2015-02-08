@@ -711,9 +711,7 @@
 
     AttributeError.prototype = new Error();
 
-    xs.extend(xs, {
-        constant: attribute.constant,
-        property: attribute.property,
-        method: attribute.method
-    });
+    xs.constant = attribute.constant;
+    xs.property = attribute.property;
+    xs.method = attribute.method;
 })(window, 'xs');
