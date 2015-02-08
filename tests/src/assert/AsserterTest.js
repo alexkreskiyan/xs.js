@@ -13,7 +13,7 @@ module('xs.assert.Asserter', function () {
     'use strict';
 
     test('equal', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -25,7 +25,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('ok', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -37,7 +37,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('not', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -49,7 +49,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('object', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -61,7 +61,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('array', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -73,7 +73,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('fn', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -85,7 +85,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('string', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -97,7 +97,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('number', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -109,7 +109,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('boolean', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -121,7 +121,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('regExp', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -133,7 +133,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('error', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -145,7 +145,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('null', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -157,7 +157,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('iterable', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -169,7 +169,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('primitive', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -181,7 +181,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('numeric', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -193,7 +193,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('defined', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -205,7 +205,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('empty', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -217,7 +217,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('Class', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -229,7 +229,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('Interface', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -241,7 +241,7 @@ module('xs.assert.Asserter', function () {
     });
 
     test('instance', function () {
-        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        var assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {
@@ -254,7 +254,7 @@ module('xs.assert.Asserter', function () {
 
     test('implements', function () {
         var me = this;
-        me.assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'));
+        me.assert = new xs.assert.Asserter(new xs.log.Logger('tests.assert.Asserter'), Error);
 
         //incorrect throws
         throws(function () {

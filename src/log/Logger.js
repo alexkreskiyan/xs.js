@@ -58,6 +58,8 @@
      *     var logger = new xs.log.Logger('xs');
      *
      * @constructor
+     *
+     * @param {String} category logger messages' category
      */
     var logger = xs.log.Logger = function (category) {
         var me = this;
