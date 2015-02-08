@@ -50,7 +50,7 @@
             return;
         }
 
-        xs.assert.ok(xs.isArray(values) || xs.isObject(values), 'constructor - type "$values" is nor array neither object', {
+        assert.ok(xs.isArray(values) || xs.isObject(values), 'constructor - type "$values" is nor array neither object', {
             $values: values
         });
 

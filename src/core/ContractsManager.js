@@ -15,6 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
+    var log = new xs.log.Logger('xs.core.ContractsManager');
+
+    var assert = new xs.assert.Asserter(log, ContractsManagerError);
+
     /**
      * xs.core.ContractsManager is core class, that is used to manage created contracts
      *
@@ -74,9 +78,9 @@
         me.has = function (name) {
 
             //assert, that name is valid string
-            xs.assert.ok(isName(name), 'has - given name "$name" is not valid', {
+            assert.ok(isName(name), 'has - given name "$name" is not valid', {
                 $name: name
-            }, ContractsManagerError);
+            });
 
             return registry.hasKey(name);
         };
@@ -97,9 +101,9 @@
         me.get = function (name) {
 
             //assert, that name is valid string
-            xs.assert.ok(isName(name), 'get - given name "$name" is not valid', {
+            assert.ok(isName(name), 'get - given name "$name" is not valid', {
                 $name: name
-            }, ContractsManagerError);
+            });
 
             return registry.at(name);
         };
@@ -128,23 +132,23 @@
         var add = me.add = function (name, Contract) {
 
             //assert, that name is valid string
-            xs.assert.ok(isName(name), 'add - given name "$name" is not valid', {
+            assert.ok(isName(name), 'add - given name "$name" is not valid', {
                 $name: name
-            }, ContractsManagerError);
+            });
 
             //assert that Contract is function or object
-            xs.assert.ok(xs.isObject(Contract) || xs.isFunction(Contract), 'add - contract is nor a function, neither an object', ContractsManagerError);
+            assert.ok(xs.isObject(Contract) || xs.isFunction(Contract), 'add - contract is nor a function, neither an object');
 
             //assert no contract with that name was defined yet
-            xs.assert.not(registry.hasKey(name), 'add - contract "$name" is already defined', {
+            assert.not(registry.hasKey(name), 'add - contract "$name" is already defined', {
                 $name: name
-            }, ContractsManagerError);
+            });
 
             //assert that Contract is not registered in manager yet
-            xs.assert.not(registry.has(Contract), 'add - contract "$label" can not be added as "$name"', {
+            assert.not(registry.has(Contract), 'add - contract "$label" can not be added as "$name"', {
                 $label: Contract.label,
                 $name: name
-            }, ContractsManagerError);
+            });
 
 
             //assign real name as label
@@ -183,9 +187,9 @@
          */
         me.remove = function (name) {
             //assert contract with that name is defined
-            xs.assert.ok(registry.hasKey(name), 'remove - contract "$name" is not defined', {
+            assert.ok(registry.hasKey(name), 'remove - contract "$name" is not defined', {
                 $name: name
-            }, ContractsManagerError);
+            });
 
             //unset Contract label
             delete registry.at(name).label;
@@ -242,14 +246,14 @@
         me.define = function (contractor, name, descFn, createdFn) {
 
             //assert, that name is valid string
-            xs.assert.ok(isName(name), 'define - given name "$name" is not valid', {
+            assert.ok(isName(name), 'define - given name "$name" is not valid', {
                 $name: name
-            }, ContractsManagerError);
+            });
 
             //assert no contract with that name was defined yet
-            xs.assert.not(registry.hasKey(name), 'define - contract "$name" is already defined', {
+            assert.not(registry.hasKey(name), 'define - contract "$name" is already defined', {
                 $name: name
-            }, ContractsManagerError);
+            });
 
             //create Contract and start it's processing
             var Contract = contractor(descFn, createdFn);
@@ -281,9 +285,9 @@
         var isName = me.isName = function (name) {
 
             //assert that name is a string
-            xs.assert.string(name, 'isName - given name "$name" is not a string', {
+            assert.string(name, 'isName - given name "$name" is not a string', {
                 $name: name
-            }, ContractsManagerError);
+            });
 
             return nameRe.test(name);
         };
@@ -307,9 +311,9 @@
         me.isShortName = function (name) {
 
             //assert that name is a string
-            xs.assert.string(name, 'isShortName - given name "$name" is not a string', {
+            assert.string(name, 'isShortName - given name "$name" is not a string', {
                 $name: name
-            }, ContractsManagerError);
+            });
 
             return shortNameRe.test(name);
         };
@@ -332,9 +336,9 @@
         var getName = me.getName = function (name) {
 
             //assert, that name is valid string
-            xs.assert.ok(isName(name), 'getName - given name "$name" is not valid', {
+            assert.ok(isName(name), 'getName - given name "$name" is not valid', {
                 $name: name
-            }, ContractsManagerError);
+            });
 
             return name.split('.').slice(-1).join('.');
         };
@@ -357,9 +361,9 @@
         var getPath = me.getPath = function (name) {
 
             //assert, that name is valid string
-            xs.assert.ok(isName(name), 'getPath - given name "$name" is not valid', {
+            assert.ok(isName(name), 'getPath - given name "$name" is not valid', {
                 $name: name
-            }, ContractsManagerError);
+            });
 
             return name.split('.').slice(0, -1).join('.');
         };
@@ -383,14 +387,14 @@
         var getNamespace = me.getNamespace = function (root, path) {
 
             //assert, that root is object
-            xs.assert.object(root, 'getNamespace - given root "$root" is not an object', {
+            assert.object(root, 'getNamespace - given root "$root" is not an object', {
                 $root: root
-            }, ContractsManagerError);
+            });
 
             //assert, that path is empty string or valid name
-            xs.assert.ok(path === '' || isName(path), 'getNamespace - given name "$name" is not valid', {
+            assert.ok(path === '' || isName(path), 'getNamespace - given name "$name" is not valid', {
                 $name: path
-            }, ContractsManagerError);
+            });
 
             //use root if no path
             if (!path) {

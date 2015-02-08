@@ -15,6 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
+    var log = new xs.log.Logger('xs.core.ProcessorsStack');
+
+    var assert = new xs.assert.Asserter(log, ProcessorsStackError);
+
     /**
      * Private internal stack class
      *
@@ -77,9 +81,9 @@
                 position = 'last';
             }
 
-            xs.assert.not(items.hasKey(name), 'add - processor "$name" already in stack', {
+            assert.not(items.hasKey(name), 'add - processor "$name" already in stack', {
                 $name: name
-            }, ProcessorsStackError);
+            });
 
             items.add(name, {
                 verifier: verifier,
@@ -125,9 +129,9 @@
          * - processor with given name is not found in stack
          */
         me.remove = function (name) {
-            xs.assert.ok(items.hasKey(name), 'remove - processor "$name" not found in stack', {
+            assert.ok(items.hasKey(name), 'remove - processor "$name" not found in stack', {
                 $name: name
-            }, ProcessorsStackError);
+            });
 
             items.removeAt(name);
         };
@@ -200,14 +204,14 @@
          * @param {*} relativeTo name of relativeTo positioned item
          */
         var apply = function (name, position, relativeTo) {
-            xs.assert.ok([
+            assert.ok([
                 'first',
                 'last',
                 'before',
                 'after'
             ].indexOf(position) >= 0, 'apply - incorrect position "$position" given', {
                 $position: position
-            }, ProcessorsStackError);
+            });
 
             //get item from items
             var item = items.at(name);
@@ -225,9 +229,9 @@
             } else {
                 var relativeKey = new xs.core.Collection(items.keys()).keyOf(relativeTo);
 
-                xs.assert.defined(relativeKey, 'apply - relative key "$relativeTo" missing in stack', {
+                assert.defined(relativeKey, 'apply - relative key "$relativeTo" missing in stack', {
                     $name: name
-                }, ProcessorsStackError);
+                });
 
                 if (position === 'after') {
                     relativeKey++;
