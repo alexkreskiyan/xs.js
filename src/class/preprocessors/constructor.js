@@ -15,7 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.class.preprocessors.constructor');
+    var log = new xs.log.Logger('xs.class.preprocessors.constructor');
+
+    var assert = new xs.assert.Asserter(log, ConstructorError);
+
     /**
      * Directive constructor
      *
@@ -49,7 +52,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        logger.trace(Class.label ? Class.label : 'undefined');
+        log.trace(Class.label ? Class.label : 'undefined');
 
         //inherited
         //get inherited constructor from parent descriptor
@@ -61,7 +64,7 @@
         var own = descriptor.hasOwnProperty('constructor') ? descriptor.constructor : undefined;
 
         //verify, that own constructor is undefined or is function
-        xs.assert.ok(!xs.isDefined(own) || xs.isFunction(own), 'own constructor is defined and is not a function', ConstructorError);
+        assert.ok(!xs.isDefined(own) || xs.isFunction(own), 'own constructor is defined and is not a function');
 
         //apply if undefined - no own constructor property given
         if (own) {

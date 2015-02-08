@@ -15,7 +15,7 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.class.preprocessors.defineElements');
+    var log = new xs.log.Logger('xs.class.preprocessors.defineElements');
 
     /**
      * Preprocessor defineElements
@@ -30,7 +30,7 @@
         return true;
     }, function (Class) {
 
-        logger.trace(Class.label ? Class.label : 'undefined');
+        log.trace(Class.label ? Class.label : 'undefined');
 
         //constants
         processConstants(Class);

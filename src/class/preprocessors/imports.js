@@ -15,7 +15,7 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.class.preprocessors.imports');
+    var log = new xs.log.Logger('xs.class.preprocessors.imports');
 
     /**
      * Directive imports
@@ -78,7 +78,7 @@
         return true;
     }, function (Class, descriptor, dependencies, ready) {
 
-        logger.trace(Class.label ? Class.label : 'undefined');
+        log.trace(Class.label ? Class.label : 'undefined');
 
         //init
         //init requires list
@@ -126,14 +126,14 @@
 
         if (loads.length) {
             //load imported classes
-            logger.trace((Class.label ? Class.label : 'undefined') + '. Loading', {
+            log.trace((Class.label ? Class.label : 'undefined') + '. Loading', {
                 loads: loads.values()
             });
             //require async
             xs.require(loads.values(), processImport);
         } else {
             //nothing to load
-            logger.trace((Class.label ? Class.label : 'undefined') + '. Nothing to load');
+            log.trace((Class.label ? Class.label : 'undefined') + '. Nothing to load');
             processImport();
         }
 
@@ -144,13 +144,13 @@
                 return xs.ContractsManager.get(name);
             });
 
-            logger.trace((Class.label ? Class.label : 'undefined') + '. Imports loaded, applying dependency', {
+            log.trace((Class.label ? Class.label : 'undefined') + '. Imports loaded, applying dependency', {
                 loads: loads.values()
             });
             //create new dependency
             dependencies.add(Class, waiting, function () {
 
-                logger.trace((Class.label ? Class.label : 'undefined') + '. Imports loads processed, applying imports', {
+                log.trace((Class.label ? Class.label : 'undefined') + '. Imports loads processed, applying imports', {
                     loads: loads.values(),
                     imports: imports.toSource()
                 });

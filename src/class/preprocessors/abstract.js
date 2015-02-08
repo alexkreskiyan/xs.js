@@ -15,7 +15,8 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.class.preprocessors.abstract');
+    var log = new xs.log.Logger('xs.class.preprocessors.abstract');
+
     /**
      * Directive abstract
      *
@@ -51,7 +52,7 @@
 
         return true;
     }, function (Class, descriptor) {
-        logger.trace(Class.label ? Class.label : 'undefined');
+        log.trace(Class.label ? Class.label : 'undefined');
         Class.descriptor.abstract = Boolean(descriptor.abstract);
     });
 })(window, 'xs');

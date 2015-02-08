@@ -15,7 +15,9 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.class.preprocessors.processExtends');
+    var log = new xs.log.Logger('xs.class.preprocessors.processExtends');
+
+    var assert = new xs.assert.Asserter(log, ProcessExtendsError);
 
     /**
      * Directive extends
@@ -48,12 +50,12 @@
     }, function (Class, descriptor) {
         var extended = descriptor.extends;
 
-        logger.trace((Class.label ? Class.label : 'undefined') + '. Preparing to extend', {
+        log.trace((Class.label ? Class.label : 'undefined') + '. Preparing to extend', {
             extended: extended
         });
         //if no parent given - extend from xs.class.Base
         if (!xs.isDefined(extended)) {
-            logger.trace((Class.label ? Class.label : 'undefined') + '. Extending xs.class.Base');
+            log.trace((Class.label ? Class.label : 'undefined') + '. Extending xs.class.Base');
             extend(Class, xs.class.Base);
 
             return;
@@ -66,27 +68,27 @@
         }
 
         //assert, that parent is defined
-        xs.assert.ok(xs.ContractsManager.has(extended), '[$Class]: parent class "$extended" is not defined. Move it to imports section, please', {
+        assert.ok(xs.ContractsManager.has(extended), '[$Class]: parent class "$extended" is not defined. Move it to imports section, please', {
             $Class: Class.label,
             $extended: extended
-        }, ProcessExtendsError);
+        });
 
         //get parent reference
         var Parent = xs.ContractsManager.get(extended);
 
         //check that parent is class
-        xs.assert.Class(Parent, '[$Class]: contract "$Parent" is not a class', {
+        assert.Class(Parent, '[$Class]: contract "$Parent" is not a class', {
             $Class: Class.label,
             $Parent: Parent.label
-        }, ProcessExtendsError);
+        });
 
         //check that class is ready
-        xs.assert.not(Parent.isProcessing, '[$Class]: parent class "$Parent" is not processed yet. Move it to imports section, please', {
+        assert.not(Parent.isProcessing, '[$Class]: parent class "$Parent" is not processed yet. Move it to imports section, please', {
             $Class: Class.label,
             $Parent: Parent.label
-        }, ProcessExtendsError);
+        });
 
-        logger.trace((Class.label ? Class.label : 'undefined') + '. Extending ' + Parent.label);
+        log.trace((Class.label ? Class.label : 'undefined') + '. Extending ' + Parent.label);
         //apply extends
         applyExtends(Class, Parent);
     });
@@ -147,7 +149,9 @@
          */
         xs.constant(child, 'inherits', function (Parent) {
             //assert, that Parent is class
-            xs.assert.Class(Parent);
+            assert.Class(Parent, 'Given Parent "$Parent" is not a class', {
+                $Parent: Parent
+            });
 
             return this.prototype instanceof Parent;
         });

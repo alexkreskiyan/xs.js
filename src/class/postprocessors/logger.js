@@ -15,7 +15,7 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.class.postprocessors.logger');
+    var log = new xs.log.Logger('xs.class.postprocessors.logger');
 
     /**
      * This postprocessor automatically creates and saves logger instance for this class as Class.log
@@ -36,7 +36,7 @@
 
         return true;
     }, function (Class) {
-        logger.trace(Class.label ? Class.label : 'undefined');
+        log.trace(Class.label ? Class.label : 'undefined');
 
         //assign logger instance
         Class.log = new xs.log.Logger(Class.label ? Class.label : 'undefined');
