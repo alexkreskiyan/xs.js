@@ -15,7 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.class.preprocessors.addOwnElements');
+    var log = new xs.log.Logger('xs.class.preprocessors.addOwnElements');
+
+    var assert = new xs.core.Asserter(log, AddOwnElementsError);
+
     /**
      * Preprocessor addOwnElements
      * Is used to process class elements
@@ -29,22 +32,22 @@
         return true;
     }, function (Class, descriptor) {
 
-        logger.trace(Class.label ? Class.label : 'undefined');
+        log.trace(Class.label ? Class.label : 'undefined');
 
         //constants
-        _processConstants(Class, descriptor);
+        processConstants(Class, descriptor);
 
         //static properties
-        _processStaticProperties(Class, descriptor);
+        processStaticProperties(Class, descriptor);
 
         //static methods
-        _processStaticMethods(Class, descriptor);
+        processStaticMethods(Class, descriptor);
 
         //properties
-        _processProperties(Class, descriptor);
+        processProperties(Class, descriptor);
 
         //methods
-        _processMethods(Class, descriptor);
+        processMethods(Class, descriptor);
     });
 
     /**
@@ -70,12 +73,12 @@
      *
      * @property constant
      */
-    var _processConstants = function (Class, descriptor) {
+    var processConstants = function (Class, descriptor) {
         //assert, that constants list is an object
-        xs.assert.object(descriptor.constant, '[$Class]: constants list "$constants" is not an object', {
+        assert.object(descriptor.constant, '[$Class]: constants list "$constants" is not an object', {
             $Class: Class.label,
             $constants: descriptor.constant
-        }, AddOwnElementsError);
+        });
 
         //convert to xs.core.Collection
         descriptor.constant = new xs.core.Collection(descriptor.constant);
@@ -86,10 +89,10 @@
         //add constants from raw descriptor
         descriptor.constant.each(function (value, name) {
             //assert that constant name is not empty
-            xs.assert.ok(name, '[$Class]: given constant name "$name" is incorrect', {
+            assert.ok(name, '[$Class]: given constant name "$name" is incorrect', {
                 $Class: Class.label,
                 $name: name
-            }, AddOwnElementsError);
+            });
 
             //add/set constant in class descriptor
             if (own.hasKey(name)) {
@@ -125,13 +128,13 @@
      *
      * @property staticProperty
      */
-    var _processStaticProperties = function (Class, descriptor) {
+    var processStaticProperties = function (Class, descriptor) {
 
         //assert, that static properties list is an object
-        xs.assert.object(descriptor.static.property, '[$Class]: static properties list "$properties" is not an object', {
+        assert.object(descriptor.static.property, '[$Class]: static properties list "$properties" is not an object', {
             $Class: Class.label,
             $properties: descriptor.static.property
-        }, AddOwnElementsError);
+        });
 
         //convert to xs.core.Collection
         descriptor.static.property = new xs.core.Collection(descriptor.static.property);
@@ -142,10 +145,10 @@
         //add static properties from raw descriptor
         descriptor.static.property.each(function (value, name) {
             //assert that static property name is not empty
-            xs.assert.ok(name, '[$Class]: given static property name "$name" is not a string', {
+            assert.ok(name, '[$Class]: given static property name "$name" is not a string', {
                 $Class: Class.label,
                 $name: name
-            }, AddOwnElementsError);
+            });
 
             //prepare property descriptor
             value = xs.Attribute.property.prepare(name, value);
@@ -186,13 +189,13 @@
      *
      * @property staticMethod
      */
-    var _processStaticMethods = function (Class, descriptor) {
+    var processStaticMethods = function (Class, descriptor) {
 
         //assert, that static methods list is an object
-        xs.assert.object(descriptor.static.method, '[$Class]: static methods list "$methods" is not an object', {
+        assert.object(descriptor.static.method, '[$Class]: static methods list "$methods" is not an object', {
             $Class: Class.label,
             $methods: descriptor.static.method
-        }, AddOwnElementsError);
+        });
 
         //convert to xs.core.Collection
         descriptor.static.method = new xs.core.Collection(descriptor.static.method);
@@ -203,10 +206,10 @@
         //add static methods from raw descriptor
         descriptor.static.method.each(function (value, name) {
             //assert that static method name is not empty
-            xs.assert.ok(name, '[$Class]: given static method name "$name" is not a string', {
+            assert.ok(name, '[$Class]: given static method name "$name" is not a string', {
                 $Class: Class.label,
                 $name: name
-            }, AddOwnElementsError);
+            });
 
             //prepare property descriptor
             value = xs.Attribute.method.prepare(name, value);
@@ -247,13 +250,13 @@
      *
      * @property property
      */
-    var _processProperties = function (Class, descriptor) {
+    var processProperties = function (Class, descriptor) {
 
         //assert, that properties list is an object
-        xs.assert.object(descriptor.property, '[$Class]: static properties list "$properties" is not an object', {
+        assert.object(descriptor.property, '[$Class]: static properties list "$properties" is not an object', {
             $Class: Class.label,
             $properties: descriptor.property
-        }, AddOwnElementsError);
+        });
 
         //convert to xs.core.Collection
         descriptor.property = new xs.core.Collection(descriptor.property);
@@ -264,10 +267,10 @@
         //add properties from raw descriptor
         descriptor.property.each(function (value, name) {
             //assert that property name is not empty
-            xs.assert.ok(name, '[$Class]: given property name "$name" is not a string', {
+            assert.ok(name, '[$Class]: given property name "$name" is not a string', {
                 $Class: Class.label,
                 $name: name
-            }, AddOwnElementsError);
+            });
 
             //prepare property descriptor
             value = xs.Attribute.property.prepare(name, value);
@@ -308,13 +311,13 @@
      *
      * @property method
      */
-    var _processMethods = function (Class, descriptor) {
+    var processMethods = function (Class, descriptor) {
 
         //assert, that methods list is an object
-        xs.assert.object(descriptor.method, '[$Class]: methods list "$methods" is not an object', {
+        assert.object(descriptor.method, '[$Class]: methods list "$methods" is not an object', {
             $Class: Class.label,
             $methods: descriptor.method
-        }, AddOwnElementsError);
+        });
 
         //init reference to methods list, converted to xs.core.Collection
         descriptor.method = new xs.core.Collection(descriptor.method);
@@ -325,10 +328,10 @@
         //add methods from raw descriptor
         descriptor.method.each(function (value, name) {
             //assert that method name is not empty
-            xs.assert.ok(name, '[$Class]: given method name "$name" is not a string', {
+            assert.ok(name, '[$Class]: given method name "$name" is not a string', {
                 $Class: Class.label,
                 $name: name
-            }, AddOwnElementsError);
+            });
 
             //prepare property descriptor
             value = xs.Attribute.method.prepare(name, value);

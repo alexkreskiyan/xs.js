@@ -15,6 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
+    var log = new xs.log.Logger('xs.interface.Interface');
+
+    var assert = new xs.core.Asserter(log, ObjectError);
+
     /**
      * xs.lang.List is private singleton, defining basic Object operations.
      *
@@ -30,7 +34,7 @@
         var me = {};
 
         // Create quick reference variables for speed access to core prototypes.
-        var _slice = Function.prototype.call.bind(Array.prototype.slice);
+        var slice = Function.prototype.call.bind(Array.prototype.slice);
 
         /**
          * Copies all properties from objects, passed as arguments to given obj
@@ -63,11 +67,11 @@
         me.extend = function (object) {
 
             //assert that index is in bounds
-            xs.assert.object(object, 'extend - given "$object" is not object', {
+            assert.object(object, 'extend - given "$object" is not object', {
                 $object: object
-            }, ObjectError);
+            });
 
-            var adds = _slice(arguments, 1), addsLength = adds.length;
+            var adds = slice(arguments, 1), addsLength = adds.length;
 
             //iterate over add-ons
             for (var i = 0; i < addsLength; i++) {
@@ -106,5 +110,7 @@
     ObjectError.prototype = new Error();
 
     //extend xs with object
-    object.extend(xs, object);
+    Object.keys(object).forEach(function (key) {
+        xs[key] = object[key];
+    });
 })(window, 'xs');

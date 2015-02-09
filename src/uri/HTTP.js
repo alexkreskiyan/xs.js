@@ -14,6 +14,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.uri.HTTP
+ *
+ * @extends xs.uri.URI
  */
 xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
 
@@ -54,7 +56,7 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
 
         //parse given namespace into user, host and port
         if (raw.namespace) {
-            var namespace = _parseNamespace(raw.namespace);
+            var namespace = parseNamespace(raw.namespace);
 
             //user
             me.user = namespace.user;
@@ -99,14 +101,14 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (scheme) {
             var me = this;
 
-            xs.assert.ok(!xs.isDefined(scheme) || xs.isString(scheme), 'Given scheme "$scheme" is not a string', {
+            self.assert.ok(!xs.isDefined(scheme) || xs.isString(scheme), 'Given scheme "$scheme" is not a string', {
                 $scheme: scheme
-            }, HTTPError);
+            });
 
-            xs.assert.ok(!xs.isDefined(scheme) || schemes.indexOf(scheme) >= 0, 'Given scheme "$scheme" is not supported. Allowed are: $allowed', {
+            self.assert.ok(!xs.isDefined(scheme) || schemes.indexOf(scheme) >= 0, 'Given scheme "$scheme" is not supported. Allowed are: $allowed', {
                 $scheme: scheme,
                 $allowed: schemes.join(', ')
-            }, HTTPError);
+            });
 
             //assign scheme
             me.private.scheme = scheme;
@@ -133,14 +135,14 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (user) {
             var me = this;
 
-            xs.assert.ok(!xs.isDefined(user) || xs.isString(user), 'Given user "$user" is not a string', {
+            self.assert.ok(!xs.isDefined(user) || xs.isString(user), 'Given user "$user" is not a string', {
                 $user: user
-            }, HTTPError);
+            });
 
             //check user if string
-            xs.assert.ok(!xs.isDefined(user) || userRe.test(user), 'Given host "$user" is incorrect', {
+            self.assert.ok(!xs.isDefined(user) || userRe.test(user), 'Given host "$user" is incorrect', {
                 $user: user
-            }, HTTPError);
+            });
 
             //assign user
             me.private.user = user;
@@ -167,14 +169,14 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (host) {
             var me = this;
 
-            xs.assert.ok(!xs.isDefined(host) || xs.isString(host), 'Given host "$host" is neither string nor undefined', {
+            self.assert.ok(!xs.isDefined(host) || xs.isString(host), 'Given host "$host" is neither string nor undefined', {
                 $host: host
-            }, HTTPError);
+            });
 
             //check host if string
-            xs.assert.ok(!xs.isDefined(host) || hostRe.test(host), 'Given host "$host" is incorrect', {
+            self.assert.ok(!xs.isDefined(host) || hostRe.test(host), 'Given host "$host" is incorrect', {
                 $host: host
-            }, HTTPError);
+            });
 
             //assign host
             me.private.host = host;
@@ -192,9 +194,9 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (port) {
             var me = this;
 
-            xs.assert.ok(!xs.isDefined(port) || xs.isNumber(port), 'Given port "$port" is not a number', {
+            self.assert.ok(!xs.isDefined(port) || xs.isNumber(port), 'Given port "$port" is not a number', {
                 $port: port
-            }, HTTPError);
+            });
 
             //assign port
             me.private.port = port;
@@ -221,14 +223,14 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (path) {
             var me = this;
 
-            xs.assert.string(path, 'Given path "$path" is not a string', {
+            self.assert.string(path, 'Given path "$path" is not a string', {
                 $path: path
-            }, HTTPError);
+            });
 
             //check path
-            xs.assert.ok(pathRe.test(path), 'Given path "$path" is incorrect', {
+            self.assert.ok(pathRe.test(path), 'Given path "$path" is incorrect', {
                 $path: path
-            }, HTTPError);
+            });
 
             //assign path
             me.private.path = path;
@@ -246,10 +248,10 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (query) {
             var me = this;
 
-            xs.assert.instance(query, imports.QueryString, 'Given query "$query" is not instance of "$QueryString"', {
+            self.assert.instance(query, imports.QueryString, 'Given query "$query" is not instance of "$QueryString"', {
                 $query: query,
                 $QueryString: imports.QueryString
-            }, HTTPError);
+            });
 
             //assign query
             me.private.query = query;
@@ -267,9 +269,9 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (hash) {
             var me = this;
 
-            xs.assert.ok(!xs.isDefined(hash) || xs.isString(hash), 'Given hash "$hash" is not a string', {
+            self.assert.ok(!xs.isDefined(hash) || xs.isString(hash), 'Given hash "$hash" is not a string', {
                 $hash: hash
-            }, HTTPError);
+            });
 
             //assign hash
             me.private.hash = hash;
@@ -322,12 +324,12 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
 
     var namespaceParseRe = /^(?:([^@:]+)@)?([^@:]+)(?::(\d+))?$/;
 
-    var _parseNamespace = function (namespace) {
+    var parseNamespace = function (namespace) {
         var raw = namespaceParseRe.exec(namespace);
 
-        xs.assert.array(raw, 'Given namespace part "$namespace" is not correct', {
+        self.assert.array(raw, 'Given namespace part "$namespace" is not correct', {
             $namespace: namespace
-        }, HTTPError);
+        });
 
         return {
             user: raw[1],
@@ -335,20 +337,4 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
             port: raw[3] ? Number(raw[3]) : undefined
         };
     };
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class HTTPError
-     */
-    function HTTPError(message) {
-        this.message = self.label + '::' + message;
-    }
-
-    HTTPError.prototype = new Error();
-
 });

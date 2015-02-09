@@ -14,6 +14,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.event.Event
+ *
+ * @extends xs.class.Base
  */
 xs.define(xs.Class, 'ns.Event', function (self) {
 
@@ -39,7 +41,7 @@ xs.define(xs.Class, 'ns.Event', function (self) {
 
         //check data
         //assert that data is object (if given)
-        xs.assert.ok(!arguments.length || xs.isObject(data), 'constructor - given data "$data" is not an object', {
+        self.assert.ok(!arguments.length || xs.isObject(data), 'constructor - given data "$data" is not an object', {
             $data: data
         }, EventError);
 

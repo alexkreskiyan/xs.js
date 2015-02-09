@@ -17,7 +17,7 @@
  *
  * @class xs.class.Base
  */
-xs.define(xs.Class, 'xs.class.Base', function () {
+xs.define(xs.Class, 'xs.class.Base', function (self) {
 
     'use strict';
 
@@ -57,8 +57,17 @@ xs.define(xs.Class, 'xs.class.Base', function () {
         //create clone via factory
         var clone = me.self.factory.apply(me, me.initArguments);
 
+        //get private backup
+        var privates = clone.private;
+
         //assign properties
         xs.extend(clone, me);
+
+        //restore private
+        clone.private = privates;
+
+        //assign privates
+        xs.extend(clone.private, me.private);
 
         //return clone
         return clone;
@@ -73,7 +82,7 @@ xs.define(xs.Class, 'xs.class.Base', function () {
      */
     me.method.destroy = function () {
         //assert, that destructor was not called yet
-        xs.assert.not(this.private.isDestroyed, 'Object is already destroyed');
+        self.assert.not(this.private.isDestroyed, 'Object is already destroyed');
 
         this.private.isDestroyed = true;
     };

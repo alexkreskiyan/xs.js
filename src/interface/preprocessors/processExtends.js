@@ -15,7 +15,9 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.interface.preprocessors.processExtends');
+    var log = new xs.log.Logger('xs.interface.preprocessors.processExtends');
+
+    var assert = new xs.core.Asserter(log, ProcessExtendsError);
 
     /**
      * Preprocessor processExtends
@@ -31,11 +33,11 @@
     }, function (Interface, descriptor) {
         var extended = descriptor.extends;
 
-        logger.trace((Interface.label ? Interface.label : 'undefined') + '. Extended ' + extended);
+        log.trace((Interface.label ? Interface.label : 'undefined') + '. Extended ' + extended);
         //if no parent given - extend from xs.interface.Base
         if (!xs.isDefined(extended)) {
-            logger.trace((Interface.label ? Interface.label : 'undefined') + '. Extending xs.interface.Base');
-            _extend(Interface, xs.interface.Base);
+            log.trace((Interface.label ? Interface.label : 'undefined') + '. Extending xs.interface.Base');
+            extend(Interface, xs.interface.Base);
 
             return;
 
@@ -47,7 +49,7 @@
         }
 
         //assert, that parent is defined
-        xs.assert.ok(xs.ContractsManager.has(extended), ProcessExtendsError, '[$Interface]: parent interface "$extended" is not defined. Move it to imports section, please', {
+        assert.ok(xs.ContractsManager.has(extended), '[$Interface]: parent interface "$extended" is not defined. Move it to imports section, please', {
             $Interface: Interface.label,
             $extended: extended
         });
@@ -56,20 +58,20 @@
         var Parent = xs.ContractsManager.get(extended);
 
         //check that parent is interface
-        xs.assert.Interface(Parent, ProcessExtendsError, '[$Interface]: contract "$Parent" is not an interface', {
+        assert.Interface(Parent, '[$Interface]: contract "$Parent" is not an interface', {
             $Interface: Interface.label,
             $Parent: Parent.label
         });
 
         //check that interface is ready
-        xs.assert.not(Parent.isProcessing, ProcessExtendsError, '[$Interface]: parent interface "$Parent" is not processed yet. Move it to imports section, please', {
+        assert.not(Parent.isProcessing, '[$Interface]: parent interface "$Parent" is not processed yet. Move it to imports section, please', {
             $Interface: Interface.label,
             $Parent: Parent.label
         });
 
-        logger.trace((Interface.label ? Interface.label : 'undefined') + '. Extending ' + Parent.label);
+        log.trace((Interface.label ? Interface.label : 'undefined') + '. Extending ' + Parent.label);
         //apply extends
-        _applyExtends(Interface, Parent);
+        applyExtends(Interface, Parent);
     });
 
     /**
@@ -82,9 +84,9 @@
      * @param {Function} target target interface
      * @param {Function} parent extended interface
      */
-    var _applyExtends = function (target, parent) {
+    var applyExtends = function (target, parent) {
         //extend
-        _extend(target, parent);
+        extend(target, parent);
 
         //save extends to descriptor
         target.descriptor.extends = parent.label;
@@ -98,7 +100,7 @@
      * @param {Function} child child interface
      * @param {Function} parent parent interface
      */
-    var _extend = function (child, parent) {
+    var extend = function (child, parent) {
         //create fake constructor
         var Fn = function () {
         };

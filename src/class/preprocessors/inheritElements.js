@@ -15,7 +15,7 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.class.preprocessors.inheritElements');
+    var log = new xs.log.Logger('xs.class.preprocessors.inheritElements');
 
     /**
      * Preprocessor inheritElements
@@ -30,25 +30,25 @@
         return true;
     }, function (Class) {
 
-        logger.trace(Class.label ? Class.label : 'undefined');
+        log.trace(Class.label ? Class.label : 'undefined');
 
         //constants
-        _processConstants(Class);
+        processConstants(Class);
 
         //static properties
-        _processStaticProperties(Class);
+        processStaticProperties(Class);
 
         //static methods
-        _processStaticMethods(Class);
+        processStaticMethods(Class);
 
         //properties
-        _processProperties(Class);
+        processProperties(Class);
 
         //methods
-        _processMethods(Class);
+        processMethods(Class);
     });
 
-    var _processConstants = function (Class) {
+    var processConstants = function (Class) {
 
         //init reference
         var own = Class.descriptor.constant;
@@ -59,7 +59,7 @@
         });
     };
 
-    var _processStaticProperties = function (Class) {
+    var processStaticProperties = function (Class) {
 
         //init reference
         var own = Class.descriptor.static.property;
@@ -70,7 +70,7 @@
         });
     };
 
-    var _processStaticMethods = function (Class) {
+    var processStaticMethods = function (Class) {
 
         //init reference
         var own = Class.descriptor.static.method;
@@ -81,7 +81,7 @@
         });
     };
 
-    var _processProperties = function (Class) {
+    var processProperties = function (Class) {
 
         //init reference
         var own = Class.descriptor.property;
@@ -92,7 +92,7 @@
         });
     };
 
-    var _processMethods = function (Class) {
+    var processMethods = function (Class) {
 
         //init reference
         var own = Class.descriptor.method;

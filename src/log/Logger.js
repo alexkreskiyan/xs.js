@@ -58,14 +58,16 @@
      *     var logger = new xs.log.Logger('xs');
      *
      * @constructor
+     *
+     * @param {String} category logger messages' category
      */
     var logger = xs.log.Logger = function (category) {
         var me = this;
 
         //assert, that category is valid (via xs.log.Router.isCategory)
-        xs.assert.ok(xs.log.Router.isCategory(category), 'Given category "$category" is not a valid category', {
+        assert.ok(xs.log.Router.isCategory(category), 'Given category "$category" is not a valid category', {
             $category: category
-        }, LoggerError);
+        });
 
         //save category
         me.category = category;
@@ -73,8 +75,8 @@
         //create profiling access object
         me.profile = {
             category: category,
-            start: _profileStart,
-            end: _profileEnd
+            start: profileStart,
+            end: profileEnd
         };
     };
 
@@ -98,19 +100,19 @@
         var me = this;
 
         //assert, that message is string
-        xs.assert.string(message, 'error - given message "$message" is not a string', {
+        assert.string(message, 'error - given message "$message" is not a string', {
             $message: message
-        }, LoggerError);
+        });
 
         //assert, that data is either not given or is an object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'error - given data "$data" is not an object', {
+        assert.ok(arguments.length === 1 || xs.isObject(data), 'error - given data "$data" is not an object', {
             $data: data
-        }, LoggerError);
+        });
 
         if (data) {
-            _process(me.category, xs.log.Error, message, data);
+            processEntry(me.category, xs.log.Error, message, data);
         } else {
-            _process(me.category, xs.log.Error, message);
+            processEntry(me.category, xs.log.Error, message);
         }
     };
 
@@ -134,19 +136,19 @@
         var me = this;
 
         //assert, that message is string
-        xs.assert.string(message, 'warn - given message "$message" is not a string', {
+        assert.string(message, 'warn - given message "$message" is not a string', {
             $message: message
-        }, LoggerError);
+        });
 
         //assert, that data is either not given or is an object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'warn - given data "$data" is not an object', {
+        assert.ok(arguments.length === 1 || xs.isObject(data), 'warn - given data "$data" is not an object', {
             $data: data
-        }, LoggerError);
+        });
 
         if (data) {
-            _process(me.category, xs.log.Warning, message, data);
+            processEntry(me.category, xs.log.Warning, message, data);
         } else {
-            _process(me.category, xs.log.Warning, message);
+            processEntry(me.category, xs.log.Warning, message);
         }
     };
 
@@ -170,19 +172,19 @@
         var me = this;
 
         //assert, that message is string
-        xs.assert.string(message, 'info - given message "$message" is not a string', {
+        assert.string(message, 'info - given message "$message" is not a string', {
             $message: message
-        }, LoggerError);
+        });
 
         //assert, that data is either not given or is an object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
+        assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
             $data: data
-        }, LoggerError);
+        });
 
         if (data) {
-            _process(me.category, xs.log.Info, message, data);
+            processEntry(me.category, xs.log.Info, message, data);
         } else {
-            _process(me.category, xs.log.Info, message);
+            processEntry(me.category, xs.log.Info, message);
         }
     };
 
@@ -207,19 +209,19 @@
         var me = this;
 
         //assert, that message is string
-        xs.assert.string(message, 'info - given message "$message" is not a string', {
+        assert.string(message, 'info - given message "$message" is not a string', {
             $message: message
-        }, LoggerError);
+        });
 
         //assert, that data is either not given or is an object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
+        assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
             $data: data
-        }, LoggerError);
+        });
 
         if (data) {
-            _process(me.category, xs.log.Trace, message, data);
+            processEntry(me.category, xs.log.Trace, message, data);
         } else {
-            _process(me.category, xs.log.Trace, message);
+            processEntry(me.category, xs.log.Trace, message);
         }
     };
 
@@ -238,13 +240,13 @@
      *
      * @param {String} mark profiling mark
      */
-    var _profileStart = function (mark) {
+    var profileStart = function (mark) {
         var me = this;
 
         //assert, that mark is string
-        xs.assert.string(mark, 'profile.start - given mark "$mark" is not a string', {
+        assert.string(mark, 'profile.start - given mark "$mark" is not a string', {
             $mark: mark
-        }, LoggerError);
+        });
 
         //add new entry to storage
         profiles.add(me.category + '.' + mark, {
@@ -270,13 +272,13 @@
      *
      * @param {String} mark profiling mark
      */
-    var _profileEnd = function (mark) {
+    var profileEnd = function (mark) {
         var me = this;
 
         //assert, that mark is string
-        xs.assert.string(mark, 'profile.end - given mark "$mark" is not a string', {
+        assert.string(mark, 'profile.end - given mark "$mark" is not a string', {
             $mark: mark
-        }, LoggerError);
+        });
 
         //evaluate storage key
         var key = me.category + '.' + mark;
@@ -291,12 +293,13 @@
         profiles.remove(profile);
 
         //process profiling message (mark) with profile as data
-        _process(me.category, xs.log.Profile, mark, profile);
+        processEntry(me.category, xs.log.Profile, mark, profile);
     };
 
     //create reference to xs.log.Router.process and remove it
-    var _process = xs.log.Router.process;
+    var processEntry = xs.log.Router.process;
     delete xs.log.Router.process;
+
     /**
      * Internal error class
      *
@@ -312,4 +315,13 @@
 
     LoggerError.prototype = new Error();
 
+    //hook method to create asserter. here fake assert is needed for first call
+    var assert = {
+        ok: function () {
+        }
+    };
+    logger.ready = function () {
+        assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Logger'), LoggerError);
+        delete logger.ready;
+    };
 })(window, 'xs');

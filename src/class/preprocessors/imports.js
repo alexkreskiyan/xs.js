@@ -15,7 +15,7 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.class.preprocessors.imports');
+    var log = new xs.log.Logger('xs.class.preprocessors.imports');
 
     /**
      * Directive imports
@@ -78,7 +78,7 @@
         return true;
     }, function (Class, descriptor, dependencies, ready) {
 
-        logger.trace(Class.label ? Class.label : 'undefined');
+        log.trace(Class.label ? Class.label : 'undefined');
 
         //init
         //init requires list
@@ -126,36 +126,36 @@
 
         if (loads.length) {
             //load imported classes
-            logger.trace((Class.label ? Class.label : 'undefined') + '. Loading', {
+            log.trace((Class.label ? Class.label : 'undefined') + '. Loading', {
                 loads: loads.values()
             });
             //require async
-            xs.require(loads.values(), _process);
+            xs.require(loads.values(), processImport);
         } else {
             //nothing to load
-            logger.trace((Class.label ? Class.label : 'undefined') + '. Nothing to load');
-            _process();
+            log.trace((Class.label ? Class.label : 'undefined') + '. Nothing to load');
+            processImport();
         }
 
         //define process function
-        function _process() {
+        function processImport() {
 
             var waiting = requires.map(function (name) {
                 return xs.ContractsManager.get(name);
             });
 
-            logger.trace((Class.label ? Class.label : 'undefined') + '. Imports loaded, applying dependency', {
+            log.trace((Class.label ? Class.label : 'undefined') + '. Imports loaded, applying dependency', {
                 loads: loads.values()
             });
             //create new dependency
             dependencies.add(Class, waiting, function () {
 
-                logger.trace((Class.label ? Class.label : 'undefined') + '. Imports loads processed, applying imports', {
+                log.trace((Class.label ? Class.label : 'undefined') + '. Imports loads processed, applying imports', {
                     loads: loads.values(),
                     imports: imports.toSource()
                 });
                 //apply imports
-                _applyImports(Class, imports);
+                applyImports(Class, imports);
 
                 //call ready to notify processor stack, that import succeed
                 ready();
@@ -176,7 +176,7 @@
      * @param {Object} target target class
      * @param {Object} imports mixins imports
      */
-    var _applyImports = function (target, imports) {
+    var applyImports = function (target, imports) {
         //assign imports
         imports.each(function (alias, name) {
             //get alias short part

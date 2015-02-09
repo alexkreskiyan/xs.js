@@ -15,6 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
+    var log = new xs.log.Logger('xs.core.ProcessorsStack');
+
+    var assert = new xs.core.Asserter(log, ProcessorsStackError);
+
     /**
      * Private internal stack class
      *
@@ -77,16 +81,16 @@
                 position = 'last';
             }
 
-            xs.assert.not(items.hasKey(name), 'add - processor "$name" already in stack', {
+            assert.not(items.hasKey(name), 'add - processor "$name" already in stack', {
                 $name: name
-            }, ProcessorsStackError);
+            });
 
             items.add(name, {
                 verifier: verifier,
                 handler: handler
             });
 
-            _apply(name, position, relativeTo);
+            apply(name, position, relativeTo);
         };
 
         /**
@@ -109,7 +113,7 @@
          * @param {String} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
          */
         me.reorder = function (name, position, relativeTo) {
-            _apply(name, position, relativeTo);
+            apply(name, position, relativeTo);
         };
 
         /**
@@ -125,9 +129,9 @@
          * - processor with given name is not found in stack
          */
         me.remove = function (name) {
-            xs.assert.ok(items.hasKey(name), 'remove - processor "$name" not found in stack', {
+            assert.ok(items.hasKey(name), 'remove - processor "$name" not found in stack', {
                 $name: name
-            }, ProcessorsStackError);
+            });
 
             items.removeAt(name);
         };
@@ -148,7 +152,7 @@
          * @param {Function} [callback] optional executed callback
          */
         me.process = function (verifierArgs, handlerArgs, callback) {
-            _process(items.clone(), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
+            process(items.clone(), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
         };
 
         /**
@@ -163,7 +167,7 @@
          * @param {Array} handlerArgs arguments for items' handlers
          * @param {Function} callback stack ready callback
          */
-        var _process = function (items, verifierArgs, handlerArgs, callback) {
+        var process = function (items, verifierArgs, handlerArgs, callback) {
             var me = this;
             if (!items.length) {
                 callback();
@@ -176,7 +180,7 @@
             if (item.verifier.apply(me, verifierArgs)) {
 
                 var ready = function () {
-                    _process(items, verifierArgs, handlerArgs, callback);
+                    process(items, verifierArgs, handlerArgs, callback);
                 };
 
                 //if item.handler returns false, processing is async, stop processing, awaiting ready call
@@ -186,7 +190,7 @@
                 }
             }
 
-            _process(items, verifierArgs, handlerArgs, callback);
+            process(items, verifierArgs, handlerArgs, callback);
         };
 
 
@@ -199,15 +203,15 @@
          * @param {String} position new item position
          * @param {*} relativeTo name of relativeTo positioned item
          */
-        var _apply = function (name, position, relativeTo) {
-            xs.assert.ok([
+        var apply = function (name, position, relativeTo) {
+            assert.ok([
                 'first',
                 'last',
                 'before',
                 'after'
             ].indexOf(position) >= 0, 'apply - incorrect position "$position" given', {
                 $position: position
-            }, ProcessorsStackError);
+            });
 
             //get item from items
             var item = items.at(name);
@@ -225,9 +229,9 @@
             } else {
                 var relativeKey = new xs.core.Collection(items.keys()).keyOf(relativeTo);
 
-                xs.assert.defined(relativeKey, 'apply - relative key "$relativeTo" missing in stack', {
+                assert.defined(relativeKey, 'apply - relative key "$relativeTo" missing in stack', {
                     $name: name
-                }, ProcessorsStackError);
+                });
 
                 if (position === 'after') {
                     relativeKey++;
@@ -245,6 +249,7 @@
      */
     xs.ProcessorsStack = {
         Class: ProcessorsStack,
+        Enum: ProcessorsStack,
         Interface: ProcessorsStack
     };
 

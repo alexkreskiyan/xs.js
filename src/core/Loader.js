@@ -15,7 +15,9 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.core.Loader');
+    var log = new xs.log.Logger('xs.core.Loader');
+
+    var assert = new xs.core.Asserter(log, LoaderError);
 
     /**
      * xs.core.Loader is core class, that is used for class loading
@@ -94,11 +96,11 @@
          * - some of required classes' already failed to load
          */
         me.require = function (name, handleLoad, handleFail) {
-            logger.trace('require. Acquired ' + name);
+            log.trace('require. Acquired ' + name);
 
             //init loaded classes list
-            var loadList = _getLoadList(new xs.core.Collection(xs.isArray(name) ? name : [name]));
-            logger.trace('require. LoadList formed', {
+            var loadList = getLoadList(new xs.core.Collection(xs.isArray(name) ? name : [name]));
+            log.trace('require. LoadList formed', {
                 loaded: loadList.loaded.toSource(),
                 failed: loadList.failed.toSource(),
                 unresolved: loadList.unresolved.toSource()
@@ -106,7 +108,7 @@
 
             //if failed section is not empty - handle fail
             if (loadList.failed.length) {
-                logger.trace('require. LoadList has failed classes. Handle fail');
+                log.trace('require. LoadList has failed classes. Handle fail');
                 //use handleFail method if given
                 if (handleFail) {
                     xs.nextTick(function () {
@@ -125,7 +127,7 @@
 
             //if new section is empty - handle load - all classes are in loaded section
             if (!loadList.unresolved.length) {
-                logger.trace('require. LoadList has only loaded classes. Handle load');
+                log.trace('require. LoadList has only loaded classes. Handle load');
                 xs.nextTick(function () {
                     handleLoad(loadList.loaded.toSource());
                 });
@@ -133,11 +135,11 @@
                 return;
             }
 
-            logger.trace('require. Add loadList to resolver');
+            log.trace('require. Add loadList to resolver');
             //add loadList to resolver
             resolver.add(loadList, handleLoad, handleFail);
 
-            logger.trace('require. Add each of loadList to loader');
+            log.trace('require. Add each of loadList to loader');
             //add each of loadList.unresolved to loader
             loadList.unresolved.each(function (path, name) {
                 if (!loader.has(name)) {
@@ -157,7 +159,7 @@
          *
          * @return {Object} list of classes, that have to be loaded
          */
-        function _getLoadList(classes) {
+        function getLoadList(classes) {
 
             /**
              * Load list
@@ -172,24 +174,24 @@
                 failed: new xs.core.Collection()
             };
 
-            logger.trace('getLoadList. Processing classes', {
+            log.trace('getLoadList. Processing classes', {
                 classes: classes.toSource()
             });
             //process loaded and missing classes
             classes.each(function (name) {
                 //assert, that name is correct
-                xs.assert.ok(xs.ContractsManager.isName(name), 'getLoadList - given loaded class name "$name" has incorrect format', {
+                assert.ok(xs.ContractsManager.isName(name), 'getLoadList - given loaded class name "$name" has incorrect format', {
                     $name: name
-                }, LoaderError);
+                });
 
                 //resolve name with paths
                 var path = paths.resolve(name);
 
-                logger.trace('getLoadList. Resolved class "' + name + '" as path"' + path + '"');
-                logger.trace('getLoadList. Check class "' + name + '"');
+                log.trace('getLoadList. Resolved class "' + name + '" as path"' + path + '"');
+                log.trace('getLoadList. Check class "' + name + '"');
                 //if the class is already loaded - add it to loaded section
                 if (loaded.has(name)) {
-                    logger.trace('getLoadList. Class "' + name + '" is already loaded');
+                    log.trace('getLoadList. Class "' + name + '" is already loaded');
                     loadList.loaded.add(name, path);
 
                     //if the class was already attempted to load, but load failed - add it to failed section
@@ -202,7 +204,7 @@
                 }
             });
 
-            logger.trace('getLoadList. Result loadList formed', {
+            log.trace('getLoadList. Result loadList formed', {
                 loaded: loadList.loaded.toSource(),
                 failed: loadList.failed.toSource(),
                 unresolved: loadList.unresolved.toSource()
@@ -221,11 +223,11 @@
          *
          * @param {String} name name of loaded class
          */
-        function _handleLoad(name) {
+        function processLoad(name) {
             //handle load if class was loaded
             if (xs.ContractsManager.has(name)) {
 
-                logger.trace('handleLoad. Class "' + name + '" loaded');
+                log.trace('handleLoad. Class "' + name + '" loaded');
                 //add loaded path
                 loaded.add(name);
 
@@ -235,7 +237,7 @@
                 //handle fail if class is missing
             } else {
 
-                logger.trace('handleFail. Class "' + name + '" failed to load');
+                log.trace('handleFail. Class "' + name + '" failed to load');
                 //add failed path
                 failed.add(name);
 
@@ -253,8 +255,8 @@
          *
          * @param {String} name name of failed class
          */
-        function _handleFail(name) {
-            logger.trace('handleFail. Class "' + name + '" failed to load');
+        function processFail(name) {
+            log.trace('handleFail. Class "' + name + '" failed to load');
             //add failed path
             failed.add(name);
 
@@ -310,14 +312,14 @@
                 if (arguments.length > 1) {
 
                     //assert that alias was not defined yet
-                    xs.assert.not(me.has(alias), 'paths::add - alias "$alias" is already registered', {
+                    assert.not(me.has(alias), 'paths::add - alias "$alias" is already registered', {
                         $alias: alias
-                    }, LoaderError);
+                    });
 
                     //assert that path is string
-                    xs.assert.string(path, 'paths::add - given path "$path" is not a string', {
+                    assert.string(path, 'paths::add - given path "$path" is not a string', {
                         $path: path
-                    }, LoaderError);
+                    });
 
                     //register new path alias
                     paths.add(alias, path);
@@ -326,9 +328,9 @@
                 }
 
                 //assert that paths list is object
-                xs.assert.object(alias, 'paths::add - given paths list "$paths" is not an object', {
+                assert.object(alias, 'paths::add - given paths list "$paths" is not an object', {
                     $paths: alias
-                }, LoaderError);
+                });
 
                 //add each path
                 (new xs.core.Collection(alias)).each(function (path, alias) {
@@ -357,9 +359,9 @@
             me.has = function (alias) {
 
                 //assert that alias is correct name
-                xs.assert.ok(xs.ContractsManager.isName(alias), 'paths::has - given alias "$alias" is not correct', {
+                assert.ok(xs.ContractsManager.isName(alias), 'paths::has - given alias "$alias" is not correct', {
                     $alias: alias
-                }, LoaderError);
+                });
 
                 //return whether alias is in paths
                 return paths.hasKey(alias);
@@ -389,9 +391,9 @@
                 if (!xs.isArray(alias)) {
 
                     //assert that alias is registered
-                    xs.assert.ok(me.has(alias), 'paths::remove - alias "$alias" is not registered', {
+                    assert.ok(me.has(alias), 'paths::remove - alias "$alias" is not registered', {
                         $alias: alias
-                    }, LoaderError);
+                    });
 
                     //remove alias
                     paths.removeAt(alias);
@@ -442,9 +444,9 @@
             me.resolve = function (name) {
 
                 //assert that name is correct
-                xs.assert.ok(xs.ContractsManager.isName(name), 'paths::resolve - given class name "$name" is not correct', {
+                assert.ok(xs.ContractsManager.isName(name), 'paths::resolve - given class name "$name" is not correct', {
                     $name: name
-                }, LoaderError);
+                });
 
                 //most suitable alias for name
                 var nameAlias = '';
@@ -505,7 +507,7 @@
              * @param {Function} [handleFail] handler for one of files failed.
              */
             me.add = function (list, handleLoad, handleFail) {
-                logger.trace('resolver::add. Add list loaded', {
+                log.trace('resolver::add. Add list loaded', {
                     loaded: list.loaded.toSource(),
                     failed: list.failed.toSource(),
                     unresolved: list.unresolved.toSource()
@@ -529,9 +531,9 @@
              */
             me.resolve = function (name) {
                 //find resolved items
-                logger.trace('resolver::resolve. Handle class "' + name + '"');
+                log.trace('resolver::resolve. Handle class "' + name + '"');
                 var resolved = awaiting.find(function (item) {
-                    logger.trace('resolver::resolve. Clean up item.pending', {
+                    log.trace('resolver::resolve. Clean up item.pending', {
                         pending: item.pending.toSource()
                     });
 
@@ -551,9 +553,9 @@
                     return false;
                 }, xs.core.Collection.All);
 
-                logger.trace('resolver::resolve. Handling items:');
+                log.trace('resolver::resolve. Handling items:');
                 resolved.each(function (item) {
-                    logger.trace('resolver::resolve. loadList', {
+                    log.trace('resolver::resolve. loadList', {
                         loaded: item.list.loaded.toSource(),
                         failed: item.list.failed.toSource(),
                         unresolved: item.list.unresolved.toSource()
@@ -576,9 +578,9 @@
              */
             me.reject = function (name) {
                 //find rejected items
-                logger.trace('resolver::reject. Handle name "' + name + '"');
+                log.trace('resolver::reject. Handle name "' + name + '"');
                 var rejected = awaiting.find(function (item) {
-                    logger.trace('resolver::reject. Check item.pending', {
+                    log.trace('resolver::reject. Check item.pending', {
                         pending: item.pending.toSource()
                     });
 
@@ -586,11 +588,11 @@
                     return item.pending.has(name);
                 }, xs.core.Collection.All);
 
-                logger.trace('resolver::reject. Handling items', {
+                log.trace('resolver::reject. Handling items', {
                     rejected: rejected.toSource()
                 });
                 rejected.each(function (item) {
-                    logger.trace('resolver::reject. Rejected:', {
+                    log.trace('resolver::reject. Rejected:', {
                         loaded: item.list.loaded,
                         failed: item.list.failed,
                         unresolved: item.list.unresolved
@@ -653,18 +655,18 @@
             me.add = function (name, path) {
                 var me = this;
 
-                logger.trace('loader::add. Add class "' + name + '" with path "' + path + '"');
+                log.trace('loader::add. Add class "' + name + '" with path "' + path + '"');
                 //assert that path was not added yet
-                xs.assert.not(me.has(path), 'loader::add - class "$Class" with path "$path" is already loading', {
+                assert.not(me.has(path), 'loader::add - class "$Class" with path "$path" is already loading', {
                     $Class: name,
                     $path: path
-                }, LoaderError);
+                });
 
                 //register new path alias
                 loading.add(name, path);
 
                 //execute load
-                _load(name, path);
+                load(name, path);
 
                 return me;
             };
@@ -690,11 +692,11 @@
              * @param {String} name loaded class name
              * @param {String} path loaded path
              */
-            var _load = function (name, path) {
+            var load = function (name, path) {
                 //create script element
                 var script = document.createElement('script');
 
-                logger.trace('loader::load. Add script for class "' + name + '" with path "' + path + '"');
+                log.trace('loader::load. Add script for class "' + name + '" with path "' + path + '"');
                 //set name - class name
                 script.name = name;
 
@@ -705,10 +707,10 @@
                 script.async = true;
 
                 //add load event listener
-                script.addEventListener('load', _handleLoad);
+                script.addEventListener('load', processLoad);
 
                 //add error event listener
-                script.addEventListener('error', _handleFail);
+                script.addEventListener('error', processFail);
 
                 //append script to head
                 document.head.appendChild(script);
@@ -717,11 +719,11 @@
             /**
              * Internal handler, that wraps external handleLoad
              */
-            var _handleLoad = function () {
+            var processLoad = function () {
                 var me = this;
 
                 //remove handler after call
-                me.removeEventListener('load', _handleLoad);
+                me.removeEventListener('load', processLoad);
 
                 //remove src from loading list
                 loading.removeAt(me.name);
@@ -733,11 +735,11 @@
             /**
              * Internal handler, that wraps external handleFail
              */
-            var _handleFail = function () {
+            var processFail = function () {
                 var me = this;
 
                 //remove handler after call
-                me.removeEventListener('load', _handleFail);
+                me.removeEventListener('load', processFail);
 
                 //remove src from loading list
                 loading.removeAt(me.name);
@@ -747,7 +749,7 @@
             };
 
             return me;
-        })(_handleLoad, _handleFail);
+        })(processLoad, processFail);
 
         /**
          * Internal list class
@@ -787,12 +789,12 @@
             me.add = function (name) {
                 var me = this;
 
-                logger.trace('' + listName + '::add. Add name "' + name + '"');
+                log.trace('' + listName + '::add. Add name "' + name + '"');
                 //assert that name is not in list
-                xs.assert.not(me.has(name), '$list::add - class "$name" is already in $list list', {
+                assert.not(me.has(name), '$list::add - class "$name" is already in $list list', {
                     $list: listName,
                     $name: name
-                }, LoaderError);
+                });
 
                 //add name to list
                 list.add(name);
@@ -824,12 +826,12 @@
             me.remove = function (name) {
                 var me = this;
 
-                logger.trace('' + listName + '::remove. Delete name "' + name + '"');
+                log.trace('' + listName + '::remove. Delete name "' + name + '"');
                 //assert that name is in list
-                xs.assert.ok(me.has(name), '$list::remove - class "$name" is not in $list list', {
+                assert.ok(me.has(name), '$list::remove - class "$name" is not in $list list', {
                     $list: listName,
                     $name: name
-                }, LoaderError);
+                });
 
                 //remove name from list
                 list.remove(name);

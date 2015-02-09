@@ -15,6 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
+    var log = new xs.log.Logger('xs.interface.Interface');
+
+    var assert = new xs.core.Asserter(log, ListError);
+
     /**
      * xs.lang.List is private singleton, defining basic list operations, for both Array and Object.
      *
@@ -30,7 +34,7 @@
         var me = {};
 
         // Create quick reference variables for speed access to core prototypes.
-        var _slice = Function.prototype.call.bind(Array.prototype.slice);
+        var slice = Function.prototype.call.bind(Array.prototype.slice);
 
         /**
          * Returns shallow copy of list
@@ -59,14 +63,14 @@
          */
         me.clone = function (list) {
             //assert that list either array or object
-            xs.assert.ok(xs.isArray(list) || xs.isObject(list), 'clone - given list "$list" is nor array neither object', {
+            assert.ok(xs.isArray(list) || xs.isObject(list), 'clone - given list "$list" is nor array neither object', {
                 $list: list
-            }, ListError);
+            });
 
             //handle array list
             if (xs.isArray(list)) {
 
-                return _slice(list);
+                return slice(list);
             }
 
             //init variables
@@ -102,5 +106,7 @@
 
 
     //extend xs with list
-    xs.extend(xs, list);
+    Object.keys(list).forEach(function (key) {
+        xs[key] = list[key];
+    });
 })(window, 'xs');

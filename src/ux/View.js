@@ -14,6 +14,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.ux.View
+ *
+ * @extends xs.class.Base
  */
 xs.define(xs.Class, 'ns.View', function (self) {
 
@@ -70,9 +72,9 @@ xs.define(xs.Class, 'ns.View', function (self) {
         self.log.trace('constructor - creating new view from template "' + template + '"');
 
         //assert, that template is string
-        xs.assert.string(template, 'constructor - given template "$template" is not a string', {
+        self.assert.string(template, 'constructor - given template "$template" is not a string', {
             $template: template
-        }, ViewError);
+        });
 
         //call observable constructor
         me.mixins.observable.call(me);
@@ -81,7 +83,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
         me.private.domHandlers = new xs.core.Collection();
 
         //parse view template into nodes collection
-        me.private.nodes = _getNodesCollection(template);
+        me.private.nodes = getNodesCollection(template);
     };
 
     /**
@@ -108,27 +110,27 @@ xs.define(xs.Class, 'ns.View', function (self) {
 
         //check event
         //assert event name is non-empty string
-        xs.assert.ok(event && xs.isString(event), 'on - given event name "$event" is not a string', {
+        self.assert.ok(event && xs.isString(event), 'on - given event name "$event" is not a string', {
             $event: event
-        }, ViewError);
+        });
 
         //assert that given event is registered
-        xs.assert.ok(me.self.events.hasOwnProperty(event), 'on - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'on - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
             $event: event
-        }, ViewError);
+        });
 
         //assert that given event config is an object
         var eventConfig = me.self.events[event];
-        xs.assert.object(eventConfig, 'on - given event "$event" config "$config" is not an object', {
+        self.assert.object(eventConfig, 'on - given event "$event" config "$config" is not an object', {
             $event: event,
             $config: eventConfig
-        }, ViewError);
+        });
 
         //check event domEvent
         //assert that domEvent is not given, or is non-empty string
-        xs.assert.ok(!eventConfig.hasOwnProperty('domEvent') || (eventConfig.domEvent && xs.isString(eventConfig.domEvent)), 'on - given event "$event" domEvent "$domEvent" is incorrect. Valid value is non-empty event name string', {
+        self.assert.ok(!eventConfig.hasOwnProperty('domEvent') || (eventConfig.domEvent && xs.isString(eventConfig.domEvent)), 'on - given event "$event" domEvent "$domEvent" is incorrect. Valid value is non-empty event name string', {
             $event: event
-        }, ViewError);
+        });
 
         //if not domEvent - simply call observable.on and return
         if (!eventConfig.domEvent) {
@@ -218,7 +220,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
      *
      * @return {xs.core.Collection} collection of nodes in parsed template
      */
-    var _getNodesCollection = function (template) {
+    var getNodesCollection = function (template) {
 
         self.log.trace('getNodesCollection - fetching nodes from template "' + template + '"');
 
@@ -244,25 +246,4 @@ xs.define(xs.Class, 'ns.View', function (self) {
         //return nodes collection
         return nodes;
     };
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class ViewError
-     */
-    function ViewError(message) {
-        this.message = self.label + '::' + message;
-    }
-
-    ViewError.prototype = new Error();
 });
-/*
- Dom events must be declared globally.
- View first verifies local events list, after that - global DOM events list
- Attributes have own events
-
- */

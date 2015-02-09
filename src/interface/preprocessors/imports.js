@@ -15,7 +15,7 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.interface.preprocessors.imports');
+    var log = new xs.log.Logger('xs.interface.preprocessors.imports');
 
     /**
      * Preprocessor imports
@@ -30,7 +30,7 @@
         return true;
     }, function (Interface, descriptor, dependencies, ready) {
 
-        logger.trace(Interface.label ? Interface.label : 'undefined');
+        log.trace(Interface.label ? Interface.label : 'undefined');
 
         //init
         //init requires list
@@ -59,31 +59,31 @@
 
         if (loads.length) {
             //load imported interfaces
-            logger.trace((Interface.label ? Interface.label : 'undefined') + '. Loading', {
+            log.trace((Interface.label ? Interface.label : 'undefined') + '. Loading', {
                 loads: loads.values()
             });
             //require async
-            xs.require(loads.values(), _process);
+            xs.require(loads.values(), processImports);
         } else {
             //nothing to load
-            logger.trace((Interface.label ? Interface.label : 'undefined') + '. Nothing to load');
-            _process();
+            log.trace((Interface.label ? Interface.label : 'undefined') + '. Nothing to load');
+            processImports();
         }
 
         //define process function
-        function _process() {
+        function processImports() {
 
             var waiting = requires.map(function (name) {
                 return xs.ContractsManager.get(name);
             });
 
-            logger.trace((Interface.label ? Interface.label : 'undefined') + '. Imports loaded, applying dependency', {
+            log.trace((Interface.label ? Interface.label : 'undefined') + '. Imports loaded, applying dependency', {
                 loads: loads.values()
             });
             //create new dependency
             dependencies.add(Interface, waiting, function () {
 
-                logger.trace((Interface.label ? Interface.label : 'undefined') + '. Imports processed', {
+                log.trace((Interface.label ? Interface.label : 'undefined') + '. Imports processed', {
                     loads: loads.values()
                 });
 

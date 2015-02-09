@@ -15,7 +15,9 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.interface.preprocessors.namespace');
+    var log = new xs.log.Logger('xs.interface.preprocessors.namespace');
+
+    var assert = new xs.core.Asserter(log, NamespaceError);
 
     /**
      * Preprocessor namespace
@@ -30,14 +32,14 @@
         return true;
     }, function (Interface, descriptor, dependencies, ready) {
 
-        logger.trace('');
+        log.trace('');
         var namespace;
 
         //if namespace specified, it must be valid
         if (xs.isDefined(descriptor.namespace)) {
-            xs.assert.ok(xs.ContractsManager.isName(descriptor.namespace), 'given namespace "$namespace" is not a valid name', {
+            assert.ok(xs.ContractsManager.isName(descriptor.namespace), 'given namespace "$namespace" is not a valid name', {
                 $namespace: descriptor.namespace
-            }, NamespaceError);
+            });
 
             namespace = descriptor.namespace;
         }

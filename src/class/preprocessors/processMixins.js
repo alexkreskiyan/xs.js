@@ -15,7 +15,9 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.class.preprocessors.processMixins');
+    var log = new xs.log.Logger('xs.class.preprocessors.processMixins');
+
+    var assert = new xs.core.Asserter(log, ProcessMixinsError);
 
     /**
      * Directive mixins
@@ -58,10 +60,10 @@
          * @return {Boolean} whether given Mixin class is stored with some alias in Class.prototype.mixins
          */
         xs.constant(Class, 'mixins', function (Mixin) {
-            xs.assert.Class(Mixin, '[$Class]: given non-class value "$Mixin"', {
+            assert.Class(Mixin, '[$Class]: given non-class value "$Mixin"', {
                 $Class: Class.label,
                 $Mixin: Mixin
-            }, ProcessMixinsError);
+            });
 
             var mixins = this.descriptor.allMixins;
 
@@ -71,7 +73,7 @@
         return true;
     }, function (Class, descriptor) {
 
-        logger.trace(Class.label ? Class.label : 'undefined');
+        log.trace(Class.label ? Class.label : 'undefined');
 
         //init
         //own mixins initial list
@@ -92,7 +94,7 @@
         //2. subtract own from inherited into pure class mixins list
 
         //process own mixins list
-        logger.trace((Class.label ? Class.label : 'undefined') + '. Processed mixins', {
+        log.trace((Class.label ? Class.label : 'undefined') + '. Processed mixins', {
             mixins: own.toSource()
         });
 
@@ -104,25 +106,25 @@
             name = resolveName(name);
 
             //assert, that mixin is defined
-            xs.assert.ok(xs.ContractsManager.has(name), '[$Class]: mixed class "$name" is not defined. Move it to imports section, please', {
+            assert.ok(xs.ContractsManager.has(name), '[$Class]: mixed class "$name" is not defined. Move it to imports section, please', {
                 $Class: Class.label,
                 $name: name
-            }, ProcessMixinsError);
+            });
 
             //get Mixin reference
             var Mixin = xs.ContractsManager.get(name);
 
             //check that contractor is xs.Class
-            xs.assert.Class(Mixin, '[$Class]: given "$Mixin" is not class', {
+            assert.Class(Mixin, '[$Class]: given "$Mixin" is not class', {
                 $Class: Class.label,
                 $Mixin: Mixin.label
-            }, ProcessMixinsError);
+            });
 
             //check that mixin is ready
-            xs.assert.not(Mixin.isProcessing, '[$Class]: mixed class "$Mixin" is not processed yet. Move it to imports section, please', {
+            assert.not(Mixin.isProcessing, '[$Class]: mixed class "$Mixin" is not processed yet. Move it to imports section, please', {
                 $Class: Class.label,
                 $Mixin: Mixin.label
-            }, ProcessMixinsError);
+            });
 
             //if name not in allMixins collection - add it to mixins and allMixins
             if (!allMixins.has(name)) {
@@ -135,7 +137,7 @@
         });
 
         //apply mixins to Class.descriptor
-        _applyMixins(Class, mixins);
+        applyMixins(Class, mixins);
     });
 
     /**
@@ -148,7 +150,7 @@
      * @param {Object} Class target class
      * @param {Object} mixins mixins list
      */
-    var _applyMixins = function (Class, mixins) {
+    var applyMixins = function (Class, mixins) {
         //create mixins property in target.prototype
         Class.prototype.mixins = {};
 
@@ -157,9 +159,9 @@
 
             var Mixin = xs.ContractsManager.get(name);
 
-            logger.trace((Class.label ? Class.label : 'undefined') + '. Mixining ' + Mixin.label + 'as ' + alias);
+            log.trace((Class.label ? Class.label : 'undefined') + '. Mixining ' + Mixin.label + 'as ' + alias);
             //mix mixed class descriptor into target descriptor
-            _mixinClass(Class.descriptor, Mixin.descriptor);
+            mixinClass(Class.descriptor, Mixin.descriptor);
 
             //save mixed into Class.prototype.mixins
             Class.prototype.mixins[alias] = Mixin;
@@ -176,22 +178,22 @@
      * @param {Object} target target class descriptor
      * @param {Object} mix mixin class descriptor
      */
-    var _mixinClass = function (target, mix) {
+    var mixinClass = function (target, mix) {
 
         //extend constants
-        _mixinSection('constant', target.constant, mix.constant);
+        mixinSection('constant', target.constant, mix.constant);
 
         //static properties
-        _mixinSection('static property', target.static.property, mix.static.property);
+        mixinSection('static property', target.static.property, mix.static.property);
 
         //static methods
-        _mixinSection('static method', target.static.method, mix.static.method);
+        mixinSection('static method', target.static.method, mix.static.method);
 
         //properties
-        _mixinSection('property', target.property, mix.property);
+        mixinSection('property', target.property, mix.property);
 
         //methods
-        _mixinSection('method', target.method, mix.method);
+        mixinSection('method', target.method, mix.method);
     };
 
     /**
@@ -205,7 +207,7 @@
      * @param {Object} target target data
      * @param {Object} mixin mixin data
      */
-    var _mixinSection = function (type, target, mixin) {
+    var mixinSection = function (type, target, mixin) {
 
         //default target with mixin
         mixin.each(function (descriptor, name) {

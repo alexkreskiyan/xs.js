@@ -20,6 +20,10 @@
         xs.interface = {};
     }
 
+    var log = new xs.log.Logger('xs.interface.Interface');
+
+    var assert = new xs.core.Asserter(log, InterfaceError);
+
     /**
      * xs.interface.Interface is core class, that is used for interface generation.
      *
@@ -31,7 +35,7 @@
      * Usage example:
      *
      *     //create simple Interface
-     *     var Interface = xs.Interface(function (Interface) {
+     *     var Interface = xs.Interface(function () {
      *         //here Interface descriptor is described:
      *         var me = this;
      *         me.constant = ['a'];
@@ -78,7 +82,7 @@
         var Contractor = function (Descriptor, createdFn) {
 
             //Descriptor must be function
-            xs.assert.fn(Descriptor, 'given interface descriptor "$descriptor" is not a function', {
+            assert.fn(Descriptor, 'given interface descriptor "$descriptor" is not a function', {
                 $descriptor: Descriptor
             }, InterfaceError);
 
@@ -87,19 +91,19 @@
             }
 
             //create interface
-            var Interface = _createSample();
+            var Interface = createSample();
 
             //save contract type
             xs.constant(Interface, 'contractor', Contractor);
 
             //Fill descriptor prototype
-            Descriptor.prototype = _createPrototypeDescriptor();
+            Descriptor.prototype = createPrototypeDescriptor();
 
             //get descriptor instance
             var descriptor = new Descriptor();
 
             //save Interface descriptor
-            xs.constant(Interface, 'descriptor', _createEmptyDescriptor());
+            xs.constant(Interface, 'descriptor', createEmptyDescriptor());
 
             //mark interface as not ready yet (until preprocessors done)
             Interface.isProcessing = true;
@@ -213,7 +217,7 @@
          *
          * @return {Function} new xInterface
          */
-        var _createSample = function () {
+        var createSample = function () {
 
             return function xInterface() {
                 throw new InterfaceError('Interface must not be called');
@@ -229,7 +233,7 @@
          *
          * @return {Object} prototype of new descriptor
          */
-        var _createPrototypeDescriptor = function () {
+        var createPrototypeDescriptor = function () {
             return {
 
                 //interface namespace
@@ -269,11 +273,11 @@
          *
          * @ignore
          *
-         * @method _createEmptyDescriptor
+         * @method createEmptyDescriptor
          *
          * @return {Object} new empty descriptor
          */
-        var _createEmptyDescriptor = function () {
+        var createEmptyDescriptor = function () {
             return {
 
                 //class namespace

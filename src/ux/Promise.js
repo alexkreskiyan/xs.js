@@ -47,6 +47,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.ux.Promise
+ *
+ * @extends xs.class.Base
  */
 xs.define(xs.Class, 'ns.Promise', function (self) {
 
@@ -106,9 +108,9 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      * @return {xs.ux.Promise} aggregate promise
      */
     Class.static.method.all = function (promises) {
-        xs.assert.array(promises, 'all - given "$promises" are not array', {
+        self.assert.array(promises, 'all - given "$promises" are not array', {
             $promises: promises
-        }, PromiseError);
+        });
 
         return this.some(promises, promises.length);
     };
@@ -125,28 +127,28 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      * @return {xs.ux.Promise} aggregate promise
      */
     Class.static.method.some = function (promises, count) {
-        xs.assert.array(promises, 'some - given "$promises" are not array', {
+        self.assert.array(promises, 'some - given "$promises" are not array', {
             $promises: promises
-        }, PromiseError);
+        });
 
-        xs.assert.ok(promises.length, 'some - given "$promises" array is empty', {
+        self.assert.ok(promises.length, 'some - given "$promises" array is empty', {
             $promises: promises
-        }, PromiseError);
+        });
 
         //assert that count is number
         if (arguments.length === 1) {
             count = 1;
         } else {
-            xs.assert.number(count, 'some - given "$count" is not a number', {
+            self.assert.number(count, 'some - given "$count" is not a number', {
                 $count: count
-            }, PromiseError);
+            });
         }
 
-        xs.assert.ok(0 < count && count <= promises.length, 'some - given count "$count" is out of bounds [$min, $max]', {
+        self.assert.ok(0 < count && count <= promises.length, 'some - given count "$count" is out of bounds [$min, $max]', {
             $count: count,
             $min: 0,
             $max: promises.length
-        }, PromiseError);
+        });
 
         //convert promises to collection
         promises = new xs.core.Collection(promises);
@@ -155,7 +157,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         var aggregate = self.factory();
 
         promises.each(function (promise) {
-            xs.assert.instance(promise, self, 'given not promise', PromiseError);
+            self.assert.instance(promise, self, 'given not promise');
             promise.then(function () {
                 //if count is 0 and aggregate is still pending - resolve it
                 if (--count === 0 && aggregate.state === self.PENDING) {
@@ -208,18 +210,18 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
     Class.method.resolve = function (data) {
         var me = this;
 
-        xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
+        self.assert.not(me.private.isDestroyed, 'Object is destroyed');
         self.log.trace('resolve - data', {
             data: data
         });
-        xs.assert.equal(me.private.state, self.PENDING, 'Promise is already resolved', PromiseError);
+        self.assert.equal(me.private.state, self.PENDING, 'Promise is already resolved');
 
         //set new state
         me.private.state = self.RESOLVED;
 
         //process promise on next tick
         xs.nextTick(function () {
-            _processPromise.call(me, 'resolve', data);
+            processPromise.call(me, 'resolve', data);
         });
     };
 
@@ -233,18 +235,18 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
     Class.method.reject = function (reason) {
         var me = this;
 
-        xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
+        self.assert.not(me.private.isDestroyed, 'Object is destroyed');
         self.log.trace('reject - reason', {
             reason: reason
         });
-        xs.assert.equal(me.private.state, self.PENDING, 'Promise is already rejected', PromiseError);
+        self.assert.equal(me.private.state, self.PENDING, 'Promise is already rejected');
 
         //set new state
         me.private.state = self.REJECTED;
 
         //process promise on next tick
         xs.nextTick(function () {
-            _processPromise.call(me, 'reject', reason);
+            processPromise.call(me, 'reject', reason);
         });
     };
 
@@ -259,11 +261,11 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
     Class.method.update = function (state) {
         var me = this;
 
-        xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
+        self.assert.not(me.private.isDestroyed, 'Object is destroyed');
         self.log.trace('update - state', {
             state: state
         });
-        xs.assert.equal(me.private.state, self.PENDING, 'Promise is already ' + me.private.state, PromiseError);
+        self.assert.equal(me.private.state, self.PENDING, 'Promise is already ' + me.private.state);
 
         //process promise on next tick
         xs.nextTick(function () {
@@ -271,7 +273,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
             //process promise handlers
             me.private.handlers.each(function (item) {
                 if (item.update) {
-                    _handleItem(item, 'update', state);
+                    handleItem(item, 'update', state);
                 }
             });
         });
@@ -295,10 +297,10 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
     Class.method.then = function (handleResolved, handleRejected, handleProgress) {
         var me = this;
 
-        xs.assert.not(me.private.isDestroyed, 'Object is destroyed', PromiseError);
+        self.assert.not(me.private.isDestroyed, 'Object is destroyed');
         self.log.trace('then');
 
-        var item = _createItem(handleResolved, handleRejected, handleProgress);
+        var item = createItem(handleResolved, handleRejected, handleProgress);
 
 
         //if not handling - return me
@@ -324,7 +326,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         //resolve item on next tick
         xs.nextTick(function () {
-            _handleItem(item, me.private.state === self.RESOLVED ? 'resolve' : 'reject', me.private.data);
+            handleItem(item, me.private.state === self.RESOLVED ? 'resolve' : 'reject', me.private.data);
         });
 
         //if promise is pending - add item to handlers
@@ -393,7 +395,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      * @param {String} action promise action
      * @param {*} data processed data
      */
-    var _processPromise = function (action, data) {
+    var processPromise = function (action, data) {
         var me = this;
 
         //set promise data
@@ -402,7 +404,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         //process promise handlers
         me.private.handlers.each(function (item) {
             if (item[action]) {
-                _handleItem(item, action, data);
+                handleItem(item, action, data);
             }
         });
 
@@ -423,7 +425,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      * @param {String} action promise action
      * @param {*} data processed data
      */
-    var _handleItem = function (item, action, data) {
+    var handleItem = function (item, action, data) {
 
         self.log.trace('handleItem - ' + action + 'with data', {
             data: data
@@ -447,7 +449,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
             self.log.trace('handleItem - process item.promise with action ' + action + ' and value', {
                 value: result
             });
-            _resolveValue(promise, action, result);
+            resolveValue(promise, action, result);
 
 
             //reject if error happened
@@ -472,8 +474,8 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      * @param {String} action promise action
      * @param {*} value resolved value
      */
-    var _resolveValue = function (promise, action, value) {
-        xs.assert.ok(promise !== value, 'Value can not refer to the promise itself', {}, TypeError);
+    var resolveValue = function (promise, action, value) {
+        self.assert.ok(promise !== value, 'Value can not refer to the promise itself', {}, TypeError);
 
         //handle value, that is promise
         if (value instanceof self) {
@@ -511,17 +513,17 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @return {Object|undefined} created item or undefined if no handlers given
      */
-    var _createItem = function (handleResolved, handleRejected, handleProgress) {
+    var createItem = function (handleResolved, handleRejected, handleProgress) {
         //handlers must be either not defined or functions
-        xs.assert.ok(!xs.isDefined(handleResolved) || xs.isFunction(handleResolved), 'createItem - given "$handleResolved" is not a function', {
+        self.assert.ok(!xs.isDefined(handleResolved) || xs.isFunction(handleResolved), 'createItem - given "$handleResolved" is not a function', {
             $handleResolved: handleResolved
-        }, PromiseError);
-        xs.assert.ok(!xs.isDefined(handleRejected) || xs.isFunction(handleRejected), 'createItem - given "$handleRejected" is not a function', {
+        });
+        self.assert.ok(!xs.isDefined(handleRejected) || xs.isFunction(handleRejected), 'createItem - given "$handleRejected" is not a function', {
             $handleRejected: handleRejected
-        }, PromiseError);
-        xs.assert.ok(!xs.isDefined(handleProgress) || xs.isFunction(handleProgress), 'createItem - given "$handleProgress" is not a function', {
+        });
+        self.assert.ok(!xs.isDefined(handleProgress) || xs.isFunction(handleProgress), 'createItem - given "$handleProgress" is not a function', {
             $handleProgress: handleProgress
-        }, PromiseError);
+        });
 
         //if something given - return item
         if (handleResolved || handleRejected || handleProgress) {
@@ -538,19 +540,4 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         return undefined;
     };
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class PromiseError
-     */
-    function PromiseError(message) {
-        this.message = self.label + '::' + message;
-    }
-
-    PromiseError.prototype = new Error();
 });

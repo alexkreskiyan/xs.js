@@ -15,6 +15,10 @@
     //framework shorthand
     var xs = root[ns];
 
+    var log = new xs.log.Logger('xs.interface.Interface');
+
+    var assert = new xs.core.Asserter(log, StringError);
+
     /**
      * xs.lang.String is private singleton, defining basic string operations.
      *
@@ -51,14 +55,14 @@
          */
         me.translate = function (string, replaces) {
             //assert that first argument is string
-            xs.assert.string(string, 'translate - given "$string" is not string', {
+            assert.string(string, 'translate - given "$string" is not string', {
                 $string: string
-            }, StringError);
+            });
 
             //assert that replaces are object
-            xs.assert.object(replaces, 'translate - given replaces "$replaces" are not object', {
+            assert.object(replaces, 'translate - given replaces "$replaces" are not object', {
                 $replaces: replaces
-            }, StringError);
+            });
 
             Object.keys(replaces).forEach(function (from) {
                 var to = replaces[from];
@@ -87,5 +91,7 @@
     StringError.prototype = new Error();
 
     //extend xs with string
-    xs.extend(xs, string);
+    Object.keys(string).forEach(function (key) {
+        xs[key] = string[key];
+    });
 })(window, 'xs');

@@ -1,16 +1,16 @@
 {
     "core": [
         "xs.lang.Type",
-        "xs.core.Assert",
+        "xs.core.Collection",
+        "xs.log.Router",
+        "xs.log.Logger",
+        "xs.core.Asserter",
         "xs.lang.Object",
         "xs.lang.Array",
         "xs.lang.List",
         "xs.lang.Attribute",
         "xs.lang.Function",
         "xs.lang.String",
-        "xs.core.Collection",
-        "xs.log.Router",
-        "xs.log.Logger",
         "xs.core.ContractsManager",
         "xs.core.DependenciesManager",
         "xs.core.Loader",
@@ -28,7 +28,11 @@
         "xs.class.preprocessors.processImplements",
         "xs.class.preprocessors.defineElements",
         "xs.class.postprocessors.logger",
+        "xs.class.postprocessors.asserter",
         "xs.class.Base",
+        "xs.enum.Enum",
+        "xs.enum.preprocessors.namespace",
+        "xs.enum.preprocessors.values",
         "xs.interface.Interface",
         "xs.interface.preprocessors.namespace",
         "xs.interface.preprocessors.prepareInterface",
@@ -82,6 +86,17 @@
                 },
                 "WebSocket": {
                     "type": "class"
+                }
+            },
+            "util": {
+                "collection": {
+                    "Collection": {
+                        "type": "class"
+                    },
+                    "Event": {
+                        "type": "class",
+                        "test": false
+                    }
                 }
             },
             "ux": {

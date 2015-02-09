@@ -125,9 +125,11 @@ module('xs.event.Observable', function () {
         object.on('add', function (event) {
             stoppableSum /= event.data.mod;
         });
-        object.fire('add', {
+
+        //verify value, returned by fire
+        strictEqual(object.fire('add', {
             mod: 5
-        });
+        }), false);
         strictEqual(stoppableSum, 20);
 
         //check non-stoppable event firing
@@ -143,9 +145,9 @@ module('xs.event.Observable', function () {
         object.on('remove', function (event) {
             unstoppableSum /= event.data.mod;
         });
-        object.fire('remove', {
+        strictEqual(object.fire('remove', {
             mod: 5
-        });
+        }), true);
         strictEqual(unstoppableSum, 4);
     });
 

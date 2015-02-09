@@ -14,6 +14,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.event.IObservable
+ *
+ * @extends xs.interface.Base
  */
 xs.define(xs.Interface, 'ns.IObservable', function () {
 

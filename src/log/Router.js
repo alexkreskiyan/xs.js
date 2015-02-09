@@ -27,12 +27,12 @@
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
      * @class xs.log
+     *
+     * @singleton
      */
 
     /**
      * Error level. Is used to log application errors
-     *
-     * @static
      *
      * @readonly
      *
@@ -45,8 +45,6 @@
     /**
      * Warning level. Is used to log application warnings
      *
-     * @static
-     *
      * @readonly
      *
      * @property Warning
@@ -57,8 +55,6 @@
 
     /**
      * Info level. Is used for application status logging
-     *
-     * @static
      *
      * @readonly
      *
@@ -71,8 +67,6 @@
     /**
      * Trace level. Is used for development stage logging
      *
-     * @static
-     *
      * @readonly
      *
      * @property Trace
@@ -83,8 +77,6 @@
 
     /**
      * Profile level. Is used for application profiling messages
-     *
-     * @static
      *
      * @readonly
      *
@@ -103,7 +95,7 @@
      *
      * @singleton
      */
-    xs.log.Router = (function () {
+    var router = xs.log.Router = (function () {
         var me = {};
 
         /**
@@ -160,7 +152,7 @@
          */
         var ready = false;
 
-        xs.Attribute.property.define(me, 'isReady', {
+        Object.defineProperty(me, 'isReady', {
             get: function () {
                 return ready;
             },
@@ -205,9 +197,9 @@
         me.isCategory = function (category) {
 
             //assert that category is a string
-            xs.assert.string(category, 'isCategory - given category "$category" is not a string', {
+            assert.string(category, 'isCategory - given category "$category" is not a string', {
                 $category: category
-            }, RouterError);
+            });
 
             return categoryRe.test(category);
         };
@@ -235,9 +227,9 @@
              *
              * @type Number
              */
-            xs.Attribute.property.define(me, 'length', {
+            Object.defineProperty(me, 'length', {
                 get: function () {
-                    return storage.items.length;
+                    return storage.private.items.length;
                 },
                 set: xs.emptyFn
             });
@@ -258,9 +250,9 @@
             me.add = function (route) {
 
                 //assert, that route is instance of xs.log.route.Route base route class
-                xs.assert.instance(route, xs.log.route.Route, 'routes.add - given route "$route" is not instance of xs.log.route.Route', {
+                assert.instance(route, xs.log.route.Route, 'routes.add - given route "$route" is not instance of xs.log.route.Route', {
                     $route: route
-                }, RouterError);
+                });
 
                 //add route to storage
                 storage.add(route);
@@ -330,9 +322,9 @@
                 if (arguments.length) {
 
                     //assert, that route is instance of xs.log.route.Route base route class
-                    xs.assert.instance(route, xs.log.route.Route, 'routes.remove - given route "$route" is not instance of xs.log.route.Route', {
+                    assert.instance(route, xs.log.route.Route, 'routes.remove - given route "$route" is not instance of xs.log.route.Route', {
                         $route: route
-                    }, RouterError);
+                    });
 
                 }
 
@@ -362,4 +354,14 @@
 
     RouterError.prototype = new Error();
 
+    //hook method to create asserter. here fake assert is needed for first call
+    var assert = {
+        string: function () {
+
+        }
+    };
+    router.ready = function () {
+        assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Router'), RouterError);
+        delete router.ready;
+    };
 })(window, 'xs');

@@ -15,49 +15,51 @@
     //framework shorthand
     var xs = root[ns];
 
-    var logger = new xs.log.Logger('xs.interface.preprocessors.prepareElements');
+    var log = new xs.log.Logger('xs.interface.preprocessors.prepareElements');
+
+    var assert = new xs.core.Asserter(log, PrepareElementsError);
 
     /**
-     * Preprocessor prepareConstants
-     * Is used to process interface constants
+     * Preprocessor prepareElements
+     * Is used to process interface elements
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      */
-    xs.interface.preprocessors.add('prepareConstants', function () {
+    xs.interface.preprocessors.add('prepareElements', function () {
 
         return true;
     }, function (Interface, descriptor) {
 
-        logger.trace(Interface.label ? Interface.label : 'undefined');
+        log.trace(Interface.label ? Interface.label : 'undefined');
 
         //constants
-        _processConstants(Interface, descriptor);
+        processConstants(Interface, descriptor);
 
         //static properties
-        _processStaticProperties(Interface, descriptor);
+        processStaticProperties(Interface, descriptor);
 
         //static methods
-        _processStaticMethods(Interface, descriptor);
+        processStaticMethods(Interface, descriptor);
 
         //constructor
-        _processConstructor(Interface, descriptor);
+        processConstructor(Interface, descriptor);
 
         //properties
-        _processProperties(Interface, descriptor);
+        processProperties(Interface, descriptor);
 
         //methods
-        _processMethods(Interface, descriptor);
+        processMethods(Interface, descriptor);
     });
 
-    var _processConstants = function (Interface, descriptor) {
+    var processConstants = function (Interface, descriptor) {
 
-        //assert, that constants list is an object
-        xs.assert.array(descriptor.constant, '[$Interface]: constants list "$constants" is not an array', {
+        //assert, that constants list is an array
+        assert.array(descriptor.constant, '[$Interface]: constants list "$constants" is not an array', {
             $Interface: Interface.label,
             $constants: descriptor.constant
-        }, PrepareElementsError);
+        });
 
         //convert to xs.core.Collection
         descriptor.constant = new xs.core.Collection(descriptor.constant);
@@ -72,10 +74,10 @@
 
         //add own constants from raw descriptor and save to Interface.descriptor
         descriptor.constant.each(function (name) {
-            xs.assert.ok(name && xs.isString(name), '[$Interface]: given constant name "$name" is incorrect', {
+            assert.ok(name && xs.isString(name), '[$Interface]: given constant name "$name" is incorrect', {
                 $Interface: Interface.label,
                 $name: name
-            }, PrepareElementsError);
+            });
 
             if (!own.has(name)) {
                 own.add(name);
@@ -84,13 +86,13 @@
 
     };
 
-    var _processStaticProperties = function (Interface, descriptor) {
+    var processStaticProperties = function (Interface, descriptor) {
 
         //assert, that static properties list is an object
-        xs.assert.object(descriptor.static.property, '[$Interface]: static properties list "$properties" is not an object', {
+        assert.object(descriptor.static.property, '[$Interface]: static properties list "$properties" is not an object', {
             $Interface: Interface.label,
             $properties: descriptor.static.property
-        }, PrepareElementsError);
+        });
 
         //convert to xs.core.Collection
         descriptor.static.property = new xs.core.Collection(descriptor.static.property);
@@ -105,10 +107,10 @@
 
         //add own static properties from raw descriptor
         descriptor.static.property.each(function (value, name) {
-            xs.assert.ok(name, '[$Interface]: given static property name "$name" is incorrect', {
+            assert.ok(name, '[$Interface]: given static property name "$name" is incorrect', {
                 $Interface: Interface.label,
                 $name: name
-            }, PrepareElementsError);
+            });
 
             //save descriptor basics
             var property = xs.Attribute.property.prepare(name, value);
@@ -134,13 +136,13 @@
         });
     };
 
-    var _processStaticMethods = function (Interface, descriptor) {
+    var processStaticMethods = function (Interface, descriptor) {
 
         //assert, that static methods list is an object
-        xs.assert.object(descriptor.static.method, '[$Interface]: static methods list "$methods" is not an object', {
+        assert.object(descriptor.static.method, '[$Interface]: static methods list "$methods" is not an object', {
             $Interface: Interface.label,
             $methods: descriptor.static.method
-        }, PrepareElementsError);
+        });
 
         //convert to xs.core.Collection
         descriptor.static.method = new xs.core.Collection(descriptor.static.method);
@@ -155,10 +157,10 @@
 
         //add own static methods from raw descriptor
         descriptor.static.method.each(function (value, name) {
-            xs.assert.ok(name, '[$Interface]: given static method name "$name" is incorrect', {
+            assert.ok(name, '[$Interface]: given static method name "$name" is incorrect', {
                 $Interface: Interface.label,
                 $name: name
-            }, PrepareElementsError);
+            });
 
             //save descriptor basics
             var method = xs.Attribute.property.prepare(name, value);
@@ -176,14 +178,14 @@
 
     };
 
-    var _processConstructor = function (Interface, descriptor) {
+    var processConstructor = function (Interface, descriptor) {
         var inherited = Interface.parent.descriptor.hasOwnProperty('constructor') ? Interface.parent.descriptor.constructor : undefined;
 
         //get own constructor from raw descriptor
         var own = descriptor.hasOwnProperty('constructor') ? descriptor.constructor : undefined;
 
         //verify, that own constructor is undefined or is function
-        xs.assert.ok(!xs.isDefined(own) || xs.isFunction(own), 'own constructor is defined and is not a function', PrepareElementsError);
+        assert.ok(!xs.isDefined(own) || xs.isFunction(own), 'own constructor is defined and is not a function');
 
         //apply
         if (own) {
@@ -195,13 +197,13 @@
         }
     };
 
-    var _processProperties = function (Interface, descriptor) {
+    var processProperties = function (Interface, descriptor) {
 
         //assert, that properties list is an object
-        xs.assert.object(descriptor.property, '[$Interface]: static properties list "$properties" is not an object', {
+        assert.object(descriptor.property, '[$Interface]: static properties list "$properties" is not an object', {
             $Interface: Interface.label,
             $properties: descriptor.property
-        }, PrepareElementsError);
+        });
 
         //convert to xs.core.Collection
         descriptor.property = new xs.core.Collection(descriptor.property);
@@ -217,10 +219,10 @@
 
         //add own properties from raw descriptor
         descriptor.property.each(function (value, name) {
-            xs.assert.ok(name, '[$Interface]: given property name "$name" is incorrect', {
+            assert.ok(name, '[$Interface]: given property name "$name" is incorrect', {
                 $Interface: Interface.label,
                 $name: name
-            }, PrepareElementsError);
+            });
 
             //save descriptor basics
             var property = xs.Attribute.property.prepare(name, value);
@@ -246,13 +248,13 @@
         });
     };
 
-    var _processMethods = function (Interface, descriptor) {
+    var processMethods = function (Interface, descriptor) {
 
         //assert, that methods list is an object
-        xs.assert.object(descriptor.method, '[$Interface]: methods list "$methods" is not an object', {
+        assert.object(descriptor.method, '[$Interface]: methods list "$methods" is not an object', {
             $Interface: Interface.label,
             $methods: descriptor.method
-        }, PrepareElementsError);
+        });
 
         //init reference to methods list, converted to xs.core.Collection
         descriptor.method = new xs.core.Collection(descriptor.method);
@@ -268,10 +270,10 @@
 
         //add own methods from raw descriptor
         descriptor.method.each(function (value, name) {
-            xs.assert.ok(name, '[$Interface]: given method name "$name" is incorrect', {
+            assert.ok(name, '[$Interface]: given method name "$name" is incorrect', {
                 $Interface: Interface.label,
                 $name: name
-            }, PrepareElementsError);
+            });
 
             //save descriptor basics
             var method = xs.Attribute.property.prepare(name, value);
@@ -298,7 +300,7 @@
      * @class PrepareElementsError
      */
     function PrepareElementsError(message) {
-        this.message = 'xs.interface.preprocessors.prepareConstants::' + message;
+        this.message = 'xs.interface.preprocessors.prepareElements::' + message;
     }
 
     PrepareElementsError.prototype = new Error();

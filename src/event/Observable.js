@@ -14,6 +14,8 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.event.Observable
+ *
+ * @extends xs.class.Base
  */
 xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
@@ -87,7 +89,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         var me = this;
 
         //assert that events are given
-        xs.assert.object(me.self.events, 'constructor - events are given incorrectly. Class constant event must be an object', ObservableError);
+        self.assert.object(me.self.events, 'constructor - events are given incorrectly. Class constant event must be an object');
 
         //register eventHandlers collections
         var handlers = me.private.eventsHandlers = {};
@@ -112,6 +114,13 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *
      * @param {String} event name of registered event
      * @param {Object} [data] optional object data
+     *
+     * @return {Boolean} whether event processing was not stopped.
+     *
+     * Notice, that:
+     *
+     * - if event is not stoppable, method will always return true
+     * - if method is stoppable, it will return true, if no handler stopped processing and false - otherwise
      */
     Class.method.fire = function (event, data) {
         var me = this;
@@ -122,54 +131,54 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event
         //assert event name is non-empty string
-        xs.assert.ok(event && xs.isString(event), 'fire - given event name "$event" is not a string', {
+        self.assert.ok(event && xs.isString(event), 'fire - given event name "$event" is not a string', {
             $event: event
-        }, ObservableError);
+        });
 
 
         //check data
         //assert that data is either not given or is object
-        xs.assert.ok(arguments.length === 1 || xs.isObject(data), 'fire - given event "$event" data "$data" is not an object', {
+        self.assert.ok(arguments.length === 1 || xs.isObject(data), 'fire - given event "$event" data "$data" is not an object', {
             $event: event,
             $data: data
-        }, ObservableError);
+        });
 
 
         //check event options
         //assert that given event is registered
-        xs.assert.ok(me.self.events.hasOwnProperty(event), 'fire - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'fire - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
             $event: event
-        }, ObservableError);
+        });
 
         //assert that given event options are object
         var options = me.self.events[event];
-        xs.assert.object(options, 'fire - given event "$event" options "$options" are not an object', {
+        self.assert.object(options, 'fire - given event "$event" options "$options" are not an object', {
             $event: event,
             $options: options
-        }, ObservableError);
+        });
 
         //check event constructor
         //assert that type is specified
-        xs.assert.ok(options.hasOwnProperty('type'), 'fire - no type given for event "$event". Add event type to Class.const.events hash constant with property type, which value must be string, referencing name of imported Class', {
+        self.assert.ok(options.hasOwnProperty('type'), 'fire - no type given for event "$event". Add event type to Class.const.events hash constant with property type, which value must be string, referencing name of imported Class', {
             $event: event
-        }, ObservableError);
+        });
 
         //assert that type is non-empty string
-        xs.assert.ok(options.type && xs.isString(options.type), 'fire - given event "$event" type "$type" is not a string', {
+        self.assert.ok(options.type && xs.isString(options.type), 'fire - given event "$event" type "$type" is not a string', {
             $event: event
-        }, ObservableError);
+        });
 
         //try to get EventClass
         var EventClass = xs.ContractsManager.get(me.self.descriptor.resolveName(options.type));
 
         //assert that EventClass is class
-        xs.assert.Class(EventClass, 'fire - given event "$event" type "$Event" is not a class', {
+        self.assert.Class(EventClass, 'fire - given event "$event" type "$Event" is not a class', {
             $event: event,
             $Event: EventClass
         });
 
         //assert that EventClass implements IEvent interface
-        xs.assert.ok(EventClass.implements(imports.IEvent), 'fire - given event "$event" type "$Event" does not implement base event interface "$Interface"', {
+        self.assert.ok(EventClass.implements(imports.IEvent), 'fire - given event "$event" type "$Event" does not implement base event interface "$Interface"', {
             $event: event,
             $Event: EventClass,
             $Interface: imports.IEvent.label
@@ -187,9 +196,9 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             stoppable = options.stoppable;
 
             //assert that stoppable is boolean
-            xs.assert.boolean(stoppable, 'fire - given event "$event" stoppable option value "$stoppable" is not a boolean', {
+            self.assert.boolean(stoppable, 'fire - given event "$event" stoppable option value "$stoppable" is not a boolean', {
                 $stoppable: stoppable
-            }, ObservableError);
+            });
 
         } else {
             stoppable = true;
@@ -197,19 +206,28 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         self.log.trace('fire - event is ' + (stoppable ? 'stoppable' : 'not stoppable') + ', processing');
 
-        //handle fire
-        //handlers
-        var handlers = me.private.eventsHandlers[event];
-        if (stoppable) {
-            handlers.find(function (item) {
 
-                return item.realHandler(eventObject) === false;
-            });
-        } else {
+        //handle fire
+
+        //get handlers list for event
+        var handlers = me.private.eventsHandlers[event];
+
+        //non-stoppable event always returns true
+        if (!stoppable) {
             handlers.each(function (item) {
                 item.realHandler(eventObject);
             });
+
+            return true;
         }
+
+        //if event is stoppable - result is opposite to whether some handler found:
+        //if any handler returns false, find return relative item, and that true-like value is returned as false
+        //if no handler returns false, find return undefined, and that false-like value is returned as true
+        return !handlers.find(function (item) {
+
+            return item.realHandler(eventObject) === false;
+        });
     };
 
     /**
@@ -247,36 +265,36 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event
         //assert event name is non-empty string
-        xs.assert.ok(event && xs.isString(event), 'on - given event name "$event" is not a string', {
+        self.assert.ok(event && xs.isString(event), 'on - given event name "$event" is not a string', {
             $event: event
-        }, ObservableError);
+        });
 
         //assert that given event is registered
-        xs.assert.ok(me.self.events.hasOwnProperty(event), 'on - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'on - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
             $event: event
-        }, ObservableError);
+        });
 
 
         //check handler
         //assert that given handler is function
-        xs.assert.fn(handler, 'on - given event "$event" handler "$handler" is not a function', {
+        self.assert.fn(handler, 'on - given event "$event" handler "$handler" is not a function', {
             $event: event,
             $handler: handler
-        }, ObservableError);
+        });
 
         //assert that given handler was not assigned yet
-        xs.assert.not(me.private.eventsHandlers[event].find(function (item) {
+        self.assert.not(me.private.eventsHandlers[event].find(function (item) {
             return item.handler === handler;
         }), 'on - given event "$event" handler "$handler" is already assigned', {
             $event: event,
             $handler: handler
-        }, ObservableError);
+        });
 
 
         //check options (if given)
-        xs.assert.ok(arguments.length === 2 || xs.isObject(options), 'on - given options "$options" are not an object', {
+        self.assert.ok(arguments.length === 2 || xs.isObject(options), 'on - given options "$options" are not an object', {
             $options: options
-        }, ObservableError);
+        });
 
 
         //if no options given - simply add
@@ -317,14 +335,14 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             buffer = options.buffer;
 
             //assert that buffer is number
-            xs.assert.number(buffer, 'on - given buffer "$buffer" is not a number', {
+            self.assert.number(buffer, 'on - given buffer "$buffer" is not a number', {
                 $buffer: buffer
-            }, ObservableError);
+            });
 
             //assert that buffer is positive whole number
-            xs.assert.ok(buffer > 0 && Math.round(buffer) === buffer, 'on - given buffer "$buffer" is not a number', {
+            self.assert.ok(buffer > 0 && Math.round(buffer) === buffer, 'on - given buffer "$buffer" is not a number', {
                 $buffer: buffer
-            }, ObservableError);
+            });
         } else {
             buffer = false;
         }
@@ -337,14 +355,14 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             calls = options.calls;
 
             //assert that calls is number
-            xs.assert.number(calls, 'on - given calls "$calls" is not a number', {
+            self.assert.number(calls, 'on - given calls "$calls" is not a number', {
                 $calls: calls
-            }, ObservableError);
+            });
 
             //assert that calls is positive whole number
-            xs.assert.ok(calls > 0 && Math.round(calls) === calls, 'on - given calls "$calls" is not a number', {
+            self.assert.ok(calls > 0 && Math.round(calls) === calls, 'on - given calls "$calls" is not a number', {
                 $calls: calls
-            }, ObservableError);
+            });
         } else {
             calls = 0;
         }
@@ -381,12 +399,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
                         if (!item.calls) {
                             //turn off event by all name, handler and scope
                             me.off(eventName, function (item) {
-                                return item.handler === handler && item.scope === scope;
-                            }, xs.core.Collection.All);
+                                return item.handler === handler;
+                            });
                         }
 
                         //call raw handler
-                        handler.call(scope, event);
+                        handler.call(item.scope, event);
                     }, buffer, item, event);
                 };
             } else {
@@ -406,7 +424,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
                     item.timeout = setTimeout(function (item, event) {
 
                         //call raw handler
-                        item.handler.call(scope, event);
+                        item.handler.call(item.scope, event);
                     }, buffer, item, event);
                 };
             }
@@ -431,12 +449,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
                     if (!item.calls) {
                         //turn off event by all name, handler and scope
                         me.off(eventName, function (item) {
-                            return item.handler === handler && item.scope === scope;
-                        }, xs.core.Collection.All);
+                            return item.handler === handler;
+                        });
                     }
 
                     //call raw handler
-                    return item.handler.call(scope, event);
+                    return item.handler.call(item.scope, event);
                 };
             } else {
                 realHandler = function (event) {
@@ -450,7 +468,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
                     }
 
                     //call raw handler
-                    return item.handler.call(scope, event);
+                    return item.handler.call(item.scope, event);
                 };
             }
         }
@@ -469,9 +487,9 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             priority = options.priority;
 
             //assert that priority is number
-            xs.assert.number(priority, 'on - given priority "$priority" is not a number', {
+            self.assert.number(priority, 'on - given priority "$priority" is not a number', {
                 $priority: priority
-            }, ObservableError);
+            });
         } else {
             priority = false;
         }
@@ -521,22 +539,22 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event (if given)
         //assert event name is non-empty string (if given)
-        xs.assert.ok(!arguments.length || (event && xs.isString(event)), 'off - given event name "$event" is not a string', {
+        self.assert.ok(!arguments.length || (event && xs.isString(event)), 'off - given event name "$event" is not a string', {
             $event: event
-        }, ObservableError);
+        });
 
         //assert that given event is registered
-        xs.assert.ok(!arguments.length || me.self.events.hasOwnProperty(event), 'off - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(!arguments.length || me.self.events.hasOwnProperty(event), 'off - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
             $event: event
-        }, ObservableError);
+        });
 
 
         //check selector
         //assert that selector is function if given
-        xs.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'off - given event "$event" selector "$selector" is not a function', {
+        self.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'off - given event "$event" selector "$selector" is not a function', {
             $event: event,
             $selector: selector
-        }, ObservableError);
+        });
 
 
         //handle different scenarios
@@ -610,22 +628,22 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event
         //assert event name is non-empty string
-        xs.assert.ok(event && xs.isString(event), 'suspend - given event name "$event" is not a string', {
+        self.assert.ok(event && xs.isString(event), 'suspend - given event name "$event" is not a string', {
             $event: event
-        }, ObservableError);
+        });
 
         //assert that given event is registered
-        xs.assert.ok(me.self.events.hasOwnProperty(event), 'suspend - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'suspend - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
             $event: event
-        }, ObservableError);
+        });
 
 
         //check selector
         //assert that selector is function if given
-        xs.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'suspend - given event "$event" selector "$selector" is not a function', {
+        self.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'suspend - given event "$event" selector "$selector" is not a function', {
             $event: event,
             $selector: selector
-        }, ObservableError);
+        });
 
 
         //handle different scenarios
@@ -699,22 +717,22 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event
         //assert event name is non-empty string
-        xs.assert.ok(event && xs.isString(event), 'resume - given event name "$event" is not a string', {
+        self.assert.ok(event && xs.isString(event), 'resume - given event name "$event" is not a string', {
             $event: event
-        }, ObservableError);
+        });
 
         //assert that given event is registered
-        xs.assert.ok(me.self.events.hasOwnProperty(event), 'resume - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'resume - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
             $event: event
-        }, ObservableError);
+        });
 
 
         //check selector
         //assert that selector is function if given
-        xs.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'resume - given event "$event" selector "$selector" is not a function', {
+        self.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'resume - given event "$event" selector "$selector" is not a function', {
             $event: event,
             $selector: selector
-        }, ObservableError);
+        });
 
 
         //handle different scenarios
@@ -768,19 +786,4 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         self.log.trace('destroy - destroying observable');
         this.off();
     };
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class ObservableError
-     */
-    function ObservableError(message) {
-        this.message = self.label + '::' + message;
-    }
-
-    ObservableError.prototype = new Error();
 });
