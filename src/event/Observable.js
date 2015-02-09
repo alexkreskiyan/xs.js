@@ -92,10 +92,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         self.assert.object(me.self.events, 'constructor - events are given incorrectly. Class constant event must be an object');
 
         //register eventHandlers collections
-        var handlers = me.private.eventsHandlers = {};
-        Object.keys(me.self.events).forEach(function (name) {
-            handlers[name] = new xs.core.Collection();
-        });
+        me.private.eventsHandlers = {};
     };
 
     /**
@@ -212,6 +209,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         //get handlers list for event
         var handlers = me.private.eventsHandlers[event];
 
+        //if no handlers exist in a moment - return true
+        if (!handlers) {
+
+            return true;
+        }
+
         //non-stoppable event always returns true
         if (!stoppable) {
             handlers.each(function (item) {
@@ -282,8 +285,10 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             $handler: handler
         });
 
+        var eventsHandlers = me.private.eventsHandlers;
+
         //assert that given handler was not assigned yet
-        self.assert.not(me.private.eventsHandlers[event].find(function (item) {
+        self.assert.ok(!eventsHandlers.hasOwnProperty(event) || !eventsHandlers[event].find(function (item) {
             return item.handler === handler;
         }), 'on - given event "$event" handler "$handler" is already assigned', {
             $event: event,
@@ -296,12 +301,18 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             $options: options
         });
 
+        //add handlers collection for event if not existing yet
+        if (!eventsHandlers.hasOwnProperty(event)) {
+            eventsHandlers[event] = new xs.core.Collection();
+        }
+
+        var handlers = eventsHandlers[event];
 
         //if no options given - simply add
         if (!options) {
             self.log.trace('on - no options given, simply adding handler');
 
-            me.private.eventsHandlers[event].add({
+            handlers.add({
                 handler: handler,
                 realHandler: function (event) {
                     //item is eventsHandler[event] collection item
@@ -499,10 +510,10 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         //if priority not given - add, else - insert
         if (priority === false) {
             //add item to collection
-            me.private.eventsHandlers[event].add(item);
+            handlers.add(item);
         } else {
             //priority in fact is index of item in handlers collection
-            me.private.eventsHandlers[event].insert(priority, item);
+            handlers.insert(priority, item);
         }
 
         return me;
@@ -558,26 +569,39 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
 
         //handle different scenarios
+        var eventsHandlers = me.private.eventsHandlers;
 
         //complete truncate of all handlers
         if (!arguments.length) {
             self.log.trace('off - truncate scenario: removing all listeners on all events');
 
-            var eventsHandlers = me.private.eventsHandlers;
-            Object.keys(eventsHandlers).forEach(function (name) {
-                eventsHandlers[name].remove();
+            Object.keys(eventsHandlers).forEach(function (event) {
+                eventsHandlers[event].remove();
+
+                //remove empty collection
+                delete eventsHandlers[event];
             });
 
             return me;
         }
 
         //working with single event
-        var handlers = me.private.eventsHandlers[event];
+        var handlers = eventsHandlers[event];
+
+        //if no handlers exist in a moment - return
+        if (!handlers) {
+
+            return me;
+        }
+
         //truncate
         if (arguments.length === 1) {
             self.log.trace('off - event truncate scenario: removing all listeners on ' + event + ' event');
 
             handlers.remove();
+
+            //remove empty collection
+            delete eventsHandlers[event];
 
             return me;
         }
@@ -594,6 +618,13 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
                 flags: flags
             });
             handlers.removeBy(selector, flags);
+        }
+
+        //if handlers collection is empty - remove it
+        if (!handlers.length) {
+
+            //remove empty collection
+            delete eventsHandlers[event];
         }
 
         return me;
@@ -647,29 +678,37 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
 
         //handle different scenarios
+        var eventsHandlers = me.private.eventsHandlers;
+
+        //if no handlers exist in a moment - return
+        if (!eventsHandlers.hasOwnProperty(event)) {
+
+            return me;
+        }
 
         var handlers;
+
         //selector given
-        if (arguments.length === 2) {
+        if (arguments.length >= 2) {
 
             //get handlers subset
             if (arguments.length === 2) {
                 self.log.trace('suspend - selector suspending scenario: suspending all listeners on ' + event + ', that match selector', {
                     selector: selector
                 });
-                handlers = me.private.eventsHandlers[event].find(selector);
+                handlers = eventsHandlers[event].find(selector);
             } else {
                 self.log.trace('suspend - selector suspending scenario: suspending all listeners on ' + event + ', that match selector with flags', {
                     selector: selector,
                     flags: flags
                 });
-                handlers = me.private.eventsHandlers[event].find(selector, flags);
+                handlers = eventsHandlers[event].find(selector, flags);
             }
 
             //all handlers suspended
         } else {
             self.log.trace('suspend - event truncate scenario: removing all listeners on ' + event + ' event');
-            handlers = me.private.eventsHandlers[event];
+            handlers = eventsHandlers[event];
         }
 
         //if handlers collection found
@@ -736,29 +775,36 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
 
         //handle different scenarios
+        var eventsHandlers = me.private.eventsHandlers;
+
+        //if no handlers exist in a moment - return
+        if (!eventsHandlers.hasOwnProperty(event)) {
+
+            return me;
+        }
 
         var handlers;
         //selector given
-        if (arguments.length === 2) {
+        if (arguments.length >= 2) {
 
             //get handlers subset
             if (arguments.length === 2) {
                 self.log.trace('resume - selector suspending scenario: suspending all listeners on ' + event + ', that match selector', {
                     selector: selector
                 });
-                handlers = me.private.eventsHandlers[event].find(selector);
+                handlers = eventsHandlers[event].find(selector);
             } else {
                 self.log.trace('resume - selector suspending scenario: suspending all listeners on ' + event + ', that match selector with flags', {
                     selector: selector,
                     flags: flags
                 });
-                handlers = me.private.eventsHandlers[event].find(selector, flags);
+                handlers = eventsHandlers[event].find(selector, flags);
             }
 
             //all handlers resumed
         } else {
             self.log.trace('resume - event truncate scenario: removing all listeners on ' + event + ' event');
-            handlers = me.private.eventsHandlers[event];
+            handlers = eventsHandlers[event];
         }
 
         //if handlers collection found

@@ -112,6 +112,9 @@ module('xs.event.Observable', function () {
             object.fire('eventWithIncorrectStoppable');
         });
 
+        //by default - no eventsHandlers collection
+        strictEqual(Object.keys(object.private.eventsHandlers).length, 0);
+
         //check stoppable event firing
         var stoppableSum = 5;
         object.on('add', function (event) {
@@ -227,10 +230,18 @@ module('xs.event.Observable', function () {
         //check duplicate handler denied
         var duplicateHandler = function () {
         };
+
+        //by default - no eventsHandlers collection
+        strictEqual(Object.keys(object.private.eventsHandlers).length, 0);
+
         object.on('add', duplicateHandler);
         throws(function () {
             object.on('add', duplicateHandler);
         });
+
+        //add listeners collection created
+        strictEqual(object.private.eventsHandlers.hasOwnProperty('add'), true);
+
         object.off();
 
         //check options must be either given as object or not given
@@ -431,8 +442,8 @@ module('xs.event.Observable', function () {
         strictEqual(object.private.eventsHandlers.add.length, 2);
         strictEqual(object.private.eventsHandlers.remove.length, 1);
         object.off();
-        strictEqual(object.private.eventsHandlers.add.length, 0);
-        strictEqual(object.private.eventsHandlers.remove.length, 0);
+        strictEqual(Object.keys(object.private.eventsHandlers).length, 0);
+
         //check event truncate scenario
         object.on('add', function () {
         });
@@ -441,9 +452,10 @@ module('xs.event.Observable', function () {
         strictEqual(object.private.eventsHandlers.add.length, 2);
         strictEqual(object.private.eventsHandlers.remove.length, 1);
         object.off('add');
-        strictEqual(object.private.eventsHandlers.add.length, 0);
+        strictEqual(object.private.eventsHandlers.hasOwnProperty('add'), false);
         strictEqual(object.private.eventsHandlers.remove.length, 1);
         object.off();
+
         //check selector scenario
         object.on('add', function () {
         });
