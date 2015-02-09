@@ -29,20 +29,7 @@ xs.define(xs.Class, 'ns.View', function (self) {
 
     Class.implements = ['xs.event.IObservable'];
 
-    Class.constant.events = {
-        mouseOver: {
-            type: 'xs.event.Event',
-            domEvent: 'mouseover'
-        },
-        click: {
-            type: 'xs.event.Event',
-            domEvent: 'click'
-        },
-        mouseOut: {
-            type: 'xs.event.Event',
-            domEvent: 'mouseout'
-        }
-    };
+    Class.constant.events = {};
 
     /**
      * 1. View it self
