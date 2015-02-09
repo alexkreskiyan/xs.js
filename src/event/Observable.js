@@ -146,7 +146,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event options
         //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'fire - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'fire - given event "$event" is not registered within Class.constant.events hash constant. Add event "$event" configuration there', {
             $event: event
         });
 
@@ -159,7 +159,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event constructor
         //assert that type is specified
-        self.assert.ok(options.hasOwnProperty('type'), 'fire - no type given for event "$event". Add event type to Class.const.events hash constant with property type, which value must be string, referencing name of imported Class', {
+        self.assert.ok(options.hasOwnProperty('type'), 'fire - no type given for event "$event". Add event type to Class.constant.events hash constant with property type, which value must be string, referencing name of imported Class', {
             $event: event
         });
 
@@ -270,7 +270,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         });
 
         //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'on - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'on - given event "$event" is not registered within Class.constant.events hash constant. Add event "$event" configuration there', {
             $event: event
         });
 
@@ -544,7 +544,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         });
 
         //assert that given event is registered
-        self.assert.ok(!arguments.length || me.self.events.hasOwnProperty(event), 'off - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(!arguments.length || me.self.events.hasOwnProperty(event), 'off - given event "$event" is not registered within Class.constant.events hash constant. Add event "$event" configuration there', {
             $event: event
         });
 
@@ -633,7 +633,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         });
 
         //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'suspend - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'suspend - given event "$event" is not registered within Class.constant.events hash constant. Add event "$event" configuration there', {
             $event: event
         });
 
@@ -722,7 +722,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         });
 
         //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'resume - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'resume - given event "$event" is not registered within Class.constant.events hash constant. Add event "$event" configuration there', {
             $event: event
         });
 
