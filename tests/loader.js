@@ -30,7 +30,7 @@
     var testsList = params.tests.split(',');
 
     //get src file
-    request('../source.json', function (src) {
+    request('../make/source.json', function (src) {
 
         var modules = {};
         assemblyModules(modules, src.modules);
