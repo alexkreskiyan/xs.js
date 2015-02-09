@@ -13,15 +13,15 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.ux.view.Input
+ * @class xs.view.Element
  */
-xs.define(xs.Class, 'ns.view.Input', function () {
+xs.define(xs.Class, 'ns.Element', function () {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.ux';
+    Class.namespace = 'xs.view';
 
     Class.extends = 'ns.View';
 
