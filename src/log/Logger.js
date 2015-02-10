@@ -320,8 +320,8 @@
         ok: function () {
         }
     };
-    logger.ready = function () {
+    logger.hookReady = function () {
         assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Logger'), LoggerError);
-        delete logger.ready;
+        delete logger.hookReady;
     };
 })(window, 'xs');

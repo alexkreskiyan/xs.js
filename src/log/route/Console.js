@@ -96,10 +96,4 @@ xs.define(xs.Class, 'ns.Console', function (self) {
                 break;
         }
     };
-}, function (Class) {
-
-    'use strict';
-
-    //add new empty console.route
-    xs.log.Router.routes.add(new Class('console'));
 });

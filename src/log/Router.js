@@ -140,27 +140,13 @@
          */
         var buffer = new xs.core.Collection();
 
-        /**
-         * Internal router ready state. When router is not ready yet, all logs are buffered, so when some route is added to router,
-         * all buffered logs are passed to it. When ready, all buffered logs are removed
-         *
-         * @readonly
-         *
-         * @property isReady
-         *
-         * @type {Boolean}
-         */
         var ready = false;
 
-        Object.defineProperty(me, 'isReady', {
-            get: function () {
-                return ready;
-            },
-            set: xs.emptyFn
-        });
-
         /**
-         * Method, that marks router as ready, changing {@link #isReady isReady} state
+         * Method, that marks router as ready.
+         *
+         * Is needed to let all log routes be added to router and not to loose any log entry
+         * Method is removed on call.
          */
         me.ready = function () {
             //mark router as ready
@@ -168,6 +154,8 @@
 
             //remove all messages from buffer
             buffer.remove();
+
+            delete me.ready;
         };
 
         /**
@@ -360,8 +348,8 @@
 
         }
     };
-    router.ready = function () {
+    router.hookReady = function () {
         assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Router'), RouterError);
-        delete router.ready;
+        delete router.hookReady;
     };
 })(window, 'xs');

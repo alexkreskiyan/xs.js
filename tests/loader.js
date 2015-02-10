@@ -54,6 +54,9 @@
             //add path to loader
             xs.Loader.paths.add('xs', '../src');
 
+            //mark xs.log.Router as ready
+            xs.log.Router.ready();
+
             xs.Loader.require(packages, function () {
                 //get tests list
                 var tests = getTests(src.core, testsList).concat(getTests(Object.keys(modules).filter(function (name) {

@@ -855,7 +855,7 @@
     assert = new xs.core.Asserter(new xs.log.Logger('xs'), AsserterError);
 
     //call hooks
-    xs.log.Router.ready();
-    xs.log.Logger.ready();
-    xs.core.Collection.ready();
+    xs.log.Router.hookReady();
+    xs.log.Logger.hookReady();
+    xs.core.Collection.hookReady();
 })(window, 'xs');
