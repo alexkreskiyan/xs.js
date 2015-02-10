@@ -35,35 +35,36 @@
         var modules = {};
         assemblyModules(modules, src.modules);
 
-        var scripts;
+        var core, packages;
 
         //built mode
         if (params.mode) {
-            scripts = ['../build/' + params.mode + '/xs.js'];
+            core = ['../build/' + params.mode + '/xs.js'];
 
+            packages = [];
             //debug mode
         } else {
-            scripts = ['../src/xs.js'];
-            scripts = scripts.concat(src.core.map(function (name) {
+            core = ['../src/xs.js'].concat(src.core.map(function (name) {
                 return resolveSourceFile(name);
             }));
-            scripts = scripts.concat(Object.keys(modules).map(function (name) {
-                return resolveSourceFile(name);
-            }));
+
+            packages = Object.keys(modules);
         }
-        load(scripts, function () {
+        load(core, function () {
             //add path to loader
-            xs.Loader.paths.add('xs', '../src/');
+            xs.Loader.paths.add('xs', '../src');
 
-            //get tests list
-            var tests = getTests(src.core, testsList).concat(getTests(Object.keys(modules).filter(function (name) {
-                var config = modules[name];
-                return config.type === 'class' && config.test !== false;
-            }), testsList));
+            xs.Loader.require(packages, function () {
+                //get tests list
+                var tests = getTests(src.core, testsList).concat(getTests(Object.keys(modules).filter(function (name) {
+                    var config = modules[name];
+                    return config.type === 'class' && config.test !== false;
+                }), testsList));
 
-            load(tests.map(function (name) {
-                return resolveTestFile(name);
-            }), runTests);
+                load(tests.map(function (name) {
+                    return resolveTestFile(name);
+                }), runTests);
+            });
         });
     });
 
@@ -243,6 +244,7 @@
     function load(files, callback) {
         //if files list empty - return
         if (!files.length) {
+            callback();
 
             return;
         }
@@ -267,17 +269,16 @@
             handler();
         });
     };
+
+    me.benchmark = function (fn, n) {
+
+        var start = Date.now();
+        for (var i = 0; i < n; i++) {
+            fn();
+        }
+        var duration = Date.now() - start;
+        console.log('duration: ', duration, 'ms for ', n, 'operations');
+        console.log('median: ', duration / n, 'ms per operation');
+        console.log('mark: about', n / duration, 'operation per ms');
+    };
 }).call(window);
-function benchmark(fn, n) {
-
-    'use strict';
-
-    var start = Date.now();
-    for (var i = 0; i < n; i++) {
-        fn();
-    }
-    var duration = Date.now() - start;
-    console.log('duration: ', duration, 'ms for ', n, 'operations');
-    console.log('median: ', duration / n, 'ms per operation');
-    console.log('mark: about', n / duration, 'operation per ms');
-}
