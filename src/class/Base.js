@@ -89,12 +89,19 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
      * @method destroy
      */
     me.method.destroy = function () {
+        var me = this;
         //assert, that destructor was not called yet
-        self.assert.not(this.private.isDestroyed, 'Object is already destroyed');
+        self.assert.ok(me.hasOwnProperty('private'), 'Object is already destroyed');
 
         //private storage is emptied and removed
-        this.private = undefined;
-        delete this.private;
+        me.private = undefined;
+        delete me.private;
+
+        //remove initArguments reference
+        delete me.initArguments;
+
+        //delete class reference
+        delete me.self;
     };
 
     /**
