@@ -2,9 +2,9 @@
     "--title": "xs.js framework docs",
     "--output": "docs",
     "--": [
-        "src/assert",
         "src/class",
         "src/core",
+        "src/dom",
         "src/env",
         "src/enum",
         "src/event",
@@ -18,5 +18,7 @@
     ],
     "--builtin-classes": true,
     "--external": [
+        "Element",
+        "CSSStyleDeclaration"
     ]
 }
