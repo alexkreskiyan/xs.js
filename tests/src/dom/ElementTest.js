@@ -76,12 +76,8 @@ module('xs.dom.Element', function () {
 
         el.destroy();
 
-        //el reference removed
-        strictEqual(el.private.hasOwnProperty('el'), false);
-
-        //all handlers are removed
-        strictEqual(el.private.hasOwnProperty('domHandlers'), false);
-        strictEqual(el.private.hasOwnProperty('eventsHandlers'), false);
+        //element is destroyed
+        strictEqual(el.hasOwnProperty('el'), false);
         return false;
     });
 
