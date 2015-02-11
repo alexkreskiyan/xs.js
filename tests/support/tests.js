@@ -143,48 +143,21 @@
         info('window.screen.availHeight:' + window.screen.availHeight);
     };
 
-    var windowScreenX = function () {
-        log('window.screenX');
-        if ('screenX' in window) {
-            info('window.screenX supported: ' + window.screenX);
-        } else {
-            warn('window.screenX missing');
-        }
-    };
-
-    var windowScreenY = function () {
-        log('window.screenY');
-        if ('screenY' in window) {
-            info('window.screenY supported: ' + window.screenY);
-        } else {
-            warn('window.screenY missing');
-        }
-    };
-
-    var windowScrollX = function () {
-        log('window.scrollX');
-        if ('scrollX' in window) {
-            info('window.scrollX supported: ' + window.scrollX);
-        } else {
-            warn('window.scrollX missing');
-        }
-    };
-
-    var windowScrollY = function () {
-        log('window.scrollY');
-        if ('scrollY' in window) {
-            info('window.scrollY supported: ' + window.scrollY);
-        } else {
-            warn('window.scrollY missing');
-        }
-    };
-
     var windowSessionStorage = function () {
         log('window.sessionStorage');
         if ('sessionStorage' in window) {
             info('window.sessionStorage supported');
         } else {
             warn('window.sessionStorage missing');
+        }
+    };
+
+    var windowLocalStorage = function () {
+        log('window.localStorage');
+        if ('localStorage' in window) {
+            info('window.localStorage supported');
+        } else {
+            warn('window.localStorage missing');
         }
     };
 
@@ -428,6 +401,68 @@
         });
     };
 
+    var elementClassList = function () {
+        log('element.classList');
+        var el = document.createElement('div');
+
+        if (!('classList' in el)) {
+            warn('element.classList missing');
+
+            return;
+        }
+
+        if (el.classList instanceof window.DOMTokenList) {
+            info('element.classList supported');
+        } else {
+            warn('element.classList is not a DOMTokenList');
+
+        }
+    };
+
+    var elementAttributeAccess = function () {
+        log('element.attributeAccess');
+        var el = document.createElement('div');
+
+        if ('attributes' in el) {
+            if (el.attributes instanceof window.NamedNodeMap) {
+                info('element.attributes supported');
+            } else {
+                warn('element.attributes is not a NamedNodeMap');
+            }
+        } else {
+            warn('element does not have attributes property');
+        }
+
+        if ('setAttribute' in el) {
+            info('element has setAttribute method');
+        } else {
+            warn('element does not have setAttribute method');
+        }
+
+        if ('getAttribute' in el) {
+            info('element has getAttribute method');
+        } else {
+            warn('element does not have getAttribute method');
+        }
+    };
+
+    var elementStyleAccess = function () {
+        log('element.styleAccess');
+        var el = document.createElement('div');
+
+        if (!('style' in el)) {
+            warn('element.style missing');
+
+            return;
+        }
+
+        if (el.style instanceof window.CSSStyleDeclaration) {
+            info('element.style supported');
+        } else {
+            warn('element.style is not a CSSStyleDeclaration');
+        }
+    };
+
     var run = function () {
         logBrowser();
         windowApplicationCache();
@@ -441,11 +476,8 @@
         windowOuterHeight();
         windowPerformance();
         windowScreen();
-        windowScreenX();
-        windowScreenY();
-        windowScrollX();
-        windowScrollY();
         windowSessionStorage();
+        windowLocalStorage();
         windowOnBlur();
         windowOnChange();
         windowOnClick();
@@ -463,6 +495,9 @@
         windowPostMessage();
         windowRequestAnimationFrame();
         navigatorOnLine();
+        elementClassList();
+        elementAttributeAccess();
+        elementStyleAccess();
     };
 
     var shallowStringify = function (object) {
