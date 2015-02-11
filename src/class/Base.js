@@ -37,10 +37,18 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
     };
 
     /**
+     * Property, that returns whether object is destroyed
      *
-     * @type {boolean}
+     * @readonly
+     *
+     * @property isDestroyed
+     *
+     * @type {Boolean}
      */
     me.property.isDestroyed = {
+        get: function () {
+            return this.hasOwnProperty('private');
+        },
         set: xs.emptyFn
     };
 
@@ -84,7 +92,9 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
         //assert, that destructor was not called yet
         self.assert.not(this.private.isDestroyed, 'Object is already destroyed');
 
-        this.private.isDestroyed = true;
+        //private storage is emptied and removed
+        this.private = undefined;
+        delete this.private;
     };
 
     /**
