@@ -45,6 +45,11 @@
     ],
     "modules": {
         "xs": {
+            "dom": {
+                "Element": {
+                    "type": "class"
+                }
+            },
             "event": {
                 "IEvent": {
                     "type": "interface"

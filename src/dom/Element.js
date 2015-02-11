@@ -33,6 +33,9 @@ xs.define(xs.Class, 'ns.Element', function (self) {
         dblClick: {
             domType: 'dblclick',
             type: 'xs.event.Event'
+        },
+        destroy: {
+            type: 'xs.event.Event'
         }
     };
 
@@ -142,6 +145,9 @@ xs.define(xs.Class, 'ns.Element', function (self) {
 
     Class.method.destroy = function () {
         var me = this;
+
+        //fire destroy event
+        me.fire('destroy');
 
         me.off();
 
