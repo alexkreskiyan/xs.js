@@ -21,7 +21,9 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
 
     'use strict';
 
-    var me = this;
+    var Class = this;
+
+    Class.abstract = true;
 
     /**
      * Class string representation
@@ -32,7 +34,7 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
      *
      * @method toString
      */
-    me.static.method.toString = function () {
+    Class.static.method.toString = function () {
         return '[class ' + (this.label ? this.label : 'xClass') + ']';
     };
 
@@ -45,7 +47,7 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
      *
      * @type {Boolean}
      */
-    me.property.isDestroyed = {
+    Class.property.isDestroyed = {
         get: function () {
             return this.hasOwnProperty('private');
         },
@@ -59,7 +61,7 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
      *
      * @return {xs.class.Base} clone object
      */
-    me.method.clone = function () {
+    Class.method.clone = function () {
         var me = this;
 
         //create clone via factory
@@ -88,7 +90,7 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
      *
      * @method destroy
      */
-    me.method.destroy = function () {
+    Class.method.destroy = function () {
         var me = this;
         //assert, that destructor was not called yet
         self.assert.ok(me.hasOwnProperty('private'), 'Object is already destroyed');
@@ -111,7 +113,7 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
      *
      * @method toString
      */
-    me.method.toString = function () {
+    Class.method.toString = function () {
         return '[instance ' + (this.constructor.label ? this.constructor.label : 'xClass') + ']';
     };
 });

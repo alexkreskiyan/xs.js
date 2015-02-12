@@ -13,8 +13,17 @@ module('xs.class.Base', function () {
     'use strict';
 
     test('clone', function () {
+        var me = this;
+
+        me.Class = xs.Class(function () {
+
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
         //create simple xs.class.Base instance
-        var sample = new xs.class.Base;
+        var sample = new me.Class();
         sample.a = 1;
 
         //create clone
@@ -29,6 +38,6 @@ module('xs.class.Base', function () {
         });
 
         //clone constructor is ok
-        strictEqual(clone.constructor, xs.class.Base);
+        strictEqual(clone.constructor, me.Class);
     });
 });
