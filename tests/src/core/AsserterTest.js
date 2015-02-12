@@ -241,6 +241,15 @@ module('xs.core.Asserter', function () {
     });
 
     test('instance', function () {
+        var me = this;
+        me.Class = xs.Class(function () {
+
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
+
         var assert = new xs.core.Asserter(new xs.log.Logger('tests.core.Asserter'), Error);
 
         //incorrect throws
@@ -248,8 +257,11 @@ module('xs.core.Asserter', function () {
             assert.instance([], {});
         });
 
+        //simple instance works nicely
+        assert.instance([], Array);
+
         //correct is silent
-        assert.instance(new xs.class.Base(), xs.class.Base);
+        assert.instance(new me.Class(), me.Class);
     });
 
     test('implements', function () {

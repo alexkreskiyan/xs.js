@@ -703,7 +703,18 @@
     asserter.prototype.instance = function (instance, Class, message, vars) {
         var me = this;
 
-        //assert that object is object
+        //assert, that Class is a function
+        me.fn(Class, 'Class "$Class" is not a function', {
+            $Class: Class
+        });
+
+        //if instanceof runs ok - return
+        if (instance instanceof Class) {
+
+            return;
+        }
+
+        //assert that instance is object
         me.object(instance, 'Instance "$instance" is not an object', {
             $instance: instance
         });
@@ -718,8 +729,8 @@
             $Class: instance.self
         });
 
-        //assert
-        if ((instance instanceof Class) || (instance.self.mixins(Class))) {
+        //assert a mixin
+        if (instance.self.mixins(Class)) {
 
             return;
         }
