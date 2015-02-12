@@ -163,8 +163,8 @@
             //mix mixed class descriptor into target descriptor
             mixinClass(Class.descriptor, Mixin.descriptor);
 
-            //save mixed into Class.prototype.mixins
-            Class.prototype.mixins[alias] = Mixin;
+            //save mixed into Class.mixins
+            Class.mixins[alias] = Mixin;
         });
     };
 

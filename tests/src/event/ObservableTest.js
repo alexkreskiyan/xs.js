@@ -14,7 +14,7 @@ module('xs.event.Observable', function () {
 
     test('fire', function () {
         var me = this;
-        me.Class = xs.Class(function () {
+        me.Class = xs.Class(function (self) {
             var Class = this;
 
             Class.namespace = 'tests.event.Observable';
@@ -54,7 +54,7 @@ module('xs.event.Observable', function () {
                 var me = this;
 
                 //call mixin constructor
-                me.mixins.observable.call(me);
+                self.mixins.observable.call(me);
             };
 
         }, me.done);
@@ -156,7 +156,7 @@ module('xs.event.Observable', function () {
 
     test('on', function () {
         var me = this;
-        me.Class = xs.Class(function () {
+        me.Class = xs.Class(function (self) {
             var Class = this;
 
             Class.namespace = 'tests.event.Observable';
@@ -196,7 +196,7 @@ module('xs.event.Observable', function () {
                 var me = this;
 
                 //call mixin constructor
-                me.mixins.observable.call(me);
+                self.mixins.observable.call(me);
             };
 
         }, me.done);
@@ -369,7 +369,7 @@ module('xs.event.Observable', function () {
 
     test('off', function () {
         var me = this;
-        me.Class = xs.Class(function () {
+        me.Class = xs.Class(function (self) {
             var Class = this;
 
             Class.namespace = 'tests.event.Observable';
@@ -409,7 +409,7 @@ module('xs.event.Observable', function () {
                 var me = this;
 
                 //call mixin constructor
-                me.mixins.observable.call(me);
+                self.mixins.observable.call(me);
             };
 
         }, me.done);
@@ -472,7 +472,7 @@ module('xs.event.Observable', function () {
 
     test('suspend', function () {
         var me = this;
-        me.Class = xs.Class(function () {
+        me.Class = xs.Class(function (self) {
             var Class = this;
 
             Class.namespace = 'tests.event.Observable';
@@ -512,7 +512,7 @@ module('xs.event.Observable', function () {
                 var me = this;
 
                 //call mixin constructor
-                me.mixins.observable.call(me);
+                self.mixins.observable.call(me);
             };
 
         }, me.done);
@@ -577,7 +577,7 @@ module('xs.event.Observable', function () {
 
     test('resume', function () {
         var me = this;
-        me.Class = xs.Class(function () {
+        me.Class = xs.Class(function (self) {
             var Class = this;
 
             Class.namespace = 'tests.event.Observable';
@@ -617,7 +617,7 @@ module('xs.event.Observable', function () {
                 var me = this;
 
                 //call mixin constructor
-                me.mixins.observable.call(me);
+                self.mixins.observable.call(me);
             };
 
         }, me.done);

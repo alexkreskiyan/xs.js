@@ -76,7 +76,7 @@ xs.define(xs.Class, 'ns.Element', function (self) {
         me.private.el = element;
 
         //call observable constructor
-        me.mixins.observable.call(me);
+        self.mixins.observable.call(me);
 
         //create collection for dom handlers
         me.private.domHandlers = new xs.core.Collection();
@@ -128,7 +128,7 @@ xs.define(xs.Class, 'ns.Element', function (self) {
         var me = this;
 
         //call Observable.on
-        me.mixins.observable.prototype.on.apply(me, arguments);
+        self.mixins.observable.prototype.on.apply(me, arguments);
 
 
         //get eventConfig
@@ -180,7 +180,7 @@ xs.define(xs.Class, 'ns.Element', function (self) {
         var me = this;
 
         //call Observable.on
-        me.mixins.observable.prototype.off.apply(me, arguments);
+        self.mixins.observable.prototype.off.apply(me, arguments);
 
         self.log.trace('on - DOM event, processing domHandlers');
 
@@ -217,7 +217,7 @@ xs.define(xs.Class, 'ns.Element', function (self) {
         me.off();
 
         //call Observable.destroy
-        me.mixins.observable.prototype.destroy.call(me);
+        self.mixins.observable.prototype.destroy.call(me);
 
         //destroy attributes gate
         delete me.private.attributes.el;

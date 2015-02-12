@@ -106,7 +106,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     Class.constructor = function (values, type) {
         var me = this;
 
-        me.mixins.observable.call(me);
+        self.mixins.observable.call(me);
 
         //init items array
         me.private.items = [];
