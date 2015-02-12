@@ -25,11 +25,9 @@ xs.define(xs.Class, 'ns.View', function (self) {
 
     Class.namespace = 'xs.ux';
 
-    Class.mixins.observable = 'xs.event.Observable';
+    Class.extends = 'xs.dom.Element';
 
-    Class.implements = ['xs.event.IObservable'];
-
-    Class.constant.events = {};
+    //Class.constant.events = {};
 
     /**
      * 1. View it self
@@ -59,18 +57,15 @@ xs.define(xs.Class, 'ns.View', function (self) {
         self.log.trace('constructor - creating new view from template "' + template + '"');
 
         //assert, that template is string
-        self.assert.string(template, 'constructor - given template "$template" is not a string', {
+        self.assert.ok(template && xs.isString(template), 'constructor - given template "$template" is not a non-empty string', {
             $template: template
         });
 
-        //call observable constructor
-        me.mixins.observable.call(me);
+        //parse view template into node
+        var el = parseTemplate(template);
 
-        //create collection for dom handlers
-        me.private.domHandlers = new xs.core.Collection();
-
-        //parse view template into nodes collection
-        me.private.nodes = getNodesCollection(template);
+        //call parent constructor
+        self.parent.call(me, el);
     };
 
     /**
@@ -86,109 +81,8 @@ xs.define(xs.Class, 'ns.View', function (self) {
 
     };
 
-    Class.method.on = function (event, handler, options) {
-        var me = this;
-
-        self.log.trace('on - ' + arguments.length + ' arguments given', {
-            event: event,
-            handler: handler,
-            options: options
-        });
-
-        //check event
-        //assert event name is non-empty string
-        self.assert.ok(event && xs.isString(event), 'on - given event name "$event" is not a string', {
-            $event: event
-        });
-
-        //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'on - given event "$event" is not registered within Class.const.events hash constant. Add event "$event" configuration there', {
-            $event: event
-        });
-
-        //assert that given event config is an object
-        var eventConfig = me.self.events[event];
-        self.assert.object(eventConfig, 'on - given event "$event" config "$config" is not an object', {
-            $event: event,
-            $config: eventConfig
-        });
-
-        //check event domEvent
-        //assert that domEvent is not given, or is non-empty string
-        self.assert.ok(!eventConfig.hasOwnProperty('domEvent') || (eventConfig.domEvent && xs.isString(eventConfig.domEvent)), 'on - given event "$event" domEvent "$domEvent" is incorrect. Valid value is non-empty event name string', {
-            $event: event
-        });
-
-        //if not domEvent - simply call observable.on and return
-        if (!eventConfig.domEvent) {
-            self.log.trace('on - not DOM event, calling Observable.on');
-            me.mixins.observable.prototype.on.apply(me, arguments);
-
-            return me;
-        }
-
-        self.log.trace('on - DOM event, calling Observable.on');
-
-
-        //init
-
-        //set up hasListener flag
-        var hasListener = me.private.eventsHandlers[event].length > 0;
-
-
-        //observable processing
-
-        //call Observable.on
-        me.mixins.observable.prototype.on.apply(me, arguments);
-
-
-        //return if no dom listener needed
-        if (hasListener) {
-            self.log.trace('on - DOM event, listener is already created');
-
-            return me;
-        }
-
-        self.log.trace('on - DOM event, creating listener');
-
-
-        //add single handler to DOM
-
-        //get event domEvent
-        var domEvent = eventConfig.domEvent;
-
-        //define domHandler
-        var domHandler = function (domEvent) {
-            me.fire(event, domEvent);
-        };
-
-        //save handler to domHandlers collection
-        me.private.domHandlers.add(domEvent, domHandler);
-
-        //add domHandler as event listener for each node in nodes list
-        me.private.nodes.each(function (node) {
-            node.addEventListener(domEvent, domHandler);
-        });
-
-        return me;
-    };
-
     Class.method.destroy = function () {
         var me = this;
-
-        self.log.trace('destroy - destroying view');
-
-        //remove domHandlers
-        var nodes = me.private.nodes;
-        var domHandlers = me.private.domHandlers;
-        nodes.each(function (node) {
-            domHandlers.each(function (domHandler, domEvent) {
-                node.removeEventListener(domEvent, domHandler);
-            });
-        });
-
-        //call Observable.destroy
-        me.mixins.observable.prototype.destroy.call(me);
 
         //call parent destroy
         self.parent.prototype.destroy.call(me);
@@ -201,15 +95,15 @@ xs.define(xs.Class, 'ns.View', function (self) {
      *
      * @private
      *
-     * @method getNodesCollection
+     * @method parseTemplate
      *
      * @param {String} template
      *
      * @return {xs.core.Collection} collection of nodes in parsed template
      */
-    var getNodesCollection = function (template) {
+    var parseTemplate = function (template) {
 
-        self.log.trace('getNodesCollection - fetching nodes from template "' + template + '"');
+        self.log.trace('parseTemplate - fetching nodes from template "' + template + '"');
 
         //create container div element to parse html into
         var container = document.createElement('div');
@@ -217,20 +111,16 @@ xs.define(xs.Class, 'ns.View', function (self) {
         //set template as div innerHTML
         container.innerHTML = template;
 
+        //assert, that template has single root
+        self.assert.equal(container.childNodes.length, 1, 'parseTemplate - template must contain single root element');
 
-        //init list of template nodes and reference to container.childNodes
-        var nodes = new xs.core.Collection();
-        var children = container.childNodes;
+        //get root
+        var root = container.lastChild;
 
-        //get children count
-        var count = container.childElementCount;
+        //remove root from container
+        container.removeChild(root);
 
-        //fill nodes collection with children
-        for (var i = 0; i < count; i++) {
-            nodes.add(children.item(i));
-        }
-
-        //return nodes collection
-        return nodes;
+        //return root
+        return root;
     };
 });

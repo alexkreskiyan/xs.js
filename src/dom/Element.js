@@ -202,7 +202,7 @@ xs.define(xs.Class, 'ns.Element', function (self) {
             el.removeEventListener(event, domHandler);
 
             return true;
-        });
+        }, xs.core.Collection.All);
 
         return me;
     };
@@ -221,6 +221,9 @@ xs.define(xs.Class, 'ns.Element', function (self) {
 
         //destroy attributes gate
         delete me.private.attributes.el;
+
+        //destroy classes gate
+        delete me.private.classes.el;
 
         //call parent destroy
         self.parent.prototype.destroy.call(me);

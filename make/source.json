@@ -109,8 +109,7 @@
                     "type": "class"
                 },
                 "View": {
-                    "type": "class",
-                    "test": false
+                    "type": "class"
                 }
             }
         }

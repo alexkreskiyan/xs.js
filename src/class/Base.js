@@ -49,7 +49,7 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
      */
     Class.property.isDestroyed = {
         get: function () {
-            return this.hasOwnProperty('private');
+            return !this.hasOwnProperty('private');
         },
         set: xs.emptyFn
     };
