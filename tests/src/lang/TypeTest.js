@@ -1040,6 +1040,9 @@ module('xs.lang.Type', function () {
 
     test('isInstance', function () {
         var me = this;
+        me.Class = xs.Class(function () {
+
+        }, me.done);
         //init test cases
         me.tests = [
             {
@@ -1047,7 +1050,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: new xs.class.Base,
+                data: new me.Class(),
                 ok: true
             },
             {
@@ -1103,6 +1106,7 @@ module('xs.lang.Type', function () {
             }
         ];
 
+        return false;
     }, function () {
         var me = this;
         //run test cases
