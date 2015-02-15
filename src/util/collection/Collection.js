@@ -31,7 +31,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
     Class.constant.events = {
         /**
-         * add:before event. Is fired before new value added/inserted into collection. Stopping that event prevents adding item to collection
+         * add:before event. Is fired before new value added/inserted into collection.
+         * Stopping that event prevents adding item to collection. Fires with {@link xs.util.collection.Event}
          *
          * @event add:before
          */
@@ -39,7 +40,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             type: 'ns.Event'
         },
         /**
-         * add event. Is fired after new value added/inserted into collection
+         * add event. Is fired after new value added/inserted into collection. Fires with {@link xs.util.collection.Event}
          *
          * @event add
          */
@@ -47,7 +48,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             type: 'ns.Event'
         },
         /**
-         * set:before event. Is fired before new value set to collection item. Stopping that event prevents changing value of collection item
+         * set:before event. Is fired before new value set to collection item.
+         * Stopping that event prevents changing value of collection item. Fires with {@link xs.util.collection.Event}
          *
          * @event set:before
          */
@@ -55,7 +57,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             type: 'ns.Event'
         },
         /**
-         * set event. Is fired after new value set to collection item
+         * set event. Is fired after new value set to collection item. Fires with {@link xs.util.collection.Event}
          *
          * @event set
          */
@@ -63,7 +65,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             type: 'ns.Event'
         },
         /**
-         * remove:before event. Is fired before item is removed from collection. Stopping that event prevents removing item from collection
+         * remove:before event. Is fired before item is removed from collection.
+         * Stopping that event prevents removing item from collection. Fires with {@link xs.util.collection.Event}
          *
          * @event remove:before
          */
@@ -71,7 +74,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             type: 'ns.Event'
         },
         /**
-         * remove event. Is fired after item is removed from collection
+         * remove event. Is fired after item is removed from collection. Fires with {@link xs.util.collection.Event}
          *
          * @event remove
          */
@@ -79,12 +82,20 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             type: 'ns.Event'
         },
         /**
-         * clear event. Is fired after all items are removed from collection
+         * clear event. Is fired after all items are removed from collection. Fires with {@link xs.util.collection.Event}
          *
          * @event clear
          */
         'clear': {
             type: 'ns.Event'
+        },
+        /**
+         * destroy event. Is fired, when collection is destroyed. Fires with {@link xs.event.Event}
+         *
+         * @event destroy
+         */
+        'destroy': {
+            type: 'xs.event.Event'
         }
     };
 
@@ -1204,13 +1215,42 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      */
     Class.method.remove = function (value, flags) {
         var me = this, values = me.values();
+        var data, item, i = 0, items = me.private.items;
 
         //remove all if no value given
         if (!arguments.length) {
-            me.private.items.splice(0, me.private.items.length);
 
-            //fire clear event
-            me.fire('clear');
+            //remove all occurrences of value in collection
+            while (i < items.length) {
+                item = items[i];
+
+                data = {
+                    key: item.key,
+                    value: item.value,
+                    index: i
+                };
+
+                //call preventable "remove:before" event, that can prevent removing value for collection. if happens - continue with next item
+                if (!me.fire('remove:before', data)) {
+                    i++;
+                    continue;
+                }
+
+                //remove item from collection
+                items.splice(i, 1);
+
+                //call closing "remove" event
+                me.fire('remove', data);
+            }
+
+            //update indexes if anything removed
+            if (items.length) {
+                updateIndexes.call(me, 0);
+            } else {
+
+                //if no items left - fire clear event
+                me.fire('clear');
+            }
 
             return me;
         }
@@ -1247,10 +1287,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //assert, that item exists
         self.assert.ok(index >= 0, 'remove - given value doesn\'t exist in collection');
 
-        var data, item;
         //if all flag is given
         if (all) {
-            var i = 0, items = me.private.items;
 
             //remove all occurrences of value in collection
             while (i < items.length) {
@@ -1264,7 +1302,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
                 data = {
                     key: item.key,
-                    value: value,
+                    value: item.value,
                     index: i
                 };
 
@@ -1275,23 +1313,23 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 }
 
                 //remove item from collection
-                me.private.items.splice(i, 1);
+                items.splice(i, 1);
 
                 //call closing "remove" event
                 me.fire('remove', data);
             }
 
             //update indexes if anything removed
-            if (me.private.items.length < values.length) {
+            if (items.length < values.length) {
                 updateIndexes.call(me, index);
             }
         } else {
 
-            item = me.private.items[index];
+            item = items[index];
 
             data = {
                 key: item.key,
-                value: value,
+                value: item.value,
                 index: index
             };
 
@@ -1302,7 +1340,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             }
 
             //remove item from items
-            me.private.items.splice(index, 1);
+            items.splice(index, 1);
 
             //call closing "remove" event
             me.fire('remove', data);
@@ -1313,7 +1351,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
 
         //if no items left - fire clear event
-        if (!me.private.items.length) {
+        if (!items.length) {
             me.fire('clear');
         }
 
@@ -2624,6 +2662,33 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         }
 
         return source;
+    };
+
+    /**
+     * Destroys collection.
+     *
+     * @method destroy
+     */
+    Class.method.destroy = function () {
+        var me = this;
+
+        //fire destroy event
+        me.fire('destroy');
+
+        //try to remove all items
+        me.remove();
+
+        //assert that collection is clear
+        self.assert.empty(me.private.items, 'destroy - some remove:before handlers blocked removing items from collection');
+
+        //toggle off all events
+        me.off();
+
+        //call Observable.destroy
+        self.mixins.observable.prototype.destroy.call(me);
+
+        //call parent destroy
+        self.parent.prototype.destroy.call(me);
     };
 
     var getTypeKind = function (type) {
