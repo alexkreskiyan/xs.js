@@ -96,7 +96,7 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
         self.assert.ok(me.hasOwnProperty('private'), 'Object is already destroyed');
 
         //private storage is emptied and removed
-        me.private = undefined;
+        me.private = null;
         delete me.private;
 
         //remove initArguments reference

@@ -19,6 +19,7 @@
     "--builtin-classes": true,
     "--external": [
         "Element",
+        "NodeList",
         "CSSStyleDeclaration"
     ]
 }
