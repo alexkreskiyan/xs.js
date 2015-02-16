@@ -451,151 +451,114 @@ module('xs.ux.View', function () {
         strictEqual(elementBodyA.parentElement, null);
     });
 
-    var go = 0;
+    var go = 1;
 
     var createView = function () {
-        var containers = window.containers = [];
-        for (var i = 0; i < 1; i++) {
-            var div = document.createElement('div');
-            div.innerHTML = '<div style="float:left;width:50%"><xs-view-position name="left"/></div><div style="float:right;width:50%"><xs-view-position name="right"/></div>';
+        var div = document.createElement('div');
+        div.innerHTML = '<div style="float:left;width:50%"><xs-view-position name="left"/></div><div style="float:right;width:50%"><xs-view-position name="right"/></div>';
 
-            //render container to body
-            document.body.insertBefore(div, document.body.firstChild);
+        //render form to body
+        document.body.insertBefore(div, document.body.firstChild);
 
-            //get view as wrapper around container
-            var container = new xs.ux.View(div);
+        //get view as wrapper around form
+        var form = window.form = new xs.ux.View(div);
 
-            container.classes.add('login');
-            container.style.width = '100%';
-            container.style.height = '25px';
-            container.style.border = '2px dashed grey';
-            /**
-             * Cases:
-             * 1. View is added to position
-             * 1.1 View is already destroyed
-             * - error is thrown
-             * 1.2 View has no parent collection (new one)
-             * - parent collection is set up
-             * - view is added to collection
-             * - view.el is inserted according to it's position in collection
-             * 1.3 View has parent collection
-             * - view is removed from previous collection
-             * - parent collection is set up
-             * - view is added to collection
-             * - view.el is inserted according to it's position in collection
-             * 2. View replaces some other view in position
-             * 2.1 View is already destroyed
-             * - error is thrown
-             * 2.2 View has no parent collection (new one)
-             * - previous view is removed from collection
-             * - parent collection is set up
-             * - view is added to collection
-             * - view.el is inserted according to it's position in collection
-             * 2.3 View has parent collection
-             * - previous view is removed from collection
-             * - view is removed from previous collection
-             * - parent collection is set up
-             * - view is added to collection
-             * - view.el is inserted according to it's position in collection
-             * 3. View is removed from position
-             * 3.1 View is already destroyed
-             * - error is thrown
-             * 3.2 View has no new parent collection (is destroyed)
-             * - view is removed from collection
-             * - view.el is removed from it's parentElement
-             * - view is destroyed
-             * 3.3 View has new parent collection (is moved)
-             * - view is removed from collection
-             * - view.el is removed from it's parentElement
-             * 4. View is destroyed
-             * 4.1 View has parent collection
-             * - view is removed from parent collection
-             */
+        form.classes.add('login');
+        form.style.width = '100%';
+        form.style.height = '25px';
+        form.style.border = '2px dashed grey';
+
+        var left = form.at('left');
+        var right = form.at('right');
+
+        //create label
+        var label = new xs.ux.View(document.createElement('label'));
+        label.private.el.innerHTML = 'label';
+
+        //add label to left
+        left.add(label);
+
+        //move label to right
+        right.add(label);
 
 
-            var left = container.at('left');
-            var right = container.at('right');
+        //create label2
+        var label2 = new xs.ux.View(document.createElement('label'));
+        label2.private.el.innerHTML = 'label';
 
-            //create label
-            var label = new xs.ux.View(document.createElement('label'));
-            label.private.el.innerHTML = 'label';
-
-            //add label to left
-            left.add(label);
-
-            //move label to right
-            right.add(label);
+        //add label to left
+        left.add(label2);
 
 
-            //create label2
-            var label2 = new xs.ux.View(document.createElement('label'));
-            label2.private.el.innerHTML = 'label';
-
-            //add label to left
-            left.add(label2);
+        //replace label2 with label
+        left.set(0, label);
 
 
-            //replace label2 with label
-            left.set(0, label);
+        //create input
+        var input = new xs.ux.View(document.createElement('input'));
+        input.attributes.set('type', 'text');
+        input.attributes.set('placeholder', 'search');
+
+        //add input to right
+        right.add(input);
 
 
-            //create input
-            var input = new xs.ux.View(document.createElement('input'));
-            input.attributes.set('type', 'text');
-            input.attributes.set('placeholder', 'search');
+        //create button
+        var button = new xs.ux.View(document.createElement('button'));
+        button.private.el.innerHTML = 'go!';
 
-            //add input to right
-            right.add(input);
+        //add button
+        right.add(button);
 
-
-            //create button
-            var button = new xs.ux.View(document.createElement('button'));
-            button.private.el.innerHTML = 'go!';
-
-            //replace input with button
-            right.set(0, button);
-
-            ////create labels
-            //var label = new xs.ux.View(document.createElement('label'));
-            //label.private.el.innerHTML = 'label';
-            //var label2 = new xs.ux.View(document.createElement('label'));
-            //label2.private.el.innerHTML = 'label2';
-            //
-            ////create input
-            //var input = new xs.ux.View(document.createElement('input'));
-            //input.attributes.set('type', 'text');
-            //input.attributes.set('placeholder', 'search');
-            //
-            ////create button
-            //var button = new xs.ux.View(document.createElement('button'));
-            //button.private.el.innerHTML = 'go!';
-            //
-            //form.at('body').add(input);
-            //form.at('body').add(button);
-            //form.at('body').insert(0, label2);
-            //form.at('body').set(0, label);
-
-            containers.push(container);
-        }
+        ////create labels
+        //var label = new xs.ux.View(document.createElement('label'));
+        //label.private.el.innerHTML = 'label';
+        //var label2 = new xs.ux.View(document.createElement('label'));
+        //label2.private.el.innerHTML = 'label2';
+        //
+        ////create input
+        //var input = new xs.ux.View(document.createElement('input'));
+        //input.attributes.set('type', 'text');
+        //input.attributes.set('placeholder', 'search');
+        //
+        ////create button
+        //var button = new xs.ux.View(document.createElement('button'));
+        //button.private.el.innerHTML = 'go!';
+        //
+        //form.at('body').add(input);
+        //form.at('body').add(button);
+        //form.at('body').insert(0, label2);
+        //form.at('body').set(0, label);
     };
 
     var removeView = function () {
-        //destroy container
-        window.containers.forEach(function (container) {
-            container.destroy();
-        });
+        //destroy form
+        window.form.destroy();
 
-        //remove reference to containers
-        delete window.containers;
+        //remove reference to form
+        delete window.form;
     };
 
     //run create and remove view to compile code
-    //createView();
-    //removeView();
+    createView();
+    removeView();
 
     if (go) {
-        setTimeout(createView, 10000);
-        setTimeout(removeView, 20000);
+        setTimeout(function () {
+            var forms = window.forms = [];
+            for (var i = 0; i < 1000; i++) {
+                createView();
+                forms.push(window.form);
+                delete window.form;
+            }
+        }, 20000);
+        setTimeout(function () {
+            window.forms.forEach(function (form) {
+                window.form = form;
+                removeView();
+            });
+            delete window.forms;
+        }, 40000);
     } else {
         window.createView = createView;
         window.removeView = removeView;
