@@ -139,6 +139,65 @@ module('xs.ux.View', function () {
         view.destroy();
     });
 
+    test('query', function () {
+        var me = this;
+
+        me.Class = xs.Class(function () {
+            var Class = this;
+
+            Class.extends = 'xs.ux.View';
+
+            Class.constant.template = '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>';
+
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
+
+        var view = new me.Class();
+        var title = view.at('title');
+        var body = view.at('body');
+
+        var label = new xs.ux.View(document.createElement('label'));
+        var input = new xs.ux.View(document.createElement('input'));
+        var button = new xs.ux.View(document.createElement('button'));
+
+        title.add(label);
+        body.add(input).add(button);
+
+        //incorrect query call throws exception
+        //query selector is not a string
+        throws(function () {
+            view.query();
+        });
+        //query flags are not a number
+        throws(function () {
+            view.query('a', null);
+        });
+
+
+        //simple query works in direct order
+        var first = view.query('div');
+        strictEqual(first.private.el, title.private.el);
+
+        //reverse flag makes query work in reverse order
+        var second = view.query('div', xs.ux.View.Reverse);
+        strictEqual(second.private.el, body.private.el);
+
+        //all flag returns a collection
+        var selection = view.query('div', xs.ux.View.All);
+        //repeated calls do not create new elements
+        strictEqual(selection.at(0), first);
+        strictEqual(selection.at(1), second);
+
+        view.destroy();
+
+        //after view destroy all selection elements are destroyed
+        strictEqual(first.isDestroyed, true);
+        strictEqual(second.isDestroyed, true);
+    });
+
     test('add', function () {
         var me = this;
 
@@ -450,118 +509,5 @@ module('xs.ux.View', function () {
         strictEqual(bodyA.isDestroyed, true);
         strictEqual(elementBodyA.parentElement, null);
     });
-
-    var go = 1;
-
-    var createView = function () {
-        var div = document.createElement('div');
-        div.innerHTML = '<div style="float:left;width:50%"><xs-view-position name="left"/></div><div style="float:right;width:50%"><xs-view-position name="right"/></div>';
-
-        //render form to body
-        document.body.insertBefore(div, document.body.firstChild);
-
-        //get view as wrapper around form
-        var form = window.form = new xs.ux.View(div);
-
-        form.classes.add('login');
-        form.style.width = '100%';
-        form.style.height = '25px';
-        form.style.border = '2px dashed grey';
-
-        var left = form.at('left');
-        var right = form.at('right');
-
-        //create label
-        var label = new xs.ux.View(document.createElement('label'));
-        label.private.el.innerHTML = 'label';
-
-        //add label to left
-        left.add(label);
-
-        //move label to right
-        right.add(label);
-
-
-        //create label2
-        var label2 = new xs.ux.View(document.createElement('label'));
-        label2.private.el.innerHTML = 'label';
-
-        //add label to left
-        left.add(label2);
-
-
-        //replace label2 with label
-        left.set(0, label);
-
-
-        //create input
-        var input = new xs.ux.View(document.createElement('input'));
-        input.attributes.set('type', 'text');
-        input.attributes.set('placeholder', 'search');
-
-        //add input to right
-        right.add(input);
-
-
-        //create button
-        var button = new xs.ux.View(document.createElement('button'));
-        button.private.el.innerHTML = 'go!';
-
-        //add button
-        right.add(button);
-
-        ////create labels
-        //var label = new xs.ux.View(document.createElement('label'));
-        //label.private.el.innerHTML = 'label';
-        //var label2 = new xs.ux.View(document.createElement('label'));
-        //label2.private.el.innerHTML = 'label2';
-        //
-        ////create input
-        //var input = new xs.ux.View(document.createElement('input'));
-        //input.attributes.set('type', 'text');
-        //input.attributes.set('placeholder', 'search');
-        //
-        ////create button
-        //var button = new xs.ux.View(document.createElement('button'));
-        //button.private.el.innerHTML = 'go!';
-        //
-        //form.at('body').add(input);
-        //form.at('body').add(button);
-        //form.at('body').insert(0, label2);
-        //form.at('body').set(0, label);
-    };
-
-    var removeView = function () {
-        //destroy form
-        window.form.destroy();
-
-        //remove reference to form
-        delete window.form;
-    };
-
-    //run create and remove view to compile code
-    createView();
-    removeView();
-
-    if (go) {
-        setTimeout(function () {
-            var forms = window.forms = [];
-            for (var i = 0; i < 1000; i++) {
-                createView();
-                forms.push(window.form);
-                delete window.form;
-            }
-        }, 20000);
-        setTimeout(function () {
-            window.forms.forEach(function (form) {
-                window.form = form;
-                removeView();
-            });
-            delete window.forms;
-        }, 40000);
-    } else {
-        window.createView = createView;
-        window.removeView = removeView;
-    }
 
 });
