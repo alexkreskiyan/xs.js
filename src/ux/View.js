@@ -39,10 +39,37 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
     Class.namespace = 'xs.ux';
 
     Class.imports = [
+        {Element: 'xs.dom.Element'},
         {Collection: 'xs.util.collection.Collection'}
     ];
 
     Class.extends = 'xs.dom.Element';
+
+    /**
+     * View query flag, meaning, that element lookup starts from the end
+     *
+     * @static
+     *
+     * @property Reverse
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Reverse = 0x1;
+
+    /**
+     * View query flag, meaning, that operation selects all matching elements
+     *
+     * @static
+     *
+     * @property All
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.All = 0x2;
 
     /**
      * View constructor
@@ -86,8 +113,8 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         //fetch positions from template
         me.private.positions = getPositionsCollection(el);
 
-        //define picked elements collection
-        //me.private.elements = new xs.core.Collection();
+        //define selected elements collection
+        me.private.selection = new xs.core.Collection();
     };
 
     /**
@@ -102,6 +129,115 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
     Class.method.at = function (key) {
 
         return this.private.positions.at(key);
+    };
+
+    /**
+     * Queries elements by selector from view. Optionally, query flags may be specified
+     *
+     * @method query
+     *
+     * @param {String} selector query selector string
+     * @param {Number} [flags] optional query flags. Allowed flags are:
+     *
+     * - Reverse - to find last matched element
+     * - All - to fetch all matched elements
+     *
+     * @returns {xs.core.Collection}
+     */
+    Class.method.query = function (selector, flags) {
+        var me = this;
+
+        //assert, that selector is a string
+        self.assert.string(selector, 'query - given selector `$selector` is not a string', {
+            $selector: selector
+        });
+
+        var all, reverse;
+        //if no flags - single element is selected
+        if (arguments.length === 1) {
+            all = false;
+            reverse = false;
+
+            //handle flags
+        } else {
+
+            //assert that flags is number
+            self.assert.number(flags, 'query - given flags "$flags" list is not number', {
+                $flags: flags
+            });
+
+            //if All flag given
+            if (flags & self.All) {
+                all = true;
+                reverse = false;
+
+                //if Reverse flag given
+            } else if (flags & self.Reverse) {
+                all = false;
+                reverse = true;
+
+                //else - no changes compared with no flags scenario
+            } else {
+                all = false;
+                reverse = false;
+            }
+        }
+
+        //get nodes list
+        var nodes = me.private.el.querySelectorAll(selector);
+
+        var i, length = nodes.length, node, element;
+        if (!all) {
+
+            //handle reverse flag
+            if (reverse) {
+                for (i = length - 1; i >= 0; i--) {
+                    node = nodes.item(i);
+                    if (isOwnNode.call(me, node)) {
+                        break;
+                    }
+                    node = undefined;
+                }
+            } else {
+                for (i = 0; i < length; i++) {
+                    node = nodes.item(i);
+                    if (isOwnNode.call(me, node)) {
+                        break;
+                    }
+                    node = undefined;
+                }
+            }
+
+            //return undefined if nothing found
+            if (!node) {
+
+                return;
+            }
+
+            //return element
+            return getSelectionElement.call(me, node);
+        }
+
+        //create selection collection
+        var selection = new xs.core.Collection();
+
+        for (i = 0; i < length; i++) {
+            node = nodes.item(i);
+
+            //if not own node - continue
+            if (!isOwnNode.call(me, node)) {
+                continue;
+            }
+
+            //get element from internal selection
+            element = getSelectionElement.call(me, node);
+
+            //add element to selection
+            selection.add(element);
+        }
+
+        //return selection
+        return selection;
     };
 
     /**
@@ -130,44 +266,14 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         //clean up positions
         me.private.positions.destroy();
 
+        //clean up elements
+        me.private.selection.each(function (element) {
+            element.destroy();
+        });
+
         //call parent destroy
         self.parent.prototype.destroy.call(me);
     };
-
-    /*
-     * 1. View it self
-     *  - GetNodesCollection. Parses template into list of nodes
-     *  - Mixins xs.event.Observable. Own event class is declared for events, rethrown from DOM??? (It is necessary for Observable)
-     *  - Events are registered as always. Nested classes will have to extend registered events list via xs.extend call in createdFn
-     * 2. Events selection
-     * Adding event handlers for DOM events both via query and simply on:
-     * view.query('ul').on('mouseOver', function(event) {
-     * });
-     * view.on('mouseOver', function(event) {
-     * });
-     * view.query('ul').off('mouseOver')
-     * view.off('mouseOver')
-     *
-     * Global calls affect on view direct children.
-     *
-     * Problems:
-     * - To pass DOM events as-is or to wrap them (Wrapped)
-     * - To save events target, given in query (query method returns lightweight wrapper, that proxies some methods to main object)
-     *
-     */
-
-    /*
-     * Adding event handlers for DOM events both via query and simply on:
-     * view.query('ul').on('mouseOver', function(event) {
-     * });
-     * view.on('mouseOver', function(event) {
-     * });
-     * view.query('ul').off('mouseOver')
-     * view.off('mouseOver')
-     */
-    //Class.method.query = function (selector) {
-    //
-    //};
 
     /**
      * Returns template parsed into an element
@@ -568,6 +674,96 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         return true;
     };
 
+    /**
+     * Returns selection element (or caches one)
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method getSelectionElement
+     *
+     * @param {Element} el
+     *
+     * @return {xs.dom.Element}
+     */
+    var getSelectionElement = function (el) {
+        var me = this;
+
+        var selection = me.private.selection;
+
+        var element = selection.find(function (element) {
+            return element.private.el === el;
+        });
+
+        //if element already selected - return it
+        if (element) {
+
+            return element;
+        }
+
+        //create element
+        element = new imports.Element(el);
+
+        //add element to elements collection
+        selection.add(element);
+
+        //return element
+        return element;
+    };
+
+    /**
+     * Returns whether given node is own node of view, verifying parentElement relation
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method isOwnNode
+     *
+     * @param {Element} node
+     *
+     * @return {Boolean}
+     */
+    var isOwnNode = function (node) {
+        var me = this;
+        var positions = me.private.positions.private.items, length = positions.length, position;
+        for (var i = 0; i < length; i++) {
+            position = positions[i].value;
+            if (hasParentElement(me.private.el, position.private.el, node)) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    /**
+     * Returns whether given element has given parent as an ancestor
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method hasParentElement
+     *
+     * @param {Element} root
+     * @param {Element} parent
+     * @param {Element} node
+     *
+     * @return {Boolean}
+     */
+    var hasParentElement = function (root, parent, node) {
+        while (node.parentElement && node.parentElement !== root) {
+            if (node.parentElement === parent) {
+                return true;
+            }
+
+            node = node.parentElement;
+        }
+
+        return false;
+    };
 
     /**
      * Internal class, used in View. Provides handy access to collection of positions in view
