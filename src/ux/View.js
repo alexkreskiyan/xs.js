@@ -9,13 +9,26 @@
 
  */
 /**
- * Core xs.js view object
+ * Core xs.js view object. View class is a base class, all other concrete views are to be extended from.
+ *
+ * Key concept of view is a concept of 3-way initialization:
+ *
+ * - via imported resource template. Imported resource must be named `Template` TODO upgrade with a link
+ * This is a base scheme for complex scenarios, when there is a complex multiline template
+ *
+ * - via template instantiation (from Class.constant.template)
+ * This is a base scheme for most simple scenarios, when there is no need in external template definition
+ *
+ * - via wrapping given DOM Element
+ * This way is required at least for initial view creation - like for a body element
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.ux.View
  *
  * @extends xs.class.Base
+ *
+ * @mixins xs.event.Observable
  */
 xs.define(xs.Class, 'ns.View', function (self, imports) {
 
@@ -31,7 +44,15 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
     Class.extends = 'xs.dom.Element';
 
-    //three levels of priority - element, imports.Template, constant.template
+    /**
+     * View constructor
+     *
+     * If element given - it is wrapped by view. If no element given - priority is given to Template resource
+     *
+     * @constructor
+     *
+     * @param {Element} [element] optional wrapped element
+     */
     Class.constructor = function (element) {
         var me = this;
 
@@ -69,11 +90,27 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         //me.private.elements = new xs.core.Collection();
     };
 
+    /**
+     * Returns reference to one of view's positions
+     *
+     * @method at
+     *
+     * @param {String|Number} key
+     *
+     * @return {xs.util.collection.Collection}
+     */
     Class.method.at = function (key) {
 
         return this.private.positions.at(key);
     };
 
+    /**
+     * Destroys view.
+     *
+     * If view is added to some container, it is removed from that container
+     *
+     * @method destroy
+     */
     Class.method.destroy = function () {
         var me = this;
 
@@ -133,7 +170,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
     //};
 
     /**
-     * Returns template parsed into nodes collection
+     * Returns template parsed into an element
      *
      * @ignore
      *
@@ -247,6 +284,17 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         return positions;
     };
 
+    /**
+     * Handler for position add:before event
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method handleAddBefore
+     *
+     * @param {xs.util.collection.Event} event
+     */
     var handleAddBefore = function (event) {
         //get view reference;
         var view = event.value;
@@ -277,6 +325,17 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         delete view.private.isUsed;
     };
 
+    /**
+     * Handler for position add event
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method handleAdd
+     *
+     * @param {xs.util.collection.Event} event
+     */
     var handleAdd = function (event) {
         var me = this;
 
@@ -307,6 +366,17 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         parent.insertBefore(view.private.el, next.private.el);
     };
 
+    /**
+     * Handler for position set:before event
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method handleSetBefore
+     *
+     * @param {xs.util.collection.Event} event
+     */
     var handleSetBefore = function (event) {
         var me = this;
 
@@ -352,6 +422,17 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         delete view.private.isUsed;
     };
 
+    /**
+     * Handler for position set event
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method handleSet
+     *
+     * @param {xs.util.collection.Event} event
+     */
     var handleSet = function (event) {
         var me = this;
 
@@ -382,6 +463,17 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         parent.insertBefore(view.private.el, next.private.el);
     };
 
+    /**
+     * Handler for position remove:before event
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method handleRemoveBefore
+     *
+     * @param {xs.util.collection.Event} event
+     */
     var handleRemoveBefore = function (event) {
 
         //get view reference;
@@ -397,6 +489,17 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         });
     };
 
+    /**
+     * Handler for position remove event
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method handleRemove
+     *
+     * @param {xs.util.collection.Event} event
+     */
     var handleRemove = function (event) {
         var me = this;
 
@@ -420,7 +523,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
     };
 
     /**
-     * Verifies list of position to be correct one
+     * Verifies list of positions to be correct one
      *
      * @ignore
      *
@@ -465,6 +568,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         return true;
     };
 
+
     /**
      * Internal class, used in View. Provides handy access to collection of positions in view
      *
@@ -498,6 +602,8 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      * Returns position with specified name
      *
      * @method at
+     *
+     * @return {xs.util.collection.Collection} position for given index/key
      */
     PositionsCollection.prototype.at = xs.core.Collection.prototype.at;
 
