@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * xs.util.collection.Collection is framework class, that is widely used for internal classes' collections
  *
@@ -2882,4 +2883,5 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             }
         }
     };
+
 });

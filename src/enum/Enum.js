@@ -219,4 +219,5 @@
     }
 
     EnumError.prototype = new Error();
+
 })(window, 'xs');

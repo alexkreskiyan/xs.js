@@ -493,4 +493,5 @@
     }
 
     ClassError.prototype = new Error();
+
 })(window, 'xs');

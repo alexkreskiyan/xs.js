@@ -320,4 +320,5 @@
         console.log('median: ', duration / n, 'ms per operation');
         console.log('mark: about', n / duration, 'operation per ms');
     };
+
 }).call(window);

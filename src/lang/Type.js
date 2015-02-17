@@ -412,4 +412,5 @@
     Object.keys(type).forEach(function (method) {
         xs[method] = type[method];
     });
+
 })(window, 'xs');

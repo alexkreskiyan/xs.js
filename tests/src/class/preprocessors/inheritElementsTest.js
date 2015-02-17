@@ -677,5 +677,5 @@ module('xs.class.preprocessors.inheritElements', function () {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
     });
-    
+
 });

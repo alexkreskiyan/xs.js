@@ -326,4 +326,5 @@
     }
 
     ProcessImplementsError.prototype = new Error();
+
 })(window, 'xs');

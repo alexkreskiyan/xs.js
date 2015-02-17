@@ -55,4 +55,5 @@
         log.trace(Class.label ? Class.label : 'undefined');
         Class.descriptor.abstract = Boolean(descriptor.abstract);
     });
+
 })(window, 'xs');

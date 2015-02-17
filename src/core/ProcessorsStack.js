@@ -267,4 +267,5 @@
     }
 
     ProcessorsStackError.prototype = new Error();
+
 })(window, 'xs');

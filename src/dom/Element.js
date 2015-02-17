@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Internal core view object. Represents a wrapper around native DOM Element.
  *
@@ -363,4 +364,5 @@ xs.define(xs.Class, 'ns.Element', function (self) {
 
         return this.el.classList.remove(name);
     };
+
 });

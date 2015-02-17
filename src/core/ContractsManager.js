@@ -485,4 +485,5 @@
     xs.extend(xs, {
         define: xs.ContractsManager.define
     });
+
 })(window, 'xs');

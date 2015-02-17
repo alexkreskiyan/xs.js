@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Base event class. It has common interface and can be used if no specific is required
  *
@@ -100,4 +101,5 @@ xs.define(xs.Class, 'ns.Event', function (self) {
     Class.property.index = {
         set: xs.emptyFn
     };
+
 });

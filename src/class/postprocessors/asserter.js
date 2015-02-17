@@ -47,4 +47,5 @@
         //assign asserter instance
         Class.assert = new xs.core.Asserter(Class.log, Class.Error);
     });
+
 })(window, 'xs');

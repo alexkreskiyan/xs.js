@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * URI Object notation abstract class. Provides basics for all URI scheme-specific implementations
  *
@@ -73,4 +74,5 @@ xs.define(xs.Class, 'ns.URI', function (self) {
             hash: data[5]
         };
     };
+
 });

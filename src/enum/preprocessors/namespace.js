@@ -45,4 +45,5 @@
         //return false to sign async processor
         return false;
     });
+
 })(window, 'xs');

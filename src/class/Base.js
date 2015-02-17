@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Private internal core class. All xs classes inherit xs.class.Base
  *
@@ -116,4 +117,5 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
     Class.method.toString = function () {
         return '[instance ' + (this.constructor.label ? this.constructor.label : 'xClass') + ']';
     };
+
 });

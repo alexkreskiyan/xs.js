@@ -352,4 +352,5 @@
         assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Router'), RouterError);
         delete router.hookReady;
     };
+
 })(window, 'xs');

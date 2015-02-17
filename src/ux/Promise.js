@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Implementation of Futures & Promises pattern for xs.js.
  *
@@ -540,4 +541,5 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         return undefined;
     };
+
 });

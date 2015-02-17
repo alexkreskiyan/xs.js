@@ -359,4 +359,5 @@
     }
 
     AddOwnElementsError.prototype = new Error();
+
 })(window, 'xs');

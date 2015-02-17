@@ -89,4 +89,5 @@
     }
 
     ConstructorError.prototype = new Error();
+
 })(window, 'xs');

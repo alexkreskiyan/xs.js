@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Object notation for http(s) protocol url
  *
@@ -337,4 +338,5 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
             port: raw[3] ? Number(raw[3]) : undefined
         };
     };
+
 });

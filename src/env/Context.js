@@ -858,4 +858,5 @@
         //other
         'isTouch'
     ]).toSource());
+
 })(window, 'xs');

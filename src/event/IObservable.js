@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Observable interface. Is introduced to describe interface, that is implemented by all observable classes
  *
@@ -178,4 +179,5 @@ xs.define(xs.Interface, 'ns.IObservable', function () {
      */
     Class.method.resume = function (event, selector, flags) {
     };
+
 });

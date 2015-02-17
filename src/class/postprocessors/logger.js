@@ -41,4 +41,5 @@
         //assign logger instance
         Class.log = new xs.log.Logger(Class.label ? Class.label : 'undefined');
     });
+
 })(window, 'xs');

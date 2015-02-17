@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Log route base interface. Is implemented by {@link xs.log.route.Route} and so has to be implemented by all inherited classes
  *
@@ -52,4 +53,5 @@ xs.define(xs.Interface, 'ns.IRoute', function () {
     Class.method.process = function (category, level, message, data) {
 
     };
+
 });

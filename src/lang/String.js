@@ -94,4 +94,5 @@
     Object.keys(string).forEach(function (key) {
         xs[key] = string[key];
     });
+
 })(window, 'xs');

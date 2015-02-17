@@ -84,4 +84,5 @@
     }
 
     NamespaceError.prototype = new Error();
+
 })(window, 'xs');

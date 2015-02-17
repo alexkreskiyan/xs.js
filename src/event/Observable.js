@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Observable mixin
  *
@@ -832,4 +833,5 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         self.log.trace('destroy - destroying observable');
         this.off();
     };
+
 });

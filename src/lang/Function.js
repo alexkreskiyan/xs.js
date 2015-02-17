@@ -340,4 +340,5 @@
     xs.wrap = fn.wrap;
     xs.nextTick = fn.nextTick;
     xs.emptyFn = fn.emptyFn;
+
 })(window, 'xs');

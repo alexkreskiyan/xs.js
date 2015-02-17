@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Console log route. Is added by default to {@link xs.log.Router}
  *
@@ -96,4 +97,5 @@ xs.define(xs.Class, 'ns.Console', function (self) {
                 break;
         }
     };
+
 });

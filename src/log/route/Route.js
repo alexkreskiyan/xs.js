@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Log route base class. Is required to be inherited by routes, added to {@link xs.log.Router.routes}
  *
@@ -181,4 +182,5 @@ xs.define(xs.Class, 'ns.Route', function (self) {
                 return match;
             });
     };
+
 });

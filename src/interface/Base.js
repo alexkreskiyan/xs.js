@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Private internal core interface. All xs interfaces inherit xs.interface.Base
  *

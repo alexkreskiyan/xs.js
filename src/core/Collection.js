@@ -2758,4 +2758,5 @@
         assert = new xs.core.Asserter(new xs.log.Logger('xs.core.Collection'), CollectionError);
         delete collection.hookReady;
     };
+
 })(window, 'xs');

@@ -861,4 +861,5 @@
     xs.extend(xs, {
         require: xs.Loader.require
     });
+
 })(window, 'xs');

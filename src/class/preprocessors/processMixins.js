@@ -231,4 +231,5 @@
     }
 
     ProcessMixinsError.prototype = new Error();
+
 })(window, 'xs');

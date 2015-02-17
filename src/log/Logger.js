@@ -324,4 +324,5 @@
         assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Logger'), LoggerError);
         delete logger.hookReady;
     };
+
 })(window, 'xs');

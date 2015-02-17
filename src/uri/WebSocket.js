@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Object notation for ws(s) protocol url
  *
@@ -266,4 +267,5 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
             port: raw[2] ? Number(raw[2]) : undefined
         };
     };
+
 });

@@ -109,4 +109,5 @@
     Object.keys(list).forEach(function (key) {
         xs[key] = list[key];
     });
+
 })(window, 'xs');

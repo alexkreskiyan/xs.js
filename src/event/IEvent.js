@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Events common interface
  *
@@ -37,4 +38,5 @@ xs.define(xs.Interface, 'ns.IEvent', function () {
     Interface.property.data = {
         set: xs.emptyFn
     };
+
 });

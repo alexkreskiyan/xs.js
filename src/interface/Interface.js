@@ -350,4 +350,5 @@
     }
 
     InterfaceError.prototype = new Error();
+
 })(window, 'xs');

@@ -869,4 +869,5 @@
     xs.log.Router.hookReady();
     xs.log.Logger.hookReady();
     xs.core.Collection.hookReady();
+
 })(window, 'xs');

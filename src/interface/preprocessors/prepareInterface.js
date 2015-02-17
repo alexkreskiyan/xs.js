@@ -75,4 +75,5 @@
     }
 
     PrepareInterfaceError.prototype = new Error();
+
 })(window, 'xs');

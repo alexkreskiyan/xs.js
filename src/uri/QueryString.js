@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Query string implementation class
  *
@@ -327,4 +328,5 @@ xs.define(xs.Class, 'ns.QueryString', function (self) {
 
         return objects;
     };
+
 });

@@ -718,4 +718,5 @@
     xs.constant = attribute.constant;
     xs.property = attribute.property;
     xs.method = attribute.method;
+
 })(window, 'xs');

@@ -8,6 +8,7 @@
  License: http://annium.com/contact
 
  */
+
 /**
  * Core xs.js view object. View class is a base class, all other concrete views are to be extended from.
  *
@@ -822,4 +823,5 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         //remove private
         delete me.private;
     };
+
 });

@@ -79,4 +79,5 @@
     }
 
     ValuesError.prototype = new Error();
+
 })(window, 'xs');

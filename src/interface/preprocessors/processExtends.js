@@ -137,4 +137,5 @@
     }
 
     ProcessExtendsError.prototype = new Error();
+
 })(window, 'xs');

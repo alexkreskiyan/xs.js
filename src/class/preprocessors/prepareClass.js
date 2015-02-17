@@ -190,4 +190,5 @@
     }
 
     PrepareClassError.prototype = new Error();
+
 })(window, 'xs');
