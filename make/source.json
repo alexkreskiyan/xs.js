@@ -133,6 +133,10 @@
                 "attribute": {
                     "IAttribute": {
                         "contract": "interface"
+                    },
+                    "String": {
+                        "contract": "class",
+                        "test": false
                     }
                 }
             },

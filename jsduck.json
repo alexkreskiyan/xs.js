@@ -4,6 +4,7 @@
     "--": [
         "src/class",
         "src/core",
+        "src/data/attribute",
         "src/dom",
         "src/env",
         "src/enum",

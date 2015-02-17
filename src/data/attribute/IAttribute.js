@@ -14,6 +14,8 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
+ * @abstract
+ *
  * @class xs.data.attribute.IAttribute
  *
  * @extends xs.interface.Base
