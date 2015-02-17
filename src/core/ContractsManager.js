@@ -78,7 +78,7 @@
         me.has = function (name) {
 
             //assert, that name is valid string
-            assert.ok(isName(name), 'has - given name "$name" is not valid', {
+            assert.ok(isName(name), 'has - given name `$name` is not valid', {
                 $name: name
             });
 
@@ -101,7 +101,7 @@
         me.get = function (name) {
 
             //assert, that name is valid string
-            assert.ok(isName(name), 'get - given name "$name" is not valid', {
+            assert.ok(isName(name), 'get - given name `$name` is not valid', {
                 $name: name
             });
 
@@ -132,7 +132,7 @@
         var add = me.add = function (name, Contract) {
 
             //assert, that name is valid string
-            assert.ok(isName(name), 'add - given name "$name" is not valid', {
+            assert.ok(isName(name), 'add - given name `$name` is not valid', {
                 $name: name
             });
 
@@ -140,12 +140,12 @@
             assert.ok(xs.isObject(Contract) || xs.isFunction(Contract), 'add - contract is nor a function, neither an object');
 
             //assert no contract with that name was defined yet
-            assert.not(registry.hasKey(name), 'add - contract "$name" is already defined', {
+            assert.not(registry.hasKey(name), 'add - contract `$name` is already defined', {
                 $name: name
             });
 
             //assert that Contract is not registered in manager yet
-            assert.not(registry.has(Contract), 'add - contract "$label" can not be added as "$name"', {
+            assert.not(registry.has(Contract), 'add - contract `$label` can not be added as `$name`', {
                 $label: Contract.label,
                 $name: name
             });
@@ -187,7 +187,7 @@
          */
         me.remove = function (name) {
             //assert contract with that name is defined
-            assert.ok(registry.hasKey(name), 'remove - contract "$name" is not defined', {
+            assert.ok(registry.hasKey(name), 'remove - contract `$name` is not defined', {
                 $name: name
             });
 
@@ -246,12 +246,12 @@
         me.define = function (contractor, name, descFn, createdFn) {
 
             //assert, that name is valid string
-            assert.ok(isName(name), 'define - given name "$name" is not valid', {
+            assert.ok(isName(name), 'define - given name `$name` is not valid', {
                 $name: name
             });
 
             //assert no contract with that name was defined yet
-            assert.not(registry.hasKey(name), 'define - contract "$name" is already defined', {
+            assert.not(registry.hasKey(name), 'define - contract `$name` is already defined', {
                 $name: name
             });
 
@@ -285,7 +285,7 @@
         var isName = me.isName = function (name) {
 
             //assert that name is a string
-            assert.string(name, 'isName - given name "$name" is not a string', {
+            assert.string(name, 'isName - given name `$name` is not a string', {
                 $name: name
             });
 
@@ -311,7 +311,7 @@
         me.isShortName = function (name) {
 
             //assert that name is a string
-            assert.string(name, 'isShortName - given name "$name" is not a string', {
+            assert.string(name, 'isShortName - given name `$name` is not a string', {
                 $name: name
             });
 
@@ -336,7 +336,7 @@
         var getName = me.getName = function (name) {
 
             //assert, that name is valid string
-            assert.ok(isName(name), 'getName - given name "$name" is not valid', {
+            assert.ok(isName(name), 'getName - given name `$name` is not valid', {
                 $name: name
             });
 
@@ -361,7 +361,7 @@
         var getPath = me.getPath = function (name) {
 
             //assert, that name is valid string
-            assert.ok(isName(name), 'getPath - given name "$name" is not valid', {
+            assert.ok(isName(name), 'getPath - given name `$name` is not valid', {
                 $name: name
             });
 
@@ -387,12 +387,12 @@
         var getNamespace = me.getNamespace = function (root, path) {
 
             //assert, that root is object
-            assert.object(root, 'getNamespace - given root "$root" is not an object', {
+            assert.object(root, 'getNamespace - given root `$root` is not an object', {
                 $root: root
             });
 
             //assert, that path is empty string or valid name
-            assert.ok(path === '' || isName(path), 'getNamespace - given name "$name" is not valid', {
+            assert.ok(path === '' || isName(path), 'getNamespace - given name `$name` is not valid', {
                 $name: path
             });
 

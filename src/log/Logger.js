@@ -41,7 +41,7 @@
      *     //create logger instance
      *     var logger = new xs.log.Logger('xs');
      *
-     *     //log message to "xs" category
+     *     //log message to `xs` category
      *     logger.log('some message');
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
@@ -65,7 +65,7 @@
         var me = this;
 
         //assert, that category is valid (via xs.log.Router.isCategory)
-        assert.ok(xs.log.Router.isCategory(category), 'Given category "$category" is not a valid category', {
+        assert.ok(xs.log.Router.isCategory(category), 'Given category `$category` is not a valid category', {
             $category: category
         });
 
@@ -100,12 +100,12 @@
         var me = this;
 
         //assert, that message is string
-        assert.string(message, 'error - given message "$message" is not a string', {
+        assert.string(message, 'error - given message `$message` is not a string', {
             $message: message
         });
 
         //assert, that data is either not given or is an object
-        assert.ok(arguments.length === 1 || xs.isObject(data), 'error - given data "$data" is not an object', {
+        assert.ok(arguments.length === 1 || xs.isObject(data), 'error - given data `$data` is not an object', {
             $data: data
         });
 
@@ -136,12 +136,12 @@
         var me = this;
 
         //assert, that message is string
-        assert.string(message, 'warn - given message "$message" is not a string', {
+        assert.string(message, 'warn - given message `$message` is not a string', {
             $message: message
         });
 
         //assert, that data is either not given or is an object
-        assert.ok(arguments.length === 1 || xs.isObject(data), 'warn - given data "$data" is not an object', {
+        assert.ok(arguments.length === 1 || xs.isObject(data), 'warn - given data `$data` is not an object', {
             $data: data
         });
 
@@ -172,12 +172,12 @@
         var me = this;
 
         //assert, that message is string
-        assert.string(message, 'info - given message "$message" is not a string', {
+        assert.string(message, 'info - given message `$message` is not a string', {
             $message: message
         });
 
         //assert, that data is either not given or is an object
-        assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
+        assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data `$data` is not an object', {
             $data: data
         });
 
@@ -209,12 +209,12 @@
         var me = this;
 
         //assert, that message is string
-        assert.string(message, 'info - given message "$message" is not a string', {
+        assert.string(message, 'info - given message `$message` is not a string', {
             $message: message
         });
 
         //assert, that data is either not given or is an object
-        assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data "$data" is not an object', {
+        assert.ok(arguments.length === 1 || xs.isObject(data), 'info - given data `$data` is not an object', {
             $data: data
         });
 
@@ -244,7 +244,7 @@
         var me = this;
 
         //assert, that mark is string
-        assert.string(mark, 'profile.start - given mark "$mark" is not a string', {
+        assert.string(mark, 'profile.start - given mark `$mark` is not a string', {
             $mark: mark
         });
 
@@ -276,7 +276,7 @@
         var me = this;
 
         //assert, that mark is string
-        assert.string(mark, 'profile.end - given mark "$mark" is not a string', {
+        assert.string(mark, 'profile.end - given mark `$mark` is not a string', {
             $mark: mark
         });
 

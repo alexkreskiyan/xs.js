@@ -68,7 +68,7 @@ xs.define(xs.Class, 'ns.Element', function (self) {
     Class.constructor = function (element) {
         var me = this;
 
-        self.assert.ok(element instanceof Element, 'Given element "$element" is not an instance of Element', {
+        self.assert.ok(element instanceof Element, 'Given element `$element` is not an instance of Element', {
             $element: element
         });
 

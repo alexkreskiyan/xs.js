@@ -58,7 +58,7 @@
          * @return {Boolean} whether Class.descriptor.implements collection contains label of given interface
          */
         xs.constant(Class, 'implements', function (Interface) {
-            assert.Interface(Interface, '[$Class]: given "$Interface" is not an interface', {
+            assert.Interface(Interface, '[$Class]: given `$Interface` is not an interface', {
                 $Class: Class.label,
                 $Interface: Interface
             });
@@ -89,7 +89,7 @@
             list.set(index, name);
 
             //assert, that interface is defined
-            assert.ok(xs.ContractsManager.has(name), '[$Class]: implemented interface "$name" is not defined. Move it to imports section, please', {
+            assert.ok(xs.ContractsManager.has(name), '[$Class]: implemented interface `$name` is not defined. Move it to imports section, please', {
                 $Class: Class.label,
                 $name: name
             });
@@ -98,13 +98,13 @@
             var Interface = xs.ContractsManager.get(name);
 
             //check that contractor is xs.Interface
-            assert.Interface(Interface, '[$Class]: given "$Interface" is not interface', {
+            assert.Interface(Interface, '[$Class]: given `$Interface` is not interface', {
                 $Class: Class.label,
                 $Interface: Interface.label
             });
 
             //check that interface is ready
-            assert.not(Interface.isProcessing, '[$Class]: implemented interface "$Interface" is not processed yet. Move it to imports section, please', {
+            assert.not(Interface.isProcessing, '[$Class]: implemented interface `$Interface` is not processed yet. Move it to imports section, please', {
                 $Class: Class.label,
                 $Interface: Interface.label
             });
@@ -159,7 +159,7 @@
         //verify constants
         Interface.descriptor.constant.each(function (name) {
             //assert, that constant is declared
-            assert.ok(descriptor.constant.hasKey(name), '[$Class]: implemented interface "$Interface" requires constant "$name", but it is not declared', {
+            assert.ok(descriptor.constant.hasKey(name), '[$Class]: implemented interface `$Interface` requires constant `$name`, but it is not declared', {
                 $Class: Class.label,
                 $Interface: Interface.label,
                 $name: name
@@ -169,7 +169,7 @@
         //static properties
         Interface.descriptor.static.property.each(function (config, name) {
             //assert, that static property is declared
-            assert.ok(descriptor.static.property.hasKey(name), '[$Class]: implemented interface "$Interface" requires static property "$name", but it is not declared', {
+            assert.ok(descriptor.static.property.hasKey(name), '[$Class]: implemented interface `$Interface` requires static property `$name`, but it is not declared', {
                 $Class: Class.label,
                 $Interface: Interface.label,
                 $name: name
@@ -180,7 +180,7 @@
 
             if (config.isAccessed) {
                 //assert, that static property is accessed
-                assert.not(property.hasOwnProperty('value'), '[$Class]: implemented interface "$Interface" requires static property "$name" to be accessed property, but it is declared as assigned one', {
+                assert.not(property.hasOwnProperty('value'), '[$Class]: implemented interface `$Interface` requires static property `$name` to be accessed property, but it is declared as assigned one', {
                     $Class: Class.label,
                     $Interface: Interface.label,
                     $name: name
@@ -188,7 +188,7 @@
 
                 //assert, that static property is readonly, if needed
                 if (config.isReadonly) {
-                    assert.equal(property.set, xs.emptyFn, '[$Class]: implemented interface "$Interface" requires static property "$name" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
+                    assert.equal(property.set, xs.emptyFn, '[$Class]: implemented interface `$Interface` requires static property `$name` to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
                         $Class: Class.label,
                         $Interface: Interface.label,
                         $name: name
@@ -196,7 +196,7 @@
                 }
             } else {
                 //assert, that static property is assigned
-                assert.ok(property.hasOwnProperty('value'), '[$Class]: implemented interface "$Interface" requires static property "$name" to be assigned property, but it is declared as accessed one', {
+                assert.ok(property.hasOwnProperty('value'), '[$Class]: implemented interface `$Interface` requires static property `$name` to be assigned property, but it is declared as accessed one', {
                     $Class: Class.label,
                     $Interface: Interface.label,
                     $name: name
@@ -207,7 +207,7 @@
         //static methods
         Interface.descriptor.static.method.each(function (config, name) {
             //assert, that static method is declared
-            assert.ok(descriptor.static.method.hasKey(name), '[$Class]: implemented interface "$Interface" requires static method "$name", but it is not declared', {
+            assert.ok(descriptor.static.method.hasKey(name), '[$Class]: implemented interface `$Interface` requires static method `$name`, but it is not declared', {
                 $Class: Class.label,
                 $Interface: Interface.label,
                 $name: name
@@ -218,7 +218,7 @@
             var declaredArguments = xs.Function.getArguments(descriptor.static.method.at(name).value).toString();
 
             //assert, that arguments' lists are equal
-            assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface "$Interface" requires static method "$name" to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
+            assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface `$Interface` requires static method `$name` to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
                 $Class: Class.label,
                 $Interface: Interface.label,
                 $name: name,
@@ -230,7 +230,7 @@
         //constructor, if given
         if (Interface.descriptor.constructor) {
             //assert, that constructor id declared
-            assert.ok(descriptor.constructor, '[$Class]: implemented interface "$Interface" requires constructor declared, but it is not declared', {
+            assert.ok(descriptor.constructor, '[$Class]: implemented interface `$Interface` requires constructor declared, but it is not declared', {
                 $Class: Class.label,
                 $Interface: Interface.label
             });
@@ -240,7 +240,7 @@
             var declaredArguments = xs.Function.getArguments(descriptor.constructor).toString();
 
             //assert, that arguments' lists are equal
-            assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface "$Interface" requires constructor to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
+            assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface `$Interface` requires constructor to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
                 $Class: Class.label,
                 $Interface: Interface.label,
                 $requiredArguments: requiredArguments,
@@ -251,7 +251,7 @@
         //properties
         Interface.descriptor.property.each(function (config, name) {
             //assert, that static property is declared
-            assert.ok(descriptor.property.hasKey(name), '[$Class]: implemented interface "$Interface" requires property "$name", but it is not declared', {
+            assert.ok(descriptor.property.hasKey(name), '[$Class]: implemented interface `$Interface` requires property `$name`, but it is not declared', {
                 $Class: Class.label,
                 $Interface: Interface.label,
                 $name: name
@@ -262,7 +262,7 @@
 
             if (config.isAccessed) {
                 //assert, that property is accessed
-                assert.not(property.hasOwnProperty('value'), '[$Class]: implemented interface "$Interface" requires property "$name" to be accessed property, but it is declared as assigned one', {
+                assert.not(property.hasOwnProperty('value'), '[$Class]: implemented interface `$Interface` requires property `$name` to be accessed property, but it is declared as assigned one', {
                     $Class: Class.label,
                     $Interface: Interface.label,
                     $name: name
@@ -270,7 +270,7 @@
 
                 //assert, that property is readonly, if needed
                 if (config.isReadonly) {
-                    assert.equal(property.set, xs.emptyFn, '[$Class]: implemented interface "$Interface" requires property "$name" to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
+                    assert.equal(property.set, xs.emptyFn, '[$Class]: implemented interface `$Interface` requires property `$name` to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
                         $Class: Class.label,
                         $Interface: Interface.label,
                         $name: name
@@ -278,7 +278,7 @@
                 }
             } else {
                 //assert, that property is assigned
-                assert.ok(property.hasOwnProperty('value'), '[$Class]: implemented interface "$Interface" requires property "$name" to be assigned property, but it is declared as accessed one', {
+                assert.ok(property.hasOwnProperty('value'), '[$Class]: implemented interface `$Interface` requires property `$name` to be assigned property, but it is declared as accessed one', {
                     $Class: Class.label,
                     $Interface: Interface.label,
                     $name: name
@@ -289,7 +289,7 @@
         //methods
         Interface.descriptor.method.each(function (config, name) {
             //assert, that method is declared
-            assert.ok(descriptor.method.hasKey(name), '[$Class]: implemented interface "$Interface" requires method "$name", but it is not declared', {
+            assert.ok(descriptor.method.hasKey(name), '[$Class]: implemented interface `$Interface` requires method `$name`, but it is not declared', {
                 $Class: Class.label,
                 $Interface: Interface.label,
                 $name: name
@@ -300,7 +300,7 @@
             var declaredArguments = xs.Function.getArguments(descriptor.method.at(name).value).toString();
 
             //assert, that arguments' lists are equal
-            assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface "$Interface" requires method "$name" to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
+            assert.equal(declaredArguments, requiredArguments, '[$Class]: implemented interface `$Interface` requires method `$name` to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
                 $Class: Class.label,
                 $Interface: Interface.label,
                 $name: name,

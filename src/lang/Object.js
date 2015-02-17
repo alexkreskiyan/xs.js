@@ -67,7 +67,7 @@
         me.extend = function (object) {
 
             //assert that index is in bounds
-            assert.object(object, 'extend - given "$object" is not object', {
+            assert.object(object, 'extend - given `$object` is not object', {
                 $object: object
             });
 

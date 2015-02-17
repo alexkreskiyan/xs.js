@@ -50,7 +50,7 @@
             return;
         }
 
-        assert.ok(xs.isArray(values) || xs.isObject(values), 'constructor - type "$values" is nor array neither object', {
+        assert.ok(xs.isArray(values) || xs.isObject(values), 'constructor - type `$values` is nor array neither object', {
             $values: values
         });
 
@@ -286,7 +286,7 @@
     collection.prototype.hasKey = function (key) {
         var me = this;
 
-        assert.ok(xs.isNumber(key) || xs.isString(key), 'hasKey - key "$key", given for collection, is neither number nor string', {
+        assert.ok(xs.isNumber(key) || xs.isString(key), 'hasKey - key `$key`, given for collection, is neither number nor string', {
             $key: key
         });
 
@@ -391,7 +391,7 @@
             index = values.indexOf(value);
         } else {
             //assert that flags is number
-            assert.number(flags, 'keyOf - given flags "$flags" list is not number', {
+            assert.number(flags, 'keyOf - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -448,7 +448,7 @@
         //assert that collection is not empty
         assert.ok(me.private.items.length, 'at - collection is empty');
 
-        assert.ok(xs.isNumber(key) || xs.isString(key), 'at - key "$key", given for collection, is neither number nor string', {
+        assert.ok(xs.isNumber(key) || xs.isString(key), 'at - key `$key`, given for collection, is neither number nor string', {
             $key: key
         });
 
@@ -463,7 +463,7 @@
             //if max is 0, then min is 0
             var min = max > 0 ? -max : 0;
 
-            assert.ok(min <= index && index <= max, 'at - index "$index" is out of bounds [$min,$max]', {
+            assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
                 $index: index,
                 $min: min,
                 $max: max
@@ -480,7 +480,7 @@
             index = me.keys().indexOf(key);
 
             //check, that key exists
-            assert.ok(index >= 0, 'at - given key "$key" doesn\'t exist', {
+            assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
                 $key: key
             });
         }
@@ -655,12 +655,12 @@
         } else {
 
             //assert that key is string
-            assert.string(key, 'add - key "$key", given for collection, is not a string', {
+            assert.string(key, 'add - key `$key`, given for collection, is not a string', {
                 $key: key
             });
 
             //assert that key is not taken
-            assert.ok(me.keys().indexOf(key) < 0, 'add - collection already has key "$key"', {
+            assert.ok(me.keys().indexOf(key) < 0, 'add - collection already has key `$key`', {
                 $key: key
             });
         }
@@ -729,7 +729,7 @@
         assert.ok(arguments.length >= 2, 'insert - no enough arguments');
 
         //assert that index is number
-        assert.number(index, 'insert - given index "$index" is not number', {
+        assert.number(index, 'insert - given index `$index` is not number', {
             $index: index
         });
 
@@ -738,7 +738,7 @@
         var min = max > 0 ? -max : 0;
 
         //check that index is in bounds
-        assert.ok(min <= index && index <= max, 'insert - index "$index" is out of bounds [$min, $max]', {
+        assert.ok(min <= index && index <= max, 'insert - index `$index` is out of bounds [$min, $max]', {
             $index: index,
             $min: min,
             $max: max
@@ -757,12 +757,12 @@
             key = index;
         } else {
             //assert that key is string
-            assert.string(key, 'insert - key "$key", given for collection, is not a string', {
+            assert.string(key, 'insert - key `$key`, given for collection, is not a string', {
                 $key: key
             });
 
             //assert that key is not taken
-            assert.ok(me.keys().indexOf(key) < 0, 'insert - collection already has key "$key"', {
+            assert.ok(me.keys().indexOf(key) < 0, 'insert - collection already has key `$key`', {
                 $key: key
             });
         }
@@ -833,7 +833,7 @@
         //assert that arguments enough
         assert.ok(arguments.length >= 2, 'set - no enough arguments');
 
-        assert.ok(xs.isNumber(key) || xs.isString(key), 'set - key "$key", given for collection, is neither number nor string', {
+        assert.ok(xs.isNumber(key) || xs.isString(key), 'set - key `$key`, given for collection, is neither number nor string', {
             $key: key
         });
 
@@ -849,7 +849,7 @@
             var min = max > 0 ? -max : 0;
 
             //assert that index is in bounds
-            assert.ok(min <= index && index <= max, 'set - index "$index" is out of bounds [$min, $max]', {
+            assert.ok(min <= index && index <= max, 'set - index `$index` is out of bounds [$min, $max]', {
                 $index: index,
                 $min: min,
                 $max: max
@@ -866,7 +866,7 @@
             index = me.keys().indexOf(key);
 
             //assert that key exists
-            assert.ok(index >= 0, 'set - given key "$key" doesn\'t exist', {
+            assert.ok(index >= 0, 'set - given key `$key` doesn\'t exist', {
                 $key: key
             });
         }
@@ -921,7 +921,7 @@
     collection.prototype.removeAt = function (key) {
         var me = this;
 
-        assert.ok(xs.isNumber(key) || xs.isString(key), 'removeAt - key "$key", given for collection, is neither number nor string', {
+        assert.ok(xs.isNumber(key) || xs.isString(key), 'removeAt - key `$key`, given for collection, is neither number nor string', {
             $key: key
         });
 
@@ -938,7 +938,7 @@
             var min = max > 0 ? -max : 0;
 
             //assert that index is in bounds
-            assert.ok(min <= index && index <= max, 'removeAt - index "$index" is out of bounds [$min, $max]', {
+            assert.ok(min <= index && index <= max, 'removeAt - index `$index` is out of bounds [$min, $max]', {
                 $index: index,
                 $min: min,
                 $max: max
@@ -956,7 +956,7 @@
             index = me.keys().indexOf(key);
 
             //assert that key exists
-            assert.ok(index >= 0, 'removeAt - given key "$key" doesn\'t exist in collection', {
+            assert.ok(index >= 0, 'removeAt - given key `$key` doesn\'t exist in collection', {
                 $key: key
             });
         }
@@ -1092,7 +1092,7 @@
             //handle flags
         } else {
             //assert that flags is number
-            assert.number(flags, 'remove - given flags "$flags" list is not number', {
+            assert.number(flags, 'remove - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -1268,7 +1268,7 @@
         var me = this;
 
         //assert that finder is function
-        assert.fn(finder, 'removeBy - given finder "$finder" is not a function', {
+        assert.fn(finder, 'removeBy - given finder `$finder` is not a function', {
             $finder: finder
         });
 
@@ -1277,7 +1277,7 @@
         if (arguments.length > 1) {
 
             //assert that flags is number
-            assert.number(flags, 'removeBy - given flags "$flags" list is not number', {
+            assert.number(flags, 'removeBy - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -1634,7 +1634,7 @@
         var me = this;
 
         //assert that iterator is function
-        assert.fn(iterator, 'each - given iterator "$iterator" is not a function', {
+        assert.fn(iterator, 'each - given iterator `$iterator` is not a function', {
             $iterator: iterator
         });
 
@@ -1643,7 +1643,7 @@
         if (arguments.length >= 2) {
 
             //assert that flags is number
-            assert.number(flags, 'each - given flags "$flags" list is not number', {
+            assert.number(flags, 'each - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -1753,7 +1753,7 @@
         var me = this;
 
         //assert that finder is function
-        assert.fn(finder, 'find - given finder "$finder" is not a function', {
+        assert.fn(finder, 'find - given finder `$finder` is not a function', {
             $finder: finder
         });
 
@@ -1762,7 +1762,7 @@
         if (arguments.length >= 2) {
 
             //assert that flags is number
-            assert.number(flags, 'find - given flags "$flags" list is not number', {
+            assert.number(flags, 'find - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -1869,7 +1869,7 @@
         var me = this;
 
         //assert that mapper is function
-        assert.fn(mapper, 'map - given mapper "$mapper" is not a function', {
+        assert.fn(mapper, 'map - given mapper `$mapper` is not a function', {
             $mapper: mapper
         });
 
@@ -1985,7 +1985,7 @@
         var me = this;
 
         //assert that reducer is function
-        assert.fn(reducer, 'reduce - given reducer "$reducer" is not a function', {
+        assert.fn(reducer, 'reduce - given reducer `$reducer` is not a function', {
             $reducer: reducer
         });
 
@@ -1997,7 +1997,7 @@
         if (arguments.length >= 2) {
 
             //assert that flags is number
-            assert.number(flags, 'reduce - given flags "$flags" list is not number', {
+            assert.number(flags, 'reduce - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -2124,7 +2124,7 @@
         assert.ok(me.private.items.length, 'some - collection is empty');
 
         //assert that tester is function
-        assert.fn(tester, 'some - given tester "$tester" is not a function', {
+        assert.fn(tester, 'some - given tester `$tester` is not a function', {
             $tester: tester
         });
 
@@ -2134,11 +2134,11 @@
         }
 
         //check, that count is number and is in bounds
-        assert.number(count, 'some - given count "$count" is not number', {
+        assert.number(count, 'some - given count `$count` is not number', {
             $count: count
         });
 
-        assert.ok(0 <= count && count <= length, 'some - given count "$count" is out of bounds [$min, $max]', {
+        assert.ok(0 <= count && count <= length, 'some - given count `$count` is out of bounds [$min, $max]', {
             $count: count,
             $min: 0,
             $max: length
@@ -2478,7 +2478,7 @@
         var me = this;
 
         //assert that keys is array
-        assert.array(keys, 'pick - given keys list "$keys" is not array', {
+        assert.array(keys, 'pick - given keys list `$keys` is not array', {
             $keys: keys
         });
 
@@ -2488,7 +2488,7 @@
             key = keys[i];
 
             //assert that key is string or number
-            assert.ok(xs.isString(key) || xs.isNumber(key), 'pick - key "$key", given for collection, is neither number nor string', {
+            assert.ok(xs.isString(key) || xs.isNumber(key), 'pick - key `$key`, given for collection, is neither number nor string', {
                 $key: key
             });
 
@@ -2498,7 +2498,7 @@
                 index = ownKeys.indexOf(key);
 
                 //assert that key exists
-                assert.ok(index >= 0, 'pick - given key "$key" doesn\'t exist', {
+                assert.ok(index >= 0, 'pick - given key `$key` doesn\'t exist', {
                     $key: key
                 });
 
@@ -2511,7 +2511,7 @@
                 var min = max > 0 ? -max : 0;
 
                 //assert that index is in bounds
-                assert.ok(min <= key && key <= max, 'pick - given index "$index" is out of bounds [$min, $max]', {
+                assert.ok(min <= key && key <= max, 'pick - given index `$index` is out of bounds [$min, $max]', {
                     $index: key,
                     $min: min,
                     $max: max
@@ -2598,7 +2598,7 @@
         var me = this;
 
         //assert that keys is array
-        assert.array(keys, 'omit - given keys list "$keys" is not array', {
+        assert.array(keys, 'omit - given keys list `$keys` is not array', {
             $keys: keys
         });
 
@@ -2611,7 +2611,7 @@
             key = keys[i];
 
             //assert that key is string or number
-            assert.ok(xs.isString(key) || xs.isNumber(key), 'omit - key "$key", given for collection, is neither number nor string', {
+            assert.ok(xs.isString(key) || xs.isNumber(key), 'omit - key `$key`, given for collection, is neither number nor string', {
                 $key: key
             });
 
@@ -2621,7 +2621,7 @@
                 index = ownKeys.indexOf(key);
 
                 //assert, that key exists
-                assert.ok(index >= 0, 'omit - given key "$key" doesn\'t exist', {
+                assert.ok(index >= 0, 'omit - given key `$key` doesn\'t exist', {
                     $key: key
                 });
 
@@ -2634,7 +2634,7 @@
                 var min = max > 0 ? -max : 0;
 
                 //assert that index is in bounds
-                assert.ok(min <= key && key <= max, 'omit - given index "$index" is out of bounds [$min, $max]', {
+                assert.ok(min <= key && key <= max, 'omit - given index `$index` is out of bounds [$min, $max]', {
                     $index: key,
                     $min: min,
                     $max: max

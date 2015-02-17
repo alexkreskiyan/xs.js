@@ -128,14 +128,14 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event
         //assert event name is non-empty string
-        self.assert.ok(event && xs.isString(event), 'fire - given event name "$event" is not a string', {
+        self.assert.ok(event && xs.isString(event), 'fire - given event name `$event` is not a string', {
             $event: event
         });
 
 
         //check data
         //assert that data is either not given or is object
-        self.assert.ok(arguments.length === 1 || xs.isObject(data), 'fire - given event "$event" data "$data" is not an object', {
+        self.assert.ok(arguments.length === 1 || xs.isObject(data), 'fire - given event `$event` data `$data` is not an object', {
             $event: event,
             $data: data
         });
@@ -143,25 +143,25 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event options
         //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'fire - given event "$event" is not registered within Class.constant.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'fire - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
             $event: event
         });
 
         //assert that given event options are object
         var options = me.self.events[event];
-        self.assert.object(options, 'fire - given event "$event" options "$options" are not an object', {
+        self.assert.object(options, 'fire - given event `$event` options `$options` are not an object', {
             $event: event,
             $options: options
         });
 
         //check event constructor
         //assert that type is specified
-        self.assert.ok(options.hasOwnProperty('type'), 'fire - no type given for event "$event". Add event type to Class.constant.events hash constant with property type, which value must be string, referencing name of imported Class', {
+        self.assert.ok(options.hasOwnProperty('type'), 'fire - no type given for event `$event`. Add event type to Class.constant.events hash constant with property type, which value must be string, referencing name of imported Class', {
             $event: event
         });
 
         //assert that type is non-empty string
-        self.assert.ok(options.type && xs.isString(options.type), 'fire - given event "$event" type "$type" is not a string', {
+        self.assert.ok(options.type && xs.isString(options.type), 'fire - given event `$event` type `$type` is not a string', {
             $event: event
         });
 
@@ -169,13 +169,13 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         var EventClass = xs.ContractsManager.get(me.self.descriptor.resolveName(options.type));
 
         //assert that EventClass is class
-        self.assert.Class(EventClass, 'fire - given event "$event" type "$Event" is not a class', {
+        self.assert.Class(EventClass, 'fire - given event `$event` type `$Event` is not a class', {
             $event: event,
             $Event: EventClass
         });
 
         //assert that EventClass implements IEvent interface
-        self.assert.ok(EventClass.implements(imports.IEvent), 'fire - given event "$event" type "$Event" does not implement base event interface "$Interface"', {
+        self.assert.ok(EventClass.implements(imports.IEvent), 'fire - given event `$event` type `$Event` does not implement base event interface `$Interface`', {
             $event: event,
             $Event: EventClass,
             $Interface: imports.IEvent.label
@@ -193,7 +193,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             stoppable = options.stoppable;
 
             //assert that stoppable is boolean
-            self.assert.boolean(stoppable, 'fire - given event "$event" stoppable option value "$stoppable" is not a boolean', {
+            self.assert.boolean(stoppable, 'fire - given event `$event` stoppable option value `$stoppable` is not a boolean', {
                 $stoppable: stoppable
             });
 
@@ -268,19 +268,19 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event
         //assert event name is non-empty string
-        self.assert.ok(event && xs.isString(event), 'on - given event name "$event" is not a string', {
+        self.assert.ok(event && xs.isString(event), 'on - given event name `$event` is not a string', {
             $event: event
         });
 
         //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'on - given event "$event" is not registered within Class.constant.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'on - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
             $event: event
         });
 
 
         //check handler
         //assert that given handler is function
-        self.assert.fn(handler, 'on - given event "$event" handler "$handler" is not a function', {
+        self.assert.fn(handler, 'on - given event `$event` handler `$handler` is not a function', {
             $event: event,
             $handler: handler
         });
@@ -290,14 +290,14 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         //assert that given handler was not assigned yet
         self.assert.ok(!eventsHandlers.hasOwnProperty(event) || !eventsHandlers[event].find(function (item) {
             return item.handler === handler;
-        }), 'on - given event "$event" handler "$handler" is already assigned', {
+        }), 'on - given event `$event` handler `$handler` is already assigned', {
             $event: event,
             $handler: handler
         });
 
 
         //check options (if given)
-        self.assert.ok(arguments.length === 2 || xs.isObject(options), 'on - given options "$options" are not an object', {
+        self.assert.ok(arguments.length === 2 || xs.isObject(options), 'on - given options `$options` are not an object', {
             $options: options
         });
 
@@ -346,12 +346,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             buffer = options.buffer;
 
             //assert that buffer is number
-            self.assert.number(buffer, 'on - given buffer "$buffer" is not a number', {
+            self.assert.number(buffer, 'on - given buffer `$buffer` is not a number', {
                 $buffer: buffer
             });
 
             //assert that buffer is positive whole number
-            self.assert.ok(buffer > 0 && Math.round(buffer) === buffer, 'on - given buffer "$buffer" is not a number', {
+            self.assert.ok(buffer > 0 && Math.round(buffer) === buffer, 'on - given buffer `$buffer` is not a number', {
                 $buffer: buffer
             });
         } else {
@@ -366,12 +366,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             calls = options.calls;
 
             //assert that calls is number
-            self.assert.number(calls, 'on - given calls "$calls" is not a number', {
+            self.assert.number(calls, 'on - given calls `$calls` is not a number', {
                 $calls: calls
             });
 
             //assert that calls is positive whole number
-            self.assert.ok(calls > 0 && Math.round(calls) === calls, 'on - given calls "$calls" is not a number', {
+            self.assert.ok(calls > 0 && Math.round(calls) === calls, 'on - given calls `$calls` is not a number', {
                 $calls: calls
             });
         } else {
@@ -498,7 +498,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             priority = options.priority;
 
             //assert that priority is number
-            self.assert.number(priority, 'on - given priority "$priority" is not a number', {
+            self.assert.number(priority, 'on - given priority `$priority` is not a number', {
                 $priority: priority
             });
         } else {
@@ -550,19 +550,19 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event (if given)
         //assert event name is non-empty string (if given)
-        self.assert.ok(!arguments.length || (event && xs.isString(event)), 'off - given event name "$event" is not a string', {
+        self.assert.ok(!arguments.length || (event && xs.isString(event)), 'off - given event name `$event` is not a string', {
             $event: event
         });
 
         //assert that given event is registered
-        self.assert.ok(!arguments.length || me.self.events.hasOwnProperty(event), 'off - given event "$event" is not registered within Class.constant.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(!arguments.length || me.self.events.hasOwnProperty(event), 'off - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
             $event: event
         });
 
 
         //check selector
         //assert that selector is function if given
-        self.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'off - given event "$event" selector "$selector" is not a function', {
+        self.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'off - given event `$event` selector `$selector` is not a function', {
             $event: event,
             $selector: selector
         });
@@ -659,19 +659,19 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event
         //assert event name is non-empty string
-        self.assert.ok(event && xs.isString(event), 'suspend - given event name "$event" is not a string', {
+        self.assert.ok(event && xs.isString(event), 'suspend - given event name `$event` is not a string', {
             $event: event
         });
 
         //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'suspend - given event "$event" is not registered within Class.constant.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'suspend - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
             $event: event
         });
 
 
         //check selector
         //assert that selector is function if given
-        self.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'suspend - given event "$event" selector "$selector" is not a function', {
+        self.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'suspend - given event `$event` selector `$selector` is not a function', {
             $event: event,
             $selector: selector
         });
@@ -756,19 +756,19 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event
         //assert event name is non-empty string
-        self.assert.ok(event && xs.isString(event), 'resume - given event name "$event" is not a string', {
+        self.assert.ok(event && xs.isString(event), 'resume - given event name `$event` is not a string', {
             $event: event
         });
 
         //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'resume - given event "$event" is not registered within Class.constant.events hash constant. Add event "$event" configuration there', {
+        self.assert.ok(me.self.events.hasOwnProperty(event), 'resume - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
             $event: event
         });
 
 
         //check selector
         //assert that selector is function if given
-        self.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'resume - given event "$event" selector "$selector" is not a function', {
+        self.assert.ok(arguments.length <= 1 || xs.isFunction(selector), 'resume - given event `$event` selector `$selector` is not a function', {
             $event: event,
             $selector: selector
         });

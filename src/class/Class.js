@@ -103,7 +103,7 @@
         var Contractor = function (Descriptor, createdFn) {
 
             //Descriptor must be function
-            assert.fn(Descriptor, 'given class descriptor "$descriptor" is not a function', {
+            assert.fn(Descriptor, 'given class descriptor `$descriptor` is not a function', {
                 $descriptor: Descriptor
             });
 
@@ -268,7 +268,7 @@
                 //abstract processing
 
                 //assert Class is not abstract
-                assert.not(descriptor.abstract, 'can not create instance of abstract class "$label"', {
+                assert.not(descriptor.abstract, 'can not create instance of abstract class `$label`', {
                     $label: Class.label
                 });
 

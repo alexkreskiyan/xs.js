@@ -75,7 +75,7 @@
      */
     var processConstants = function (Class, descriptor) {
         //assert, that constants list is an object
-        assert.object(descriptor.constant, '[$Class]: constants list "$constants" is not an object', {
+        assert.object(descriptor.constant, '[$Class]: constants list `$constants` is not an object', {
             $Class: Class.label,
             $constants: descriptor.constant
         });
@@ -89,7 +89,7 @@
         //add constants from raw descriptor
         descriptor.constant.each(function (value, name) {
             //assert that constant name is not empty
-            assert.ok(name, '[$Class]: given constant name "$name" is incorrect', {
+            assert.ok(name, '[$Class]: given constant name `$name` is incorrect', {
                 $Class: Class.label,
                 $name: name
             });
@@ -131,7 +131,7 @@
     var processStaticProperties = function (Class, descriptor) {
 
         //assert, that static properties list is an object
-        assert.object(descriptor.static.property, '[$Class]: static properties list "$properties" is not an object', {
+        assert.object(descriptor.static.property, '[$Class]: static properties list `$properties` is not an object', {
             $Class: Class.label,
             $properties: descriptor.static.property
         });
@@ -145,7 +145,7 @@
         //add static properties from raw descriptor
         descriptor.static.property.each(function (value, name) {
             //assert that static property name is not empty
-            assert.ok(name, '[$Class]: given static property name "$name" is not a string', {
+            assert.ok(name, '[$Class]: given static property name `$name` is not a string', {
                 $Class: Class.label,
                 $name: name
             });
@@ -192,7 +192,7 @@
     var processStaticMethods = function (Class, descriptor) {
 
         //assert, that static methods list is an object
-        assert.object(descriptor.static.method, '[$Class]: static methods list "$methods" is not an object', {
+        assert.object(descriptor.static.method, '[$Class]: static methods list `$methods` is not an object', {
             $Class: Class.label,
             $methods: descriptor.static.method
         });
@@ -206,7 +206,7 @@
         //add static methods from raw descriptor
         descriptor.static.method.each(function (value, name) {
             //assert that static method name is not empty
-            assert.ok(name, '[$Class]: given static method name "$name" is not a string', {
+            assert.ok(name, '[$Class]: given static method name `$name` is not a string', {
                 $Class: Class.label,
                 $name: name
             });
@@ -253,7 +253,7 @@
     var processProperties = function (Class, descriptor) {
 
         //assert, that properties list is an object
-        assert.object(descriptor.property, '[$Class]: static properties list "$properties" is not an object', {
+        assert.object(descriptor.property, '[$Class]: static properties list `$properties` is not an object', {
             $Class: Class.label,
             $properties: descriptor.property
         });
@@ -267,7 +267,7 @@
         //add properties from raw descriptor
         descriptor.property.each(function (value, name) {
             //assert that property name is not empty
-            assert.ok(name, '[$Class]: given property name "$name" is not a string', {
+            assert.ok(name, '[$Class]: given property name `$name` is not a string', {
                 $Class: Class.label,
                 $name: name
             });
@@ -314,7 +314,7 @@
     var processMethods = function (Class, descriptor) {
 
         //assert, that methods list is an object
-        assert.object(descriptor.method, '[$Class]: methods list "$methods" is not an object', {
+        assert.object(descriptor.method, '[$Class]: methods list `$methods` is not an object', {
             $Class: Class.label,
             $methods: descriptor.method
         });
@@ -328,7 +328,7 @@
         //add methods from raw descriptor
         descriptor.method.each(function (value, name) {
             //assert that method name is not empty
-            assert.ok(name, '[$Class]: given method name "$name" is not a string', {
+            assert.ok(name, '[$Class]: given method name `$name` is not a string', {
                 $Class: Class.label,
                 $name: name
             });

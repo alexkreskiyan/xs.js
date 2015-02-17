@@ -75,7 +75,7 @@
         var Contractor = function (values, createdFn) {
 
             //Descriptor must be function
-            assert.object(values, 'given values object "$values" is not an object', {
+            assert.object(values, 'given values object `$values` is not an object', {
                 $values: values
             });
 

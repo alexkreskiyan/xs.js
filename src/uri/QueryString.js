@@ -35,7 +35,7 @@ xs.define(xs.Class, 'ns.QueryString', function (self) {
     Class.constructor = function (params) {
         var me = this;
 
-        self.assert.ok(!arguments.length || xs.isObject(params) || xs.isString(params), 'Given params "$params" are nor object neither string', {
+        self.assert.ok(!arguments.length || xs.isObject(params) || xs.isString(params), 'Given params `$params` are nor object neither string', {
             $params: params
         });
 
@@ -48,7 +48,7 @@ xs.define(xs.Class, 'ns.QueryString', function (self) {
             //decode
             params = decodeURI(params);
 
-            self.assert.ok(queryStringRe.test(params), 'Given query string "$queryString" is not correct', {
+            self.assert.ok(queryStringRe.test(params), 'Given query string `$queryString` is not correct', {
                 $queryString: params
             });
 
@@ -71,7 +71,7 @@ xs.define(xs.Class, 'ns.QueryString', function (self) {
         set: function (params) {
             var me = this;
 
-            self.assert.object(params, 'Given params "$params" are not an object', {
+            self.assert.object(params, 'Given params `$params` are not an object', {
                 $params: params
             });
 
@@ -89,7 +89,7 @@ xs.define(xs.Class, 'ns.QueryString', function (self) {
      * @returns {String}
      */
     Class.method.toString = function (encode) {
-        self.assert.ok(!arguments.length || xs.isBoolean(encode), 'Given encode "$encode" is not boolean', {
+        self.assert.ok(!arguments.length || xs.isBoolean(encode), 'Given encode `$encode` is not boolean', {
             $encode: encode
         });
 

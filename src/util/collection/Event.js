@@ -46,7 +46,7 @@ xs.define(xs.Class, 'ns.Event', function (self) {
 
         //check data
         //assert that data is object
-        self.assert.ok(xs.isObject(data), 'constructor - given data "$data" is not an object', {
+        self.assert.ok(xs.isObject(data), 'constructor - given data `$data` is not an object', {
             $data: data
         });
 

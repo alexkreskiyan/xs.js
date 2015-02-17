@@ -64,12 +64,12 @@
         var me = this;
 
         //assert, that logger is an instance of xs.log.Logger
-        assert.ok(logger instanceof xs.log.Logger, 'Given logger "$logger" is not an instance of xs.log.Logger', {
+        assert.ok(logger instanceof xs.log.Logger, 'Given logger `$logger` is not an instance of xs.log.Logger', {
             $logger: logger
         });
 
         //assert, that  Exception is function
-        assert.fn(Exception, 'Given Exception class "$Exception" is not a function', {
+        assert.fn(Exception, 'Given Exception class `$Exception` is not a function', {
             $Exception: Exception
         });
 
@@ -631,7 +631,7 @@
         var me = this;
 
         //assert, that Class is function
-        me.fn(Class, 'Class "$Class" is not a function', {
+        me.fn(Class, 'Class `$Class` is not a function', {
             $Class: Class
         });
 
@@ -667,7 +667,7 @@
         var me = this;
 
         //assert, that fn is function
-        me.fn(Interface, 'Interface "$Interface" is not a function', {
+        me.fn(Interface, 'Interface `$Interface` is not a function', {
             $Interface: Interface
         });
 
@@ -704,7 +704,7 @@
         var me = this;
 
         //assert, that Class is a function
-        me.fn(Class, 'Class "$Class" is not a function', {
+        me.fn(Class, 'Class `$Class` is not a function', {
             $Class: Class
         });
 
@@ -715,17 +715,17 @@
         }
 
         //assert that instance is object
-        me.object(instance, 'Instance "$instance" is not an object', {
+        me.object(instance, 'Instance `$instance` is not an object', {
             $instance: instance
         });
 
         //assert, that Class is class
-        me.Class(Class, 'Class "$Class" is not a class', {
+        me.Class(Class, 'Class `$Class` is not a class', {
             $Class: Class
         });
 
         //assert that object.self is class
-        me.Class(instance.self, 'Instance.self "$Class" is not a class', {
+        me.Class(instance.self, 'Instance.self `$Class` is not a class', {
             $Class: instance.self
         });
 
@@ -762,17 +762,17 @@
         var me = this;
 
         //assert that instance is object
-        me.object(instance, 'Instance "$instance" is not an object', {
+        me.object(instance, 'Instance `$instance` is not an object', {
             $instance: instance
         });
 
         //assert, that Interface is interface
-        me.Interface(Interface, 'Interface "$Interface" is not an interface', {
+        me.Interface(Interface, 'Interface `$Interface` is not an interface', {
             $Interface: Interface
         });
 
         //assert that instance.self is class
-        me.Class(instance.self, 'Instance.self "$Class" is not a class', {
+        me.Class(instance.self, 'Instance.self `$Class` is not a class', {
             $Class: instance.self
         });
 

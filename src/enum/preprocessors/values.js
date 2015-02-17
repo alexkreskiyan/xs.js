@@ -38,7 +38,7 @@
         //values
 
         //assert, that values list is an object
-        assert.object(values, '[$Enum]: values list "$values" is not an object', {
+        assert.object(values, '[$Enum]: values list `$values` is not an object', {
             $Enum: Enum.label,
             $value: values
         });
@@ -51,7 +51,7 @@
 
         //add values from raw descriptor and save to Enum.descriptor, define values as constants
         values.each(function (value, name) {
-            assert.ok(name && xs.isString(name), '[$Enum]: given value name "$name" is incorrect', {
+            assert.ok(name && xs.isString(name), '[$Enum]: given value name `$name` is incorrect', {
                 $Enum: Enum.label,
                 $name: name
             });

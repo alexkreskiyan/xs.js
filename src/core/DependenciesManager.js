@@ -181,7 +181,7 @@
         var showDeadLock = function (deadLock) {
             //self lock
             if (deadLock.length === 1) {
-                return 'Class "' + deadLock[0].label + '" imports itself';
+                return 'Class `' + deadLock[0].label + '` imports itself';
             }
 
             //chain lock
@@ -189,7 +189,7 @@
             var names = deadLock.values().map(function (Class) {
                 return Class.label;
             });
-            return 'Class "' + first.label + '" imports "' + names.join('", which imports "') + '", which, in it\'s turn, imports "' + first.label + '"';
+            return 'Class `' + first.label + '` imports `' + names.join('`, which imports `') + '`, which, in it\'s turn, imports `' + first.label + '`';
         };
 
         /**

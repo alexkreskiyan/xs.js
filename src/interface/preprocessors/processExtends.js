@@ -49,7 +49,7 @@
         }
 
         //assert, that parent is defined
-        assert.ok(xs.ContractsManager.has(extended), '[$Interface]: parent interface "$extended" is not defined. Move it to imports section, please', {
+        assert.ok(xs.ContractsManager.has(extended), '[$Interface]: parent interface `$extended` is not defined. Move it to imports section, please', {
             $Interface: Interface.label,
             $extended: extended
         });
@@ -58,13 +58,13 @@
         var Parent = xs.ContractsManager.get(extended);
 
         //check that parent is interface
-        assert.Interface(Parent, '[$Interface]: contract "$Parent" is not an interface', {
+        assert.Interface(Parent, '[$Interface]: contract `$Parent` is not an interface', {
             $Interface: Interface.label,
             $Parent: Parent.label
         });
 
         //check that interface is ready
-        assert.not(Parent.isProcessing, '[$Interface]: parent interface "$Parent" is not processed yet. Move it to imports section, please', {
+        assert.not(Parent.isProcessing, '[$Interface]: parent interface `$Parent` is not processed yet. Move it to imports section, please', {
             $Interface: Interface.label,
             $Parent: Parent.label
         });

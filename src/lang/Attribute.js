@@ -52,7 +52,7 @@
          * @return {Boolean} verification result
          */
         me.defined = function (object, name) {
-            assert.string(name, 'defined - given "$name" is not a string', {
+            assert.string(name, 'defined - given `$name` is not a string', {
                 $name: name
             });
 
@@ -84,11 +84,11 @@
          * @param {Object} descriptor descriptor of new property
          */
         me.define = function (object, name, descriptor) {
-            assert.string(name, 'define - given "$name" is not a string', {
+            assert.string(name, 'define - given `$name` is not a string', {
                 $name: name
             });
 
-            assert.object(descriptor, 'define - given "$descriptor" is not an object', {
+            assert.object(descriptor, 'define - given `$descriptor` is not an object', {
                 $descriptor: descriptor
             });
 
@@ -110,11 +110,11 @@
          * @return {Object} property descriptor
          */
         me.getDescriptor = function (object, name) {
-            assert.string(name, 'getDescriptor - given "$name" is not a string', {
+            assert.string(name, 'getDescriptor - given `$name` is not a string', {
                 $name: name
             });
 
-            assert.ok(object.hasOwnProperty(name), 'getDescriptor - given object does not have own property "$name"', {
+            assert.ok(object.hasOwnProperty(name), 'getDescriptor - given object does not have own property `$name`', {
                 $name: name
             });
 
@@ -140,11 +140,11 @@
          * @return {Boolean} whether property is assigned
          */
         me.isAssigned = function (object, name) {
-            assert.string(name, 'isAssigned - given "$name" is not a string', {
+            assert.string(name, 'isAssigned - given `$name` is not a string', {
                 $name: name
             });
 
-            assert.ok(object.hasOwnProperty(name), 'isAssigned - given object does not have own property "$name"', {
+            assert.ok(object.hasOwnProperty(name), 'isAssigned - given object does not have own property `$name`', {
                 $name: name
             });
 
@@ -170,11 +170,11 @@
          * @return {Boolean} whether property is accessed
          */
         me.isAccessed = function (object, name) {
-            assert.string(name, 'isAccessed - given "$name" is not a string', {
+            assert.string(name, 'isAccessed - given `$name` is not a string', {
                 $name: name
             });
 
-            assert.ok(object.hasOwnProperty(name), 'isAccessed - given object does not have own property "$name"', {
+            assert.ok(object.hasOwnProperty(name), 'isAccessed - given object does not have own property `$name`', {
                 $name: name
             });
 
@@ -200,11 +200,11 @@
          * @return {Boolean} whether property is writable
          */
         me.isWritable = function (object, name) {
-            assert.string(name, 'isWritable - given "$name" is not a string', {
+            assert.string(name, 'isWritable - given `$name` is not a string', {
                 $name: name
             });
 
-            assert.ok(object.hasOwnProperty(name), 'isWritable - given object does not have own property "$name"', {
+            assert.ok(object.hasOwnProperty(name), 'isWritable - given object does not have own property `$name`', {
                 $name: name
             });
 
@@ -230,11 +230,11 @@
          * @return {Boolean} whether property is configurable
          */
         var isConfigurable = me.isConfigurable = function (object, name) {
-            assert.string(name, 'isConfigurable - given "$name" is not a string', {
+            assert.string(name, 'isConfigurable - given `$name` is not a string', {
                 $name: name
             });
 
-            assert.ok(object.hasOwnProperty(name), 'isConfigurable - given object does not have own property "$name"', {
+            assert.ok(object.hasOwnProperty(name), 'isConfigurable - given object does not have own property `$name`', {
                 $name: name
             });
 
@@ -260,11 +260,11 @@
          * @return {Boolean} whether property is enumerable
          */
         me.isEnumerable = function (object, name) {
-            assert.string(name, 'isEnumerable - given "$name" is not a string', {
+            assert.string(name, 'isEnumerable - given `$name` is not a string', {
                 $name: name
             });
 
-            assert.ok(object.hasOwnProperty(name), 'isEnumerable - given object does not have own property "$name"', {
+            assert.ok(object.hasOwnProperty(name), 'isEnumerable - given object does not have own property `$name`', {
                 $name: name
             });
 
@@ -340,7 +340,7 @@
          * @return {Object} corrected descriptor copy
          */
         var prepareDescriptor = me.prepareDescriptor = function (descriptor) {
-            assert.object(descriptor, 'prepareDescriptor - given "$descriptor" is not an object', {
+            assert.object(descriptor, 'prepareDescriptor - given `$descriptor` is not an object', {
                 $descriptor: descriptor
             });
 
@@ -397,12 +397,12 @@
          * @param {*} value constant value
          */
         me.constant = function (object, name, value) {
-            assert.string(name, 'constant - given "$name" is not a string', {
+            assert.string(name, 'constant - given `$name` is not a string', {
                 $name: name
             });
 
-            //assert, that object has no constant "name", or it is defined, but is configurable
-            assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'constant "$name" is already defined', {
+            //assert, that object has no constant `name`, or it is defined, but is configurable
+            assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'constant `$name` is already defined', {
                 $name: name
             });
 
@@ -464,7 +464,7 @@
              * @return {Object} prepared descriptor
              */
             me.prepare = function (name, descriptor) {
-                assert.string(name, 'property::prepare - given "$name" is not a string', {
+                assert.string(name, 'property::prepare - given `$name` is not a string', {
                     $name: name
                 });
 
@@ -538,14 +538,14 @@
              * @param {Object} descriptor defined property descriptor
              */
             me.define = function (object, name, descriptor) {
-                assert.string(name, 'property::define - given "$name" is not a string', {
+                assert.string(name, 'property::define - given `$name` is not a string', {
                     $name: name
                 });
 
                 assert.ok(isDescriptor(descriptor), 'property::define - given object is not a descriptor');
 
-                //assert, that object has no property "name", or it is defined, but is configurable
-                assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'property::define - property "$name" is already defined', {
+                //assert, that object has no property `name`, or it is defined, but is configurable
+                assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'property::define - property `$name` is already defined', {
                     $name: name
                 });
 
@@ -607,12 +607,12 @@
              * @return {Object} prepared method descriptor
              */
             me.prepare = function (name, descriptor) {
-                assert.string(name, 'method::prepare - given "$name" is not a string', {
+                assert.string(name, 'method::prepare - given `$name` is not a string', {
                     $name: name
                 });
 
-                //assert, that descriptor is function, or is object with property "value", that is function
-                assert.ok(xs.isFunction(descriptor) || (xs.isObject(descriptor) && xs.isFunction(descriptor.value)), 'method::prepare - Method "$name" descriptor "$descriptor" is incorrect', {
+                //assert, that descriptor is function, or is object with property `value`, that is function
+                assert.ok(xs.isFunction(descriptor) || (xs.isObject(descriptor) && xs.isFunction(descriptor.value)), 'method::prepare - Method `$name` descriptor `$descriptor` is incorrect', {
                     $name: name,
                     $descriptor: descriptor
                 });
@@ -671,18 +671,18 @@
              * @param {Object} descriptor defined method descriptor
              */
             me.define = function (object, name, descriptor) {
-                assert.string(name, 'method::define - given "$name" is not a string', {
+                assert.string(name, 'method::define - given `$name` is not a string', {
                     $name: name
                 });
 
                 assert.ok(isDescriptor(descriptor), 'method::define - given object is not a descriptor');
 
-                assert.fn(descriptor.value, 'method::define - given "$value" is not a function', {
+                assert.fn(descriptor.value, 'method::define - given `$value` is not a function', {
                     $value: descriptor.value
                 });
 
-                //assert, that object has no method "name", or it is defined, but is configurable
-                assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'method::define - method "$name" is already defined', {
+                //assert, that object has no method `name`, or it is defined, but is configurable
+                assert.ok(!object.hasOwnProperty(name) || isConfigurable(object, name), 'method::define - method `$name` is already defined', {
                     $name: name
                 });
 

@@ -59,7 +59,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
     Class.namespace = 'xs.ux';
 
     /**
-     * Promise "pending" state constant
+     * Promise `pending` state constant
      *
      * @static
      *
@@ -72,7 +72,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
     Class.constant.PENDING = 'pending';
 
     /**
-     * Promise "resolved" state constant
+     * Promise `resolved` state constant
      *
      * @static
      *
@@ -85,7 +85,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
     Class.constant.RESOLVED = 'resolved';
 
     /**
-     * Promise "rejected" state constant
+     * Promise `rejected` state constant
      *
      * @static
      *
@@ -108,7 +108,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      * @return {xs.ux.Promise} aggregate promise
      */
     Class.static.method.all = function (promises) {
-        self.assert.array(promises, 'all - given "$promises" are not array', {
+        self.assert.array(promises, 'all - given `$promises` are not array', {
             $promises: promises
         });
 
@@ -127,11 +127,11 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      * @return {xs.ux.Promise} aggregate promise
      */
     Class.static.method.some = function (promises, count) {
-        self.assert.array(promises, 'some - given "$promises" are not array', {
+        self.assert.array(promises, 'some - given `$promises` are not array', {
             $promises: promises
         });
 
-        self.assert.ok(promises.length, 'some - given "$promises" array is empty', {
+        self.assert.ok(promises.length, 'some - given `$promises` array is empty', {
             $promises: promises
         });
 
@@ -139,12 +139,12 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         if (arguments.length === 1) {
             count = 1;
         } else {
-            self.assert.number(count, 'some - given "$count" is not a number', {
+            self.assert.number(count, 'some - given `$count` is not a number', {
                 $count: count
             });
         }
 
-        self.assert.ok(0 < count && count <= promises.length, 'some - given count "$count" is out of bounds [$min, $max]', {
+        self.assert.ok(0 < count && count <= promises.length, 'some - given count `$count` is out of bounds [$min, $max]', {
             $count: count,
             $min: 0,
             $max: promises.length
@@ -515,13 +515,13 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      */
     var createItem = function (handleResolved, handleRejected, handleProgress) {
         //handlers must be either not defined or functions
-        self.assert.ok(!xs.isDefined(handleResolved) || xs.isFunction(handleResolved), 'createItem - given "$handleResolved" is not a function', {
+        self.assert.ok(!xs.isDefined(handleResolved) || xs.isFunction(handleResolved), 'createItem - given `$handleResolved` is not a function', {
             $handleResolved: handleResolved
         });
-        self.assert.ok(!xs.isDefined(handleRejected) || xs.isFunction(handleRejected), 'createItem - given "$handleRejected" is not a function', {
+        self.assert.ok(!xs.isDefined(handleRejected) || xs.isFunction(handleRejected), 'createItem - given `$handleRejected` is not a function', {
             $handleRejected: handleRejected
         });
-        self.assert.ok(!xs.isDefined(handleProgress) || xs.isFunction(handleProgress), 'createItem - given "$handleProgress" is not a function', {
+        self.assert.ok(!xs.isDefined(handleProgress) || xs.isFunction(handleProgress), 'createItem - given `$handleProgress` is not a function', {
             $handleProgress: handleProgress
         });
 

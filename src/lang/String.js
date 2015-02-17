@@ -55,12 +55,12 @@
          */
         me.translate = function (string, replaces) {
             //assert that first argument is string
-            assert.string(string, 'translate - given "$string" is not string', {
+            assert.string(string, 'translate - given `$string` is not string', {
                 $string: string
             });
 
             //assert that replaces are object
-            assert.object(replaces, 'translate - given replaces "$replaces" are not object', {
+            assert.object(replaces, 'translate - given replaces `$replaces` are not object', {
                 $replaces: replaces
             });
 

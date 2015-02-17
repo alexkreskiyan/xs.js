@@ -82,7 +82,7 @@
         var Contractor = function (Descriptor, createdFn) {
 
             //Descriptor must be function
-            assert.fn(Descriptor, 'given interface descriptor "$descriptor" is not a function', {
+            assert.fn(Descriptor, 'given interface descriptor `$descriptor` is not a function', {
                 $descriptor: Descriptor
             }, InterfaceError);
 

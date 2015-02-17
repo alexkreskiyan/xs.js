@@ -66,7 +66,7 @@
 
         //if namespace specified, it must be valid
         if (xs.isDefined(descriptor.namespace)) {
-            assert.ok(xs.ContractsManager.isName(descriptor.namespace), 'given namespace "$namespace" is not a valid name', {
+            assert.ok(xs.ContractsManager.isName(descriptor.namespace), 'given namespace `$namespace` is not a valid name', {
                 $namespace: descriptor.namespace
             });
 

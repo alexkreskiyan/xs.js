@@ -60,7 +60,7 @@
          * @return {Boolean} whether given Mixin class is stored with some alias in Class.prototype.mixins
          */
         xs.constant(Class, 'mixins', function (Mixin) {
-            assert.Class(Mixin, '[$Class]: given non-class value "$Mixin"', {
+            assert.Class(Mixin, '[$Class]: given non-class value `$Mixin`', {
                 $Class: Class.label,
                 $Mixin: Mixin
             });
@@ -106,7 +106,7 @@
             name = resolveName(name);
 
             //assert, that mixin is defined
-            assert.ok(xs.ContractsManager.has(name), '[$Class]: mixed class "$name" is not defined. Move it to imports section, please', {
+            assert.ok(xs.ContractsManager.has(name), '[$Class]: mixed class `$name` is not defined. Move it to imports section, please', {
                 $Class: Class.label,
                 $name: name
             });
@@ -115,13 +115,13 @@
             var Mixin = xs.ContractsManager.get(name);
 
             //check that contractor is xs.Class
-            assert.Class(Mixin, '[$Class]: given "$Mixin" is not class', {
+            assert.Class(Mixin, '[$Class]: given `$Mixin` is not class', {
                 $Class: Class.label,
                 $Mixin: Mixin.label
             });
 
             //check that mixin is ready
-            assert.not(Mixin.isProcessing, '[$Class]: mixed class "$Mixin" is not processed yet. Move it to imports section, please', {
+            assert.not(Mixin.isProcessing, '[$Class]: mixed class `$Mixin` is not processed yet. Move it to imports section, please', {
                 $Class: Class.label,
                 $Mixin: Mixin.label
             });

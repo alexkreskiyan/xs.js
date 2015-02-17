@@ -68,7 +68,7 @@
         }
 
         //assert, that parent is defined
-        assert.ok(xs.ContractsManager.has(extended), '[$Class]: parent class "$extended" is not defined. Move it to imports section, please', {
+        assert.ok(xs.ContractsManager.has(extended), '[$Class]: parent class `$extended` is not defined. Move it to imports section, please', {
             $Class: Class.label,
             $extended: extended
         });
@@ -77,13 +77,13 @@
         var Parent = xs.ContractsManager.get(extended);
 
         //check that parent is class
-        assert.Class(Parent, '[$Class]: contract "$Parent" is not a class', {
+        assert.Class(Parent, '[$Class]: contract `$Parent` is not a class', {
             $Class: Class.label,
             $Parent: Parent.label
         });
 
         //check that class is ready
-        assert.not(Parent.isProcessing, '[$Class]: parent class "$Parent" is not processed yet. Move it to imports section, please', {
+        assert.not(Parent.isProcessing, '[$Class]: parent class `$Parent` is not processed yet. Move it to imports section, please', {
             $Class: Class.label,
             $Parent: Parent.label
         });
@@ -149,7 +149,7 @@
          */
         xs.constant(child, 'inherits', function (Parent) {
             //assert, that Parent is class
-            assert.Class(Parent, 'Given Parent "$Parent" is not a class', {
+            assert.Class(Parent, 'Given Parent `$Parent` is not a class', {
                 $Parent: Parent
             });
 

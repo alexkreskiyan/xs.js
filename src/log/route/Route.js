@@ -54,7 +54,7 @@ xs.define(xs.Class, 'ns.Route', function (self) {
         var me = this;
 
         //assert, that name is non-empty string
-        self.assert.ok(name && xs.isString(name), 'constructor - given route name "$name" is not correct', {
+        self.assert.ok(name && xs.isString(name), 'constructor - given route name `$name` is not correct', {
             $name: name
         });
 
@@ -101,18 +101,18 @@ xs.define(xs.Class, 'ns.Route', function (self) {
     var verifyRules = function (rules) {
 
         //assert, that rules are an array
-        self.assert.array(rules, 'verifyRules - given rules "$rules" are not an array');
+        self.assert.array(rules, 'verifyRules - given rules `$rules` are not an array');
 
         //verify each rule individually
         rules.forEach(function (rule) {
 
             //assert, that rule is an object
-            self.assert.object(rule, 'verifyRules - given rule "$rule" is not an object', {
+            self.assert.object(rule, 'verifyRules - given rule `$rule` is not an object', {
                 $rule: rule
             });
 
             //assert that category or level given
-            self.assert.ok(rule.hasOwnProperty('category') || rule.hasOwnProperty('level'), 'verifyRules - given rule "$rule" is not informative: nor category neither level given', {
+            self.assert.ok(rule.hasOwnProperty('category') || rule.hasOwnProperty('level'), 'verifyRules - given rule `$rule` is not informative: nor category neither level given', {
                 $rule: rule
             });
 
@@ -120,7 +120,7 @@ xs.define(xs.Class, 'ns.Route', function (self) {
             if (rule.hasOwnProperty('category')) {
 
                 //assert, that category has correct format
-                self.assert.ok(xs.log.Router.isCategory(rule.category), 'verifyRules - given category "$category" is not correct', {
+                self.assert.ok(xs.log.Router.isCategory(rule.category), 'verifyRules - given category `$category` is not correct', {
                     $category: rule.category
                 });
             }
@@ -129,7 +129,7 @@ xs.define(xs.Class, 'ns.Route', function (self) {
             if (rule.hasOwnProperty('level')) {
 
                 //assert, that level is number
-                self.assert.number(rule.level, 'verifyRules - given level "$level" list is not a number', {
+                self.assert.number(rule.level, 'verifyRules - given level `$level` list is not a number', {
                     $level: rule.level
                 });
             }

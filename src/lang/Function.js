@@ -57,11 +57,11 @@
          * @return {Function} bound function
          */
         var bind = me.bind = function (fn, scope, args) {
-            assert.fn(fn, 'bind - given "$fn" is not a function', {
+            assert.fn(fn, 'bind - given `$fn` is not a function', {
                 $fn: fn
             });
 
-            assert.ok(arguments.length < 3 || xs.isArray(args), 'bind - given "$args" is not a array', {
+            assert.ok(arguments.length < 3 || xs.isArray(args), 'bind - given `$args` is not a array', {
                 $args: args
             });
 
@@ -90,7 +90,7 @@
          * @return {Function} bound function
          */
         me.memorize = function (fn) {
-            assert.fn(fn, 'memorize - given "$fn" is not a function', {
+            assert.fn(fn, 'memorize - given `$fn` is not a function', {
                 $fn: fn
             });
 
@@ -139,11 +139,11 @@
          * @return {Function} wrapped function
          */
         me.wrap = function (fn, wrapper, scope) {
-            assert.fn(fn, 'wrap - given "$fn" is not a function', {
+            assert.fn(fn, 'wrap - given `$fn` is not a function', {
                 $fn: fn
             });
 
-            assert.fn(wrapper, 'wrap - given "$fn" is not a function', {
+            assert.fn(wrapper, 'wrap - given `$fn` is not a function', {
                 $fn: wrapper
             });
 
@@ -174,7 +174,7 @@
          * @param {Object} scope optional execution scope
          */
         me.nextTick = function (fn, scope) {
-            assert.fn(fn, 'nextTick - given "$fn" is not a function', {
+            assert.fn(fn, 'nextTick - given `$fn` is not a function', {
                 $fn: fn
             });
 
@@ -205,7 +205,7 @@
          * @return {String} function name
          */
         me.getName = function (fn) {
-            assert.fn(fn, 'getName - given "$fn" is not a function', {
+            assert.fn(fn, 'getName - given `$fn` is not a function', {
                 $fn: fn
             });
 
@@ -233,7 +233,7 @@
          * @return {Array} array with function formal params
          */
         me.getArguments = function (fn) {
-            assert.fn(fn, 'getArguments - given "$fn" is not a function', {
+            assert.fn(fn, 'getArguments - given `$fn` is not a function', {
                 $fn: fn
             });
 
@@ -264,7 +264,7 @@
          * @return {String} function body
          */
         me.getBody = function (fn) {
-            assert.fn(fn, 'getBody - given "$fn" is not a function', {
+            assert.fn(fn, 'getBody - given `$fn` is not a function', {
                 $fn: fn
             });
 
@@ -289,7 +289,7 @@
          * @return {Object} function data
          */
         me.parse = function (fn) {
-            assert.fn(fn, 'parse - given "$fn" is not a function', {
+            assert.fn(fn, 'parse - given `$fn` is not a function', {
                 $fn: fn
             });
 

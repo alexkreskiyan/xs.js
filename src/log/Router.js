@@ -185,7 +185,7 @@
         me.isCategory = function (category) {
 
             //assert that category is a string
-            assert.string(category, 'isCategory - given category "$category" is not a string', {
+            assert.string(category, 'isCategory - given category `$category` is not a string', {
                 $category: category
             });
 
@@ -238,7 +238,7 @@
             me.add = function (route) {
 
                 //assert, that route is instance of xs.log.route.Route base route class
-                assert.instance(route, xs.log.route.Route, 'routes.add - given route "$route" is not instance of xs.log.route.Route', {
+                assert.instance(route, xs.log.route.Route, 'routes.add - given route `$route` is not instance of xs.log.route.Route', {
                     $route: route
                 });
 
@@ -310,7 +310,7 @@
                 if (arguments.length) {
 
                     //assert, that route is instance of xs.log.route.Route base route class
-                    assert.instance(route, xs.log.route.Route, 'routes.remove - given route "$route" is not instance of xs.log.route.Route', {
+                    assert.instance(route, xs.log.route.Route, 'routes.remove - given route `$route` is not instance of xs.log.route.Route', {
                         $route: route
                     });
 

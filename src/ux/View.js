@@ -84,14 +84,14 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var me = this;
 
         //assert, that element is instance of Element, if given
-        self.assert.ok(!arguments.length || element instanceof Element, 'constructor - given element "$element" is not an instance of Element', {
+        self.assert.ok(!arguments.length || element instanceof Element, 'constructor - given element `$element` is not an instance of Element', {
             $element: element
         });
 
         var el;
 
         if (element) {
-            self.log.trace('constructor - creating new view from given element "$element"', {
+            self.log.trace('constructor - creating new view from given element `$element`', {
                 $element: element
             });
 
@@ -99,7 +99,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         } else {
 
             //assert, that constant.template is a non-empty string
-            self.assert.ok(me.self.template && xs.isString(me.self.template), 'constructor - given template "$template" is not a non-empty string', {
+            self.assert.ok(me.self.template && xs.isString(me.self.template), 'constructor - given template `$template` is not a non-empty string', {
                 $template: me.self.template
             });
 
@@ -162,7 +162,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         } else {
 
             //assert that flags is number
-            self.assert.number(flags, 'query - given flags "$flags" list is not number', {
+            self.assert.number(flags, 'query - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -290,7 +290,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      */
     var parseTemplate = function (template) {
 
-        self.log.trace('parseTemplate - fetching nodes from template "' + template + '"');
+        self.log.trace('parseTemplate - fetching nodes from template `' + template + '`');
 
         //create container div element to parse html into
         var container = document.createElement('div');
@@ -410,7 +410,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         });
 
         //assert, that view is not destroyed
-        self.assert.not(view.isDestroyed, 'position.add - "$view" is destroyed', {
+        self.assert.not(view.isDestroyed, 'position.add - `$view` is destroyed', {
             $view: view
         });
 
@@ -494,7 +494,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         });
 
         //assert, that view is not destroyed
-        self.assert.not(view.isDestroyed, 'position.set - "$view" is destroyed', {
+        self.assert.not(view.isDestroyed, 'position.set - `$view` is destroyed', {
             $view: view
         });
 
@@ -590,7 +590,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         });
 
         //assert, that view is not destroyed
-        self.assert.not(view.isDestroyed, 'position.set - "$view" is destroyed', {
+        self.assert.not(view.isDestroyed, 'position.set - `$view` is destroyed', {
             $view: view
         });
     };
@@ -654,19 +654,19 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
             name = element.getAttribute('name');
 
             //assert, that element name is unique
-            self.assert.ok(names.indexOf(name) < 0, 'Given position name "$name" is already taken', {
+            self.assert.ok(names.indexOf(name) < 0, 'Given position name `$name` is already taken', {
                 $name: name
             });
 
             names.push(name);
 
             //element.parentElement must be defined
-            self.assert.ok(element.parentElement, 'Position "$element" does not have a parent element', {
+            self.assert.ok(element.parentElement, 'Position `$element` does not have a parent element', {
                 $element: element
             });
 
             //element.parentElement must contain only position
-            self.assert.equal(element.parentElement.childNodes.length, 1, 'Position "$element" does not have a parent element', {
+            self.assert.equal(element.parentElement.childNodes.length, 1, 'Position `$element` does not have a parent element', {
                 $element: element
             });
         }

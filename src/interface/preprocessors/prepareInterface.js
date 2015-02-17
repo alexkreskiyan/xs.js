@@ -49,7 +49,7 @@
         });
 
         //assert that either extended is not defined or is defined as non-empty string
-        assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '[$Interface]: given extended "$extended" is incorrect', {
+        assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '[$Interface]: given extended `$extended` is incorrect', {
             $Interface: Interface.label,
             $extended: extended
         });

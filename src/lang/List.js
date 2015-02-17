@@ -63,7 +63,7 @@
          */
         me.clone = function (list) {
             //assert that list either array or object
-            assert.ok(xs.isArray(list) || xs.isObject(list), 'clone - given list "$list" is nor array neither object', {
+            assert.ok(xs.isArray(list) || xs.isObject(list), 'clone - given list `$list` is nor array neither object', {
                 $list: list
             });
 

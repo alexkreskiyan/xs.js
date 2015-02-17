@@ -136,12 +136,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         }
 
         //assert, that values are either an array or object
-        self.assert.ok(xs.isArray(values) || xs.isObject(values), 'constructor - values "$values" is nor array neither object', {
+        self.assert.ok(xs.isArray(values) || xs.isObject(values), 'constructor - values `$values` is nor array neither object', {
             $values: values
         });
 
         //assert, that type is function (if given as second argument)
-        self.assert.ok(arguments.length === 1 || xs.isFunction(type), 'constructor - type "$type" is not a function', {
+        self.assert.ok(arguments.length === 1 || xs.isFunction(type), 'constructor - type `$type` is not a function', {
             $type: type
         });
 
@@ -345,7 +345,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     Class.method.hasKey = function (key) {
         var me = this;
 
-        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'hasKey - key "$key", given for collection, is neither number nor string', {
+        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'hasKey - key `$key`, given for collection, is neither number nor string', {
             $key: key
         });
 
@@ -457,7 +457,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index = values.indexOf(value);
         } else {
             //assert that flags is number
-            self.assert.number(flags, 'keyOf - given flags "$flags" list is not number', {
+            self.assert.number(flags, 'keyOf - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -514,7 +514,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //assert that collection is not empty
         self.assert.ok(me.private.items.length, 'at - collection is empty');
 
-        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'at - key "$key", given for collection, is neither number nor string', {
+        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'at - key `$key`, given for collection, is neither number nor string', {
             $key: key
         });
 
@@ -529,7 +529,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             //if max is 0, then min is 0
             var min = max > 0 ? -max : 0;
 
-            self.assert.ok(min <= index && index <= max, 'at - index "$index" is out of bounds [$min,$max]', {
+            self.assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
                 $index: index,
                 $min: min,
                 $max: max
@@ -546,7 +546,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index = me.keys().indexOf(key);
 
             //check, that key exists
-            self.assert.ok(index >= 0, 'at - given key "$key" doesn\'t exist', {
+            self.assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
                 $key: key
             });
         }
@@ -721,12 +721,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         } else {
 
             //assert that key is string
-            self.assert.string(key, 'add - key "$key", given for collection, is not a string', {
+            self.assert.string(key, 'add - key `$key`, given for collection, is not a string', {
                 $key: key
             });
 
             //assert that key is not taken
-            self.assert.ok(me.keys().indexOf(key) < 0, 'add - collection already has key "$key"', {
+            self.assert.ok(me.keys().indexOf(key) < 0, 'add - collection already has key `$key`', {
                 $key: key
             });
         }
@@ -740,7 +740,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index: me.private.items.length
         };
 
-        //call preventable "add:before" event, that can prevent adding value to collection
+        //call preventable `add:before` event, that can prevent adding value to collection
         if (!me.fire('add:before', data)) {
 
             return me;
@@ -752,7 +752,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             value: value
         });
 
-        //call closing "add" event
+        //call closing `add` event
         me.fire('add', data);
 
         return me;
@@ -812,7 +812,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         self.assert.ok(arguments.length >= 2, 'insert - no enough arguments');
 
         //assert that index is number
-        self.assert.number(index, 'insert - given index "$index" is not number', {
+        self.assert.number(index, 'insert - given index `$index` is not number', {
             $index: index
         });
 
@@ -821,7 +821,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         var min = max > 0 ? -max : 0;
 
         //check that index is in bounds
-        self.assert.ok(min <= index && index <= max, 'insert - index "$index" is out of bounds [$min, $max]', {
+        self.assert.ok(min <= index && index <= max, 'insert - index `$index` is out of bounds [$min, $max]', {
             $index: index,
             $min: min,
             $max: max
@@ -840,12 +840,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             key = index;
         } else {
             //assert that key is string
-            self.assert.string(key, 'insert - key "$key", given for collection, is not a string', {
+            self.assert.string(key, 'insert - key `$key`, given for collection, is not a string', {
                 $key: key
             });
 
             //assert that key is not taken
-            self.assert.ok(me.keys().indexOf(key) < 0, 'insert - collection already has key "$key"', {
+            self.assert.ok(me.keys().indexOf(key) < 0, 'insert - collection already has key `$key`', {
                 $key: key
             });
         }
@@ -859,7 +859,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index: index
         };
 
-        //call preventable "add:before" event, that can prevent insert value into collection
+        //call preventable `add:before` event, that can prevent insert value into collection
         if (!me.fire('add:before', data)) {
 
             return me;
@@ -875,7 +875,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //updated indexes
         updateIndexes.call(me, index + 1);
 
-        //call closing "add" event
+        //call closing `add` event
         me.fire('add', data);
 
         return me;
@@ -933,7 +933,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //assert that arguments enough
         self.assert.ok(arguments.length >= 2, 'set - no enough arguments');
 
-        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'set - key "$key", given for collection, is neither number nor string', {
+        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'set - key `$key`, given for collection, is neither number nor string', {
             $key: key
         });
 
@@ -949,7 +949,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             var min = max > 0 ? -max : 0;
 
             //assert that index is in bounds
-            self.assert.ok(min <= index && index <= max, 'set - index "$index" is out of bounds [$min, $max]', {
+            self.assert.ok(min <= index && index <= max, 'set - index `$index` is out of bounds [$min, $max]', {
                 $index: index,
                 $min: min,
                 $max: max
@@ -966,7 +966,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index = me.keys().indexOf(key);
 
             //assert that key exists
-            self.assert.ok(index >= 0, 'set - given key "$key" doesn\'t exist', {
+            self.assert.ok(index >= 0, 'set - given key `$key` doesn\'t exist', {
                 $key: key
             });
         }
@@ -980,7 +980,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index: index
         };
 
-        //call preventable "set:before" event, that can prevent setting value for collection item
+        //call preventable `set:before` event, that can prevent setting value for collection item
         if (!me.fire('set:before', data)) {
 
             return me;
@@ -988,7 +988,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
         me.private.items[index].value = value;
 
-        //call closing "set" event
+        //call closing `set` event
         me.fire('set', data);
 
         return me;
@@ -1038,7 +1038,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     Class.method.removeAt = function (key) {
         var me = this;
 
-        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'removeAt - key "$key", given for collection, is neither number nor string', {
+        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'removeAt - key `$key`, given for collection, is neither number nor string', {
             $key: key
         });
 
@@ -1055,7 +1055,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             var min = max > 0 ? -max : 0;
 
             //assert that index is in bounds
-            self.assert.ok(min <= index && index <= max, 'removeAt - index "$index" is out of bounds [$min, $max]', {
+            self.assert.ok(min <= index && index <= max, 'removeAt - index `$index` is out of bounds [$min, $max]', {
                 $index: index,
                 $min: min,
                 $max: max
@@ -1073,7 +1073,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index = me.keys().indexOf(key);
 
             //assert that key exists
-            self.assert.ok(index >= 0, 'removeAt - given key "$key" doesn\'t exist in collection', {
+            self.assert.ok(index >= 0, 'removeAt - given key `$key` doesn\'t exist in collection', {
                 $key: key
             });
         }
@@ -1086,7 +1086,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index: index
         };
 
-        //call preventable "remove:before" event, that can prevent removing value for collection
+        //call preventable `remove:before` event, that can prevent removing value for collection
         if (!me.fire('remove:before', data)) {
 
             return me;
@@ -1098,7 +1098,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //update indexes
         updateIndexes.call(me, index);
 
-        //call closing "remove" event
+        //call closing `remove` event
         me.fire('remove', data);
 
         //if no items left - fire clear event
@@ -1230,7 +1230,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //call preventable "remove:before" event, that can prevent removing value for collection. if happens - continue with next item
+                //call preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
                 if (!me.fire('remove:before', data)) {
                     i++;
                     continue;
@@ -1239,7 +1239,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //call closing "remove" event
+                //call closing `remove` event
                 me.fire('remove', data);
             }
 
@@ -1266,7 +1266,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             //handle flags
         } else {
             //assert that flags is number
-            self.assert.number(flags, 'remove - given flags "$flags" list is not number', {
+            self.assert.number(flags, 'remove - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -1306,7 +1306,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //call preventable "remove:before" event, that can prevent removing value for collection. if happens - continue with next item
+                //call preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
                 if (!me.fire('remove:before', data)) {
                     i++;
                     continue;
@@ -1315,7 +1315,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //call closing "remove" event
+                //call closing `remove` event
                 me.fire('remove', data);
             }
 
@@ -1333,7 +1333,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 index: index
             };
 
-            //call preventable "remove:before" event, that can prevent removing value for collection
+            //call preventable `remove:before` event, that can prevent removing value for collection
             if (!me.fire('remove:before', data)) {
 
                 return me;
@@ -1342,7 +1342,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             //remove item from items
             items.splice(index, 1);
 
-            //call closing "remove" event
+            //call closing `remove` event
             me.fire('remove', data);
 
             //update indexes
@@ -1478,7 +1478,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         var me = this;
 
         //assert that finder is function
-        self.assert.fn(finder, 'removeBy - given finder "$finder" is not a function', {
+        self.assert.fn(finder, 'removeBy - given finder `$finder` is not a function', {
             $finder: finder
         });
 
@@ -1487,7 +1487,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         if (arguments.length > 1) {
 
             //assert that flags is number
-            self.assert.number(flags, 'removeBy - given flags "$flags" list is not number', {
+            self.assert.number(flags, 'removeBy - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -1523,7 +1523,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //call preventable "remove:before" event, that can prevent removing value for collection. if happens - continue with next item
+                //call preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
                 if (!me.fire('remove:before', data)) {
                     i++;
 
@@ -1533,7 +1533,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //call closing "remove" event
+                //call closing `remove` event
                 me.fire('remove', data);
             }
         } else if (reverse) {
@@ -1556,7 +1556,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //call preventable "remove:before" event, that can prevent removing value for collection. if happens - continue with next item
+                //call preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
                 if (!me.fire('remove:before', data)) {
                     i--;
 
@@ -1566,7 +1566,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //call closing "remove" event
+                //call closing `remove` event
                 me.fire('remove', data);
 
                 break;
@@ -1591,7 +1591,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //call preventable "remove:before" event, that can prevent removing value for collection. if happens - continue with next item
+                //call preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
                 if (!me.fire('remove:before', data)) {
                     i++;
 
@@ -1601,7 +1601,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //call closing "remove" event
+                //call closing `remove` event
                 me.fire('remove', data);
 
                 break;
@@ -1685,7 +1685,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         var me = this;
 
         //assert that iterator is function
-        self.assert.fn(iterator, 'each - given iterator "$iterator" is not a function', {
+        self.assert.fn(iterator, 'each - given iterator `$iterator` is not a function', {
             $iterator: iterator
         });
 
@@ -1694,7 +1694,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         if (arguments.length >= 2) {
 
             //assert that flags is number
-            self.assert.number(flags, 'each - given flags "$flags" list is not number', {
+            self.assert.number(flags, 'each - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -1804,7 +1804,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         var me = this;
 
         //assert that finder is function
-        self.assert.fn(finder, 'find - given finder "$finder" is not a function', {
+        self.assert.fn(finder, 'find - given finder `$finder` is not a function', {
             $finder: finder
         });
 
@@ -1813,7 +1813,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         if (arguments.length >= 2) {
 
             //assert that flags is number
-            self.assert.number(flags, 'find - given flags "$flags" list is not number', {
+            self.assert.number(flags, 'find - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -1920,7 +1920,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         var me = this;
 
         //assert that mapper is function
-        self.assert.fn(mapper, 'map - given mapper "$mapper" is not a function', {
+        self.assert.fn(mapper, 'map - given mapper `$mapper` is not a function', {
             $mapper: mapper
         });
 
@@ -2036,7 +2036,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         var me = this;
 
         //assert that reducer is function
-        self.assert.fn(reducer, 'reduce - given reducer "$reducer" is not a function', {
+        self.assert.fn(reducer, 'reduce - given reducer `$reducer` is not a function', {
             $reducer: reducer
         });
 
@@ -2048,7 +2048,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         if (arguments.length >= 2) {
 
             //assert that flags is number
-            self.assert.number(flags, 'reduce - given flags "$flags" list is not number', {
+            self.assert.number(flags, 'reduce - given flags `$flags` list is not number', {
                 $flags: flags
             });
 
@@ -2175,7 +2175,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         self.assert.ok(me.private.items.length, 'some - collection is empty');
 
         //assert that tester is function
-        self.assert.fn(tester, 'some - given tester "$tester" is not a function', {
+        self.assert.fn(tester, 'some - given tester `$tester` is not a function', {
             $tester: tester
         });
 
@@ -2185,11 +2185,11 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         }
 
         //check, that count is number and is in bounds
-        self.assert.number(count, 'some - given count "$count" is not number', {
+        self.assert.number(count, 'some - given count `$count` is not number', {
             $count: count
         });
 
-        self.assert.ok(0 <= count && count <= length, 'some - given count "$count" is out of bounds [$min, $max]', {
+        self.assert.ok(0 <= count && count <= length, 'some - given count `$count` is out of bounds [$min, $max]', {
             $count: count,
             $min: 0,
             $max: length
@@ -2429,7 +2429,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         var me = this;
 
         //assert that keys is array
-        self.assert.array(keys, 'pick - given keys list "$keys" is not array', {
+        self.assert.array(keys, 'pick - given keys list `$keys` is not array', {
             $keys: keys
         });
 
@@ -2439,7 +2439,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             key = keys[i];
 
             //assert that key is string or number
-            self.assert.ok(xs.isString(key) || xs.isNumber(key), 'pick - key "$key", given for collection, is neither number nor string', {
+            self.assert.ok(xs.isString(key) || xs.isNumber(key), 'pick - key `$key`, given for collection, is neither number nor string', {
                 $key: key
             });
 
@@ -2449,7 +2449,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 index = ownKeys.indexOf(key);
 
                 //assert that key exists
-                self.assert.ok(index >= 0, 'pick - given key "$key" doesn\'t exist', {
+                self.assert.ok(index >= 0, 'pick - given key `$key` doesn\'t exist', {
                     $key: key
                 });
 
@@ -2462,7 +2462,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 var min = max > 0 ? -max : 0;
 
                 //assert that index is in bounds
-                self.assert.ok(min <= key && key <= max, 'pick - given index "$index" is out of bounds [$min, $max]', {
+                self.assert.ok(min <= key && key <= max, 'pick - given index `$index` is out of bounds [$min, $max]', {
                     $index: key,
                     $min: min,
                     $max: max
@@ -2549,7 +2549,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         var me = this;
 
         //assert that keys is array
-        self.assert.array(keys, 'omit - given keys list "$keys" is not array', {
+        self.assert.array(keys, 'omit - given keys list `$keys` is not array', {
             $keys: keys
         });
 
@@ -2562,7 +2562,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             key = keys[i];
 
             //assert that key is string or number
-            self.assert.ok(xs.isString(key) || xs.isNumber(key), 'omit - key "$key", given for collection, is neither number nor string', {
+            self.assert.ok(xs.isString(key) || xs.isNumber(key), 'omit - key `$key`, given for collection, is neither number nor string', {
                 $key: key
             });
 
@@ -2572,7 +2572,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 index = ownKeys.indexOf(key);
 
                 //assert, that key exists
-                self.assert.ok(index >= 0, 'omit - given key "$key" doesn\'t exist', {
+                self.assert.ok(index >= 0, 'omit - given key `$key` doesn\'t exist', {
                     $key: key
                 });
 
@@ -2585,7 +2585,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 var min = max > 0 ? -max : 0;
 
                 //assert that index is in bounds
-                self.assert.ok(min <= key && key <= max, 'omit - given index "$index" is out of bounds [$min, $max]', {
+                self.assert.ok(min <= key && key <= max, 'omit - given index `$index` is out of bounds [$min, $max]', {
                     $index: key,
                     $min: min,
                     $max: max
@@ -2722,7 +2722,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
 
                 //assert, that value is instance of type or Class, that mixes type
-                self.assert.ok(isClassInstance.call(me, values[i]), 'verifySourceValues - given value "$value" is not an instance of "$Class" of instance of class, that mixins "$Class"', {
+                self.assert.ok(isClassInstance.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of `$Class` of instance of class, that mixins `$Class`', {
                     $value: values[i],
                     $Class: type.label
                 });
@@ -2734,7 +2734,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
 
                 //assert, that value is instance of Class that implements type
-                self.assert.ok(isImplementation.call(me, values[i]), 'verifySourceValues - given value "$value" is not an instance of class, that implements interface "$Interface"', {
+                self.assert.ok(isImplementation.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of class, that implements interface `$Interface`', {
                     $value: values[i],
                     $Interface: type.label
                 });
@@ -2746,7 +2746,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
 
                 //assert, that value is instance of given constructor
-                self.assert.ok(isInstance.call(me, values[i]), 'verifySourceValues - given value "$value" is not an instance of "$Class"', {
+                self.assert.ok(isInstance.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of `$Class`', {
                     $value: values[i],
                     $Class: type
                 });
@@ -2758,7 +2758,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
 
                 //assert, that value passes given primitive verifier
-                self.assert.ok(isType.call(me, values[i]), 'verifySourceValues - given value "$value" is not an instance of "$Class"', {
+                self.assert.ok(isType.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of `$Class`', {
                     $value: values[i],
                     $Class: type.name
                 });
@@ -2784,7 +2784,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         if (kind === 'class') {
 
             //assert, that value is instance of type or Class, that mixes type
-            self.assert.ok(isClassInstance.call(me, value), 'verifySourceValues - given value "$value" is not an instance of "$Class" of instance of class, that mixins "$Class"', {
+            self.assert.ok(isClassInstance.call(me, value), 'verifySourceValues - given value `$value` is not an instance of `$Class` of instance of class, that mixins `$Class`', {
                 $value: value,
                 $Class: type.label
             });
@@ -2793,7 +2793,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         } else if (kind === 'interface') {
 
             //assert, that value is instance of Class that implements type
-            self.assert.ok(isImplementation.call(me, value), 'verifySourceValues - given value "$value" is not an instance of class, that implements interface "$Interface"', {
+            self.assert.ok(isImplementation.call(me, value), 'verifySourceValues - given value `$value` is not an instance of class, that implements interface `$Interface`', {
                 $value: value,
                 $Interface: type.label
             });
@@ -2802,7 +2802,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         } else if (kind === 'constructor') {
 
             //assert, that value is instance of given constructor
-            self.assert.ok(isInstance.call(me, value), 'verifySourceValues - given value "$value" is not an instance of "$Class"', {
+            self.assert.ok(isInstance.call(me, value), 'verifySourceValues - given value `$value` is not an instance of `$Class`', {
                 $value: value,
                 $Class: type
             });
@@ -2811,7 +2811,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         } else {
 
             //assert, that value passes given primitive verifier
-            self.assert.ok(isType.call(me, value), 'verifySourceValues - given value "$value" is not an instance of "$Class"', {
+            self.assert.ok(isType.call(me, value), 'verifySourceValues - given value `$value` is not an instance of `$Class`', {
                 $value: value,
                 $Class: type.name
             });
@@ -2826,7 +2826,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
         var type = me.private.type;
 
-        self.assert.instance(value, type, 'isClassInstance - given value "$value" is not an instance of class "$Class"', {
+        self.assert.instance(value, type, 'isClassInstance - given value `$value` is not an instance of class `$Class`', {
             $value: value,
             $Class: type
         });
@@ -2840,7 +2840,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         var type = me.private.type;
 
         //assert, that value is instance of some class
-        self.assert.implements(value, type, 'isImplementation - given value "$value" is not an instance of class, that implements interface "$Interface"', {
+        self.assert.implements(value, type, 'isImplementation - given value `$value` is not an instance of class, that implements interface `$Interface`', {
             $value: value,
             $Interface: type
         });

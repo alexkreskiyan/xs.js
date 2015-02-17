@@ -101,11 +101,11 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (scheme) {
             var me = this;
 
-            self.assert.ok(!xs.isDefined(scheme) || xs.isString(scheme), 'Given scheme "$scheme" is not a string', {
+            self.assert.ok(!xs.isDefined(scheme) || xs.isString(scheme), 'Given scheme `$scheme` is not a string', {
                 $scheme: scheme
             });
 
-            self.assert.ok(!xs.isDefined(scheme) || schemes.indexOf(scheme) >= 0, 'Given scheme "$scheme" is not supported. Allowed are: $allowed', {
+            self.assert.ok(!xs.isDefined(scheme) || schemes.indexOf(scheme) >= 0, 'Given scheme `$scheme` is not supported. Allowed are: $allowed', {
                 $scheme: scheme,
                 $allowed: schemes.join(', ')
             });
@@ -135,12 +135,12 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (user) {
             var me = this;
 
-            self.assert.ok(!xs.isDefined(user) || xs.isString(user), 'Given user "$user" is not a string', {
+            self.assert.ok(!xs.isDefined(user) || xs.isString(user), 'Given user `$user` is not a string', {
                 $user: user
             });
 
             //check user if string
-            self.assert.ok(!xs.isDefined(user) || userRe.test(user), 'Given host "$user" is incorrect', {
+            self.assert.ok(!xs.isDefined(user) || userRe.test(user), 'Given host `$user` is incorrect', {
                 $user: user
             });
 
@@ -169,12 +169,12 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (host) {
             var me = this;
 
-            self.assert.ok(!xs.isDefined(host) || xs.isString(host), 'Given host "$host" is neither string nor undefined', {
+            self.assert.ok(!xs.isDefined(host) || xs.isString(host), 'Given host `$host` is neither string nor undefined', {
                 $host: host
             });
 
             //check host if string
-            self.assert.ok(!xs.isDefined(host) || hostRe.test(host), 'Given host "$host" is incorrect', {
+            self.assert.ok(!xs.isDefined(host) || hostRe.test(host), 'Given host `$host` is incorrect', {
                 $host: host
             });
 
@@ -194,7 +194,7 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (port) {
             var me = this;
 
-            self.assert.ok(!xs.isDefined(port) || xs.isNumber(port), 'Given port "$port" is not a number', {
+            self.assert.ok(!xs.isDefined(port) || xs.isNumber(port), 'Given port `$port` is not a number', {
                 $port: port
             });
 
@@ -223,12 +223,12 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (path) {
             var me = this;
 
-            self.assert.string(path, 'Given path "$path" is not a string', {
+            self.assert.string(path, 'Given path `$path` is not a string', {
                 $path: path
             });
 
             //check path
-            self.assert.ok(pathRe.test(path), 'Given path "$path" is incorrect', {
+            self.assert.ok(pathRe.test(path), 'Given path `$path` is incorrect', {
                 $path: path
             });
 
@@ -248,7 +248,7 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (query) {
             var me = this;
 
-            self.assert.instance(query, imports.QueryString, 'Given query "$query" is not instance of "$QueryString"', {
+            self.assert.instance(query, imports.QueryString, 'Given query `$query` is not instance of `$QueryString`', {
                 $query: query,
                 $QueryString: imports.QueryString
             });
@@ -269,7 +269,7 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         set: function (hash) {
             var me = this;
 
-            self.assert.ok(!xs.isDefined(hash) || xs.isString(hash), 'Given hash "$hash" is not a string', {
+            self.assert.ok(!xs.isDefined(hash) || xs.isString(hash), 'Given hash `$hash` is not a string', {
                 $hash: hash
             });
 
@@ -327,7 +327,7 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
     var parseNamespace = function (namespace) {
         var raw = namespaceParseRe.exec(namespace);
 
-        self.assert.array(raw, 'Given namespace part "$namespace" is not correct', {
+        self.assert.array(raw, 'Given namespace part `$namespace` is not correct', {
             $namespace: namespace
         });
 

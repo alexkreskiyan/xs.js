@@ -180,18 +180,18 @@
             //process loaded and missing classes
             classes.each(function (name) {
                 //assert, that name is correct
-                assert.ok(xs.ContractsManager.isName(name), 'getLoadList - given loaded class name "$name" has incorrect format', {
+                assert.ok(xs.ContractsManager.isName(name), 'getLoadList - given loaded class name `$name` has incorrect format', {
                     $name: name
                 });
 
                 //resolve name with paths
                 var path = paths.resolve(name);
 
-                log.trace('getLoadList. Resolved class "' + name + '" as path"' + path + '"');
-                log.trace('getLoadList. Check class "' + name + '"');
+                log.trace('getLoadList. Resolved class `' + name + '` as path`' + path + '`');
+                log.trace('getLoadList. Check class `' + name + '`');
                 //if the class is already loaded - add it to loaded section
                 if (loaded.has(name)) {
-                    log.trace('getLoadList. Class "' + name + '" is already loaded');
+                    log.trace('getLoadList. Class `' + name + '` is already loaded');
                     loadList.loaded.add(name, path);
 
                     //if the class was already attempted to load, but load failed - add it to failed section
@@ -227,7 +227,7 @@
             //handle load if class was loaded
             if (xs.ContractsManager.has(name)) {
 
-                log.trace('handleLoad. Class "' + name + '" loaded');
+                log.trace('handleLoad. Class `' + name + '` loaded');
                 //add loaded path
                 loaded.add(name);
 
@@ -237,7 +237,7 @@
                 //handle fail if class is missing
             } else {
 
-                log.trace('handleFail. Class "' + name + '" failed to load');
+                log.trace('handleFail. Class `' + name + '` failed to load');
                 //add failed path
                 failed.add(name);
 
@@ -256,7 +256,7 @@
          * @param {String} name name of failed class
          */
         function processFail(name) {
-            log.trace('handleFail. Class "' + name + '" failed to load');
+            log.trace('handleFail. Class `' + name + '` failed to load');
             //add failed path
             failed.add(name);
 
@@ -312,12 +312,12 @@
                 if (arguments.length > 1) {
 
                     //assert that alias was not defined yet
-                    assert.not(me.has(alias), 'paths::add - alias "$alias" is already registered', {
+                    assert.not(me.has(alias), 'paths::add - alias `$alias` is already registered', {
                         $alias: alias
                     });
 
                     //assert that path is string
-                    assert.string(path, 'paths::add - given path "$path" is not a string', {
+                    assert.string(path, 'paths::add - given path `$path` is not a string', {
                         $path: path
                     });
 
@@ -328,7 +328,7 @@
                 }
 
                 //assert that paths list is object
-                assert.object(alias, 'paths::add - given paths list "$paths" is not an object', {
+                assert.object(alias, 'paths::add - given paths list `$paths` is not an object', {
                     $paths: alias
                 });
 
@@ -359,7 +359,7 @@
             me.has = function (alias) {
 
                 //assert that alias is correct name
-                assert.ok(xs.ContractsManager.isName(alias), 'paths::has - given alias "$alias" is not correct', {
+                assert.ok(xs.ContractsManager.isName(alias), 'paths::has - given alias `$alias` is not correct', {
                     $alias: alias
                 });
 
@@ -391,7 +391,7 @@
                 if (!xs.isArray(alias)) {
 
                     //assert that alias is registered
-                    assert.ok(me.has(alias), 'paths::remove - alias "$alias" is not registered', {
+                    assert.ok(me.has(alias), 'paths::remove - alias `$alias` is not registered', {
                         $alias: alias
                     });
 
@@ -428,7 +428,7 @@
              *
              *     //add common alias
              *     xs.Loader.paths.add('my', 'mylib');
-             *     //resolve className, that starts in "my" namespace
+             *     //resolve className, that starts in `my` namespace
              *     xs.Loader.paths.resolve('my.demo.Class');//mylib/demo/Class.js
              *     //add more specific alias
              *     xs.Loader.paths.add('my.demo', 'mydemolib');
@@ -444,7 +444,7 @@
             me.resolve = function (name) {
 
                 //assert that name is correct
-                assert.ok(xs.ContractsManager.isName(name), 'paths::resolve - given class name "$name" is not correct', {
+                assert.ok(xs.ContractsManager.isName(name), 'paths::resolve - given class name `$name` is not correct', {
                     $name: name
                 });
 
@@ -531,7 +531,7 @@
              */
             me.resolve = function (name) {
                 //find resolved items
-                log.trace('resolver::resolve. Handle class "' + name + '"');
+                log.trace('resolver::resolve. Handle class `' + name + '`');
                 var resolved = awaiting.find(function (item) {
                     log.trace('resolver::resolve. Clean up item.pending', {
                         pending: item.pending.toSource()
@@ -578,7 +578,7 @@
              */
             me.reject = function (name) {
                 //find rejected items
-                log.trace('resolver::reject. Handle name "' + name + '"');
+                log.trace('resolver::reject. Handle name `' + name + '`');
                 var rejected = awaiting.find(function (item) {
                     log.trace('resolver::reject. Check item.pending', {
                         pending: item.pending.toSource()
@@ -655,9 +655,9 @@
             me.add = function (name, path) {
                 var me = this;
 
-                log.trace('loader::add. Add class "' + name + '" with path "' + path + '"');
+                log.trace('loader::add. Add class `' + name + '` with path `' + path + '`');
                 //assert that path was not added yet
-                assert.not(me.has(path), 'loader::add - class "$Class" with path "$path" is already loading', {
+                assert.not(me.has(path), 'loader::add - class `$Class` with path `$path` is already loading', {
                     $Class: name,
                     $path: path
                 });
@@ -696,7 +696,7 @@
                 //create script element
                 var script = document.createElement('script');
 
-                log.trace('loader::load. Add script for class "' + name + '" with path "' + path + '"');
+                log.trace('loader::load. Add script for class `' + name + '` with path `' + path + '`');
                 //set name - class name
                 script.name = name;
 
@@ -789,9 +789,9 @@
             me.add = function (name) {
                 var me = this;
 
-                log.trace('' + listName + '::add. Add name "' + name + '"');
+                log.trace('' + listName + '::add. Add name `' + name + '`');
                 //assert that name is not in list
-                assert.not(me.has(name), '$list::add - class "$name" is already in $list list', {
+                assert.not(me.has(name), '$list::add - class `$name` is already in $list list', {
                     $list: listName,
                     $name: name
                 });
@@ -826,9 +826,9 @@
             me.remove = function (name) {
                 var me = this;
 
-                log.trace('' + listName + '::remove. Delete name "' + name + '"');
+                log.trace('' + listName + '::remove. Delete name `' + name + '`');
                 //assert that name is in list
-                assert.ok(me.has(name), '$list::remove - class "$name" is not in $list list', {
+                assert.ok(me.has(name), '$list::remove - class `$name` is not in $list list', {
                     $list: listName,
                     $name: name
                 });

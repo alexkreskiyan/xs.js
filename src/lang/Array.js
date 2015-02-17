@@ -49,7 +49,7 @@
          * @param {Array} array shuffled array
          */
         me.shuffle = function (array) {
-            assert.array(array, 'shuffle - given "$array" is not array', {
+            assert.array(array, 'shuffle - given `$array` is not array', {
                 $array: array
             });
 

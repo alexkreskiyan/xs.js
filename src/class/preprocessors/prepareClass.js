@@ -50,7 +50,7 @@
     var processImports = function (Class, descriptor) {
 
         //assert that imports are an array
-        assert.array(descriptor.imports, '[$Class]: given imports list "$imports" is not an array', {
+        assert.array(descriptor.imports, '[$Class]: given imports list `$imports` is not an array', {
             $Class: Class.label,
             $imports: descriptor.imports
         });
@@ -69,7 +69,7 @@
 
             if (xs.isString(imported)) {
                 //verify imported name
-                assert.ok(xs.ContractsManager.isName(imported), '[$Class]: given imported name "$name" is not correct', {
+                assert.ok(xs.ContractsManager.isName(imported), '[$Class]: given imported name `$name` is not correct', {
                     $Class: Class.label,
                     $name: imported
                 });
@@ -82,13 +82,13 @@
             var name = imported[alias];
 
             //verify imported name
-            assert.ok(xs.ContractsManager.isName(name), '[$Class]: given imported name "$name" is not correct', {
+            assert.ok(xs.ContractsManager.isName(name), '[$Class]: given imported name `$name` is not correct', {
                 $Class: Class.label,
                 $name: name
             });
 
             //verify imported alias
-            assert.ok(xs.ContractsManager.isName(alias), '[$Class]: given imported alias "$alias" is not correct', {
+            assert.ok(xs.ContractsManager.isName(alias), '[$Class]: given imported alias `$alias` is not correct', {
                 $Class: Class.label,
                 $alias: alias
             });
@@ -101,7 +101,7 @@
         log.trace((Class.label ? Class.label : 'undefined') + '. Extended:' + extended);
 
         //assert that either extended is not defined or is defined as non-empty string
-        assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '[$Class]: given extended "$extended" is incorrect', {
+        assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '[$Class]: given extended `$extended` is incorrect', {
             $Class: Class.label,
             $extended: extended
         });
@@ -115,7 +115,7 @@
     var processMixins = function (Class, descriptor) {
 
         //assert that mixins are an object
-        assert.object(descriptor.mixins, '[$Class]: given mixins list "$mixins" is not an object', {
+        assert.object(descriptor.mixins, '[$Class]: given mixins list `$mixins` is not an object', {
             $Class: Class.label,
             $mixins: descriptor.mixins
         });
@@ -132,13 +132,13 @@
         });
         mixins.each(function (name, alias) {
             //verify mixed class name
-            assert.ok(xs.ContractsManager.isName(name), '[$Class]: given mixed class name "$name" is not a string', {
+            assert.ok(xs.ContractsManager.isName(name), '[$Class]: given mixed class name `$name` is not a string', {
                 $Class: Class.label,
                 $name: name
             });
 
             //verify mixed class alias
-            assert.ok(xs.ContractsManager.isShortName(alias), '[$Class]: given mixed class alias "$alias" is not correct', {
+            assert.ok(xs.ContractsManager.isShortName(alias), '[$Class]: given mixed class alias `$alias` is not correct', {
                 $Class: Class.label,
                 $alias: alias
             });
@@ -150,7 +150,7 @@
     var processImplements = function (Class, descriptor) {
 
         //assert that implements are an array
-        assert.array(descriptor.implements, '[$Class]: given interfaces list "$implements" is not an array', {
+        assert.array(descriptor.implements, '[$Class]: given interfaces list `$implements` is not an array', {
             $Class: Class.label,
             $implements: descriptor.implements
         });
@@ -167,7 +167,7 @@
         });
         interfaces.each(function (name) {
             //verify implemented interface name
-            assert.ok(xs.ContractsManager.isName(name), '[$Class]: given implemented interface name "$name" is incorrect', {
+            assert.ok(xs.ContractsManager.isName(name), '[$Class]: given implemented interface name `$name` is incorrect', {
                 $Class: Class.label,
                 $name: name
             });

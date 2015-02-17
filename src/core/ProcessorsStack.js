@@ -81,7 +81,7 @@
                 position = 'last';
             }
 
-            assert.not(items.hasKey(name), 'add - processor "$name" already in stack', {
+            assert.not(items.hasKey(name), 'add - processor `$name` already in stack', {
                 $name: name
             });
 
@@ -129,7 +129,7 @@
          * - processor with given name is not found in stack
          */
         me.remove = function (name) {
-            assert.ok(items.hasKey(name), 'remove - processor "$name" not found in stack', {
+            assert.ok(items.hasKey(name), 'remove - processor `$name` not found in stack', {
                 $name: name
             });
 
@@ -209,7 +209,7 @@
                 'last',
                 'before',
                 'after'
-            ].indexOf(position) >= 0, 'apply - incorrect position "$position" given', {
+            ].indexOf(position) >= 0, 'apply - incorrect position `$position` given', {
                 $position: position
             });
 
@@ -229,7 +229,7 @@
             } else {
                 var relativeKey = new xs.core.Collection(items.keys()).keyOf(relativeTo);
 
-                assert.defined(relativeKey, 'apply - relative key "$relativeTo" missing in stack', {
+                assert.defined(relativeKey, 'apply - relative key `$relativeTo` missing in stack', {
                     $name: name
                 });
 
