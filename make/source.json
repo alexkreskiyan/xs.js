@@ -129,6 +129,13 @@
     },
     "modules": {
         "xs": {
+            "data": {
+                "attribute": {
+                    "IAttribute": {
+                        "type": "interface"
+                    }
+                }
+            },
             "dom": {
                 "Element": {
                     "type": "class"
