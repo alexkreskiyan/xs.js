@@ -74,4 +74,5 @@ module('xs.lang.Array', function () {
             strictEqual(true, key in x);
         });
     });
+
 });

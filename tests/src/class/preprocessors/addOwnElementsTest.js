@@ -735,4 +735,5 @@ module('xs.class.preprocessors.addOwnElements', function () {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
     });
+
 });

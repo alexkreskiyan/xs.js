@@ -39,4 +39,5 @@ module('xs.class.postprocessors.logger', function () {
 
         return false;
     });
+
 });

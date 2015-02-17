@@ -45,4 +45,5 @@ module('xs.lang.List', function () {
         //links are saved
         strictEqual(x.b === clone.b, true);
     });
+
 });

@@ -283,4 +283,5 @@ module('xs.enum.Enum', function () {
             me.stack.add(name, item.verifier, item.handler);
         });
     });
+
 });

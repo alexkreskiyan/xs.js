@@ -43,4 +43,5 @@ module('xs.lang.Object', function () {
         strictEqual(me.x.d, 1);
         strictEqual(me.x.e, me.a);
     });
+
 });

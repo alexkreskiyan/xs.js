@@ -40,4 +40,5 @@ module('xs.class.Base', function () {
         //clone constructor is ok
         strictEqual(clone.constructor, me.Class);
     });
+
 });

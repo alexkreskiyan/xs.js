@@ -108,4 +108,5 @@ module('xs.class.preprocessors.abstract', function () {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
     });
+
 });

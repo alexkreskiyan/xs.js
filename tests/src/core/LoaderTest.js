@@ -296,4 +296,5 @@ module('xs.Loader', function () {
     }, function () {
         xs.Loader.paths.remove('tests.core.Loader');
     });
+
 });

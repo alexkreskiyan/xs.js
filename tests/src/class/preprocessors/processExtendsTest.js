@@ -136,4 +136,5 @@ module('xs.class.preprocessors.processExtends', function () {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
     });
+
 });

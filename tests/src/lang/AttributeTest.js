@@ -592,4 +592,5 @@ module('xs.lang.Attribute', function () {
         strictEqual(xs.Attribute.isConfigurable(obj, 'simple'), false);
         strictEqual(xs.Attribute.isEnumerable(obj, 'simple'), true);
     });
+
 });

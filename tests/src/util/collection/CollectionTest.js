@@ -1078,7 +1078,7 @@ module('xs.util.collection.Collection', function () {
 
         collection.off('remove').off('remove:before').removeBy(function () {
             return true;
-        },xs.util.collection.Collection.All);
+        }, xs.util.collection.Collection.All);
 
         strictEqual(str, '6b1:6c1:8d1:8f2:!!!');
     });

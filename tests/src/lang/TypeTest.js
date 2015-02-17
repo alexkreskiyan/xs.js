@@ -1260,4 +1260,5 @@ module('xs.lang.Type', function () {
             strictEqual(xs.isInterface(test.data), test.ok);
         });
     });
+
 });

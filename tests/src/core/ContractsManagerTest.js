@@ -467,4 +467,5 @@ module('xs.ContractsManager', function () {
         var root2 = xs.ContractsManager.getNamespace(root, 'a.b');
         strictEqual(root2.c, root1);
     });
+
 });

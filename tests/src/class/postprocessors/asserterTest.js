@@ -39,4 +39,5 @@ module('xs.class.postprocessors.asserter', function () {
 
         return false;
     });
+
 });

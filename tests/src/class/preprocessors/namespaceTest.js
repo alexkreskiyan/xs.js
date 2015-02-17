@@ -104,4 +104,5 @@ module('xs.class.preprocessors.namespace', function () {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
     });
+
 });

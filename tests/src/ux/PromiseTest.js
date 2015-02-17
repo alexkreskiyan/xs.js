@@ -549,4 +549,5 @@ module('xs.ux.Promise', function () {
 
         return false;
     });
+
 });

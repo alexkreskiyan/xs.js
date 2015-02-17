@@ -39,4 +39,5 @@ module('xs.lang.String', function () {
         //check translation
         strictEqual(me.str, 'My bear is big and black. I love my big black bear');
     });
+
 });

@@ -509,4 +509,5 @@
 
         return JSON.stringify(shallow);
     };
+
 }).call(window);

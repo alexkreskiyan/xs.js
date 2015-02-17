@@ -61,4 +61,5 @@ module('xs.uri.QueryString', function () {
         //check encoded
         strictEqual(qs.toString(true), me.encoded);
     });
+
 });

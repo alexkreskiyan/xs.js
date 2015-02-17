@@ -109,4 +109,5 @@ module('xs.interface.preprocessors.prepareInterface', function () {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
     });
+
 });

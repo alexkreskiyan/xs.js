@@ -3,5 +3,7 @@
  */
 xs.define(xs.Class, 'ns.Base', function () {
     var me = this;
+
     me.namespace = 'tests.class.preprocessors.imports';
+
 });

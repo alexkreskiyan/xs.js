@@ -320,4 +320,5 @@ module('xs.class.Class', function () {
             me.stack.add(name, item.verifier, item.handler);
         });
     });
+
 });

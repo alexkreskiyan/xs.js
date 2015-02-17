@@ -55,4 +55,5 @@ module('xs.enum.preprocessors.namespace', function () {
             xs.ContractsManager.add(me.EnumName, me.EnumSave);
         }
     });
+
 });

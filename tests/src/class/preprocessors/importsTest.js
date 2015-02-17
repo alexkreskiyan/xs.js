@@ -72,4 +72,5 @@ module('xs.class.preprocessors.imports', function () {
         xs.ContractsManager.remove(ns.Base.label);
         xs.ContractsManager.remove(ns.Child.label);
     });
+
 });

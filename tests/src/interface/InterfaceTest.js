@@ -284,4 +284,5 @@ module('xs.interface.Interface', function () {
             me.stack.add(name, item.verifier, item.handler);
         });
     });
+
 });

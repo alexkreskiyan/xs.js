@@ -1637,4 +1637,5 @@ module('xs.core.Collection', function () {
         collection = new xs.core.Collection({});
         strictEqual(JSON.stringify(collection.toSource()), '{}');
     });
+
 });

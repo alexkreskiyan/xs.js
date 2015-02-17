@@ -143,4 +143,5 @@ module('xs.lang.Function', function () {
         strictEqual(data.args.toString(), 'demo123_AsD,asd_123_ASD');
         strictEqual(data.body.trim(), '"use strict";\n            return demo123_AsD + asd_123_ASD + \'\';');
     });
+
 });

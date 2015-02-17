@@ -677,4 +677,5 @@ module('xs.class.preprocessors.defineElements', function () {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
     });
+
 });

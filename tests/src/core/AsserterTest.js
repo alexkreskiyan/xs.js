@@ -283,4 +283,5 @@ module('xs.core.Asserter', function () {
         //correct is silent
         me.assert.implements(new me.Class(), xs.interface.Base);
     });
+
 });
