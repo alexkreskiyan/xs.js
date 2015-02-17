@@ -30,13 +30,15 @@ xs.define(xs.Interface, 'ns.IAttribute', function () {
      * Attribute get method.
      * Returns given value according to internal transformation rule for scenario `internal => external`
      *
+     * @static
+     *
      * @method get
      *
      * @param {*} value incoming value
      *
      * @return {*} transformed returned value
      */
-    Interface.method.get = function (value) {
+    Interface.static.method.get = function (value) {
 
     };
 
@@ -44,13 +46,15 @@ xs.define(xs.Interface, 'ns.IAttribute', function () {
      * Attribute set method.
      * Returns given value according to internal transformation rule for scenario `external => internal`
      *
+     * @static
+     *
      * @method set
      *
      * @param {*} value incoming value
      *
      * @return {*} transformed returned value
      */
-    Interface.method.set = function (value) {
+    Interface.static.method.set = function (value) {
 
     };
 
