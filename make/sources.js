@@ -7,7 +7,7 @@ var src = require('./source.json');
 var scripts = ['src/xs.js'];
 
 //add core modules to scripts list
-scripts = scripts.concat(src.core.map(getPathFromName));
+scripts = scripts.concat(Object.keys(src.core).map(getPathFromName));
 
 //init modules list
 var modules = {};

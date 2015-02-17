@@ -31,45 +31,78 @@
 
     //get src file
     request('../make/source.json', function (src) {
+        var testsLoader = function (core, modules) {
+            loadTests(core, modules, testsList);
+        };
 
-        var modules = {};
-        assemblyModules(modules, src.modules);
-
-        var core, packages;
-
-        //built mode
         if (params.mode) {
-            core = ['../build/' + params.mode + '/xs.js'];
-
-            packages = [];
-            //debug mode
+            loadBuild(src, params.mode, testsLoader);
         } else {
-            core = ['../src/xs.js'].concat(src.core.map(function (name) {
-                return resolveSourceFile(name);
-            }));
-
-            packages = Object.keys(modules);
+            loadSource(src, testsLoader);
         }
-        load(core, function () {
+    });
+
+    var loadBuild = function (src, mode, callback) {
+
+        load(['../build/' + mode + '/xs.js'], function () {
+
             //add path to loader
             xs.Loader.paths.add('xs', '../src');
 
             //mark xs.log.Router as ready
             xs.log.Router.ready();
 
-            xs.Loader.require(packages, function () {
-                //get tests list
-                var tests = getTests(src.core, testsList).concat(getTests(Object.keys(modules).filter(function (name) {
-                    var config = modules[name];
-                    return config.type === 'class' && config.test !== false;
-                }), testsList));
+            var modules = {};
+            assemblyModules(modules, src.modules);
 
-                load(tests.map(function (name) {
-                    return resolveTestFile(name);
-                }), runTests);
+            callback(src.core, modules);
+        });
+    };
+
+    var loadSource = function (src, callback) {
+
+        var modules = {};
+        assemblyModules(modules, src.modules);
+
+        var coreFiles = ['../src/xs.js'].concat(Object.keys(src.core).map(function (name) {
+            return resolveSourceFile(name);
+        }));
+
+        load(coreFiles, function () {
+            //add path to loader
+            xs.Loader.paths.add('xs', '../src');
+
+            //mark xs.log.Router as ready
+            xs.log.Router.ready();
+
+            xs.Loader.require(Object.keys(modules), function () {
+                callback(src.core, modules);
             });
         });
-    });
+    };
+
+    var loadTests = function (core, modules, testsList) {
+        var tested = {
+            core: undefined,
+            modules: undefined
+        };
+
+        tested.core = Object.keys(core).filter(function (name) {
+            return core[name].test !== false;
+        });
+
+        tested.modules = Object.keys(modules).filter(function (name) {
+            var config = modules[name];
+            return config.type === 'class' && config.test !== false;
+        });
+
+        //get tests list
+        var tests = getTests(tested.core, testsList).concat(getTests(tested.modules, testsList));
+
+        load(tests.map(function (name) {
+            return resolveTestFile(name);
+        }), runTests);
+    };
 
     function assemblyModules(list, modules, name) {
         //modules is node, if given string type
