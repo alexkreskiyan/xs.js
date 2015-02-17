@@ -132,75 +132,75 @@
             "data": {
                 "attribute": {
                     "IAttribute": {
-                        "type": "interface"
+                        "contract": "interface"
                     }
                 }
             },
             "dom": {
                 "Element": {
-                    "type": "class"
+                    "contract": "class"
                 }
             },
             "event": {
                 "IEvent": {
-                    "type": "interface"
+                    "contract": "interface"
                 },
                 "Event": {
-                    "type": "class",
+                    "contract": "class",
                     "test": false
                 },
                 "IObservable": {
-                    "type": "interface"
+                    "contract": "interface"
                 },
                 "Observable": {
-                    "type": "class"
+                    "contract": "class"
                 }
             },
             "log": {
                 "route": {
                     "IRoute": {
-                        "type": "interface"
+                        "contract": "interface"
                     },
                     "Route": {
-                        "type": "class"
+                        "contract": "class"
                     },
                     "Console": {
-                        "type": "class",
+                        "contract": "class",
                         "test": false
                     }
                 }
             },
             "uri": {
                 "URI": {
-                    "type": "class"
+                    "contract": "class"
                 },
                 "QueryString": {
-                    "type": "class"
+                    "contract": "class"
                 },
                 "HTTP": {
-                    "type": "class"
+                    "contract": "class"
                 },
                 "WebSocket": {
-                    "type": "class"
+                    "contract": "class"
                 }
             },
             "util": {
                 "collection": {
                     "Collection": {
-                        "type": "class"
+                        "contract": "class"
                     },
                     "Event": {
-                        "type": "class",
+                        "contract": "class",
                         "test": false
                     }
                 }
             },
             "ux": {
                 "Promise": {
-                    "type": "class"
+                    "contract": "class"
                 },
                 "View": {
-                    "type": "class"
+                    "contract": "class"
                 }
             }
         }

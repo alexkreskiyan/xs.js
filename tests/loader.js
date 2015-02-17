@@ -93,7 +93,7 @@
 
         tested.modules = Object.keys(modules).filter(function (name) {
             var config = modules[name];
-            return config.type === 'class' && config.test !== false;
+            return config.contract === 'class' && config.test !== false;
         });
 
         //get tests list
@@ -105,8 +105,8 @@
     };
 
     function assemblyModules(list, modules, name) {
-        //modules is node, if given string type
-        if (typeof modules.type === 'string') {
+        //modules is node, if given string contract
+        if (typeof modules.contract === 'string') {
             list[name] = modules;
 
             return;

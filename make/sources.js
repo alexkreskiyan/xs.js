@@ -22,8 +22,8 @@ scripts = scripts.concat(Object.keys(modules).map(getPathFromName));
 module.exports = scripts;
 
 function assemblyModules(list, modules, name) {
-    //modules is node, if given string type
-    if (typeof modules.type === 'string') {
+    //modules is node, if given string contract
+    if (typeof modules.contract === 'string') {
         list[name] = modules;
 
         return;
