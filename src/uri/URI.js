@@ -50,7 +50,7 @@ xs.define(xs.Class, 'ns.URI', function (self) {
         var me = this;
 
         //assert, that uri is either undefined or string
-        self.assert.ok(!arguments.length || xs.isString(URI), 'Given URI `$URI` is not a string', {
+        self.assert.ok(!arguments.length || xs.isString(URI), 'constructor - given URI `$URI` is not a string', {
             $URI: URI
         });
 
@@ -62,7 +62,7 @@ xs.define(xs.Class, 'ns.URI', function (self) {
         //save raw parsing info
         var data = parseRe.exec(decodeURI(URI));
 
-        self.assert.array(data, 'Given string `$URI` is correct URI', {
+        self.assert.array(data, 'constructor - given string `$URI` is correct URI', {
             $URI: URI
         });
 
