@@ -741,7 +741,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index: me.private.items.length
         };
 
-        //call preventable `add:before` event, that can prevent adding value to collection
+        //fire preventable `add:before` event, that can prevent adding value to collection
         if (!me.fire('add:before', data)) {
 
             return me;
@@ -753,7 +753,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             value: value
         });
 
-        //call closing `add` event
+        //fire closing `add` event
         me.fire('add', data);
 
         return me;
@@ -860,7 +860,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index: index
         };
 
-        //call preventable `add:before` event, that can prevent insert value into collection
+        //fire preventable `add:before` event, that can prevent insert value into collection
         if (!me.fire('add:before', data)) {
 
             return me;
@@ -876,7 +876,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //updated indexes
         updateIndexes.call(me, index + 1);
 
-        //call closing `add` event
+        //fire closing `add` event
         me.fire('add', data);
 
         return me;
@@ -981,7 +981,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index: index
         };
 
-        //call preventable `set:before` event, that can prevent setting value for collection item
+        //fire preventable `set:before` event, that can prevent setting value for collection item
         if (!me.fire('set:before', data)) {
 
             return me;
@@ -989,7 +989,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
         me.private.items[index].value = value;
 
-        //call closing `set` event
+        //fire closing `set` event
         me.fire('set', data);
 
         return me;
@@ -1087,7 +1087,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index: index
         };
 
-        //call preventable `remove:before` event, that can prevent removing value for collection
+        //fire preventable `remove:before` event, that can prevent removing value for collection
         if (!me.fire('remove:before', data)) {
 
             return me;
@@ -1099,7 +1099,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //update indexes
         updateIndexes.call(me, index);
 
-        //call closing `remove` event
+        //fire closing `remove` event
         me.fire('remove', data);
 
         //if no items left - fire clear event
@@ -1231,7 +1231,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //call preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
+                //fire preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
                 if (!me.fire('remove:before', data)) {
                     i++;
                     continue;
@@ -1240,7 +1240,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //call closing `remove` event
+                //fire closing `remove` event
                 me.fire('remove', data);
             }
 
@@ -1307,7 +1307,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //call preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
+                //fire preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
                 if (!me.fire('remove:before', data)) {
                     i++;
                     continue;
@@ -1316,7 +1316,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //call closing `remove` event
+                //fire closing `remove` event
                 me.fire('remove', data);
             }
 
@@ -1334,7 +1334,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 index: index
             };
 
-            //call preventable `remove:before` event, that can prevent removing value for collection
+            //fire preventable `remove:before` event, that can prevent removing value for collection
             if (!me.fire('remove:before', data)) {
 
                 return me;
@@ -1343,7 +1343,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             //remove item from items
             items.splice(index, 1);
 
-            //call closing `remove` event
+            //fire closing `remove` event
             me.fire('remove', data);
 
             //update indexes
@@ -1524,7 +1524,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //call preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
+                //fire preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
                 if (!me.fire('remove:before', data)) {
                     i++;
 
@@ -1534,7 +1534,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //call closing `remove` event
+                //fire closing `remove` event
                 me.fire('remove', data);
             }
         } else if (reverse) {
@@ -1557,7 +1557,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //call preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
+                //fire preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
                 if (!me.fire('remove:before', data)) {
                     i--;
 
@@ -1567,7 +1567,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //call closing `remove` event
+                //fire closing `remove` event
                 me.fire('remove', data);
 
                 break;
@@ -1592,7 +1592,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //call preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
+                //fire preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
                 if (!me.fire('remove:before', data)) {
                     i++;
 
@@ -1602,7 +1602,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //call closing `remove` event
+                //fire closing `remove` event
                 me.fire('remove', data);
 
                 break;
@@ -2685,7 +2685,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //toggle off all events
         me.off();
 
-        //call Observable.destroy
+        //fire Observable.destroy
         self.mixins.observable.prototype.destroy.call(me);
 
         //call parent destroy
