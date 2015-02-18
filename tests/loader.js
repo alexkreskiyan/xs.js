@@ -165,7 +165,6 @@
 
         test(name, function (assert) {
             var scope = {};
-            var date;
 
             var done = assert.async();
 
@@ -191,13 +190,11 @@
             };
 
             var handleEnd = function () {
-                date = new Date();
-                console.info(module + '::' + name, '-', +(date.valueOf() + (date.getMilliseconds() / 1000) - time).toFixed(3));
+                console.info(module + '::' + name, '-', +((new Date()).valueOf()  - time));
                 done();
             };
 
-            date = new Date();
-            var time = date.valueOf() + (date.getMilliseconds() / 1000);
+            var time = (new Date()).valueOf();
             handleSetUp();
         });
     };
