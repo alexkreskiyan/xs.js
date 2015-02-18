@@ -14,7 +14,7 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.util.collection.Event
+ * @class xs.data.model.Event
  *
  * @extends xs.class.Base
  */
@@ -96,7 +96,7 @@ xs.define(xs.Class, 'ns.Event', function (self) {
      *
      * @property new
      *
-     * @type {O*bject}
+     * @type {Object}
      */
     Class.property.new = {
         set: xs.emptyFn

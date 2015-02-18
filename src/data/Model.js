@@ -36,6 +36,8 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
     Class.mixins.observable = 'xs.event.Observable';
 
+    Class.implements = ['ns.IModel'];
+
     Class.abstract = true;
 
     /**
@@ -49,12 +51,11 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      *
      * @type {Object}
      */
-    Class.constant.attributes = {
-        name: {
-            type: 'ns.attribute.String'
-        }
-    };
+    Class.constant.attributes = {};
 
+    /**
+     * Model events list. See {@link xs.event.Observable#events}
+     */
     Class.constant.events = {
         /**
          * load event. Is fired, when model's data is explicitly loaded via proxy
@@ -91,6 +92,14 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
          */
         'change': {
             type: 'xs.event.Event'
+        },
+        /**
+         * destroy event. Is fired, when element is destroyed. Fires with {@link xs.event.Event}
+         *
+         * @event destroy
+         */
+        destroy: {
+            type: 'xs.event.Event'
         }
     };
 
@@ -109,112 +118,236 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             $data: data
         });
 
-        //get class attributes collection
-        var classAttributes = getAttributes(me.self);
+        //call observable constructor
+        self.mixins.observable.call(me);
 
-        //init attributes storage
-        var attributes = me.private.attributes = {};
+        //get internal Data class
+        var Data = getData(me.self);
 
-        //setup model data
-        classAttributes.each(function (attribute, name) {
-            attributes[name] = data.hasOwnProperty(name) ? attribute.set(data[name]) : attribute.set();
-        });
+        //setup instance data storage
+        me.private.data = data ? new Data(me, data) : new Data(me);
     };
 
-    Class.method.get = function (name) {
+    /**
+     * Model data accessor
+     *
+     * @readonly
+     *
+     * @property data
+     *
+     * @type {Object}
+     */
+    Class.property.data = {
+        get: function () {
+            return this.private.data;
+        },
+        set: xs.emptyFn
+    };
+
+    /**
+     * Model destroy method
+     *
+     * @method destroy
+     */
+    Class.method.destroy = function () {
         var me = this;
 
-        //assert, that given attribute exists
-        self.assert.ok(me.self.attributes.hasOwnProperty(name), 'get - attribute `$name` is not defined in model `$Model`', {
-            $name: name,
-            $Model: me.self
-        });
+        //fire destroy event
+        me.fire('destroy');
 
-        var attribute = me.self.private.attributes.at(name);
+        //toggle off all events
+        me.off();
 
-        return attribute.get(me.private.attributes[name]);
+        //call Observable.destroy
+        self.mixins.observable.prototype.destroy.call(me);
+
+        //destroy data container
+        me.private.data.destroy();
+
+        //call parent destroy
+        self.parent.prototype.destroy.call(me);
     };
 
-    Class.method.set = function (name, value) {
-        var me = this;
-
-        //assert, that given attribute exists
-        self.assert.ok(me.self.attributes.hasOwnProperty(name), 'get - attribute `$name` is not defined in model `$Model`', {
-            $name: name,
-            $Model: me.self
-        });
-
-        //prepare event data
-        var old = me.private.attributes[name];
-        var data = {
-            attribute: name,
-            old: old,
-            new: value
-        };
-
-        //fire preventable `change:before` event, that can prevent changing attribute value
-        if (!me.fire('change:before', data)) {
-
-            return me;
-        }
-
-        //get model attribute reference
-        var attribute = me.self.private.attributes.at(name);
-
-        //set new value
-        me.private.attributes[name] = attribute.set(value);
-
-        //fire closing `change` event
-        me.fire('change', data);
-
-        return me;
-    };
-
-
-    var getAttributes = function (Class) {
+    /**
+     * Lazy initialization method for Model attributes
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method getAttributes
+     *
+     * @param {xs.data.Model} Class class, being initialized
+     *
+     * @return {Function} Data function
+     */
+    var getData = function (Class) {
         //return collection if defined
-        if (Class.private.hasOwnProperty('attributes')) {
-            return Class.private.attributes;
+        if (Class.private.hasOwnProperty('Data')) {
+            return Class.private.Data;
         }
 
-        //define attributes collection
-        var attributes = Class.private.attributes = new xs.core.Collection();
+        //define attributes type
+        var Data = Class.private.Data = getDataSample();
+
+        Data.attributes = new xs.core.Collection();
 
         //define attributes
         (new xs.core.Collection(Class.attributes)).each(function (config, name) {
-
-            //assert that type is specified
-            self.assert.ok(config.hasOwnProperty('type'), 'getAttributes - no type given for attribute `$attribute`. Add attribute type to Class.constant.attribute hash constant with property type, which value must be string, referencing name of imported Class', {
-                $attribute: name
-            });
-
-            //assert that type is non-empty string
-            self.assert.ok(config.type && xs.isString(config.type), 'getAttributes - given attribute `$attribute` type `$type` is not a string', {
-                $attribute: name,
-                $type: config.type
-            });
-
-            //get Attribute contract
-            var Attribute = xs.ContractsManager.get(Class.descriptor.resolveName(config.type));
-
-            //assert that Attribute is class
-            self.assert.Class(Attribute, 'getAttribute - given attribute `$attribute` type `$Attribute` is not a class', {
-                $attribute: name,
-                $Attribute: Attribute
-            });
-
-            //assert that Attribute implements IAttribute interface
-            self.assert.ok(Attribute.implements(imports.IAttribute), 'fire - given attribute `$attribute` type `$Attribute` does not implement base attribute interface `$Interface`', {
-                $attribute: event,
-                $Attribute: Attribute,
-                $Interface: imports.IAttribute.label
-            });
-
-            //add attribute
-            attributes.add(name, new Attribute(config));
+            defineAttribute(Class, Data, name, config);
         });
 
-        return attributes;
+        return Data;
+    };
+
+    /**
+     * Returns sample of Data internal class
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method getDataSample
+     *
+     * @return {Function}
+     */
+    var getDataSample = function () {
+        var Data = function (model, data) {
+            var me = this;
+
+            //save model reference
+            me.model = model;
+
+            //init private storage
+            me.private = {};
+
+            if (!data) {
+
+                data = {};
+            }
+
+            //set attributes
+            Data.attributes.each(function (attribute, name) {
+                me.private[name] = attribute.set(data[name]);
+            });
+        };
+
+        //define destroy method
+        Data.prototype.destroy = destroyData;
+
+        return Data;
+    };
+
+    /**
+     * Data destroy method
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method destroyData
+     */
+    var destroyData = function () {
+        //remove model reference
+        delete this.model;
+
+        //remove private reference
+        delete this.private;
+    };
+
+    /**
+     * Defines attribute into prototype of Data
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method defineAttribute
+     *
+     * @param {Function} Class class
+     * @param {Function} Data data internal class
+     * @param {String} name name of defined attribute
+     * @param {Object} config config of defined attribute
+     */
+    var defineAttribute = function (Class, Data, name, config) {
+
+        //assert that type is specified
+        self.assert.ok(config.hasOwnProperty('type'), 'getAttributes - no type given for attribute `$attribute`. Add attribute type to Class.constant.attribute hash constant with property type, which value must be string, referencing name of imported Class', {
+            $attribute: name
+        });
+
+        //assert that type is non-empty string
+        self.assert.ok(config.type && xs.isString(config.type), 'getAttributes - given attribute `$attribute` type `$type` is not a string', {
+            $attribute: name,
+            $type: config.type
+        });
+
+        //get Attribute contract
+        var Attribute = xs.ContractsManager.get(Class.descriptor.resolveName(config.type));
+
+        //assert that Attribute is class
+        self.assert.Class(Attribute, 'getAttribute - given attribute `$attribute` type `$Attribute` is not a class', {
+            $attribute: name,
+            $Attribute: Attribute
+        });
+
+        //assert that Attribute implements IAttribute interface
+        self.assert.ok(Attribute.implements(imports.IAttribute), 'fire - given attribute `$attribute` type `$Attribute` does not implement base attribute interface `$Interface`', {
+            $attribute: event,
+            $Attribute: Attribute,
+            $Interface: imports.IAttribute.label
+        });
+
+        var attribute = new Attribute(config);
+
+        var descriptor = xs.property.prepare(name, getPropertyDescriptor(attribute, name));
+
+        //add attribute
+        xs.property.define(Data.prototype, name, descriptor);
+        Data.attributes.add(name, attribute);
+    };
+
+    /**
+     * Data destroy method
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method destroyData
+     */
+    var getPropertyDescriptor = function (attribute, name) {
+        var get = function () {
+            return attribute.get(this.private[name]);
+        };
+        var set = function (value) {
+            var me = this;
+
+            //prepare event data
+            var old = me.private[name];
+            var data = {
+                attribute: name,
+                old: old,
+                new: value
+            };
+
+            //fire preventable `change:before` event, that can prevent changing attribute value
+            if (!me.model.fire('change:before', data)) {
+
+                return;
+            }
+
+            //set new value
+            me.private[name] = attribute.set(value);
+
+            //fire closing `change` event
+            me.model.fire('change', data);
+        };
+
+        return {
+            get: get,
+            set: set
+        };
     };
 
 });

@@ -151,8 +151,6 @@
      * @param {Object} mixins mixins list
      */
     var applyMixins = function (Class, mixins) {
-        //create mixins property in target.prototype
-        Class.prototype.mixins = {};
 
         //apply each mixin
         mixins.each(function (name, alias) {
