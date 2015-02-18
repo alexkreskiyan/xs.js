@@ -151,7 +151,7 @@
             });
 
             //prepare property descriptor
-            value = xs.Attribute.property.prepare(name, value);
+            value = xs.property.prepare(name, value);
 
             //add/set static property in class descriptor
             if (own.hasKey(name)) {
@@ -211,8 +211,8 @@
                 $name: name
             });
 
-            //prepare property descriptor
-            value = xs.Attribute.method.prepare(name, value);
+            //prepare method descriptor
+            value = xs.method.prepare(name, value);
 
             //add/set static method in class descriptor
             if (own.hasKey(name)) {
@@ -273,7 +273,7 @@
             });
 
             //prepare property descriptor
-            value = xs.Attribute.property.prepare(name, value);
+            value = xs.property.prepare(name, value);
 
             //add/set property in class descriptor
             if (own.hasKey(name)) {
@@ -333,8 +333,8 @@
                 $name: name
             });
 
-            //prepare property descriptor
-            value = xs.Attribute.method.prepare(name, value);
+            //prepare method descriptor
+            value = xs.method.prepare(name, value);
 
             //add/set method in class descriptor
             if (own.hasKey(name)) {

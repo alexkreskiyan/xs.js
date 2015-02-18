@@ -113,7 +113,7 @@
             });
 
             //save descriptor basics
-            var property = xs.Attribute.property.prepare(name, value);
+            var property = xs.property.prepare(name, value);
 
             var scheme;
             //if is assigned
@@ -163,7 +163,7 @@
             });
 
             //save descriptor basics
-            var method = xs.Attribute.property.prepare(name, value);
+            var method = xs.method.prepare(name, value);
 
             var scheme = {
                 args: xs.Function.getArguments(method.value)
@@ -225,7 +225,7 @@
             });
 
             //save descriptor basics
-            var property = xs.Attribute.property.prepare(name, value);
+            var property = xs.property.prepare(name, value);
 
             var scheme;
             //if is assigned
@@ -276,7 +276,7 @@
             });
 
             //save descriptor basics
-            var method = xs.Attribute.property.prepare(name, value);
+            var method = xs.method.prepare(name, value);
 
             var scheme = {
                 args: xs.Function.getArguments(method.value)

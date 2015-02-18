@@ -63,7 +63,7 @@
         Class.descriptor.static.property.each(function (descriptor, name) {
 
             //save property to class
-            xs.Attribute.property.define(Class, name, descriptor);
+            xs.property.define(Class, name, descriptor);
         });
     };
 
@@ -71,7 +71,7 @@
         Class.descriptor.static.method.each(function (descriptor, name) {
 
             //save method to class
-            xs.Attribute.method.define(Class, name, descriptor);
+            xs.method.define(Class, name, descriptor);
         });
     };
 
@@ -81,7 +81,7 @@
         Class.descriptor.property.each(function (descriptor, name) {
 
             //save property to prototype
-            xs.Attribute.property.define(prototype, name, descriptor);
+            xs.property.define(prototype, name, descriptor);
 
             //set undefined for assigned properties
             if (descriptor.hasOwnProperty('value')) {
@@ -94,7 +94,7 @@
         Class.descriptor.method.each(function (value, name) {
 
             //save method to prototype
-            xs.Attribute.method.define(Class.prototype, name, value);
+            xs.method.define(Class.prototype, name, value);
         });
     };
 
