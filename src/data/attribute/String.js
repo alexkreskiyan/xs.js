@@ -18,7 +18,7 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.String', function () {
+xs.define(xs.Class, 'ns.String', function (self) {
 
     'use strict';
 
@@ -29,17 +29,26 @@ xs.define(xs.Class, 'ns.String', function () {
     Class.implements = ['ns.IAttribute'];
 
     /**
-     * String `get` method
      *
-     * @static
+     * @param {Object} config
+     */
+    Class.constructor = function (config) {
+        self.assert.object(config, 'constructor - given config `$config` is not an object', {
+            $config: config
+        });
+    };
+
+    /**
+     * String `get` method
      *
      * @method get
      *
      * @param {String} value incoming value
+     * @param {Object} options value achieving options
      *
      * @return {String} transformed returned value
      */
-    Class.static.method.get = function (value) {
+    Class.method.get = function (value, options) {
         return value;
     };
 
@@ -47,15 +56,13 @@ xs.define(xs.Class, 'ns.String', function () {
      * Attribute set method.
      * Returns given value according to internal transformation rule for scenario `external => internal`
      *
-     * @static
-     *
      * @method set
      *
      * @param {*} value incoming value
      *
      * @return {String} transformed returned value
      */
-    Class.static.method.set = function (value) {
+    Class.method.set = function (value) {
         return value + '';
     };
 
