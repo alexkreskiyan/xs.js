@@ -38,9 +38,8 @@
     }, function (Class) {
         log.trace(Class.label ? Class.label : 'undefined');
 
-        Class.Error = function (message) {
-            this.message = Class.label + '::' + message;
-        };
+        var label = Class.label ? Class.label : '';
+        eval('Class.Error = function ' + getErrorClassName(label) + '(message) { this.message = \'' + label + '::\' + message; }');
 
         Class.Error.prototype = new Error();
 
@@ -48,4 +47,19 @@
         Class.assert = new xs.core.Asserter(Class.log, Class.Error);
     });
 
+    var getErrorClassName = function (label) {
+        if (!label) {
+
+            return 'Error';
+        }
+        
+        var parts = label.split('.');
+
+        var name = '';
+        parts.forEach(function (part) {
+            name += part[0].toUpperCase() + part.slice(1);
+        });
+
+        return name + 'Error';
+    };
 })(window, 'xs');
