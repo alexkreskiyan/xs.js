@@ -29,17 +29,27 @@ xs.define(xs.Interface, 'ns.IAttribute', function () {
     Interface.namespace = 'xs.data.attribute';
 
     /**
+     * Attribute constructor
+     *
+     * @constructor
+     *
+     * @param {Object} config attribute configuration object
+     */
+    Interface.constructor = function (config) {
+
+    };
+
+    /**
      * Attribute get method.
      * Returns given value according to internal transformation rule for scenario `internal => external`
      *
      * @method get
      *
      * @param {*} value incoming value
-     * @param {Object} options value achieving options
      *
      * @return {*} transformed returned value
      */
-    Interface.method.get = function (value, options) {
+    Interface.method.get = function (value) {
 
     };
 
@@ -54,17 +64,6 @@ xs.define(xs.Interface, 'ns.IAttribute', function () {
      * @return {*} transformed returned value
      */
     Interface.method.set = function (value) {
-
-    };
-
-    /**
-     * Attribute constructor
-     *
-     * @constructor
-     *
-     * @param {Object} config attribute configuration object
-     */
-    Interface.constructor = function (config) {
 
     };
 

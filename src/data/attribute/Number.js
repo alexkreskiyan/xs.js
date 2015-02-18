@@ -10,7 +10,7 @@
  */
 
 /**
- * String attribute
+ * Number attribute
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
@@ -18,7 +18,7 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.String', function (self) {
+xs.define(xs.Class, 'ns.Number', function (self) {
 
     'use strict';
 
@@ -29,7 +29,7 @@ xs.define(xs.Class, 'ns.String', function (self) {
     Class.implements = ['ns.IAttribute'];
 
     /**
-     * String attribute constructor
+     * Number attribute constructor
      *
      * @param {Object} config
      */
@@ -46,7 +46,7 @@ xs.define(xs.Class, 'ns.String', function (self) {
     };
 
     /**
-     * String `get` method
+     * Number `get` method
      *
      * @method get
      *
@@ -59,7 +59,7 @@ xs.define(xs.Class, 'ns.String', function (self) {
     };
 
     /**
-     * String `set` method. Converts any given value to string
+     * Number `set` method. Try's to convert given value to number. If value is not numeric, error is thrown
      *
      * @method set
      *
@@ -68,7 +68,11 @@ xs.define(xs.Class, 'ns.String', function (self) {
      * @return {String} transformed returned value
      */
     Class.method.set = function (value) {
-        return xs.isDefined(value) ? String(value) : this.default;
+        self.assert.ok(!xs.isDefined(value) || xs.isNumeric(value), 'set - given value `$value` is not numeric', {
+            $value: value
+        });
+
+        return xs.isDefined(value) ? Number(value) : this.default;
     };
 
 });

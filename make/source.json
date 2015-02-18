@@ -134,6 +134,10 @@
                     "IAttribute": {
                         "contract": "interface"
                     },
+                    "Number": {
+                        "contract": "class",
+                        "test": false
+                    },
                     "String": {
                         "contract": "class",
                         "test": false
@@ -146,8 +150,7 @@
                     }
                 },
                 "Model": {
-                    "contract": "class",
-                    "test": false
+                    "contract": "class"
                 }
             },
             "dom": {
