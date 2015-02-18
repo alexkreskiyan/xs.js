@@ -203,13 +203,13 @@
             },
             "util": {
                 "collection": {
-                    "Collection": {
-                        "contract": "class"
-                    },
                     "Event": {
                         "contract": "class",
                         "test": false
                     }
+                },
+                "Collection": {
+                    "contract": "class"
                 }
             },
             "ux": {

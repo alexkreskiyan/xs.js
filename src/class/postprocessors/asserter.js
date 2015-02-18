@@ -52,7 +52,7 @@
 
             return 'Error';
         }
-        
+
         var parts = label.split('.');
 
         var name = '';

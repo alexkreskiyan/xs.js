@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.util.collection.Collection', function () {
+module('xs.util.Collection', function () {
 
     'use strict';
 
@@ -17,14 +17,14 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //no arguments is normal
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         //values are empty
         strictEqual(collection.private.items.length, 0);
         //type is not defined
         strictEqual(collection.private.hasOwnProperty('type'), false);
 
         //single argument (as value) may be an object
-        collection = new xs.util.collection.Collection({a: 1});
+        collection = new xs.util.Collection({a: 1});
         //values are assigned
         strictEqual(collection.private.items[0].key, 'a');
         strictEqual(collection.private.items[0].value, 1);
@@ -32,7 +32,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.private.hasOwnProperty('type'), false);
 
         //single argument (as value) may be an array
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         //values are assigned
         strictEqual(collection.private.items[0].key, 0);
         strictEqual(collection.private.items[0].value, 1);
@@ -40,7 +40,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.private.hasOwnProperty('type'), false);
 
         //single argument (as type) may be a function
-        collection = new xs.util.collection.Collection(Function);
+        collection = new xs.util.Collection(Function);
         //values are empty
         strictEqual(collection.private.items.length, 0);
         //type is assigned
@@ -48,11 +48,11 @@ module('xs.util.collection.Collection', function () {
 
         //otherwise - it's error
         throws(function () {
-            return new xs.util.collection.Collection(null);
+            return new xs.util.Collection(null);
         });
 
         //two arguments must be a source and a type
-        collection = new xs.util.collection.Collection([1], Number);
+        collection = new xs.util.Collection([1], Number);
         //values are assigned
         strictEqual(collection.private.items[0].key, 0);
         strictEqual(collection.private.items[0].value, 1);
@@ -62,28 +62,28 @@ module('xs.util.collection.Collection', function () {
         //incorrect initial value must fail
         //primitive
         throws(function () {
-            return new xs.util.collection.Collection([
+            return new xs.util.Collection([
                 1,
                 'a'
             ], Number);
         });
         //constructor
         throws(function () {
-            return new xs.util.collection.Collection([
+            return new xs.util.Collection([
                 [],
                 {}
             ], Array);
         });
         //interface
         throws(function () {
-            return new xs.util.collection.Collection([new xs.class.Base()], xs.interface.Base);
+            return new xs.util.Collection([new xs.class.Base()], xs.interface.Base);
         });
         //class
         throws(function () {
-            return new xs.util.collection.Collection([
-                new xs.util.collection.Collection,
+            return new xs.util.Collection([
+                new xs.util.Collection,
                 new xs.class.Base()
-            ], xs.util.collection.Collection);
+            ], xs.util.Collection);
         });
     });
 
@@ -92,22 +92,22 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //check empty array list
-        collection = new xs.util.collection.Collection([]);
+        collection = new xs.util.Collection([]);
         strictEqual(collection.length, 0);
 
         //check array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             3
         ]);
         strictEqual(collection.length, 2);
 
         //check empty object list
-        collection = new xs.util.collection.Collection({});
+        collection = new xs.util.Collection({});
         strictEqual(collection.length, 0);
 
         //check object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: 1,
             b: 3
         });
@@ -119,25 +119,25 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //check simple array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             3
         ]);
         strictEqual(JSON.stringify(collection.keys()), '[0,1]');
 
         //check empty array list
-        collection = new xs.util.collection.Collection([]);
+        collection = new xs.util.Collection([]);
         strictEqual(JSON.stringify(collection.keys()), '[]');
 
         //check simple object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             x: 1,
             b: 2
         });
         strictEqual(JSON.stringify(collection.keys()), '["x","b"]');
 
         //check empty object list
-        collection = new xs.util.collection.Collection({});
+        collection = new xs.util.Collection({});
         strictEqual(JSON.stringify(collection.keys()), '[]');
     });
 
@@ -145,25 +145,25 @@ module('xs.util.collection.Collection', function () {
         //init test variables
         var collection;
         //check simple array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             3
         ]);
         strictEqual(JSON.stringify(collection.values()), '[1,3]');
 
         //check empty object list
-        collection = new xs.util.collection.Collection([]);
+        collection = new xs.util.Collection([]);
         strictEqual(JSON.stringify(collection.values()), '[]');
 
         //check simple object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             x: 1,
             b: '2'
         });
         strictEqual(JSON.stringify(collection.values()), '[1,"2"]');
 
         //check empty object list
-        collection = new xs.util.collection.Collection({});
+        collection = new xs.util.Collection({});
         strictEqual(JSON.stringify(collection.values()), '[]');
     });
 
@@ -172,7 +172,7 @@ module('xs.util.collection.Collection', function () {
         var item = {x: 1}, collection, clone;
 
         //test array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             2,
             item
@@ -186,7 +186,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.private.items[2].value === clone.private.items[2].value, true);
 
         //test object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: 1,
             c: 2,
             b: item
@@ -205,7 +205,7 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //check key processing
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             3
         ]);
@@ -214,7 +214,7 @@ module('xs.util.collection.Collection', function () {
         });
 
         //check simple array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             3
         ]);
@@ -223,13 +223,13 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.hasKey(2), false);
 
         //check empty array list
-        collection = new xs.util.collection.Collection([]);
+        collection = new xs.util.Collection([]);
         strictEqual(collection.hasKey(0), false);
         strictEqual(collection.hasKey(1), false);
         strictEqual(collection.hasKey(2), false);
 
         //check simple object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             x: 1,
             b: 2
         });
@@ -237,7 +237,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.hasKey('y'), false);
 
         //check empty object list
-        collection = new xs.util.collection.Collection({});
+        collection = new xs.util.Collection({});
         strictEqual(collection.hasKey('x'), false);
         strictEqual(collection.hasKey('y'), false);
     });
@@ -248,7 +248,7 @@ module('xs.util.collection.Collection', function () {
         var item = {a: 1};
 
         //test array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             3,
             item
@@ -258,12 +258,12 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.has('A'), false);
 
         //test empty array list
-        collection = new xs.util.collection.Collection([]);
+        collection = new xs.util.Collection([]);
         strictEqual(collection.has(1), false);
         strictEqual(collection.has('A'), false);
 
         //test object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             x: 1,
             b: 2,
             a: item
@@ -273,12 +273,12 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.has('1'), false);
 
         //test empty object list
-        collection = new xs.util.collection.Collection({});
+        collection = new xs.util.Collection({});
         strictEqual(collection.has(1), false);
         strictEqual(collection.has('1'), false);
 
         //test typed list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             3
         ], Number);
@@ -294,7 +294,7 @@ module('xs.util.collection.Collection', function () {
         var item = {a: 1};
 
         //test array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             1,
             3,
@@ -310,16 +310,16 @@ module('xs.util.collection.Collection', function () {
 
         strictEqual(collection.keyOf(3), 2);
         strictEqual(collection.keyOf(item), 4);
-        strictEqual(collection.keyOf(item, xs.util.collection.Collection.Reverse), 5);
+        strictEqual(collection.keyOf(item, xs.util.Collection.Reverse), 5);
         strictEqual(collection.keyOf('1'), undefined);
 
         //test empty array list
-        collection = new xs.util.collection.Collection([]);
+        collection = new xs.util.Collection([]);
         strictEqual(collection.keyOf(0), undefined);
         strictEqual(collection.keyOf('0'), undefined);
 
         //test object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             x: 1,
             y: 1,
             c: 2,
@@ -329,16 +329,16 @@ module('xs.util.collection.Collection', function () {
         });
         strictEqual(collection.keyOf(1), 'x');
         strictEqual(collection.keyOf(item), 'a');
-        strictEqual(collection.keyOf(item, xs.util.collection.Collection.Reverse), 'b');
+        strictEqual(collection.keyOf(item, xs.util.Collection.Reverse), 'b');
         strictEqual(collection.keyOf('1'), undefined);
 
         //test empty object list
-        collection = new xs.util.collection.Collection({});
+        collection = new xs.util.Collection({});
         strictEqual(collection.keyOf(1), undefined);
         strictEqual(collection.keyOf('1'), undefined);
 
         //test typed list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             3
         ], Number);
@@ -353,13 +353,13 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //check collection filled
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         throws(function () {
             collection.at(0);
         });
 
         //check key processing
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             3
         ]);
@@ -375,7 +375,7 @@ module('xs.util.collection.Collection', function () {
         });
 
         //check simple array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             3
         ]);
@@ -383,7 +383,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.at(1), 3);
 
         //check simple object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             x: 1,
             b: 2
         });
@@ -402,13 +402,13 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //check collection filled
-        collection = new xs.util.collection.Collection([]);
+        collection = new xs.util.Collection([]);
         throws(function () {
             collection.first();
         });
 
         //test array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             {
                 x: 1,
                 y: 2
@@ -430,7 +430,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.first(), collection.at(0));
 
         //test object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: {
                 x: 1,
                 y: 2
@@ -456,13 +456,13 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //check collection filled
-        collection = new xs.util.collection.Collection([]);
+        collection = new xs.util.Collection([]);
         throws(function () {
             collection.last();
         });
 
         //test array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             {
                 x: 1,
                 y: 2
@@ -484,7 +484,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.last(), collection.at(3));
 
         //test object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: {
                 x: 1,
                 y: 2
@@ -513,7 +513,7 @@ module('xs.util.collection.Collection', function () {
         };
 
         //check object collection error handling
-        collection = new xs.util.collection.Collection({});
+        collection = new xs.util.Collection({});
         //throws if no arguments
         throws(function () {
             collection.add();
@@ -529,7 +529,7 @@ module('xs.util.collection.Collection', function () {
         });
 
         //complex test
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         collection.add(x);
         strictEqual(collection.last(), x);
         strictEqual(collection.at(0), x);
@@ -539,7 +539,7 @@ module('xs.util.collection.Collection', function () {
 
 
         //test typed list
-        collection = new xs.util.collection.Collection(Number);
+        collection = new xs.util.Collection(Number);
         throws(function () {
             collection.add('a');
         });
@@ -552,7 +552,7 @@ module('xs.util.collection.Collection', function () {
 
 
         //test events
-        collection = new xs.util.collection.Collection(Number);
+        collection = new xs.util.Collection(Number);
         var str = '';
 
         //add:before - add only values, that are greater than five
@@ -584,7 +584,7 @@ module('xs.util.collection.Collection', function () {
         };
 
         //check object collection error handling
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         //throws if not enough arguments
         throws(function () {
             collection.insert(1);
@@ -604,13 +604,13 @@ module('xs.util.collection.Collection', function () {
         });
 
         //throws if adding with same key
-        collection = new xs.util.collection.Collection({a: 1});
+        collection = new xs.util.Collection({a: 1});
         throws(function () {
             collection.insert(0, 'a', 1);
         });
 
         //complex test
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         collection.insert(0, x);
         strictEqual(collection.last(), x);
         strictEqual(collection.at(0), x);
@@ -622,7 +622,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.at('b'), 3);
 
         //test typed list
-        collection = new xs.util.collection.Collection(Number);
+        collection = new xs.util.Collection(Number);
         throws(function () {
             collection.insert(0, 'a');
         });
@@ -638,7 +638,7 @@ module('xs.util.collection.Collection', function () {
 
 
         //test events
-        collection = new xs.util.collection.Collection(Number);
+        collection = new xs.util.Collection(Number);
         var str = '';
 
         //add:before - insert only values, that are greater than five
@@ -670,7 +670,7 @@ module('xs.util.collection.Collection', function () {
         };
 
         //check object collection error handling
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         //throws if not enough arguments
         throws(function () {
             collection.set(1);
@@ -681,19 +681,19 @@ module('xs.util.collection.Collection', function () {
         });
 
         //throws if key (index) not in bounds
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.set(1, 1);
         });
 
         //throws if key (key) is missing
-        collection = new xs.util.collection.Collection({a: 1});
+        collection = new xs.util.Collection({a: 1});
         throws(function () {
             collection.set('b', 1);
         });
 
         //complex test
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         collection.add('a', x);
         strictEqual(collection.at(0), x);
         collection.set(0, 2);
@@ -703,7 +703,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.at('a'), 5);
 
         //test typed list
-        collection = new xs.util.collection.Collection(Number);
+        collection = new xs.util.Collection(Number);
         collection.add('a', 5);
         throws(function () {
             collection.set(0, 'b');
@@ -717,7 +717,7 @@ module('xs.util.collection.Collection', function () {
 
 
         //test events
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: 10,
             b: 8,
             c: 7,
@@ -755,26 +755,26 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //check object collection error handling
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         //throws if key is incorrect
         throws(function () {
             collection.removeAt([]);
         });
 
         //throws if key (index) not in bounds
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.removeAt(1);
         });
 
         //throws if key (key) is missing
-        collection = new xs.util.collection.Collection({a: 1});
+        collection = new xs.util.Collection({a: 1});
         throws(function () {
             collection.removeAt('b');
         });
 
         //test array
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             3,
             2
@@ -784,7 +784,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(collection.values().toString(), '1,2');
 
         //test object
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: 1,
             b: 2,
             c: 3
@@ -799,7 +799,7 @@ module('xs.util.collection.Collection', function () {
 
 
         //test events
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: 4,
             b: 6,
             c: 6,
@@ -844,20 +844,20 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //check object collection error handling
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         //throws if flags given and are incorrect
         throws(function () {
             collection.remove([], null);
         });
 
         //throws if value missing in array
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         throws(function () {
             collection.remove([]);
         });
 
         //test array
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             3,
             item,
             3,
@@ -872,15 +872,15 @@ module('xs.util.collection.Collection', function () {
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5,6]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2,' + itemString + ']');
 
-        collection.remove(item, xs.util.collection.Collection.Reverse);
+        collection.remove(item, xs.util.Collection.Reverse);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
-        collection.remove(item, xs.util.collection.Collection.All);
+        collection.remove(item, xs.util.Collection.All);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
 
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: 3,
             b: item,
             c: 3,
@@ -895,16 +895,16 @@ module('xs.util.collection.Collection', function () {
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g","h"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2,' + itemString + ']');
 
-        collection.remove(item, xs.util.collection.Collection.Reverse);
+        collection.remove(item, xs.util.Collection.Reverse);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
-        collection.remove(item, xs.util.collection.Collection.All);
+        collection.remove(item, xs.util.Collection.All);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","e","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
 
         //test typed list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             2,
             3
@@ -917,7 +917,7 @@ module('xs.util.collection.Collection', function () {
 
 
         //test events
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: 4,
             b: 6,
             c: 6,
@@ -943,10 +943,10 @@ module('xs.util.collection.Collection', function () {
             str += '!!!';
         });
 
-        collection.remove(4, xs.util.collection.Collection.All);
-        collection.remove(6, xs.util.collection.Collection.All);
+        collection.remove(4, xs.util.Collection.All);
+        collection.remove(6, xs.util.Collection.All);
         collection.remove(8);
-        collection.remove(8, xs.util.collection.Collection.Reverse);
+        collection.remove(8, xs.util.Collection.Reverse);
         collection.remove(10);
         strictEqual(JSON.stringify(collection.toSource()), '{"a":4,"e":8,"g":10}');
 
@@ -962,7 +962,7 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //throws if finder is not array
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         throws(function () {
             collection.removeBy([]);
         });
@@ -973,7 +973,7 @@ module('xs.util.collection.Collection', function () {
         });
 
         //test array
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             3,
             item,
             3,
@@ -992,17 +992,17 @@ module('xs.util.collection.Collection', function () {
 
         collection.removeBy(function (value) {
             return value === item;
-        }, xs.util.collection.Collection.Reverse);
+        }, xs.util.Collection.Reverse);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3,4,5]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
         collection.removeBy(function (value) {
             return value === item;
-        }, xs.util.collection.Collection.All);
+        }, xs.util.Collection.All);
         strictEqual(JSON.stringify(collection.keys()), '[0,1,2,3]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
 
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: 3,
             b: item,
             c: 3,
@@ -1021,19 +1021,19 @@ module('xs.util.collection.Collection', function () {
 
         collection.removeBy(function (value) {
             return value === item;
-        }, xs.util.collection.Collection.Reverse);
+        }, xs.util.Collection.Reverse);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","d","e","f","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,' + itemString + ',2,' + itemString + ',2]');
 
         collection.removeBy(function (value) {
             return value === item;
-        }, xs.util.collection.Collection.All);
+        }, xs.util.Collection.All);
         strictEqual(JSON.stringify(collection.keys()), '["a","c","e","g"]');
         strictEqual(JSON.stringify(collection.values()), '[3,3,2,2]');
 
 
         //test events
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: 4,
             b: 6,
             c: 6,
@@ -1061,16 +1061,16 @@ module('xs.util.collection.Collection', function () {
 
         collection.removeBy(function (value) {
             return value === 4;
-        }, xs.util.collection.Collection.All);
+        }, xs.util.Collection.All);
         collection.removeBy(function (value) {
             return value === 6;
-        }, xs.util.collection.Collection.All);
+        }, xs.util.Collection.All);
         collection.removeBy(function (value) {
             return value === 8;
         });
         collection.removeBy(function (value) {
             return value === 8;
-        }, xs.util.collection.Collection.Reverse);
+        }, xs.util.Collection.Reverse);
         collection.removeBy(function (value) {
             return value === 10;
         });
@@ -1078,7 +1078,7 @@ module('xs.util.collection.Collection', function () {
 
         collection.off('remove').off('remove:before').removeBy(function () {
             return true;
-        }, xs.util.collection.Collection.All);
+        }, xs.util.Collection.All);
 
         strictEqual(str, '6b1:6c1:8d1:8f2:!!!');
     });
@@ -1088,7 +1088,7 @@ module('xs.util.collection.Collection', function () {
         var collection, sum;
 
         //throws if iterator is not a function
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         throws(function () {
             collection.each(null);
         });
@@ -1099,7 +1099,7 @@ module('xs.util.collection.Collection', function () {
         });
 
         //test array
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             2
         ]);
@@ -1113,11 +1113,11 @@ module('xs.util.collection.Collection', function () {
         sum = '';
         collection.each(function (value) {
             sum += value;
-        }, xs.util.collection.Collection.Reverse);
+        }, xs.util.Collection.Reverse);
         strictEqual(sum, '21');
 
         //test empty array
-        collection = new xs.util.collection.Collection([]);
+        collection = new xs.util.Collection([]);
         //direct
         sum = '';
         collection.each(function (value) {
@@ -1128,11 +1128,11 @@ module('xs.util.collection.Collection', function () {
         sum = '';
         collection.each(function (value) {
             sum += value;
-        }, xs.util.collection.Collection.Reverse);
+        }, xs.util.Collection.Reverse);
         strictEqual(sum, '');
 
         //test object
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             x: 1,
             b: 2
         });
@@ -1146,11 +1146,11 @@ module('xs.util.collection.Collection', function () {
         sum = '';
         collection.each(function (value) {
             sum += value;
-        }, xs.util.collection.Collection.Reverse);
+        }, xs.util.Collection.Reverse);
         strictEqual(sum, '21');
 
         //test empty object
-        collection = new xs.util.collection.Collection({});
+        collection = new xs.util.Collection({});
         //direct
         sum = '';
         collection.each(function (value) {
@@ -1161,7 +1161,7 @@ module('xs.util.collection.Collection', function () {
         sum = '';
         collection.each(function (value) {
             sum += value;
-        }, xs.util.collection.Collection.Reverse);
+        }, xs.util.Collection.Reverse);
         strictEqual(sum, '');
     });
 
@@ -1170,7 +1170,7 @@ module('xs.util.collection.Collection', function () {
         var collection, found;
 
         //throws if finder is not a function
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         throws(function () {
             collection.find(null);
         });
@@ -1190,7 +1190,7 @@ module('xs.util.collection.Collection', function () {
         };
 
         //for Array
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             {x: 2},
             {x: 2},
             {x: 0}
@@ -1203,18 +1203,18 @@ module('xs.util.collection.Collection', function () {
         //reverse
         found = collection.find(function (value, key) {
             return this.sum(key, value.x) === 2;
-        }, xs.util.collection.Collection.Reverse, scope);
+        }, xs.util.Collection.Reverse, scope);
         strictEqual(found, collection.at(2));
         //all
         found = collection.find(function (value, key) {
             return this.sum(key, value.x) >= 2;
-        }, xs.util.collection.Collection.All, scope);
+        }, xs.util.Collection.All, scope);
         strictEqual(found.at(0), collection.at(0));
         strictEqual(found.at(1), collection.at(1));
         strictEqual(found.at(2), collection.at(2));
 
         //for Object
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             aa: {x: 1},
             c: {x: 2},
             ab: {x: 3}
@@ -1227,12 +1227,12 @@ module('xs.util.collection.Collection', function () {
         //reverse
         found = collection.find(function (value, key) {
             return this.first(key) === 'a';
-        }, xs.util.collection.Collection.Reverse, scope);
+        }, xs.util.Collection.Reverse, scope);
         strictEqual(found, collection.at('ab'));
         //all
         found = collection.find(function (value, key) {
             return this.first(key) === 'a';
-        }, xs.util.collection.Collection.All, scope);
+        }, xs.util.Collection.All, scope);
         strictEqual(found.at('aa'), collection.at('aa'));
         strictEqual(found.at('ab'), collection.at('ab'));
     });
@@ -1246,13 +1246,13 @@ module('xs.util.collection.Collection', function () {
         }, map;
 
         //throws if mapper is not a function
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         throws(function () {
             collection.map(null);
         });
 
         //for Array
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             2,
             4
@@ -1263,7 +1263,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(JSON.stringify(map.values()), '[2,5,10]');
 
         //for Object
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: 1,
             c: 2,
             b: 4
@@ -1279,7 +1279,7 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //throws if reducer is not a function
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         throws(function () {
             collection.reduce(null);
         });
@@ -1290,7 +1290,7 @@ module('xs.util.collection.Collection', function () {
         });
 
         //test array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             6,
             5,
             4
@@ -1305,13 +1305,13 @@ module('xs.util.collection.Collection', function () {
         //reverse
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, xs.util.collection.Collection.Reverse), 27);
+        }, xs.util.Collection.Reverse), 27);
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, xs.util.collection.Collection.Reverse, undefined, -3), 30);
+        }, xs.util.Collection.Reverse, undefined, -3), 30);
 
         //test object
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             x: 1,
             b: 2,
             a: 3
@@ -1326,10 +1326,10 @@ module('xs.util.collection.Collection', function () {
         //reverse
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, xs.util.collection.Collection.Reverse), '7b2x');
+        }, xs.util.Collection.Reverse), '7b2x');
         strictEqual(collection.reduce(function (memo, value, name) {
             return memo + 2 * value + name;
-        }, xs.util.collection.Collection.Reverse, undefined, -3), '3a4b2x');
+        }, xs.util.Collection.Reverse, undefined, -3), '3a4b2x');
     });
 
     test('some', function () {
@@ -1337,31 +1337,31 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //throws if collection is empty
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         throws(function () {
             collection.some();
         });
 
         //throws if tester is not a function
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.some(null);
         });
 
         //throws if count is not a number
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.some(xs.emptyFn, 'a');
         });
 
         //throws if count is out of bounds
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.some(xs.emptyFn, 2);
         });
 
         //test array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             {
                 x: 1,
                 y: 2
@@ -1407,7 +1407,7 @@ module('xs.util.collection.Collection', function () {
 
 
         //test object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: {
                 x: 1,
                 y: 2
@@ -1457,19 +1457,19 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //throws if collection is empty
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         throws(function () {
             collection.all();
         });
 
         //throws if tester is not a function
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.all(null);
         });
 
         //test array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             {
                 x: 1,
                 y: 2
@@ -1499,7 +1499,7 @@ module('xs.util.collection.Collection', function () {
 
 
         //test object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: {
                 x: 1,
                 y: 2
@@ -1533,19 +1533,19 @@ module('xs.util.collection.Collection', function () {
         var collection;
 
         //throws if collection is empty
-        collection = new xs.util.collection.Collection();
+        collection = new xs.util.Collection();
         throws(function () {
             collection.none();
         });
 
         //throws if tester is not a function
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.none(null);
         });
 
         //test array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             {
                 x: 1,
                 y: 2
@@ -1575,7 +1575,7 @@ module('xs.util.collection.Collection', function () {
 
 
         //test object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: {
                 x: 1,
                 y: 2
@@ -1609,31 +1609,31 @@ module('xs.util.collection.Collection', function () {
         var collection, picked, correctKeys, correctValues;
 
         //throws if keys list is not an array
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.pick();
         });
 
         //throws if some key is neither object nor string
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.pick([null]);
         });
 
         //throws if some key (index) is out of bounds
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.pick([2]);
         });
 
         //throws if some key (key) is missing
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.pick(['a']);
         });
 
         //test array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             {
                 x: 1,
                 y: 2
@@ -1663,7 +1663,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(JSON.stringify(picked.values()), correctValues);
 
         //test object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: {
                 x: 1,
                 y: 2
@@ -1698,31 +1698,31 @@ module('xs.util.collection.Collection', function () {
         var collection, omitted, correctKeys, correctValues;
 
         //throws if keys list is not an array
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.omit();
         });
 
         //throws if some key is neither object nor string
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.omit([null]);
         });
 
         //throws if some key (index) is out of bounds
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.omit([2]);
         });
 
         //throws if some key (key) is missing
-        collection = new xs.util.collection.Collection([1]);
+        collection = new xs.util.Collection([1]);
         throws(function () {
             collection.omit(['a']);
         });
 
         //test array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             {
                 x: 1,
                 y: 2
@@ -1752,7 +1752,7 @@ module('xs.util.collection.Collection', function () {
         strictEqual(JSON.stringify(omitted.values()), correctValues);
 
         //test object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             a: {
                 x: 1,
                 y: 2
@@ -1786,25 +1786,25 @@ module('xs.util.collection.Collection', function () {
         //init test variables
         var collection;
         //check simple array list
-        collection = new xs.util.collection.Collection([
+        collection = new xs.util.Collection([
             1,
             3
         ]);
         strictEqual(JSON.stringify(collection.toSource()), '{"0":1,"1":3}');
 
         //check empty object list
-        collection = new xs.util.collection.Collection([]);
+        collection = new xs.util.Collection([]);
         strictEqual(JSON.stringify(collection.toSource()), '{}');
 
         //check simple object list
-        collection = new xs.util.collection.Collection({
+        collection = new xs.util.Collection({
             x: 1,
             b: '2'
         });
         strictEqual(JSON.stringify(collection.toSource()), '{"x":1,"b":"2"}');
 
         //check empty object list
-        collection = new xs.util.collection.Collection({});
+        collection = new xs.util.Collection({});
         strictEqual(JSON.stringify(collection.toSource()), '{}');
     });
 

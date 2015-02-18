@@ -41,7 +41,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
     Class.imports = [
         {Element: 'xs.dom.Element'},
-        {Collection: 'xs.util.collection.Collection'}
+        {Collection: 'xs.util.Collection'}
     ];
 
     Class.extends = 'xs.dom.Element';
@@ -125,7 +125,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @param {String|Number} key
      *
-     * @return {xs.util.collection.Collection}
+     * @return {xs.util.Collection}
      */
     Class.method.at = function (key) {
 
@@ -800,7 +800,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @method at
      *
-     * @return {xs.util.collection.Collection} position for given index/key
+     * @return {xs.util.Collection} position for given index/key
      */
     PositionsCollection.prototype.at = xs.core.Collection.prototype.at;
 
