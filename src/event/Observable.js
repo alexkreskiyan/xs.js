@@ -163,7 +163,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //assert that type is non-empty string
         self.assert.ok(options.type && xs.isString(options.type), 'fire - given event `$event` type `$type` is not a string', {
-            $event: event
+            $event: event,
+            $type: options.type
         });
 
         //try to get EventClass
