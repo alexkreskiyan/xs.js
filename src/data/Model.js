@@ -31,7 +31,8 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
     Class.namespace = 'xs.data';
 
     Class.imports = [
-        {IAttribute: 'ns.attribute.IAttribute'}
+        {IAttribute: 'ns.attribute.IAttribute'},
+        'ns.model.Event'
     ];
 
     Class.mixins.observable = 'xs.event.Observable';
@@ -58,7 +59,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      */
     Class.constant.events = {
         /**
-         * load event. Is fired, when model's data is explicitly loaded via proxy
+         * load event. Is fired, when model's data is explicitly loaded via proxy. Fires with {@link xs.event.Event}
          *
          * @event load
          */
@@ -66,7 +67,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             type: 'xs.event.Event'
         },
         /**
-         * save event. Is fired, when model's data is explicitly saved via proxy
+         * save event. Is fired, when model's data is explicitly saved via proxy. Fires with {@link xs.event.Event}
          *
          * @event save
          */
@@ -76,22 +77,24 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         /**
          * change:before event. Is fired before some model's attribute changes it's value.
          *
-         * Stopping this event prevents value change. If new value is equal to current, nothing happens
+         * Stopping this event prevents value change. If new value is equal to current, nothing happens.
+         * Fires with {@link xs.data.model.Event}
          *
          * @event change:before
          */
         'change:before': {
-            type: 'xs.event.Event'
+            type: 'xs.data.model.Event'
         },
         /**
          * change event. Is fired, when some model's attribute changes it's value.
          *
-         * If new value is equal to current, nothing happens
+         * If new value is equal to current, nothing happens.
+         * Fires with {@link xs.data.model.Event}
          *
          * @event change
          */
         'change': {
-            type: 'xs.event.Event'
+            type: 'xs.data.model.Event'
         },
         /**
          * destroy event. Is fired, when element is destroyed. Fires with {@link xs.event.Event}

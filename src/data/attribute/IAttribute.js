@@ -16,6 +16,8 @@
  *
  * @abstract
  *
+ * @private
+ *
  * @class xs.data.attribute.IAttribute
  *
  * @extends xs.interface.Base

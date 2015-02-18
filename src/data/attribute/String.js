@@ -14,6 +14,8 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
+ * @private
+ *
  * @class xs.data.attribute.String
  *
  * @extends xs.class.Base
