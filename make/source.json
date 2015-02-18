@@ -138,6 +138,16 @@
                         "contract": "class",
                         "test": false
                     }
+                },
+                "model": {
+                    "Event": {
+                        "contract": "class",
+                        "test": false
+                    }
+                },
+                "Model": {
+                    "contract": "class",
+                    "test": false
                 }
             },
             "dom": {
