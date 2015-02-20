@@ -227,6 +227,12 @@
             });
         });
 
+        //if class is abstract, constructor, properties nad methods are not verified
+        if (Class.descriptor.abstract) {
+
+            return true;
+        }
+
         //constructor, if given
         if (Interface.descriptor.constructor) {
             //assert, that constructor id declared
