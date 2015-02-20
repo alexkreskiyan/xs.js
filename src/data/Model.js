@@ -218,9 +218,6 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         var Data = function (model, data) {
             var me = this;
 
-            //save model reference
-            me.model = model;
-
             //init private storage
             me.private = {};
 
@@ -233,6 +230,9 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             Data.attributes.each(function (attribute, name) {
                 me.private[name] = attribute.set(data[name]);
             });
+
+            //save model reference
+            me.private.model = model;
         };
 
         //define destroy method
@@ -252,7 +252,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      */
     var destroyData = function () {
         //remove model reference
-        delete this.model;
+        delete this.private.model;
 
         //remove private reference
         delete this.private;
@@ -311,7 +311,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
     };
 
     /**
-     * Data destroy method
+     * Returns Data property descriptor
      *
      * @ignore
      *
@@ -334,8 +334,11 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
                 new: value
             };
 
+            //get model reference
+            var model = me.private.model;
+
             //fire preventable `change:before` event, that can prevent changing attribute value
-            if (!me.model.fire('change:before', data)) {
+            if (!model.fire('change:before', data)) {
 
                 return;
             }
@@ -344,7 +347,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             me.private[name] = attribute.set(value);
 
             //fire closing `change` event
-            me.model.fire('change', data);
+            model.fire('change', data);
         };
 
         return {
