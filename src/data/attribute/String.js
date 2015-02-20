@@ -53,10 +53,11 @@ xs.define(xs.Class, 'ns.String', function (self) {
      * @method get
      *
      * @param {String} value incoming value
+     * @param {Number} format format index
      *
      * @return {String} transformed returned value
      */
-    Class.method.get = function (value) {
+    Class.method.get = function (value, format) {
         return value;
     };
 

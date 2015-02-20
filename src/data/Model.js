@@ -227,12 +227,10 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             }
 
             //set attributes
-            Data.attributes.each(function (attribute, name) {
-                me.private[name] = attribute.set(data[name]);
+            me.constructor.attributes.each(function (attribute, name) {
+                var attr = me.private[name] = new Attribute(model, attribute, name);
+                attr.private.value = attribute.set(data[name]);
             });
-
-            //save model reference
-            me.private.model = model;
         };
 
         //define destroy method
@@ -251,11 +249,14 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      * @method destroyData
      */
     var destroyData = function () {
-        //remove model reference
-        delete this.private.model;
+        var me = this;
+        //destroy attributes
+        me.constructor.attributes.each(function (attribute, name) {
+            this[name].destroy();
+        }, 0, me.private);
 
         //remove private reference
-        delete this.private;
+        delete me.private;
     };
 
     /**
@@ -296,14 +297,19 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
         //assert that Attribute implements IAttribute interface
         self.assert.ok(Attribute.implements(imports.IAttribute), 'fire - given attribute `$attribute` type `$Attribute` does not implement base attribute interface `$Interface`', {
-            $attribute: event,
+            $attribute: name,
             $Attribute: Attribute,
             $Interface: imports.IAttribute.label
         });
 
         var attribute = new Attribute(config);
 
-        var descriptor = xs.property.prepare(name, getPropertyDescriptor(attribute, name));
+        var descriptor = xs.property.prepare(name, {
+            get: function () {
+                return this.private[name];
+            },
+            set: xs.emptyFn
+        });
 
         //add attribute
         xs.property.define(Data.prototype, name, descriptor);
@@ -311,49 +317,96 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
     };
 
     /**
-     * Returns Data property descriptor
+     * Internal attribute class
      *
      * @ignore
      *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
      * @private
      *
-     * @method destroyData
+     * @class Attribute
      */
-    var getPropertyDescriptor = function (attribute, name) {
-        var get = function () {
-            return attribute.get(this.private[name]);
-        };
-        var set = function (value) {
-            var me = this;
 
-            //prepare event data
-            var old = me.private[name];
-            var data = {
-                attribute: name,
-                old: old,
-                new: value
-            };
-
-            //get model reference
-            var model = me.private.model;
-
-            //fire preventable `change:before` event, that can prevent changing attribute value
-            if (!model.fire('change:before', data)) {
-
-                return;
-            }
-
-            //set new value
-            me.private[name] = attribute.set(value);
-
-            //fire closing `change` event
-            model.fire('change', data);
-        };
-
-        return {
-            get: get,
-            set: set
+    /**
+     * Attribute constructor
+     *
+     * @ignore
+     *
+     * @constructor
+     *
+     * @param {xs.data.Model} model
+     * @param {xs.data.attribute.IAttribute} attribute
+     * @param {String} name
+     */
+    var Attribute = function (model, attribute, name) {
+        this.private = {
+            model: model,
+            attribute: attribute,
+            name: name
         };
     };
 
+    /**
+     * Attribute get method
+     *
+     * @ignore
+     *
+     * @method get
+     *
+     * @param {Number} format
+     *
+     * @return {*}
+     */
+    Attribute.prototype.get = function (format) {
+        return this.private.attribute.get(this.private.value, format);
+    };
+
+    /**
+     * Attribute set method
+     *
+     * @ignore
+     *
+     * @method set
+     *
+     * @param {*} value
+     */
+    Attribute.prototype.set = function (value) {
+        var me = this;
+
+        //prepare event data
+        var data = {
+            attribute: me.private.name,
+            old: me.private.value,
+            new: value
+        };
+
+        //get model reference
+        var model = me.private.model;
+
+        //fire preventable `change:before` event, that can prevent changing attribute value
+        if (!model.fire('change:before', data)) {
+
+            return;
+        }
+
+        //set new value
+        me.private.value = me.private.attribute.set(value);
+
+        //fire closing `change` event
+        model.fire('change', data);
+    };
+
+    /**
+     * Destroys attribute
+     *
+     * @ignore
+     *
+     * @method destroy
+     */
+    Attribute.prototype.destroy = function () {
+        delete this.private.model;
+        delete this.private.attribute;
+        delete this.private;
+    };
 });

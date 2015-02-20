@@ -15,7 +15,7 @@ module('xs.data.Model', function () {
     test('constructor', function () {
         var me = this;
 
-        window.Model = me.Class = xs.Class(function () {
+        me.Class = xs.Class(function () {
 
             var Class = this;
 
@@ -46,9 +46,11 @@ module('xs.data.Model', function () {
         //model can be created empty
         model = new me.Class();
         //no default is given in config, assigned undefined
-        strictEqual(model.data.name, undefined);
+        strictEqual(model.data.name.get(), undefined);
         //default assigned
-        strictEqual(model.data.age, 0);
+        strictEqual(model.data.age.get(), 0);
+
+        model.destroy();
 
         //although, initial data may be passed
         model = new me.Class({
@@ -56,15 +58,17 @@ module('xs.data.Model', function () {
             age: '5'
         });
         //no default is given in config, assigned undefined
-        strictEqual(model.data.name, 'max');
+        strictEqual(model.data.name.get(), 'max');
         //default assigned
-        strictEqual(model.data.age, 5);
+        strictEqual(model.data.age.get(), 5);
+
+        model.destroy();
     });
 
     test('data', function () {
         var me = this;
 
-        window.Model = me.Class = xs.Class(function () {
+        me.Class = xs.Class(function () {
 
             var Class = this;
 
@@ -91,9 +95,11 @@ module('xs.data.Model', function () {
         //model can be created empty
         model = new me.Class();
         //no default is given in config, assigned undefined
-        strictEqual(model.data.name, undefined);
+        strictEqual(model.data.name.get(), undefined);
         //default assigned
-        strictEqual(model.data.age, 0);
+        strictEqual(model.data.age.get(), 0);
+
+        model.destroy();
 
         //although, initial data may be passed
         model = new me.Class({
@@ -101,15 +107,15 @@ module('xs.data.Model', function () {
             age: '5'
         });
         //no default is given in config, assigned undefined
-        strictEqual(model.data.name, 'max');
+        strictEqual(model.data.name.get(), 'max');
         //default assigned
-        strictEqual(model.data.age, 5);
+        strictEqual(model.data.age.get(), 5);
 
         //when attribute is changed
-        model.data.name = 555;
-        strictEqual(model.data.name, '555');
-        model.data.age = '55';
-        strictEqual(model.data.age, 55);
+        model.data.name.set(555);
+        strictEqual(model.data.name.get(), '555');
+        model.data.age.set('55');
+        strictEqual(model.data.age.get(), 55);
 
         var state = '';
         //change:before is called before value is changed
@@ -122,20 +128,22 @@ module('xs.data.Model', function () {
             }
         });
 
-        model.data.name = 5;
+        model.data.name.set(5);
         strictEqual(state, 'name:555:5;');
-        strictEqual(model.data.name, '555');
+        strictEqual(model.data.name.get(), '555');
 
-        model.data.name = 'max';
+        model.data.name.set('max');
         strictEqual(state, 'name:555:5;name:555:max;');
-        strictEqual(model.data.name, 'max');
+        strictEqual(model.data.name.get(), 'max');
+
+        model.destroy();
 
     });
 
     test('destroy', function () {
         var me = this;
 
-        window.Model = me.Class = xs.Class(function () {
+        me.Class = xs.Class(function () {
 
             var Class = this;
 
