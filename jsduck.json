@@ -12,6 +12,7 @@
         "src/interface",
         "src/lang",
         "src/log",
+        "src/storage",
         "src/uri",
         "src/util",
         "src/ux",
@@ -19,8 +20,9 @@
     ],
     "--builtin-classes": true,
     "--external": [
+        "CSSStyleDeclaration",
         "Element",
         "NodeList",
-        "CSSStyleDeclaration"
+        "Storage"
     ]
 }

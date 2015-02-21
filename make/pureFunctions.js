@@ -54,7 +54,28 @@ module.exports = {
             'self.assert.Class',
             'self.assert.Interface',
             'self.assert.instance',
-            'self.assert.implements'
+            'self.assert.implements',
+            'me.assert.equal',
+            'me.assert.ok',
+            'me.assert.not',
+            'me.assert.object',
+            'me.assert.array',
+            'me.assert.fn',
+            'me.assert.string',
+            'me.assert.number',
+            'me.assert.boolean',
+            'me.assert.regExp',
+            'me.assert.error',
+            'me.assert.null',
+            'me.assert.iterable',
+            'me.assert.primitive',
+            'me.assert.numeric',
+            'me.assert.defined',
+            'me.assert.empty',
+            'me.assert.Class',
+            'me.assert.Interface',
+            'me.assert.instance',
+            'me.assert.implements'
         ]
     }
 };

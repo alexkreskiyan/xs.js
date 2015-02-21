@@ -219,6 +219,20 @@
                     }
                 }
             },
+            "storage": {
+                "WebStorage": {
+                    "contract": "class",
+                    "test": false
+                },
+                "Local": {
+                    "contract": "class",
+                    "test": false
+                },
+                "Session": {
+                    "contract": "class",
+                    "test": false
+                }
+            },
             "uri": {
                 "URI": {
                     "contract": "class"
