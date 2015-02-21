@@ -141,6 +141,8 @@
          *
          * @member xs.class.Base
          *
+         * @static
+         *
          * @method inherits
          *
          * @param {Function} Parent verified Parent class

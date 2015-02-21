@@ -53,6 +53,8 @@
          *
          * @member xs.class.Base
          *
+         * @static
+         *
          * @method mixins
          *
          * @param {Function} Mixin verified mixin class

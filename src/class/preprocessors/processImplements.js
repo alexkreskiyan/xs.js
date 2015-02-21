@@ -51,6 +51,8 @@
          *
          * @member xs.class.Base
          *
+         * @static
+         *
          * @method implements
          *
          * @param {Function} Interface verified interface
