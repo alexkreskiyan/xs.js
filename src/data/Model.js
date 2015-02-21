@@ -276,12 +276,12 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
     var defineAttribute = function (Class, Data, name, config) {
 
         //assert that type is specified
-        self.assert.ok(config.hasOwnProperty('type'), 'getAttributes - no type given for attribute `$attribute`. Add attribute type to Class.constant.attribute hash constant with property type, which value must be string, referencing name of imported Class', {
+        self.assert.ok(config.hasOwnProperty('type'), 'defineAttribute - no type given for attribute `$attribute`. Add attribute type to Class.constant.attribute hash constant with property type, which value must be string, referencing name of imported Class', {
             $attribute: name
         });
 
         //assert that type is non-empty string
-        self.assert.ok(config.type && xs.isString(config.type), 'getAttributes - given attribute `$attribute` type `$type` is not a string', {
+        self.assert.ok(config.type && xs.isString(config.type), 'defineAttribute - given attribute `$attribute` type `$type` is not a string', {
             $attribute: name,
             $type: config.type
         });
@@ -290,13 +290,13 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         var Attribute = xs.ContractsManager.get(Class.descriptor.resolveName(config.type));
 
         //assert that Attribute is class
-        self.assert.Class(Attribute, 'getAttribute - given attribute `$attribute` type `$Attribute` is not a class', {
+        self.assert.Class(Attribute, 'defineAttribute - given attribute `$attribute` type `$Attribute` is not a class', {
             $attribute: name,
             $Attribute: Attribute
         });
 
         //assert that Attribute implements IAttribute interface
-        self.assert.ok(Attribute.implements(imports.IAttribute), 'fire - given attribute `$attribute` type `$Attribute` does not implement base attribute interface `$Interface`', {
+        self.assert.ok(Attribute.implements(imports.IAttribute), 'defineAttribute - given attribute `$attribute` type `$Attribute` does not implement base attribute interface `$Interface`', {
             $attribute: name,
             $Attribute: Attribute,
             $Interface: imports.IAttribute.label
