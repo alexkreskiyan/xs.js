@@ -226,8 +226,8 @@ module('xs.ux.View', function () {
         //verify initial state
         //view
         strictEqual(view.private.hasOwnProperty('container'), false);
-        strictEqual(title.length, 0);
-        strictEqual(body.length, 0);
+        strictEqual(title.size, 0);
+        strictEqual(body.size, 0);
 
         //elements
         //titleA
@@ -246,11 +246,11 @@ module('xs.ux.View', function () {
 
         //verify subsequent state
         //view
-        strictEqual(title.length, 2);
+        strictEqual(title.size, 2);
         strictEqual(title.at(0), titleA);
         strictEqual(title.at(1), titleB);
         strictEqual(title.private.el.childNodes.length, 2);
-        strictEqual(body.length, 1);
+        strictEqual(body.size, 1);
         strictEqual(body.at(0), bodyA);
         strictEqual(body.private.el.childNodes.length, 1);
 
@@ -296,8 +296,8 @@ module('xs.ux.View', function () {
         //verify initial state
         //view
         strictEqual(view.private.hasOwnProperty('container'), false);
-        strictEqual(title.length, 0);
-        strictEqual(body.length, 0);
+        strictEqual(title.size, 0);
+        strictEqual(body.size, 0);
 
         //elements
         //titleA
@@ -316,7 +316,7 @@ module('xs.ux.View', function () {
 
         //verify middle state
         //view
-        strictEqual(title.length, 1);
+        strictEqual(title.size, 1);
         strictEqual(title.at(0), titleB);
         strictEqual(title.private.el.childNodes.length, 1);
 
@@ -334,7 +334,7 @@ module('xs.ux.View', function () {
 
         //verify subsequent state
         //view
-        strictEqual(title.length, 1);
+        strictEqual(title.size, 1);
         strictEqual(title.at(0), bodyA);
         strictEqual(title.private.el.childNodes.length, 1);
 
@@ -376,8 +376,8 @@ module('xs.ux.View', function () {
         //verify initial state
         //view
         strictEqual(view.private.hasOwnProperty('container'), false);
-        strictEqual(title.length, 0);
-        strictEqual(body.length, 0);
+        strictEqual(title.size, 0);
+        strictEqual(body.size, 0);
 
         //elements
         //titleA
@@ -394,10 +394,10 @@ module('xs.ux.View', function () {
 
         //verify middle state
         //view
-        strictEqual(title.length, 1);
+        strictEqual(title.size, 1);
         strictEqual(title.at(0), titleA);
         strictEqual(title.private.el.childNodes.length, 1);
-        strictEqual(body.length, 0);
+        strictEqual(body.size, 0);
 
         //elements
         //titleA
@@ -411,7 +411,7 @@ module('xs.ux.View', function () {
 
         //verify middle state
         //view
-        strictEqual(title.length, 1);
+        strictEqual(title.size, 1);
         strictEqual(title.at(0), titleB);
         strictEqual(title.private.el.childNodes.length, 1);
 
@@ -429,7 +429,7 @@ module('xs.ux.View', function () {
 
         //verify subsequent state
         //view
-        strictEqual(title.length, 0);
+        strictEqual(title.size, 0);
         strictEqual(title.private.el.childNodes.length, 0);
 
         //elements
@@ -469,14 +469,14 @@ module('xs.ux.View', function () {
 
         //verify view
         //title
-        strictEqual(title.length, 2);
+        strictEqual(title.size, 2);
         strictEqual(title.at(0), titleA);
         strictEqual(title.at(1), titleB);
         strictEqual(title.private.el.childNodes.length, 2);
         strictEqual(elementTitleA.parentElement, title.private.el);
         strictEqual(elementTitleB.parentElement, title.private.el);
 
-        strictEqual(body.length, 1);
+        strictEqual(body.size, 1);
         strictEqual(body.at(0), bodyA);
         strictEqual(body.private.el.childNodes.length, 1);
         strictEqual(elementBodyA.parentElement, body.private.el);

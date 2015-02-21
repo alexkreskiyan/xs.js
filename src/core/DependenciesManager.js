@@ -68,7 +68,7 @@
             filterWaitingDependencies(waiting);
 
             //if empty waiting list - apply handleReady immediately
-            if (!waiting.length) {
+            if (!waiting.size) {
                 log.trace('add. Filtered list is empty. Handling');
                 handleReady();
 
@@ -117,7 +117,7 @@
                 dependency.waiting.remove(processed);
 
                 //dependency is resolved, if waiting is empty
-                return !dependency.waiting.length;
+                return !dependency.waiting.size;
             }, xs.core.Collection.All);
 
             log.trace('remove. Resolved dependencies', {
@@ -147,7 +147,7 @@
             });
 
             //iterate over waiting
-            while (i < waiting.length) {
+            while (i < waiting.size) {
 
                 //get Class reference at i position
                 Class = waiting.at(i);
@@ -247,7 +247,7 @@
                 });
 
                 //if working chains found - split each to include waiting
-                if (chains.length) {
+                if (chains.size) {
                     log.trace('chains::add. Work chains exist. Updating...');
                     //init updated chains list
                     var updated = new xs.core.Collection();
@@ -309,7 +309,7 @@
                 //remove processed class from each work chain
                 chains.each(function (chain) {
                     //if chain is more than 2 items long - remove item from it
-                    if (chain.length > 2) {
+                    if (chain.size > 2) {
                         chain.remove(processed);
 
                         //else - remove chain from storage
@@ -408,7 +408,7 @@
                     var merged = getMergedChains(chain);
 
                     //if any merged chains - add them to storage
-                    if (merged.length) {
+                    if (merged.size) {
                         log.trace('chains::createChains. Adding merged:');
                         merged.each(function (chain) {
                             log.trace('chains::createChains.', {
@@ -480,7 +480,7 @@
                     var merged = getMergedChains(copy);
 
                     //if any merged chains - add them to storage
-                    if (merged.length) {
+                    if (merged.size) {
                         log.trace('chains::updateChains. Adding merged:');
                         merged.each(function (chain) {
                             log.trace('chains::updateChains.', {
@@ -547,7 +547,7 @@
                 var chains = getChains(junction);
 
                 //merge if any chains found
-                if (chains.length) {
+                if (chains.size) {
                     log.trace('chains::getMergedChains. Merging...');
                     //fill merged list
                     chains.each(function (source) {
@@ -707,7 +707,7 @@
                         item.waiting.remove(processed);
 
                         //item is resolved, if waiting is empty
-                        return !item.waiting.length;
+                        return !item.waiting.size;
                     }, xs.core.Collection.All);
                 }
 
@@ -732,7 +732,7 @@
                 var i = 0, Class, name;
 
                 //iterate over waiting
-                while (i < waiting.length) {
+                while (i < waiting.size) {
                     name = waiting.at(i);
 
                     //go to next if class is not registered

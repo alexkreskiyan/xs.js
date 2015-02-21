@@ -207,7 +207,7 @@
             var storage = new xs.core.Collection();
 
             /**
-             * Routes collection length
+             * Routes collection size
              *
              * @property length
              *
@@ -215,7 +215,7 @@
              *
              * @type Number
              */
-            Object.defineProperty(me, 'length', {
+            Object.defineProperty(me, 'size', {
                 get: function () {
                     return storage.private.items.length;
                 },

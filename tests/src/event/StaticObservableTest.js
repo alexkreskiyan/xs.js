@@ -259,7 +259,7 @@ module('xs.event.StaticObservable', function () {
 
         //check simple case without options - only event and handler
         me.Class.on('add', xs.emptyFn);
-        strictEqual(me.Class.private.eventsHandlers.add.length, 1);
+        strictEqual(me.Class.private.eventsHandlers.add.size, 1);
         strictEqual(me.Class.private.eventsHandlers.add.at(0).handler, xs.emptyFn);
         me.Class.off();
 
@@ -447,8 +447,8 @@ module('xs.event.StaticObservable', function () {
         });
         me.Class.on('add', xs.emptyFn);
         me.Class.on('remove', xs.emptyFn);
-        strictEqual(me.Class.private.eventsHandlers.add.length, 2);
-        strictEqual(me.Class.private.eventsHandlers.remove.length, 1);
+        strictEqual(me.Class.private.eventsHandlers.add.size, 2);
+        strictEqual(me.Class.private.eventsHandlers.remove.size, 1);
         me.Class.off();
         strictEqual(Object.keys(me.Class.private.eventsHandlers).length, 0);
 
@@ -457,11 +457,11 @@ module('xs.event.StaticObservable', function () {
         });
         me.Class.on('add', xs.emptyFn);
         me.Class.on('remove', xs.emptyFn);
-        strictEqual(me.Class.private.eventsHandlers.add.length, 2);
-        strictEqual(me.Class.private.eventsHandlers.remove.length, 1);
+        strictEqual(me.Class.private.eventsHandlers.add.size, 2);
+        strictEqual(me.Class.private.eventsHandlers.remove.size, 1);
         me.Class.off('add');
         strictEqual(me.Class.private.eventsHandlers.hasOwnProperty('add'), false);
-        strictEqual(me.Class.private.eventsHandlers.remove.length, 1);
+        strictEqual(me.Class.private.eventsHandlers.remove.size, 1);
         me.Class.off();
 
         //check selector scenario
@@ -469,13 +469,13 @@ module('xs.event.StaticObservable', function () {
         });
         me.Class.on('add', xs.emptyFn);
         me.Class.on('remove', xs.emptyFn);
-        strictEqual(me.Class.private.eventsHandlers.add.length, 2);
-        strictEqual(me.Class.private.eventsHandlers.remove.length, 1);
+        strictEqual(me.Class.private.eventsHandlers.add.size, 2);
+        strictEqual(me.Class.private.eventsHandlers.remove.size, 1);
         me.Class.off('add', function (item) {
             return item.handler === xs.emptyFn; //note, that by default, xs.core.Collection.removeBy removes only first matched element
         });
-        strictEqual(me.Class.private.eventsHandlers.add.length, 1);
-        strictEqual(me.Class.private.eventsHandlers.remove.length, 1);
+        strictEqual(me.Class.private.eventsHandlers.add.size, 1);
+        strictEqual(me.Class.private.eventsHandlers.remove.size, 1);
     });
 
     test('suspend', function () {

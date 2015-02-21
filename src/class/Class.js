@@ -162,7 +162,7 @@
                 dependencies.ready(Class.label);
 
                 //if dependencies empty - all classes processed
-                if (!processing.length) {
+                if (!processing.size) {
 
                     //notify, that all ready
                     dependencies.ready(null);

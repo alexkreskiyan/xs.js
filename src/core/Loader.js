@@ -107,7 +107,7 @@
             });
 
             //if failed section is not empty - handle fail
-            if (loadList.failed.length) {
+            if (loadList.failed.size) {
                 log.trace('require. LoadList has failed classes. Handle fail');
                 //use handleFail method if given
                 if (handleFail) {
@@ -126,7 +126,7 @@
             }
 
             //if new section is empty - handle load - all classes are in loaded section
-            if (!loadList.unresolved.length) {
+            if (!loadList.unresolved.size) {
                 log.trace('require. LoadList has only loaded classes. Handle load');
                 xs.nextTick(function () {
                     handleLoad(loadList.loaded.toSource());
@@ -547,7 +547,7 @@
                         item.list.unresolved.removeAt(name);
                         item.list.loaded.add(name, path);
 
-                        return !item.pending.length;
+                        return !item.pending.size;
                     }
 
                     return false;

@@ -220,15 +220,15 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     Class.constant.All = 0x2;
 
     /**
-     * Collection length
+     * Collection size
      *
-     * @property length
+     * @property size
      *
      * @readonly
      *
      * @type Number
      */
-    Class.property.length = {
+    Class.property.size = {
         get: function () {
             return this.private.items.length;
         },

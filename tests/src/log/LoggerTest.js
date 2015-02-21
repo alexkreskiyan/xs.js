@@ -81,13 +81,13 @@ module('xs.log.Logger', function () {
         //run test
 
         //assert, that logs storage is empty
-        strictEqual(me.route.logs.length, 0);
+        strictEqual(me.route.logs.size, 0);
 
         //process message
         logger.error(message, data);
 
         //assert, that logs storage has new entry
-        strictEqual(me.route.logs.length, 1);
+        strictEqual(me.route.logs.size, 1);
 
         //assert, that message is related to demo data
         var entry = me.route.logs.at(0);
@@ -170,13 +170,13 @@ module('xs.log.Logger', function () {
         //run test
 
         //assert, that logs storage is empty
-        strictEqual(me.route.logs.length, 0);
+        strictEqual(me.route.logs.size, 0);
 
         //process message
         logger.warn(message, data);
 
         //assert, that logs storage has new entry
-        strictEqual(me.route.logs.length, 1);
+        strictEqual(me.route.logs.size, 1);
 
         //assert, that message is related to demo data
         var entry = me.route.logs.at(0);
@@ -259,13 +259,13 @@ module('xs.log.Logger', function () {
         //run test
 
         //assert, that logs storage is empty
-        strictEqual(me.route.logs.length, 0);
+        strictEqual(me.route.logs.size, 0);
 
         //process message
         logger.info(message, data);
 
         //assert, that logs storage has new entry
-        strictEqual(me.route.logs.length, 1);
+        strictEqual(me.route.logs.size, 1);
 
         //assert, that message is related to demo data
         var entry = me.route.logs.at(0);
@@ -348,13 +348,13 @@ module('xs.log.Logger', function () {
         //run test
 
         //assert, that logs storage is empty
-        strictEqual(me.route.logs.length, 0);
+        strictEqual(me.route.logs.size, 0);
 
         //process message
         logger.trace(message, data);
 
         //assert, that logs storage has new entry
-        strictEqual(me.route.logs.length, 1);
+        strictEqual(me.route.logs.size, 1);
 
         //assert, that message is related to demo data
         var entry = me.route.logs.at(0);
@@ -441,13 +441,13 @@ module('xs.log.Logger', function () {
             me.route.logs.remove();
 
             //assert, that logs storage is empty
-            strictEqual(me.route.logs.length, 0);
+            strictEqual(me.route.logs.size, 0);
 
             //end profile
             logger.profile.end(mark);
 
             //assert, that logs storage has new entry
-            strictEqual(me.route.logs.length, 1);
+            strictEqual(me.route.logs.size, 1);
 
             //assert, that message is related to demo data
             var entry = me.route.logs.at(0);

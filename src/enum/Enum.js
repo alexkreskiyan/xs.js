@@ -120,7 +120,7 @@
                 dependencies.ready(Enum.label);
 
                 //if dependencies empty - all enums processed
-                if (!processing.length) {
+                if (!processing.size) {
 
                     //notify, that all ready
                     dependencies.ready(null);

@@ -57,7 +57,7 @@
             return !xs.ContractsManager.has(name);
         }, xs.core.Collection.All);
 
-        if (loads.length) {
+        if (loads.size) {
             //load imported interfaces
             log.trace((Interface.label ? Interface.label : 'undefined') + '. Loading', {
                 loads: loads.values()

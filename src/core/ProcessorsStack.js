@@ -169,7 +169,7 @@
          */
         var process = function (items, verifierArgs, handlerArgs, callback) {
             var me = this;
-            if (!items.length) {
+            if (!items.size) {
                 callback();
 
                 return;

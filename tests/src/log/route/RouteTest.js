@@ -221,24 +221,24 @@ module('xs.log.route.Route', function () {
 
         // verify logs in routes
         //routeAll
-        strictEqual(me.routeAll.logs.length, 4);
+        strictEqual(me.routeAll.logs.size, 4);
         strictEqual(me.routeAll.logs.at(0).message, 'message1');
         strictEqual(me.routeAll.logs.at(1).message, 'message2');
         strictEqual(me.routeAll.logs.at(2).message, 'message3');
         strictEqual(me.routeAll.logs.at(3).message, 'message4');
 
         //routeCategory
-        strictEqual(me.routeCategory.logs.length, 2);
+        strictEqual(me.routeCategory.logs.size, 2);
         strictEqual(me.routeCategory.logs.at(0).message, 'message1');
         strictEqual(me.routeCategory.logs.at(1).message, 'message2');
 
         //routeLevel
-        strictEqual(me.routeLevel.logs.length, 2);
+        strictEqual(me.routeLevel.logs.size, 2);
         strictEqual(me.routeLevel.logs.at(0).message, 'message2');
         strictEqual(me.routeLevel.logs.at(1).message, 'message4');
 
         //routeCategoryLevel
-        strictEqual(me.routeCategoryLevel.logs.length, 1);
+        strictEqual(me.routeCategoryLevel.logs.size, 1);
         strictEqual(me.routeCategoryLevel.logs.at(0).message, 'message2');
     }, function () {
         var me = this;

@@ -635,7 +635,7 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
         }
 
         //if handlers collection is empty - remove it
-        if (!handlers.length) {
+        if (!handlers.size) {
 
             //remove empty collection
             delete eventsHandlers[event];

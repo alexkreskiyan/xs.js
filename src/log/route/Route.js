@@ -158,7 +158,7 @@ xs.define(xs.Class, 'ns.Route', function (self) {
         var me = this;
 
         //rule needs processing if there are no rules, or at least one rule, that matches category and level
-        return !me.rules.length || me.rules.some(function (rule) {
+        return !me.rules.size || me.rules.some(function (rule) {
 
                 //to match, category must start with rule.category (if given) and level must match rule.level (if given)
 

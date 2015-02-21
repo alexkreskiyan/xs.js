@@ -138,7 +138,7 @@ module('xs.class.preprocessors.prepareClass', function () {
         var ns = window.tests.class.preprocessors.prepareClass.mixins;
 
         //check chain
-        strictEqual(ns.Class.descriptor.mixins.length, 1);
+        strictEqual(ns.Class.descriptor.mixins.size, 1);
         strictEqual(ns.Class.descriptor.mixins.at('demo'), 'xs.class.Base');
 
     }, function () {
@@ -241,7 +241,7 @@ module('xs.class.preprocessors.prepareClass', function () {
         var ns = window.tests.class.preprocessors.prepareClass.implements;
 
         //check chain
-        strictEqual(ns.Class.descriptor.implements.length, 1);
+        strictEqual(ns.Class.descriptor.implements.size, 1);
         strictEqual(ns.Class.descriptor.implements.at(0), 'tests.class.preprocessors.prepareClass.implements.Interface');
 
     }, function () {

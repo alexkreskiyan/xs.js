@@ -76,20 +76,20 @@ module('xs.log.Router', function () {
         var routes = xs.log.Router.routes;
 
         //save length
-        var length = routes.length;
+        var length = routes.size;
 
         //add new route
         var route = new me.Class('memory');
         routes.add(route);
 
         //length must be increased by 1
-        strictEqual(routes.length, length + 1);
+        strictEqual(routes.size, length + 1);
 
         //remove route
         routes.remove(route);
 
         //length must return to it's initial value
-        strictEqual(routes.length, length);
+        strictEqual(routes.size, length);
     });
 
     test('routes.add', function () {
@@ -146,14 +146,14 @@ module('xs.log.Router', function () {
         });
 
         //save length
-        var length = routes.length;
+        var length = routes.size;
 
         //add new route
         var route = new me.Class('memory');
         routes.add(route);
 
         //length must be increased by 1
-        strictEqual(routes.length, length + 1);
+        strictEqual(routes.size, length + 1);
 
         //remove route
         routes.remove(route);
@@ -208,14 +208,14 @@ module('xs.log.Router', function () {
         var routes = xs.log.Router.routes;
 
         //save length
-        var length = routes.length;
+        var length = routes.size;
 
         //add new route
         var route = new me.Class('memory');
         routes.add(route);
 
         //length must be increased by 1
-        strictEqual(routes.length, length + 1);
+        strictEqual(routes.size, length + 1);
 
         //route must be instance of xs.log.Route
         throws(function () {

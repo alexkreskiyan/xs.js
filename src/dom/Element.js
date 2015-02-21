@@ -149,7 +149,7 @@ xs.define(xs.Class, 'ns.Element', function (self) {
         var handlers = me.private.eventsHandlers[event];
 
         //return if there is more than one handler - domHandler was already added
-        if (handlers.length > 1) {
+        if (handlers.size > 1) {
             self.log.trace('on - DOM event, listener is already created');
 
             return me;

@@ -124,7 +124,7 @@
             return !xs.ContractsManager.has(name);
         }, xs.core.Collection.All);
 
-        if (loads.length) {
+        if (loads.size) {
             //load imported classes
             log.trace((Class.label ? Class.label : 'undefined') + '. Loading', {
                 loads: loads.values()

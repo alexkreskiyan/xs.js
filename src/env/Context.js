@@ -59,7 +59,7 @@
                 var positives = new xs.core.Collection(rule[2]);
 
                 //try userAgent to match any one of negatives given in rule
-                match = negatives.length ? negatives.some(function (regExp) {
+                match = negatives.size ? negatives.some(function (regExp) {
 
                     //check if userAgent matches given regExp
                     return regExp.test(userAgent);

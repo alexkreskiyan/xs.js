@@ -116,15 +116,15 @@
     collection.All = 0x2;
 
     /**
-     * Collection length
+     * Collection size
      *
-     * @property length
+     * @property size
      *
      * @readonly
      *
      * @type Number
      */
-    Object.defineProperty(collection.prototype, 'length', {
+    Object.defineProperty(collection.prototype, 'size', {
         get: function () {
             return this.private.items.length;
         },

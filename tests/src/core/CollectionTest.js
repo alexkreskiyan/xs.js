@@ -40,31 +40,31 @@ module('xs.core.Collection', function () {
         strictEqual(collection.private.items[1].value, x.b);
     });
 
-    test('length', function () {
+    test('size', function () {
         //init test variables
         var collection;
 
         //check empty array list
         collection = new xs.core.Collection([]);
-        strictEqual(collection.length, 0);
+        strictEqual(collection.size, 0);
 
         //check array list
         collection = new xs.core.Collection([
             1,
             3
         ]);
-        strictEqual(collection.length, 2);
+        strictEqual(collection.size, 2);
 
         //check empty object list
         collection = new xs.core.Collection({});
-        strictEqual(collection.length, 0);
+        strictEqual(collection.size, 0);
 
         //check object list
         collection = new xs.core.Collection({
             a: 1,
             b: 3
         });
-        strictEqual(collection.length, 2);
+        strictEqual(collection.size, 2);
     });
 
     test('keys', function () {

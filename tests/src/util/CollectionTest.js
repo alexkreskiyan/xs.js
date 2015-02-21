@@ -87,31 +87,31 @@ module('xs.util.Collection', function () {
         });
     });
 
-    test('length', function () {
+    test('size', function () {
         //init test variables
         var collection;
 
         //check empty array list
         collection = new xs.util.Collection([]);
-        strictEqual(collection.length, 0);
+        strictEqual(collection.size, 0);
 
         //check array list
         collection = new xs.util.Collection([
             1,
             3
         ]);
-        strictEqual(collection.length, 2);
+        strictEqual(collection.size, 2);
 
         //check empty object list
         collection = new xs.util.Collection({});
-        strictEqual(collection.length, 0);
+        strictEqual(collection.size, 0);
 
         //check object list
         collection = new xs.util.Collection({
             a: 1,
             b: 3
         });
-        strictEqual(collection.length, 2);
+        strictEqual(collection.size, 2);
     });
 
     test('keys', function () {

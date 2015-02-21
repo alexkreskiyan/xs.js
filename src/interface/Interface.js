@@ -134,7 +134,7 @@
                 dependencies.ready(Interface.label);
 
                 //if dependencies empty - all interfaces processed
-                if (!processing.length) {
+                if (!processing.size) {
 
                     //notify, that all ready
                     dependencies.ready(null);

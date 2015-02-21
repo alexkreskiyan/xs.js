@@ -31,11 +31,11 @@ module('xs.dom.Element', function () {
 
         //for own event - simple observable usage
         el.on('destroy', xs.emptyFn);
-        strictEqual(el.private.domHandlers.length, 0);
+        strictEqual(el.private.domHandlers.size, 0);
 
         //for dom event - dom handler is generated
         el.on('click', xs.emptyFn);
-        strictEqual(el.private.domHandlers.length, 1);
+        strictEqual(el.private.domHandlers.size, 1);
         strictEqual(el.private.domHandlers.hasKey('click'), true);
 
         el.destroy();
