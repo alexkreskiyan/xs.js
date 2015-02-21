@@ -90,7 +90,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         var me = this;
 
         //assert that events are given
-        self.assert.object(me.self.events, 'constructor - events are given incorrectly. Class constant event must be an object');
+        self.assert.object(me.self.events, 'constructor - events are given incorrectly. Class constant events must be an object');
 
         //register eventHandlers collections
         me.private.eventsHandlers = {};
@@ -248,6 +248,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *         scope: {},
      *         priority: 0
      *     });
+     *
+     * @method on
      *
      * @param {String} event registered event name
      * @param {Function} handler event handler
@@ -535,6 +537,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *         return item.suspended;
      *     });
      *
+     * @method off
+     *
      * @param {String} [event] name of registered event
      * @param {Function} [selector] handlers selector function
      * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#removeBy}
@@ -644,6 +648,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *         return !item.suspended;
      *     });
      *
+     * @method suspend
+     *
      * @param {String} event name of registered event
      * @param {Function} [selector] handlers selector function
      * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#find}
@@ -740,6 +746,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *     object.resume('add', function(item) {
      *         return item.suspended;
      *     });
+     *
+     * @method resume
      *
      * @param {String} event name of registered event
      * @param {Function} [selector] handlers selector function

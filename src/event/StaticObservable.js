@@ -10,15 +10,17 @@
  */
 
 /**
- * Observable mixin
+ * Static observable mixin
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.event.Observable
+ * @abstract
+ *
+ * @class xs.event.StaticObservable
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Observable', function (self, imports) {
+xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
 
     'use strict';
 
@@ -30,7 +32,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         {IEvent: 'ns.IEvent'}
     ];
 
-    Class.implements = ['ns.IObservable'];
+    Class.implements = ['ns.IStaticObservable'];
 
     /**
      * Observable is abstract class - can be only mixed
@@ -82,21 +84,6 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
     Class.constant.events = {};
 
     /**
-     * Observable constructor
-     *
-     * @constructor
-     */
-    Class.constructor = function () {
-        var me = this;
-
-        //assert that events are given
-        self.assert.object(me.self.events, 'constructor - events are given incorrectly. Class constant event must be an object');
-
-        //register eventHandlers collections
-        me.private.eventsHandlers = {};
-    };
-
-    /**
      * Events firing method.
      *
      * For example:
@@ -107,6 +94,8 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *     });
      *     //without data
      *     object.fire('reset');
+     *
+     * @static
      *
      * @method fire
      *
@@ -120,7 +109,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      * - if event is not stoppable, method will always return true
      * - if method is stoppable, it will return true, if no handler stopped processing and false - otherwise
      */
-    Class.method.fire = function (event, data) {
+    Class.static.method.fire = function (event, data) {
         var me = this;
 
         self.log.trace('fire - event ' + event, {
@@ -144,12 +133,12 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
         //check event options
         //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'fire - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
+        self.assert.ok(me.events.hasOwnProperty(event), 'fire - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
             $event: event
         });
 
         //assert that given event options are object
-        var options = me.self.events[event];
+        var options = me.events[event];
         self.assert.object(options, 'fire - given event `$event` options `$options` are not an object', {
             $event: event,
             $options: options
@@ -168,7 +157,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         });
 
         //try to get EventClass
-        var EventClass = xs.ContractsManager.get(me.self.descriptor.resolveName(options.type));
+        var EventClass = xs.ContractsManager.get(me.descriptor.resolveName(options.type));
 
         //assert that EventClass is class
         self.assert.Class(EventClass, 'fire - given event `$event` type `$Event` is not a class', {
@@ -207,6 +196,11 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
 
 
         //handle fire
+
+        //init eventsHandlers if not yet
+        if (!me.private.hasOwnProperty('eventsHandlers')) {
+            me.private.eventsHandlers = {};
+        }
 
         //get handlers list for event
         var handlers = me.private.eventsHandlers[event];
@@ -249,6 +243,10 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *         priority: 0
      *     });
      *
+     * @static
+     *
+     * @method on
+     *
      * @param {String} event registered event name
      * @param {Function} handler event handler
      * @param {Object} [options] Optional options for new handler
@@ -259,7 +257,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *
      * @chainable
      */
-    Class.method.on = function (event, handler, options) {
+    Class.static.method.on = function (event, handler, options) {
         var me = this;
 
         self.log.trace('on - ' + arguments.length + ' arguments given', {
@@ -275,7 +273,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         });
 
         //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'on - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
+        self.assert.ok(me.events.hasOwnProperty(event), 'on - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
             $event: event
         });
 
@@ -286,6 +284,11 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             $event: event,
             $handler: handler
         });
+
+        //init eventsHandlers if not yet
+        if (!me.private.hasOwnProperty('eventsHandlers')) {
+            me.private.eventsHandlers = {};
+        }
 
         var eventsHandlers = me.private.eventsHandlers;
 
@@ -535,13 +538,17 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *         return item.suspended;
      *     });
      *
+     * @static
+     *
+     * @method off
+     *
      * @param {String} [event] name of registered event
      * @param {Function} [selector] handlers selector function
      * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#removeBy}
      *
      * @chainable
      */
-    Class.method.off = function (event, selector, flags) {
+    Class.static.method.off = function (event, selector, flags) {
         var me = this;
 
         self.log.trace('off - ' + arguments.length + ' arguments given', {
@@ -557,7 +564,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         });
 
         //assert that given event is registered
-        self.assert.ok(!arguments.length || me.self.events.hasOwnProperty(event), 'off - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
+        self.assert.ok(!arguments.length || me.events.hasOwnProperty(event), 'off - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
             $event: event
         });
 
@@ -569,6 +576,11 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             $selector: selector
         });
 
+
+        //init eventsHandlers if not yet
+        if (!me.private.hasOwnProperty('eventsHandlers')) {
+            me.private.eventsHandlers = {};
+        }
 
         //handle different scenarios
         var eventsHandlers = me.private.eventsHandlers;
@@ -644,13 +656,17 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *         return !item.suspended;
      *     });
      *
+     * @static
+     *
+     * @method suspend
+     *
      * @param {String} event name of registered event
      * @param {Function} [selector] handlers selector function
      * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#find}
      *
      * @chainable
      */
-    Class.method.suspend = function (event, selector, flags) {
+    Class.static.method.suspend = function (event, selector, flags) {
         var me = this;
 
         self.log.trace('suspend - ' + arguments.length + ' arguments given', {
@@ -666,7 +682,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         });
 
         //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'suspend - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
+        self.assert.ok(me.events.hasOwnProperty(event), 'suspend - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
             $event: event
         });
 
@@ -678,6 +694,11 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             $selector: selector
         });
 
+
+        //init eventsHandlers if not yet
+        if (!me.private.hasOwnProperty('eventsHandlers')) {
+            me.private.eventsHandlers = {};
+        }
 
         //handle different scenarios
         var eventsHandlers = me.private.eventsHandlers;
@@ -741,13 +762,17 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *         return item.suspended;
      *     });
      *
+     * @static
+     *
+     * @method resume
+     *
      * @param {String} event name of registered event
      * @param {Function} [selector] handlers selector function
      * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#find}
      *
      * @chainable
      */
-    Class.method.resume = function (event, selector, flags) {
+    Class.static.method.resume = function (event, selector, flags) {
         var me = this;
 
         self.log.trace('resume - ' + arguments.length + ' arguments given', {
@@ -763,7 +788,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         });
 
         //assert that given event is registered
-        self.assert.ok(me.self.events.hasOwnProperty(event), 'resume - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
+        self.assert.ok(me.events.hasOwnProperty(event), 'resume - given event `$event` is not registered within Class.constant.events hash constant. Add event `$event` configuration there', {
             $event: event
         });
 
@@ -775,6 +800,11 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
             $selector: selector
         });
 
+
+        //init eventsHandlers if not yet
+        if (!me.private.hasOwnProperty('eventsHandlers')) {
+            me.private.eventsHandlers = {};
+        }
 
         //handle different scenarios
         var eventsHandlers = me.private.eventsHandlers;
@@ -830,7 +860,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
      *
      * @method destroy
      */
-    Class.method.destroy = function () {
+    Class.static.method.destroy = function () {
         self.log.trace('destroy - destroying observable');
         this.off();
     };

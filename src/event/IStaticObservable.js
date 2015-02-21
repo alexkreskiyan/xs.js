@@ -10,15 +10,15 @@
  */
 
 /**
- * Observable interface. Is introduced to describe interface, that is implemented by all observable classes
+ * Static observable interface. Is introduced to describe interface, that is implemented by all static observable classes
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.event.IObservable
+ * @class xs.event.IStaticObservable
  *
  * @extends xs.interface.Base
  */
-xs.define(xs.Interface, 'ns.IObservable', function () {
+xs.define(xs.Interface, 'ns.IStaticObservable', function () {
 
     'use strict';
 
@@ -80,12 +80,14 @@ xs.define(xs.Interface, 'ns.IObservable', function () {
      *     //without data
      *     object.fire('reset');
      *
+     * @static
+     *
      * @method fire
      *
      * @param {String} event name of registered event
      * @param {Object} [data] optional object data
      */
-    Class.method.fire = function (event, data) {
+    Class.static.method.fire = function (event, data) {
     };
 
     /**
@@ -102,6 +104,10 @@ xs.define(xs.Interface, 'ns.IObservable', function () {
      *         priority: 0
      *     });
      *
+     * @static
+     *
+     * @method on
+     *
      * @param {String} event registered event name
      * @param {Function} handler event handler
      * @param {Object} [options] Optional options for new handler
@@ -112,7 +118,7 @@ xs.define(xs.Interface, 'ns.IObservable', function () {
      *
      * @chainable
      */
-    Class.method.on = function (event, handler, options) {
+    Class.static.method.on = function (event, handler, options) {
     };
 
     /**
@@ -129,13 +135,17 @@ xs.define(xs.Interface, 'ns.IObservable', function () {
      *         return item.suspended;
      *     });
      *
+     * @static
+     *
+     * @method off
+     *
      * @param {String} [event] name of registered event
      * @param {Function} [selector] handlers selector function
      * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#removeBy}
      *
      * @chainable
      */
-    Class.method.off = function (event, selector, flags) {
+    Class.static.method.off = function (event, selector, flags) {
     };
 
     /**
@@ -150,13 +160,17 @@ xs.define(xs.Interface, 'ns.IObservable', function () {
      *         return !item.suspended;
      *     });
      *
+     * @static
+     *
+     * @method suspend
+     *
      * @param {String} event name of registered event
      * @param {Function} [selector] handlers selector function
      * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#find}
      *
      * @chainable
      */
-    Class.method.suspend = function (event, selector, flags) {
+    Class.static.method.suspend = function (event, selector, flags) {
     };
 
     /**
@@ -171,13 +185,17 @@ xs.define(xs.Interface, 'ns.IObservable', function () {
      *         return item.suspended;
      *     });
      *
+     * @static
+     *
+     * @method resume
+     *
      * @param {String} event name of registered event
      * @param {Function} [selector] handlers selector function
      * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#find}
      *
      * @chainable
      */
-    Class.method.resume = function (event, selector, flags) {
+    Class.static.method.resume = function (event, selector, flags) {
     };
 
 });

@@ -197,6 +197,12 @@
                 },
                 "Observable": {
                     "contract": "class"
+                },
+                "IStaticObservable": {
+                    "contract": "interface"
+                },
+                "StaticObservable": {
+                    "contract": "class"
                 }
             },
             "log": {

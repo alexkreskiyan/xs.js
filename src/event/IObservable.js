@@ -102,6 +102,8 @@ xs.define(xs.Interface, 'ns.IObservable', function () {
      *         priority: 0
      *     });
      *
+     * @method on
+     *
      * @param {String} event registered event name
      * @param {Function} handler event handler
      * @param {Object} [options] Optional options for new handler
@@ -129,6 +131,8 @@ xs.define(xs.Interface, 'ns.IObservable', function () {
      *         return item.suspended;
      *     });
      *
+     * @method off
+     *
      * @param {String} [event] name of registered event
      * @param {Function} [selector] handlers selector function
      * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#removeBy}
@@ -150,6 +154,8 @@ xs.define(xs.Interface, 'ns.IObservable', function () {
      *         return !item.suspended;
      *     });
      *
+     * @method suspend
+     *
      * @param {String} event name of registered event
      * @param {Function} [selector] handlers selector function
      * @param {Number} [flags] handlers selector flags. For supported flags, look to {@link xs.core.Collection#find}
@@ -170,6 +176,8 @@ xs.define(xs.Interface, 'ns.IObservable', function () {
      *     object.resume('add', function(item) {
      *         return item.suspended;
      *     });
+     *
+     * @method resume
      *
      * @param {String} event name of registered event
      * @param {Function} [selector] handlers selector function
