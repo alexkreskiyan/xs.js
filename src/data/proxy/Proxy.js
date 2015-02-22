@@ -30,6 +30,7 @@ xs.define(xs.Class, 'ns.proxy.Proxy', function (self, imports) {
 
     Class.imports = [
         {Operation: 'ns.Operation'},
+        {OperationsTypes: 'ns.operation.Types'},
         {IReader: 'ns.reader.IReader'},
         {Reader: 'ns.reader.Reader'},
         {IWriter: 'ns.writer.IWriter'},
@@ -133,8 +134,130 @@ xs.define(xs.Class, 'ns.proxy.Proxy', function (self, imports) {
         }
     };
 
-    Class.method.run = function (operation) {
-        self.assert.instance(operation, imports.Operations, 'run - given object `$operaion` is not an `$Operation` instance', {});
+    Class.method.create = function (operation) {
+        //assert, that operation is correct instance
+        self.assert.instance(operation, imports.Operation, 'create - given object `$operation` is not an `$Operation` instance', {
+            $operation: operation,
+            $Operation: imports.Operation
+        });
+
+        //assert, that operation has correct type
+        self.assert.equals(operation.type, imports.OperationsTypes.Create, 'create - given operation type `$type` is not a type `$wanted`', {
+            $type: imports.OperationsTypes.keyOf(operation.type),
+            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.Create)
+        });
+    };
+
+    Class.method.createAll = function (operation) {
+        //assert, that operation is correct instance
+        self.assert.instance(operation, imports.Operation, 'createAll - given object `$operation` is not an `$Operation` instance', {
+            $operation: operation,
+            $Operation: imports.Operation
+        });
+
+        //assert, that operation has correct type
+        self.assert.equals(operation.type, imports.OperationsTypes.CreateAll, 'createAll - given operation type `$type` is not a type `$wanted`', {
+            $type: imports.OperationsTypes.keyOf(operation.type),
+            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.CreateAll)
+        });
+    };
+
+    Class.method.read = function (operation) {
+        //assert, that operation is correct instance
+        self.assert.instance(operation, imports.Operation, 'read - given object `$operation` is not an `$Operation` instance', {
+            $operation: operation,
+            $Operation: imports.Operation
+        });
+
+        //assert, that operation has correct type
+        self.assert.equals(operation.type, imports.OperationsTypes.Read, 'read - given operation type `$type` is not a type `$wanted`', {
+            $type: imports.OperationsTypes.keyOf(operation.type),
+            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.Read)
+        });
+    };
+
+    Class.method.getCount = function (operation) {
+        //assert, that operation is correct instance
+        self.assert.instance(operation, imports.Operation, 'getCount - given object `$operation` is not an `$Operation` instance', {
+            $operation: operation,
+            $Operation: imports.Operation
+        });
+
+        //assert, that operation has correct type
+        self.assert.equals(operation.type, imports.OperationsTypes.GetCount, 'getCount - given operation type `$type` is not a type `$wanted`', {
+            $type: imports.OperationsTypes.keyOf(operation.type),
+            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.GetCount)
+        });
+    };
+
+    Class.method.readAll = function (operation) {
+        //assert, that operation is correct instance
+        self.assert.instance(operation, imports.Operation, 'readAll - given object `$operation` is not an `$Operation` instance', {
+            $operation: operation,
+            $Operation: imports.Operation
+        });
+
+        //assert, that operation has correct type
+        self.assert.equals(operation.type, imports.OperationsTypes.ReadAll, 'readAll - given operation type `$type` is not a type `$wanted`', {
+            $type: imports.OperationsTypes.keyOf(operation.type),
+            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.ReadAll)
+        });
+    };
+
+    Class.method.update = function (operation) {
+        //assert, that operation is correct instance
+        self.assert.instance(operation, imports.Operation, 'update - given object `$operation` is not an `$Operation` instance', {
+            $operation: operation,
+            $Operation: imports.Operation
+        });
+
+        //assert, that operation has correct type
+        self.assert.equals(operation.type, imports.OperationsTypes.Update, 'update - given operation type `$type` is not a type `$wanted`', {
+            $type: imports.OperationsTypes.keyOf(operation.type),
+            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.Update)
+        });
+    };
+
+    Class.method.updateAll = function (operation) {
+        //assert, that operation is correct instance
+        self.assert.instance(operation, imports.Operation, 'updateAll - given object `$operation` is not an `$Operation` instance', {
+            $operation: operation,
+            $Operation: imports.Operation
+        });
+
+        //assert, that operation has correct type
+        self.assert.equals(operation.type, imports.OperationsTypes.UpdateAll, 'updateAll - given operation type `$type` is not a type `$wanted`', {
+            $type: imports.OperationsTypes.keyOf(operation.type),
+            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.UpdateAll)
+        });
+    };
+
+    Class.method.delete = function (operation) {
+        //assert, that operation is correct instance
+        self.assert.instance(operation, imports.Operation, 'delete - given object `$operation` is not an `$Operation` instance', {
+            $operation: operation,
+            $Operation: imports.Operation
+        });
+
+        //assert, that operation has correct type
+        self.assert.equals(operation.type, imports.OperationsTypes.Delete, 'delete - given operation type `$type` is not a type `$wanted`', {
+            $type: imports.OperationsTypes.keyOf(operation.type),
+            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.Delete)
+        });
+    };
+
+    Class.method.deleteAll = function (operation) {
+        //assert, that operation is correct instance
+        self.assert.instance(operation, imports.Operation, 'deleteAll - given object `$operation` is not an `$Operation` instance', {
+            $operation: operation,
+            $Operation: imports.Operation
+        });
+
+        //assert, that operation has correct type
+        self.assert.equals(operation.type, imports.OperationsTypes.DeleteAll, 'deleteAll - given operation type `$type` is not a type `$wanted`', {
+            $type: imports.OperationsTypes.keyOf(operation.type),
+            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.DeleteAll)
+        });
     };
 
     var createReader = function (config) {
