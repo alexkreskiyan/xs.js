@@ -17,6 +17,8 @@
 
     var log = new xs.log.Logger('xs.enum.preprocessors.values');
 
+    var assert = new xs.core.Asserter(log, MethodsError);
+
     /**
      * Preprocessor methods
      * Is used to assign internal methods to enum
@@ -32,7 +34,25 @@
 
         log.trace(Enum.label ? Enum.label : 'undefined');
 
-        var hasDescriptor = xs.method.prepare('has', function (value) {
+        //keyOf method
+        xs.method.define(Enum, 'keyOf', xs.method.prepare('keyOf', function (value) {
+            var values = this.values;
+            var keys = Object.keys(values);
+
+            var key = keys.filter(function (name) {
+
+                return values[name] === value;
+            }).shift();
+
+            assert.defined(key, 'keyOf - given value `$value` is not a part of enum', {
+                $value: value
+            });
+
+            return key;
+        }));
+
+        //has method
+        xs.method.define(Enum, 'has', xs.method.prepare('has', function (value) {
             var values = this.values;
             var keys = Object.keys(values);
 
@@ -40,9 +60,22 @@
 
                 return values[name] === value;
             });
-        });
-
-        xs.method.define(Enum, 'has', hasDescriptor);
+        }));
     });
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class MethodsError
+     */
+    function MethodsError(message) {
+        this.message = 'xs.enum.preprocessors.methods::' + message;
+    }
+
+    MethodsError.prototype = new Error();
 
 })(window, 'xs');

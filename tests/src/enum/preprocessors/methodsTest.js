@@ -12,7 +12,7 @@ module('xs.enum.preprocessors.methods', function () {
 
     'use strict';
 
-    test('values', function () {
+    test('methods', function () {
         var me = this;
 
         //Enum
@@ -45,7 +45,14 @@ module('xs.enum.preprocessors.methods', function () {
 
         var ns = window.tests.enum.preprocessors.methods;
 
-        //check has function
+        //check keyOf method
+        strictEqual(ns.Enum.keyOf(1), 'a');
+        throws(function () {
+            return ns.Enum.keyOf('1');
+        });
+        strictEqual(ns.Enum.keyOf(me.fn), 'b');
+
+        //check has method
         strictEqual(ns.Enum.has(1), true);
         strictEqual(ns.Enum.has('1'), false);
         strictEqual(ns.Enum.has(me.fn), true);
