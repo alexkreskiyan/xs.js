@@ -143,6 +143,31 @@
                         "test": false
                     }
                 },
+                "model": {
+                    "Event": {
+                        "contract": "class",
+                        "test": false
+                    }
+                },
+                "proxy": {
+                    "storage": {
+                        "Local": {
+                            "contract": "class",
+                            "test": false
+                        }
+                    },
+                    "IProxy": {
+                        "contract": "interface"
+                    },
+                    "Memory": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "Proxy": {
+                        "contract": "class",
+                        "test": false
+                    }
+                },
                 "reader": {
                     "IReader": {
                         "contract": "interface"
@@ -165,12 +190,6 @@
                         "test": false
                     },
                     "JSON": {
-                        "contract": "class",
-                        "test": false
-                    }
-                },
-                "model": {
-                    "Event": {
                         "contract": "class",
                         "test": false
                     }

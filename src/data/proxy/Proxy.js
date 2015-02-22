@@ -31,11 +31,11 @@ xs.define(xs.Class, 'ns.proxy.Proxy', function (self, imports) {
     Class.imports = [
         {IReader: 'ns.reader.IReader'},
         {Reader: 'ns.reader.Reader'},
-        {IWriter: 'ns.reader.IWriter'},
-        {Writer: 'ns.reader.Writer'}
+        {IWriter: 'ns.writer.IWriter'},
+        {Writer: 'ns.writer.Writer'}
     ];
 
-    Class.implements = ['ns.data.IProxy'];
+    Class.implements = ['ns.proxy.IProxy'];
 
     Class.abstract = true;
 

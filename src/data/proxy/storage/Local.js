@@ -16,13 +16,11 @@
  *
  * @abstract
  *
- * @class xs.data.Model
+ * @class xs.data.proxy.storage.Local
  *
- * @extends xs.class.Base
- *
- * @mixins xs.event.Observable
+ * @extends xs.data.proxy.Proxy
  */
-xs.define(xs.Class, 'ns.proxy.Memory', function (self, imports) {
+xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
 
     'use strict';
 
