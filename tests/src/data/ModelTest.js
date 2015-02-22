@@ -65,6 +65,46 @@ module('xs.data.Model', function () {
         model.destroy();
     });
 
+    test('primaryAttributes', function () {
+        var me = this;
+
+        me.Class = xs.Class(function () {
+
+            var Class = this;
+
+            Class.extends = 'xs.data.Model';
+
+            Class.constant.attributes = {
+                id: {
+                    type: 'xs.data.attribute.Number',
+                    primary: true
+                },
+                name: {
+                    type: 'xs.data.attribute.String',
+                },
+                age: {
+                    type: 'xs.data.attribute.Number',
+                    default: 0
+                }
+            };
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
+
+        var primary = me.Class.primaryAttributes;
+
+        //primary attributes is lazy initiated
+        strictEqual(primary, me.Class.primaryAttributes);
+
+        //primary attributes is a xs.core.Collection
+        strictEqual(primary instanceof xs.core.Collection, true);
+
+        //primary attributes contains
+        strictEqual(JSON.stringify(primary.values()), '["id"]');
+    });
+
     test('data', function () {
         var me = this;
 

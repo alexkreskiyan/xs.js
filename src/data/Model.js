@@ -106,6 +106,39 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         }
     };
 
+    Class.static.property.primaryAttributes = {
+        get: function () {
+            var me = this;
+            if (me.private.hasOwnProperty('primaryAttributes')) {
+                return me.private.primaryAttributes;
+            }
+
+            //define attributes collection
+            var attributes = me.private.primaryAttributes = new xs.core.Collection();
+
+            //internal items
+            var items = [];
+
+            //fill items
+            (new xs.core.Collection(this.attributes)).find(function (config, name) {
+                //primary config property marks property as primary
+                if (config.primary === true) {
+                    items.push({
+                        key: items.length,
+                        value: name
+                    });
+                }
+            });
+
+            //set items
+            attributes.private.items = items;
+
+            //return attributes
+            return attributes;
+        },
+        set: xs.emptyFn
+    };
+
     /**
      * Model constructor
      *
