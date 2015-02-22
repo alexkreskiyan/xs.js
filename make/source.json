@@ -152,6 +152,11 @@
                         "test": false
                     }
                 },
+                "operation": {
+                    "Types": {
+                        "contract": "enum"
+                    }
+                },
                 "proxy": {
                     "storage": {
                         "Local": {
@@ -197,8 +202,15 @@
                         "test": false
                     }
                 },
+                "IModel": {
+                    "contract": "interface"
+                },
                 "Model": {
                     "contract": "class"
+                },
+                "Operation": {
+                    "contract": "class",
+                    "test": false
                 }
             },
             "dom": {

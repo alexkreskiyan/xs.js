@@ -29,6 +29,7 @@ xs.define(xs.Class, 'ns.proxy.Proxy', function (self, imports) {
     Class.namespace = 'xs.data';
 
     Class.imports = [
+        {Operation: 'ns.Operation'},
         {IReader: 'ns.reader.IReader'},
         {Reader: 'ns.reader.Reader'},
         {IWriter: 'ns.writer.IWriter'},
@@ -130,6 +131,10 @@ xs.define(xs.Class, 'ns.proxy.Proxy', function (self, imports) {
         set: function (writer) {
 
         }
+    };
+
+    Class.method.run = function (operation) {
+        self.assert.instance(operation, imports.Operations, 'run - given object `$operaion` is not an `$Operation` instance', {});
     };
 
     var createReader = function (config) {

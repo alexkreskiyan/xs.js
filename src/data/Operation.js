@@ -14,15 +14,13 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @abstract
- *
- * @class xs.data.Model
+ * @class xs.data.Operation
  *
  * @extends xs.class.Base
  *
- * @mixins xs.event.Observable
+ * @mixins xs.ux.Promise
  */
-xs.define(xs.Class, 'ns.proxy.Memory', function (self, imports) {
+xs.define(xs.Class, 'ns.Operation', function (self, imports) {
 
     'use strict';
 
@@ -30,10 +28,44 @@ xs.define(xs.Class, 'ns.proxy.Memory', function (self, imports) {
 
     Class.namespace = 'xs.data';
 
-    Class.extends = 'ns.proxy.Proxy';
+    Class.imports = [
+        {Types: 'ns.operation.Types'}
+    ];
 
-    Class.method.run = function (operation) {
+    Class.mixins.promise = 'xs.ux.Promise';
 
+    Class.constructor = function (type, data) {
+        var me = this;
+
+        //verify type
+        self.assert.ok(imports.Types.has(type), 'constructor - given operation type `$type` is not supported', {
+            $type: type
+        });
+
+        //verify data, if given
+        self.assert.ok(arguments.length === 1 || xs.isObject(data), 'constructor - given data `$data` is not an object', {
+            $data: data
+        });
+
+
+        //set privates
+
+        //type
+        me.private.type = type;
+
+        //data
+        me.private.data = data;
+
+        //call observable constructor
+        self.mixins.promise.call(me);
+    };
+
+    Class.property.type = {
+        set: xs.emptyFn
+    };
+
+    Class.property.data = {
+        set: xs.emptyFn
     };
 
 });
