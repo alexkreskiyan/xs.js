@@ -44,39 +44,7 @@ xs.define(xs.Interface, 'ns.IProxy', function () {
         get: xs.emptyFn
     };
 
-    Interface.method.create = function (model) {
-
-    };
-
-    Interface.method.createAll = function (models) {
-
-    };
-
-    Interface.method.read = function (data) {
-
-    };
-
-    Interface.method.getCount = function () {
-
-    };
-
-    Interface.method.readAll = function (data) {
-
-    };
-
-    Interface.method.update = function (model) {
-
-    };
-
-    Interface.method.updateAll = function (models) {
-
-    };
-
-    Interface.method.delete = function (model) {
-
-    };
-
-    Interface.method.deleteAll = function (models) {
+    Interface.method.run = function (operation) {
 
     };
 

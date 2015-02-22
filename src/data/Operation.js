@@ -10,7 +10,7 @@
  */
 
 /**
- * Key data workflow element of xs.js.
+ * xs.data.Operation represents operation, performed by proxy with data
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *

@@ -30,39 +30,7 @@ xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
 
     Class.extends = 'ns.proxy.Proxy';
 
-    Class.method.create = function (model) {
-
-    };
-
-    Class.method.createAll = function (models) {
-
-    };
-
-    Class.method.read = function (data) {
-
-    };
-
-    Class.method.getCount = function () {
-
-    };
-
-    Class.method.readAll = function (data) {
-
-    };
-
-    Class.method.update = function (model) {
-
-    };
-
-    Class.method.updateAll = function (models) {
-
-    };
-
-    Class.method.delete = function (model) {
-
-    };
-
-    Class.method.deleteAll = function (models) {
+    Class.method.run = function (operation) {
 
     };
 
