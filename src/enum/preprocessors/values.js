@@ -63,6 +63,8 @@
             xs.constant(Enum, name, value);
         });
 
+        //define values as constant
+        xs.constant(Enum, 'values', values.toSource());
     });
 
     /**

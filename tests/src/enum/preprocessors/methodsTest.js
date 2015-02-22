@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.enum.preprocessors.values', function () {
+module('xs.enum.preprocessors.methods', function () {
 
     'use strict';
 
@@ -16,7 +16,7 @@ module('xs.enum.preprocessors.values', function () {
         var me = this;
 
         //Enum
-        me.EnumName = 'tests.enum.preprocessors.values.Enum';
+        me.EnumName = 'tests.enum.preprocessors.methods.Enum';
 
         me.fn = function () {
         };
@@ -43,17 +43,12 @@ module('xs.enum.preprocessors.values', function () {
     }, function () {
         var me = this;
 
-        var ns = window.tests.enum.preprocessors.values;
+        var ns = window.tests.enum.preprocessors.methods;
 
-        //Enum
-        //a
-        strictEqual(ns.Enum.a, 1);
-        strictEqual(xs.Attribute.isWritable(ns.Enum, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(ns.Enum, 'a'), false);
-        //b
-        strictEqual(ns.Enum.b, me.fn);
-        strictEqual(xs.Attribute.isWritable(ns.Enum, 'a'), false);
-        strictEqual(xs.Attribute.isConfigurable(ns.Enum, 'a'), false);
+        //check has function
+        strictEqual(ns.Enum.has(1), true);
+        strictEqual(ns.Enum.has('1'), false);
+        strictEqual(ns.Enum.has(me.fn), true);
 
     }, function () {
         var me = this;

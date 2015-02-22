@@ -99,6 +99,9 @@
         "xs.enum.preprocessors.values": {
             "test": true
         },
+        "xs.enum.preprocessors.methods": {
+            "test": true
+        },
         "xs.interface.Interface": {
             "test": true
         },
