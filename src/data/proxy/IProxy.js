@@ -32,7 +32,7 @@ xs.define(xs.Interface, 'ns.IProxy', function () {
 
     Interface.constant.writer = {};
 
-    Interface.constructor = function (config, reader, writer) {
+    Interface.constructor = function (config) {
 
     };
 

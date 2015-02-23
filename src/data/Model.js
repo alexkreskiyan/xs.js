@@ -32,6 +32,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
     Class.imports = [
         {IAttribute: 'ns.attribute.IAttribute'},
+        {IProxy: 'ns.proxy.IProxy'},
         'ns.model.Event'
     ];
 
@@ -53,6 +54,19 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      * @type {Object}
      */
     Class.constant.attributes = {};
+
+    /**
+     * Model proxy declaration
+     *
+     * @static
+     *
+     * @readonly
+     *
+     * @property proxy
+     *
+     * @type {Object}
+     */
+    Class.constant.proxy = {};
 
     /**
      * Model events list. See {@link xs.event.Observable#events}
@@ -130,6 +144,11 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
                 }
             });
 
+            //at least one primary attribute must exist
+            self.assert.ok(items.length, 'primaryAttributes - model `$Model` has no primary attributes', {
+                $Model: me
+            });
+
             //set items
             attributes.private.items = items;
 
@@ -145,13 +164,20 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      * @constructor
      *
      * @param {Object} [data] model raw data
+     * @param {xs.data.proxy.IProxy} [proxy] model proxy
      */
-    Class.constructor = function (data) {
+    Class.constructor = function (data, proxy) {
         var me = this;
 
-        //assert, that uri is either undefined or string
+        //assert, that data is either undefined or an object
         self.assert.ok(!arguments.length || xs.isObject(data), 'constructor - given data `$data` is not an object', {
             $data: data
+        });
+
+        //assert, that proxy is xs.data.proxy.IProxy, if given
+        self.assert.ok(arguments.length < 2 || (xs.isInstance(proxy) && proxy.self.implements(imports.IProxy)), 'constructor - given object `$object` is not an instance of Class, that implements interface `$Interface`', {
+            $object: proxy,
+            $Interface: imports.IProxy
         });
 
         //call observable constructor
@@ -162,6 +188,9 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
         //setup instance data storage
         me.private.data = data ? new Data(me, data) : new Data(me);
+
+        //setup proxy
+        me.private.proxy = proxy ? proxy : getProxy(me.self);
     };
 
     /**
@@ -178,6 +207,22 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             return this.private.data;
         },
         set: xs.emptyFn
+    };
+
+    Class.method.create = function () {
+
+    };
+
+    Class.method.read = function () {
+
+    };
+
+    Class.method.update = function () {
+
+    };
+
+    Class.method.delete = function () {
+
     };
 
     /**
@@ -223,6 +268,12 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             return Class.private.Data;
         }
 
+        //assert that attributes are an object
+        self.assert.object(Class.attributes, 'getData - given class `$Class` attributes `$attributes` are not an object', {
+            $attributes: Class.attributes,
+            $Class: Class
+        });
+
         //define attributes type
         var Data = Class.private.Data = getDataSample();
 
@@ -234,6 +285,60 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         });
 
         return Data;
+    };
+
+    /**
+     * Lazy initialization method for Model proxy
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method getProxy
+     *
+     * @param {xs.data.Model} Class class, being initialized
+     *
+     * @return {xs.data.proxy.IProxy} Proxy instance
+     */
+    var getProxy = function (Class) {
+        //return collection if defined
+        if (Class.private.hasOwnProperty('proxy')) {
+            return Class.private.proxy;
+        }
+
+        var config = Class.proxy;
+
+        //assert that proxy definition is an object
+        self.assert.object(config, 'getProxy - given class `$Class` proxy definition `$proxy` is not an object', {
+            $proxy: config,
+            $Class: Class
+        });
+
+        //assert that type is specified
+        self.assert.ok(config.hasOwnProperty('type'), 'getProxy - no type given for proxy in config `$config`. Add attribute type to Class.constant.proxy hash constant with property type, which value must be string, referencing name of imported Class', {
+            $config: config
+        });
+
+        //assert that type is non-empty string
+        self.assert.ok(config.type && xs.isString(config.type), 'getProxy - given proxy type `$type` is not a string', {
+            $type: config.type
+        });
+
+        //get Proxy contract
+        var Proxy = xs.ContractsManager.get(Class.descriptor.resolveName(config.type));
+
+        //assert that Proxy is class
+        self.assert.Class(Proxy, 'getProxy - given proxy type `$Proxy` is not a class', {
+            $Proxy: Proxy
+        });
+
+        //assert that Proxy implements IProxy interface
+        self.assert.ok(Proxy.implements(imports.IProxy), 'getProxy - given proxy type `$Proxy` does not implement base proxy interface `$Proxy`', {
+            $Proxy: Proxy,
+            $Interface: imports.IProxy
+        });
+
+        return new Proxy(config);
     };
 
     /**
@@ -332,7 +437,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         self.assert.ok(Attribute.implements(imports.IAttribute), 'defineAttribute - given attribute `$attribute` type `$Attribute` does not implement base attribute interface `$Interface`', {
             $attribute: name,
             $Attribute: Attribute,
-            $Interface: imports.IAttribute.label
+            $Interface: imports.IAttribute
         });
 
         var attribute = new Attribute(config);

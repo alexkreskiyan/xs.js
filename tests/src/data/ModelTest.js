@@ -22,6 +22,10 @@ module('xs.data.Model', function () {
             Class.extends = 'xs.data.Model';
 
             Class.constant.attributes = {
+                id: {
+                    type: 'xs.data.attribute.Number',
+                    primary: true
+                },
                 name: {
                     type: 'xs.data.attribute.String'
                 },
@@ -30,6 +34,17 @@ module('xs.data.Model', function () {
                     default: 0
                 }
             };
+
+            Class.constant.proxy = {
+                type: 'xs.data.proxy.storage.Local',
+                reader: {
+                    type: 'xs.data.reader.JSON'
+                },
+                writer: {
+                    type: 'xs.data.writer.JSON'
+                }
+            };
+
         }, me.done);
 
         return false;
@@ -80,13 +95,24 @@ module('xs.data.Model', function () {
                     primary: true
                 },
                 name: {
-                    type: 'xs.data.attribute.String',
+                    type: 'xs.data.attribute.String'
                 },
                 age: {
                     type: 'xs.data.attribute.Number',
                     default: 0
                 }
             };
+
+            Class.constant.proxy = {
+                type: 'xs.data.proxy.storage.Local',
+                reader: {
+                    type: 'xs.data.reader.JSON'
+                },
+                writer: {
+                    type: 'xs.data.writer.JSON'
+                }
+            };
+
         }, me.done);
 
         return false;
@@ -115,6 +141,10 @@ module('xs.data.Model', function () {
             Class.extends = 'xs.data.Model';
 
             Class.constant.attributes = {
+                id: {
+                    type: 'xs.data.attribute.Number',
+                    primary: true
+                },
                 name: {
                     type: 'xs.data.attribute.String'
                 },
@@ -123,6 +153,17 @@ module('xs.data.Model', function () {
                     default: 0
                 }
             };
+
+            Class.constant.proxy = {
+                type: 'xs.data.proxy.storage.Local',
+                reader: {
+                    type: 'xs.data.reader.JSON'
+                },
+                writer: {
+                    type: 'xs.data.writer.JSON'
+                }
+            };
+
         }, me.done);
 
         return false;
@@ -190,6 +231,10 @@ module('xs.data.Model', function () {
             Class.extends = 'xs.data.Model';
 
             Class.constant.attributes = {
+                id: {
+                    type: 'xs.data.attribute.Number',
+                    primary: true
+                },
                 name: {
                     type: 'xs.data.attribute.String'
                 },
@@ -198,6 +243,17 @@ module('xs.data.Model', function () {
                     default: 0
                 }
             };
+
+            Class.constant.proxy = {
+                type: 'xs.data.proxy.storage.Local',
+                reader: {
+                    type: 'xs.data.reader.JSON'
+                },
+                writer: {
+                    type: 'xs.data.writer.JSON'
+                }
+            };
+
         }, me.done);
 
         return false;

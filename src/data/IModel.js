@@ -28,7 +28,14 @@ xs.define(xs.Interface, 'ns.IModel', function () {
 
     Interface.namespace = 'xs.data';
 
-    Interface.constant = ['attributes'];
+    Interface.constant = [
+        'attributes',
+        'proxy'
+    ];
+
+    Interface.static.property.primaryAttributes = {
+        set: xs.emptyFn
+    };
 
     /**
      * Attribute constructor
@@ -37,7 +44,7 @@ xs.define(xs.Interface, 'ns.IModel', function () {
      *
      * @param {Object} data attribute configuration object
      */
-    Interface.constructor = function (data) {
+    Interface.constructor = function (data, proxy) {
 
     };
 

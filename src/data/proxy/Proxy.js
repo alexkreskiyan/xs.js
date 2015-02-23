@@ -29,12 +29,12 @@ xs.define(xs.Class, 'ns.proxy.Proxy', function (self, imports) {
     Class.namespace = 'xs.data';
 
     Class.imports = [
-        {Operation: 'ns.Operation'},
-        {OperationsTypes: 'ns.operation.Types'},
+        {'operation.Create': 'ns.operation.Create'},
+        {'operation.Read': 'ns.operation.Read'},
+        {'operation.Update': 'ns.operation.Update'},
+        {'operation.Delete': 'ns.operation.Delete'},
         {IReader: 'ns.reader.IReader'},
-        {Reader: 'ns.reader.Reader'},
-        {IWriter: 'ns.writer.IWriter'},
-        {Writer: 'ns.writer.Writer'}
+        {IWriter: 'ns.writer.IWriter'}
     ];
 
     Class.implements = ['ns.proxy.IProxy'];
@@ -45,16 +45,12 @@ xs.define(xs.Class, 'ns.proxy.Proxy', function (self, imports) {
 
     Class.constant.writer = {};
 
-    Class.constructor = function (config, reader, writer) {
+    Class.constructor = function (config) {
         var me = this;
 
-        //assert, that config is given and is an object
-        self.assert.object(config, 'constructor - given config `$config` is not an object', {
-            $config: config
-        });
+        //if no arguments
+        if (!arguments.length) {
 
-        //if no arguments given - create template reader and writer
-        if (arguments.length === 1) {
             //create template reader
             me.private.reader = createReader(self.reader);
 
@@ -64,200 +60,140 @@ xs.define(xs.Class, 'ns.proxy.Proxy', function (self, imports) {
             return;
         }
 
+        //assert, that config is given and is an object
+        self.assert.object(config, 'constructor - given config `$config` is not an object', {
+            $config: config
+        });
 
-        //verify 2 arguments scenario
+        //save config
+        me.private.config = config;
 
-        if (arguments.length === 2) {
+        //process reader
+        if (config.hasOwnProperty('reader')) {
 
-            //assert reader is instanceof Reader or Writer
-            self.assert.ok(reader instanceof imports.Reader || reader instanceof imports.Writer, 'constructor - given second argument is nor a `$Reader` neither a `$Writer` instance', {
-                $Reader: imports.Reader,
-                $Writer: imports.Writer
+            //assert reader implements IReader || is object
+            self.assert.object(config.reader, 'constructor - given config.reader `$reader` is not an object', {
+                $reader: config.reader
             });
 
-            //handle reader depending on it's type
-            if (reader instanceof imports.Reader) {
+            if (xs.isInstance(config.reader)) {
+                //assert, that config.reader implements IReader
+                self.assert.implements(config.reader, imports.IReader, 'constructor - given config.reader`$reader` does not implement `$Interface`', {
+                    $reader: config.reader,
+                    $Interface: imports.IReader
+                });
 
-                //save reader reference
-                me.private.reader = reader;
-
-                //create template writer
-                me.private.writer = createWriter(self.reader);
+                //save reader
+                me.private.reader = config.reader;
             } else {
-                //create template reader
-                me.private.reader = createReader(self.reader);
 
-                //save writer reference
-                me.private.writer = reader;
+                //create reader from config
+                me.private.reader = createReader(config.reader);
             }
 
-            return;
+        } else {
+            //create template reader
+            me.private.reader = createReader(self.reader);
         }
 
+        //process writer
+        if (config.hasOwnProperty('writer')) {
 
-        //verify 3 arguments scenario
+            //assert writer implements IWriter || is object
+            self.assert.object(config.writer, 'constructor - given config.writer `$writer` is not an object', {
+                $writer: config.writer
+            });
 
-        //assert reader is instanceof Reader
-        self.assert.ok(reader instanceof imports.Reader, 'constructor - given reader `$reader` is nor an instance of `$Reader`', {
-            $reader: reader,
-            $Reader: imports.Reader
-        });
+            if (xs.isInstance(config.writer)) {
+                //assert, that config.writer implements IWriter
+                self.assert.implements(config.writer, imports.IWriter, 'constructor - given config.writer`$writer` does not implement `$Interface`', {
+                    $writer: config.writer,
+                    $Interface: imports.IWriter
+                });
 
-        //assert writer is instanceof Writer
-        self.assert.ok(writer instanceof imports.Writer, 'constructor - given writer `$writer` is nor an instance of `$Writer`', {
-            $writer: writer,
-            $Writer: imports.Writer
-        });
+                //save writer
+                me.private.writer = config.writer;
+            } else {
 
-        //save reader reference
-        me.private.reader = reader;
+                //create writer from config
+                me.private.writer = createWriter(config.writer);
+            }
 
-        //save writer reference
-        me.private.writer = reader;
+        } else {
+            //create template writer
+            me.private.writer = createWriter(self.writer);
+        }
     };
 
     Class.property.reader = {
-        get: function () {
-
-        },
         set: function (reader) {
+            //assert, that reader implements IReader
+            self.assert.implements(reader, imports.IReader, 'constructor - given config.reader`$reader` does not implement `$Interface`', {
+                $reader: reader,
+                $Interface: imports.IReader
+            });
 
+            this.private.reader = reader;
         }
     };
 
     Class.property.writer = {
-        get: function () {
-
-        },
         set: function (writer) {
+            //assert, that writer implements IWriter
+            self.assert.implements(writer, imports.IWriter, 'constructor - given config.writer`$writer` does not implement `$Interface`', {
+                $writer: writer,
+                $Interface: imports.IWriter
+            });
 
+            this.private.writer = writer;
         }
     };
 
     Class.method.create = function (operation) {
         //assert, that operation is correct instance
-        self.assert.instance(operation, imports.Operation, 'create - given object `$operation` is not an `$Operation` instance', {
+        self.assert.instance(operation, imports.operation.Create, 'create - given object `$operation` is not an `$Operation` instance', {
             $operation: operation,
-            $Operation: imports.Operation
-        });
-
-        //assert, that operation has correct type
-        self.assert.equals(operation.type, imports.OperationsTypes.Create, 'create - given operation type `$type` is not a type `$wanted`', {
-            $type: imports.OperationsTypes.keyOf(operation.type),
-            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.Create)
+            $Operation: imports.operation.Create
         });
     };
 
     Class.method.createAll = function (operation) {
-        //assert, that operation is correct instance
-        self.assert.instance(operation, imports.Operation, 'createAll - given object `$operation` is not an `$Operation` instance', {
-            $operation: operation,
-            $Operation: imports.Operation
-        });
-
-        //assert, that operation has correct type
-        self.assert.equals(operation.type, imports.OperationsTypes.CreateAll, 'createAll - given operation type `$type` is not a type `$wanted`', {
-            $type: imports.OperationsTypes.keyOf(operation.type),
-            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.CreateAll)
-        });
     };
 
     Class.method.read = function (operation) {
         //assert, that operation is correct instance
-        self.assert.instance(operation, imports.Operation, 'read - given object `$operation` is not an `$Operation` instance', {
+        self.assert.instance(operation, imports.operation.Read, 'read - given object `$operation` is not an `$Operation` instance', {
             $operation: operation,
-            $Operation: imports.Operation
-        });
-
-        //assert, that operation has correct type
-        self.assert.equals(operation.type, imports.OperationsTypes.Read, 'read - given operation type `$type` is not a type `$wanted`', {
-            $type: imports.OperationsTypes.keyOf(operation.type),
-            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.Read)
+            $Operation: imports.operation.Read
         });
     };
 
     Class.method.getCount = function (operation) {
-        //assert, that operation is correct instance
-        self.assert.instance(operation, imports.Operation, 'getCount - given object `$operation` is not an `$Operation` instance', {
-            $operation: operation,
-            $Operation: imports.Operation
-        });
-
-        //assert, that operation has correct type
-        self.assert.equals(operation.type, imports.OperationsTypes.GetCount, 'getCount - given operation type `$type` is not a type `$wanted`', {
-            $type: imports.OperationsTypes.keyOf(operation.type),
-            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.GetCount)
-        });
     };
 
     Class.method.readAll = function (operation) {
-        //assert, that operation is correct instance
-        self.assert.instance(operation, imports.Operation, 'readAll - given object `$operation` is not an `$Operation` instance', {
-            $operation: operation,
-            $Operation: imports.Operation
-        });
-
-        //assert, that operation has correct type
-        self.assert.equals(operation.type, imports.OperationsTypes.ReadAll, 'readAll - given operation type `$type` is not a type `$wanted`', {
-            $type: imports.OperationsTypes.keyOf(operation.type),
-            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.ReadAll)
-        });
     };
 
     Class.method.update = function (operation) {
         //assert, that operation is correct instance
-        self.assert.instance(operation, imports.Operation, 'update - given object `$operation` is not an `$Operation` instance', {
+        self.assert.instance(operation, imports.operation.Update, 'update - given object `$operation` is not an `$Operation` instance', {
             $operation: operation,
-            $Operation: imports.Operation
-        });
-
-        //assert, that operation has correct type
-        self.assert.equals(operation.type, imports.OperationsTypes.Update, 'update - given operation type `$type` is not a type `$wanted`', {
-            $type: imports.OperationsTypes.keyOf(operation.type),
-            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.Update)
+            $Operation: imports.operation.Update
         });
     };
 
     Class.method.updateAll = function (operation) {
-        //assert, that operation is correct instance
-        self.assert.instance(operation, imports.Operation, 'updateAll - given object `$operation` is not an `$Operation` instance', {
-            $operation: operation,
-            $Operation: imports.Operation
-        });
-
-        //assert, that operation has correct type
-        self.assert.equals(operation.type, imports.OperationsTypes.UpdateAll, 'updateAll - given operation type `$type` is not a type `$wanted`', {
-            $type: imports.OperationsTypes.keyOf(operation.type),
-            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.UpdateAll)
-        });
     };
 
     Class.method.delete = function (operation) {
         //assert, that operation is correct instance
-        self.assert.instance(operation, imports.Operation, 'delete - given object `$operation` is not an `$Operation` instance', {
+        self.assert.instance(operation, imports.operation.Delete, 'delete - given object `$operation` is not an `$Operation` instance', {
             $operation: operation,
-            $Operation: imports.Operation
-        });
-
-        //assert, that operation has correct type
-        self.assert.equals(operation.type, imports.OperationsTypes.Delete, 'delete - given operation type `$type` is not a type `$wanted`', {
-            $type: imports.OperationsTypes.keyOf(operation.type),
-            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.Delete)
+            $Operation: imports.operation.Delete
         });
     };
 
     Class.method.deleteAll = function (operation) {
-        //assert, that operation is correct instance
-        self.assert.instance(operation, imports.Operation, 'deleteAll - given object `$operation` is not an `$Operation` instance', {
-            $operation: operation,
-            $Operation: imports.Operation
-        });
-
-        //assert, that operation has correct type
-        self.assert.equals(operation.type, imports.OperationsTypes.DeleteAll, 'deleteAll - given operation type `$type` is not a type `$wanted`', {
-            $type: imports.OperationsTypes.keyOf(operation.type),
-            $wanted: imports.OperationsTypes.keyOf(imports.OperationsTypes.DeleteAll)
-        });
     };
 
     var createReader = function (config) {
@@ -271,7 +207,7 @@ xs.define(xs.Class, 'ns.proxy.Proxy', function (self, imports) {
         });
 
         //get Reader contract
-        var Reader = xs.ContractsManager.get(Class.descriptor.resolveName(config.type));
+        var Reader = xs.ContractsManager.get(self.descriptor.resolveName(config.type));
 
         //assert that Reader is class
         self.assert.Class(Reader, 'createReader - given reader type `$Reader` is not a class', {
@@ -298,7 +234,7 @@ xs.define(xs.Class, 'ns.proxy.Proxy', function (self, imports) {
         });
 
         //get Writer contract
-        var Writer = xs.ContractsManager.get(Class.descriptor.resolveName(config.type));
+        var Writer = xs.ContractsManager.get(self.descriptor.resolveName(config.type));
 
         //assert that Writer is class
         self.assert.Class(Writer, 'createWriter - given writer type `$Writer` is not a class', {

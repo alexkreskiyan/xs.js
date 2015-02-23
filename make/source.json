@@ -153,8 +153,28 @@
                     }
                 },
                 "operation": {
-                    "Types": {
-                        "contract": "enum"
+                    "Create": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "Delete": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "IOperation": {
+                        "contract": "interface"
+                    },
+                    "Operation": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "Read": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "Update": {
+                        "contract": "class",
+                        "test": false
                     }
                 },
                 "proxy": {
@@ -207,10 +227,6 @@
                 },
                 "Model": {
                     "contract": "class"
-                },
-                "Operation": {
-                    "contract": "class",
-                    "test": false
                 }
             },
             "dom": {
