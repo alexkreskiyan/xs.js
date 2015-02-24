@@ -1,125 +1,50 @@
 {
     "core": {
-        "xs.lang.Type": {
-            "test": true
-        },
-        "xs.core.Collection": {
-            "test": true
-        },
-        "xs.log.Router": {
-            "test": true
-        },
-        "xs.log.Logger": {
-            "test": true
-        },
-        "xs.core.Asserter": {
-            "test": true
-        },
-        "xs.lang.Object": {
-            "test": true
-        },
-        "xs.lang.Array": {
-            "test": true
-        },
-        "xs.lang.List": {
-            "test": true
-        },
-        "xs.lang.Attribute": {
-            "test": true
-        },
-        "xs.lang.Function": {
-            "test": true
-        },
-        "xs.lang.String": {
-            "test": true
-        },
-        "xs.core.ContractsManager": {
-            "test": true
-        },
+        "xs.lang.Type": {},
+        "xs.core.Collection": {},
+        "xs.log.Router": {},
+        "xs.log.Logger": {},
+        "xs.core.Asserter": {},
+        "xs.lang.Object": {},
+        "xs.lang.Array": {},
+        "xs.lang.List": {},
+        "xs.lang.Attribute": {},
+        "xs.lang.Function": {},
+        "xs.lang.String": {},
+        "xs.core.ContractsManager": {},
         "xs.core.DependenciesManager": {
             "test": false
         },
-        "xs.core.Loader": {
-            "test": true
-        },
+        "xs.core.Loader": {},
         "xs.core.ProcessorsStack": {
             "test": false
         },
-        "xs.class.Class": {
-            "test": true
-        },
-        "xs.class.preprocessors.namespace": {
-            "test": true
-        },
-        "xs.class.preprocessors.abstract": {
-            "test": true
-        },
-        "xs.class.preprocessors.prepareClass": {
-            "test": true
-        },
-        "xs.class.preprocessors.imports": {
-            "test": true
-        },
-        "xs.class.preprocessors.processExtends": {
-            "test": true
-        },
-        "xs.class.preprocessors.inheritElements": {
-            "test": true
-        },
-        "xs.class.preprocessors.processMixins": {
-            "test": true
-        },
-        "xs.class.preprocessors.constructor": {
-            "test": true
-        },
-        "xs.class.preprocessors.addOwnElements": {
-            "test": true
-        },
-        "xs.class.preprocessors.processImplements": {
-            "test": true
-        },
-        "xs.class.preprocessors.defineElements": {
-            "test": true
-        },
-        "xs.class.postprocessors.logger": {
-            "test": true
-        },
-        "xs.class.postprocessors.asserter": {
-            "test": true
-        },
-        "xs.class.Base": {
-            "test": true
-        },
-        "xs.enum.Enum": {
-            "test": true
-        },
-        "xs.enum.preprocessors.namespace": {
-            "test": true
-        },
-        "xs.enum.preprocessors.values": {
-            "test": true
-        },
-        "xs.enum.preprocessors.methods": {
-            "test": true
-        },
-        "xs.interface.Interface": {
-            "test": true
-        },
-        "xs.interface.preprocessors.namespace": {
-            "test": true
-        },
-        "xs.interface.preprocessors.prepareInterface": {
-            "test": true
-        },
-        "xs.interface.preprocessors.imports": {
-            "test": true
-        },
-        "xs.interface.preprocessors.processExtends": {
-            "test": true
-        },
-        "xs.interface.preprocessors.prepareElements": {
-            "test": true
-        },
+        "xs.core.Lazy": {},
+        "xs.class.Class": {},
+        "xs.class.preprocessors.namespace": {},
+        "xs.class.preprocessors.abstract": {},
+        "xs.class.preprocessors.prepareClass": {},
+        "xs.class.preprocessors.imports": {},
+        "xs.class.preprocessors.processExtends": {},
+        "xs.class.preprocessors.inheritElements": {},
+        "xs.class.preprocessors.processMixins": {},
+        "xs.class.preprocessors.constructor": {},
+        "xs.class.preprocessors.addOwnElements": {},
+        "xs.class.preprocessors.processImplements": {},
+        "xs.class.preprocessors.defineElements": {},
+        "xs.class.postprocessors.logger": {},
+        "xs.class.postprocessors.asserter": {},
+        "xs.class.Base": {},
+        "xs.enum.Enum": {},
+        "xs.enum.preprocessors.namespace": {},
+        "xs.enum.preprocessors.values": {},
+        "xs.enum.preprocessors.methods": {},
+        "xs.interface.Interface": {},
+        "xs.interface.preprocessors.namespace": {},
+        "xs.interface.preprocessors.prepareInterface": {},
+        "xs.interface.preprocessors.imports": {},
+        "xs.interface.preprocessors.processExtends": {},
+        "xs.interface.preprocessors.prepareElements": {},
         "xs.interface.Base": {
             "test": false
         },

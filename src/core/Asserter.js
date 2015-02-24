@@ -15,9 +15,9 @@
     //framework shorthand
     var xs = root[ns];
 
-    //define xs.assert
-    if (!xs.assert) {
-        xs.assert = {};
+    //define xs.core
+    if (!xs.core) {
+        xs.core = {};
     }
 
     var slice = Function.prototype.call.bind(Array.prototype.slice);
@@ -64,12 +64,12 @@
         var me = this;
 
         //assert, that logger is an instance of xs.log.Logger
-        assert.ok(logger instanceof xs.log.Logger, 'Given logger `$logger` is not an instance of xs.log.Logger', {
+        assert.ok(logger instanceof xs.log.Logger, 'constructor - given logger `$logger` is not an instance of xs.log.Logger', {
             $logger: logger
         });
 
         //assert, that  Exception is function
-        assert.fn(Exception, 'Given Exception class `$Exception` is not a function', {
+        assert.fn(Exception, 'constructor - given Exception class `$Exception` is not a function', {
             $Exception: Exception
         });
 
