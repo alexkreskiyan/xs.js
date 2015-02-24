@@ -33,7 +33,11 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
     Class.imports = [
         {IAttribute: 'ns.attribute.IAttribute'},
         {IProxy: 'ns.proxy.IProxy'},
-        'ns.model.Event'
+        'ns.model.Event',
+        {'operation.Create': 'ns.operation.Create'},
+        {'operation.Read': 'ns.operation.Read'},
+        {'operation.Update': 'ns.operation.Update'},
+        {'operation.Delete': 'ns.operation.Delete'}
     ];
 
     Class.mixins.observable = 'xs.event.Observable';
@@ -118,7 +122,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         destroy: {
             type: 'xs.event.Event'
         }
-    };
+    };//TODO add operation events: create, create:before, etc
 
     Class.static.property.primaryAttributes = {
         get: function () {
@@ -127,6 +131,12 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
                 return me.private.primaryAttributes;
             }
 
+            //assert, that attributes list is a xs.core.Collection
+            self.assert.instance(me.attributes, xs.core.Collection, 'primaryAttributes - model `$Model` attributes list `$attributes` is not an xs.core.Collection instance', {
+                $Model: me,
+                $attributes: me.attributes
+            });
+
             //define attributes collection
             var attributes = me.private.primaryAttributes = new xs.core.Collection();
 
@@ -134,7 +144,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             var items = [];
 
             //fill items
-            (new xs.core.Collection(this.attributes)).find(function (config, name) {
+            me.attributes.find(function (config, name) {
                 //primary config property marks property as primary
                 if (config.primary === true) {
                     items.push({
@@ -142,7 +152,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
                         value: name
                     });
                 }
-            });
+            }, xs.core.Collection.All);
 
             //at least one primary attribute must exist
             self.assert.ok(items.length, 'primaryAttributes - model `$Model` has no primary attributes', {
@@ -210,19 +220,67 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
     };
 
     Class.method.create = function () {
+        var me = this;
 
+        //get proxy reference
+        var proxy = me.private.proxy;
+
+        //create operation
+        var operation = new imports.operation.Create(me);
+
+        //run operation with proxy
+        proxy.create(operation);
+
+        //return operation (to use it like a promise)
+        return operation;
     };
 
     Class.method.read = function () {
+        var me = this;
 
+        //get proxy reference
+        var proxy = me.private.proxy;
+
+        //create operation
+        var operation = new imports.operation.Read(me);
+
+        //run operation with proxy
+        proxy.read(operation);
+
+        //return operation (to use it like a promise)
+        return operation;
     };
 
     Class.method.update = function () {
+        var me = this;
 
+        //get proxy reference
+        var proxy = me.private.proxy;
+
+        //create operation
+        var operation = new imports.operation.Update(me);
+
+        //run operation with proxy
+        proxy.update(operation);
+
+        //return operation (to use it like a promise)
+        return operation;
     };
 
     Class.method.delete = function () {
+        var me = this;
 
+        //get proxy reference
+        var proxy = me.private.proxy;
+
+        //create operation
+        var operation = new imports.operation.Delete(me);
+
+        //run operation with proxy
+        proxy.delete(operation);
+
+        //return operation (to use it like a promise)
+        return operation;
     };
 
     /**
@@ -244,6 +302,9 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
         //destroy data container
         me.private.data.destroy();
+
+        //remove proxy reference
+        delete me.private.proxy;
 
         //call parent destroy
         self.parent.prototype.destroy.call(me);
@@ -268,8 +329,8 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             return Class.private.Data;
         }
 
-        //assert that attributes are an object
-        self.assert.object(Class.attributes, 'getData - given class `$Class` attributes `$attributes` are not an object', {
+        //assert that attributes are an xs.core.Collection instance
+        self.assert.instance(Class.attributes, xs.core.Collection, 'getData - given class `$Class` attributes `$attributes` are not an instance of xs.core.Collection', {
             $attributes: Class.attributes,
             $Class: Class
         });
@@ -277,10 +338,11 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         //define attributes type
         var Data = Class.private.Data = getDataSample();
 
-        Data.attributes = new xs.core.Collection();
+        //create Model private attributes' collection
+        Class.private.attributes = new xs.core.Collection();
 
         //define attributes
-        (new xs.core.Collection(Class.attributes)).each(function (config, name) {
+        Class.attributes.each(function (config, name) {
             defineAttribute(Class, Data, name, config);
         });
 
@@ -338,7 +400,9 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             $Interface: imports.IProxy
         });
 
-        return new Proxy(config);
+        var proxy = Class.private.proxy = new Proxy(config);
+
+        return proxy;
     };
 
     /**
@@ -357,7 +421,9 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             var me = this;
 
             //init private storage
-            me.private = {};
+            me.private = {
+                model: model
+            };
 
             if (!data) {
 
@@ -365,7 +431,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             }
 
             //set attributes
-            me.constructor.attributes.each(function (attribute, name) {
+            model.self.private.attributes.each(function (attribute, name) {
                 var attr = me.private[name] = new Attribute(model, attribute, name);
                 attr.private.value = attribute.set(data[name]);
             });
@@ -388,10 +454,14 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      */
     var destroyData = function () {
         var me = this;
+
         //destroy attributes
-        me.constructor.attributes.each(function (attribute, name) {
+        me.private.model.self.private.attributes.each(function (attribute, name) {
             this[name].destroy();
         }, 0, me.private);
+
+        //remove model reference
+        delete me.private.model;
 
         //remove private reference
         delete me.private;
@@ -451,7 +521,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
         //add attribute
         xs.property.define(Data.prototype, name, descriptor);
-        Data.attributes.add(name, attribute);
+        Class.private.attributes.add(name, attribute);
     };
 
     /**
@@ -508,9 +578,16 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      * @method set
      *
      * @param {*} value
+     * @param {Boolean} [silent] Is used, when no events must be fired
      */
-    Attribute.prototype.set = function (value) {
+    Attribute.prototype.set = function (value, silent) {
         var me = this;
+
+        if (silent) {
+            me.private.value = me.private.attribute.set(value);
+
+            return;
+        }
 
         //prepare event data
         var data = {

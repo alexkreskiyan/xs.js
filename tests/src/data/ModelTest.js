@@ -15,13 +15,13 @@ module('xs.data.Model', function () {
     test('constructor', function () {
         var me = this;
 
-        me.Class = xs.Class(function () {
+        window.Model = me.Class = xs.Class(function () {
 
             var Class = this;
 
             Class.extends = 'xs.data.Model';
 
-            Class.constant.attributes = {
+            Class.constant.attributes = new xs.core.Collection({
                 id: {
                     type: 'xs.data.attribute.Number',
                     primary: true
@@ -33,7 +33,7 @@ module('xs.data.Model', function () {
                     type: 'xs.data.attribute.Number',
                     default: 0
                 }
-            };
+            });
 
             Class.constant.proxy = {
                 type: 'xs.data.proxy.storage.Local',
@@ -89,7 +89,7 @@ module('xs.data.Model', function () {
 
             Class.extends = 'xs.data.Model';
 
-            Class.constant.attributes = {
+            Class.constant.attributes = new xs.core.Collection({
                 id: {
                     type: 'xs.data.attribute.Number',
                     primary: true
@@ -101,7 +101,7 @@ module('xs.data.Model', function () {
                     type: 'xs.data.attribute.Number',
                     default: 0
                 }
-            };
+            });
 
             Class.constant.proxy = {
                 type: 'xs.data.proxy.storage.Local',
@@ -140,7 +140,7 @@ module('xs.data.Model', function () {
 
             Class.extends = 'xs.data.Model';
 
-            Class.constant.attributes = {
+            Class.constant.attributes = new xs.core.Collection({
                 id: {
                     type: 'xs.data.attribute.Number',
                     primary: true
@@ -152,7 +152,7 @@ module('xs.data.Model', function () {
                     type: 'xs.data.attribute.Number',
                     default: 0
                 }
-            };
+            });
 
             Class.constant.proxy = {
                 type: 'xs.data.proxy.storage.Local',
@@ -230,7 +230,7 @@ module('xs.data.Model', function () {
 
             Class.extends = 'xs.data.Model';
 
-            Class.constant.attributes = {
+            Class.constant.attributes = new xs.core.Collection({
                 id: {
                     type: 'xs.data.attribute.Number',
                     primary: true
@@ -242,7 +242,7 @@ module('xs.data.Model', function () {
                     type: 'xs.data.attribute.Number',
                     default: 0
                 }
-            };
+            });
 
             Class.constant.proxy = {
                 type: 'xs.data.proxy.storage.Local',
