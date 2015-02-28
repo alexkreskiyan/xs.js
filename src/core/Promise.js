@@ -77,7 +77,7 @@
         me.private = {};
 
         //initially - Pending state
-        me.private.state = xs.core.Promise.Pending;
+        me.private.state = me.constructor.Pending;
 
         //create handlers collection
         me.private.handlers = new xs.core.Collection();
@@ -105,7 +105,7 @@
      *
      * @readonly
      *
-     * @type {String}
+     * @type {Number}
      */
     xs.constant(xs.core.Promise, 'Resolved', 1);
 
@@ -118,7 +118,7 @@
      *
      * @readonly
      *
-     * @type {String}
+     * @type {Number}
      */
     xs.constant(xs.core.Promise, 'Rejected', 2);
 
@@ -152,6 +152,8 @@
      * @return {xs.core.Promise} aggregate promise
      */
     xs.core.Promise.some = function (promises, count) {
+        var me = this;
+
         assert.array(promises, 'some - given `$promises` are not array', {
             $promises: promises
         });
@@ -176,14 +178,14 @@
         });
 
         //create aggregate promise
-        var aggregate = new xs.core.Promise();
+        var aggregate = new this();
 
         //use promises as collection
         (new xs.core.Collection(promises)).each(function (promise) {
-            assert.instance(promise, xs.core.Promise, 'some - given not promise');
+            assert.instance(promise, me, 'some - given not promise');
             promise.then(function () {
                 //if count is 0 and aggregate is still pending - resolve it
-                if (--count === 0 && aggregate.state === xs.core.Promise.Pending) {
+                if (--count === 0 && aggregate.state === me.Pending) {
                     aggregate.resolve();
                 }
             }, function (reason) {
@@ -208,6 +210,22 @@
     }));
 
     /**
+     * Property, that returns whether object is destroyed
+     *
+     * @readonly
+     *
+     * @property isDestroyed
+     *
+     * @type {Boolean}
+     */
+    xs.property.define(xs.core.Promise.prototype, 'isDestroyed', xs.property.prepare('isDestroyed', {
+        get: function () {
+            return !this.hasOwnProperty('private');
+        },
+        set: xs.emptyFn
+    }));
+
+    /**
      * Promise resolve method. Resolves promise, running consequently it's handlers
      *
      * @method resolve
@@ -217,10 +235,14 @@
     xs.core.Promise.prototype.resolve = function (data) {
         var me = this;
 
-        assert.equal(me.private.state, xs.core.Promise.Pending, 'resolve - promise is already resolved');
+        //assert, that promise is not destroyed
+        assert.not(me.isDestroyed, 'resove - object is destroyed');
+
+        //assert, that promise is pending
+        assert.equal(me.private.state, me.constructor.Pending, 'resolve - promise is already resolved');
 
         //set new state
-        me.private.state = xs.core.Promise.Resolved;
+        me.private.state = me.constructor.Resolved;
 
         //process promise on next tick
         xs.nextTick(function () {
@@ -239,13 +261,13 @@
         var me = this;
 
         //assert, that promise is not destroyed yet
-        assert.not(me.private.isDestroyed, 'reject - object is destroyed');
+        assert.not(me.isDestroyed, 'reject - object is destroyed');
 
         //assert, that promise is pending
-        assert.equal(me.private.state, xs.core.Promise.Pending, 'reject - promise is already rejected');
+        assert.equal(me.private.state, me.constructor.Pending, 'reject - promise is already rejected');
 
         //set new state
-        me.private.state = xs.core.Promise.Rejected;
+        me.private.state = me.constructor.Rejected;
 
         //process promise on next tick
         xs.nextTick(function () {
@@ -265,10 +287,12 @@
         var me = this;
 
         //assert, that promise is not destroyed yet
-        assert.not(me.private.isDestroyed, 'update - object is destroyed');
+        assert.not(me.isDestroyed, 'update - object is destroyed');
 
         //assert, that promise is pending
-        assert.equal(me.private.state, xs.core.Promise.Pending, 'update - promise is already ' + me.private.state);
+        assert.equal(me.private.state, me.constructor.Pending, 'update - promise is already ' + me.private.state);
+
+        var constructor = me.constructor;
 
         //process promise on next tick
         xs.nextTick(function () {
@@ -276,7 +300,7 @@
             //process promise handlers
             me.private.handlers.each(function (item) {
                 if (item.update) {
-                    handleItem(item, 'update', state);
+                    handleItem.call(constructor, item, 'update', state);
                 }
             });
         });
@@ -301,7 +325,7 @@
         var me = this;
 
         //assert, that promise is not destroyed yet
-        assert.not(me.private.isDestroyed, 'then - object is destroyed');
+        assert.not(me.isDestroyed, 'then - object is destroyed');
 
         var item = createItem(handleResolved, handleRejected, handleProgress);
 
@@ -314,20 +338,21 @@
 
 
         //create new promise as item.promise
-        item.promise = new xs.core.Promise();
+        item.promise = new me.constructor();
 
         //if promise is pending  - add item and return new promise
-        if (me.private.state === xs.core.Promise.Pending) {
+        if (me.private.state === me.constructor.Pending) {
             //add item to handlers
             me.private.handlers.add(item);
 
             return item.promise;
         }
 
+        var constructor = me.constructor;
 
         //resolve item on next tick
         xs.nextTick(function () {
-            handleItem(item, me.private.state === xs.core.Promise.Resolved ? 'resolve' : 'reject', me.private.data);
+            handleItem.call(constructor, item, me.private.state === me.constructor.Resolved ? 'resolve' : 'reject', me.private.data);
         });
 
         //if promise is pending - add item to handlers
@@ -404,10 +429,12 @@
         //set promise data
         me.private.data = data;
 
+        var constructor = me.constructor;
+
         //process promise handlers
         me.private.handlers.each(function (item) {
             if (item[action]) {
-                handleItem(item, action, data);
+                handleItem.call(constructor, item, action, data);
             }
         });
 
@@ -441,7 +468,7 @@
             var result = handler(data);
 
             //resolve item.promise with fetched result
-            resolveValue(promise, action, result);
+            resolveValue.call(this, promise, action, result);
 
 
             //reject if error happened
@@ -467,7 +494,7 @@
         assert.ok(promise !== value, 'resolveValue - value can not refer to the promise itself', {}, TypeError);
 
         //handle value, that is promise
-        if (value instanceof xs.core.Promise) {
+        if (value instanceof this) {
             value.then(function (data) {
                 promise.resolve(data);
             }, function (reason) {
