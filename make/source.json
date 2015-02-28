@@ -11,15 +11,16 @@
         "xs.lang.Attribute": {},
         "xs.lang.Function": {},
         "xs.lang.String": {},
+        "xs.core.Loader": {},
         "xs.core.ContractsManager": {},
         "xs.core.DependenciesManager": {
             "test": false
         },
-        "xs.core.Loader": {},
         "xs.core.ProcessorsStack": {
             "test": false
         },
         "xs.core.Lazy": {},
+        "xs.core.Promise": {},
         "xs.class.Class": {},
         "xs.class.preprocessors.namespace": {},
         "xs.class.preprocessors.abstract": {},
