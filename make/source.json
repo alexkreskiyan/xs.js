@@ -11,11 +11,12 @@
         "xs.lang.Attribute": {},
         "xs.lang.Function": {},
         "xs.lang.String": {},
+        "xs.core.Promise": {},
+        "xs.core.Loader": {},
         "xs.core.ContractsManager": {},
         "xs.core.DependenciesManager": {
             "test": false
         },
-        "xs.core.Loader": {},
         "xs.core.ProcessorsStack": {
             "test": false
         },
@@ -234,9 +235,6 @@
                 }
             },
             "ux": {
-                "Promise": {
-                    "contract": "class"
-                },
                 "View": {
                     "contract": "class"
                 }
