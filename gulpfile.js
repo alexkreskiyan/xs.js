@@ -2,6 +2,9 @@
 
 var gulp = require('gulp');
 
+//source task. concat core only
+gulp.task('source', require('./make/task/source'));
+
 //debug task. concat only
 gulp.task('debug', require('./make/task/debug'));
 
@@ -16,6 +19,7 @@ gulp.task('release', require('./make/task/release'));
 
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', [
+    'source',
     'debug',
     'preview',
     'candidate',
