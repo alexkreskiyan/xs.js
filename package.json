@@ -8,9 +8,12 @@
         "gulp": "latest",
         "gulp-compass": "latest",
         "gulp-concat": "latest",
+        "gulp-indent": "latest",
+        "gulp-merge": "latest",
         "gulp-minify-css": "latest",
         "gulp-uglify": "latest",
         "gulp-watch": "latest",
+        "gulp-wrap": "latest",
         "gulp.spritesmith": "latest",
         "qunitjs": "latest",
         "socket.io": "latest"
