@@ -235,6 +235,9 @@
                 }
             },
             "ux": {
+                "Promise": {
+                    "contract": "class"
+                },
                 "View": {
                     "contract": "class"
                 }
