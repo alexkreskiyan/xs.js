@@ -1,0 +1,10 @@
+1. Stream
+1.1 Common
+Stream is a stream of events, produced by some event emitter
+Streams can be transformed and combined
+Streams can be finite and infinite
+Streams are destroyable and endable (destroy leads to stream end, but not visa versa)
+Each event transformation/combination produces a new event stream
+1.2 Event emitters
+
+2.
