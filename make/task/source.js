@@ -8,12 +8,9 @@ module.exports = function () {
     var indent = require('gulp-indent');
     var wrap = require('gulp-wrap');
     var concat = require('gulp-concat');
-    var merge = require('gulp-merge');
-    var uglify = require('gulp-uglify');
-    var pure = require('../pureFunctions');
 
     //remove old files
-    del(['build/release/*.js']);
+    del(['build/source/*.js']);
 
 
     //get core stream
@@ -30,20 +27,9 @@ module.exports = function () {
     }));
 
 
-    //get modules stream
-    var modules = gulp.src(sources.modules);
-
-    //wrap all sources in modules template
-    modules = modules.pipe(wrap({
-        src: 'make/template/module'
-    }));
-
-
     //get build stream
-    var build = merge(core, modules);
-
     //concat all files
-    build = build.pipe(concat({
+    var build = core.pipe(concat({
         path: 'xs.js'
     }, {
         newLine: '\n\n\n'
@@ -59,20 +45,7 @@ module.exports = function () {
         src: 'make/template/framework'
     }));
 
-    //uglify
-    build = build.pipe(uglify({
-        mangle: true,
-        compress: {
-            pure_funcs: Array.prototype.concat.apply([], [
-                pure.log.internal,
-                pure.log.contract,
-                pure.assert.internal,
-                pure.assert.contract
-            ])
-        }
-    }));
-
 
     //save build
-    build.pipe(gulp.dest('build/release'));
+    build.pipe(gulp.dest('build/source'));
 };
