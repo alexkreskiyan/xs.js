@@ -1,569 +1,552 @@
-/*
- This file is core of xs.js
+'use strict';
 
- Copyright (c) 2013-2014, Annium Inc
+var log = new xs.log.Logger('xs.core.Promise');
 
- Contact: http://annium.com/contact
+var assert = new xs.core.Asserter(log, PromiseError);
 
- License: http://annium.com/contact
+//define xs.core
+if (!xs.core) {
+    xs.core = {};
+}
 
+/**
+ * Implementation of Futures & Promises pattern for xs.js.
+ *
+ * Usage example:
+ *
+ *     var getData = function() {
+ *         var promise = new xs.core.Promise();
+ *         setTimeout(function() {
+ *             promise.resolve({x: 1});
+ *         }, 500);
+ *         return promise;
+ *     };
+ *
+ *     getData().then(function(data) {
+ *         console.log('data fetched', data);
+ *
+ *         //transform data
+ *         data.message = data.x;
+ *         data.x = null;
+ *
+ *         return data;
+ *     }).then(function(data) {
+ *         console.log('transformed data:', data);
+ *         console.log('load update');
+ *         //perform new async stage
+ *         return getData().then(function(update) {
+ *             console.log('update loaded');
+ *             xs.extend(data, update);
+ *
+ *             return data;
+ *         });
+ *     }).then(function(data) {
+ *         //log result
+ *         console.log('Processing finished. Data:', data);
+ *     });
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @class xs.core.Promise
  */
-(function (root, ns) {
 
-    'use strict';
+/**
+ * Promise constructor
+ *
+ * @constructor
+ */
+xs.core.Promise = function () {
+    var me = this;
 
-    //framework shorthand
-    var xs = root[ns];
+    //init private storage
+    me.private = {};
 
-    var log = new xs.log.Logger('xs.core.Promise');
+    //initially - Pending state
+    me.private.state = me.constructor.Pending;
 
-    var assert = new xs.core.Asserter(log, PromiseError);
+    //create handlers collection
+    me.private.handlers = new xs.core.Collection();
+};
 
-    //define xs.core
-    if (!xs.core) {
-        xs.core = {};
+/**
+ * Promise `pending` state constant
+ *
+ * @static
+ *
+ * @property Pending
+ *
+ * @readonly
+ *
+ * @type {String}
+ */
+xs.constant(xs.core.Promise, 'Pending', 0);
+
+/**
+ * Promise `resolved` state constant
+ *
+ * @static
+ *
+ * @property Resolved
+ *
+ * @readonly
+ *
+ * @type {Number}
+ */
+xs.constant(xs.core.Promise, 'Resolved', 1);
+
+/**
+ * Promise `rejected` state constant
+ *
+ * @static
+ *
+ * @property Rejected
+ *
+ * @readonly
+ *
+ * @type {Number}
+ */
+xs.constant(xs.core.Promise, 'Rejected', 2);
+
+/**
+ * Static async control operating method. Creates aggregate promise, that is resolved when all
+ * given promises are resolved. If any promise among given is rejected, aggregate promise is rejected with that reason
+ *
+ * @method all
+ *
+ * @param {xs.core.Promise[]} promises array of promises
+ *
+ * @return {xs.core.Promise} aggregate promise
+ */
+xs.core.Promise.all = function (promises) {
+    assert.array(promises, 'all - given `$promises` are not array', {
+        $promises: promises
+    });
+
+    return this.some(promises, promises.length);
+};
+
+/**
+ * Static async control operating method. Creates aggregate promise, that is resolved when some (count is specified by second param)
+ * of given promises are resolved. If any promise among given is rejected, aggregate promise is rejected with that reason
+ *
+ * @method some
+ *
+ * @param {xs.core.Promise[]} promises array of promises
+ * @param {Number} count count of promises, needed for aggregate promise to resolve
+ *
+ * @return {xs.core.Promise} aggregate promise
+ */
+xs.core.Promise.some = function (promises, count) {
+    var me = this;
+
+    assert.array(promises, 'some - given `$promises` are not array', {
+        $promises: promises
+    });
+
+    assert.ok(promises.length, 'some - given `$promises` array is empty', {
+        $promises: promises
+    });
+
+    //assert that count is number
+    if (arguments.length === 1) {
+        count = 1;
+    } else {
+        assert.number(count, 'some - given `$count` is not a number', {
+            $count: count
+        });
     }
 
-    /**
-     * Implementation of Futures & Promises pattern for xs.js.
-     *
-     * Usage example:
-     *
-     *     var getData = function() {
-     *         var promise = new xs.core.Promise();
-     *         setTimeout(function() {
-     *             promise.resolve({x: 1});
-     *         }, 500);
-     *         return promise;
-     *     };
-     *
-     *     getData().then(function(data) {
-     *         console.log('data fetched', data);
-     *
-     *         //transform data
-     *         data.message = data.x;
-     *         data.x = null;
-     *
-     *         return data;
-     *     }).then(function(data) {
-     *         console.log('transformed data:', data);
-     *         console.log('load update');
-     *         //perform new async stage
-     *         return getData().then(function(update) {
-     *             console.log('update loaded');
-     *             xs.extend(data, update);
-     *
-     *             return data;
-     *         });
-     *     }).then(function(data) {
-     *         //log result
-     *         console.log('Processing finished. Data:', data);
-     *     });
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class xs.core.Promise
-     */
+    assert.ok(0 < count && count <= promises.length, 'some - given count `$count` is out of bounds [$min, $max]', {
+        $count: count,
+        $min: 0,
+        $max: promises.length
+    });
 
-    /**
-     * Promise constructor
-     *
-     * @constructor
-     */
-    xs.core.Promise = function () {
-        var me = this;
+    //create aggregate promise
+    var aggregate = new this();
 
-        //init private storage
-        me.private = {};
-
-        //initially - Pending state
-        me.private.state = me.constructor.Pending;
-
-        //create handlers collection
-        me.private.handlers = new xs.core.Collection();
-    };
-
-    /**
-     * Promise `pending` state constant
-     *
-     * @static
-     *
-     * @property Pending
-     *
-     * @readonly
-     *
-     * @type {String}
-     */
-    xs.constant(xs.core.Promise, 'Pending', 0);
-
-    /**
-     * Promise `resolved` state constant
-     *
-     * @static
-     *
-     * @property Resolved
-     *
-     * @readonly
-     *
-     * @type {Number}
-     */
-    xs.constant(xs.core.Promise, 'Resolved', 1);
-
-    /**
-     * Promise `rejected` state constant
-     *
-     * @static
-     *
-     * @property Rejected
-     *
-     * @readonly
-     *
-     * @type {Number}
-     */
-    xs.constant(xs.core.Promise, 'Rejected', 2);
-
-    /**
-     * Static async control operating method. Creates aggregate promise, that is resolved when all
-     * given promises are resolved. If any promise among given is rejected, aggregate promise is rejected with that reason
-     *
-     * @method all
-     *
-     * @param {xs.core.Promise[]} promises array of promises
-     *
-     * @return {xs.core.Promise} aggregate promise
-     */
-    xs.core.Promise.all = function (promises) {
-        assert.array(promises, 'all - given `$promises` are not array', {
-            $promises: promises
+    //use promises as collection
+    (new xs.core.Collection(promises)).each(function (promise) {
+        assert.instance(promise, me, 'some - given not promise');
+        promise.then(function () {
+            //if count is 0 and aggregate is still pending - resolve it
+            if (--count === 0 && aggregate.state === me.Pending) {
+                aggregate.resolve();
+            }
+        }, function (reason) {
+            aggregate.reject(reason);
         });
+    });
 
-        return this.some(promises, promises.length);
-    };
+    return aggregate;
+};
 
-    /**
-     * Static async control operating method. Creates aggregate promise, that is resolved when some (count is specified by second param)
-     * of given promises are resolved. If any promise among given is rejected, aggregate promise is rejected with that reason
-     *
-     * @method some
-     *
-     * @param {xs.core.Promise[]} promises array of promises
-     * @param {Number} count count of promises, needed for aggregate promise to resolve
-     *
-     * @return {xs.core.Promise} aggregate promise
-     */
-    xs.core.Promise.some = function (promises, count) {
-        var me = this;
+/**
+ * Promise state. Is changed internally from {@link #Pending pending} to {@link #Resolved resolved} or {@link #Rejected rejected}
+ *
+ * @property state
+ *
+ * @readonly
+ *
+ * @type {String}
+ */
+xs.property.define(xs.core.Promise.prototype, 'state', xs.property.prepare('state', {
+    set: xs.emptyFn
+}));
 
-        assert.array(promises, 'some - given `$promises` are not array', {
-            $promises: promises
-        });
+/**
+ * Property, that returns whether object is destroyed
+ *
+ * @readonly
+ *
+ * @property isDestroyed
+ *
+ * @type {Boolean}
+ */
+xs.property.define(xs.core.Promise.prototype, 'isDestroyed', xs.property.prepare('isDestroyed', {
+    get: function () {
+        return !this.hasOwnProperty('private');
+    },
+    set: xs.emptyFn
+}));
 
-        assert.ok(promises.length, 'some - given `$promises` array is empty', {
-            $promises: promises
-        });
+/**
+ * Promise resolve method. Resolves promise, running consequently it's handlers
+ *
+ * @method resolve
+ *
+ * @param {*} data data, promise is resolved with
+ */
+xs.core.Promise.prototype.resolve = function (data) {
+    var me = this;
 
-        //assert that count is number
-        if (arguments.length === 1) {
-            count = 1;
-        } else {
-            assert.number(count, 'some - given `$count` is not a number', {
-                $count: count
-            });
-        }
+    //assert, that promise is not destroyed
+    assert.not(me.isDestroyed, 'resove - object is destroyed');
 
-        assert.ok(0 < count && count <= promises.length, 'some - given count `$count` is out of bounds [$min, $max]', {
-            $count: count,
-            $min: 0,
-            $max: promises.length
-        });
+    //assert, that promise is pending
+    assert.equal(me.private.state, me.constructor.Pending, 'resolve - promise is already resolved');
 
-        //create aggregate promise
-        var aggregate = new this();
+    //set new state
+    me.private.state = me.constructor.Resolved;
 
-        //use promises as collection
-        (new xs.core.Collection(promises)).each(function (promise) {
-            assert.instance(promise, me, 'some - given not promise');
-            promise.then(function () {
-                //if count is 0 and aggregate is still pending - resolve it
-                if (--count === 0 && aggregate.state === me.Pending) {
-                    aggregate.resolve();
-                }
-            }, function (reason) {
-                aggregate.reject(reason);
-            });
-        });
+    //process promise on next tick
+    xs.nextTick(function () {
+        processPromise.call(me, 'resolve', data);
+    });
+};
 
-        return aggregate;
-    };
+/**
+ * Promise reject method. Rejects promise, running consequently it's handlers
+ *
+ * @method reject
+ *
+ * @param {*} reason reason, for which promise is rejected
+ */
+xs.core.Promise.prototype.reject = function (reason) {
+    var me = this;
 
-    /**
-     * Promise state. Is changed internally from {@link #Pending pending} to {@link #Resolved resolved} or {@link #Rejected rejected}
-     *
-     * @property state
-     *
-     * @readonly
-     *
-     * @type {String}
-     */
-    xs.property.define(xs.core.Promise.prototype, 'state', xs.property.prepare('state', {
-        set: xs.emptyFn
-    }));
+    //assert, that promise is not destroyed yet
+    assert.not(me.isDestroyed, 'reject - object is destroyed');
 
-    /**
-     * Property, that returns whether object is destroyed
-     *
-     * @readonly
-     *
-     * @property isDestroyed
-     *
-     * @type {Boolean}
-     */
-    xs.property.define(xs.core.Promise.prototype, 'isDestroyed', xs.property.prepare('isDestroyed', {
-        get: function () {
-            return !this.hasOwnProperty('private');
-        },
-        set: xs.emptyFn
-    }));
+    //assert, that promise is pending
+    assert.equal(me.private.state, me.constructor.Pending, 'reject - promise is already rejected');
 
-    /**
-     * Promise resolve method. Resolves promise, running consequently it's handlers
-     *
-     * @method resolve
-     *
-     * @param {*} data data, promise is resolved with
-     */
-    xs.core.Promise.prototype.resolve = function (data) {
-        var me = this;
+    //set new state
+    me.private.state = me.constructor.Rejected;
 
-        //assert, that promise is not destroyed
-        assert.not(me.isDestroyed, 'resove - object is destroyed');
+    //process promise on next tick
+    xs.nextTick(function () {
+        processPromise.call(me, 'reject', reason);
+    });
+};
 
-        //assert, that promise is pending
-        assert.equal(me.private.state, me.constructor.Pending, 'resolve - promise is already resolved');
+/**
+ * Promise update method. Doesn't change promise state, only consequently runs all registered progress handlers.
+ * So, this method could be run many times before promise is resolved or rejected. After that, update method is prohibited
+ *
+ * @method update
+ *
+ * @param {*} state some value, that means updated state of pending operation, handled by promise
+ */
+xs.core.Promise.prototype.update = function (state) {
+    var me = this;
 
-        //set new state
-        me.private.state = me.constructor.Resolved;
+    //assert, that promise is not destroyed yet
+    assert.not(me.isDestroyed, 'update - object is destroyed');
 
-        //process promise on next tick
-        xs.nextTick(function () {
-            processPromise.call(me, 'resolve', data);
-        });
-    };
+    //assert, that promise is pending
+    assert.equal(me.private.state, me.constructor.Pending, 'update - promise is already ' + me.private.state);
 
-    /**
-     * Promise reject method. Rejects promise, running consequently it's handlers
-     *
-     * @method reject
-     *
-     * @param {*} reason reason, for which promise is rejected
-     */
-    xs.core.Promise.prototype.reject = function (reason) {
-        var me = this;
+    var constructor = me.constructor;
 
-        //assert, that promise is not destroyed yet
-        assert.not(me.isDestroyed, 'reject - object is destroyed');
-
-        //assert, that promise is pending
-        assert.equal(me.private.state, me.constructor.Pending, 'reject - promise is already rejected');
-
-        //set new state
-        me.private.state = me.constructor.Rejected;
-
-        //process promise on next tick
-        xs.nextTick(function () {
-            processPromise.call(me, 'reject', reason);
-        });
-    };
-
-    /**
-     * Promise update method. Doesn't change promise state, only consequently runs all registered progress handlers.
-     * So, this method could be run many times before promise is resolved or rejected. After that, update method is prohibited
-     *
-     * @method update
-     *
-     * @param {*} state some value, that means updated state of pending operation, handled by promise
-     */
-    xs.core.Promise.prototype.update = function (state) {
-        var me = this;
-
-        //assert, that promise is not destroyed yet
-        assert.not(me.isDestroyed, 'update - object is destroyed');
-
-        //assert, that promise is pending
-        assert.equal(me.private.state, me.constructor.Pending, 'update - promise is already ' + me.private.state);
-
-        var constructor = me.constructor;
-
-        //process promise on next tick
-        xs.nextTick(function () {
-
-            //process promise handlers
-            me.private.handlers.each(function (item) {
-                if (item.update) {
-                    handleItem.call(constructor, item, 'update', state);
-                }
-            });
-        });
-    };
-
-    /**
-     * Core promise method. Adds handlers for promise future state, when it will be either resolved or rejected.
-     * If no handlers given, method does nothing. If any handler given, new promise object will be returned, constructing
-     * chain of promise objects, allowing to perform stack of async operations
-     *
-     * @method then
-     *
-     * @param {Function|undefined} [handleResolved] handler, that will be called, when promise will be resolved. Undefined, if param is omitted
-     * @param {Function|undefined} [handleRejected] handler, that will be called, when promise will be rejected. Undefined, if param is omitted
-     * @param {Function|undefined} [handleProgress] handler, that will be called, when promise will change it's progress state, but not yet resolved|rejected. Undefined, if param is omitted
-     *
-     * @chainable
-     *
-     * @return {xs.core.Promise}
-     */
-    xs.core.Promise.prototype.then = function (handleResolved, handleRejected, handleProgress) {
-        var me = this;
-
-        //assert, that promise is not destroyed yet
-        assert.not(me.isDestroyed, 'then - object is destroyed');
-
-        var item = createItem(handleResolved, handleRejected, handleProgress);
-
-
-        //if not handling - return me
-        if (!item) {
-
-            return me;
-        }
-
-
-        //create new promise as item.promise
-        item.promise = new me.constructor();
-
-        //if promise is pending  - add item and return new promise
-        if (me.private.state === me.constructor.Pending) {
-            //add item to handlers
-            me.private.handlers.add(item);
-
-            return item.promise;
-        }
-
-        var constructor = me.constructor;
-
-        //resolve item on next tick
-        xs.nextTick(function () {
-            handleItem.call(constructor, item, me.private.state === me.constructor.Resolved ? 'resolve' : 'reject', me.private.data);
-        });
-
-        //if promise is pending - add item to handlers
-
-        return item.promise;
-    };
-
-    /**
-     * Core promise method. Adds handler for promise future state, when it will be rejected
-     * If no handler given, method does nothing. If any handler given, new promise object will be returned, constructing
-     * chain of promise objects, allowing to perform stack of async operations
-     *
-     * @method otherwise
-     *
-     * @param {Function|undefined} [handleRejected] handler, that will be called, when promise will be rejected. Undefined, if param is omitted
-     *
-     * @chainable
-     *
-     * @return {xs.core.Promise}
-     */
-    xs.core.Promise.prototype.otherwise = function (handleRejected) {
-        return this.then(undefined, handleRejected);
-    };
-
-    /**
-     * Core promise method. Adds handler for promise future state, when its progress will be changed (not rejected/resolved yet)
-     * If no handler given, method does nothing. If any handler given, new promise object will be returned, constructing
-     * chain of promise objects, allowing to perform stack of async operations
-     *
-     * @method progress
-     *
-     * @param {Function|undefined} [handleProgress] handler, that will be called, when promise will change it's progress state, but not yet resolved|rejected. Undefined, if param is omitted
-     *
-     * @chainable
-     *
-     * @return {xs.core.Promise}
-     */
-    xs.core.Promise.prototype.progress = function (handleProgress) {
-        return this.then(undefined, undefined, handleProgress);
-    };
-
-    /**
-     * Promise destroy method
-     *
-     * @method destroy
-     */
-    xs.core.Promise.prototype.destroy = function () {
-        var me = this;
-
-        //remove all handlers
-        me.private.handlers.remove();
-
-        //mark promise as destroyed
-        me.private = {
-            isDestroyed: true
-        };
-    };
-
-    /**
-     * Processes promise with given action
-     *
-     * @ignore
-     *
-     * @private
-     *
-     * @method processPromise
-     *
-     * @param {String} action promise action
-     * @param {*} data processed data
-     */
-    var processPromise = function (action, data) {
-        var me = this;
-
-        //set promise data
-        me.private.data = data;
-
-        var constructor = me.constructor;
+    //process promise on next tick
+    xs.nextTick(function () {
 
         //process promise handlers
         me.private.handlers.each(function (item) {
-            if (item[action]) {
-                handleItem.call(constructor, item, action, data);
+            if (item.update) {
+                handleItem.call(constructor, item, 'update', state);
             }
         });
+    });
+};
 
-        //remove all handlers
-        me.private.handlers.remove();
-    };
+/**
+ * Core promise method. Adds handlers for promise future state, when it will be either resolved or rejected.
+ * If no handlers given, method does nothing. If any handler given, new promise object will be returned, constructing
+ * chain of promise objects, allowing to perform stack of async operations
+ *
+ * @method then
+ *
+ * @param {Function|undefined} [handleResolved] handler, that will be called, when promise will be resolved. Undefined, if param is omitted
+ * @param {Function|undefined} [handleRejected] handler, that will be called, when promise will be rejected. Undefined, if param is omitted
+ * @param {Function|undefined} [handleProgress] handler, that will be called, when promise will change it's progress state, but not yet resolved|rejected. Undefined, if param is omitted
+ *
+ * @chainable
+ *
+ * @return {xs.core.Promise}
+ */
+xs.core.Promise.prototype.then = function (handleResolved, handleRejected, handleProgress) {
+    var me = this;
 
-    /**
-     * Handles promise item.
-     *
-     * @ignore
-     *
-     * @private
-     *
-     * @method handleItem
-     *
-     * @param {Object} item handled item
-     * @param {String} action promise action
-     * @param {*} data processed data
-     */
-    var handleItem = function (item, action, data) {
+    //assert, that promise is not destroyed yet
+    assert.not(me.isDestroyed, 'then - object is destroyed');
 
-        //get handler for given type
-        var handler = item[action];
-
-        //get item.promise ref
-        var promise = item.promise;
-
-        try {
-            //get handler result
-            var result = handler(data);
-
-            //resolve item.promise with fetched result
-            resolveValue.call(this, promise, action, result);
+    var item = createItem(handleResolved, handleRejected, handleProgress);
 
 
-            //reject if error happened
-        } catch (exception) {
-            promise.reject(exception);
-        }
-    };
+    //if not handling - return me
+    if (!item) {
 
-    /**
-     * Resolves value of promise
-     *
-     * @ignore
-     *
-     * @private
-     *
-     * @method resolveValue
-     *
-     * @param {xs.core.Promise} promise promise, value is resolved for
-     * @param {String} action promise action
-     * @param {*} value resolved value
-     */
-    var resolveValue = function (promise, action, value) {
-        assert.ok(promise !== value, 'resolveValue - value can not refer to the promise itself', {}, TypeError);
-
-        //handle value, that is promise
-        if (value instanceof this) {
-            value.then(function (data) {
-                promise.resolve(data);
-            }, function (reason) {
-                promise.reject(reason);
-            }, function (state) {
-                promise.update(state);
-            });
-
-            return;
-
-        }
-
-        promise[action](value);
-    };
-
-    /**
-     * Creates promise item depending on given incoming callbacks
-     *
-     * @ignore
-     *
-     * @private
-     *
-     * @method createItem
-     *
-     * @param {Function|undefined} handleResolved resolved handler
-     * @param {Function|undefined} handleRejected rejected handler
-     * @param {Function|undefined} handleProgress progress handler
-     *
-     * @return {Object|undefined} created item or undefined if no handlers given
-     */
-    var createItem = function (handleResolved, handleRejected, handleProgress) {
-        //handlers must be either not defined or functions
-        assert.ok(!xs.isDefined(handleResolved) || xs.isFunction(handleResolved), 'createItem - given `$handleResolved` is not a function', {
-            $handleResolved: handleResolved
-        });
-        assert.ok(!xs.isDefined(handleRejected) || xs.isFunction(handleRejected), 'createItem - given `$handleRejected` is not a function', {
-            $handleRejected: handleRejected
-        });
-        assert.ok(!xs.isDefined(handleProgress) || xs.isFunction(handleProgress), 'createItem - given `$handleProgress` is not a function', {
-            $handleProgress: handleProgress
-        });
-
-        //if something given - return item
-        if (handleResolved || handleRejected || handleProgress) {
-
-            return {
-                resolve: handleResolved,
-                reject: handleRejected,
-                update: handleProgress
-            };
-        }
-
-        return undefined;
-    };
-
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class PromiseError
-     */
-    function PromiseError(message) {
-        this.message = 'xs.core.Promise::' + message;
+        return me;
     }
 
-    PromiseError.prototype = new Error();
 
-})(window, 'xs');
+    //create new promise as item.promise
+    item.promise = new me.constructor();
+
+    //if promise is pending  - add item and return new promise
+    if (me.private.state === me.constructor.Pending) {
+        //add item to handlers
+        me.private.handlers.add(item);
+
+        return item.promise;
+    }
+
+    var constructor = me.constructor;
+
+    //resolve item on next tick
+    xs.nextTick(function () {
+        handleItem.call(constructor, item, me.private.state === me.constructor.Resolved ? 'resolve' : 'reject', me.private.data);
+    });
+
+    //if promise is pending - add item to handlers
+
+    return item.promise;
+};
+
+/**
+ * Core promise method. Adds handler for promise future state, when it will be rejected
+ * If no handler given, method does nothing. If any handler given, new promise object will be returned, constructing
+ * chain of promise objects, allowing to perform stack of async operations
+ *
+ * @method otherwise
+ *
+ * @param {Function|undefined} [handleRejected] handler, that will be called, when promise will be rejected. Undefined, if param is omitted
+ *
+ * @chainable
+ *
+ * @return {xs.core.Promise}
+ */
+xs.core.Promise.prototype.otherwise = function (handleRejected) {
+    return this.then(undefined, handleRejected);
+};
+
+/**
+ * Core promise method. Adds handler for promise future state, when its progress will be changed (not rejected/resolved yet)
+ * If no handler given, method does nothing. If any handler given, new promise object will be returned, constructing
+ * chain of promise objects, allowing to perform stack of async operations
+ *
+ * @method progress
+ *
+ * @param {Function|undefined} [handleProgress] handler, that will be called, when promise will change it's progress state, but not yet resolved|rejected. Undefined, if param is omitted
+ *
+ * @chainable
+ *
+ * @return {xs.core.Promise}
+ */
+xs.core.Promise.prototype.progress = function (handleProgress) {
+    return this.then(undefined, undefined, handleProgress);
+};
+
+/**
+ * Promise destroy method
+ *
+ * @method destroy
+ */
+xs.core.Promise.prototype.destroy = function () {
+    var me = this;
+
+    //remove all handlers
+    me.private.handlers.remove();
+
+    //mark promise as destroyed
+    me.private = {
+        isDestroyed: true
+    };
+};
+
+/**
+ * Processes promise with given action
+ *
+ * @ignore
+ *
+ * @private
+ *
+ * @method processPromise
+ *
+ * @param {String} action promise action
+ * @param {*} data processed data
+ */
+function processPromise(action, data) {
+    var me = this;
+
+    //set promise data
+    me.private.data = data;
+
+    var constructor = me.constructor;
+
+    //process promise handlers
+    me.private.handlers.each(function (item) {
+        if (item[action]) {
+            handleItem.call(constructor, item, action, data);
+        }
+    });
+
+    //remove all handlers
+    me.private.handlers.remove();
+}
+
+/**
+ * Handles promise item.
+ *
+ * @ignore
+ *
+ * @private
+ *
+ * @method handleItem
+ *
+ * @param {Object} item handled item
+ * @param {String} action promise action
+ * @param {*} data processed data
+ */
+function handleItem(item, action, data) {
+
+    //get handler for given type
+    var handler = item[action];
+
+    //get item.promise ref
+    var promise = item.promise;
+
+    try {
+        //get handler result
+        var result = handler(data);
+
+        //resolve item.promise with fetched result
+        resolveValue.call(this, promise, action, result);
+
+
+        //reject if error happened
+    } catch (exception) {
+        promise.reject(exception);
+    }
+}
+
+/**
+ * Resolves value of promise
+ *
+ * @ignore
+ *
+ * @private
+ *
+ * @method resolveValue
+ *
+ * @param {xs.core.Promise} promise promise, value is resolved for
+ * @param {String} action promise action
+ * @param {*} value resolved value
+ */
+function resolveValue(promise, action, value) {
+    assert.ok(promise !== value, 'resolveValue - value can not refer to the promise itself', {}, TypeError);
+
+    //handle value, that is promise
+    if (value instanceof this) {
+        value.then(function (data) {
+            promise.resolve(data);
+        }, function (reason) {
+            promise.reject(reason);
+        }, function (state) {
+            promise.update(state);
+        });
+
+        return;
+
+    }
+
+    promise[action](value);
+}
+
+/**
+ * Creates promise item depending on given incoming callbacks
+ *
+ * @ignore
+ *
+ * @private
+ *
+ * @method createItem
+ *
+ * @param {Function|undefined} handleResolved resolved handler
+ * @param {Function|undefined} handleRejected rejected handler
+ * @param {Function|undefined} handleProgress progress handler
+ *
+ * @return {Object|undefined} created item or undefined if no handlers given
+ */
+function createItem(handleResolved, handleRejected, handleProgress) {
+    //handlers must be either not defined or functions
+    assert.ok(!xs.isDefined(handleResolved) || xs.isFunction(handleResolved), 'createItem - given `$handleResolved` is not a function', {
+        $handleResolved: handleResolved
+    });
+    assert.ok(!xs.isDefined(handleRejected) || xs.isFunction(handleRejected), 'createItem - given `$handleRejected` is not a function', {
+        $handleRejected: handleRejected
+    });
+    assert.ok(!xs.isDefined(handleProgress) || xs.isFunction(handleProgress), 'createItem - given `$handleProgress` is not a function', {
+        $handleProgress: handleProgress
+    });
+
+    //if something given - return item
+    if (handleResolved || handleRejected || handleProgress) {
+
+        return {
+            resolve: handleResolved,
+            reject: handleRejected,
+            update: handleProgress
+        };
+    }
+
+    return undefined;
+}
+
+
+/**
+ * Internal error class
+ *
+ * @ignore
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @class PromiseError
+ */
+function PromiseError(message) {
+    this.message = 'xs.core.Promise::' + message;
+}
+
+PromiseError.prototype = new Error();

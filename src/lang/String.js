@@ -1,98 +1,81 @@
-/*
- This file is core of xs.js
+'use strict';
 
- Copyright (c) 2013-2014, Annium Inc
+var log = new xs.log.Logger('xs.interface.Interface');
 
- Contact: http://annium.com/contact
+var assert = new xs.core.Asserter(log, StringError);
 
- License: http://annium.com/contact
-
+/**
+ * xs.lang.String is private singleton, defining basic string operations.
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @private
+ *
+ * @class xs.lang.String
+ *
+ * @singleton
  */
-(function (root, ns) {
-
-    'use strict';
-
-    //framework shorthand
-    var xs = root[ns];
-
-    var log = new xs.log.Logger('xs.interface.Interface');
-
-    var assert = new xs.core.Asserter(log, StringError);
+xs.String = (function () {
+    var me = {};
 
     /**
-     * xs.lang.String is private singleton, defining basic string operations.
+     * Translates string with given replacements
      *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     * For example:
      *
-     * @private
+     *     console.log(xs.translate('My fox is small and brown. I love my small brown fox', {
+     *         small: 'big',
+     *         brown: 'black',
+     *         fox: 'bear'
+     *     }));
+     *     //outputs:
+     *     //My bear is big and black. I love my big black bear
      *
-     * @class xs.lang.String
+     * @method translate
      *
-     * @singleton
+     * @param {String} string translated string
+     * @param {Object} replaces replaces hash, where keys are replaced strings and values are respective replaces
+     *
+     * @return {String} translated string
      */
-    var string = xs.String = (function () {
-        var me = {};
+    me.translate = function (string, replaces) {
+        //assert that first argument is string
+        assert.string(string, 'translate - given `$string` is not string', {
+            $string: string
+        });
 
-        /**
-         * Translates string with given replacements
-         *
-         * For example:
-         *
-         *     console.log(xs.translate('My fox is small and brown. I love my small brown fox', {
-         *         small: 'big',
-         *         brown: 'black',
-         *         fox: 'bear'
-         *     }));
-         *     //outputs:
-         *     //My bear is big and black. I love my big black bear
-         *
-         * @method translate
-         *
-         * @param {String} string translated string
-         * @param {Object} replaces replaces hash, where keys are replaced strings and values are respective replaces
-         *
-         * @return {String} translated string
-         */
-        me.translate = function (string, replaces) {
-            //assert that first argument is string
-            assert.string(string, 'translate - given `$string` is not string', {
-                $string: string
-            });
+        //assert that replaces are object
+        assert.object(replaces, 'translate - given replaces `$replaces` are not object', {
+            $replaces: replaces
+        });
 
-            //assert that replaces are object
-            assert.object(replaces, 'translate - given replaces `$replaces` are not object', {
-                $replaces: replaces
-            });
+        Object.keys(replaces).forEach(function (from) {
+            var to = replaces[from];
+            string = string.split(from).join(to);
+        });
 
-            Object.keys(replaces).forEach(function (from) {
-                var to = replaces[from];
-                string = string.split(from).join(to);
-            });
+        return string;
+    };
 
-            return string;
-        };
+    return me;
+})();
 
-        return me;
-    })();
+/**
+ * Internal error class
+ *
+ * @ignore
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @class StringError
+ */
+function StringError(message) {
+    this.message = 'xs.lang.String::' + message;
+}
 
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class StringError
-     */
-    function StringError(message) {
-        this.message = 'xs.lang.String::' + message;
-    }
+StringError.prototype = new Error();
 
-    StringError.prototype = new Error();
-
-    //extend xs with string
-    Object.keys(string).forEach(function (key) {
-        xs[key] = string[key];
-    });
-
-})(window, 'xs');
+//extend xs with string
+Object.keys(xs.String).forEach(function (key) {
+    xs[key] = xs.String[key];
+});

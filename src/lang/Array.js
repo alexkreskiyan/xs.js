@@ -1,79 +1,62 @@
-/*
- This file is core of xs.js
+'use strict';
 
- Copyright (c) 2013-2014, Annium Inc
+var log = new xs.log.Logger('xs.interface.Interface');
 
- Contact: http://annium.com/contact
+var assert = new xs.core.Asserter(log, ArrayError);
 
- License: http://annium.com/contact
-
+/**
+ * xs.lang.Array is private singleton, defining basic Array operations.
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @private
+ *
+ * @class xs.lang.Array
+ *
+ * @singleton
  */
-(function (root, ns) {
-
-    'use strict';
-
-    //framework shorthand
-    var xs = root[ns];
-
-    var log = new xs.log.Logger('xs.interface.Interface');
-
-    var assert = new xs.core.Asserter(log, ArrayError);
+xs.Array = (function () {
+    var me = {};
 
     /**
-     * xs.lang.Array is private singleton, defining basic Array operations.
+     * Shuffles array items
      *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     * For example:
      *
-     * @private
+     *     xs.shuffle([
+     *         1,
+     *         2,
+     *         3
+     *     ]);
      *
-     * @class xs.lang.Array
+     * @method shuffle
      *
-     * @singleton
+     * @param {Array} array shuffled array
      */
-    xs.Array = (function () {
-        var me = {};
+    me.shuffle = function (array) {
+        assert.array(array, 'shuffle - given `$array` is not array', {
+            $array: array
+        });
 
-        /**
-         * Shuffles array items
-         *
-         * For example:
-         *
-         *     xs.shuffle([
-         *         1,
-         *         2,
-         *         3
-         *     ]);
-         *
-         * @method shuffle
-         *
-         * @param {Array} array shuffled array
-         */
-        me.shuffle = function (array) {
-            assert.array(array, 'shuffle - given `$array` is not array', {
-                $array: array
-            });
+        array.sort(function () {
+            return Math.random() - 0.5;
+        });
+    };
 
-            array.sort(function () {
-                return Math.random() - 0.5;
-            });
-        };
+    return me;
+})();
 
-        return me;
-    })();
+/**
+ * Internal error class
+ *
+ * @ignore
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @class ArrayError
+ */
+function ArrayError(message) {
+    this.message = 'xs.lang.Array::' + message;
+}
 
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class ArrayError
-     */
-    function ArrayError(message) {
-        this.message = 'xs.lang.Array::' + message;
-    }
-
-    ArrayError.prototype = new Error();
-
-})(window, 'xs');
+ArrayError.prototype = new Error();

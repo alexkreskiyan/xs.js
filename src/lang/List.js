@@ -1,113 +1,96 @@
-/*
- This file is core of xs.js
+'use strict';
 
- Copyright (c) 2013-2014, Annium Inc
+var log = new xs.log.Logger('xs.interface.Interface');
 
- Contact: http://annium.com/contact
+var assert = new xs.core.Asserter(log, ListError);
 
- License: http://annium.com/contact
-
+/**
+ * xs.lang.List is private singleton, defining basic list operations, for both Array and Object.
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @private
+ *
+ * @class xs.lang.List
+ *
+ * @singleton
  */
-(function (root, ns) {
+xs.List = (function () {
+    var me = {};
 
-    'use strict';
-
-    //framework shorthand
-    var xs = root[ns];
-
-    var log = new xs.log.Logger('xs.interface.Interface');
-
-    var assert = new xs.core.Asserter(log, ListError);
+    // Create quick reference variables for speed access to core prototypes.
+    var slice = Function.prototype.call.bind(Array.prototype.slice);
 
     /**
-     * xs.lang.List is private singleton, defining basic list operations, for both Array and Object.
+     * Returns shallow copy of list
      *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     * For example:
      *
-     * @private
+     *     //for Array
+     *     xs.clone([
+     *         1,
+     *         2,
+     *         3
+     *     ]);
      *
-     * @class xs.lang.List
+     *     //for Object
+     *     xs.clone({
+     *         a: 1,
+     *         c: 2,
+     *         b: 3
+     *     });
      *
-     * @singleton
+     * @method clone
+     *
+     * @param {Array|Object} list copied list
+     *
+     * @return {Array|Object} list shallow copy
      */
-    var list = xs.List = (function () {
-        var me = {};
+    me.clone = function (list) {
+        //assert that list either array or object
+        assert.ok(xs.isArray(list) || xs.isObject(list), 'clone - given list `$list` is nor array neither object', {
+            $list: list
+        });
 
-        // Create quick reference variables for speed access to core prototypes.
-        var slice = Function.prototype.call.bind(Array.prototype.slice);
+        //handle array list
+        if (xs.isArray(list)) {
 
-        /**
-         * Returns shallow copy of list
-         *
-         * For example:
-         *
-         *     //for Array
-         *     xs.clone([
-         *         1,
-         *         2,
-         *         3
-         *     ]);
-         *
-         *     //for Object
-         *     xs.clone({
-         *         a: 1,
-         *         c: 2,
-         *         b: 3
-         *     });
-         *
-         * @method clone
-         *
-         * @param {Array|Object} list copied list
-         *
-         * @return {Array|Object} list shallow copy
-         */
-        me.clone = function (list) {
-            //assert that list either array or object
-            assert.ok(xs.isArray(list) || xs.isObject(list), 'clone - given list `$list` is nor array neither object', {
-                $list: list
-            });
+            return slice(list);
+        }
 
-            //handle array list
-            if (xs.isArray(list)) {
+        //init variables
+        var copy = {}, index, keysLength, keys = Object.keys(list), key;
+        keysLength = keys.length;
 
-                return slice(list);
-            }
+        //copy values
+        for (index = 0; index < keysLength; index++) {
+            key = keys[index];
+            copy[key] = list[key];
+        }
 
-            //init variables
-            var copy = {}, index, keysLength, keys = Object.keys(list), key;
-            keysLength = keys.length;
+        return copy;
+    };
 
-            //copy values
-            for (index = 0; index < keysLength; index++) {
-                key = keys[index];
-                copy[key] = list[key];
-            }
+    return me;
+})();
 
-            return copy;
-        };
+/**
+ * Internal error class
+ *
+ * @ignore
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @class ListError
+ */
+function ListError(message) {
+    this.message = 'xs.lang.List::' + message;
+}
 
-        return me;
-    })();
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class ListError
-     */
-    function ListError(message) {
-        this.message = 'xs.lang.List::' + message;
-    }
-
-    ListError.prototype = new Error();
+ListError.prototype = new Error();
 
 
-    //extend xs with list
-    Object.keys(list).forEach(function (key) {
-        xs[key] = list[key];
-    });
-
-})(window, 'xs');
+//extend xs with list
+Object.keys(xs.List).forEach(function (key) {
+    xs[key] = xs.List[key];
+});
