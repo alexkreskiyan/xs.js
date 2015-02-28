@@ -1,14 +1,3 @@
-/*
- This file is core of xs.js
-
- Copyright (c) 2013-2014, Annium Inc
-
- Contact: http://annium.com/contact
-
- License: http://annium.com/contact
-
- */
-
 /**
  * URI Object notation abstract class. Provides basics for all URI scheme-specific implementations
  *
