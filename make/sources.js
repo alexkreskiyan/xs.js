@@ -4,10 +4,12 @@
 var src = require('./source.json');
 
 //init scripts array
-var scripts = ['src/xs.js'];
+var scripts = {
+    core: ['src/xs.js']
+};
 
 //add core modules to scripts list
-scripts = scripts.concat(Object.keys(src.core).map(getPathFromName));
+scripts.core = scripts.core.concat(Object.keys(src.core).map(getPathFromName));
 
 //init modules list
 var modules = {};
@@ -16,7 +18,7 @@ var modules = {};
 assemblyModules(modules, src.modules);
 
 //add modules to scripts list
-scripts = scripts.concat(Object.keys(modules).map(getPathFromName));
+scripts.modules = Object.keys(modules).map(getPathFromName);
 
 //export scripts
 module.exports = scripts;
