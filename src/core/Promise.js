@@ -8,95 +8,119 @@
  License: http://annium.com/contact
 
  */
-
-/**
- * Implementation of Futures & Promises pattern for xs.js.
- *
- * Usage example:
- *
- *     var getData = function() {
- *         var promise = new xs.ux.Promise();
- *         setTimeout(function() {
- *             promise.resolve({x: 1});
- *         }, 500);
- *         return promise;
- *     };
- *
- *     getData().then(function(data) {
- *         console.log('data fetched', data);
- *
- *         //transform data
- *         data.message = data.x;
- *         data.x = null;
- *
- *         return data;
- *     }).then(function(data) {
- *         console.log('transformed data:', data);
- *         console.log('load update');
- *         //perform new async stage
- *         return getData().then(function(update) {
- *             console.log('update loaded');
- *             xs.extend(data, update);
- *
- *             return data;
- *         });
- *     }).then(function(data) {
- *         //log result
- *         console.log('Processing finished. Data:', data);
- *     });
- *
- * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
- *
- * @class xs.ux.Promise
- *
- * @extends xs.class.Base
- */
-xs.define(xs.Class, 'ns.Promise', function (self) {
+(function (root, ns) {
 
     'use strict';
 
-    var Class = this;
+    //framework shorthand
+    var xs = root[ns];
 
-    Class.namespace = 'xs.ux';
+    var log = new xs.log.Logger('xs.core.Promise');
+
+    var assert = new xs.core.Asserter(log, PromiseError);
+
+    //define xs.core
+    if (!xs.core) {
+        xs.core = {};
+    }
+
+    /**
+     * Implementation of Futures & Promises pattern for xs.js.
+     *
+     * Usage example:
+     *
+     *     var getData = function() {
+     *         var promise = new xs.core.Promise();
+     *         setTimeout(function() {
+     *             promise.resolve({x: 1});
+     *         }, 500);
+     *         return promise;
+     *     };
+     *
+     *     getData().then(function(data) {
+     *         console.log('data fetched', data);
+     *
+     *         //transform data
+     *         data.message = data.x;
+     *         data.x = null;
+     *
+     *         return data;
+     *     }).then(function(data) {
+     *         console.log('transformed data:', data);
+     *         console.log('load update');
+     *         //perform new async stage
+     *         return getData().then(function(update) {
+     *             console.log('update loaded');
+     *             xs.extend(data, update);
+     *
+     *             return data;
+     *         });
+     *     }).then(function(data) {
+     *         //log result
+     *         console.log('Processing finished. Data:', data);
+     *     });
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class xs.core.Promise
+     */
+
+    /**
+     * Promise constructor
+     *
+     * @constructor
+     */
+    xs.core.Promise = function () {
+        var me = this;
+
+        //init private storage
+        me.private = {};
+
+        //initially - Pending state
+        me.private.state = xs.core.Promise.Pending;
+
+        //create handlers collection
+        me.private.handlers = new xs.core.Collection();
+    };
 
     /**
      * Promise `pending` state constant
      *
      * @static
      *
-     * @property PENDING
+     * @property Pending
      *
      * @readonly
      *
      * @type {String}
      */
-    Class.constant.PENDING = 'pending';
+    xs.constant(xs.core.Promise, 'Pending', 0);
 
     /**
      * Promise `resolved` state constant
      *
      * @static
      *
-     * @property RESOLVED
+     * @property Resolved
      *
      * @readonly
      *
      * @type {String}
      */
-    Class.constant.RESOLVED = 'resolved';
+    xs.constant(xs.core.Promise, 'Resolved', 1);
 
     /**
      * Promise `rejected` state constant
      *
      * @static
      *
-     * @property REJECTED
+     * @property Rejected
      *
      * @readonly
      *
      * @type {String}
      */
-    Class.constant.REJECTED = 'rejected';
+    xs.constant(xs.core.Promise, 'Rejected', 2);
 
     /**
      * Static async control operating method. Creates aggregate promise, that is resolved when all
@@ -104,12 +128,12 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @method all
      *
-     * @param {xs.ux.Promise[]} promises array of promises
+     * @param {xs.core.Promise[]} promises array of promises
      *
-     * @return {xs.ux.Promise} aggregate promise
+     * @return {xs.core.Promise} aggregate promise
      */
-    Class.static.method.all = function (promises) {
-        self.assert.array(promises, 'all - given `$promises` are not array', {
+    xs.core.Promise.all = function (promises) {
+        assert.array(promises, 'all - given `$promises` are not array', {
             $promises: promises
         });
 
@@ -122,17 +146,17 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @method some
      *
-     * @param {xs.ux.Promise[]} promises array of promises
+     * @param {xs.core.Promise[]} promises array of promises
      * @param {Number} count count of promises, needed for aggregate promise to resolve
      *
-     * @return {xs.ux.Promise} aggregate promise
+     * @return {xs.core.Promise} aggregate promise
      */
-    Class.static.method.some = function (promises, count) {
-        self.assert.array(promises, 'some - given `$promises` are not array', {
+    xs.core.Promise.some = function (promises, count) {
+        assert.array(promises, 'some - given `$promises` are not array', {
             $promises: promises
         });
 
-        self.assert.ok(promises.length, 'some - given `$promises` array is empty', {
+        assert.ok(promises.length, 'some - given `$promises` array is empty', {
             $promises: promises
         });
 
@@ -140,28 +164,26 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
         if (arguments.length === 1) {
             count = 1;
         } else {
-            self.assert.number(count, 'some - given `$count` is not a number', {
+            assert.number(count, 'some - given `$count` is not a number', {
                 $count: count
             });
         }
 
-        self.assert.ok(0 < count && count <= promises.length, 'some - given count `$count` is out of bounds [$min, $max]', {
+        assert.ok(0 < count && count <= promises.length, 'some - given count `$count` is out of bounds [$min, $max]', {
             $count: count,
             $min: 0,
             $max: promises.length
         });
 
-        //convert promises to collection
-        promises = new xs.core.Collection(promises);
-
         //create aggregate promise
-        var aggregate = self.factory();
+        var aggregate = new xs.core.Promise();
 
-        promises.each(function (promise) {
-            self.assert.instance(promise, self, 'given not promise');
+        //use promises as collection
+        (new xs.core.Collection(promises)).each(function (promise) {
+            assert.instance(promise, xs.core.Promise, 'some - given not promise');
             promise.then(function () {
                 //if count is 0 and aggregate is still pending - resolve it
-                if (--count === 0 && aggregate.state === self.PENDING) {
+                if (--count === 0 && aggregate.state === xs.core.Promise.Pending) {
                     aggregate.resolve();
                 }
             }, function (reason) {
@@ -173,7 +195,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
     };
 
     /**
-     * Promise state. Is changed internally from {@link #PENDING pending} to {@link #RESOLVED resolved} or {@link #REJECTED rejected}
+     * Promise state. Is changed internally from {@link #Pending pending} to {@link #Resolved resolved} or {@link #Rejected rejected}
      *
      * @property state
      *
@@ -181,25 +203,9 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @type {String}
      */
-    Class.property.state = {
+    xs.property.define(xs.core.Promise.prototype, 'state', xs.property.prepare('state', {
         set: xs.emptyFn
-    };
-
-    /**
-     * Promise constructor
-     *
-     * @constructor
-     */
-    Class.constructor = function () {
-        var me = this;
-
-        self.log.trace('constructor');
-        //initially - PENDING state
-        me.private.state = self.PENDING;
-
-        //create handlers collection
-        me.private.handlers = new xs.core.Collection();
-    };
+    }));
 
     /**
      * Promise resolve method. Resolves promise, running consequently it's handlers
@@ -208,17 +214,13 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @param {*} data data, promise is resolved with
      */
-    Class.method.resolve = function (data) {
+    xs.core.Promise.prototype.resolve = function (data) {
         var me = this;
 
-        self.assert.not(me.private.isDestroyed, 'Object is destroyed');
-        self.log.trace('resolve - data', {
-            data: data
-        });
-        self.assert.equal(me.private.state, self.PENDING, 'Promise is already resolved');
+        assert.equal(me.private.state, xs.core.Promise.Pending, 'resolve - promise is already resolved');
 
         //set new state
-        me.private.state = self.RESOLVED;
+        me.private.state = xs.core.Promise.Resolved;
 
         //process promise on next tick
         xs.nextTick(function () {
@@ -233,17 +235,17 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @param {*} reason reason, for which promise is rejected
      */
-    Class.method.reject = function (reason) {
+    xs.core.Promise.prototype.reject = function (reason) {
         var me = this;
 
-        self.assert.not(me.private.isDestroyed, 'Object is destroyed');
-        self.log.trace('reject - reason', {
-            reason: reason
-        });
-        self.assert.equal(me.private.state, self.PENDING, 'Promise is already rejected');
+        //assert, that promise is not destroyed yet
+        assert.not(me.private.isDestroyed, 'reject - object is destroyed');
+
+        //assert, that promise is pending
+        assert.equal(me.private.state, xs.core.Promise.Pending, 'reject - promise is already rejected');
 
         //set new state
-        me.private.state = self.REJECTED;
+        me.private.state = xs.core.Promise.Rejected;
 
         //process promise on next tick
         xs.nextTick(function () {
@@ -259,14 +261,14 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @param {*} state some value, that means updated state of pending operation, handled by promise
      */
-    Class.method.update = function (state) {
+    xs.core.Promise.prototype.update = function (state) {
         var me = this;
 
-        self.assert.not(me.private.isDestroyed, 'Object is destroyed');
-        self.log.trace('update - state', {
-            state: state
-        });
-        self.assert.equal(me.private.state, self.PENDING, 'Promise is already ' + me.private.state);
+        //assert, that promise is not destroyed yet
+        assert.not(me.private.isDestroyed, 'update - object is destroyed');
+
+        //assert, that promise is pending
+        assert.equal(me.private.state, xs.core.Promise.Pending, 'update - promise is already ' + me.private.state);
 
         //process promise on next tick
         xs.nextTick(function () {
@@ -293,31 +295,29 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @chainable
      *
-     * @return {xs.ux.Promise}
+     * @return {xs.core.Promise}
      */
-    Class.method.then = function (handleResolved, handleRejected, handleProgress) {
+    xs.core.Promise.prototype.then = function (handleResolved, handleRejected, handleProgress) {
         var me = this;
 
-        self.assert.not(me.private.isDestroyed, 'Object is destroyed');
-        self.log.trace('then');
+        //assert, that promise is not destroyed yet
+        assert.not(me.private.isDestroyed, 'then - object is destroyed');
 
         var item = createItem(handleResolved, handleRejected, handleProgress);
 
 
         //if not handling - return me
         if (!item) {
-            self.log.trace('then - no handlers given, returning self');
 
             return me;
         }
 
 
-        self.log.trace('then - some handlers given, handling new item');
         //create new promise as item.promise
-        item.promise = self.factory();
+        item.promise = new xs.core.Promise();
 
         //if promise is pending  - add item and return new promise
-        if (me.private.state === self.PENDING) {
+        if (me.private.state === xs.core.Promise.Pending) {
             //add item to handlers
             me.private.handlers.add(item);
 
@@ -327,7 +327,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         //resolve item on next tick
         xs.nextTick(function () {
-            handleItem(item, me.private.state === self.RESOLVED ? 'resolve' : 'reject', me.private.data);
+            handleItem(item, me.private.state === xs.core.Promise.Resolved ? 'resolve' : 'reject', me.private.data);
         });
 
         //if promise is pending - add item to handlers
@@ -346,9 +346,9 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @chainable
      *
-     * @return {xs.ux.Promise}
+     * @return {xs.core.Promise}
      */
-    Class.method.otherwise = function (handleRejected) {
+    xs.core.Promise.prototype.otherwise = function (handleRejected) {
         return this.then(undefined, handleRejected);
     };
 
@@ -363,9 +363,9 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @chainable
      *
-     * @return {xs.ux.Promise}
+     * @return {xs.core.Promise}
      */
-    Class.method.progress = function (handleProgress) {
+    xs.core.Promise.prototype.progress = function (handleProgress) {
         return this.then(undefined, undefined, handleProgress);
     };
 
@@ -374,14 +374,16 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @method destroy
      */
-    Class.method.destroy = function () {
+    xs.core.Promise.prototype.destroy = function () {
         var me = this;
 
         //remove all handlers
         me.private.handlers.remove();
 
-        //call parent method
-        self.parent.prototype.destroy.call(me);
+        //mark promise as destroyed
+        me.private = {
+            isDestroyed: true
+        };
     };
 
     /**
@@ -428,10 +430,6 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      */
     var handleItem = function (item, action, data) {
 
-        self.log.trace('handleItem - ' + action + 'with data', {
-            data: data
-        });
-
         //get handler for given type
         var handler = item[action];
 
@@ -440,24 +438,14 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         try {
             //get handler result
-            self.log.trace('handleItem - get result from ' + action + ' handler, called with data', {
-                handler: handler,
-                data: data
-            });
             var result = handler(data);
 
             //resolve item.promise with fetched result
-            self.log.trace('handleItem - process item.promise with action ' + action + ' and value', {
-                value: result
-            });
             resolveValue(promise, action, result);
 
 
             //reject if error happened
         } catch (exception) {
-            self.log.trace('handleItem - reject item.promise with exception', {
-                exception: exception
-            });
             promise.reject(exception);
         }
     };
@@ -471,16 +459,15 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @method resolveValue
      *
-     * @param {xs.ux.Promise} promise promise, value is resolved for
+     * @param {xs.core.Promise} promise promise, value is resolved for
      * @param {String} action promise action
      * @param {*} value resolved value
      */
     var resolveValue = function (promise, action, value) {
-        self.assert.ok(promise !== value, 'Value can not refer to the promise itself', {}, TypeError);
+        assert.ok(promise !== value, 'resolveValue - value can not refer to the promise itself', {}, TypeError);
 
         //handle value, that is promise
-        if (value instanceof self) {
-            self.log.trace('resolveValue - value is ' + self.label + ' instance, continue with value.then');
+        if (value instanceof xs.core.Promise) {
             value.then(function (data) {
                 promise.resolve(data);
             }, function (reason) {
@@ -493,9 +480,6 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
         }
 
-        self.log.trace('resolveValue - value is simple, ' + action + ' promise with it', {
-            value: value
-        });
         promise[action](value);
     };
 
@@ -516,19 +500,18 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      */
     var createItem = function (handleResolved, handleRejected, handleProgress) {
         //handlers must be either not defined or functions
-        self.assert.ok(!xs.isDefined(handleResolved) || xs.isFunction(handleResolved), 'createItem - given `$handleResolved` is not a function', {
+        assert.ok(!xs.isDefined(handleResolved) || xs.isFunction(handleResolved), 'createItem - given `$handleResolved` is not a function', {
             $handleResolved: handleResolved
         });
-        self.assert.ok(!xs.isDefined(handleRejected) || xs.isFunction(handleRejected), 'createItem - given `$handleRejected` is not a function', {
+        assert.ok(!xs.isDefined(handleRejected) || xs.isFunction(handleRejected), 'createItem - given `$handleRejected` is not a function', {
             $handleRejected: handleRejected
         });
-        self.assert.ok(!xs.isDefined(handleProgress) || xs.isFunction(handleProgress), 'createItem - given `$handleProgress` is not a function', {
+        assert.ok(!xs.isDefined(handleProgress) || xs.isFunction(handleProgress), 'createItem - given `$handleProgress` is not a function', {
             $handleProgress: handleProgress
         });
 
         //if something given - return item
         if (handleResolved || handleRejected || handleProgress) {
-            self.log.trace('createItem - some handlers given');
 
             return {
                 resolve: handleResolved,
@@ -537,9 +520,23 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
             };
         }
 
-        self.log.trace('createItem - no handlers given');
-
         return undefined;
     };
 
-});
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class PromiseError
+     */
+    function PromiseError(message) {
+        this.message = 'xs.core.Promise::' + message;
+    }
+
+    PromiseError.prototype = new Error();
+
+})(window, 'xs');

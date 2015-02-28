@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.ux.Promise', function () {
+module('xs.core.Promise', function () {
 
     'use strict';
 
@@ -16,14 +16,14 @@ module('xs.ux.Promise', function () {
         //init test variables
         var promise;
         //resolve destroyed throws
-        promise = new xs.ux.Promise();
+        promise = new xs.core.Promise();
         promise.destroy();
         throws(function () {
             promise.resolve();
         });
 
         //resolve not pending throws
-        promise = new xs.ux.Promise();
+        promise = new xs.core.Promise();
         promise.resolve();
         throws(function () {
             promise.resolve();
@@ -33,7 +33,7 @@ module('xs.ux.Promise', function () {
     test('resolve simple plain case normal', function () {
         //simple case - three L1 handlers. All resolved
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         me.source = 5;
         me.promise.then(function (data) {
             me.source *= data;
@@ -57,7 +57,7 @@ module('xs.ux.Promise', function () {
     test('resolve simple plain case exception', function () {
         //simple case - three L1 handlers. Second L1 handler throws exception
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         me.source = 5;
         me.promise.then(function (data) {
             me.source *= data;
@@ -81,7 +81,7 @@ module('xs.ux.Promise', function () {
     test('resolve simple chain case normal', function () {
         //simple case - promises chain with three steps. All resolved
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         var value = 5;
         me.chain = me.promise.then(function (data) {
             return data * value;
@@ -103,7 +103,7 @@ module('xs.ux.Promise', function () {
     test('resolve simple chain case exception', function () {
         //simple case - promises chain with three steps. Step two throws exception
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         var value = 5;
         me.chain = me.promise.then(function (data) {
             return data * value;
@@ -129,7 +129,7 @@ module('xs.ux.Promise', function () {
     test('resolve complex case normal', function () {
         //complex case - promises tree 2 levels with 3 handlers each - 12 total. All resolved
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         me.total = 0;
         me.promise.then(function (data) {
             return data + 2; //7
@@ -167,7 +167,7 @@ module('xs.ux.Promise', function () {
     test('resolve complex case exception', function () {
         //complex case - promises tree 2 levels with 3 handlers each - 12 total. Second L1 handler throws exception
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         me.total = 0;
         me.promise.then(function (data) {
             return data + 2; //7
@@ -210,14 +210,14 @@ module('xs.ux.Promise', function () {
         //init test variables
         var promise;
         //reject destroyed throws
-        promise = new xs.ux.Promise();
+        promise = new xs.core.Promise();
         promise.destroy();
         throws(function () {
             promise.reject();
         });
 
         //resolve not pending throws
-        promise = new xs.ux.Promise();
+        promise = new xs.core.Promise();
         promise.reject();
         throws(function () {
             promise.reject();
@@ -227,7 +227,7 @@ module('xs.ux.Promise', function () {
     test('reject simple plain case normal', function () {
         //simple case - three L1 handlers. All resolved
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         me.source = 5;
         me.promise.otherwise(function (data) {
             me.source *= data;
@@ -251,7 +251,7 @@ module('xs.ux.Promise', function () {
     test('reject simple plain case exception', function () {
         //simple case - three L1 handlers. Second L1 handler throws exception
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         me.source = 5;
         me.promise.otherwise(function (data) {
             me.source *= data;
@@ -275,7 +275,7 @@ module('xs.ux.Promise', function () {
     test('reject simple chain case normal', function () {
         //simple case - promises chain with three steps. All resolved
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         var value = 5;
         me.chain = me.promise.otherwise(function (data) {
             return data * value;
@@ -297,7 +297,7 @@ module('xs.ux.Promise', function () {
     test('reject simple chain case exception', function () {
         //simple case - promises chain with three steps. Step two throws exception
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         var value = 5;
         me.chain = me.promise.otherwise(function (data) {
             return data * value;
@@ -323,7 +323,7 @@ module('xs.ux.Promise', function () {
     test('reject complex case normal', function () {
         //complex case - promises tree 2 levels with 3 handlers each - 12 total. All resolved
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         me.total = 0;
         me.promise.otherwise(function (data) {
             return data + 2; //7
@@ -361,7 +361,7 @@ module('xs.ux.Promise', function () {
     test('reject complex case exception', function () {
         //complex case - promises tree 2 levels with 3 handlers each - 12 total. Second L1 handler throws exception
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         me.total = 0;
         me.promise.otherwise(function (data) {
             return data + 2; //7
@@ -403,7 +403,7 @@ module('xs.ux.Promise', function () {
     test('progress complex case', function () {
         //complex case - promises tree 2 levels with 3 handlers each - 12 total. All resolved
         var me = this;
-        me.promise = new xs.ux.Promise;
+        me.promise = new xs.core.Promise;
         me.total = 0;
         me.promise.progress(function (data) {
             return data + 2; //4; 3
@@ -450,7 +450,7 @@ module('xs.ux.Promise', function () {
 
     test('immediate', function () {
         var me = this;
-        var promise = new xs.ux.Promise();
+        var promise = new xs.core.Promise();
         promise.resolve(5);
         //handlers run immediately if promise is already done
         setTimeout(function () {
@@ -472,27 +472,27 @@ module('xs.ux.Promise', function () {
 
         //promises should be non-array
         throws(function () {
-            xs.ux.Promise.some({});
+            xs.core.Promise.some({});
         });
         throws(function () {
-            xs.ux.Promise.some([]);
+            xs.core.Promise.some([]);
         });
 
         //count should be either omitted or be number
         throws(function () {
-            xs.ux.Promise.some([xs.ux.Promise.factory()], null);
+            xs.core.Promise.some([xs.core.Promise.factory()], null);
         });
 
         //count should be in bounds: 0 < count <= promises.length
         throws(function () {
-            xs.ux.Promise.some([xs.ux.Promise.factory()], 2);
+            xs.core.Promise.some([xs.core.Promise.factory()], 2);
         });
 
 
         //if enough promises resolve - aggregate is resolved
-        var p1 = new xs.ux.Promise();
-        var p2 = new xs.ux.Promise();
-        var p3 = new xs.ux.Promise();
+        var p1 = new xs.core.Promise();
+        var p2 = new xs.core.Promise();
+        var p3 = new xs.core.Promise();
         var totalResolved = 0;
         setTimeout(function () {
             totalResolved += 1;
@@ -507,7 +507,7 @@ module('xs.ux.Promise', function () {
             p3.resolve();
         }, 10000);
 
-        xs.ux.Promise.some([
+        xs.core.Promise.some([
             p1,
             p2,
             p3
@@ -518,9 +518,9 @@ module('xs.ux.Promise', function () {
         });
 
         //if any promise is rejected - aggregate is rejected
-        var p4 = new xs.ux.Promise();
-        var p5 = new xs.ux.Promise();
-        var p6 = new xs.ux.Promise();
+        var p4 = new xs.core.Promise();
+        var p5 = new xs.core.Promise();
+        var p6 = new xs.core.Promise();
         var totalRejected = 0;
         setTimeout(function () {
             totalRejected += 1;
@@ -535,7 +535,7 @@ module('xs.ux.Promise', function () {
             p6.resolve();
         }, 110);
 
-        xs.ux.Promise.some([
+        xs.core.Promise.some([
             p4,
             p5,
             p6
