@@ -72,14 +72,11 @@ xs.core.Lazy = function (evaluation) {
      * @return {*} lazy evaluated value
      */
     me.get = function () {
-        //get evaluation value
-        var value = evaluation();
-
-        //return get function
+        //delete get function
         delete me.get;
 
         //return evaluation value
-        return value;
+        return evaluation();
     };
 };
 
