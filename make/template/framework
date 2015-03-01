@@ -12,12 +12,8 @@
 
  */
 
-(function (root, ns) {
-
-    'use strict';
-
-    var xs = root[ns] = {};
+(function (xs) {
 
 <%= contents %>
 
-})(window, 'xs');
+})(window.xs = {});

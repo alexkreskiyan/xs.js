@@ -3,25 +3,18 @@
 //get sources file
 var src = require('./source.json');
 
-//init scripts array
-var scripts = {
-    core: ['src/xs.js']
-};
-
-//add core modules to scripts list
-scripts.core = scripts.core.concat(Object.keys(src.core).map(getPathFromName));
-
 //init modules list
 var modules = {};
 
 //assembly modules hash
 assemblyModules(modules, src.modules);
 
-//add modules to scripts list
-scripts.modules = Object.keys(modules).map(getPathFromName);
-
-//export scripts
-module.exports = scripts;
+//export scripts array
+module.exports = {
+    entry: ['src/xs.js'],
+    core: Object.keys(src.core).map(getPathFromName),
+    modules: Object.keys(modules).map(getPathFromName)
+};
 
 function assemblyModules(list, modules, name) {
     //modules is node, if given string contract

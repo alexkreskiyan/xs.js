@@ -8,9 +8,14 @@ module.exports = function () {
     var indent = require('gulp-indent');
     var wrap = require('gulp-wrap');
     var concat = require('gulp-concat');
+    var merge = require('gulp-merge');
 
     //remove old files
     del(['build/source/*.js']);
+
+
+    //get entry stream
+    var entry = gulp.src(sources.entry);
 
 
     //get core stream
@@ -28,16 +33,18 @@ module.exports = function () {
 
 
     //get build stream
+    var build = merge(entry, core);
+
+    //indent files
+    build = build.pipe(indent({
+        amount: 4
+    }));
+
     //concat all files
-    var build = core.pipe(concat({
+    build = build.pipe(concat({
         path: 'xs.js'
     }, {
         newLine: '\n\n\n'
-    }));
-
-    //indent concatenated file
-    build = build.pipe(indent({
-        amount: 4
     }));
 
     //wrap concatenated file in framework template

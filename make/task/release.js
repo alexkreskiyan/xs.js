@@ -16,6 +16,10 @@ module.exports = function () {
     del(['build/release/*.js']);
 
 
+    //get entry stream
+    var entry = gulp.src(sources.entry);
+
+
     //get core stream
     var core = gulp.src(sources.core);
 
@@ -29,20 +33,24 @@ module.exports = function () {
         src: 'make/template/core'
     }));
 
-    //indent concatenated file
-    core = core.pipe(indent({
+
+    //get main stream
+    var main = merge(entry, core);
+
+    //indent files
+    main = main.pipe(indent({
         amount: 4
     }));
 
     //concat files
-    core = core.pipe(concat({
+    main = main.pipe(concat({
         path: 'xs.js'
     }, {
         newLine: '\n\n\n'
     }));
 
     //wrap concatenated file in framework template
-    core = core.pipe(wrap({
+    main = main.pipe(wrap({
         src: 'make/template/framework'
     }));
 
@@ -57,7 +65,7 @@ module.exports = function () {
 
 
     //get build stream
-    var build = merge(core, modules);
+    var build = merge(main, modules);
 
     //concat all files
     build = build.pipe(concat({
