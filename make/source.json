@@ -21,6 +21,9 @@
         },
         "xs.core.Lazy": {},
         "xs.core.Promise": {},
+        "xs.reactive.Stream": {
+            "test": false
+        },
         "xs.class.Class": {},
         "xs.class.preprocessors.namespace": {},
         "xs.class.preprocessors.abstract": {},
