@@ -11,7 +11,7 @@ module.exports = function () {
     var merge = require('gulp-merge');
 
     //remove old files
-    del(['build/debug/*.js']);
+    del(['build/source/*.js']);
 
 
     //get entry stream
@@ -32,38 +32,13 @@ module.exports = function () {
     }));
 
 
-    //get main stream
-    var main = merge(entry, core);
+    //get build stream
+    var build = merge(entry, core);
 
     //indent files
-    main = main.pipe(indent({
+    build = build.pipe(indent({
         amount: 4
     }));
-
-    //concat files
-    main = main.pipe(concat({
-        path: 'xs.js'
-    }, {
-        newLine: '\n\n\n'
-    }));
-
-    //wrap concatenated file in framework template
-    main = main.pipe(wrap({
-        src: 'make/template/framework'
-    }));
-
-
-    //get modules stream
-    var modules = gulp.src(sources.modules);
-
-    //wrap all sources in modules template
-    modules = modules.pipe(wrap({
-        src: 'make/template/module'
-    }));
-
-
-    //get build stream
-    var build = merge(main, modules);
 
     //concat all files
     build = build.pipe(concat({
@@ -72,7 +47,12 @@ module.exports = function () {
         newLine: '\n\n\n'
     }));
 
+    //wrap concatenated file in framework template
+    build = build.pipe(wrap({
+        src: 'make/template/framework'
+    }));
+
 
     //save build
-    build.pipe(gulp.dest('build/debug'));
+    build.pipe(gulp.dest('build/source'));
 };

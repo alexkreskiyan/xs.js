@@ -1,14 +1,3 @@
-/*
- This file is core of xs.js
-
- Copyright (c) 2013-2014, Annium Inc
-
- Contact: http://annium.com/contact
-
- License: http://annium.com/contact
-
- */
-
 /**
  * Core xs.js view object. View class is a base class, all other concrete views are to be extended from.
  *

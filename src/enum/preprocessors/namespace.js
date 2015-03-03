@@ -1,49 +1,32 @@
-/*
- This file is core of xs.js
+'use strict';
 
- Copyright (c) 2013-2014, Annium Inc
+var log = new xs.log.Logger('xs.enum.preprocessors.namespace');
 
- Contact: http://annium.com/contact
-
- License: http://annium.com/contact
-
+/**
+ * Preprocessor namespace
+ * Is used to work with enum namespace
+ *
+ * @ignore
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  */
-(function (root, ns) {
+xs.enum.preprocessors.add('namespace', function () {
 
-    'use strict';
+    return true;
+}, function (Enum, values, ready) {
 
-    //framework shorthand
-    var xs = root[ns];
+    log.trace('');
 
-    var log = new xs.log.Logger('xs.enum.preprocessors.namespace');
+    //save namespace
+    Enum.descriptor.resolveName = function (path) {
 
-    /**
-     * Preprocessor namespace
-     * Is used to work with enum namespace
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     */
-    xs.enum.preprocessors.add('namespace', function () {
+        //simply return path, namespace is empty
+        return path;
+    };
 
-        return true;
-    }, function (Enum, values, ready) {
+    //continue on next tick to allow ContractsManager check enum name
+    xs.nextTick(ready);
 
-        log.trace('');
-
-        //save namespace
-        Enum.descriptor.resolveName = function (path) {
-
-            //simply return path, namespace is empty
-            return path;
-        };
-
-        //continue on next tick to allow ContractsManager check enum name
-        xs.nextTick(ready);
-
-        //return false to sign async processor
-        return false;
-    });
-
-})(window, 'xs');
+    //return false to sign async processor
+    return false;
+});

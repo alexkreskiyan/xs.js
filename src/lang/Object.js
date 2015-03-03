@@ -1,117 +1,100 @@
-/*
- This file is core of xs.js
+'use strict';
 
- Copyright (c) 2013-2014, Annium Inc
+var log = new xs.log.Logger('xs.interface.Interface');
 
- Contact: http://annium.com/contact
+var assert = new xs.core.Asserter(log, ObjectError);
 
- License: http://annium.com/contact
-
+/**
+ * xs.lang.List is private singleton, defining basic Object operations.
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @private
+ *
+ * @class xs.lang.Object
+ *
+ * @singleton
  */
-(function (root, ns) {
+xs.Object = (function () {
+    var me = {};
 
-    'use strict';
-
-    //framework shorthand
-    var xs = root[ns];
-
-    var log = new xs.log.Logger('xs.interface.Interface');
-
-    var assert = new xs.core.Asserter(log, ObjectError);
+    // Create quick reference variables for speed access to core prototypes.
+    var slice = Function.prototype.call.bind(Array.prototype.slice);
 
     /**
-     * xs.lang.List is private singleton, defining basic Object operations.
+     * Copies all properties from objects, passed as arguments to given obj
      *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     * For example:
      *
-     * @private
+     *     var list = {
+     *         x: 1
+     *     };
+     *     xs.extend(list, {
+     *         x: 2,
+     *         c: 1
+     *     }, {
+     *         c: 2,
+     *         x: 3,
+     *         a: 4
+     *     });
+     *     console.log(list);
+     *     //outputs:
+     *     //{
+     *     //    x: 3,
+     *     //    c: 2,
+     *     //    a: 4
+     *     //}
      *
-     * @class xs.lang.Object
+     * @method extend
      *
-     * @singleton
+     * @param {Object} object extended object
      */
-    var object = xs.Object = (function () {
-        var me = {};
+    me.extend = function (object) {
 
-        // Create quick reference variables for speed access to core prototypes.
-        var slice = Function.prototype.call.bind(Array.prototype.slice);
+        //assert that index is in bounds
+        assert.object(object, 'extend - given `$object` is not object', {
+            $object: object
+        });
 
-        /**
-         * Copies all properties from objects, passed as arguments to given obj
-         *
-         * For example:
-         *
-         *     var list = {
-         *         x: 1
-         *     };
-         *     xs.extend(list, {
-         *         x: 2,
-         *         c: 1
-         *     }, {
-         *         c: 2,
-         *         x: 3,
-         *         a: 4
-         *     });
-         *     console.log(list);
-         *     //outputs:
-         *     //{
-         *     //    x: 3,
-         *     //    c: 2,
-         *     //    a: 4
-         *     //}
-         *
-         * @method extend
-         *
-         * @param {Object} object extended object
-         */
-        me.extend = function (object) {
+        var adds = slice(arguments, 1), addsLength = adds.length;
 
-            //assert that index is in bounds
-            assert.object(object, 'extend - given `$object` is not object', {
-                $object: object
-            });
+        //iterate over add-ons
+        for (var i = 0; i < addsLength; i++) {
+            var source = adds[i];
 
-            var adds = slice(arguments, 1), addsLength = adds.length;
-
-            //iterate over add-ons
-            for (var i = 0; i < addsLength; i++) {
-                var source = adds[i];
-
-                //continue if source is not object
-                if (!xs.isObject(source)) {
-                    continue;
-                }
-
-                var sourceKeys = Object.keys(source), sourceLength = sourceKeys.length;
-
-                for (var j = 0; j < sourceLength; j++) {
-                    var key = sourceKeys[j];
-                    object[key] = source[key];
-                }
+            //continue if source is not object
+            if (!xs.isObject(source)) {
+                continue;
             }
-        };
 
-        return me;
-    })();
+            var sourceKeys = Object.keys(source), sourceLength = sourceKeys.length;
 
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class ObjectError
-     */
-    function ObjectError(message) {
-        this.message = 'xs.lang.Object::' + message;
-    }
+            for (var j = 0; j < sourceLength; j++) {
+                var key = sourceKeys[j];
+                object[key] = source[key];
+            }
+        }
+    };
 
-    ObjectError.prototype = new Error();
+    return me;
+})();
 
-    //extend xs with object
-    Object.keys(object).forEach(function (key) {
-        xs[key] = object[key];
-    });
+/**
+ * Internal error class
+ *
+ * @ignore
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @class ObjectError
+ */
+function ObjectError(message) {
+    this.message = 'xs.lang.Object::' + message;
+}
 
-})(window, 'xs');
+ObjectError.prototype = new Error();
+
+//extend xs with object
+Object.keys(xs.Object).forEach(function (key) {
+    xs[key] = xs.Object[key];
+});

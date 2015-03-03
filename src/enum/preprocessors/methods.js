@@ -1,81 +1,64 @@
-/*
- This file is core of xs.js
+'use strict';
 
- Copyright (c) 2013-2014, Annium Inc
+var log = new xs.log.Logger('xs.enum.preprocessors.values');
 
- Contact: http://annium.com/contact
+var assert = new xs.core.Asserter(log, MethodsError);
 
- License: http://annium.com/contact
-
+/**
+ * Preprocessor methods
+ * Is used to assign internal methods to enum
+ *
+ * @ignore
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  */
-(function (root, ns) {
+xs.enum.preprocessors.add('methods', function () {
 
-    'use strict';
+    return true;
+}, function (Enum) {
 
-    //framework shorthand
-    var xs = root[ns];
+    log.trace(Enum.label ? Enum.label : 'undefined');
 
-    var log = new xs.log.Logger('xs.enum.preprocessors.values');
+    //keyOf method
+    xs.method.define(Enum, 'keyOf', xs.method.prepare('keyOf', function (value) {
+        var values = this.values;
+        var keys = Object.keys(values);
 
-    var assert = new xs.core.Asserter(log, MethodsError);
+        var key = keys.filter(function (name) {
 
-    /**
-     * Preprocessor methods
-     * Is used to assign internal methods to enum
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     */
-    xs.enum.preprocessors.add('methods', function () {
+            return values[name] === value;
+        }).shift();
 
-        return true;
-    }, function (Enum) {
+        assert.defined(key, 'keyOf - given value `$value` is not a part of enum', {
+            $value: value
+        });
 
-        log.trace(Enum.label ? Enum.label : 'undefined');
+        return key;
+    }));
 
-        //keyOf method
-        xs.method.define(Enum, 'keyOf', xs.method.prepare('keyOf', function (value) {
-            var values = this.values;
-            var keys = Object.keys(values);
+    //has method
+    xs.method.define(Enum, 'has', xs.method.prepare('has', function (value) {
+        var values = this.values;
+        var keys = Object.keys(values);
 
-            var key = keys.filter(function (name) {
+        return keys.some(function (name) {
 
-                return values[name] === value;
-            }).shift();
+            return values[name] === value;
+        });
+    }));
+});
 
-            assert.defined(key, 'keyOf - given value `$value` is not a part of enum', {
-                $value: value
-            });
+/**
+ * Internal error class
+ *
+ * @ignore
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @class MethodsError
+ */
+function MethodsError(message) {
+    this.message = 'xs.enum.preprocessors.methods::' + message;
+}
 
-            return key;
-        }));
-
-        //has method
-        xs.method.define(Enum, 'has', xs.method.prepare('has', function (value) {
-            var values = this.values;
-            var keys = Object.keys(values);
-
-            return keys.some(function (name) {
-
-                return values[name] === value;
-            });
-        }));
-    });
-
-    /**
-     * Internal error class
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     *
-     * @class MethodsError
-     */
-    function MethodsError(message) {
-        this.message = 'xs.enum.preprocessors.methods::' + message;
-    }
-
-    MethodsError.prototype = new Error();
-
-})(window, 'xs');
+MethodsError.prototype = new Error();

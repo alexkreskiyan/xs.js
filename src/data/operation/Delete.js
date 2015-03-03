@@ -1,14 +1,3 @@
-/*
- This file is core of xs.js
-
- Copyright (c) 2013-2014, Annium Inc
-
- Contact: http://annium.com/contact
-
- License: http://annium.com/contact
-
- */
-
 /**
  * xs.data.operation.Delete represents operation, performed by proxy with model, being deleted on server
  *

@@ -1,101 +1,84 @@
-/*
- This file is core of xs.js
+'use strict';
 
- Copyright (c) 2013-2014, Annium Inc
+var log = new xs.log.Logger('xs.class.preprocessors.defineElements');
 
- Contact: http://annium.com/contact
-
- License: http://annium.com/contact
-
+/**
+ * Preprocessor defineElements
+ * Is used to inherit parent elements to class descriptor
+ *
+ * @ignore
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  */
-(function (root, ns) {
+xs.class.preprocessors.add('defineElements', function () {
 
-    'use strict';
+    return true;
+}, function (Class) {
 
-    //framework shorthand
-    var xs = root[ns];
+    log.trace(Class.label ? Class.label : 'undefined');
 
-    var log = new xs.log.Logger('xs.class.preprocessors.defineElements');
+    //constants
+    processConstants(Class);
 
-    /**
-     * Preprocessor defineElements
-     * Is used to inherit parent elements to class descriptor
-     *
-     * @ignore
-     *
-     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
-     */
-    xs.class.preprocessors.add('defineElements', function () {
+    //static properties
+    processStaticProperties(Class);
 
-        return true;
-    }, function (Class) {
+    //static methods
+    processStaticMethods(Class);
 
-        log.trace(Class.label ? Class.label : 'undefined');
+    //properties
+    processProperties(Class);
 
-        //constants
-        processConstants(Class);
+    //methods
+    processMethods(Class);
+});
 
-        //static properties
-        processStaticProperties(Class);
+function processConstants(Class) {
+    Class.descriptor.constant.each(function (value, name) {
 
-        //static methods
-        processStaticMethods(Class);
-
-        //properties
-        processProperties(Class);
-
-        //methods
-        processMethods(Class);
+        xs.constant(Class, name, value);
     });
+}
 
-    var processConstants = function (Class) {
-        Class.descriptor.constant.each(function (value, name) {
+function processStaticProperties(Class) {
+    //create privates storage in class
+    Class.private = {};
 
-            xs.constant(Class, name, value);
-        });
-    };
+    //apply
+    Class.descriptor.static.property.each(function (descriptor, name) {
 
-    var processStaticProperties = function (Class) {
-        //create privates storage in class
-        Class.private = {};
+        //save property to class
+        xs.property.define(Class, name, descriptor);
+    });
+}
 
-        //apply
-        Class.descriptor.static.property.each(function (descriptor, name) {
+function processStaticMethods(Class) {
+    Class.descriptor.static.method.each(function (descriptor, name) {
 
-            //save property to class
-            xs.property.define(Class, name, descriptor);
-        });
-    };
+        //save method to class
+        xs.method.define(Class, name, descriptor);
+    });
+}
 
-    var processStaticMethods = function (Class) {
-        Class.descriptor.static.method.each(function (descriptor, name) {
+function processProperties(Class) {
+    var prototype = Class.prototype;
 
-            //save method to class
-            xs.method.define(Class, name, descriptor);
-        });
-    };
+    Class.descriptor.property.each(function (descriptor, name) {
 
-    var processProperties = function (Class) {
-        var prototype = Class.prototype;
+        //save property to prototype
+        xs.property.define(prototype, name, descriptor);
 
-        Class.descriptor.property.each(function (descriptor, name) {
+        //set undefined for assigned properties
+        if (descriptor.hasOwnProperty('value')) {
+            prototype[name] = undefined;
+        }
+    });
+}
 
-            //save property to prototype
-            xs.property.define(prototype, name, descriptor);
+function processMethods(Class) {
+    Class.descriptor.method.each(function (value, name) {
 
-            //set undefined for assigned properties
-            if (descriptor.hasOwnProperty('value')) {
-                prototype[name] = undefined;
-            }
-        });
-    };
-
-    var processMethods = function (Class) {
-        Class.descriptor.method.each(function (value, name) {
-
-            //save method to prototype
-            xs.method.define(Class.prototype, name, value);
-        });
-    };
-
-})(window, 'xs');
+        //save method to prototype
+        xs.method.define(Class.prototype, name, value);
+    });
+}

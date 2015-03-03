@@ -35,7 +35,7 @@
             loadTests(core, modules, testsList);
         };
 
-        if (params.mode) {
+        if (params.mode && params.mode !== 'source') {
             loadBuild(src, params.mode, testsLoader);
         } else {
             loadSource(src, testsLoader);
@@ -61,19 +61,16 @@
 
     var loadSource = function (src, callback) {
 
-        var modules = {};
-        assemblyModules(modules, src.modules);
+        load(['../build/source/xs.js'], function () {
 
-        var coreFiles = ['../src/xs.js'].concat(Object.keys(src.core).map(function (name) {
-            return resolveSourceFile(name);
-        }));
-
-        load(coreFiles, function () {
             //add path to loader
             xs.Loader.paths.add('xs', '../src');
 
             //mark xs.log.Router as ready
             xs.log.Router.ready();
+
+            var modules = {};
+            assemblyModules(modules, src.modules);
 
             xs.Loader.require(Object.keys(modules), function () {
                 callback(src.core, modules);
@@ -190,7 +187,7 @@
             };
 
             var handleEnd = function () {
-                console.info(module + '::' + name, '-', +((new Date()).valueOf()  - time));
+                console.info(module + '::' + name, '-', +((new Date()).valueOf() - time));
                 done();
             };
 
@@ -212,11 +209,6 @@
             });
         });
         return list;
-    }
-
-    //resolves source file name from class name
-    function resolveSourceFile(name) {
-        return '../src/' + name.split('.').slice(1).join('/') + '.js';
     }
 
     //resolves test file name from class name
