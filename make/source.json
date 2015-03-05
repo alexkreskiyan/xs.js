@@ -21,9 +21,7 @@
         },
         "xs.core.Lazy": {},
         "xs.core.Promise": {},
-        "xs.reactive.Stream": {
-            "test": false
-        },
+        "xs.reactive.Stream": {},
         "xs.class.Class": {},
         "xs.class.preprocessors.namespace": {},
         "xs.class.preprocessors.abstract": {},
@@ -214,7 +212,8 @@
             },
             "uri": {
                 "URI": {
-                    "contract": "class"
+                    "contract": "class",
+                    "test": false
                 },
                 "QueryString": {
                     "contract": "class"

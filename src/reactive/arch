@@ -1,6 +1,9 @@
 1. Stream
 1.1 Common
 Stream is a stream of events, produced by some event emitter
+Stream is constructed with:
+- subscriber
+- unsubscriber
 Streams can be transformed and combined
 Streams are infinite, but are endable
 Streams are destroyable and endable (destroy leads to stream end, but not visa versa)

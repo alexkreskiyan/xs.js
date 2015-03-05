@@ -108,6 +108,13 @@ xs.constant(xs.core.Promise, 'Resolved', 1);
 xs.constant(xs.core.Promise, 'Rejected', 2);
 
 /**
+ * Static method, that verifies given object to be a promise
+ */
+xs.core.Promise.isPromise = function (candidate) {
+
+};
+
+/**
  * Static async control operating method. Creates aggregate promise, that is resolved when all
  * given promises are resolved. If any promise among given is rejected, aggregate promise is rejected with that reason
  *
@@ -391,9 +398,7 @@ xs.core.Promise.prototype.destroy = function () {
     me.private.handlers.remove();
 
     //mark promise as destroyed
-    me.private = {
-        isDestroyed: true
-    };
+    delete me.private;
 };
 
 /**
