@@ -5,6 +5,23 @@
         "xs.log.Router": {},
         "xs.log.Logger": {},
         "xs.core.Asserter": {},
+        "reactive": {
+            "xs.reactive.Reactive": {
+                "test": false
+            },
+            "xs.reactive.Stream": {},
+            "xs.reactive.Property": {},
+            "xs.reactive.Emitter": {
+                "test": false
+            },
+            "xs.reactive.Transformer": {
+                "test": false
+            },
+            "xs.reactive.stream.Emitter": {},
+            "xs.reactive.stream.Transformer": {},
+            "xs.reactive.property.Emitter": {},
+            "xs.reactive.property.Transformer": {}
+        },
         "xs.lang.Object": {},
         "xs.lang.Array": {},
         "xs.lang.List": {},
@@ -21,7 +38,6 @@
         },
         "xs.core.Lazy": {},
         "xs.core.Promise": {},
-        "xs.reactive.Stream": {},
         "xs.class.Class": {},
         "xs.class.preprocessors.namespace": {},
         "xs.class.preprocessors.abstract": {},

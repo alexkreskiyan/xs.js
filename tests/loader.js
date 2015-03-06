@@ -10,8 +10,8 @@
     var handlers = [];
 
     //fetches tests list from specified query param
-    var params = (function () {
-        var result = /\?([^#\?]+)/.exec(me.location.search);
+    var params = (function (query) {
+        var result = /\?([^#\?]+)/.exec(query);
         if (!result) {
 
             return {};
@@ -24,16 +24,13 @@
         }
 
         return params;
-    }).call(me);
+    })(me.location.search);
 
     //fetches tests list from specified query param
     var testsList = params.tests.split(',');
 
     //get src file
     request('../make/source.json', function (src) {
-        var testsLoader = function (core, modules) {
-            loadTests(core, modules, testsList);
-        };
 
         if (params.mode && params.mode !== 'source') {
             loadBuild(src, params.mode, testsLoader);
@@ -52,10 +49,7 @@
             //mark xs.log.Router as ready
             xs.log.Router.ready();
 
-            var modules = {};
-            assemblyModules(modules, src.modules);
-
-            callback(src.core, modules);
+            callback(src);
         });
     };
 
@@ -73,9 +67,19 @@
             assemblyModules(modules, src.modules);
 
             xs.Loader.require(Object.keys(modules), function () {
-                callback(src.core, modules);
+                callback(src);
             });
         });
+    };
+
+    var testsLoader = function (src) {
+
+        var core = assemblyCore(src.core);
+
+        var modules = {};
+        assemblyModules(modules, src.modules);
+
+        loadTests(core, modules, testsList);
     };
 
     var loadTests = function (core, modules, testsList) {
@@ -101,6 +105,34 @@
         }), runTests);
     };
 
+    function assemblyCore(modules) {
+        var names = Object.keys(modules);
+
+        var core = {};
+
+        for (var i = 0; i < names.length; i++) {
+
+            var name = names[i];
+            var module = modules[name];
+
+            if (isModule(module)) {
+
+                core[name] = module;
+
+                continue;
+            }
+
+            //concat core with module
+            var keys = Object.keys(module);
+            for (var j = 0; j < keys.length; j++) {
+                var key = keys[j];
+                core[key] = module[key];
+            }
+        }
+
+        return core;
+    }
+
     function assemblyModules(list, modules, name) {
         //modules is node, if given string contract
         if (typeof modules.contract === 'string') {
@@ -113,6 +145,10 @@
         Object.keys(modules).forEach(function (key) {
             assemblyModules(list, modules[key], name ? (name + '.' + key) : key);
         });
+    }
+
+    function isModule(description) {
+        return (Object.keys(description).length === 0) || (typeof description.contract === 'string') || (typeof description.test === 'boolean');
     }
 
 
