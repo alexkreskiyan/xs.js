@@ -1,8 +1,16 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.core.Promise');
+var log = new xs.log.Logger('xs.reactive.Reactive');
 
-var assert = new xs.core.Asserter(log, StreamError);
+var assert = new xs.core.Asserter(log, ReactiveError);
+
+var Reactive = module.Reactive = function () {
+    throw new ReactiveError('constructor - abstract class');
+};
+
+Reactive.prototype.listen = function (listener) {
+    console.log('add listener', listener);
+};
 
 /**
  * Internal error class
@@ -11,10 +19,10 @@ var assert = new xs.core.Asserter(log, StreamError);
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class StreamError
+ * @class ReactiveError
  */
-function StreamError(message) {
-    this.message = 'xs.reactive.Stream::' + message;
+function ReactiveError(message) {
+    this.message = 'xs.reactive.Reactive::' + message;
 }
 
-StreamError.prototype = new Error();
+ReactiveError.prototype = new Error();

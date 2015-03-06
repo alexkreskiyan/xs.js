@@ -1,8 +1,25 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.core.Promise');
+var log = new xs.log.Logger('xs.reactive.stream.Emitter');
 
-var assert = new xs.core.Asserter(log, StreamError);
+var assert = new xs.core.Asserter(log, EmitterError);
+
+if (!module.stream) {
+    module.stream = {};
+}
+
+xs.reactive.stream = {};
+
+xs.reactive.stream.Emitter = function (source) {
+    console.log('constructor - emitter', source);
+};
+
+var Emitter = module.stream.Emitter = xs.reactive.stream.Emitter;
+
+delete xs.reactive.stream;
+
+//extend Emitter from Stream
+xs.extend(Emitter, module.Stream);
 
 /**
  * Internal error class
@@ -11,10 +28,10 @@ var assert = new xs.core.Asserter(log, StreamError);
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class StreamError
+ * @class EmitterError
  */
-function StreamError(message) {
-    this.message = 'xs.reactive.Stream::' + message;
+function EmitterError(message) {
+    this.message = 'xs.reactive.stream.Emitter::' + message;
 }
 
-StreamError.prototype = new Error();
+EmitterError.prototype = new Error();

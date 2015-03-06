@@ -22,6 +22,32 @@ xs.uid = function () {
 };
 
 /**
+ * Core extend function
+ *
+ * @ignore
+ *
+ * @param {Function} child child class
+ * @param {Function} parent parent class
+ */
+xs.extend = function (child, parent) {
+    //create fake constructor
+    var Fn = function () {
+    };
+
+    //assign prototype for fake constructor
+    Fn.prototype = parent.prototype;
+
+    //assign new fake constructor's instance as child prototype, establishing correct prototype chain
+    child.prototype = new Fn();
+
+    //assign correct constructor instead fake constructor
+    child.prototype.constructor = child;
+
+    //save reference to parent
+    child.parent = parent;
+};
+
+/**
  * @property isChrome
  * @inheritdoc xs.env.Context#isChrome
  */

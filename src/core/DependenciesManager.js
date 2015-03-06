@@ -338,6 +338,10 @@ var DependenciesManager = (function () {
                 return first !== last;
             });
 
+            if (lockedChain) {
+                debugger; //TODO remove
+            }
+
             //if locked chain found - return locked subset
             return lockedChain ? new xs.core.Collection(lockedChain.values().slice(first, last)) : undefined;
         };

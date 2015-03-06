@@ -1,8 +1,25 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.core.Promise');
+var log = new xs.log.Logger('xs.reactive.stream.Transformer');
 
-var assert = new xs.core.Asserter(log, StreamError);
+var assert = new xs.core.Asserter(log, TransformerError);
+
+if (!module.stream) {
+    module.stream = {};
+}
+
+xs.reactive.stream = {};
+
+xs.reactive.stream.Transformer = function (source) {
+    console.log('constructor - transformer', source);
+};
+
+var Transformer = module.stream.Transformer = xs.reactive.stream.Transformer;
+
+delete xs.reactive.stream;
+
+//extend Transformer from Stream
+xs.extend(Transformer, module.Stream);
 
 /**
  * Internal error class
@@ -11,10 +28,10 @@ var assert = new xs.core.Asserter(log, StreamError);
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class StreamError
+ * @class TransformerError
  */
-function StreamError(message) {
-    this.message = 'xs.reactive.Stream::' + message;
+function TransformerError(message) {
+    this.message = 'xs.reactive.stream.Transformer::' + message;
 }
 
-StreamError.prototype = new Error();
+TransformerError.prototype = new Error();
