@@ -8,16 +8,16 @@ if (!xs.reactive) {
     xs.reactive = {};
 }
 
-var Stream = xs.reactive.Stream = module.Stream = function (source) {
-    assert.ok((source instanceof Stream) || xs.isFunction(source), 'constructor - given source `$source` is not a stream neither an emitter', {
-        $source: source
-    });
+var Reactive = module.Reactive;
 
-    return xs.isFunction(source) ? new module.stream.Emitter(source) : new module.stream.Transformer(source);
+var Stream = xs.reactive.Stream = function (generator, sources) {
+    var me = this;
+
+    Reactive.apply(me, arguments);
 };
 
 //extend Stream from Reactive
-xs.extend(module.Stream, module.Reactive);
+xs.extend(Stream, Reactive);
 
 /**
  * Internal error class

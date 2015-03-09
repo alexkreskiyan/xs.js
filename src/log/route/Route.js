@@ -24,7 +24,7 @@ xs.define(xs.Class, 'ns.Route', function (self) {
      *
      * For example:
      *
-     *     var route = new MyRoute([
+     *     var route = new MyRoute('my route', [
      *         {
      *             category: 'xs',
      *             level: xs.log.Info | xs.log.Warning

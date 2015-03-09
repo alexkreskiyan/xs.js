@@ -10,17 +10,7 @@
                 "test": false
             },
             "xs.reactive.Stream": {},
-            "xs.reactive.Property": {},
-            "xs.reactive.Emitter": {
-                "test": false
-            },
-            "xs.reactive.Transformer": {
-                "test": false
-            },
-            "xs.reactive.stream.Emitter": {},
-            "xs.reactive.stream.Transformer": {},
-            "xs.reactive.property.Emitter": {},
-            "xs.reactive.property.Transformer": {}
+            "xs.reactive.Property": {}
         },
         "xs.lang.Object": {},
         "xs.lang.Array": {},

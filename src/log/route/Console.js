@@ -70,7 +70,7 @@ xs.define(xs.Class, 'ns.Console', function (self) {
 
         switch (level) {
             case xs.log.Error:
-                console.info(category + ' ' + message, data);
+                console.error(category + ' ' + message, data);
                 break;
             case xs.log.Warning:
                 console.warn(category + ' ' + message, data);

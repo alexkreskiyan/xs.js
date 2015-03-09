@@ -8,16 +8,16 @@ if (!xs.reactive) {
     xs.reactive = {};
 }
 
-var Property = xs.reactive.Property = module.Property = function (source) {
-    assert.ok((source instanceof Property) || xs.isFunction(source), 'constructor - given source `$source` is not a property neither an emitter', {
-        $source: source
-    });
+var Reactive = module.Reactive;
 
-    return xs.isFunction(source) ? new module.property.Emitter(source) : new module.property.Transformer(source);
+var Property = xs.reactive.Property = function (generator, sources) {
+    var me = this;
+
+    Reactive.apply(me, arguments);
 };
 
 //extend Property from Reactive
-xs.extend(module.Property, module.Reactive);
+xs.extend(Property, Reactive);
 
 /**
  * Internal error class
