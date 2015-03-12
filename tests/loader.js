@@ -46,15 +46,7 @@
             //add path to loader
             xs.Loader.paths.add('xs', '../src');
 
-            //add debug log route
-            xs.log.Router.routes.add(new xs.log.route.Console('console'));
-
-            //mark xs.log.Router as ready
-            xs.log.Router.ready();
-
-            xs.onReady(function () {
-                callback(src);
-            });
+            callback(src);
         });
     };
 
@@ -69,16 +61,7 @@
             assemblyModules(modules, src.modules);
 
             xs.Loader.require(Object.keys(modules), function () {
-
-                xs.onReady(function () {
-                    //add debug log route
-                    xs.log.Router.routes.add(new xs.log.route.Console('console'));
-
-                    //mark xs.log.Router as ready
-                    xs.log.Router.ready();
-
-                    callback(src);
-                });
+                callback(src);
             });
         });
     };
@@ -89,6 +72,9 @@
 
         var modules = {};
         assemblyModules(modules, src.modules);
+
+        //mark xs.log.Router as ready
+        xs.log.Router.ready();
 
         loadTests(core, modules, testsList);
     };
