@@ -227,9 +227,6 @@ xs.property.define(xs.core.Promise.prototype, 'isDestroyed', xs.property.prepare
 xs.core.Promise.prototype.resolve = function (data) {
     var me = this;
 
-    //assert, that promise is not destroyed
-    assert.not(me.isDestroyed, 'resove - object is destroyed');
-
     //assert, that promise is pending
     assert.equal(me.private.state, me.constructor.Pending, 'resolve - promise is already resolved');
 
@@ -251,9 +248,6 @@ xs.core.Promise.prototype.resolve = function (data) {
  */
 xs.core.Promise.prototype.reject = function (reason) {
     var me = this;
-
-    //assert, that promise is not destroyed yet
-    assert.not(me.isDestroyed, 'reject - object is destroyed');
 
     //assert, that promise is pending
     assert.equal(me.private.state, me.constructor.Pending, 'reject - promise is already rejected');
@@ -277,9 +271,6 @@ xs.core.Promise.prototype.reject = function (reason) {
  */
 xs.core.Promise.prototype.update = function (state) {
     var me = this;
-
-    //assert, that promise is not destroyed yet
-    assert.not(me.isDestroyed, 'update - object is destroyed');
 
     //assert, that promise is pending
     assert.equal(me.private.state, me.constructor.Pending, 'update - promise is already ' + me.private.state);
@@ -316,11 +307,7 @@ xs.core.Promise.prototype.update = function (state) {
 xs.core.Promise.prototype.then = function (handleResolved, handleRejected, handleProgress) {
     var me = this;
 
-    //assert, that promise is not destroyed yet
-    assert.not(me.isDestroyed, 'then - object is destroyed');
-
     var item = createItem(handleResolved, handleRejected, handleProgress);
-
 
     //if not handling - return me
     if (!item) {
