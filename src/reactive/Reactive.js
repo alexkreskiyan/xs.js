@@ -4,10 +4,48 @@ var log = new xs.log.Logger('xs.reactive.Reactive');
 
 var assert = new xs.core.Asserter(log, ReactiveError);
 
+//define xs.reactive
+if (!xs.reactive) {
+    xs.reactive = {};
+}
+
+/**
+ * Reactive targets enum
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @class xs.reactive
+ *
+ * @singleton
+ */
+
+/**
+ * Data target. Is used to listen to reactive data changes. Default value
+ *
+ * @readonly
+ *
+ * @property Data
+ *
+ * @type {Number}
+ */
+xs.reactive.Data = 0x1;
+
+/**
+ * Destroy target. Is used to listen to single event of reactive destroying
+ *
+ * @readonly
+ *
+ * @property Warning
+ *
+ * @type {Number}
+ */
+xs.reactive.Destroy = 0x2;
+
+
 var Reactive = function (generator, sources) {
     var me = this;
 
-    log.info('constructor - creating reactive from `$generator` and `$sources`', {
+    log.trace('constructor - creating reactive from `$generator` and `$sources`', {
         $generator: generator,
         $sources: sources
     });
@@ -25,16 +63,22 @@ var Reactive = function (generator, sources) {
     //run generator with send, end and given sources
     var handlers = generator.apply(undefined, [
         function (data) {
+            //verify stream
+            assert.not(me.isDestroyed, 'send - reactive is destroyed');
+
             //send data
-            send.call(me, Reactive.Data, data);
+            send(me.private.reactiveHandlers, xs.reactive.Data, data);
         },
         function () {
+            //verify stream
+            assert.not(me.isDestroyed, 'send - reactive is destroyed');
+
             //destroy stream
             me.destroy();
         }
     ].concat(sources ? sources : []));
 
-    log.info('constructor - generator returned `$handlers`', {
+    log.trace('constructor - generator returned `$handlers`', {
         $handlers: handlers
     });
 
@@ -69,9 +113,6 @@ var Reactive = function (generator, sources) {
 
 //save reference to module
 module.Reactive = Reactive;
-
-Reactive.Data = 0x1;
-Reactive.Destroy = 0x2;
 
 Object.defineProperty(Reactive.prototype, 'isDestroyed', {
     get: function () {
@@ -116,7 +157,7 @@ Reactive.prototype.on = function (handler, options) {
 
         handlers.add({
             handler: handler,
-            target: Reactive.Data,
+            target: xs.reactive.Data,
             suspended: false,
             scope: undefined
         });
@@ -143,11 +184,11 @@ Reactive.prototype.on = function (handler, options) {
             $target: target
         });
     } else {
-        target = Reactive.Data;
+        target = xs.reactive.Data;
     }
 
     //process suspended option
-    var suspended = options.hasOwnProperty('scope') ? Boolean(options.suspended) : false;
+    var suspended = options.hasOwnProperty('suspended') ? Boolean(options.suspended) : false;
 
     //define handler item
     var item = {
@@ -298,7 +339,7 @@ Reactive.prototype.resume = function (selector, flags) {
 
         //mark each item as resumed
         handlers.each(function (item) {
-            item.suspended = true;
+            item.suspended = false;
         });
 
         //sync active state to true - all handlers were resumed
@@ -327,12 +368,12 @@ Reactive.prototype.resume = function (selector, flags) {
     if (resumed instanceof xs.core.Collection) {
         //mark each item as resumed
         resumed.each(function (item) {
-            item.resumeed = true;
+            item.suspended = false;
         });
 
         //else if single handler found
     } else if (xs.isObject(resumed)) {
-        resumed.resumeed = true;
+        resumed.suspended = false;
     }
 
     //sync active state - perhaps, some handlers were resumed and it is true
@@ -346,27 +387,28 @@ Reactive.prototype.destroy = function () {
 
     log.trace('destroy - destroying reactive');
 
-    //send destroy notification
-    send.call(me, Reactive.Destroy);
-
-    //remove all reactiveHandlers
-    me.private.reactiveHandlers.remove();
-
     //call off handler
     me.private.off();
 
+    var handlers = me.private.reactiveHandlers;
+
     delete me.private;
+
+    //send destroy notification
+    send(handlers, xs.reactive.Destroy);
+
+    //remove all handlers
+    handlers.remove();
 };
 
-function send(target, data) {
-    var me = this;
+function send(handlers, target, data) {
 
-    log.trace('send - sending `$data` to ' + (target === Reactive.Data ? 'Data' : 'Destroy'), {
+    log.trace('send - sending `$data` to ' + (target === xs.reactive.Data ? 'Data' : 'Destroy'), {
         $data: data
     });
 
     //return whether handlers processing was cancelled
-    return !me.private.reactiveHandlers.find(function (item) {
+    return !handlers.find(function (item) {
 
         //ignore, if item is suspended or has another target
         if (item.suspended || !(item.target & target)) {
