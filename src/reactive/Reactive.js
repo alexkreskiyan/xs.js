@@ -18,7 +18,7 @@ var Reactive = function (generator, sources) {
     });
 
     //verify sources
-    assert.ok(arguments.length === 1 || xs.isArray(sources), 'constructor - given dependent sources list `$sources` is not an array of reactives', {
+    assert.ok(arguments.length === 1 || xs.isArray(sources), 'constructor - given dependent sources list `$sources` is not an array of reactive elements', {
         $sources: sources
     });
 
@@ -110,7 +110,7 @@ Reactive.prototype.on = function (handler, options) {
     //if no options given - simply add
     if (!options) {
 
-        log.info('on - adding handler `$handler` without options', {
+        log.trace('on - adding handler `$handler` without options', {
             $handler: handler
         });
 
@@ -128,7 +128,7 @@ Reactive.prototype.on = function (handler, options) {
     }
 
 
-    log.info('on - add handler `$handler` with options `$options`', {
+    log.trace('on - add handler `$handler` with options `$options`', {
         $handler: handler,
         $options: options
     });
@@ -179,7 +179,7 @@ Reactive.prototype.on = function (handler, options) {
         handlers.insert(priority, item);
     }
 
-    log.info('on - handler `$handler` was ' + (priority === false ? 'added' : 'inserted at ' + priority) + 'as `$item`', {
+    log.trace('on - handler `$handler` was ' + (priority === false ? 'added' : 'inserted at ' + priority) + 'as `$item`', {
         $handler: handler,
         $item: item
     });
@@ -201,7 +201,7 @@ Reactive.prototype.off = function (selector, flags) {
     //complete truncate of all handlers
     if (!arguments.length) {
 
-        log.info('off - removing all handlers');
+        log.trace('off - removing all handlers');
 
         //remove all handlers
         handlers.remove();
@@ -214,12 +214,12 @@ Reactive.prototype.off = function (selector, flags) {
 
     //selector given
     if (arguments.length === 1) {
-        log.info('off - removing handlers by selector `$selector`', {
+        log.trace('off - removing handlers by selector `$selector`', {
             $selector: selector
         });
         handlers.removeBy(selector);
     } else {
-        log.info('off - removing handlers by selector `$selector` and flags `$flags`', {
+        log.trace('off - removing handlers by selector `$selector` and flags `$flags`', {
             $selector: selector
         });
         handlers.removeBy(selector, flags);
@@ -240,7 +240,7 @@ Reactive.prototype.suspend = function (selector, flags) {
     //all items suspended
     if (!arguments.length) {
 
-        log.info('suspend - suspending all handlers');
+        log.trace('suspend - suspending all handlers');
 
         //mark each item as suspended
         handlers.each(function (item) {
@@ -256,12 +256,12 @@ Reactive.prototype.suspend = function (selector, flags) {
     //get suspended handlers subset
     var suspended;
     if (arguments.length === 1) {
-        log.info('suspend - suspending handlers by selector `$selector`', {
+        log.trace('suspend - suspending handlers by selector `$selector`', {
             $selector: selector
         });
         suspended = handlers.find(selector);
     } else {
-        log.info('suspend - suspending handlers by selector `$selector` and flags `$flags`', {
+        log.trace('suspend - suspending handlers by selector `$selector` and flags `$flags`', {
             $selector: selector
         });
         suspended = handlers.find(selector, flags);
@@ -294,7 +294,7 @@ Reactive.prototype.resume = function (selector, flags) {
     //all items resumed
     if (!arguments.length) {
 
-        log.info('resume - resuming all handlers');
+        log.trace('resume - resuming all handlers');
 
         //mark each item as resumed
         handlers.each(function (item) {
@@ -312,12 +312,12 @@ Reactive.prototype.resume = function (selector, flags) {
     //get resumed handlers subset
     var resumed;
     if (arguments.length === 1) {
-        log.info('resume - resuming handlers by selector `$selector`', {
+        log.trace('resume - resuming handlers by selector `$selector`', {
             $selector: selector
         });
         resumed = handlers.find(selector);
     } else {
-        log.info('resume - resuming handlers by selector `$selector` and flags `$flags`', {
+        log.trace('resume - resuming handlers by selector `$selector` and flags `$flags`', {
             $selector: selector
         });
         resumed = handlers.find(selector, flags);
@@ -325,7 +325,7 @@ Reactive.prototype.resume = function (selector, flags) {
 
     //if handlers collection found
     if (resumed instanceof xs.core.Collection) {
-        //mark each item as resumeed
+        //mark each item as resumed
         resumed.each(function (item) {
             item.resumeed = true;
         });
@@ -344,7 +344,7 @@ Reactive.prototype.resume = function (selector, flags) {
 Reactive.prototype.destroy = function () {
     var me = this;
 
-    log.info('destroy - destroying reactive');
+    log.trace('destroy - destroying reactive');
 
     //send destroy notification
     send.call(me, Reactive.Destroy);
@@ -361,7 +361,7 @@ Reactive.prototype.destroy = function () {
 function send(target, data) {
     var me = this;
 
-    log.info('send - sending `$data` to ' + (target === Reactive.Data ? 'Data' : 'Destroy'), {
+    log.trace('send - sending `$data` to ' + (target === Reactive.Data ? 'Data' : 'Destroy'), {
         $data: data
     });
 
@@ -385,18 +385,18 @@ function syncActive(value) {
     //if no exact state given - evaluate
     if (!arguments.length) {
 
-        log.info('syncActive - no value given, evaluating');
+        log.trace('syncActive - no value given, evaluating');
 
         value = me.private.reactiveHandlers.find(function (item) {
             return !item.suspended;
         }) !== undefined;
 
-        log.info('syncActive - evaluated value is ' + (value ? 'true' : 'false'));
+        log.trace('syncActive - evaluated value is ' + (value ? 'true' : 'false'));
     }
 
     //return if nothing changed
     if (me.private.isActive === value) {
-        log.info('syncActive - no changes, exiting');
+        log.trace('syncActive - no changes, exiting');
 
         return;
     }
@@ -406,12 +406,12 @@ function syncActive(value) {
 
     //call on/off
     if (value) {
-        log.info('syncActive - resuming reactive with `$on`', {
+        log.trace('syncActive - resuming reactive with `$on`', {
             $on: me.private.on
         });
         me.private.on();
     } else {
-        log.info('syncActive - suspending reactive with `$off`', {
+        log.trace('syncActive - suspending reactive with `$off`', {
             $off: me.private.off
         });
         me.private.off();
