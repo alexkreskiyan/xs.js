@@ -56,7 +56,7 @@ var DependenciesManager = window.dm = (function () {
             dependency.add(getDependency(contract));
 
             //assert, that no dead lock made
-            assert.not(getDeadLock(dependency), 'dead lock found');
+            assert.not(getDeadLock(dependency));
         });
     };
 
