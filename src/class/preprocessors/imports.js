@@ -109,14 +109,14 @@ xs.class.preprocessors.add('imports', function () {
 
     if (loads.size) {
         //load imported classes
-        log.trace(Class.label + '. Loading', {
+        log.trace(Class + '. Loading', {
             loads: loads.values()
         });
         //require async
         xs.require(loads.values(), processImport);
     } else {
         //nothing to load
-        log.trace(Class.label + '. Nothing to load');
+        log.trace(Class + '. Nothing to load');
         processImport();
     }
 
@@ -127,13 +127,13 @@ xs.class.preprocessors.add('imports', function () {
             return xs.ContractsManager.get(name);
         });
 
-        log.trace(Class.label + '. Imports loaded, applying dependency', {
+        log.trace(Class + '. Imports loaded, applying dependency', {
             loads: loads.values()
         });
         //create new dependency
         dependencies.add(Class, waiting, function () {
 
-            log.trace(Class.label + '. Imports loads processed, applying imports', {
+            log.trace(Class + '. Imports loads processed, applying imports', {
                 loads: loads.values(),
                 imports: imports.toSource()
             });

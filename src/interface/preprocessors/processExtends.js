@@ -18,10 +18,10 @@ xs.interface.preprocessors.add('processExtends', function () {
 }, function (Interface, descriptor) {
     var extended = descriptor.extends;
 
-    log.trace(Interface.label + '. Extended ' + extended);
+    log.trace(Interface + '. Extended ' + extended);
     //if no parent given - extend from xs.interface.Base
     if (!xs.isDefined(extended)) {
-        log.trace(Interface.label + '. Extending xs.interface.Base');
+        log.trace(Interface + '. Extending xs.interface.Base');
         extend(Interface, xs.interface.Base);
 
         return;
@@ -34,8 +34,8 @@ xs.interface.preprocessors.add('processExtends', function () {
     }
 
     //assert, that parent is defined
-    assert.ok(xs.ContractsManager.has(extended), '[$Interface]: parent interface `$extended` is not defined. Move it to imports section, please', {
-        $Interface: Interface.label,
+    assert.ok(xs.ContractsManager.has(extended), '$Interface: parent interface `$extended` is not defined. Move it to imports section, please', {
+        $Interface: Interface,
         $extended: extended
     });
 
@@ -43,18 +43,18 @@ xs.interface.preprocessors.add('processExtends', function () {
     var Parent = xs.ContractsManager.get(extended);
 
     //check that parent is interface
-    assert.Interface(Parent, '[$Interface]: contract `$Parent` is not an interface', {
-        $Interface: Interface.label,
-        $Parent: Parent.label
+    assert.Interface(Parent, '$Interface: contract `$Parent` is not an interface', {
+        $Interface: Interface,
+        $Parent: Parent
     });
 
     //check that interface is ready
-    assert.not(Parent.isProcessing, '[$Interface]: parent interface `$Parent` is not processed yet. Move it to imports section, please', {
-        $Interface: Interface.label,
-        $Parent: Parent.label
+    assert.not(Parent.isProcessing, '$Interface: parent interface `$Parent` is not processed yet. Move it to imports section, please', {
+        $Interface: Interface,
+        $Parent: Parent
     });
 
-    log.trace(Interface.label + '. Extending ' + Parent.label);
+    log.trace(Interface + '. Extending ' + Parent);
     //apply extends
     applyExtends(Interface, Parent);
 });

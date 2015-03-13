@@ -20,8 +20,8 @@ xs.enum.preprocessors.add('values', function () {
     //values
 
     //assert, that values list is an object
-    assert.object(values, '[$Enum]: values list `$values` is not an object', {
-        $Enum: Enum.label,
+    assert.object(values, '$Enum: values list `$values` is not an object', {
+        $Enum: Enum,
         $value: values
     });
 
@@ -33,8 +33,8 @@ xs.enum.preprocessors.add('values', function () {
 
     //add values from raw descriptor and save to Enum.descriptor, define values as constants
     values.each(function (value, name) {
-        assert.ok(name && xs.isString(name), '[$Enum]: given value name `$name` is incorrect', {
-            $Enum: Enum.label,
+        assert.ok(name && xs.isString(name), '$Enum: given value name `$name` is incorrect', {
+            $Enum: Enum,
             $name: name
         });
 

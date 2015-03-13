@@ -42,14 +42,14 @@ xs.interface.preprocessors.add('imports', function () {
 
     if (loads.size) {
         //load imported interfaces
-        log.trace(Interface.label + '. Loading', {
+        log.trace(Interface + '. Loading', {
             loads: loads.values()
         });
         //require async
         xs.require(loads.values(), processImports);
     } else {
         //nothing to load
-        log.trace(Interface.label + '. Nothing to load');
+        log.trace(Interface + '. Nothing to load');
         processImports();
     }
 
@@ -60,13 +60,13 @@ xs.interface.preprocessors.add('imports', function () {
             return xs.ContractsManager.get(name);
         });
 
-        log.trace(Interface.label + '. Imports loaded, applying dependency', {
+        log.trace(Interface + '. Imports loaded, applying dependency', {
             loads: loads.values()
         });
         //create new dependency
         dependencies.add(Interface, waiting, function () {
 
-            log.trace(Interface.label + '. Imports processed', {
+            log.trace(Interface + '. Imports processed', {
                 loads: loads.values()
             });
 

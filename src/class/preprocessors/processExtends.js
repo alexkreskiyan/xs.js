@@ -35,12 +35,12 @@ xs.class.preprocessors.add('processExtends', function () {
 }, function (Class, descriptor) {
     var extended = descriptor.extends;
 
-    log.trace(Class.label + '. Preparing to extend', {
+    log.trace(Class + '. Preparing to extend', {
         extended: extended
     });
     //if no parent given - extend from xs.class.Base
     if (!xs.isDefined(extended)) {
-        log.trace(Class.label + '. Extending xs.class.Base');
+        log.trace(Class + '. Extending xs.class.Base');
         extend(Class, xs.class.Base);
 
         return;
@@ -53,8 +53,8 @@ xs.class.preprocessors.add('processExtends', function () {
     }
 
     //assert, that parent is defined
-    assert.ok(xs.ContractsManager.has(extended), '[$Class]: parent class `$extended` is not defined. Move it to imports section, please', {
-        $Class: Class.label,
+    assert.ok(xs.ContractsManager.has(extended), '$Class: parent class `$extended` is not defined. Move it to imports section, please', {
+        $Class: Class,
         $extended: extended
     });
 
@@ -62,18 +62,18 @@ xs.class.preprocessors.add('processExtends', function () {
     var Parent = xs.ContractsManager.get(extended);
 
     //check that parent is class
-    assert.Class(Parent, '[$Class]: contract `$Parent` is not a class', {
-        $Class: Class.label,
-        $Parent: Parent.label
+    assert.Class(Parent, '$Class: contract `$Parent` is not a class', {
+        $Class: Class,
+        $Parent: Parent
     });
 
     //check that class is ready
-    assert.not(Parent.isProcessing, '[$Class]: parent class `$Parent` is not processed yet. Move it to imports section, please', {
-        $Class: Class.label,
-        $Parent: Parent.label
+    assert.not(Parent.isProcessing, '$Class: parent class `$Parent` is not processed yet. Move it to imports section, please', {
+        $Class: Class,
+        $Parent: Parent
     });
 
-    log.trace(Class.label + '. Extending ' + Parent.label);
+    log.trace(Class + '. Extending ' + Parent);
     //apply extends
     applyExtends(Class, Parent);
 });

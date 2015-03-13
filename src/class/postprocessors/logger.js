@@ -1,13 +1,11 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.class.postprocessors.logger');
-
 /**
  * This postprocessor automatically creates and saves logger instance for this class as Class.log
  *
  * This is made to automatically create logger instances, that use Class.label as category.
  *
- * Later, logger can be accessed via self.label
+ * Later, logger can be accessed via self.log
  *
  * @member xs.class.postprocessors
  *

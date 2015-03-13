@@ -39,8 +39,8 @@ xs.interface.preprocessors.add('prepareElements', function () {
 function processConstants(Interface, descriptor) {
 
     //assert, that constants list is an array
-    assert.array(descriptor.constant, '[$Interface]: constants list `$constants` is not an array', {
-        $Interface: Interface.label,
+    assert.array(descriptor.constant, '$Interface: constants list `$constants` is not an array', {
+        $Interface: Interface,
         $constants: descriptor.constant
     });
 
@@ -57,8 +57,8 @@ function processConstants(Interface, descriptor) {
 
     //add own constants from raw descriptor and save to Interface.descriptor
     descriptor.constant.each(function (name) {
-        assert.ok(name && xs.isString(name), '[$Interface]: given constant name `$name` is incorrect', {
-            $Interface: Interface.label,
+        assert.ok(name && xs.isString(name), '$Interface: given constant name `$name` is incorrect', {
+            $Interface: Interface,
             $name: name
         });
 
@@ -72,8 +72,8 @@ function processConstants(Interface, descriptor) {
 function processStaticProperties(Interface, descriptor) {
 
     //assert, that static properties list is an object
-    assert.object(descriptor.static.property, '[$Interface]: static properties list `$properties` is not an object', {
-        $Interface: Interface.label,
+    assert.object(descriptor.static.property, '$Interface: static properties list `$properties` is not an object', {
+        $Interface: Interface,
         $properties: descriptor.static.property
     });
 
@@ -90,8 +90,8 @@ function processStaticProperties(Interface, descriptor) {
 
     //add own static properties from raw descriptor
     descriptor.static.property.each(function (value, name) {
-        assert.ok(name, '[$Interface]: given static property name `$name` is incorrect', {
-            $Interface: Interface.label,
+        assert.ok(name, '$Interface: given static property name `$name` is incorrect', {
+            $Interface: Interface,
             $name: name
         });
 
@@ -122,8 +122,8 @@ function processStaticProperties(Interface, descriptor) {
 function processStaticMethods(Interface, descriptor) {
 
     //assert, that static methods list is an object
-    assert.object(descriptor.static.method, '[$Interface]: static methods list `$methods` is not an object', {
-        $Interface: Interface.label,
+    assert.object(descriptor.static.method, '$Interface: static methods list `$methods` is not an object', {
+        $Interface: Interface,
         $methods: descriptor.static.method
     });
 
@@ -140,8 +140,8 @@ function processStaticMethods(Interface, descriptor) {
 
     //add own static methods from raw descriptor
     descriptor.static.method.each(function (value, name) {
-        assert.ok(name, '[$Interface]: given static method name `$name` is incorrect', {
-            $Interface: Interface.label,
+        assert.ok(name, '$Interface: given static method name `$name` is incorrect', {
+            $Interface: Interface,
             $name: name
         });
 
@@ -183,8 +183,8 @@ function processConstructor(Interface, descriptor) {
 function processProperties(Interface, descriptor) {
 
     //assert, that properties list is an object
-    assert.object(descriptor.property, '[$Interface]: static properties list `$properties` is not an object', {
-        $Interface: Interface.label,
+    assert.object(descriptor.property, '$Interface: static properties list `$properties` is not an object', {
+        $Interface: Interface,
         $properties: descriptor.property
     });
 
@@ -202,8 +202,8 @@ function processProperties(Interface, descriptor) {
 
     //add own properties from raw descriptor
     descriptor.property.each(function (value, name) {
-        assert.ok(name, '[$Interface]: given property name `$name` is incorrect', {
-            $Interface: Interface.label,
+        assert.ok(name, '$Interface: given property name `$name` is incorrect', {
+            $Interface: Interface,
             $name: name
         });
 
@@ -234,8 +234,8 @@ function processProperties(Interface, descriptor) {
 function processMethods(Interface, descriptor) {
 
     //assert, that methods list is an object
-    assert.object(descriptor.method, '[$Interface]: methods list `$methods` is not an object', {
-        $Interface: Interface.label,
+    assert.object(descriptor.method, '$Interface: methods list `$methods` is not an object', {
+        $Interface: Interface,
         $methods: descriptor.method
     });
 
@@ -253,8 +253,8 @@ function processMethods(Interface, descriptor) {
 
     //add own methods from raw descriptor
     descriptor.method.each(function (value, name) {
-        assert.ok(name, '[$Interface]: given method name `$name` is incorrect', {
-            $Interface: Interface.label,
+        assert.ok(name, '$Interface: given method name `$name` is incorrect', {
+            $Interface: Interface,
             $name: name
         });
 

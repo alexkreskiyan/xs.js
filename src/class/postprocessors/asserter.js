@@ -1,7 +1,5 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.class.postprocessors.asserter');
-
 /**
  * This postprocessor automatically creates and saves asserter instance for this class as Class.assert
  *

@@ -47,14 +47,14 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
      * @return {Boolean} whether given Mixin class is stored with some alias in Class.prototype.mixins
      */
     xs.constant(Class, 'mixins', function (Mixin) {
-        assert.Class(Mixin, '[$Class]: given non-class value `$Mixin`', {
-            $Class: Class.label,
+        assert.Class(Mixin, '$Class: given non-class value `$Mixin`', {
+            $Class: Class,
             $Mixin: Mixin
         });
 
         var mixins = this.descriptor.allMixins;
 
-        return xs.isObject(mixins) && mixins.has(Mixin.label);
+        return xs.isObject(mixins) && mixins.has(Mixin.label); //TODO mixins must contain classes?
     });
 
     return true;
@@ -79,7 +79,7 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
     //2. subtract own from inherited into pure class mixins list
 
     //process own mixins list
-    log.trace(Class.label + '. Processed mixins', {
+    log.trace(Class + '. Processed mixins', {
         mixins: own.toSource()
     });
 
@@ -91,8 +91,8 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
         name = resolveName(name);
 
         //assert, that mixin is defined
-        assert.ok(xs.ContractsManager.has(name), '[$Class]: mixed class `$name` is not defined. Move it to imports section, please', {
-            $Class: Class.label,
+        assert.ok(xs.ContractsManager.has(name), '$Class: mixed class `$name` is not defined. Move it to imports section, please', {
+            $Class: Class,
             $name: name
         });
 
@@ -100,15 +100,15 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
         var Mixin = xs.ContractsManager.get(name);
 
         //check that contractor is xs.Class
-        assert.Class(Mixin, '[$Class]: given `$Mixin` is not class', {
-            $Class: Class.label,
-            $Mixin: Mixin.label
+        assert.Class(Mixin, '$Class: given `$Mixin` is not class', {
+            $Class: Class,
+            $Mixin: Mixin
         });
 
         //check that mixin is ready
-        assert.not(Mixin.isProcessing, '[$Class]: mixed class `$Mixin` is not processed yet. Move it to imports section, please', {
-            $Class: Class.label,
-            $Mixin: Mixin.label
+        assert.not(Mixin.isProcessing, '$Class: mixed class `$Mixin` is not processed yet. Move it to imports section, please', {
+            $Class: Class,
+            $Mixin: Mixin
         });
 
         //if name not in allMixins collection - add it to mixins and allMixins
@@ -142,7 +142,7 @@ function applyMixins(Class, mixins) {
 
         var Mixin = xs.ContractsManager.get(name);
 
-        log.trace(Class.label + '. Mixining ' + Mixin.label + 'as ' + alias);
+        log.trace(Class + '. Mixining ' + Mixin + 'as ' + alias);
         //mix mixed class descriptor into target descriptor
         mixinClass(Class.descriptor, Mixin.descriptor);
 

@@ -26,13 +26,13 @@ xs.interface.preprocessors.add('prepareInterface', function () {
     //prepare extends
 
     var extended = descriptor.extends;
-    log.trace(Interface.label + '. Extended ', {
+    log.trace(Interface + '. Extended ', {
         extended: extended
     });
 
     //assert that either extended is not defined or is defined as non-empty string
-    assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '[$Interface]: given extended `$extended` is incorrect', {
-        $Interface: Interface.label,
+    assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '$Interface: given extended `$extended` is incorrect', {
+        $Interface: Interface,
         $extended: extended
     });
 

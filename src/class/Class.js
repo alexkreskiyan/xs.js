@@ -253,8 +253,8 @@ xs.Class = xs.class.Class = (function (dependencies) {
             //abstract processing
 
             //assert Class is not abstract
-            assert.not(descriptor.abstract, 'can not create instance of abstract class `$label`', {
-                $label: Class.label
+            assert.not(descriptor.abstract, 'can not create instance of abstract class `$Class`', {
+                $Class: Class
             });
 
 
