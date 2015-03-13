@@ -16,19 +16,6 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
     Class.abstract = true;
 
     /**
-     * Class string representation
-     *
-     * @static
-     *
-     * @template
-     *
-     * @method toString
-     */
-    Class.static.method.toString = function () {
-        return '[class ' + (this.label ? this.label : 'xClass') + ']';
-    };
-
-    /**
      * Property, that returns whether object is destroyed
      *
      * @readonly
@@ -94,17 +81,6 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
 
         //delete class reference
         delete me.self;
-    };
-
-    /**
-     * Object string representation
-     *
-     * @template
-     *
-     * @method toString
-     */
-    Class.method.toString = function () {
-        return '[instance ' + (this.constructor.label ? this.constructor.label : 'xClass') + ']';
     };
 
 });

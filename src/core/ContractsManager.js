@@ -139,6 +139,17 @@ xs.ContractsManager = (function () {
         //assign real name as label
         Contract.label = name;
 
+        //set to string methods
+        Contract.toString = function () {
+            return '[' + this.contractor.label + (this.label ? ' ' + this.label : '') + ']';
+        };
+
+        if (xs.isFunction(Contract)) {
+            Contract.prototype.toString = function () {
+                return '[' + this.constructor.contractor.label + (this.constructor.label ? ' ' + this.constructor.label : '') + ' instance]';
+            };
+        }
+
         //get short name of Contract
         var label = getName(name);
 
