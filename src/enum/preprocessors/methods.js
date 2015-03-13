@@ -17,8 +17,6 @@ xs.enum.preprocessors.add('methods', function () {
     return true;
 }, function (Enum) {
 
-    log.trace(Enum.label);
-
     //keyOf method
     xs.method.define(Enum, 'keyOf', xs.method.prepare('keyOf', function (value) {
         var values = this.values;

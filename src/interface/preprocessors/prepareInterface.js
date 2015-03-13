@@ -17,9 +17,6 @@ xs.interface.preprocessors.add('prepareInterface', function () {
     return true;
 }, function (Interface, descriptor) {
 
-    log.trace(Interface.label);
-
-
     //prepare imports
 
     //create new empty collection

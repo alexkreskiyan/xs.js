@@ -17,9 +17,6 @@ xs.enum.preprocessors.add('values', function () {
     return true;
 }, function (Enum, values) {
 
-    log.trace(Enum.label);
-
-
     //values
 
     //assert, that values list is an object

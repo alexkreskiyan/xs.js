@@ -15,8 +15,6 @@ xs.interface.preprocessors.add('imports', function () {
     return true;
 }, function (Interface, descriptor, dependencies, ready) {
 
-    log.trace(Interface.label);
-
     //init
     //init requires list
     var requires = new xs.core.Collection();
