@@ -30,11 +30,11 @@ module('xs.dom.Element', function () {
         var el = new xs.dom.Element(document.createElement('div'));
 
         //for own event - simple observable usage
-        el.on('destroy', xs.emptyFn);
+        el.on('destroy', xs.noop);
         strictEqual(el.private.domHandlers.size, 0);
 
         //for dom event - dom handler is generated
-        el.on('click', xs.emptyFn);
+        el.on('click', xs.noop);
         strictEqual(el.private.domHandlers.size, 1);
         strictEqual(el.private.domHandlers.hasKey('click'), true);
 
@@ -45,14 +45,14 @@ module('xs.dom.Element', function () {
 
         var el = new xs.dom.Element(document.createElement('div'));
 
-        el.on('click', xs.emptyFn);
-        el.on('dblClick', xs.emptyFn);
-        el.on('destroy', xs.emptyFn);
+        el.on('click', xs.noop);
+        el.on('dblClick', xs.noop);
+        el.on('destroy', xs.noop);
         strictEqual(JSON.stringify(el.private.domHandlers.keys()), '["click","dblClick"]');
 
         //all not used dom handlers are removed
         el.off('click', function (item) {
-            return item.handler === xs.emptyFn;
+            return item.handler === xs.noop;
         });
         strictEqual(JSON.stringify(el.private.domHandlers.keys()), '["dblClick"]');
         el.off();
@@ -66,8 +66,8 @@ module('xs.dom.Element', function () {
 
         var el = new xs.dom.Element(document.createElement('div'));
 
-        el.on('click', xs.emptyFn);
-        el.on('dblClick', xs.emptyFn);
+        el.on('click', xs.noop);
+        el.on('dblClick', xs.noop);
 
         el.on('destroy', function () {
             //on next tick test is ready

@@ -873,7 +873,7 @@ module('xs.core.Collection', function () {
 
         //throws if flags given and are incorrect
         throws(function () {
-            collection.each(xs.emptyFn, null);
+            collection.each(xs.noop, null);
         });
 
         //test array
@@ -955,7 +955,7 @@ module('xs.core.Collection', function () {
 
         //throws if flags given and are incorrect
         throws(function () {
-            collection.find(xs.emptyFn, null);
+            collection.find(xs.noop, null);
         });
 
         var scope = {
@@ -1064,7 +1064,7 @@ module('xs.core.Collection', function () {
 
         //throws if flags given and are incorrect
         throws(function () {
-            collection.reduce(xs.emptyFn, null);
+            collection.reduce(xs.noop, null);
         });
 
         //test array list
@@ -1129,13 +1129,13 @@ module('xs.core.Collection', function () {
         //throws if count is not a number
         collection = new xs.core.Collection([1]);
         throws(function () {
-            collection.some(xs.emptyFn, 'a');
+            collection.some(xs.noop, 'a');
         });
 
         //throws if count is out of bounds
         collection = new xs.core.Collection([1]);
         throws(function () {
-            collection.some(xs.emptyFn, 2);
+            collection.some(xs.noop, 2);
         });
 
         //test array list

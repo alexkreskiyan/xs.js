@@ -75,7 +75,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         get: function () {
             return this.storage.length;
         },
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     /**

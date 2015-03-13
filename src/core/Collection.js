@@ -115,7 +115,7 @@ Object.defineProperty(Collection.prototype, 'size', {
     get: function () {
         return this.private.items.length;
     },
-    set: xs.emptyFn
+    set: xs.noop
 });
 
 /**

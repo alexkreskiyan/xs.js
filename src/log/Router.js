@@ -211,7 +211,7 @@ var router = xs.log.Router = (function () {
             get: function () {
                 return storage.private.items.length;
             },
-            set: xs.emptyFn
+            set: xs.noop
         });
 
         /**

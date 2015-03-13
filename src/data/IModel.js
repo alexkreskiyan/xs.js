@@ -23,7 +23,7 @@ xs.define(xs.Interface, 'ns.IModel', function () {
     ];
 
     Interface.static.property.primaryAttributes = {
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     /**
@@ -47,7 +47,7 @@ xs.define(xs.Interface, 'ns.IModel', function () {
      * @type {Object}
      */
     Interface.property.data = {
-        set: xs.emptyFn
+        set: xs.noop
     };
 
 });

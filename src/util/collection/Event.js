@@ -55,7 +55,7 @@ xs.define(xs.Class, 'ns.Event', function (self) {
      * @type {Object}
      */
     Class.property.data = {
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     /**
@@ -66,7 +66,7 @@ xs.define(xs.Class, 'ns.Event', function (self) {
      * @type {Object}
      */
     Class.property.value = {
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     /**
@@ -77,7 +77,7 @@ xs.define(xs.Class, 'ns.Event', function (self) {
      * @type {Object}
      */
     Class.property.key = {
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     /**
@@ -88,7 +88,7 @@ xs.define(xs.Class, 'ns.Event', function (self) {
      * @type {Object}
      */
     Class.property.index = {
-        set: xs.emptyFn
+        set: xs.noop
     };
 
 });

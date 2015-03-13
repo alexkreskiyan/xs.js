@@ -198,7 +198,7 @@ xs.core.Promise.some = function (promises, count) {
  * @type {String}
  */
 xs.property.define(xs.core.Promise.prototype, 'state', xs.property.prepare('state', {
-    set: xs.emptyFn
+    set: xs.noop
 }));
 
 /**
@@ -214,7 +214,7 @@ xs.property.define(xs.core.Promise.prototype, 'isDestroyed', xs.property.prepare
     get: function () {
         return !this.hasOwnProperty('private');
     },
-    set: xs.emptyFn
+    set: xs.noop
 }));
 
 /**

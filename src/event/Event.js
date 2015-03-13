@@ -58,7 +58,7 @@ xs.define(xs.Class, 'ns.Event', function (self) {
      * @type {Object}
      */
     Class.property.data = {
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     /**

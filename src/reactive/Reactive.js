@@ -118,7 +118,7 @@ Object.defineProperty(Reactive.prototype, 'isDestroyed', {
     get: function () {
         return !this.hasOwnProperty('private');
     },
-    set: xs.emptyFn,
+    set: xs.noop,
     configurable: false,
     enumerable: true
 });
@@ -127,7 +127,7 @@ Object.defineProperty(Reactive.prototype, 'isActive', {
     get: function () {
         return this.private.isActive;
     },
-    set: xs.emptyFn,
+    set: xs.noop,
     configurable: false,
     enumerable: true
 });

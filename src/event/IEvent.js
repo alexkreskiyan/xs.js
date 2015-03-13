@@ -37,7 +37,7 @@ xs.define(xs.Interface, 'ns.IEvent', function () {
      * @type {Object}
      */
     Interface.property.data = {
-        set: xs.emptyFn
+        set: xs.noop
     };
 
 });

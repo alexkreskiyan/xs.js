@@ -107,7 +107,7 @@ function processStaticProperties(Interface, descriptor) {
         } else {
             scheme = {
                 isAccessed: true,
-                isReadonly: property.set === xs.emptyFn
+                isReadonly: property.set === xs.noop
             };
         }
 
@@ -219,7 +219,7 @@ function processProperties(Interface, descriptor) {
         } else {
             scheme = {
                 isAccessed: true,
-                isReadonly: property.set === xs.emptyFn
+                isReadonly: property.set === xs.noop
             };
         }
 

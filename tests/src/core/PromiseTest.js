@@ -419,11 +419,11 @@ module('xs.core.Promise', function () {
         }).progress(function (data) {
             me.total *= data; //8 * 1.25 = 10; 4 * 1 = 4
         });
-        me.last = me.promise.then(xs.emptyFn, undefined, function (data) {
+        me.last = me.promise.then(xs.noop, undefined, function (data) {
             return data + 1; //3; 2
-        }).then(xs.emptyFn, undefined, function (data) {
+        }).then(xs.noop, undefined, function (data) {
             return data * 4; //12; 8
-        }).then(xs.emptyFn, undefined, function (data) {
+        }).then(xs.noop, undefined, function (data) {
             me.total -= data; //10 - 12 = -2; 4 - 8 = -4
         });
     }, function () {

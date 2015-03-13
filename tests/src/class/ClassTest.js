@@ -26,7 +26,7 @@ module('xs.class.Class', function () {
     test('factory', function () {
         var me = this;
         //create simple class
-        me.Class = xs.Class(xs.emptyFn, me.done);
+        me.Class = xs.Class(xs.noop, me.done);
 
         //assign some constructor
         me.Class.descriptor.constructor = function (a, b) {

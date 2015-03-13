@@ -250,7 +250,7 @@ Object.defineProperty(Dependency.prototype, 'size', {
     get: function () {
         return this.dependencies.size;
     },
-    set: xs.emptyFn
+    set: xs.noop
 });
 
 Dependency.prototype.add = function (dependency) {

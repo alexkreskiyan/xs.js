@@ -14,7 +14,7 @@ module('xs.lang.List', function () {
 
     test('clone', function () {
         throws(function () {
-            xs.clone(xs.emptyFn);
+            xs.clone(xs.noop);
         });
 
         //init test variables

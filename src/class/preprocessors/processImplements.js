@@ -173,7 +173,7 @@ function verifyInterface(Class, Interface) {
 
             //assert, that static property is readonly, if needed
             if (config.isReadonly) {
-                assert.equal(property.set, xs.emptyFn, '$Class: implemented interface `$Interface` requires static property `$name` to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
+                assert.equal(property.set, xs.noop, '$Class: implemented interface `$Interface` requires static property `$name` to be readonly, but it is not. Use xs.noop as set to mark property, as readonly', {
                     $Class: Class,
                     $Interface: Interface,
                     $name: name
@@ -261,7 +261,7 @@ function verifyInterface(Class, Interface) {
 
             //assert, that property is readonly, if needed
             if (config.isReadonly) {
-                assert.equal(property.set, xs.emptyFn, '$Class: implemented interface `$Interface` requires property `$name` to be readonly, but it is not. Use xs.emptyFn as set to mark property, as readonly', {
+                assert.equal(property.set, xs.noop, '$Class: implemented interface `$Interface` requires property `$name` to be readonly, but it is not. Use xs.noop as set to mark property, as readonly', {
                     $Class: Class,
                     $Interface: Interface,
                     $name: name

@@ -221,7 +221,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         get: function () {
             return this.private.items.length;
         },
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     /**

@@ -455,16 +455,16 @@ xs.define(xs.Class, 'xs.request.Request', function () {
             },
             timeoutId: 0,
             xhr: {
-                set: xs.emptyFn
+                set: xs.noop
             },
             isCrossDomain: {
-                set: xs.emptyFn
+                set: xs.noop
             },
             isXhr: {
-                set: xs.emptyFn
+                set: xs.noop
             },
             deferred: {
-                set: xs.emptyFn
+                set: xs.noop
             },
             postContentType: {
                 set: function (postContentType) {

@@ -154,7 +154,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             //return attributes
             return attributes;
         },
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     /**
@@ -205,7 +205,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         get: function () {
             return this.private.data;
         },
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     Class.method.create = function () {
@@ -505,7 +505,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             get: function () {
                 return this.private[name];
             },
-            set: xs.emptyFn
+            set: xs.noop
         });
 
         //add attribute

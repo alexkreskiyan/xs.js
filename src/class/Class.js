@@ -93,7 +93,7 @@ xs.Class = xs.class.Class = (function (dependencies) {
         });
 
         if (!xs.isFunction(createdFn)) {
-            createdFn = xs.emptyFn;
+            createdFn = xs.noop;
         }
 
         //create class
@@ -461,7 +461,7 @@ if (!Object.keys(xs.DependenciesManager).length) {
 
 //define prototype of xs.class.Base
 xs.class.Base = xs.Class(function () {
-}, xs.emptyFn);
+}, xs.noop);
 
 
 /**

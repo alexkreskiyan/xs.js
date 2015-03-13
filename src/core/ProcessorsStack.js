@@ -137,7 +137,7 @@ var ProcessorsStack = function ProcessorsStack() {
      * @param {Function} [callback] optional executed callback
      */
     me.process = function (verifierArgs, handlerArgs, callback) {
-        process(items.clone(), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.emptyFn);
+        process(items.clone(), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.noop);
     };
 
     /**

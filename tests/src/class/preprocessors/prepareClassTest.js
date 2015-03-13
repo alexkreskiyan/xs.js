@@ -171,9 +171,9 @@ module('xs.class.preprocessors.prepareClass', function () {
             me.static.property.d = {
                 get: function () {
                 },
-                set: xs.emptyFn
+                set: xs.noop
             };
-            me.static.method.e = xs.emptyFn;
+            me.static.method.e = xs.noop;
             me.static.method.f = function (a, b) {
             };
             me.property.g = undefined;
@@ -186,9 +186,9 @@ module('xs.class.preprocessors.prepareClass', function () {
             me.property.i = {
                 get: function () {
                 },
-                set: xs.emptyFn
+                set: xs.noop
             };
-            me.method.j = xs.emptyFn;
+            me.method.j = xs.noop;
             me.method.k = function (a, b) {
             };
         });
@@ -212,15 +212,15 @@ module('xs.class.preprocessors.prepareClass', function () {
             me.implements = ['tests.class.preprocessors.prepareClass.implements.Interface'];
             me.constant.a = 1;
             me.static.property.b = 1;
-            me.static.property.c = {get: xs.emptyFn};
-            me.static.property.d = {set: xs.emptyFn};
-            me.static.method.e = xs.emptyFn;
+            me.static.property.c = {get: xs.noop};
+            me.static.property.d = {set: xs.noop};
+            me.static.method.e = xs.noop;
             me.static.method.f = function (a, b) {
             };
             me.property.g = 1;
-            me.property.h = {get: xs.emptyFn};
-            me.property.i = {set: xs.emptyFn};
-            me.method.j = xs.emptyFn;
+            me.property.h = {get: xs.noop};
+            me.property.i = {set: xs.noop};
+            me.method.j = xs.noop;
             me.method.k = function (a, b) {
             };
         });

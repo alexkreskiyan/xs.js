@@ -18,7 +18,7 @@ module('xs.lang.Function', function () {
         });
 
         throws(function () {
-            xs.bind(xs.emptyFn, null, null);
+            xs.bind(xs.noop, null, null);
         });
 
         //init test function

@@ -38,7 +38,7 @@ xs.define(xs.Class, 'ns.operation.Create', function (self, imports) {
     };
 
     Class.property.model = {
-        set: xs.emptyFn
+        set: xs.noop
     };
 
 });

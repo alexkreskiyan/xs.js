@@ -65,7 +65,7 @@ xs.Enum = xs.enum.Enum = (function (dependencies) {
         });
 
         if (!xs.isFunction(createdFn)) {
-            createdFn = xs.emptyFn;
+            createdFn = xs.noop;
         }
 
         //create enum
@@ -187,7 +187,7 @@ if (!Object.keys(xs.DependenciesManager).length) {
 
 
 //define prototype of xs.enum.Base
-xs.enum.Base = xs.Enum({}, xs.emptyFn);
+xs.enum.Base = xs.Enum({}, xs.noop);
 
 
 /**

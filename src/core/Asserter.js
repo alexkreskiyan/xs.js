@@ -242,7 +242,7 @@ asserter.prototype.array = function (value, message, vars) {
  *     //create asserter instance
  *     var asserter = new xs.core.Asserter(logger, Error);
  *
- *     asserter.fn(xs.emptyFn);
+ *     asserter.fn(xs.noop);
  *
  * @method fn
  *
@@ -614,7 +614,7 @@ asserter.prototype.empty = function (value, message, vars) {
  *     //create asserter instance
  *     var asserter = new xs.core.Asserter(logger, Error);
  *
- *     asserter.Class(xs.Class(xs.emptyFn));
+ *     asserter.Class(xs.Class(xs.noop));
  *
  * @method Class
  *
@@ -650,7 +650,7 @@ asserter.prototype.Class = function (Class, message, vars) {
  *     //create asserter instance
  *     var asserter = new xs.core.Asserter(logger, Error);
  *
- *     asserter.Interface(xs.Interface(xs.emptyFn));
+ *     asserter.Interface(xs.Interface(xs.noop));
  *
  * @method Interface
  *

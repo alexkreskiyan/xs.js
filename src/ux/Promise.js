@@ -122,7 +122,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      * @type {String}
      */
     Class.property.state = {
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     /**

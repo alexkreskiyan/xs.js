@@ -176,8 +176,8 @@ xs.extend = function (child, parent) {
  * @inheritdoc xs.lang.Function#nextTick
  */
 /**
- * @method emptyFn
- * @inheritdoc xs.lang.Function#emptyFn
+ * @method noop
+ * @inheritdoc xs.lang.Function#noop
  */
 /**
  * @method clone

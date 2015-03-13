@@ -26,11 +26,11 @@ xs.define(xs.Interface, 'ns.IProxy', function () {
     };
 
     Interface.property.reader = {
-        get: xs.emptyFn
+        get: xs.noop
     };
 
     Interface.property.writer = {
-        get: xs.emptyFn
+        get: xs.noop
     };
 
     Interface.method.create = function (operation) {

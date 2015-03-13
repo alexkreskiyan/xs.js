@@ -38,13 +38,13 @@ xs.define(xs.Class, 'xs.request.Data', function () {
                 get: function () {
                     return this.__get('data') instanceof FormData;
                 },
-                set: xs.emptyFn
+                set: xs.noop
             },
             raw: {
                 get: function () {
                     return this.__get('raw');
                 },
-                set: xs.emptyFn
+                set: xs.noop
             },
             data: {
                 get: function () {
@@ -52,7 +52,7 @@ xs.define(xs.Class, 'xs.request.Data', function () {
                     var data = me.__get('data');
                     return data ? data : me.__get('raw');
                 },
-                set: xs.emptyFn
+                set: xs.noop
             }
         },
         methods: {

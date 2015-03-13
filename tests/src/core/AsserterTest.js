@@ -81,7 +81,7 @@ module('xs.core.Asserter', function () {
         });
 
         //correct is silent
-        assert.fn(xs.emptyFn);
+        assert.fn(xs.noop);
     });
 
     test('string', function () {
@@ -221,11 +221,11 @@ module('xs.core.Asserter', function () {
 
         //incorrect throws
         throws(function () {
-            assert.Class(xs.emptyFn);
+            assert.Class(xs.noop);
         });
 
         //correct is silent
-        assert.Class(xs.Class(xs.emptyFn));
+        assert.Class(xs.Class(xs.noop));
     });
 
     test('Interface', function () {
@@ -233,11 +233,11 @@ module('xs.core.Asserter', function () {
 
         //incorrect throws
         throws(function () {
-            assert.Class(xs.emptyFn);
+            assert.Class(xs.noop);
         });
 
         //correct is silent
-        assert.Interface(xs.Interface(xs.emptyFn));
+        assert.Interface(xs.Interface(xs.noop));
     });
 
     test('instance', function () {
@@ -270,7 +270,7 @@ module('xs.core.Asserter', function () {
 
         //incorrect throws
         throws(function () {
-            me.assert.implements(xs.emptyFn, xs.emptyFn);
+            me.assert.implements(xs.noop, xs.noop);
         });
 
         me.Class = xs.Class(function () {

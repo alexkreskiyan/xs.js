@@ -72,7 +72,7 @@ xs.Interface = xs.interface.Interface = (function (dependencies) {
         }, InterfaceError);
 
         if (!xs.isFunction(createdFn)) {
-            createdFn = xs.emptyFn;
+            createdFn = xs.noop;
         }
 
         //create interface
@@ -318,7 +318,7 @@ if (!Object.keys(xs.DependenciesManager).length) {
 
 //define prototype of xs.interface.Base
 xs.interface.Base = xs.Interface(function () {
-}, xs.emptyFn);
+}, xs.noop);
 
 
 /**

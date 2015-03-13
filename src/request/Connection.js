@@ -57,14 +57,14 @@ xs.define(xs.Class, 'xs.data.Connection', function () {
 
     //    var XMLHttpRequestProto = {
     //        //event handlers
-    //        onloadstart: xs.emptyFn,
-    //        onprogress: xs.emptyFn,
-    //        onabort: xs.emptyFn,
-    //        onerror: xs.emptyFn,
-    //        onload: xs.emptyFn,
-    //        ontimeout: xs.emptyFn,
-    //        onloadend: xs.emptyFn,
-    //        onreadystatechange: xs.emptyFn,
+    //        onloadstart: xs.noop,
+    //        onprogress: xs.noop,
+    //        onabort: xs.noop,
+    //        onerror: xs.noop,
+    //        onload: xs.noop,
+    //        ontimeout: xs.noop,
+    //        onloadend: xs.noop,
+    //        onreadystatechange: xs.noop,
     //        //responseType
     //        '': '',
     //        arraybuffer: '',
@@ -109,10 +109,10 @@ xs.define(xs.Class, 'xs.data.Connection', function () {
     //    };
     //    var XDomainRequestProto = {
     //        //event handlers
-    //        onprogress: xs.emptyFn,
-    //        onerror: xs.emptyFn,
-    //        onload: xs.emptyFn,
-    //        ontimeout: xs.emptyFn,
+    //        onprogress: xs.noop,
+    //        onerror: xs.noop,
+    //        onload: xs.noop,
+    //        ontimeout: xs.noop,
     //        //methods
     //        open: function (method, url) {
     //        }, //async?user?pass? anonymous!!
@@ -182,7 +182,7 @@ xs.define(xs.Class, 'xs.data.Connection', function () {
              * @property pending {Object} pending requests
              */
             pending: {
-                set: xs.emptyFn
+                set: xs.noop
             },
             /**
              * @param {xs.request.Request}, containing

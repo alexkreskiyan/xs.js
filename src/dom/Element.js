@@ -97,7 +97,7 @@ xs.define(xs.Class, 'ns.Element', function (self) {
      * @type {Object}
      */
     Class.property.attributes = {
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     /**
@@ -108,7 +108,7 @@ xs.define(xs.Class, 'ns.Element', function (self) {
      * @type {Object}
      */
     Class.property.classes = {
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     /**
@@ -122,7 +122,7 @@ xs.define(xs.Class, 'ns.Element', function (self) {
         get: function () {
             return this.private.el.style;
         },
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     Class.method.on = function (event, handler, options) {

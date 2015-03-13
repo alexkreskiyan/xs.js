@@ -297,10 +297,9 @@ xs.Function = (function () {
     /**
      * Represents empty function. Is used internally to specify empty methods
      *
-     * @method emptyFn
+     * @method noop
      */
-    me.emptyFn = function () {
-    };
+    me.noop = function () {};
 
     return me;
 })();
@@ -324,4 +323,4 @@ xs.bind = xs.Function.bind;
 xs.memorize = xs.Function.memorize;
 xs.wrap = xs.Function.wrap;
 xs.nextTick = xs.Function.nextTick;
-xs.emptyFn = xs.Function.emptyFn;
+xs.noop = xs.Function.noop;

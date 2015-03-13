@@ -28,7 +28,7 @@ module('xs.reactive.Stream', function () {
                     send(null);
                     end();
                 },
-                off: xs.emptyFn
+                off: xs.noop
             };
         };
     }, function () {
@@ -46,7 +46,7 @@ module('xs.reactive.Stream', function () {
 
         //generator must return object
         throws(function () {
-            return new xs.reactive.Stream(xs.emptyFn);
+            return new xs.reactive.Stream(xs.noop);
         });
 
         //return.on must be a function
@@ -64,7 +64,7 @@ module('xs.reactive.Stream', function () {
             return new xs.reactive.Stream(function () {
 
                 return {
-                    on: xs.emptyFn
+                    on: xs.noop
                 };
             });
         });
@@ -88,7 +88,7 @@ module('xs.reactive.Stream', function () {
                     send(null);
                     end();
                 },
-                off: xs.emptyFn
+                off: xs.noop
             };
         };
     }, function () {
@@ -148,7 +148,7 @@ module('xs.reactive.Stream', function () {
 
         //not an object second argument throws
         throws(function () {
-            me.stream.on(xs.emptyFn, null);
+            me.stream.on(xs.noop, null);
         });
 
 
@@ -177,14 +177,14 @@ module('xs.reactive.Stream', function () {
 
         //incorrect target throws exception
         throws(function () {
-            me.stream.on(xs.emptyFn, {
+            me.stream.on(xs.noop, {
                 target: null
             });
         });
 
         //incorrect priority throws exception
         throws(function () {
-            me.stream.on(xs.emptyFn, {
+            me.stream.on(xs.noop, {
                 priority: null
             });
         });
@@ -256,7 +256,7 @@ module('xs.reactive.Stream', function () {
 
         me.stream = new xs.reactive.Stream(me.generator);
 
-        me.stream.on(xs.emptyFn);
+        me.stream.on(xs.noop);
 
         //stream is active
         strictEqual(me.stream.isActive, true);
@@ -269,8 +269,8 @@ module('xs.reactive.Stream', function () {
 
 
         //with given arguments, handlers.removeBy is called
-        me.stream.on(xs.emptyFn);
-        me.stream.on(xs.emptyFn);
+        me.stream.on(xs.noop);
+        me.stream.on(xs.noop);
         me.stream.on(function () {
 
         });
@@ -325,7 +325,7 @@ module('xs.reactive.Stream', function () {
 
         me.stream = new xs.reactive.Stream(me.generator);
 
-        me.stream.on(xs.emptyFn);
+        me.stream.on(xs.noop);
 
         //stream is active
         strictEqual(me.stream.isActive, true);
@@ -338,8 +338,8 @@ module('xs.reactive.Stream', function () {
 
 
         //with given arguments, handlers.find is called
-        me.stream.on(xs.emptyFn);
-        me.stream.on(xs.emptyFn);
+        me.stream.on(xs.noop);
+        me.stream.on(xs.noop);
         me.stream.on(function () {
 
         });
@@ -394,7 +394,7 @@ module('xs.reactive.Stream', function () {
 
         me.stream = new xs.reactive.Stream(me.generator);
 
-        me.stream.on(xs.emptyFn);
+        me.stream.on(xs.noop);
 
         me.stream.suspend();
 
@@ -409,8 +409,8 @@ module('xs.reactive.Stream', function () {
 
 
         //with given arguments, handlers.removeBy is called
-        me.stream.on(xs.emptyFn);
-        me.stream.on(xs.emptyFn);
+        me.stream.on(xs.noop);
+        me.stream.on(xs.noop);
         me.stream.on(function () {
 
         });

@@ -133,7 +133,7 @@ module('xs.ContractsManager', function () {
 
         //throws when adding contract for registered name
         throws(function () {
-            xs.ContractsManager.add('xs.class.Base', xs.Class(xs.emptyFn));
+            xs.ContractsManager.add('xs.class.Base', xs.Class(xs.noop));
         });
 
         //throws when adding registered contract

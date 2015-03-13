@@ -28,7 +28,7 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
         get: function () {
             return !this.hasOwnProperty('private');
         },
-        set: xs.emptyFn
+        set: xs.noop
     };
 
     /**

@@ -95,7 +95,7 @@ xs.property.define(Stream.prototype, 'isDestroyed', xs.property.prepare('isDestr
     get: function () {
         return !this.hasOwnProperty('private');
     },
-    set: xs.emptyFn
+    set: xs.noop
 }));
 
 /**
@@ -111,7 +111,7 @@ xs.property.define(Stream.prototype, 'isActive', xs.property.prepare('isActive',
     get: function () {
         return this.private.listeners.length > 0;
     },
-    set: xs.emptyFn
+    set: xs.noop
 }));
 
 

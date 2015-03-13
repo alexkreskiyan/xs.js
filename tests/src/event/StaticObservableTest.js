@@ -254,46 +254,46 @@ module('xs.event.StaticObservable', function () {
 
         //check options must be either given as object or not given
         throws(function () {
-            me.Class.on('add', xs.emptyFn, undefined);
+            me.Class.on('add', xs.noop, undefined);
         });
 
         //check simple case without options - only event and handler
-        me.Class.on('add', xs.emptyFn);
+        me.Class.on('add', xs.noop);
         strictEqual(me.Class.private.eventsHandlers.add.size, 1);
-        strictEqual(me.Class.private.eventsHandlers.add.at(0).handler, xs.emptyFn);
+        strictEqual(me.Class.private.eventsHandlers.add.at(0).handler, xs.noop);
         me.Class.off();
 
         //check buffer, if given, must be number
         throws(function () {
-            me.Class.on('add', xs.emptyFn, {
+            me.Class.on('add', xs.noop, {
                 buffer: undefined
             });
         });
 
         //check buffer must be positive integer number
         throws(function () {
-            me.Class.on('add', xs.emptyFn, {
+            me.Class.on('add', xs.noop, {
                 buffer: 0.5
             });
         });
 
         //check calls, if given, must be number
         throws(function () {
-            me.Class.on('add', xs.emptyFn, {
+            me.Class.on('add', xs.noop, {
                 calls: undefined
             });
         });
 
         //check calls must be positive integer number
         throws(function () {
-            me.Class.on('add', xs.emptyFn, {
+            me.Class.on('add', xs.noop, {
                 calls: 0.5
             });
         });
 
         //check priority, if given, must be number
         throws(function () {
-            me.Class.on('add', xs.emptyFn, {
+            me.Class.on('add', xs.noop, {
                 priority: undefined
             });
         });
@@ -445,8 +445,8 @@ module('xs.event.StaticObservable', function () {
         //check complete truncate scenario
         me.Class.on('add', function () {
         });
-        me.Class.on('add', xs.emptyFn);
-        me.Class.on('remove', xs.emptyFn);
+        me.Class.on('add', xs.noop);
+        me.Class.on('remove', xs.noop);
         strictEqual(me.Class.private.eventsHandlers.add.size, 2);
         strictEqual(me.Class.private.eventsHandlers.remove.size, 1);
         me.Class.off();
@@ -455,8 +455,8 @@ module('xs.event.StaticObservable', function () {
         //check event truncate scenario
         me.Class.on('add', function () {
         });
-        me.Class.on('add', xs.emptyFn);
-        me.Class.on('remove', xs.emptyFn);
+        me.Class.on('add', xs.noop);
+        me.Class.on('remove', xs.noop);
         strictEqual(me.Class.private.eventsHandlers.add.size, 2);
         strictEqual(me.Class.private.eventsHandlers.remove.size, 1);
         me.Class.off('add');
@@ -467,12 +467,12 @@ module('xs.event.StaticObservable', function () {
         //check selector scenario
         me.Class.on('add', function () {
         });
-        me.Class.on('add', xs.emptyFn);
-        me.Class.on('remove', xs.emptyFn);
+        me.Class.on('add', xs.noop);
+        me.Class.on('remove', xs.noop);
         strictEqual(me.Class.private.eventsHandlers.add.size, 2);
         strictEqual(me.Class.private.eventsHandlers.remove.size, 1);
         me.Class.off('add', function (item) {
-            return item.handler === xs.emptyFn; //note, that by default, xs.core.Collection.removeBy removes only first matched element
+            return item.handler === xs.noop; //note, that by default, xs.core.Collection.removeBy removes only first matched element
         });
         strictEqual(me.Class.private.eventsHandlers.add.size, 1);
         strictEqual(me.Class.private.eventsHandlers.remove.size, 1);

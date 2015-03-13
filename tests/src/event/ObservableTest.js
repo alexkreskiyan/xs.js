@@ -246,46 +246,46 @@ module('xs.event.Observable', function () {
 
         //check options must be either given as object or not given
         throws(function () {
-            object.on('add', xs.emptyFn, undefined);
+            object.on('add', xs.noop, undefined);
         });
 
         //check simple case without options - only event and handler
-        object.on('add', xs.emptyFn);
+        object.on('add', xs.noop);
         strictEqual(object.private.eventsHandlers.add.size, 1);
-        strictEqual(object.private.eventsHandlers.add.at(0).handler, xs.emptyFn);
+        strictEqual(object.private.eventsHandlers.add.at(0).handler, xs.noop);
         object.off();
 
         //check buffer, if given, must be number
         throws(function () {
-            object.on('add', xs.emptyFn, {
+            object.on('add', xs.noop, {
                 buffer: undefined
             });
         });
 
         //check buffer must be positive integer number
         throws(function () {
-            object.on('add', xs.emptyFn, {
+            object.on('add', xs.noop, {
                 buffer: 0.5
             });
         });
 
         //check calls, if given, must be number
         throws(function () {
-            object.on('add', xs.emptyFn, {
+            object.on('add', xs.noop, {
                 calls: undefined
             });
         });
 
         //check calls must be positive integer number
         throws(function () {
-            object.on('add', xs.emptyFn, {
+            object.on('add', xs.noop, {
                 calls: 0.5
             });
         });
 
         //check priority, if given, must be number
         throws(function () {
-            object.on('add', xs.emptyFn, {
+            object.on('add', xs.noop, {
                 priority: undefined
             });
         });
@@ -437,8 +437,8 @@ module('xs.event.Observable', function () {
         //check complete truncate scenario
         object.on('add', function () {
         });
-        object.on('add', xs.emptyFn);
-        object.on('remove', xs.emptyFn);
+        object.on('add', xs.noop);
+        object.on('remove', xs.noop);
         strictEqual(object.private.eventsHandlers.add.size, 2);
         strictEqual(object.private.eventsHandlers.remove.size, 1);
         object.off();
@@ -447,8 +447,8 @@ module('xs.event.Observable', function () {
         //check event truncate scenario
         object.on('add', function () {
         });
-        object.on('add', xs.emptyFn);
-        object.on('remove', xs.emptyFn);
+        object.on('add', xs.noop);
+        object.on('remove', xs.noop);
         strictEqual(object.private.eventsHandlers.add.size, 2);
         strictEqual(object.private.eventsHandlers.remove.size, 1);
         object.off('add');
@@ -459,12 +459,12 @@ module('xs.event.Observable', function () {
         //check selector scenario
         object.on('add', function () {
         });
-        object.on('add', xs.emptyFn);
-        object.on('remove', xs.emptyFn);
+        object.on('add', xs.noop);
+        object.on('remove', xs.noop);
         strictEqual(object.private.eventsHandlers.add.size, 2);
         strictEqual(object.private.eventsHandlers.remove.size, 1);
         object.off('add', function (item) {
-            return item.handler === xs.emptyFn; //note, that by default, xs.core.Collection.removeBy removes only first matched element
+            return item.handler === xs.noop; //note, that by default, xs.core.Collection.removeBy removes only first matched element
         });
         strictEqual(object.private.eventsHandlers.add.size, 1);
         strictEqual(object.private.eventsHandlers.remove.size, 1);
