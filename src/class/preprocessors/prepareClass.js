@@ -17,8 +17,6 @@ xs.class.preprocessors.add('prepareClass', function () {
     return true;
 }, function (Class, descriptor) {
 
-    log.trace(Class.label);
-
     //prepare imports
     processImports(Class, descriptor);
 

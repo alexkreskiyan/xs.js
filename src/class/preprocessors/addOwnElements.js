@@ -17,8 +17,6 @@ xs.class.preprocessors.add('addOwnElements', function () {
     return true;
 }, function (Class, descriptor) {
 
-    log.trace(Class.label);
-
     //constants
     processConstants(Class, descriptor);
 

@@ -37,6 +37,5 @@ xs.class.preprocessors.add('abstract', function () {
 
     return true;
 }, function (Class, descriptor) {
-    log.trace(Class.label);
     Class.descriptor.abstract = Boolean(descriptor.abstract);
 });

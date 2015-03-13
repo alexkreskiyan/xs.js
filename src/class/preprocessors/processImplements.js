@@ -56,8 +56,6 @@ xs.class.preprocessors.add('processImplements', function (Class) {
     return true;
 }, function (Class, descriptor) {
 
-    log.trace(Class.label);
-
     //init
     //get interfaces list
     var interfaces = Class.descriptor.implements = descriptor.implements;

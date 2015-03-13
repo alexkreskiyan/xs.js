@@ -63,8 +63,6 @@ xs.class.preprocessors.add('imports', function () {
     return true;
 }, function (Class, descriptor, dependencies, ready) {
 
-    log.trace(Class.label);
-
     //init
     //init requires list
     var requires = new xs.core.Collection();

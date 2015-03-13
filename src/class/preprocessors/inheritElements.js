@@ -15,8 +15,6 @@ xs.class.preprocessors.add('inheritElements', function () {
     return true;
 }, function (Class) {
 
-    log.trace(Class.label);
-
     //constants
     processConstants(Class);
 

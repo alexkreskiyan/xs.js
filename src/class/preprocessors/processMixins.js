@@ -60,8 +60,6 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
     return true;
 }, function (Class, descriptor) {
 
-    log.trace(Class.label);
-
     //init
     //own mixins initial list
     var own = descriptor.mixins;
