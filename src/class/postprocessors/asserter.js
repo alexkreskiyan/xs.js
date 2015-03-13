@@ -21,7 +21,7 @@ xs.class.postprocessors.add('asserter', function () {
 
     return true;
 }, function (Class) {
-    log.trace(Class.label ? Class.label : 'undefined');
+    log.trace(Class.label);
 
     var label = Class.label ? Class.label : '';
     eval('Class.Error = function ' + getErrorClassName(label) + '(message) { this.message = \'' + label + '::\' + message; }');

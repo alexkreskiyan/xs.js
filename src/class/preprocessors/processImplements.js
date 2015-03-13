@@ -56,7 +56,7 @@ xs.class.preprocessors.add('processImplements', function (Class) {
     return true;
 }, function (Class, descriptor) {
 
-    log.trace(Class.label ? Class.label : 'undefined');
+    log.trace(Class.label);
 
     //init
     //get interfaces list
@@ -64,7 +64,7 @@ xs.class.preprocessors.add('processImplements', function (Class) {
 
 
     //process interfaces list
-    log.trace((Class.label ? Class.label : 'undefined') + '. Declared interfaces', {
+    log.trace(Class.label + '. Declared interfaces', {
         interfaces: interfaces.toSource()
     });
     //namespace shortcut
@@ -123,7 +123,7 @@ function verifyImplements(Class, interfaces) {
 
         var Interface = xs.ContractsManager.get(name);
 
-        log.trace((Class.label ? Class.label : 'undefined') + '. Verifying implementation of ' + Interface.label);
+        log.trace(Class.label + '. Verifying implementation of ' + Interface.label);
         //verify, that target implements Interface
         verifyInterface(Class, Interface);
     });

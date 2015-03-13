@@ -17,7 +17,7 @@ xs.class.preprocessors.add('prepareClass', function () {
     return true;
 }, function (Class, descriptor) {
 
-    log.trace(Class.label ? Class.label : 'undefined');
+    log.trace(Class.label);
 
     //prepare imports
     processImports(Class, descriptor);
@@ -83,7 +83,7 @@ function processImports(Class, descriptor) {
 function processExtends(Class, descriptor) {
 
     var extended = descriptor.extends;
-    log.trace((Class.label ? Class.label : 'undefined') + '. Extended:' + extended);
+    log.trace(Class.label + '. Extended:' + extended);
 
     //assert that either extended is not defined or is defined as non-empty string
     assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '[$Class]: given extended `$extended` is incorrect', {
@@ -112,7 +112,7 @@ function processMixins(Class, descriptor) {
     var imports = descriptor.imports;
 
     //process mixins list
-    log.trace((Class.label ? Class.label : 'undefined') + '. Preparing to process mixins', {
+    log.trace(Class.label + '. Preparing to process mixins', {
         mixins: mixins.toSource()
     });
     mixins.each(function (name, alias) {
@@ -147,7 +147,7 @@ function processImplements(Class, descriptor) {
     var imports = descriptor.imports;
 
     //process interfaces list
-    log.trace((Class.label ? Class.label : 'undefined') + '. Preparing to process interfaces', {
+    log.trace(Class.label + '. Preparing to process interfaces', {
         interfaces: interfaces.toSource()
     });
     interfaces.each(function (name) {

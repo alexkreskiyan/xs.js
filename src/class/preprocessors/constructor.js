@@ -37,7 +37,7 @@ xs.class.preprocessors.add('constructor', function () {
     return true;
 }, function (Class, descriptor) {
 
-    log.trace(Class.label ? Class.label : 'undefined');
+    log.trace(Class.label);
 
     //inherited
     //get inherited constructor from parent descriptor

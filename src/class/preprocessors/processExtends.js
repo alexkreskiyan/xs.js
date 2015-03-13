@@ -35,12 +35,12 @@ xs.class.preprocessors.add('processExtends', function () {
 }, function (Class, descriptor) {
     var extended = descriptor.extends;
 
-    log.trace((Class.label ? Class.label : 'undefined') + '. Preparing to extend', {
+    log.trace(Class.label + '. Preparing to extend', {
         extended: extended
     });
     //if no parent given - extend from xs.class.Base
     if (!xs.isDefined(extended)) {
-        log.trace((Class.label ? Class.label : 'undefined') + '. Extending xs.class.Base');
+        log.trace(Class.label + '. Extending xs.class.Base');
         extend(Class, xs.class.Base);
 
         return;
@@ -73,7 +73,7 @@ xs.class.preprocessors.add('processExtends', function () {
         $Parent: Parent.label
     });
 
-    log.trace((Class.label ? Class.label : 'undefined') + '. Extending ' + Parent.label);
+    log.trace(Class.label + '. Extending ' + Parent.label);
     //apply extends
     applyExtends(Class, Parent);
 });
@@ -93,7 +93,7 @@ function applyExtends(target, parent) {
     extend(target, parent);
 
     //save extends to descriptor
-    target.descriptor.extends = parent.label;
+    target.descriptor.extends = parent;
 }
 
 /**

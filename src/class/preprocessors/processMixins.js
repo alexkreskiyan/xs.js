@@ -60,7 +60,7 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
     return true;
 }, function (Class, descriptor) {
 
-    log.trace(Class.label ? Class.label : 'undefined');
+    log.trace(Class.label);
 
     //init
     //own mixins initial list
@@ -81,7 +81,7 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
     //2. subtract own from inherited into pure class mixins list
 
     //process own mixins list
-    log.trace((Class.label ? Class.label : 'undefined') + '. Processed mixins', {
+    log.trace(Class.label + '. Processed mixins', {
         mixins: own.toSource()
     });
 
@@ -144,7 +144,7 @@ function applyMixins(Class, mixins) {
 
         var Mixin = xs.ContractsManager.get(name);
 
-        log.trace((Class.label ? Class.label : 'undefined') + '. Mixining ' + Mixin.label + 'as ' + alias);
+        log.trace(Class.label + '. Mixining ' + Mixin.label + 'as ' + alias);
         //mix mixed class descriptor into target descriptor
         mixinClass(Class.descriptor, Mixin.descriptor);
 

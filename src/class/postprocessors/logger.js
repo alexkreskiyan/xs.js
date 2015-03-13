@@ -21,8 +21,8 @@ xs.class.postprocessors.add('logger', function () {
 
     return true;
 }, function (Class) {
-    log.trace(Class.label ? Class.label : 'undefined');
+    log.trace(Class.label);
 
     //assign logger instance
-    Class.log = new xs.log.Logger(Class.label ? Class.label : 'undefined');
+    Class.log = new xs.log.Logger(Class.label);
 });
