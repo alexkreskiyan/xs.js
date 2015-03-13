@@ -169,7 +169,7 @@ xs.define(xs.Class, 'ns.Observable', function (self, imports) {
         self.assert.ok(EventClass.implements(imports.IEvent), 'fire - given event `$event` type `$Event` does not implement base event interface `$Interface`', {
             $event: event,
             $Event: EventClass,
-            $Interface: imports.IEvent.label
+            $Interface: imports.IEvent
         });
 
 

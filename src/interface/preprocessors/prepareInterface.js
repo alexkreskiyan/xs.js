@@ -17,7 +17,7 @@ xs.interface.preprocessors.add('prepareInterface', function () {
     return true;
 }, function (Interface, descriptor) {
 
-    log.trace(Interface.label ? Interface.label : 'undefined');
+    log.trace(Interface.label);
 
 
     //prepare imports
@@ -29,7 +29,7 @@ xs.interface.preprocessors.add('prepareInterface', function () {
     //prepare extends
 
     var extended = descriptor.extends;
-    log.trace((Interface.label ? Interface.label : 'undefined') + '. Extended ', {
+    log.trace(Interface.label + '. Extended ', {
         extended: extended
     });
 

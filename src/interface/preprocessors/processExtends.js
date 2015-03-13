@@ -18,10 +18,10 @@ xs.interface.preprocessors.add('processExtends', function () {
 }, function (Interface, descriptor) {
     var extended = descriptor.extends;
 
-    log.trace((Interface.label ? Interface.label : 'undefined') + '. Extended ' + extended);
+    log.trace(Interface.label + '. Extended ' + extended);
     //if no parent given - extend from xs.interface.Base
     if (!xs.isDefined(extended)) {
-        log.trace((Interface.label ? Interface.label : 'undefined') + '. Extending xs.interface.Base');
+        log.trace(Interface.label + '. Extending xs.interface.Base');
         extend(Interface, xs.interface.Base);
 
         return;
@@ -54,7 +54,7 @@ xs.interface.preprocessors.add('processExtends', function () {
         $Parent: Parent.label
     });
 
-    log.trace((Interface.label ? Interface.label : 'undefined') + '. Extending ' + Parent.label);
+    log.trace(Interface.label + '. Extending ' + Parent.label);
     //apply extends
     applyExtends(Interface, Parent);
 });
@@ -74,7 +74,7 @@ function applyExtends(target, parent) {
     extend(target, parent);
 
     //save extends to descriptor
-    target.descriptor.extends = parent.label;
+    target.descriptor.extends = parent;
 }
 
 /**

@@ -15,7 +15,7 @@ xs.interface.preprocessors.add('imports', function () {
     return true;
 }, function (Interface, descriptor, dependencies, ready) {
 
-    log.trace(Interface.label ? Interface.label : 'undefined');
+    log.trace(Interface.label);
 
     //init
     //init requires list
@@ -44,14 +44,14 @@ xs.interface.preprocessors.add('imports', function () {
 
     if (loads.size) {
         //load imported interfaces
-        log.trace((Interface.label ? Interface.label : 'undefined') + '. Loading', {
+        log.trace(Interface.label + '. Loading', {
             loads: loads.values()
         });
         //require async
         xs.require(loads.values(), processImports);
     } else {
         //nothing to load
-        log.trace((Interface.label ? Interface.label : 'undefined') + '. Nothing to load');
+        log.trace(Interface.label + '. Nothing to load');
         processImports();
     }
 
@@ -62,13 +62,13 @@ xs.interface.preprocessors.add('imports', function () {
             return xs.ContractsManager.get(name);
         });
 
-        log.trace((Interface.label ? Interface.label : 'undefined') + '. Imports loaded, applying dependency', {
+        log.trace(Interface.label + '. Imports loaded, applying dependency', {
             loads: loads.values()
         });
         //create new dependency
         dependencies.add(Interface, waiting, function () {
 
-            log.trace((Interface.label ? Interface.label : 'undefined') + '. Imports processed', {
+            log.trace(Interface.label + '. Imports processed', {
                 loads: loads.values()
             });
 

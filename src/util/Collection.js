@@ -2714,7 +2714,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //assert, that value is instance of type or Class, that mixes type
                 self.assert.ok(isClassInstance.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of `$Class` of instance of class, that mixins `$Class`', {
                     $value: values[i],
-                    $Class: type.label
+                    $Class: type
                 });
             }
 
@@ -2726,7 +2726,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //assert, that value is instance of Class that implements type
                 self.assert.ok(isImplementation.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of class, that implements interface `$Interface`', {
                     $value: values[i],
-                    $Interface: type.label
+                    $Interface: type
                 });
             }
 
@@ -2776,7 +2776,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             //assert, that value is instance of type or Class, that mixes type
             self.assert.ok(isClassInstance.call(me, value), 'verifySourceValues - given value `$value` is not an instance of `$Class` of instance of class, that mixins `$Class`', {
                 $value: value,
-                $Class: type.label
+                $Class: type
             });
 
             //if interface
@@ -2785,7 +2785,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             //assert, that value is instance of Class that implements type
             self.assert.ok(isImplementation.call(me, value), 'verifySourceValues - given value `$value` is not an instance of class, that implements interface `$Interface`', {
                 $value: value,
-                $Interface: type.label
+                $Interface: type
             });
 
             //if constructor

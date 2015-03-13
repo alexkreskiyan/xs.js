@@ -17,7 +17,7 @@ xs.interface.preprocessors.add('prepareElements', function () {
     return true;
 }, function (Interface, descriptor) {
 
-    log.trace(Interface.label ? Interface.label : 'undefined');
+    log.trace(Interface.label);
 
     //constants
     processConstants(Interface, descriptor);

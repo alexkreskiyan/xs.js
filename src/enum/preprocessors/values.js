@@ -17,7 +17,7 @@ xs.enum.preprocessors.add('values', function () {
     return true;
 }, function (Enum, values) {
 
-    log.trace(Enum.label ? Enum.label : 'undefined');
+    log.trace(Enum.label);
 
 
     //values
