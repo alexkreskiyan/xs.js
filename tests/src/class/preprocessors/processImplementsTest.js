@@ -149,10 +149,10 @@ module('xs.class.preprocessors.processImplements', function () {
 
         //check chain
         strictEqual(ns.BaseClass.descriptor.implements.size, 1);
-        strictEqual(ns.BaseClass.descriptor.implements.at(0), 'tests.class.preprocessors.processImplements.BaseInterface');
+        strictEqual(ns.BaseClass.descriptor.implements.at(0), ns.BaseInterface);
         strictEqual(ns.ChildClass.descriptor.implements.size, 2);
-        strictEqual(ns.ChildClass.descriptor.implements.at(0), 'tests.class.preprocessors.processImplements.ChildInterface');
-        strictEqual(ns.ChildClass.descriptor.implements.at(1), 'tests.class.preprocessors.processImplements.BaseInterface');
+        strictEqual(ns.ChildClass.descriptor.implements.at(0), ns.BaseInterface);
+        strictEqual(ns.ChildClass.descriptor.implements.at(1), ns.ChildInterface);
 
         //check implements method
         strictEqual(ns.BaseClass.implements(ns.BaseInterface), true);

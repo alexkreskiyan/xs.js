@@ -38,6 +38,13 @@ module('xs.class.preprocessors.processMixins', function () {
         var ns = window.tests.class.preprocessors.processMixins;
         var Child = ns.Child;
 
+        //verify descriptor
+        strictEqual(Child.descriptor.mixins.size, 1);
+        strictEqual(Child.descriptor.mixins.at(0), ns.Mix2);
+        strictEqual(Child.descriptor.allMixins.size, 2);
+        strictEqual(Child.descriptor.allMixins.at(0), ns.Mix1);
+        strictEqual(Child.descriptor.allMixins.at(1), ns.Mix2);
+
         //check attributes from Mix1
         var Mix1 = ns.Mix1;
         strictEqual(Child.descriptor.constant.a, Mix1.descriptor.constant.a);

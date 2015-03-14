@@ -139,7 +139,7 @@ module('xs.class.preprocessors.prepareClass', function () {
 
         //check chain
         strictEqual(ns.Class.descriptor.mixins.size, 1);
-        strictEqual(ns.Class.descriptor.mixins.at('demo'), 'xs.class.Base');
+        strictEqual(ns.Class.descriptor.mixins.at('demo'), xs.class.Base);
 
     }, function () {
         var me = this;
@@ -242,7 +242,7 @@ module('xs.class.preprocessors.prepareClass', function () {
 
         //check chain
         strictEqual(ns.Class.descriptor.implements.size, 1);
-        strictEqual(ns.Class.descriptor.implements.at(0), 'tests.class.preprocessors.prepareClass.implements.Interface');
+        strictEqual(ns.Class.descriptor.implements.at(0), ns.Interface);
 
     }, function () {
         var me = this;

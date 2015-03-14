@@ -50,28 +50,29 @@ xs.class.preprocessors.add('processImplements', function (Class) {
             $Interface: Interface
         });
 
-        return this.descriptor.implements.has(Interface.label); //TODO implements must contain interfaces?
+        return this.descriptor.implements.has(Interface);
     });
 
     return true;
 }, function (Class, descriptor) {
 
     //init
-    //get interfaces list
-    var interfaces = Class.descriptor.implements = descriptor.implements; //TODO implements must contain interfaces?
+    //own interfaces initial list
+    var own = descriptor.implements;
 
+    //get interfaces list as clone of parents one
+    var interfaces = Class.descriptor.implements = Class.parent.descriptor.implements.clone();
 
     //process interfaces list
     log.trace(Class + '. Declared interfaces', {
-        interfaces: interfaces.toSource()
+        interfaces: own.toSource()
     });
     //namespace shortcut
     var resolveName = Class.descriptor.resolveName;
-    interfaces.each(function (name, index, list) {
+    own.each(function (name) {
 
         //resolve name with namespace and update list
         name = resolveName(name);
-        list.set(index, name);
 
         //assert, that interface is defined
         assert.ok(xs.ContractsManager.has(name), '$Class: implemented interface `$name` is not defined. Move it to imports section, please', {
@@ -93,11 +94,11 @@ xs.class.preprocessors.add('processImplements', function (Class) {
             $Class: Class,
             $Interface: Interface
         });
-    });
 
-    //add all inherited
-    Class.parent.descriptor.implements.each(function (value) {
-        interfaces.add(value);
+        //add interface if not added yet
+        if (!interfaces.has(Interface)) {
+            interfaces.add(Interface);
+        }
     });
 
     //verify interfaces implementation
@@ -117,9 +118,7 @@ xs.class.preprocessors.add('processImplements', function (Class) {
  */
 function verifyImplements(Class, interfaces) {
     //apply each interface
-    interfaces.each(function (name) {
-
-        var Interface = xs.ContractsManager.get(name);
+    interfaces.each(function (Interface) {
 
         log.trace(Class + '. Verifying implementation of ' + Interface);
         //verify, that target implements Interface

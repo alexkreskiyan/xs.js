@@ -52,9 +52,7 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
             $Mixin: Mixin
         });
 
-        var mixins = this.descriptor.allMixins;
-
-        return xs.isObject(mixins) && mixins.has(Mixin.label); //TODO mixins must contain classes?
+        return this.descriptor.allMixins.has(Mixin);
     });
 
     return true;
@@ -112,12 +110,12 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
         });
 
         //if name not in allMixins collection - add it to mixins and allMixins
-        if (!allMixins.has(name)) {
-            //add aliased name to mixins collection
-            mixins.add(alias, name);
+        if (!allMixins.has(Mixin)) {
+            //add aliased Mixin to mixins collection
+            mixins.add(alias, Mixin);
 
             //add name to allMixins collection
-            allMixins.add(name);
+            allMixins.add(Mixin);
         }
     });
 
@@ -138,9 +136,7 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
 function applyMixins(Class, mixins) {
 
     //apply each mixin
-    mixins.each(function (name, alias) {
-
-        var Mixin = xs.ContractsManager.get(name);
+    mixins.each(function (Mixin, alias) {
 
         log.trace(Class + '. Mixining ' + Mixin + 'as ' + alias);
         //mix mixed class descriptor into target descriptor
