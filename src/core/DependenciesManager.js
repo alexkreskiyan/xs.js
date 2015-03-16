@@ -9,6 +9,8 @@ var assert = new xs.core.Asserter(log, DependenciesManagerError);
  *
  * DependenciesManager used to manage contracts' dependencies
  *
+ * @ignore
+ *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @private
@@ -20,8 +22,24 @@ var assert = new xs.core.Asserter(log, DependenciesManagerError);
 var DependenciesManager = (function () {
     var me = {};
 
+    /**
+     * Internal dependencies manager storage
+     *
+     * @property storage
+     *
+     * @type {xs.core.Collection}
+     */
     var storage = new xs.core.Collection();
 
+    /**
+     * Adds new dependency from given contract to given waited contracts' collection
+     *
+     * @method add
+     *
+     * @param {Object|Function} contract dependent contract
+     * @param {xs.core.Collection} waiting collection of contracts, given contract waits for
+     * @param {Function} handleReady handler, being called as far as waiting dependencies are resolved
+     */
     me.add = function (contract, waiting, handleReady) {
 
         //filter waiting
@@ -30,17 +48,23 @@ var DependenciesManager = (function () {
             return contract.isProcessing;
         }, xs.core.Collection.All);
 
+        //execute handle ready on next tick, if no dependencies
         if (!waiting.size) {
             xs.nextTick(handleReady);
 
             return;
         }
 
+        //get/create dependency from contract
         var dependency = getDependency(contract);
+
+        //assign handleReady for dependency
         dependency.handleReady = handleReady;
 
-        //add dependencies
+        //add waiting as dependencies for contract dependency
         waiting.each(function (contract) {
+
+            //get/create dependency from contract from waiting collection
             dependency.add(getDependency(contract));
 
             //assert, that no dead lock made
@@ -48,7 +72,16 @@ var DependenciesManager = (function () {
         });
     };
 
+    /**
+     * Removes contract from dependencies manager, because it is prepared
+     *
+     * @method remove
+     *
+     * @param {Object|Function} contract removed contract
+     */
     me.remove = function (contract) {
+
+        //try to find a dependency for removed contract in internal storage
         var removed = storage.find(function (dependency) {
             return dependency.contract === contract;
         });
@@ -59,62 +92,112 @@ var DependenciesManager = (function () {
             return;
         }
 
+        //remove contract dependency from storage
         storage.remove(removed);
 
-        var resolved = new xs.core.Collection();
-
+        //process internal storage
         storage.each(function (dependency) {
+
+            //if any dependency has removed one as dependent, than
             if (dependency.has(removed)) {
+
+                //remove it from dependent list
                 dependency.remove(removed);
-                if (!dependency.size) {
-                    resolved.add(dependency);
+
+                //if removed dependency was last one and handleReady is defined - call handleReady on next tick
+                if (!dependency.size && dependency.handleReady) {
+                    xs.nextTick(dependency.handleReady);
                 }
             }
         });
-
-        resolved.each(function (dependency) {
-            if (dependency.handleReady) {
-                xs.nextTick(dependency.handleReady);
-            }
-        });
     };
 
+    /**
+     * Gets/creates a dependency for a given contract. Created dependency is stored in internal storage
+     *
+     * @private
+     *
+     * @method getDependency
+     *
+     * @param {Object|Function} contract
+     *
+     * @returns {Dependency} dependency for given contract
+     */
     var getDependency = function (contract) {
+
+        //try to find dependency in storage
         var dependency = storage.find(function (dependency) {
 
+            //dependency match is based on contract reference
             return dependency.contract === contract;
         });
 
+        //if dependency not found
         if (!dependency) {
+
+            //create new Dependency from contract
             dependency = new Dependency(contract);
 
+            //add dependecy to storage
             storage.add(dependency);
         }
 
+        //return dependency
         return dependency;
     };
 
+    /**
+     * Returns false, when no deadLock is detected, assert fails otherwise. Coded as a function to make clear production code
+     *
+     * @private
+     *
+     * @method getDeadLock
+     *
+     * @param {Dependency} dependency dependency, tested to have a lock
+     *
+     * @returns {Boolean} false is returned, saying that dependency has no deadLock
+     */
     var getDeadLock = function (dependency) {
+
+        //try to find lock
         var deadLock = dependency.getLock();
 
+        //if lock is found, assert fails with user-friendly lock description
         assert.not(deadLock, 'dead lock detected: ' + (deadLock ? showDeadLock(deadLock) : ''));
 
         return false;
     };
 
+    /**
+     * Internal method, that returns user-friendly message for given deadLock contracts' collection
+     *
+     * @private
+     *
+     * @method showDeadLock
+     *
+     * @param {xs.core.Collection} deadLock
+     *
+     * @returns {String}
+     */
     var showDeadLock = function (deadLock) {
-        //self lock
+
+        //self lock case
         if (deadLock.size === 2) {
             return 'Contract `' + deadLock[0].contract.label + '` depends on itself';
         }
 
-        //chain lock
+        //chain lock case. get locked contract label
         var locked = deadLock.shift().contract.label;
+
+        //remove last contract - it's duplicate
         deadLock.pop();
 
+        //get array of locked contracts' names
         var names = deadLock.values().map(function (dependency) {
             return dependency.contract.label;
         });
+
+        //return deadLock descpription
         return 'Contract `' + locked + '` depends on `' + names.join('`, which depends on `') + '`, which, in it\'s turn, depends on `' + locked + '`';
     };
 
