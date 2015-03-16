@@ -17,22 +17,10 @@ var assert = new xs.core.Asserter(log, DependenciesManagerError);
  *
  * @singleton
  */
-var DependenciesManager = window.dm = (function () {
+var DependenciesManager = (function () {
     var me = {};
 
-    var storage = me.storage = new xs.core.Collection();
-    me.dump = function () {
-        var dump = {};
-        storage.each(function (dependency) {
-            dump[dependency.contract.label] = dependency.dump();
-        });
-        console.log(JSON.stringify(dump));
-    };
-    window.logWaiting = function (chain) {
-        return chain.values().map(function (contract) {
-            return contract.label;
-        }).join(', ');
-    };
+    var storage = new xs.core.Collection();
 
     me.add = function (contract, waiting, handleReady) {
 
@@ -133,17 +121,10 @@ var DependenciesManager = window.dm = (function () {
     return me;
 })();
 
-var ReadyManager = window.rm = (function () {
+var ReadyManager = (function () {
     var me = {};
 
-    var storage = me.storage = new xs.core.Collection();
-    me.dump = function () {
-        storage.each(function (item) {
-            console.log(item.waiting.map(function (item) {
-                return item.label;
-            }).values().join(' -> '));
-        });
-    };
+    var storage = new xs.core.Collection();
 
     me.add = function (waiting, handleReady) {
 
@@ -310,16 +291,6 @@ Dependency.prototype.getLock = function (chain) {
     });
 
     return lock;
-};
-
-Dependency.prototype.dump = function () {
-    var me = this;
-    var dump = {};
-    me.dependencies.each(function (dependency) {
-        dump[dependency.contract.label] = dependency.dump();
-    });
-
-    return dump;
 };
 
 //save DependenciesManager.onReady to xs.onReady
