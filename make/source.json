@@ -20,15 +20,25 @@
         "xs.lang.String": {},
         "xs.core.Loader": {},
         "xs.core.ContractsManager": {},
-        "xs.core.DependenciesManager": {
-            "test": false
-        },
-        "xs.core.ProcessorsStack": {
-            "test": false
+        "contracts": {
+            "xs.core.Dependency": {
+                "test": false
+            },
+            "xs.core.DependenciesManager": {
+                "test": false
+            },
+            "xs.core.ReadyManager": {
+                "test": false
+            },
+            "xs.core.ProcessorsStack": {
+                "test": false
+            },
+            "xs.class.Class": {},
+            "xs.enum.Enum": {},
+            "xs.interface.Interface": {}
         },
         "xs.core.Lazy": {},
         "xs.core.Promise": {},
-        "xs.class.Class": {},
         "xs.class.preprocessors.namespace": {},
         "xs.class.preprocessors.abstract": {},
         "xs.class.preprocessors.prepareClass": {},
@@ -43,11 +53,9 @@
         "xs.class.postprocessors.logger": {},
         "xs.class.postprocessors.asserter": {},
         "xs.class.Base": {},
-        "xs.enum.Enum": {},
         "xs.enum.preprocessors.namespace": {},
         "xs.enum.preprocessors.values": {},
         "xs.enum.preprocessors.methods": {},
-        "xs.interface.Interface": {},
         "xs.interface.preprocessors.namespace": {},
         "xs.interface.preprocessors.prepareInterface": {},
         "xs.interface.preprocessors.imports": {},

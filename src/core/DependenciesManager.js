@@ -4,6 +4,9 @@ var log = new xs.log.Logger('xs.core.DependenciesManager');
 
 var assert = new xs.core.Asserter(log, DependenciesManagerError);
 
+//get dependency reference
+var Dependency = module.Dependency;
+
 /**
  * Private internal core class.
  *
@@ -138,7 +141,7 @@ var DependenciesManager = (function () {
             //create new Dependency from contract
             dependency = new Dependency(contract);
 
-            //add dependecy to storage
+            //add dependency to storage
             storage.add(dependency);
         }
 
@@ -197,311 +200,15 @@ var DependenciesManager = (function () {
             return dependency.contract.label;
         });
 
-        //return deadLock descpription
+        //return deadLock description
         return 'Contract `' + locked + '` depends on `' + names.join('`, which depends on `') + '`, which, in it\'s turn, depends on `' + locked + '`';
     };
 
     return me;
 })();
 
-/**
- * Private internal dependency class. Represents single node in dependencies mesh
- *
- * @ignore
- *
- * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
- *
- * @private
- *
- * @class Dependency
- *
- * @singleton
- */
-
-/**
- * Creates dependency instance
- *
- * @constructor
- *
- * @param {Object|Function} contract contract, dependency is created from
- */
-function Dependency(contract) {
-    var me = this;
-
-    //save contract reference
-    me.contract = contract;
-
-    //create dependencies collection
-    me.dependencies = new xs.core.Collection();
-}
-
-/**
- * Dependency own dependencies collection size
- *
- * @property size
- *
- * @readonly
- *
- * @type {Number}
- */
-Object.defineProperty(Dependency.prototype, 'size', {
-    get: function () {
-        return this.dependencies.size;
-    },
-    set: xs.noop
-});
-
-/**
- * Adds new dependent dependency for this one
- *
- * @method add
- *
- * @param {Dependency} dependency
- *
- * @chainable
- */
-Dependency.prototype.add = function (dependency) {
-    var me = this;
-
-    me.dependencies.add(dependency);
-
-    return me;
-};
-
-/**
- * Returns, whether dependency has given one as dependent
- *
- * @method has
- *
- * @param {Dependency} dependency
- *
- * @return {Boolean} verification status
- */
-Dependency.prototype.has = function (dependency) {
-    var me = this;
-
-    return me.dependencies.has(dependency);
-};
-
-/**
- * Removes dependent dependency from this one
- *
- * @method remove
- *
- * @param {Dependency} dependency
- *
- * @chainable
- */
-Dependency.prototype.remove = function (dependency) {
-    var me = this;
-
-    me.dependencies.remove(dependency);
-
-    return me;
-};
-
-/**
- * Tries to find lock recursively withing dependency
- *
- * @method getLock
- *
- * @param {xs.core.Collection} [chain] existent lookup chain
- *
- * @return {null|xs.core.Collection} found locked chain or null if nothing found
- */
-Dependency.prototype.getLock = function (chain) {
-    var me = this;
-
-    //define lock
-    var lock = null;
-
-    //lock is looked up for current dependency
-    if (!arguments.length) {
-
-        //try to find lock in dependents
-        me.dependencies.find(function (dependency) {
-
-            //try to find lock down recursively
-            lock = dependency.getLock(new xs.core.Collection([me]));
-
-            //lock is found, return
-            return lock;
-        });
-
-        //return lookup result - null if nothing found or found chain
-        return lock;
-    }
-
-
-    //lock chain is given
-
-    //add this dependency to chain
-    chain.add(me);
-
-    //exit case - lock found
-    if (me === chain.first()) {
-
-        //return locked chain
-        return chain;
-    }
-
-    //try to find lock in dependents
-    me.dependencies.find(function (dependency) {
-
-        //try to find lock down recursively
-        lock = dependency.getLock(chain.clone());
-
-        //lock is found, return
-        return lock;
-    });
-
-    //return lookup result - null if nothing found or found chain
-    return lock;
-};
-
-/**
- * Private internal core class.
- *
- * ReadyManager is used to manage external dependencies on contracts
- *
- * @ignore
- *
- * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
- *
- * @private
- *
- * @class xs.core.ReadyManager
- *
- * @singleton
- */
-var ReadyManager = (function () {
-    var me = {};
-
-    /**
-     * Internal dependencies manager storage
-     *
-     * @property storage
-     *
-     * @type {xs.core.Collection}
-     */
-    var storage = new xs.core.Collection();
-
-    /**
-     * Adds new dependency from contracts with given names or simply when all contracts are processed //TODO - integrate with global processing contracts collection
-     *
-     * @method add
-     *
-     * @param {String[]} [waiting] optional array with names of waited contracts
-     * @param {Function} handleReady handler, being called as far as waiting dependencies are resolved
-     */
-    me.add = function (waiting, handleReady) {
-
-        //assert, that correct params given
-        assert.ok(xs.isFunction(waiting) || (xs.isArray(waiting) && xs.isFunction(handleReady)), 'incorrect onReady parameters');
-
-        //if waiting is function - it's handleReady and empty waiting
-        if (xs.isFunction(waiting)) {
-            handleReady = waiting;
-            waiting = null;
-
-            //else - waiting must be array, handleReady - function
-        } else {
-            waiting = new xs.core.Collection(waiting);
-        }
-
-        //waiting: null means, that all classes must be loaded
-        if (!waiting) {
-
-            //add item to storage
-            storage.add({
-                waiting: null,
-                handleReady: handleReady
-            });
-
-            return;
-        }
-
-        //filter waiting
-        waiting = waiting.find(function (name) {
-
-            //assert, that name is correct
-            assert.ok(xs.ContractsManager.isName(name), 'Given name `$name` is not a valid contract name', {
-                $name: name
-            });
-
-            //if contract is not defined - wait
-            if (!xs.ContractsManager.has(name)) {
-
-                return true;
-            }
-
-            //get contract
-            var contract = xs.ContractsManager.get(name);
-
-            //return whether contract is processing
-            return contract.isProcessing;
-        }, xs.core.Collection.All);
-
-        //add item to storage
-        storage.add({
-            waiting: waiting,
-            handleReady: handleReady
-        });
-    };
-
-    /**
-     * Removes processed contract from ready manager
-     *
-     * @method remove
-     *
-     * @param {String|Null} contract removed contract label
-     */
-    me.remove = function (contract) {
-
-        //get resolved queue lists. If processed given - with non-null waiting list. If no processed given - with null lists only
-        var resolved;
-        if (contract === null) {
-            resolved = storage.find(function (item) {
-                //item is resolved, if waiting list is null
-
-                return item.waiting === null;
-            }, xs.core.Collection.All);
-        } else {
-            resolved = storage.find(function (item) {
-                //items with waiting null are not resolved
-                if (item.waiting === null) {
-
-                    return false;
-                }
-
-                //return false if item waiting doesn't have processed
-                if (!item.waiting.has(contract)) {
-                    return false;
-                }
-
-                //remove processed from item waiting
-                item.waiting.remove(contract);
-
-                //item is resolved, if waiting is empty
-                return !item.waiting.size;
-            }, xs.core.Collection.All);
-        }
-
-        //process resolved dependencies to remove them from stack
-        resolved.each(function (item) {
-            storage.remove(item);
-            item.handleReady();
-        });
-    };
-
-    return me;
-})();
-
-//TODO remove
-DependenciesManager.ready = ReadyManager.remove;
-
-//save DependenciesManager.onReady to xs.onReady
-xs.onReady = ReadyManager.add;
+//save DependenciesManager reference
+module.DependenciesManager = DependenciesManager;
 
 /**
  * @ignore
