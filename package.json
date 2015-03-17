@@ -44,8 +44,6 @@
         "maxstatements": false,
         "maxcomplexity": false,
         "maxlen": false,
-
-        // Relaxing
         "asi": false,
         "boss": false,
         "debug": false,
@@ -71,8 +69,6 @@
         "sub": false,
         "supernew": true,
         "validthis": true,
-
-        // Environments
         "browser": true,
         "browserify": false,
         "couch": false,
@@ -91,8 +87,6 @@
         "worker": false,
         "wsh": false,
         "yui": false,
-
-        // Custom Globals
         "globals": {
             "xs": true,
             "module": true,
