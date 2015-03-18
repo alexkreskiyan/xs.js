@@ -142,8 +142,8 @@ var ReadyManager = (function () {
     return me;
 })();
 
-//TODO remove
-module.DependenciesManager.ready = ReadyManager.remove;
+//save ReadyManager reference
+module.ReadyManager = ReadyManager;
 
 //save DependenciesManager.onReady to xs.onReady
 xs.onReady = ReadyManager.add;

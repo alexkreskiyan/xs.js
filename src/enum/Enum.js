@@ -39,7 +39,7 @@ var assert = new xs.core.Asserter(log, EnumError);
  *
  * @singleton
  */
-xs.Enum = xs.enum.Enum = (function (dependencies) {
+xs.Enum = xs.enum.Enum = (function (ProcessorsStack, dependencies, ready) {
 
     /**
      * Currently processing enums' list
@@ -102,13 +102,13 @@ xs.Enum = xs.enum.Enum = (function (dependencies) {
             dependencies.remove(Enum);
 
             //notify, that enum is ready
-            dependencies.ready(Enum.label);
+            ready.remove(Enum.label);
 
             //if dependencies empty - all enums processed
             if (!processing.size) {
 
                 //notify, that all ready
-                dependencies.ready(null);
+                ready.remove(null);
             }
 
             //call createdFn
@@ -142,7 +142,7 @@ xs.Enum = xs.enum.Enum = (function (dependencies) {
      *
      * @singleton
      */
-    var preprocessors = xs.enum.preprocessors = new xs.ProcessorsStack.Enum();
+    var preprocessors = xs.enum.preprocessors = new ProcessorsStack();
 
     /**
      * Returns class empty descriptor
@@ -165,25 +165,7 @@ xs.Enum = xs.enum.Enum = (function (dependencies) {
     };
 
     return Contractor;
-})(xs.DependenciesManager.Enum);
-
-
-//clean up ProcessorsStack
-//remove ProcessorsStack reference
-delete xs.ProcessorsStack.Enum;
-//complete if ready
-if (!Object.keys(xs.ProcessorsStack).length) {
-    delete xs.ProcessorsStack;
-}
-
-
-//clean up DependenciesManager
-//remove DependenciesManager reference
-delete xs.DependenciesManager.Enum;
-//complete if ready
-if (!Object.keys(xs.DependenciesManager).length) {
-    delete xs.DependenciesManager;
-}
+})(module.ProcessorsStack, module.DependenciesManager, module.ReadyManager);
 
 
 //define prototype of xs.enum.Base

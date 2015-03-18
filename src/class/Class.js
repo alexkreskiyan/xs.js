@@ -67,7 +67,7 @@ var assert = new xs.core.Asserter(log, ClassError);
  *
  * @singleton
  */
-xs.Class = xs.class.Class = (function (dependencies) {
+xs.Class = xs.class.Class = (function (ProcessorsStack, dependencies, ready) {
 
     /**
      * Currently processing classes' list
@@ -144,13 +144,13 @@ xs.Class = xs.class.Class = (function (dependencies) {
             dependencies.remove(Class);
 
             //notify, that class is ready
-            dependencies.ready(Class.label);
+            ready.remove(Class.label);
 
             //if dependencies empty - all classes processed
             if (!processing.size) {
 
                 //notify, that all ready
-                dependencies.ready(null);
+                ready.remove(null);
             }
 
             //call createdFn
@@ -194,7 +194,7 @@ xs.Class = xs.class.Class = (function (dependencies) {
      *
      * @singleton
      */
-    var preprocessors = xs.class.preprocessors = new xs.ProcessorsStack.Class();
+    var preprocessors = xs.class.preprocessors = new ProcessorsStack();
 
     /**
      * Stack of processors, processing class after it's considered to be created (after createdFn is called)
@@ -219,7 +219,7 @@ xs.Class = xs.class.Class = (function (dependencies) {
      *
      * @singleton
      */
-    var postprocessors = xs.class.postprocessors = new xs.ProcessorsStack.Class();
+    var postprocessors = xs.class.postprocessors = new ProcessorsStack();
 
     /**
      * Returns new xClass sample
@@ -438,25 +438,7 @@ xs.Class = xs.class.Class = (function (dependencies) {
     };
 
     return Contractor;
-})(xs.DependenciesManager.Class);
-
-
-//clean up ProcessorsStack
-//remove ProcessorsStack reference
-delete xs.ProcessorsStack.Class;
-//complete if ready
-if (!Object.keys(xs.ProcessorsStack).length) {
-    delete xs.ProcessorsStack;
-}
-
-
-//clean up DependenciesManager
-//remove DependenciesManager reference
-delete xs.DependenciesManager.Class;
-//complete if ready
-if (!Object.keys(xs.DependenciesManager).length) {
-    delete xs.DependenciesManager;
-}
+})(module.ProcessorsStack, module.DependenciesManager, module.ReadyManager);
 
 
 //define prototype of xs.class.Base

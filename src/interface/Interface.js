@@ -46,7 +46,7 @@ var assert = new xs.core.Asserter(log, InterfaceError);
  *
  * @singleton
  */
-xs.Interface = xs.interface.Interface = (function (dependencies) {
+xs.Interface = xs.interface.Interface = (function (ProcessorsStack, dependencies, ready) {
 
     /**
      * Currently processing interfaces' list
@@ -116,13 +116,13 @@ xs.Interface = xs.interface.Interface = (function (dependencies) {
             dependencies.remove(Interface);
 
             //notify, that interface is ready
-            dependencies.ready(Interface.label);
+            ready.remove(Interface.label);
 
             //if dependencies empty - all interfaces processed
             if (!processing.size) {
 
                 //notify, that all ready
-                dependencies.ready(null);
+                ready.remove(null);
             }
 
             //call createdFn
@@ -166,7 +166,7 @@ xs.Interface = xs.interface.Interface = (function (dependencies) {
      *
      * @singleton
      */
-    var preprocessors = xs.interface.preprocessors = new xs.ProcessorsStack.Interface();
+    var preprocessors = xs.interface.preprocessors = new ProcessorsStack();
 
     /**
      * Stack of processors, processing interface after it's considered to be created (after createdFn is called)
@@ -191,7 +191,7 @@ xs.Interface = xs.interface.Interface = (function (dependencies) {
      *
      * @singleton
      */
-    var postprocessors = xs.interface.postprocessors = new xs.ProcessorsStack.Interface();
+    var postprocessors = xs.interface.postprocessors = new ProcessorsStack();
 
     /**
      * Returns new xInterface sample
@@ -295,25 +295,7 @@ xs.Interface = xs.interface.Interface = (function (dependencies) {
     };
 
     return Contractor;
-})(xs.DependenciesManager.Interface);
-
-
-//clean up ProcessorsStack
-//remove ProcessorsStack reference
-delete xs.ProcessorsStack.Interface;
-//complete if ready
-if (!Object.keys(xs.ProcessorsStack).length) {
-    delete xs.ProcessorsStack;
-}
-
-
-//clean up DependenciesManager
-//remove DependenciesManager reference
-delete xs.DependenciesManager.Interface;
-//complete if ready
-if (!Object.keys(xs.DependenciesManager).length) {
-    delete xs.DependenciesManager;
-}
+})(module.ProcessorsStack, module.DependenciesManager, module.ReadyManager);
 
 
 //define prototype of xs.interface.Base

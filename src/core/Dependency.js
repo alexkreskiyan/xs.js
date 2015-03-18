@@ -10,8 +10,6 @@
  * @private
  *
  * @class Dependency
- *
- * @singleton
  */
 
 /**

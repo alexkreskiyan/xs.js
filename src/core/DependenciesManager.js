@@ -211,18 +211,6 @@ var DependenciesManager = (function () {
 module.DependenciesManager = DependenciesManager;
 
 /**
- * @ignore
- *
- * Create DependenciesManager references hash for all contracts implemented.
- * When contract is implemented it fetches and removes it's reference from hash. If hash is empty - it is removed
- */
-xs.DependenciesManager = {
-    Class: DependenciesManager,
-    Enum: DependenciesManager,
-    Interface: DependenciesManager
-};
-
-/**
  * Internal error class
  *
  * @ignore

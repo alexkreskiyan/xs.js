@@ -226,17 +226,8 @@ var ProcessorsStack = function ProcessorsStack() {
     };
 };
 
-/**
- * @ignore
- *
- * Create ProcessorsStack references hash for all contracts implemented.
- * When contract is implemented it fetches and removes it's reference from hash. If hash is empty - it is removed
- */
-xs.ProcessorsStack = {
-    Class: ProcessorsStack,
-    Enum: ProcessorsStack,
-    Interface: ProcessorsStack
-};
+//save ProcessorsStack reference
+module.ProcessorsStack = ProcessorsStack;
 
 /**
  * Internal error class
