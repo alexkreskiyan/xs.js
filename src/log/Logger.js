@@ -56,7 +56,7 @@ delete xs.log.Router.process;
  *
  * @param {String} category logger messages' category
  */
-var logger = xs.log.Logger = function (category) {
+var Logger = xs.log.Logger = function (category) {
     var me = this;
 
     //assert, that category is valid (via xs.log.Router.isCategory)
@@ -91,7 +91,7 @@ var logger = xs.log.Logger = function (category) {
  * @param {String} message log message
  * @param {Object} [data] message data
  */
-logger.prototype.error = function (message, data) {
+Logger.prototype.error = function (message, data) {
     var me = this;
 
     //assert, that message is string
@@ -127,7 +127,7 @@ logger.prototype.error = function (message, data) {
  * @param {String} message log message
  * @param {Object} [data] message data
  */
-logger.prototype.warn = function (message, data) {
+Logger.prototype.warn = function (message, data) {
     var me = this;
 
     //assert, that message is string
@@ -163,7 +163,7 @@ logger.prototype.warn = function (message, data) {
  * @param {String} message log message
  * @param {Object} [data] message data
  */
-logger.prototype.info = function (message, data) {
+Logger.prototype.info = function (message, data) {
     var me = this;
 
     //assert, that message is string
@@ -200,7 +200,7 @@ logger.prototype.info = function (message, data) {
  * @param {String} message log message
  * @param {Object} [data] message data
  */
-logger.prototype.trace = function (message, data) {
+Logger.prototype.trace = function (message, data) {
     var me = this;
 
     //assert, that message is string
@@ -307,7 +307,7 @@ function LoggerError(message) {
 LoggerError.prototype = new Error();
 
 //hook method to create asserter. here fake assert is needed for first call
-logger.hookReady = function () {
+Logger.hookReady = function () {
     assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Logger'), LoggerError);
-    delete logger.hookReady;
+    delete Logger.hookReady;
 };

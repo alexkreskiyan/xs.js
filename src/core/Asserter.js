@@ -55,7 +55,7 @@ var slice = Function.prototype.call.bind(Array.prototype.slice);
  * @param {xs.log.Logger} logger instance of xs.log.Logger, asserter reports it's exceptions to
  * @param {Function} Exception Exception class, used by asserter to generate exceptions
  */
-var asserter = xs.core.Asserter = function (logger, Exception) {
+var Asserter = xs.core.Asserter = function (logger, Exception) {
     var me = this;
 
     //assert, that logger is an instance of xs.log.Logger
@@ -95,7 +95,7 @@ var asserter = xs.core.Asserter = function (logger, Exception) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.equal = function (given, expected, message, vars) {
+Asserter.prototype.equal = function (given, expected, message, vars) {
     var me = this;
 
     //assert
@@ -126,7 +126,7 @@ asserter.prototype.equal = function (given, expected, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.ok = function (expression, message, vars) {
+Asserter.prototype.ok = function (expression, message, vars) {
     var me = this;
 
     //assert
@@ -157,7 +157,7 @@ asserter.prototype.ok = function (expression, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.not = function (expression, message, vars) {
+Asserter.prototype.not = function (expression, message, vars) {
     var me = this;
 
     //assert
@@ -188,7 +188,7 @@ asserter.prototype.not = function (expression, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.object = function (value, message, vars) {
+Asserter.prototype.object = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -219,7 +219,7 @@ asserter.prototype.object = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.array = function (value, message, vars) {
+Asserter.prototype.array = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -250,7 +250,7 @@ asserter.prototype.array = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.fn = function (value, message, vars) {
+Asserter.prototype.fn = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -281,7 +281,7 @@ asserter.prototype.fn = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.string = function (value, message, vars) {
+Asserter.prototype.string = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -312,7 +312,7 @@ asserter.prototype.string = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.number = function (value, message, vars) {
+Asserter.prototype.number = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -343,7 +343,7 @@ asserter.prototype.number = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.boolean = function (value, message, vars) {
+Asserter.prototype.boolean = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -374,7 +374,7 @@ asserter.prototype.boolean = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.regExp = function (value, message, vars) {
+Asserter.prototype.regExp = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -405,7 +405,7 @@ asserter.prototype.regExp = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.error = function (value, message, vars) {
+Asserter.prototype.error = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -436,7 +436,7 @@ asserter.prototype.error = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.null = function (value, message, vars) {
+Asserter.prototype.null = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -467,7 +467,7 @@ asserter.prototype.null = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.iterable = function (value, message, vars) {
+Asserter.prototype.iterable = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -498,7 +498,7 @@ asserter.prototype.iterable = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.primitive = function (value, message, vars) {
+Asserter.prototype.primitive = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -529,7 +529,7 @@ asserter.prototype.primitive = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.numeric = function (value, message, vars) {
+Asserter.prototype.numeric = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -560,7 +560,7 @@ asserter.prototype.numeric = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.defined = function (value, message, vars) {
+Asserter.prototype.defined = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -591,7 +591,7 @@ asserter.prototype.defined = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.empty = function (value, message, vars) {
+Asserter.prototype.empty = function (value, message, vars) {
     var me = this;
 
     //assert
@@ -622,7 +622,7 @@ asserter.prototype.empty = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.Class = function (Class, message, vars) {
+Asserter.prototype.Class = function (Class, message, vars) {
     var me = this;
 
     //assert, that Class is function
@@ -658,7 +658,7 @@ asserter.prototype.Class = function (Class, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.Interface = function (Interface, message, vars) {
+Asserter.prototype.Interface = function (Interface, message, vars) {
     var me = this;
 
     //assert, that fn is function
@@ -695,7 +695,7 @@ asserter.prototype.Interface = function (Interface, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.instance = function (instance, Class, message, vars) {
+Asserter.prototype.instance = function (instance, Class, message, vars) {
     var me = this;
 
     //assert, that Class is a function
@@ -753,7 +753,7 @@ asserter.prototype.instance = function (instance, Class, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-asserter.prototype.implements = function (instance, Interface, message, vars) {
+Asserter.prototype.implements = function (instance, Interface, message, vars) {
     var me = this;
 
     //assert that instance is object
