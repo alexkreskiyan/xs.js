@@ -5,6 +5,9 @@ if (!xs.core) {
     xs.core = {};
 }
 
+var assert;
+
+
 /**
  * xs.core.Collection is core framework class, that is used for internal collections
  *
@@ -13,14 +16,12 @@ if (!xs.core) {
  * @private
  *
  * @class xs.core.Collection
- */
-
-var assert;
-
-/**
- * xs.core.Collection constructor
+ *
+ *
  *
  * @constructor
+ *
+ * xs.core.Collection constructor
  *
  * @param {Array|Object} [values] collection source
  */

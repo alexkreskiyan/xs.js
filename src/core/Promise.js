@@ -49,12 +49,6 @@ if (!xs.core) {
  *
  * @class xs.core.Promise
  */
-
-/**
- * Promise constructor
- *
- * @constructor
- */
 xs.core.Promise = function () {
     var me = this;
 

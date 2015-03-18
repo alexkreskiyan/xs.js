@@ -35,9 +35,11 @@ var assert = new xs.core.Asserter(log, LazyError);
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.core.Lazy
- */
-
-/**
+ *
+ *
+ *
+ * @constructor
+ *
  * Lazy constructor. Accepts single argument - evaluation function
  *
  * For example:
@@ -49,8 +51,6 @@ var assert = new xs.core.Asserter(log, LazyError);
  *
  *     //get value of lazy
  *     var value = lazy.get();
- *
- * @constructor
  *
  * @param {Function} evaluation lazy post-evaluated value
  */

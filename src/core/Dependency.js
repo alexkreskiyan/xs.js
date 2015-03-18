@@ -10,12 +10,12 @@
  * @private
  *
  * @class Dependency
- */
-
-/**
- * Creates dependency instance
+ *
+ *
  *
  * @constructor
+ *
+ * Creates dependency instance
  *
  * @param {Object|Function} contract contract, dependency is created from
  */

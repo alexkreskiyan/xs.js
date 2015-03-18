@@ -42,17 +42,17 @@ delete xs.log.Router.process;
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.log.Logger
- */
-
-/**
+ *
+ *
+ *
+ * @constructor
+ *
  * Logger constructor. Logger category is given as single argument
  *
  * For example:
  *
  *     //create logger instance
  *     var logger = new xs.log.Logger('xs');
- *
- * @constructor
  *
  * @param {String} category logger messages' category
  */

@@ -26,8 +26,6 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     /**
      * Storage flag, meaning, that operation is reverse
      *
-     * @static
-     *
      * @property Reverse
      *
      * @readonly
@@ -38,8 +36,6 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
     /**
      * Storage flag, meaning, that operation is made for all matches.
-     *
-     * @static
      *
      * @property All
      *
@@ -53,8 +49,6 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
      * Storage reference.
      *
      * @private
-     *
-     * @static
      *
      * @property storage
      *

@@ -37,9 +37,11 @@ var slice = Function.prototype.call.bind(Array.prototype.slice);
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.core.Asserter
- */
-
-/**
+ *
+ *
+ *
+ * @constructor
+ *
  * Asserter constructor. Logger category is given as single argument
  *
  * For example:
@@ -49,8 +51,6 @@ var slice = Function.prototype.call.bind(Array.prototype.slice);
  *
  *     //create asserter instance
  *     var asserter = new xs.core.Asserter(logger, Error);
- *
- * @constructor
  *
  * @param {xs.log.Logger} logger instance of xs.log.Logger, asserter reports it's exceptions to
  * @param {Function} Exception Exception class, used by asserter to generate exceptions
