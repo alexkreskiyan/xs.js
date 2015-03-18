@@ -298,16 +298,16 @@ function profileEnd(mark) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class LoggerError
+ * @class XsLogLoggerError
  */
-function LoggerError(message) {
+function XsLogLoggerError(message) {
     this.message = 'xs.log.Logger::' + message;
 }
 
-LoggerError.prototype = new Error();
+XsLogLoggerError.prototype = new Error();
 
 //hook method to create asserter. here fake assert is needed for first call
 Logger.hookReady = function () {
-    assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Logger'), LoggerError);
+    assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Logger'), XsLogLoggerError);
     delete Logger.hookReady;
 };

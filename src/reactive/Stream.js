@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.reactive.Stream');
 
-var assert = new xs.core.Asserter(log, StreamError);
+var assert = new xs.core.Asserter(log, XsReactiveStreamError);
 
 if (!xs.reactive) {
     xs.reactive = {};
@@ -26,10 +26,10 @@ xs.extend(Stream, Reactive);
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class StreamError
+ * @class XsReactiveStreamError
  */
-function StreamError(message) {
+function XsReactiveStreamError(message) {
     this.message = 'xs.reactive.Stream::' + message;
 }
 
-StreamError.prototype = new Error();
+XsReactiveStreamError.prototype = new Error();

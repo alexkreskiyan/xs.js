@@ -7,7 +7,7 @@ if (!xs.interface) {
 
 var log = new xs.log.Logger('xs.interface.Interface');
 
-var assert = new xs.core.Asserter(log, InterfaceError);
+var assert = new xs.core.Asserter(log, XsInterfaceInterfaceError);
 
 /**
  * xs.interface.Interface is core class, that is used for interface generation.
@@ -58,7 +58,7 @@ xs.Interface = xs.interface.Interface = (function (ProcessorsStack, processing, 
         //Descriptor must be function
         assert.fn(Descriptor, 'given interface descriptor `$descriptor` is not a function', {
             $descriptor: Descriptor
-        }, InterfaceError);
+        }, XsInterfaceInterfaceError);
 
         if (!xs.isFunction(createdFn)) {
             createdFn = xs.noop;
@@ -176,7 +176,7 @@ xs.Interface = xs.interface.Interface = (function (ProcessorsStack, processing, 
     var createSample = function () {
 
         return function xInterface() {
-            throw new InterfaceError('Interface must not be called');
+            throw new XsInterfaceInterfaceError('Interface must not be called');
         };
     };
 
@@ -281,10 +281,10 @@ xs.interface.Base = xs.Interface(function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class InterfaceError
+ * @class XsInterfaceInterfaceError
  */
-function InterfaceError(message) {
+function XsInterfaceInterfaceError(message) {
     this.message = 'xs.interface.Interface::' + message;
 }
 
-InterfaceError.prototype = new Error();
+XsInterfaceInterfaceError.prototype = new Error();

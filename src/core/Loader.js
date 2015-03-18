@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.core.Loader');
 
-var assert = new xs.core.Asserter(log, LoaderError);
+var assert = new xs.core.Asserter(log, XsCoreLoaderError);
 
 /**
  * xs.core.Loader is core class, that is used for class loading
@@ -104,7 +104,7 @@ xs.Loader = (function () {
                 loadList.failed.each(function (path, name) {
                     failed.push(name + ' (' + path + ')');
                 });
-                throw new LoaderError('failed loading classes: ' + failed.join(', '));
+                throw new XsCoreLoaderError('failed loading classes: ' + failed.join(', '));
             }
 
             return;
@@ -598,7 +598,7 @@ xs.Loader = (function () {
                 if (item.handleFail) {
                     item.handleFail(item.list.failed.toSource(), item.list.loaded.toSource(), item.list.unresolved.toSource());
                 } else {
-                    throw new LoaderError('failed loading classes: ' + name + ' (' + path + ')');
+                    throw new XsCoreLoaderError('failed loading classes: ' + name + ' (' + path + ')');
                 }
             });
         };
@@ -835,13 +835,13 @@ xs.Loader = (function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class LoaderError
+ * @class XsCoreLoaderError
  */
-function LoaderError(message) {
+function XsCoreLoaderError(message) {
     this.message = 'xs.core.Loader::' + message;
 }
 
-LoaderError.prototype = new Error();
+XsCoreLoaderError.prototype = new Error();
 
 xs.extend(xs, {
     require: xs.Loader.require

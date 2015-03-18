@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.interface.Interface');
 
-var assert = new xs.core.Asserter(log, ArrayError);
+var assert = new xs.core.Asserter(log, XsLangArrayError);
 
 /**
  * xs.lang.Array is private singleton, defining basic Array operations.
@@ -53,10 +53,10 @@ xs.Array = (function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class ArrayError
+ * @class XsLangArrayError
  */
-function ArrayError(message) {
+function XsLangArrayError(message) {
     this.message = 'xs.lang.Array::' + message;
 }
 
-ArrayError.prototype = new Error();
+XsLangArrayError.prototype = new Error();

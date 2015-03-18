@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.core.ProcessorsStack');
 
-var assert = new xs.core.Asserter(log, ProcessorsStackError);
+var assert = new xs.core.Asserter(log, XsCoreProcessorsStackError);
 
 /**
  * Private internal stack class
@@ -15,7 +15,7 @@ var assert = new xs.core.Asserter(log, ProcessorsStackError);
  *
  * @class xs.core.ProcessorsStack
  */
-var ProcessorsStack = function ProcessorsStack() {
+var ProcessorsStack = function () {
     var me = this;
 
     //items hash
@@ -236,10 +236,10 @@ module.ProcessorsStack = ProcessorsStack;
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class ProcessorsStackError
+ * @class XsCoreProcessorsStackError
  */
-function ProcessorsStackError(message) {
+function XsCoreProcessorsStackError(message) {
     this.message = 'xs.core.ProcessorsStack::' + message;
 }
 
-ProcessorsStackError.prototype = new Error();
+XsCoreProcessorsStackError.prototype = new Error();

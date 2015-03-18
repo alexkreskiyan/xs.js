@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.reactive.Property');
 
-var assert = new xs.core.Asserter(log, PropertyError);
+var assert = new xs.core.Asserter(log, XsReactivePropertyError);
 
 if (!xs.reactive) {
     xs.reactive = {};
@@ -26,10 +26,10 @@ xs.extend(Property, Reactive);
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class PropertyError
+ * @class XsReactivePropertyError
  */
-function PropertyError(message) {
+function XsReactivePropertyError(message) {
     this.message = 'xs.reactive.Property::' + message;
 }
 
-PropertyError.prototype = new Error();
+XsReactivePropertyError.prototype = new Error();

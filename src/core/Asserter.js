@@ -841,16 +841,16 @@ function raise(message, vars) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class AsserterError
+ * @class XsCoreAsserterError
  */
-function AsserterError(message) {
+function XsCoreAsserterError(message) {
     this.message = 'xs.core.Asserter::' + message;
 }
 
-AsserterError.prototype = new Error();
+XsCoreAsserterError.prototype = new Error();
 
 //create assert. here fake assert is needed for first call
-assert = new xs.core.Asserter(new xs.log.Logger('xs'), AsserterError);
+assert = new xs.core.Asserter(new xs.log.Logger('xs'), XsCoreAsserterError);
 
 //call hooks
 xs.log.Router.hookReady();

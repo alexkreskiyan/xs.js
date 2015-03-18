@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.interface.preprocessors.prepareElements');
 
-var assert = new xs.core.Asserter(log, PrepareElementsError);
+var assert = new xs.core.Asserter(log, XsInterfacePreprocessorsPrepareElementsError);
 
 /**
  * Preprocessor prepareElements
@@ -280,10 +280,10 @@ function processMethods(Interface, descriptor) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class PrepareElementsError
+ * @class XsInterfacePreprocessorsPrepareElementsError
  */
-function PrepareElementsError(message) {
+function XsInterfacePreprocessorsPrepareElementsError(message) {
     this.message = 'xs.interface.preprocessors.prepareElements::' + message;
 }
 
-PrepareElementsError.prototype = new Error();
+XsInterfacePreprocessorsPrepareElementsError.prototype = new Error();

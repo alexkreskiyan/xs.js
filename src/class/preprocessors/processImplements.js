@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.class.preprocessors.processImplements');
 
-var assert = new xs.core.Asserter(log, ProcessImplementsError);
+var assert = new xs.core.Asserter(log, XsClassPreprocessorsProcessImplementsError);
 
 /**
  * Directive implements
@@ -309,10 +309,10 @@ function verifyInterface(Class, Interface) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class ProcessImplementsError
+ * @class XsClassPreprocessorsProcessImplementsError
  */
-function ProcessImplementsError(message) {
+function XsClassPreprocessorsProcessImplementsError(message) {
     this.message = 'xs.class.preprocessors.processImplements::' + message;
 }
 
-ProcessImplementsError.prototype = new Error();
+XsClassPreprocessorsProcessImplementsError.prototype = new Error();

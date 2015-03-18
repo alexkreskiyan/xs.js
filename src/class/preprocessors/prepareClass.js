@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.class.preprocessors.prepareClass');
 
-var assert = new xs.core.Asserter(log, PrepareClassError);
+var assert = new xs.core.Asserter(log, XsClassPreprocessorsPrepareClassError);
 
 /**
  * Preprocessor prepareClass
@@ -166,10 +166,10 @@ function processImplements(Class, descriptor) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class PrepareClassError
+ * @class XsClassPreprocessorsPrepareClassError
  */
-function PrepareClassError(message) {
+function XsClassPreprocessorsPrepareClassError(message) {
     this.message = 'xs.class.preprocessors.prepareClass::' + message;
 }
 
-PrepareClassError.prototype = new Error();
+XsClassPreprocessorsPrepareClassError.prototype = new Error();

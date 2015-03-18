@@ -7,7 +7,7 @@ if (!xs.class) {
 
 var log = new xs.log.Logger('xs.class.Class');
 
-var assert = new xs.core.Asserter(log, ClassError);
+var assert = new xs.core.Asserter(log, XsClassClassError);
 
 /**
  * xs.class.Class is core class, that is used for class generation.
@@ -423,10 +423,10 @@ xs.class.Base = xs.Class(function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class ClassError
+ * @class XsClassClassError
  */
-function ClassError(message) {
+function XsClassClassError(message) {
     this.message = 'xs.class.Class::' + message;
 }
 
-ClassError.prototype = new Error();
+XsClassClassError.prototype = new Error();

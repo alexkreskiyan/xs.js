@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.core.DependenciesManager');
 
-var assert = new xs.core.Asserter(log, DependenciesManagerError);
+var assert = new xs.core.Asserter(log, XsCoreDependenciesManagerError);
 
 /**
  * Private internal core class.
@@ -155,10 +155,10 @@ xs.onReady = ReadyManager.add;
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class DependenciesManagerError
+ * @class XsCoreDependenciesManagerError
  */
-function DependenciesManagerError(message) {
+function XsCoreDependenciesManagerError(message) {
     this.message = 'xs.DependenciesManager::' + message;
 }
 
-DependenciesManagerError.prototype = new Error();
+XsCoreDependenciesManagerError.prototype = new Error();

@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.class.preprocessors.namespace');
 
-var assert = new xs.core.Asserter(log, NamespaceError);
+var assert = new xs.core.Asserter(log, XsClassPreprocessorsNamespaceError);
 
 /**
  * Directive namespace
@@ -91,10 +91,10 @@ xs.class.preprocessors.add('namespace', function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class NamespaceError
+ * @class XsClassPreprocessorsNamespaceError
  */
-function NamespaceError(message) {
+function XsClassPreprocessorsNamespaceError(message) {
     this.message = 'xs.class.preprocessors.namespace::' + message;
 }
 
-NamespaceError.prototype = new Error();
+XsClassPreprocessorsNamespaceError.prototype = new Error();

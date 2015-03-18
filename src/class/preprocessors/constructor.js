@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.class.preprocessors.constructor');
 
-var assert = new xs.core.Asserter(log, ConstructorError);
+var assert = new xs.core.Asserter(log, XsClassPreprocessorsConstructorError);
 
 /**
  * Directive constructor
@@ -65,10 +65,10 @@ xs.class.preprocessors.add('constructor', function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class ConstructorError
+ * @class XsClassPreprocessorsConstructorError
  */
-function ConstructorError(message) {
+function XsClassPreprocessorsConstructorError(message) {
     this.message = 'xs.class.preprocessors.constructor::' + message;
 }
 
-ConstructorError.prototype = new Error();
+XsClassPreprocessorsConstructorError.prototype = new Error();

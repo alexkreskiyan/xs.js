@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.class.preprocessors.processMixins');
 
-var assert = new xs.core.Asserter(log, ProcessMixinsError);
+var assert = new xs.core.Asserter(log, XsClassPreprocessorsProcessMixinsError);
 
 /**
  * Directive mixins
@@ -202,10 +202,10 @@ function mixinSection(target, mixin) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class ProcessMixinsError
+ * @class XsClassPreprocessorsProcessMixinsError
  */
-function ProcessMixinsError(message) {
+function XsClassPreprocessorsProcessMixinsError(message) {
     this.message = 'xs.class.preprocessors.processMixins::' + message;
 }
 
-ProcessMixinsError.prototype = new Error();
+XsClassPreprocessorsProcessMixinsError.prototype = new Error();

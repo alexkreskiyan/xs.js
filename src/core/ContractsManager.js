@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.core.ContractsManager');
 
-var assert = new xs.core.Asserter(log, ContractsManagerError);
+var assert = new xs.core.Asserter(log, XsCoreContractsManagerError);
 
 /**
  * xs.core.ContractsManager is core class, that is used to manage created contracts
@@ -470,13 +470,13 @@ xs.ContractsManager = (function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class ContractsManagerError
+ * @class XsCoreContractsManagerError
  */
-function ContractsManagerError(message) {
+function XsCoreContractsManagerError(message) {
     this.message = 'xs.core.ContractsManager::' + message;
 }
 
-ContractsManagerError.prototype = new Error();
+XsCoreContractsManagerError.prototype = new Error();
 
 xs.extend(xs, {
     define: xs.ContractsManager.define

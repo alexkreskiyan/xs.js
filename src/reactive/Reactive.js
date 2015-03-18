@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.reactive.Reactive');
 
-var assert = new xs.core.Asserter(log, ReactiveError);
+var assert = new xs.core.Asserter(log, XsReactiveReactiveError);
 
 //define xs.reactive
 if (!xs.reactive) {
@@ -467,10 +467,10 @@ function syncActive(value) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class ReactiveError
+ * @class XsReactiveReactiveError
  */
-function ReactiveError(message) {
+function XsReactiveReactiveError(message) {
     this.message = 'xs.reactive.Reactive::' + message;
 }
 
-ReactiveError.prototype = new Error();
+XsReactiveReactiveError.prototype = new Error();

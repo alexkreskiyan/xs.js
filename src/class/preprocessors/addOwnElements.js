@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.class.preprocessors.addOwnElements');
 
-var assert = new xs.core.Asserter(log, AddOwnElementsError);
+var assert = new xs.core.Asserter(log, XsClassPreprocessorsAddOwnElementsError);
 
 /**
  * Preprocessor addOwnElements
@@ -335,10 +335,10 @@ function processMethods(Class, descriptor) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class AddOwnElementsError
+ * @class XsClassPreprocessorsAddOwnElementsError
  */
-function AddOwnElementsError(message) {
+function XsClassPreprocessorsAddOwnElementsError(message) {
     this.message = 'xs.class.preprocessors.addOwnElements::' + message;
 }
 
-AddOwnElementsError.prototype = new Error();
+XsClassPreprocessorsAddOwnElementsError.prototype = new Error();

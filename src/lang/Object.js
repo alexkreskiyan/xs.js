@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.interface.Interface');
 
-var assert = new xs.core.Asserter(log, ObjectError);
+var assert = new xs.core.Asserter(log, XsLangObjectError);
 
 /**
  * xs.lang.List is private singleton, defining basic Object operations.
@@ -86,13 +86,13 @@ xs.Object = (function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class ObjectError
+ * @class XsLangObjectError
  */
-function ObjectError(message) {
+function XsLangObjectError(message) {
     this.message = 'xs.lang.Object::' + message;
 }
 
-ObjectError.prototype = new Error();
+XsLangObjectError.prototype = new Error();
 
 //extend xs with object
 Object.keys(xs.Object).forEach(function (key) {

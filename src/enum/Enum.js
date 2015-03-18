@@ -7,7 +7,7 @@ if (!xs.enum) {
 
 var log = new xs.log.Logger('xs.enum.Enum');
 
-var assert = new xs.core.Asserter(log, EnumError);
+var assert = new xs.core.Asserter(log, XsEnumEnumError);
 
 /**
  * xs.enum.Enum is core class, that is used for enum generation.
@@ -150,10 +150,10 @@ xs.enum.Base = xs.Enum({}, xs.noop);
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class EnumError
+ * @class XsEnumEnumError
  */
-function EnumError(message) {
+function XsEnumEnumError(message) {
     this.message = 'xs.enum.Enum::' + message;
 }
 
-EnumError.prototype = new Error();
+XsEnumEnumError.prototype = new Error();

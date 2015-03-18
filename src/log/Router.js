@@ -326,16 +326,16 @@ var router = xs.log.Router = (function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class RouterError
+ * @class XsLogRouterError
  */
-function RouterError(message) {
+function XsLogRouterError(message) {
     this.message = 'xs.log.Router::' + message;
 }
 
-RouterError.prototype = new Error();
+XsLogRouterError.prototype = new Error();
 
 //hook method to create asserter. here fake assert is needed for first call
 router.hookReady = function () {
-    assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Router'), RouterError);
+    assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Router'), XsLogRouterError);
     delete router.hookReady;
 };

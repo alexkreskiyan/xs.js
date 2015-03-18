@@ -7,7 +7,7 @@ if (!xs.core) {
 
 var log = new xs.log.Logger('xs.core.Lazy');
 
-var assert = new xs.core.Asserter(log, LazyError);
+var assert = new xs.core.Asserter(log, XsCoreLazyError);
 
 /**
  * xs.core.Lazy is key system element, that allows lazy-like evaluations for class members.
@@ -101,13 +101,13 @@ xs.lazy = function (evaluation) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class LazyError
+ * @class XsCoreLazyError
  */
-function LazyError(message) {
+function XsCoreLazyError(message) {
     this.message = 'xs.core.Lazy::' + message;
 }
 
-LazyError.prototype = new Error();
+XsCoreLazyError.prototype = new Error();
 
 xs.extend(xs, {
     define: xs.ContractsManager.define

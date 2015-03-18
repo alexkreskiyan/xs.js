@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.interface.Interface');
 
-var assert = new xs.core.Asserter(log, StringError);
+var assert = new xs.core.Asserter(log, XsLangStringError);
 
 /**
  * xs.lang.String is private singleton, defining basic string operations.
@@ -67,13 +67,13 @@ xs.String = (function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class StringError
+ * @class XsLangStringError
  */
-function StringError(message) {
+function XsLangStringError(message) {
     this.message = 'xs.lang.String::' + message;
 }
 
-StringError.prototype = new Error();
+XsLangStringError.prototype = new Error();
 
 //extend xs with string
 Object.keys(xs.String).forEach(function (key) {

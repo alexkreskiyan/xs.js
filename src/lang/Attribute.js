@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.interface.Interface');
 
-var assert = new xs.core.Asserter(log, AttributeError);
+var assert = new xs.core.Asserter(log, XsLangAttributeError);
 
 /**
  * xs.lang.Attribute is private singleton, providing basic attributes' operations
@@ -694,11 +694,11 @@ xs.Attribute = (function () {
  *
  * @class AttributeError
  */
-function AttributeError(message) {
+function XsLangAttributeError(message) {
     this.message = 'xs.lang.Attribute::' + message;
 }
 
-AttributeError.prototype = new Error();
+XsLangAttributeError.prototype = new Error();
 
 xs.constant = xs.Attribute.constant;
 xs.property = xs.Attribute.property;

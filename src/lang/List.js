@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.interface.Interface');
 
-var assert = new xs.core.Asserter(log, ListError);
+var assert = new xs.core.Asserter(log, XsLangListError);
 
 /**
  * xs.lang.List is private singleton, defining basic list operations, for both Array and Object.
@@ -81,13 +81,13 @@ xs.List = (function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class ListError
+ * @class XsLangListError
  */
-function ListError(message) {
+function XsLangListError(message) {
     this.message = 'xs.lang.List::' + message;
 }
 
-ListError.prototype = new Error();
+XsLangListError.prototype = new Error();
 
 
 //extend xs with list

@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.enum.preprocessors.values');
 
-var assert = new xs.core.Asserter(log, MethodsError);
+var assert = new xs.core.Asserter(log, XsEnumPreprocessorsMethodsError);
 
 /**
  * Preprocessor methods
@@ -53,10 +53,10 @@ xs.enum.preprocessors.add('methods', function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class MethodsError
+ * @class XsEnumPreprocessorsMethodsError
  */
-function MethodsError(message) {
+function XsEnumPreprocessorsMethodsError(message) {
     this.message = 'xs.enum.preprocessors.methods::' + message;
 }
 
-MethodsError.prototype = new Error();
+XsEnumPreprocessorsMethodsError.prototype = new Error();

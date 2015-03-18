@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.interface.Interface');
 
-var assert = new xs.core.Asserter(log, FunctionError);
+var assert = new xs.core.Asserter(log, XsLangFunctionError);
 
 /**
  * xs.lang.Function is private singleton, defining basic function operations.
@@ -311,13 +311,13 @@ xs.Function = (function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class FunctionError
+ * @class XsLangFunctionError
  */
-function FunctionError(message) {
+function XsLangFunctionError(message) {
     this.message = 'xs.lang.Function::' + message;
 }
 
-FunctionError.prototype = new Error();
+XsLangFunctionError.prototype = new Error();
 
 xs.bind = xs.Function.bind;
 xs.memorize = xs.Function.memorize;

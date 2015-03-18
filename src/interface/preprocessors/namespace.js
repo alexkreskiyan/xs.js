@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.interface.preprocessors.namespace');
 
-var assert = new xs.core.Asserter(log, NamespaceError);
+var assert = new xs.core.Asserter(log, XsInterfacePreprocessorsNamespaceError);
 
 /**
  * Preprocessor namespace
@@ -62,10 +62,10 @@ xs.interface.preprocessors.add('namespace', function () {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class NamespaceError
+ * @class XsInterfacePreprocessorsNamespaceError
  */
-function NamespaceError(message) {
+function XsInterfacePreprocessorsNamespaceError(message) {
     this.message = 'xs.interface.preprocessors.namespace::' + message;
 }
 
-NamespaceError.prototype = new Error();
+XsInterfacePreprocessorsNamespaceError.prototype = new Error();

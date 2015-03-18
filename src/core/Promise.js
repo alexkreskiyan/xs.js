@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.core.Promise');
 
-var assert = new xs.core.Asserter(log, PromiseError);
+var assert = new xs.core.Asserter(log, XsCorePromiseError);
 
 //define xs.core
 if (!xs.core) {
@@ -529,10 +529,10 @@ function createItem(handleResolved, handleRejected, handleProgress) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class PromiseError
+ * @class XsCorePromiseError
  */
-function PromiseError(message) {
+function XsCorePromiseError(message) {
     this.message = 'xs.core.Promise::' + message;
 }
 
-PromiseError.prototype = new Error();
+XsCorePromiseError.prototype = new Error();

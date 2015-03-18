@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.interface.preprocessors.processExtends');
 
-var assert = new xs.core.Asserter(log, ProcessExtendsError);
+var assert = new xs.core.Asserter(log, XsInterfacePreprocessorsProcessExtendsError);
 
 /**
  * Preprocessor processExtends
@@ -115,10 +115,10 @@ function extend(child, parent) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class ProcessExtendsError
+ * @class XsInterfacePreprocessorsProcessExtendsError
  */
-function ProcessExtendsError(message) {
+function XsInterfacePreprocessorsProcessExtendsError(message) {
     this.message = 'xs.interface.preprocessors.processExtends::' + message;
 }
 
-ProcessExtendsError.prototype = new Error();
+XsInterfacePreprocessorsProcessExtendsError.prototype = new Error();

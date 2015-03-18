@@ -2732,16 +2732,16 @@ function updateIndexes(index) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class CollectionError
+ * @class XsCoreCollectionError
  */
-function CollectionError(message) {
+function XsCoreCollectionError(message) {
     this.message = 'xs.core.Collection::' + message;
 }
 
-CollectionError.prototype = new Error();
+XsCoreCollectionError.prototype = new Error();
 
 //hook method to create asserter
 Collection.hookReady = function () {
-    assert = new xs.core.Asserter(new xs.log.Logger('xs.core.Collection'), CollectionError);
+    assert = new xs.core.Asserter(new xs.log.Logger('xs.core.Collection'), XsCoreCollectionError);
     delete Collection.hookReady;
 };

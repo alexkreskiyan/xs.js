@@ -2,7 +2,7 @@
 
 var log = new xs.log.Logger('xs.class.preprocessors.processExtends');
 
-var assert = new xs.core.Asserter(log, ProcessExtendsError);
+var assert = new xs.core.Asserter(log, XsClassPreprocessorsProcessExtendsError);
 
 /**
  * Directive extends
@@ -151,10 +151,10 @@ function extend(child, parent) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class ProcessExtendsError
+ * @class XsClassPreprocessorsProcessExtendsError
  */
-function ProcessExtendsError(message) {
+function XsClassPreprocessorsProcessExtendsError(message) {
     this.message = 'xs.class.preprocessors.processExtends::' + message;
 }
 
-ProcessExtendsError.prototype = new Error();
+XsClassPreprocessorsProcessExtendsError.prototype = new Error();
