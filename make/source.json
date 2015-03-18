@@ -30,6 +30,9 @@
             "xs.core.ReadyManager": {
                 "test": false
             },
+            "xs.core.ProcessingList": {
+                "test": false
+            },
             "xs.core.ProcessorsStack": {
                 "test": false
             },

@@ -67,18 +67,7 @@ var assert = new xs.core.Asserter(log, ClassError);
  *
  * @singleton
  */
-xs.Class = xs.class.Class = (function (ProcessorsStack, dependencies, ready) {
-
-    /**
-     * Currently processing classes' list
-     *
-     * @ignore
-     *
-     * @property processing
-     *
-     * @type {xs.core.Collection}
-     */
-    var processing = new xs.core.Collection();
+xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies) {
 
     /**
      * Creates class sample and starts processors applying
@@ -114,10 +103,7 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, dependencies, ready) {
         //save Class descriptor
         xs.constant(Class, 'descriptor', createEmptyDescriptor());
 
-        //mark class as not ready yet (until preprocessors done)
-        Class.isProcessing = true;
-
-        //push class to processed list
+        //add class to processing list
         processing.add(Class);
 
         //process preprocessors stack before createdFn called.
@@ -134,24 +120,8 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, dependencies, ready) {
             //create factory for class
             Class.factory = createFactory(Class);
 
-            //remove isProcessing mark
-            delete Class.isProcessing;
-
             //remove class from processing list
             processing.remove(Class);
-
-            //remove from dependencies
-            dependencies.remove(Class);
-
-            //notify, that class is ready
-            ready.remove(Class.label);
-
-            //if dependencies empty - all classes processed
-            if (!processing.size) {
-
-                //notify, that all ready
-                ready.remove(null);
-            }
 
             //call createdFn
             createdFn(Class, imports);
@@ -438,7 +408,7 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, dependencies, ready) {
     };
 
     return Contractor;
-})(module.ProcessorsStack, module.DependenciesManager, module.ReadyManager);
+})(module.ProcessorsStack, module.ProcessingList, module.DependenciesManager);
 
 
 //define prototype of xs.class.Base

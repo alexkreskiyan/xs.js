@@ -39,18 +39,7 @@ var assert = new xs.core.Asserter(log, EnumError);
  *
  * @singleton
  */
-xs.Enum = xs.enum.Enum = (function (ProcessorsStack, dependencies, ready) {
-
-    /**
-     * Currently processing enums' list
-     *
-     * @ignore
-     *
-     * @property processing
-     *
-     * @type {xs.core.Collection}
-     */
-    var processing = new xs.core.Collection();
+xs.Enum = xs.enum.Enum = (function (ProcessorsStack, processing) {
 
     /**
      * Creates enum sample and starts processors applying
@@ -77,9 +66,6 @@ xs.Enum = xs.enum.Enum = (function (ProcessorsStack, dependencies, ready) {
         //save Enum descriptor
         xs.constant(Enum, 'descriptor', createEmptyDescriptor());
 
-        //mark enum as not ready yet (until preprocessors done)
-        Enum.isProcessing = true;
-
         //push enum to processed list
         processing.add(Enum);
 
@@ -92,24 +78,9 @@ xs.Enum = xs.enum.Enum = (function (ProcessorsStack, dependencies, ready) {
             Enum,
             values
         ], function () {
-            //remove isProcessing mark
-            delete Enum.isProcessing;
 
             //remove enum from processing list
             processing.remove(Enum);
-
-            //remove from dependencies
-            dependencies.remove(Enum);
-
-            //notify, that enum is ready
-            ready.remove(Enum.label);
-
-            //if dependencies empty - all enums processed
-            if (!processing.size) {
-
-                //notify, that all ready
-                ready.remove(null);
-            }
 
             //call createdFn
             createdFn(Enum);
@@ -165,7 +136,7 @@ xs.Enum = xs.enum.Enum = (function (ProcessorsStack, dependencies, ready) {
     };
 
     return Contractor;
-})(module.ProcessorsStack, module.DependenciesManager, module.ReadyManager);
+})(module.ProcessorsStack, module.ProcessingList);
 
 
 //define prototype of xs.enum.Base

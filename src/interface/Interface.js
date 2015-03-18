@@ -46,18 +46,7 @@ var assert = new xs.core.Asserter(log, InterfaceError);
  *
  * @singleton
  */
-xs.Interface = xs.interface.Interface = (function (ProcessorsStack, dependencies, ready) {
-
-    /**
-     * Currently processing interfaces' list
-     *
-     * @ignore
-     *
-     * @property processing
-     *
-     * @type {xs.core.Collection}
-     */
-    var processing = new xs.core.Collection();
+xs.Interface = xs.interface.Interface = (function (ProcessorsStack, processing, dependencies) {
 
     /**
      * Creates interface sample and starts processors applying
@@ -90,9 +79,6 @@ xs.Interface = xs.interface.Interface = (function (ProcessorsStack, dependencies
         //save Interface descriptor
         xs.constant(Interface, 'descriptor', createEmptyDescriptor());
 
-        //mark interface as not ready yet (until preprocessors done)
-        Interface.isProcessing = true;
-
         //push interface to processed list
         processing.add(Interface);
 
@@ -106,24 +92,9 @@ xs.Interface = xs.interface.Interface = (function (ProcessorsStack, dependencies
             descriptor,
             dependencies
         ], function () {
-            //remove isProcessing mark
-            delete Interface.isProcessing;
 
             //remove interface from processing list
             processing.remove(Interface);
-
-            //remove from dependencies
-            dependencies.remove(Interface);
-
-            //notify, that interface is ready
-            ready.remove(Interface.label);
-
-            //if dependencies empty - all interfaces processed
-            if (!processing.size) {
-
-                //notify, that all ready
-                ready.remove(null);
-            }
 
             //call createdFn
             createdFn(Interface);
@@ -295,7 +266,7 @@ xs.Interface = xs.interface.Interface = (function (ProcessorsStack, dependencies
     };
 
     return Contractor;
-})(module.ProcessorsStack, module.DependenciesManager, module.ReadyManager);
+})(module.ProcessorsStack, module.ProcessingList, module.DependenciesManager);
 
 
 //define prototype of xs.interface.Base
