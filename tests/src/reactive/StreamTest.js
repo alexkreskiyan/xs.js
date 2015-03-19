@@ -110,7 +110,7 @@ module('xs.reactive.Stream', function () {
             target: xs.reactive.Data | xs.reactive.Destroy
         });
 
-        //stream is not active and not destroyed
+        //stream is not active and destroyed
         strictEqual(me.stream.isDestroyed, true);
 
     });

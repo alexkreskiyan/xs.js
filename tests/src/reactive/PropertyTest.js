@@ -45,7 +45,7 @@ module('xs.reactive.Property', function () {
         });
 
         //generator must return object or undefined
-        me.stream = new xs.reactive.Property(xs.noop);
+        me.property = new xs.reactive.Property(xs.noop);
         throws(function () {
             return new xs.reactive.Property(function () {
                 return null;
@@ -73,22 +73,24 @@ module('xs.reactive.Property', function () {
         });
 
         //correct generator given
-        me.stream = new xs.reactive.Property(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
         //check basics
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
+        strictEqual(me.property.value, undefined);
+
     }, function () {
         var me = this;
-        me.stream.destroy();
+        me.property.destroy();
     });
 
     test('basics', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (set, end) {
             return {
                 on: function () {
-                    send(null);
+                    set(null);
                     end();
                 },
                 off: xs.noop
@@ -97,33 +99,33 @@ module('xs.reactive.Property', function () {
     }, function () {
         var me = this;
 
-        me.stream = new xs.reactive.Property(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
         //stream is not active and not destroyed
-        strictEqual(me.stream.isActive, false);
-        strictEqual(me.stream.isDestroyed, false);
+        strictEqual(me.property.isActive, false);
+        strictEqual(me.property.isDestroyed, false);
 
         var log = '';
-        me.stream.on(function (data) {
+        me.property.on(function (data) {
             log += arguments.length + data;
         }, {
             target: xs.reactive.Data | xs.reactive.Destroy
         });
 
-        //stream is not active and not destroyed
-        strictEqual(me.stream.isDestroyed, true);
+        //stream is not active and destroyed
+        strictEqual(me.property.isDestroyed, true);
 
     });
 
     test('on', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (set, end) {
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                send(i);
+                set(i);
                 i--;
                 if (i === 0) {
                     end();
@@ -142,16 +144,16 @@ module('xs.reactive.Property', function () {
         var me = this;
 
         //correct generator given
-        me.stream = new xs.reactive.Property(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
         //not a function handler throws
         throws(function () {
-            me.stream.on(null);
+            me.property.on(null);
         });
 
         //not an object second argument throws
         throws(function () {
-            me.stream.on(xs.noop, null);
+            me.property.on(xs.noop, null);
         });
 
 
@@ -163,51 +165,55 @@ module('xs.reactive.Property', function () {
             positioned: ''
         };
 
+        var value = '';
+
         //method can be added with initially suspended state
-        me.stream.on(function (data) {
+        me.property.on(function (data) {
             log.suspended += data;
         }, {
             suspended: true
         });
 
         //this way stream is still inactive
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
 
         //simply method appends new handler, that has undefined scope, xs.reactive.Data target and is not suspended
-        me.stream.on(function (data) {
+        me.property.on(function (data) {
             log.simple += data;
+            value += me.property.value;
+            value += data;
         });
 
         //incorrect target throws exception
         throws(function () {
-            me.stream.on(xs.noop, {
+            me.property.on(xs.noop, {
                 target: null
             });
         });
 
         //incorrect priority throws exception
         throws(function () {
-            me.stream.on(xs.noop, {
+            me.property.on(xs.noop, {
                 priority: null
             });
         });
 
         //method can be targeted directly with target type flags
-        me.stream.on(function (data) {
+        me.property.on(function (data) {
             log.targeted += data;
         }, {
             target: xs.reactive.Destroy
         });
 
         //method can be called within given scope
-        me.stream.on(function (data) {
+        me.property.on(function (data) {
             log.scoped += data + this;
         }, {
             scope: '!'
         });
 
         //method can be positioned. returning false allows to stop event handling
-        me.stream.on(function (data) {
+        me.property.on(function (data) {
             log.positioned += data;
             if (data === 5) {
                 return false;
@@ -216,13 +222,15 @@ module('xs.reactive.Property', function () {
             priority: 0
         });
 
-        me.stream.on(function () {
+        me.property.on(function () {
             //check logs
             strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
             strictEqual(log.targeted, 'undefined');
             strictEqual(log.scoped, '10!9!8!7!6!4!3!2!1!'); //5 is missing - cancelled
             strictEqual(log.suspended, '');
             strictEqual(log.positioned, '10987654321'); //5 is presented
+            //check value
+            strictEqual(value.toString(), 'undefined1010998877664433221'); //5 is missing - cancelled
             me.done();
         }, {
             target: xs.reactive.Destroy
@@ -234,12 +242,12 @@ module('xs.reactive.Property', function () {
     test('off', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (set, end) {
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                send(i);
+                set(i);
                 i--;
                 if (i === 0) {
                     end();
@@ -257,58 +265,58 @@ module('xs.reactive.Property', function () {
     }, function () {
         var me = this;
 
-        me.stream = new xs.reactive.Property(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
-        me.stream.on(xs.noop);
+        me.property.on(xs.noop);
 
         //stream is active
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
 
         //empty argument - removes all handlers
-        me.stream.off();
+        me.property.off();
 
         //stream is deactivated
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
 
 
         //with given arguments, handlers.removeBy is called
-        me.stream.on(xs.noop);
-        me.stream.on(xs.noop);
-        me.stream.on(function () {
+        me.property.on(xs.noop);
+        me.property.on(xs.noop);
+        me.property.on(function () {
 
         });
 
         //remove first handler
-        me.stream.off(function () {
+        me.property.off(function () {
 
             return true;
         });
 
         //stream is active
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
 
         //remove all left handlers
-        me.stream.off(function () {
+        me.property.off(function () {
 
             return true;
         }, xs.core.Collection.All);
 
         //stream is deactivated
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
     }, function () {
         var me = this;
-        me.stream.destroy();
+        me.property.destroy();
     });
 
     test('suspend', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (set, end) {
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                send(i);
+                set(i);
                 i--;
                 if (i === 0) {
                     end();
@@ -326,58 +334,58 @@ module('xs.reactive.Property', function () {
     }, function () {
         var me = this;
 
-        me.stream = new xs.reactive.Property(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
-        me.stream.on(xs.noop);
+        me.property.on(xs.noop);
 
         //stream is active
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
 
         //empty argument - suspends all handlers
-        me.stream.suspend();
+        me.property.suspend();
 
         //stream is deactivated
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
 
 
         //with given arguments, handlers.find is called
-        me.stream.on(xs.noop);
-        me.stream.on(xs.noop);
-        me.stream.on(function () {
+        me.property.on(xs.noop);
+        me.property.on(xs.noop);
+        me.property.on(function () {
 
         });
 
         //suspend first handler
-        me.stream.suspend(function () {
+        me.property.suspend(function () {
 
             return true;
         });
 
         //stream is active
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
 
         //suspend all left handlers
-        me.stream.suspend(function () {
+        me.property.suspend(function () {
 
             return true;
         }, xs.core.Collection.All);
 
         //stream is deactivated
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
     }, function () {
         var me = this;
-        me.stream.destroy();
+        me.property.destroy();
     });
 
     test('resume', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (set, end) {
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                send(i);
+                set(i);
                 i--;
                 if (i === 0) {
                     end();
@@ -395,51 +403,51 @@ module('xs.reactive.Property', function () {
     }, function () {
         var me = this;
 
-        me.stream = new xs.reactive.Property(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
-        me.stream.on(xs.noop);
+        me.property.on(xs.noop);
 
-        me.stream.suspend();
+        me.property.suspend();
 
         //stream is inactive
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
 
         //empty argument - resumes all handlers
-        me.stream.resume();
+        me.property.resume();
 
         //stream is activated
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
 
 
         //with given arguments, handlers.removeBy is called
-        me.stream.on(xs.noop);
-        me.stream.on(xs.noop);
-        me.stream.on(function () {
+        me.property.on(xs.noop);
+        me.property.on(xs.noop);
+        me.property.on(function () {
 
         });
 
-        me.stream.suspend();
+        me.property.suspend();
 
         //resume first handler
-        me.stream.resume(function () {
+        me.property.resume(function () {
 
             return true;
         });
 
         //stream is actived
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
 
         //resume all left handlers
-        me.stream.resume(function () {
+        me.property.resume(function () {
 
             return true;
         }, xs.core.Collection.All);
 
         //stream is active
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
     }, function () {
         var me = this;
-        me.stream.destroy();
+        me.property.destroy();
     });
 
 });
