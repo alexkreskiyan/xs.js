@@ -12,4 +12,434 @@ module('xs.reactive.Property', function () {
 
     'use strict';
 
+    xs.log.Router.routes.add(new xs.log.route.Console('reactive', [
+        {
+            category: 'xs.reactive',
+            level: xs.log.Trace
+        }
+    ]));
+
+    test('constructor', function () {
+        var me = this;
+
+        me.generator = function (send, end) {
+            return {
+                on: function () {
+                    send(null);
+                    end();
+                },
+                off: xs.noop
+            };
+        };
+    }, function () {
+        var me = this;
+
+        //generator must be given
+        throws(function () {
+            return new xs.reactive.Property();
+        });
+
+        //sources must be an array
+        throws(function () {
+            return new xs.reactive.Property(me.generator, undefined);
+        });
+
+        //generator must return object or undefined
+        me.stream = new xs.reactive.Property(xs.noop);
+        throws(function () {
+            return new xs.reactive.Property(function () {
+                return null;
+            });
+        });
+
+        //return.on must be a function
+        throws(function () {
+
+            return new xs.reactive.Property(function () {
+
+                return {};
+            });
+        });
+
+        //return.off must be a function
+        throws(function () {
+
+            return new xs.reactive.Property(function () {
+
+                return {
+                    on: xs.noop
+                };
+            });
+        });
+
+        //correct generator given
+        me.stream = new xs.reactive.Property(me.generator);
+
+        //check basics
+        strictEqual(me.stream.isActive, false);
+    }, function () {
+        var me = this;
+        me.stream.destroy();
+    });
+
+    test('basics', function () {
+        var me = this;
+
+        me.generator = function (send, end) {
+            return {
+                on: function () {
+                    send(null);
+                    end();
+                },
+                off: xs.noop
+            };
+        };
+    }, function () {
+        var me = this;
+
+        me.stream = new xs.reactive.Property(me.generator);
+
+        //stream is not active and not destroyed
+        strictEqual(me.stream.isActive, false);
+        strictEqual(me.stream.isDestroyed, false);
+
+        var log = '';
+        me.stream.on(function (data) {
+            log += arguments.length + data;
+        }, {
+            target: xs.reactive.Data | xs.reactive.Destroy
+        });
+
+        //stream is not active and not destroyed
+        strictEqual(me.stream.isDestroyed, true);
+
+    });
+
+    test('on', function () {
+        var me = this;
+
+        me.generator = function (send, end) {
+            var i = 10;
+            var interval = 0;
+            var intervalId;
+            var generator = function () {
+                send(i);
+                i--;
+                if (i === 0) {
+                    end();
+                }
+            };
+            return {
+                on: function () {
+                    intervalId = setInterval(generator, interval);
+                },
+                off: function () {
+                    clearInterval(intervalId);
+                }
+            };
+        };
+    }, function () {
+        var me = this;
+
+        //correct generator given
+        me.stream = new xs.reactive.Property(me.generator);
+
+        //not a function handler throws
+        throws(function () {
+            me.stream.on(null);
+        });
+
+        //not an object second argument throws
+        throws(function () {
+            me.stream.on(xs.noop, null);
+        });
+
+
+        var log = {
+            simple: '',
+            targeted: '',
+            suspended: '',
+            scoped: '',
+            positioned: ''
+        };
+
+        //method can be added with initially suspended state
+        me.stream.on(function (data) {
+            log.suspended += data;
+        }, {
+            suspended: true
+        });
+
+        //this way stream is still inactive
+        strictEqual(me.stream.isActive, false);
+
+        //simply method appends new handler, that has undefined scope, xs.reactive.Data target and is not suspended
+        me.stream.on(function (data) {
+            log.simple += data;
+        });
+
+        //incorrect target throws exception
+        throws(function () {
+            me.stream.on(xs.noop, {
+                target: null
+            });
+        });
+
+        //incorrect priority throws exception
+        throws(function () {
+            me.stream.on(xs.noop, {
+                priority: null
+            });
+        });
+
+        //method can be targeted directly with target type flags
+        me.stream.on(function (data) {
+            log.targeted += data;
+        }, {
+            target: xs.reactive.Destroy
+        });
+
+        //method can be called within given scope
+        me.stream.on(function (data) {
+            log.scoped += data + this;
+        }, {
+            scope: '!'
+        });
+
+        //method can be positioned. returning false allows to stop event handling
+        me.stream.on(function (data) {
+            log.positioned += data;
+            if (data === 5) {
+                return false;
+            }
+        }, {
+            priority: 0
+        });
+
+        me.stream.on(function () {
+            //check logs
+            strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
+            strictEqual(log.targeted, 'undefined');
+            strictEqual(log.scoped, '10!9!8!7!6!4!3!2!1!'); //5 is missing - cancelled
+            strictEqual(log.suspended, '');
+            strictEqual(log.positioned, '10987654321'); //5 is presented
+            me.done();
+        }, {
+            target: xs.reactive.Destroy
+        });
+
+        return false;
+    });
+
+    test('off', function () {
+        var me = this;
+
+        me.generator = function (send, end) {
+            var i = 10;
+            var interval = 0;
+            var intervalId;
+            var generator = function () {
+                send(i);
+                i--;
+                if (i === 0) {
+                    end();
+                }
+            };
+            return {
+                on: function () {
+                    intervalId = setInterval(generator, interval);
+                },
+                off: function () {
+                    clearInterval(intervalId);
+                }
+            };
+        };
+    }, function () {
+        var me = this;
+
+        me.stream = new xs.reactive.Property(me.generator);
+
+        me.stream.on(xs.noop);
+
+        //stream is active
+        strictEqual(me.stream.isActive, true);
+
+        //empty argument - removes all handlers
+        me.stream.off();
+
+        //stream is deactivated
+        strictEqual(me.stream.isActive, false);
+
+
+        //with given arguments, handlers.removeBy is called
+        me.stream.on(xs.noop);
+        me.stream.on(xs.noop);
+        me.stream.on(function () {
+
+        });
+
+        //remove first handler
+        me.stream.off(function () {
+
+            return true;
+        });
+
+        //stream is active
+        strictEqual(me.stream.isActive, true);
+
+        //remove all left handlers
+        me.stream.off(function () {
+
+            return true;
+        }, xs.core.Collection.All);
+
+        //stream is deactivated
+        strictEqual(me.stream.isActive, false);
+    }, function () {
+        var me = this;
+        me.stream.destroy();
+    });
+
+    test('suspend', function () {
+        var me = this;
+
+        me.generator = function (send, end) {
+            var i = 10;
+            var interval = 0;
+            var intervalId;
+            var generator = function () {
+                send(i);
+                i--;
+                if (i === 0) {
+                    end();
+                }
+            };
+            return {
+                on: function () {
+                    intervalId = setInterval(generator, interval);
+                },
+                off: function () {
+                    clearInterval(intervalId);
+                }
+            };
+        };
+    }, function () {
+        var me = this;
+
+        me.stream = new xs.reactive.Property(me.generator);
+
+        me.stream.on(xs.noop);
+
+        //stream is active
+        strictEqual(me.stream.isActive, true);
+
+        //empty argument - suspends all handlers
+        me.stream.suspend();
+
+        //stream is deactivated
+        strictEqual(me.stream.isActive, false);
+
+
+        //with given arguments, handlers.find is called
+        me.stream.on(xs.noop);
+        me.stream.on(xs.noop);
+        me.stream.on(function () {
+
+        });
+
+        //suspend first handler
+        me.stream.suspend(function () {
+
+            return true;
+        });
+
+        //stream is active
+        strictEqual(me.stream.isActive, true);
+
+        //suspend all left handlers
+        me.stream.suspend(function () {
+
+            return true;
+        }, xs.core.Collection.All);
+
+        //stream is deactivated
+        strictEqual(me.stream.isActive, false);
+    }, function () {
+        var me = this;
+        me.stream.destroy();
+    });
+
+    test('resume', function () {
+        var me = this;
+
+        me.generator = function (send, end) {
+            var i = 10;
+            var interval = 0;
+            var intervalId;
+            var generator = function () {
+                send(i);
+                i--;
+                if (i === 0) {
+                    end();
+                }
+            };
+            return {
+                on: function () {
+                    intervalId = setInterval(generator, interval);
+                },
+                off: function () {
+                    clearInterval(intervalId);
+                }
+            };
+        };
+    }, function () {
+        var me = this;
+
+        me.stream = new xs.reactive.Property(me.generator);
+
+        me.stream.on(xs.noop);
+
+        me.stream.suspend();
+
+        //stream is inactive
+        strictEqual(me.stream.isActive, false);
+
+        //empty argument - resumes all handlers
+        me.stream.resume();
+
+        //stream is activated
+        strictEqual(me.stream.isActive, true);
+
+
+        //with given arguments, handlers.removeBy is called
+        me.stream.on(xs.noop);
+        me.stream.on(xs.noop);
+        me.stream.on(function () {
+
+        });
+
+        me.stream.suspend();
+
+        //resume first handler
+        me.stream.resume(function () {
+
+            return true;
+        });
+
+        //stream is actived
+        strictEqual(me.stream.isActive, true);
+
+        //resume all left handlers
+        me.stream.resume(function () {
+
+            return true;
+        }, xs.core.Collection.All);
+
+        //stream is active
+        strictEqual(me.stream.isActive, true);
+    }, function () {
+        var me = this;
+        me.stream.destroy();
+    });
+
 });
