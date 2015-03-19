@@ -14,7 +14,7 @@ var Property = xs.reactive.Property = function (generator, sources) {
     var me = this;
 
     var propertyGenerator = function (send) {
-        generator.apply(undefined, [
+        return generator.apply(undefined, [
             function (data) {
                 //send
                 send(data);

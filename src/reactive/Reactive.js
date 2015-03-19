@@ -464,8 +464,10 @@ Reactive.prototype.destroy = function () {
 
     log.trace('destroy - destroying reactive');
 
-    //call off handler
-    me.private.off();
+    //call off handler, if given
+    if (me.private.off) {
+        me.private.off();
+    }
 
     var handlers = me.private.reactiveHandlers;
 
