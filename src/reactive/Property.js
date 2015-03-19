@@ -15,12 +15,16 @@ var Property = xs.reactive.Property = function (generator, sources) {
 
     var propertyGenerator = function (send) {
         return generator.apply(undefined, [
-            function (data) {
+            function (data) { //TODO test cancelable send
                 //send
-                send(data);
+                if (!send(data)) {
+                    return false;
+                }
 
                 //set current value
                 me.private.value = data;
+
+                return true;
             }
         ].concat(Array.prototype.slice.call(arguments, 1)));
     };

@@ -482,16 +482,16 @@ Reactive.prototype.destroy = function () {
 
 function handleSend(data, silent) {
     var me = this;
-    if (silent) {
+    if (silent) { //TODO test cancelable send
 
-        return;
+        return true;
     }
 
     //verify stream
     assert.not(me.isDestroyed, 'send - reactive is destroyed');
 
     //send data
-    send(me.private.reactiveHandlers, xs.reactive.Data, data);
+    return send(me.private.reactiveHandlers, xs.reactive.Data, data);
 }
 
 function handleDestroy() {
