@@ -42,6 +42,26 @@ xs.reactive.Data = 0x1;
 xs.reactive.Destroy = 0x2;
 
 
+/**
+ * Private reactive core. Represents some reactive object
+ *
+ * @ignore
+ *
+ * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+ *
+ * @private
+ *
+ * @class Reactive
+ *
+ *
+ *
+ * @constructor
+ *
+ * Creates reactive instance
+ *
+ * @param {Function} generator stream generator function
+ * @param {Array} sources additional sources, used by reactive object
+ */
 var Reactive = function (generator, sources) {
     var me = this;
 
@@ -114,6 +134,15 @@ var Reactive = function (generator, sources) {
 //save reference to module
 module.Reactive = Reactive;
 
+/**
+ * Reactive destroyed state
+ *
+ * @property isDestroyed
+ *
+ * @readonly
+ *
+ * @type {Boolean}
+ */
 Object.defineProperty(Reactive.prototype, 'isDestroyed', {
     get: function () {
         return !this.hasOwnProperty('private');
@@ -123,6 +152,15 @@ Object.defineProperty(Reactive.prototype, 'isDestroyed', {
     enumerable: true
 });
 
+/**
+ * Reactive active state
+ *
+ * @property isActive
+ *
+ * @readonly
+ *
+ * @type {Boolean}
+ */
 Object.defineProperty(Reactive.prototype, 'isActive', {
     get: function () {
         return this.private.isActive;
@@ -132,6 +170,16 @@ Object.defineProperty(Reactive.prototype, 'isActive', {
     enumerable: true
 });
 
+/**
+ * Adds handler for reactive changes
+ *
+ * @method on
+ *
+ * @param {Function} handler reactive change handler
+ * @param {Object} [options] reactive handler options
+ *
+ * @chainable
+ */
 Reactive.prototype.on = function (handler, options) {
     var me = this;
 
@@ -233,6 +281,16 @@ Reactive.prototype.on = function (handler, options) {
     return me;
 };
 
+/**
+ * Removes selected handler(s) for reactive changes
+ *
+ * @method off
+ *
+ * @param {Function} [selector] selector, that matches removed handlers
+ * @param {Object} [flags] reactive handler options
+ *
+ * @chainable
+ */
 Reactive.prototype.off = function (selector, flags) {
     var me = this;
 
@@ -272,6 +330,16 @@ Reactive.prototype.off = function (selector, flags) {
     return me;
 };
 
+/**
+ * Suspends selected handler(s) for reactive changes
+ *
+ * @method suspend
+ *
+ * @param {Function} [selector] selector, that matches removed handlers
+ * @param {Object} [flags] reactive handler options
+ *
+ * @chainable
+ */
 Reactive.prototype.suspend = function (selector, flags) {
     var me = this;
 
@@ -326,6 +394,16 @@ Reactive.prototype.suspend = function (selector, flags) {
     return me;
 };
 
+/**
+ * Resumes selected handler(s) for reactive changes
+ *
+ * @method resume
+ *
+ * @param {Function} [selector] selector, that matches removed handlers
+ * @param {Object} [flags] reactive handler options
+ *
+ * @chainable
+ */
 Reactive.prototype.resume = function (selector, flags) {
     var me = this;
 
@@ -382,6 +460,11 @@ Reactive.prototype.resume = function (selector, flags) {
     return me;
 };
 
+/**
+ * Destroys reactive
+ *
+ * @method destroy
+ */
 Reactive.prototype.destroy = function () {
     var me = this;
 
