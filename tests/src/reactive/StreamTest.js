@@ -44,9 +44,12 @@ module('xs.reactive.Stream', function () {
             return new xs.reactive.Stream(me.generator, undefined);
         });
 
-        //generator must return object
+        //generator must return object or undefined
+        me.stream = new xs.reactive.Stream(xs.noop);
         throws(function () {
-            return new xs.reactive.Stream(xs.noop);
+            return new xs.reactive.Stream(function () {
+                return null;
+            });
         });
 
         //return.on must be a function

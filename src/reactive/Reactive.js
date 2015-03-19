@@ -82,21 +82,24 @@ var Reactive = function (generator, sources) {
 
     //run generator with send, end and given sources
     var handlers = generator.apply(undefined, [
-        function (data) {
-            //verify stream
-            assert.not(me.isDestroyed, 'send - reactive is destroyed');
-
-            //send data
-            send(me.private.reactiveHandlers, xs.reactive.Data, data);
-        },
-        function () {
-            //verify stream
-            assert.not(me.isDestroyed, 'send - reactive is destroyed');
-
-            //destroy stream
-            me.destroy();
-        }
+        handleSend.bind(me),
+        handleDestroy.bind(me)
     ].concat(sources ? sources : []));
+
+    //create private storage
+    me.private = {};
+
+    //initially reactive is inactive
+    me.private.isActive = false;
+
+    //create reactiveHandlers collection
+    me.private.reactiveHandlers = new xs.core.Collection();
+
+    //if handlers are not defined - return
+    if (!xs.isDefined(handlers)) {
+
+        return;
+    }
 
     log.trace('constructor - generator returned `$handlers`', {
         $handlers: handlers
@@ -116,15 +119,6 @@ var Reactive = function (generator, sources) {
     assert.fn(handlers.off, 'constructor - given handlers.off `$off` is not a function', {
         $off: handlers.off
     });
-
-    //create private storage
-    me.private = {};
-
-    //initially reactive is inactive
-    me.private.isActive = false;
-
-    //create reactiveHandlers collection
-    me.private.reactiveHandlers = new xs.core.Collection();
 
     //save handlers
     me.private.on = handlers.on;
@@ -484,6 +478,30 @@ Reactive.prototype.destroy = function () {
     handlers.remove();
 };
 
+function handleSend(data, silent) {
+    var me = this;
+    if (silent) {
+
+        return;
+    }
+
+    //verify stream
+    assert.not(me.isDestroyed, 'send - reactive is destroyed');
+
+    //send data
+    send(me.private.reactiveHandlers, xs.reactive.Data, data);
+}
+
+function handleDestroy() {
+    var me = this;
+
+    //verify stream
+    assert.not(me.isDestroyed, 'send - reactive is destroyed');
+
+    //destroy stream
+    me.destroy();
+}
+
 function send(handlers, target, data) {
 
     log.trace('send - sending `$data` to ' + (target === xs.reactive.Data ? 'Data' : 'Destroy'), {
@@ -529,17 +547,15 @@ function syncActive(value) {
     //sync state
     me.private.isActive = value;
 
-    //call on/off
-    if (value) {
-        log.trace('syncActive - resuming reactive with `$on`', {
-            $on: me.private.on
-        });
-        me.private.on();
-    } else {
-        log.trace('syncActive - suspending reactive with `$off`', {
-            $off: me.private.off
-        });
-        me.private.off();
+    //toggle reactive state
+    var handle = value ? me.private.on : me.private.off;
+    log.trace('syncActive - ' + (value ? 'resuming' : 'suspending') + ' reactive with `$handle`', {
+        $handle: handle
+    });
+
+    //handle, if handle given
+    if (handle) {
+        handle();
     }
 }
 
