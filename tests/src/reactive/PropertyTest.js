@@ -12,13 +12,6 @@ module('xs.reactive.Property', function () {
 
     'use strict';
 
-    xs.log.Router.routes.add(new xs.log.route.Console('reactive', [
-        {
-            category: 'xs.reactive',
-            level: xs.log.Trace
-        }
-    ]));
-
     test('constructor', function () {
         var me = this;
 
@@ -115,6 +108,76 @@ module('xs.reactive.Property', function () {
         //stream is not active and destroyed
         strictEqual(me.property.isDestroyed, true);
 
+    });
+
+    test('send', function () {
+        var me = this;
+
+        me.generator = function (set, end) {
+            var emitter = function () {
+                //set initial value silently
+                set(null, true);
+
+                var i = 0;
+                while (i < 10) {
+                    //if set ok, continue
+                    if (set(i)) {
+                        i++;
+
+                        //if set cancelled, set null and end
+                    } else {
+                        set(null);
+                        end();
+                        return;
+                    }
+                }
+                end();
+            };
+            return {
+                on: function () {
+                    xs.nextTick(emitter);
+                },
+                off: xs.noop
+            };
+        };
+    }, function () {
+        var me = this;
+
+        me.property = new xs.reactive.Property(me.generator);
+
+        //stream is not active and not destroyed
+        strictEqual(me.property.isActive, false);
+        strictEqual(me.property.isDestroyed, false);
+
+        var log = '';
+        var value = '';
+
+        me.property.on(function (data) {
+            if (data === 5) {
+                return false;
+            }
+        });
+
+        me.property.on(function (data) {
+            log += data;
+            value += me.property.value;
+            value += data;
+        });
+
+        me.property.on(function () {
+            //stream is not active and destroyed
+            strictEqual(me.property.isDestroyed, true);
+
+            //check log and value
+            strictEqual(log, '01234null');
+            strictEqual(value, 'null0011223344null');
+
+            me.done();
+        }, {
+            target: xs.reactive.Destroy
+        });
+
+        return false;
     });
 
     test('on', function () {
@@ -434,7 +497,7 @@ module('xs.reactive.Property', function () {
             return true;
         });
 
-        //stream is actived
+        //stream is activated
         strictEqual(me.property.isActive, true);
 
         //resume all left handlers
