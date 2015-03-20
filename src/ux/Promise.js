@@ -88,6 +88,17 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
     Class.constant.Rejected = xs.core.Promise.Rejected;
 
     /**
+     * Static method, that verifies given object to be a promise
+     *
+     * @static
+     *
+     * @method isPromise
+     *
+     * @return {Boolean} verification status
+     */
+    Class.static.method.isPromise = xs.core.Promise.isPromise;
+
+    /**
      * Static async control operating method. Creates aggregate promise, that is resolved when all
      * given promises are resolved. If any promise among given is rejected, aggregate promise is rejected with that reason
      *

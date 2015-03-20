@@ -12,6 +12,19 @@ module('xs.core.Promise', function () {
 
     'use strict';
 
+    test('isPromise', function () {
+        //init test variables
+        var promise = new xs.core.Promise();
+
+        //promise must be an object and contain then method
+        strictEqual(xs.core.Promise.isPromise(null), false);
+        var arr = [];
+        arr.then = xs.noop;
+        strictEqual(xs.core.Promise.isPromise(arr), false);
+        strictEqual(xs.core.Promise.isPromise({then: xs.noop}), true);
+        strictEqual(xs.core.Promise.isPromise(promise), true);
+    });
+
     test('resolve basic', function () {
         //init test variables
         var promise;

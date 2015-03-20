@@ -103,14 +103,29 @@ xs.constant(xs.core.Promise, 'Rejected', 2);
 
 /**
  * Static method, that verifies given object to be a promise
+ *
+ * @static
+ *
+ * @method isPromise
+ *
+ * @return {Boolean} verification status
  */
-xs.core.Promise.isPromise = function (candidate) {
+var isPromise = xs.core.Promise.isPromise = function (candidate) {
 
+    //candidate must be an object
+    if (!xs.isObject(candidate)) {
+        return false;
+    }
+
+    //candidate must container `then` member, that is a function
+    return xs.isFunction(candidate.then);
 };
 
 /**
  * Static async control operating method. Creates aggregate promise, that is resolved when all
  * given promises are resolved. If any promise among given is rejected, aggregate promise is rejected with that reason
+ *
+ * @static
  *
  * @method all
  *
@@ -129,6 +144,8 @@ xs.core.Promise.all = function (promises) {
 /**
  * Static async control operating method. Creates aggregate promise, that is resolved when some (count is specified by second param)
  * of given promises are resolved. If any promise among given is rejected, aggregate promise is rejected with that reason
+ *
+ * @static
  *
  * @method some
  *
@@ -269,15 +286,13 @@ xs.core.Promise.prototype.update = function (state) {
     //assert, that promise is pending
     assert.equal(me.private.state, me.constructor.Pending, 'update - promise is already ' + me.private.state);
 
-    var constructor = me.constructor;
-
     //process promise on next tick
     xs.nextTick(function () {
 
         //process promise handlers
         me.private.handlers.each(function (item) {
             if (item.update) {
-                handleItem.call(constructor, item, 'update', state);
+                handleItem(item, 'update', state);
             }
         });
     });
@@ -321,11 +336,9 @@ xs.core.Promise.prototype.then = function (handleResolved, handleRejected, handl
         return item.promise;
     }
 
-    var constructor = me.constructor;
-
     //resolve item on next tick
     xs.nextTick(function () {
-        handleItem.call(constructor, item, me.private.state === me.constructor.Resolved ? 'resolve' : 'reject', me.private.data);
+        handleItem(item, me.private.state === me.constructor.Resolved ? 'resolve' : 'reject', me.private.data);
     });
 
     //if promise is pending - add item to handlers
@@ -400,12 +413,10 @@ function processPromise(action, data) {
     //set promise data
     me.private.data = data;
 
-    var constructor = me.constructor;
-
     //process promise handlers
     me.private.handlers.each(function (item) {
         if (item[action]) {
-            handleItem.call(constructor, item, action, data);
+            handleItem(item, action, data);
         }
     });
 
@@ -439,7 +450,7 @@ function handleItem(item, action, data) {
         var result = handler(data);
 
         //resolve item.promise with fetched result
-        resolveValue.call(this, promise, action, result);
+        resolveValue(promise, action, result);
 
 
         //reject if error happened
@@ -465,7 +476,7 @@ function resolveValue(promise, action, value) {
     assert.ok(promise !== value, 'resolveValue - value can not refer to the promise itself', {}, TypeError);
 
     //handle value, that is promise
-    if (value instanceof this) {
+    if (isPromise(value)) {
         value.then(function (data) {
             promise.resolve(data);
         }, function (reason) {
