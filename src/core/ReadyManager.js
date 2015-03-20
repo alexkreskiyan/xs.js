@@ -32,7 +32,7 @@ var ReadyManager = (function () {
     var storage = new xs.core.Collection();
 
     /**
-     * Adds new dependency from contracts with given names or simply when all contracts are processed //TODO - integrate with global processing contracts collection
+     * Adds new dependency from contracts with given names or simply when all contracts are processed
      *
      * @method add
      *
