@@ -80,12 +80,6 @@ var Reactive = function (generator, sources) {
         $sources: sources
     });
 
-    //run generator with send, end and given sources
-    var handlers = generator.apply(undefined, [
-        handleSend.bind(me),
-        handleDestroy.bind(me)
-    ].concat(sources ? sources : []));
-
     //create private storage
     me.private = {};
 
@@ -94,6 +88,15 @@ var Reactive = function (generator, sources) {
 
     //create reactiveHandlers collection
     me.private.reactiveHandlers = new xs.core.Collection();
+
+    //add underConstruction flag
+    me.underConstruction = true;
+
+    //run generator with send, end and given sources
+    var handlers = generator.apply(undefined, [
+        handleSend.bind(me),
+        handleDestroy.bind(me)
+    ].concat(sources ? sources : []));
 
     //if handlers are not defined - return
     if (!xs.isDefined(handlers)) {
@@ -123,6 +126,9 @@ var Reactive = function (generator, sources) {
     //save handlers
     me.private.on = handlers.on;
     me.private.off = handlers.off;
+
+    //remove underConstruction flag
+    delete me.underConstruction;
 };
 
 //save reference to module
@@ -176,6 +182,9 @@ Object.defineProperty(Reactive.prototype, 'isActive', {
  */
 Reactive.prototype.on = function (handler, options) {
     var me = this;
+
+    //assert, that reactive is not destroyed
+    assert.not(me.isDestroyed, 'on - reactive is destroyed');
 
     //assert, that handler is a function
     assert.fn(handler, 'on - given handler `$handler` is not a function', {
@@ -288,6 +297,9 @@ Reactive.prototype.on = function (handler, options) {
 Reactive.prototype.off = function (selector, flags) {
     var me = this;
 
+    //assert, that reactive is not destroyed
+    assert.not(me.isDestroyed, 'send - reactive is destroyed');
+
     //get handlers reference
     var handlers = me.private.reactiveHandlers;
 
@@ -336,6 +348,9 @@ Reactive.prototype.off = function (selector, flags) {
  */
 Reactive.prototype.suspend = function (selector, flags) {
     var me = this;
+
+    //assert, that reactive is not destroyed
+    assert.not(me.isDestroyed, 'send - reactive is destroyed');
 
     //get handlers reference
     var handlers = me.private.reactiveHandlers;
@@ -401,6 +416,9 @@ Reactive.prototype.suspend = function (selector, flags) {
 Reactive.prototype.resume = function (selector, flags) {
     var me = this;
 
+    //assert, that reactive is not destroyed
+    assert.not(me.isDestroyed, 'send - reactive is destroyed');
+
     //get handlers reference
     var handlers = me.private.reactiveHandlers;
 
@@ -462,6 +480,9 @@ Reactive.prototype.resume = function (selector, flags) {
 Reactive.prototype.destroy = function () {
     var me = this;
 
+    //assert, that reactive is not destroyed
+    assert.not(me.isDestroyed, 'send - reactive is destroyed');
+
     log.trace('destroy - destroying reactive');
 
     //call off handler, if given
@@ -482,13 +503,17 @@ Reactive.prototype.destroy = function () {
 
 function handleSend(data, silent) {
     var me = this;
-    if (silent) { //TODO test cancelable send
+
+    //assert, that reactive is not destroyed
+    assert.not(me.isDestroyed, 'send - reactive is destroyed');
+
+    //verify, that reactive is not under construction
+    assert.not(me.underConstruction, 'send - reactive is being constructed');
+
+    if (silent) {
 
         return true;
     }
-
-    //verify stream
-    assert.not(me.isDestroyed, 'send - reactive is destroyed');
 
     //send data
     return send(me.private.reactiveHandlers, xs.reactive.Data, data);
@@ -497,7 +522,7 @@ function handleSend(data, silent) {
 function handleDestroy() {
     var me = this;
 
-    //verify stream
+    //assert, that reactive is not destroyed
     assert.not(me.isDestroyed, 'send - reactive is destroyed');
 
     //destroy stream

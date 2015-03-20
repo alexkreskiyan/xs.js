@@ -15,9 +15,9 @@ var Property = xs.reactive.Property = function (generator, sources) {
 
     var propertyGenerator = function (send) {
         return generator.apply(undefined, [
-            function (data) { //TODO test cancelable send
+            function (data, silent) {
                 //send
-                if (!send(data)) {
+                if (!send(data, silent)) {
                     return false;
                 }
 
