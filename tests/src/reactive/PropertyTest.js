@@ -34,7 +34,7 @@ module('xs.reactive.Property', function () {
 
         //sources must be an array
         throws(function () {
-            return new xs.reactive.Property(me.generator, undefined);
+            return new xs.reactive.Property(me.generator, undefined, undefined);
         });
 
         //generator must return object or undefined
