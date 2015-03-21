@@ -318,11 +318,8 @@ xs.core.Promise.prototype.then = function (handleResolved, handleRejected, handl
 
     var item = createItem(handleResolved, handleRejected, handleProgress);
 
-    //if not handling - return me
-    if (!item) {
-
-        return me;
-    }
+    //assert, that item is created
+    assert.ok(item,'then - no promise handlers given');
 
 
     //create new promise as item.promise
@@ -347,13 +344,30 @@ xs.core.Promise.prototype.then = function (handleResolved, handleRejected, handl
 };
 
 /**
+ * Core promise method. Adds handler for promise future state, when it will be resolved or rejected
+ * If no handler given, method does nothing. If any handler given, new promise object will be returned, constructing
+ * chain of promise objects, allowing to perform stack of async operations
+ *
+ * @method otherwise
+ *
+ * @param {Function|undefined} handleDone handler, that will be called, when promise will be resolved or rejected
+ *
+ * @chainable
+ *
+ * @return {xs.core.Promise}
+ */
+xs.core.Promise.prototype.always = function (handleDone) {
+    return this.then(handleDone, handleDone);
+};
+
+/**
  * Core promise method. Adds handler for promise future state, when it will be rejected
  * If no handler given, method does nothing. If any handler given, new promise object will be returned, constructing
  * chain of promise objects, allowing to perform stack of async operations
  *
  * @method otherwise
  *
- * @param {Function|undefined} [handleRejected] handler, that will be called, when promise will be rejected. Undefined, if param is omitted
+ * @param {Function|undefined} handleRejected handler, that will be called, when promise will be rejected
  *
  * @chainable
  *
@@ -370,7 +384,7 @@ xs.core.Promise.prototype.otherwise = function (handleRejected) {
  *
  * @method progress
  *
- * @param {Function|undefined} [handleProgress] handler, that will be called, when promise will change it's progress state, but not yet resolved|rejected. Undefined, if param is omitted
+ * @param {Function|undefined} handleProgress handler, that will be called, when promise will change it's progress state, but not yet resolved|rejected
  *
  * @chainable
  *

@@ -197,13 +197,28 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
     Class.method.then = xs.core.Promise.prototype.then;
 
     /**
+     * Core promise method. Adds handler for promise future state, when it will be resolved or rejected
+     * If no handler given, method does nothing. If any handler given, new promise object will be returned, constructing
+     * chain of promise objects, allowing to perform stack of async operations
+     *
+     * @method otherwise
+     *
+     * @param {Function|undefined} handleDone handler, that will be called, when promise will be resolved or rejected
+     *
+     * @chainable
+     *
+     * @return {xs.ux.Promise}
+     */
+    Class.method.always = xs.core.Promise.prototype.always;
+
+    /**
      * Core promise method. Adds handler for promise future state, when it will be rejected
      * If no handler given, method does nothing. If any handler given, new promise object will be returned, constructing
      * chain of promise objects, allowing to perform stack of async operations
      *
      * @method otherwise
      *
-     * @param {Function|undefined} [handleRejected] handler, that will be called, when promise will be rejected. Undefined, if param is omitted
+     * @param {Function|undefined} handleRejected handler, that will be called, when promise will be rejected
      *
      * @chainable
      *
@@ -218,7 +233,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @method progress
      *
-     * @param {Function|undefined} [handleProgress] handler, that will be called, when promise will change it's progress state, but not yet resolved|rejected. Undefined, if param is omitted
+     * @param {Function|undefined} handleProgress handler, that will be called, when promise will change it's progress state, but not yet resolved|rejected
      *
      * @chainable
      *
