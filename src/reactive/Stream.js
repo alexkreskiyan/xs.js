@@ -20,6 +20,44 @@ var Stream = xs.reactive.Stream = function (generator, sources) {
 xs.extend(Stream, Reactive);
 
 /**
+ * Creates reactive stream from promise
+ *
+ * @static
+ *
+ * @method fromPromise
+ *
+ * @param {Object} promise reactive source promise
+ *
+ * @return {xs.reactive.Stream}
+ */
+Stream.fromPromise = function (promise) {
+
+    //assert, that a promise given
+    assert.ok(xs.core.Promise.isPromise(promise), 'fromPromise - given `$promise` is not a promise object', {
+        $promise: promise
+    });
+
+    return new this(function (send, end, promise) {
+        promise.then(function (data) {
+            send({
+                state: xs.core.Promise.Resolved,
+                data: data
+            });
+        }, function (error) {
+            send({
+                state: xs.core.Promise.Rejected,
+                error: error
+            });
+        }, function (progress) {
+            send({
+                state: xs.core.Promise.Pending,
+                progress: progress
+            });
+        }).always(end);
+    }, [promise]);
+};
+
+/**
  * Internal error class
  *
  * @ignore

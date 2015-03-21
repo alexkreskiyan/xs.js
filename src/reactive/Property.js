@@ -10,7 +10,7 @@ if (!xs.reactive) {
 
 var Reactive = module.Reactive;
 
-var Property = xs.reactive.Property = function (generator, sources) {
+var Property = xs.reactive.Property = function (generator, value, sources) {
     var me = this;
 
     var propertyGenerator = function (send) {
@@ -29,11 +29,56 @@ var Property = xs.reactive.Property = function (generator, sources) {
         ].concat(Array.prototype.slice.call(arguments, 1)));
     };
 
-    Reactive.apply(me, [propertyGenerator].concat(Array.prototype.slice.call(arguments, 1)));
+    Reactive.apply(me, [propertyGenerator].concat(Array.prototype.slice.call(arguments, 2)));
+
+    //set initial property value
+    me.private.value = value;
 };
 
 //extend Property from Reactive
 xs.extend(Property, Reactive);
+
+/**
+ * Creates reactive property from promise
+ *
+ * @static
+ *
+ * @method fromPromise
+ *
+ * @param {Object} promise reactive source promise
+ *
+ * @return {xs.reactive.Property}
+ */
+Property.fromPromise = function (promise) {
+
+    //assert, that a promise given
+    assert.ok(xs.core.Promise.isPromise(promise), 'fromPromise - given `$promise` is not a promise object', {
+        $promise: promise
+    });
+
+    return new this(function (set, end, promise) {
+
+        promise.then(function (data) {
+            set({
+                state: xs.core.Promise.Resolved,
+                data: data
+            });
+        }, function (error) {
+            set({
+                state: xs.core.Promise.Rejected,
+                error: error
+            });
+        }, function (progress) {
+            set({
+                state: xs.core.Promise.Pending,
+                progress: progress
+            });
+        }).always(end);
+    }, {
+        state: xs.core.Promise.Pending,
+        progress: undefined
+    }, [promise]);
+};
 
 /**
  * Property current value
