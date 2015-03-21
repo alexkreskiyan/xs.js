@@ -98,6 +98,9 @@ var Reactive = function (generator, sources) {
         handleDestroy.bind(me)
     ].concat(sources ? sources : []));
 
+    //remove underConstruction flag
+    delete me.underConstruction;
+
     //if handlers are not defined - return
     if (!xs.isDefined(handlers)) {
 
@@ -126,9 +129,6 @@ var Reactive = function (generator, sources) {
     //save handlers
     me.private.on = handlers.on;
     me.private.off = handlers.off;
-
-    //remove underConstruction flag
-    delete me.underConstruction;
 };
 
 //save reference to module
