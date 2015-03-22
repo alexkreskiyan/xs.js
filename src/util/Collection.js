@@ -34,7 +34,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
          *
          * @event add
          */
-        'add': {
+        add: {
             type: 'ns.collection.Event'
         },
         /**
@@ -51,7 +51,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
          *
          * @event set
          */
-        'set': {
+        set: {
             type: 'ns.collection.Event'
         },
         /**
@@ -68,7 +68,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
          *
          * @event remove
          */
-        'remove': {
+        remove: {
             type: 'ns.collection.Event'
         },
         /**
@@ -76,7 +76,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
          *
          * @event clear
          */
-        'clear': {
+        clear: {
             type: 'ns.collection.Event'
         },
         /**
@@ -84,7 +84,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
          *
          * @event destroy
          */
-        'destroy': {
+        destroy: {
             type: 'xs.event.Event'
         }
     };
@@ -157,7 +157,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //add item
                 me.private.items.push({
                     key: i,
-                    value: values[i]
+                    value: values[ i ]
                 });
             }
 
@@ -168,16 +168,17 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //handle hash source
 
         //get keys and length
-        var keys = Object.keys(values), key;
+        var keys = Object.keys(values);
+        var key;
         length = keys.length;
 
         for (i = 0; i < length; i++) {
-            key = keys[i];
+            key = keys[ i ];
 
             //add item
             me.private.items.push({
                 key: key,
-                value: values[key]
+                value: values[ key ]
             });
         }
     };
@@ -252,10 +253,11 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     Class.method.keys = function () {
         var me = this;
 
-        var keys = [], length = me.private.items.length;
+        var keys = [];
+        var length = me.private.items.length;
 
         for (var i = 0; i < length; i++) {
-            keys.push(me.private.items[i].key);
+            keys.push(me.private.items[ i ].key);
         }
 
         return keys;
@@ -289,10 +291,11 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     Class.method.values = function () {
         var me = this;
 
-        var values = [], length = me.private.items.length;
+        var values = [];
+        var length = me.private.items.length;
 
         for (var i = 0; i < length; i++) {
-            values.push(me.private.items[i].value);
+            values.push(me.private.items[ i ].value);
         }
 
         return values;
@@ -343,7 +346,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         if (xs.isNumber(key)) {
 
             //check, that key exists
-            return 0 <= key && key < me.private.items.length;
+            return key >= 0 && key < me.private.items.length;
         }
 
         //if it is string - it's key
@@ -438,7 +441,9 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      * @return {String|Number|undefined} found key, or undefined if nothing found
      */
     Class.method.keyOf = function (value, flags) {
-        var me = this, index, values = me.values();
+        var me = this;
+        var index;
+        var values = me.values();
 
         //assert, that value is valid
         self.assert.ok(isValid.call(me, value), 'Not valid');
@@ -458,7 +463,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             }
         }
 
-        return index >= 0 ? me.private.items[index].key : undefined;
+        return index >= 0 ? me.private.items[ index ].key : undefined;
     };
 
     /**
@@ -541,7 +546,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             });
         }
 
-        return me.private.items[index].value;
+        return me.private.items[ index ].value;
     };
 
     /**
@@ -605,7 +610,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //assert that collection is not empty
         self.assert.ok(me.private.items.length, 'first - collection is empty');
 
-        return me.private.items[0].value;
+        return me.private.items[ 0 ].value;
     };
 
     /**
@@ -669,7 +674,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //assert that collection is not empty
         self.assert.ok(me.private.items.length, 'last - collection is empty');
 
-        return me.private.items[me.private.items.length - 1].value;
+        return me.private.items[ me.private.items.length - 1 ].value;
     };
 
     /**
@@ -930,6 +935,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
         //handle number key - it's index
         var index;
+
         if (xs.isNumber(key)) {
             index = key;
 
@@ -976,7 +982,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             return me;
         }
 
-        me.private.items[index].value = value;
+        me.private.items[ index ].value = value;
 
         //fire closing `set` event
         me.fire('set', data);
@@ -1068,7 +1074,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             });
         }
 
-        var item = me.private.items[index];
+        var item = me.private.items[ index ];
 
         var data = {
             key: item.key,
@@ -1204,15 +1210,18 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      * @chainable
      */
     Class.method.remove = function (value, flags) {
-        var me = this, values = me.values();
-        var data, item, i = 0, items = me.private.items;
+        var me = this;
+        var values = me.values();
+        var data, item;
+        var i = 0;
+        var items = me.private.items;
 
         //remove all if no value given
         if (!arguments.length) {
 
             //remove all occurrences of value in collection
             while (i < items.length) {
-                item = items[i];
+                item = items[ i ];
 
                 data = {
                     key: item.key,
@@ -1248,7 +1257,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //assert, that value is valid
         self.assert.ok(isValid.call(me, value), 'Not valid');
 
-        var index, all = false;
+        var index;
+        var all = false;
         //if no flags - remove first occurrence of value
         if (arguments.length === 1) {
             index = values.indexOf(value);
@@ -1282,7 +1292,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
             //remove all occurrences of value in collection
             while (i < items.length) {
-                item = items[i];
+                item = items[ i ];
 
                 //if item.value is not equal to value - continue with next item
                 if (item.value !== value) {
@@ -1315,7 +1325,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             }
         } else {
 
-            item = items[index];
+            item = items[ index ];
 
             data = {
                 key: item.key,
@@ -1472,7 +1482,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             $finder: finder
         });
 
-        var all = false, reverse = false;
+        var all = false;
+        var reverse = false;
         //handle flags
         if (arguments.length > 1) {
 
@@ -1491,13 +1502,15 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         }
 
         //init variables
-        var items = me.private.items, i, item, data, length = items.length;
+        var items = me.private.items;
+        var i, item, data;
+        var length = items.length;
 
         if (all) {
             i = 0;
             //remove all matched occurrences from collection
             while (i < items.length) {
-                item = items[i];
+                item = items[ i ];
 
                 //if item does not match - continue with next item
                 if (!finder(item.value, item.key)) {
@@ -1530,7 +1543,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             i = items.length - 1;
             //remove all matched occurrences from collection
             while (i >= 0) {
-                item = items[i];
+                item = items[ i ];
 
                 //if item does not match - continue with next item
                 if (!finder(item.value, item.key)) {
@@ -1565,7 +1578,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             i = 0;
             //remove first matched occurrence from collection
             while (i < items.length) {
-                item = items[i];
+                item = items[ i ];
 
                 //if item does not match - continue with next item
                 if (!finder(item.value, item.key)) {
@@ -1681,6 +1694,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
         //handle flags
         var reverse = false;
+
         if (arguments.length >= 2) {
 
             //assert that flags is number
@@ -1700,15 +1714,17 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         }
 
         //iterate
-        var i, item, length = me.private.items.length;
+        var i, item;
+        var length = me.private.items.length;
+
         if (reverse) {
             for (i = length - 1; i >= 0; i--) {
-                item = me.private.items[i];
+                item = me.private.items[ i ];
                 iterator.call(scope, item.value, item.key, me);
             }
         } else {
             for (i = 0; i < length; i++) {
-                item = me.private.items[i];
+                item = me.private.items[ i ];
                 iterator.call(scope, item.value, item.key, me);
             }
         }
@@ -1799,7 +1815,9 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         });
 
         //handle flags
-        var all = false, reverse = false;
+        var all = false;
+        var reverse = false;
+
         if (arguments.length >= 2) {
 
             //assert that flags is number
@@ -1822,14 +1840,16 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         }
 
         //init variables
-        var i, item, length = me.private.items.length, found;
+        var i, item, found;
+        var length = me.private.items.length;
 
         if (all) {
             //copies of matched items
             var items = [];
 
             for (i = 0; i < length; i++) {
-                item = me.private.items[i];
+                item = me.private.items[ i ];
+
                 if (finder.call(scope, item.value, item.key, me)) {
                     //add index
                     items.push({
@@ -1843,7 +1863,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             found.private.items = items;
         } else if (reverse) {
             for (i = length - 1; i >= 0; i--) {
-                item = me.private.items[i];
+                item = me.private.items[ i ];
+
                 if (finder.call(scope, item.value, item.key, me)) {
                     found = item.value;
                     break;
@@ -1851,7 +1872,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             }
         } else {
             for (i = 0; i < length; i++) {
-                item = me.private.items[i];
+                item = me.private.items[ i ];
+
                 if (finder.call(scope, item.value, item.key, me)) {
                     found = item.value;
                     break;
@@ -1921,12 +1943,14 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         }
 
         //init variables
-        var i, item, length = me.private.items.length;
+        var i, item;
+        var length = me.private.items.length;
 
         //mapped items
         var items = [];
+
         for (i = 0; i < length; i++) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
             items.push({
                 key: item.key,
                 value: mapper.call(scope, item.value, item.key, me)
@@ -2035,6 +2059,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
         //handle flags
         var reverse = false;
+
         if (arguments.length >= 2) {
 
             //assert that flags is number
@@ -2055,12 +2080,14 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
         //check memo
         var hasMemo = false;
+
         if (arguments.length >= 4) {
             hasMemo = true;
         }
 
         //init variables
-        var result, i, item, length = me.private.items.length;
+        var result, i, item;
+        var length = me.private.items.length;
 
         //reduce
         if (reverse) {
@@ -2069,11 +2096,11 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 result = memo;
             } else {
                 i = length - 2;
-                result = me.private.items[length - 1].value;
+                result = me.private.items[ length - 1 ].value;
             }
 
             for (; i >= 0; i--) {
-                item = me.private.items[i];
+                item = me.private.items[ i ];
                 result = reducer.call(scope, result, item.value, item.key, me);
             }
         } else {
@@ -2082,11 +2109,11 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 result = memo;
             } else {
                 i = 1;
-                result = me.private.items[0].value;
+                result = me.private.items[ 0 ].value;
             }
 
             for (; i < length; i++) {
-                item = me.private.items[i];
+                item = me.private.items[ i ];
                 result = reducer.call(scope, result, item.value, item.key, me);
             }
         }
@@ -2159,7 +2186,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      * @return {Boolean} whether some values pass tester function
      */
     Class.method.some = function (tester, count, scope) {
-        var me = this, length = me.private.items.length;
+        var me = this;
+        var length = me.private.items.length;
 
         //assert that collection is not empty
         self.assert.ok(me.private.items.length, 'some - collection is empty');
@@ -2179,7 +2207,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             $count: count
         });
 
-        self.assert.ok(0 <= count && count <= length, 'some - given count `$count` is out of bounds [$min, $max]', {
+        self.assert.ok(count >= 0 && count <= length, 'some - given count `$count` is out of bounds [$min, $max]', {
             $count: count,
             $min: 0,
             $max: length
@@ -2190,13 +2218,14 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             scope = me;
         }
 
-        var i, item, found = 0;
+        var i, item;
+        var found = 0;
 
         //handle negative scenario
         if (count === 0) {
             //iterate over me.private.items to find matches
             for (i = 0; i < length; i++) {
-                item = me.private.items[i];
+                item = me.private.items[ i ];
 
                 //increment found if tester returns true
                 if (tester.call(scope, item.value, item.key, me)) {
@@ -2216,7 +2245,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //handle positive scenario
         //iterate over me.private.items to find matches
         for (i = 0; i < length; i++) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
 
             //increment found if tester returns true
             if (tester.call(scope, item.value, item.key, me)) {
@@ -2424,9 +2453,13 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         });
 
 
-        var length = keys.length, key, i, ownKeys = me.keys(), index, item, items = [];
+        var length = keys.length;
+        var key, i, index, item;
+        var ownKeys = me.keys();
+        var items = [];
+
         for (i = 0; i < length; i++) {
-            key = keys[i];
+            key = keys[ i ];
 
             //assert that key is string or number
             self.assert.ok(xs.isString(key) || xs.isNumber(key), 'pick - key `$key`, given for collection, is neither number nor string', {
@@ -2467,7 +2500,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             }
 
             //get picked item
-            item = me.private.items[index];
+            item = me.private.items[ index ];
 
             //copy it to items
             items.push({
@@ -2544,12 +2577,16 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         });
 
 
-        var length = keys.length, key, i, ownKeys = me.keys(), maxIndex = ownKeys.length - 1, index, item, items = [];
+        var length = keys.length;
+        var key, i, index, item;
+        var ownKeys = me.keys();
+        var maxIndex = ownKeys.length - 1;
+        var items = [];
 
         var omittedIndexes = [];
         //remove blacklisted items
         for (i = 0; i < length; i++) {
-            key = keys[i];
+            key = keys[ i ];
 
             //assert that key is string or number
             self.assert.ok(xs.isString(key) || xs.isNumber(key), 'omit - key `$key`, given for collection, is neither number nor string', {
@@ -2599,7 +2636,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 continue;
             }
 
-            item = me.private.items[i];
+            item = me.private.items[ i ];
             items.push({
                 key: item.key,
                 value: item.value
@@ -2644,11 +2681,13 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     Class.method.toSource = function () {
         var me = this;
 
-        var source = {}, length = me.private.items.length, item;
+        var source = {};
+        var length = me.private.items.length;
+        var item;
 
         for (var i = 0; i < length; i++) {
-            item = me.private.items[i];
-            source[item.key] = item.value;
+            item = me.private.items[ i ];
+            source[ item.key ] = item.value;
         }
 
         return source;
@@ -2704,7 +2743,10 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     var verifySourceValues = function (values) {
         var me = this;
 
-        var type = me.private.type, kind = me.private.kind, i, length = values.length;
+        var type = me.private.type;
+        var kind = me.private.kind;
+        var i;
+        var length = values.length;
 
         //if class
         if (kind === 'class') {
@@ -2712,8 +2754,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
 
                 //assert, that value is instance of type or Class, that mixes type
-                self.assert.ok(isClassInstance.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of `$Class` of instance of class, that mixins `$Class`', {
-                    $value: values[i],
+                self.assert.ok(isClassInstance.call(me, values[ i ]), 'verifySourceValues - given value `$value` is not an instance of `$Class` of instance of class, that mixins `$Class`', {
+                    $value: values[ i ],
                     $Class: type
                 });
             }
@@ -2724,8 +2766,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
 
                 //assert, that value is instance of Class that implements type
-                self.assert.ok(isImplementation.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of class, that implements interface `$Interface`', {
-                    $value: values[i],
+                self.assert.ok(isImplementation.call(me, values[ i ]), 'verifySourceValues - given value `$value` is not an instance of class, that implements interface `$Interface`', {
+                    $value: values[ i ],
                     $Interface: type
                 });
             }
@@ -2736,8 +2778,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
 
                 //assert, that value is instance of given constructor
-                self.assert.ok(isInstance.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of `$Class`', {
-                    $value: values[i],
+                self.assert.ok(isInstance.call(me, values[ i ]), 'verifySourceValues - given value `$value` is not an instance of `$Class`', {
+                    $value: values[ i ],
                     $Class: type
                 });
             }
@@ -2748,8 +2790,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
 
                 //assert, that value passes given primitive verifier
-                self.assert.ok(isType.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of `$Class`', {
-                    $value: values[i],
+                self.assert.ok(isType.call(me, values[ i ]), 'verifySourceValues - given value `$value` is not an instance of `$Class`', {
+                    $value: values[ i ],
                     $Class: type.name
                 });
             }
@@ -2762,7 +2804,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     var isValid = function (value) {
         var me = this;
 
-        var type = me.private.type, kind = me.private.kind;
+        var type = me.private.type;
+        var kind = me.private.kind;
 
         //return true if not typed collection
         if (!type) {
@@ -2860,11 +2903,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      * @param {Number} index index, update starts from
      */
     var updateIndexes = function (index) {
-        var me = this, length = me.private.items.length;
+        var me = this;
+        var length = me.private.items.length;
 
         //updated indexes for all items, starting from given index
         for (var i = index; i < length; i++) {
-            var item = me.private.items[i];
+            var item = me.private.items[ i ];
 
             //update if is number
             if (xs.isNumber(item.key)) {

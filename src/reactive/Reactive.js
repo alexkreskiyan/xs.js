@@ -227,6 +227,7 @@ Reactive.prototype.on = function (handler, options) {
 
     //process target (if given)
     var target;
+
     if (options.hasOwnProperty('target')) {
         target = options.target;
 
@@ -251,6 +252,7 @@ Reactive.prototype.on = function (handler, options) {
 
     //process priority (if given)
     var priority;
+
     if (options.hasOwnProperty('priority')) {
         priority = options.priority;
 
@@ -373,6 +375,7 @@ Reactive.prototype.suspend = function (selector, flags) {
 
     //get suspended handlers subset
     var suspended;
+
     if (arguments.length === 1) {
         log.trace('suspend - suspending handlers by selector `$selector`', {
             $selector: selector
@@ -442,6 +445,7 @@ Reactive.prototype.resume = function (selector, flags) {
 
     //get resumed handlers subset
     var resumed;
+
     if (arguments.length === 1) {
         log.trace('resume - resuming handlers by selector `$selector`', {
             $selector: selector

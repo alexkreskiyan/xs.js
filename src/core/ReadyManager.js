@@ -105,6 +105,7 @@ var ReadyManager = (function () {
 
         //get resolved queue lists. If processed given - with non-null waiting list. If no processed given - with null lists only
         var resolved;
+
         if (contract === null) {
             resolved = storage.find(function (item) {
                 //item is resolved, if waiting list is null

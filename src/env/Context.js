@@ -39,9 +39,11 @@ xs.env.Context = xs.context = (function () {
         params = new xs.core.Collection(params);
 
         (new xs.core.Collection(rules)).find(function (rule) {
-            var defaults = xs.clone(rule[0]), data = [], match;
-            var negatives = new xs.core.Collection(rule[1]);
-            var positives = new xs.core.Collection(rule[2]);
+            var defaults = xs.clone(rule[ 0 ]);
+            var data = [];
+            var match;
+            var negatives = new xs.core.Collection(rule[ 1 ]);
+            var positives = new xs.core.Collection(rule[ 2 ]);
 
             //try userAgent to match any one of negatives given in rule
             match = negatives.size ? negatives.some(function (regExp) {
@@ -89,19 +91,19 @@ xs.env.Context = xs.context = (function () {
             params.each(function (param) {
 
                 //if default item is array - it contains parser rules for parsing obtained result
-                if (xs.isArray(defaults[0])) {
+                if (xs.isArray(defaults[ 0 ])) {
                     var raw = data.shift();
                     var parser = defaults.shift();
                     //parse raw data and assign
-                    result[param] = raw.replace(parser[0], parser[1]);
+                    result[ param ] = raw.replace(parser[ 0 ], parser[ 1 ]);
 
                     //else if default item given - use it
-                } else if (xs.isDefined(defaults[0])) {
-                    result[param] = defaults.shift();
+                } else if (xs.isDefined(defaults[ 0 ])) {
+                    result[ param ] = defaults.shift();
 
                     //else - use data, shift empty default place
                 } else {
-                    result[param] = data.shift();
+                    result[ param ] = data.shift();
                     defaults.shift();
                 }
             });
@@ -202,7 +204,7 @@ xs.env.Context = xs.context = (function () {
          *
          * @type {Object}
          */
-        me.cpu = parse(userAgent, rules.cpu, ['architecture']);
+        me.cpu = parse(userAgent, rules.cpu, [ 'architecture' ]);
 
 
         //set shortcuts
@@ -521,7 +523,7 @@ xs.env.Context = xs.context = (function () {
         //rules for determining the browser
         browser: [
             [
-                [browser.chrome],
+                [ browser.chrome ],
                 [
                     /chromium/,
                     /mobile/,
@@ -534,8 +536,8 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [browser.chromeMobile],
-                [/yabrowser/],
+                [ browser.chromeMobile ],
+                [ /yabrowser/ ],
                 [
                     /mobile/,
                     /(?:chrome|crios)\/([\d]+)\.([\d]+)/,
@@ -543,7 +545,7 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [browser.chromium],
+                [ browser.chromium ],
                 [],
                 [
                     /chromium\/([\d]+)\.([\d]+)/,
@@ -551,15 +553,15 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [browser.firefox],
-                [/waterfox/],
+                [ browser.firefox ],
+                [ /waterfox/ ],
                 [
                     /firefox\/([\d]+)\.([\d]+)/,
                     /firefox\/([\d\.]+)/
                 ]
             ],
             [
-                [browser.waterfox],
+                [ browser.waterfox ],
                 [],
                 [
                     /waterfox/,
@@ -568,7 +570,7 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [browser.safari],
+                [ browser.safari ],
                 [
                     /chrome/,
                     /mobile/
@@ -580,8 +582,8 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [browser.safariMobile],
-                [/chrome/],
+                [ browser.safariMobile ],
+                [ /chrome/ ],
                 [
                     /mobile/,
                     /version\/([\d]+)\.([\d]+)/,
@@ -589,7 +591,7 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [browser.opera],
+                [ browser.opera ],
                 [],
                 [
                     /opera/,
@@ -598,7 +600,7 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [browser.opera],
+                [ browser.opera ],
                 [],
                 [
                     /opr\/([\d]+)\.([\d]+)/,
@@ -606,8 +608,8 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [browser.ie],
-                [/iemobile/],
+                [ browser.ie ],
+                [ /iemobile/ ],
                 [
                     /msie\s([\d]+)\.([\d]+)/,
                     /msie\s([\d\.]+)/
@@ -620,11 +622,11 @@ xs.env.Context = xs.context = (function () {
                     '0',
                     '11.0'
                 ],
-                [/iemobile/],
-                [/trident\/7/]
+                [ /iemobile/ ],
+                [ /trident\/7/ ]
             ],
             [
-                [browser.ieMobile],
+                [ browser.ieMobile ],
                 [],
                 [
                     /iemobile\/([\d]+)\.([\d]+)/,
@@ -632,7 +634,7 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [browser.yabrowser],
+                [ browser.yabrowser ],
                 [],
                 [
                     /yabrowser\/([\d]+)\.([\d]+)/,
@@ -644,7 +646,7 @@ xs.env.Context = xs.context = (function () {
         //rules for determining the engine
         engine: [
             [
-                [engine.webkit],
+                [ engine.webkit ],
                 [
                     /opr\//,
                     /yabrowser\//,
@@ -656,8 +658,8 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [engine.blink],
-                [/chrome\/(?:[1-9]|1[0-9]|2[0-7])\./],
+                [ engine.blink ],
+                [ /chrome\/(?:[1-9]|1[0-9]|2[0-7])\./ ],
                 [
                     /(?:opr|crios|chrome|yabrowser)\//,
                     /applewebkit\/([\d]+)\.([\d]+)/,
@@ -665,7 +667,7 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [engine.gecko],
+                [ engine.gecko ],
                 [],
                 [
                     /gecko\//,
@@ -674,7 +676,7 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [engine.presto],
+                [ engine.presto ],
                 [],
                 [
                     /presto\/([\d]+)\.([\d]+)/,
@@ -682,7 +684,7 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [engine.trident],
+                [ engine.trident ],
                 [],
                 [
                     /trident\/([\d]+)\.([\d]+)/,
@@ -690,18 +692,18 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [engine.trident],
+                [ engine.trident ],
                 [],
-                [/msie/]
+                [ /msie/ ]
             ]
         ],
 
         //rules for determining the operating system
         os: [
             [
-                [os.linux],
-                [/android/],
-                [/linux\s/]
+                [ os.linux ],
+                [ /android/ ],
+                [ /linux\s/ ]
             ],
             [
                 [
@@ -709,7 +711,7 @@ xs.env.Context = xs.context = (function () {
                     'xp'
                 ],
                 [],
-                [/windows\snt\s5\.(?:1|2)/]
+                [ /windows\snt\s5\.(?:1|2)/ ]
             ],
             [
                 [
@@ -717,7 +719,7 @@ xs.env.Context = xs.context = (function () {
                     'vista'
                 ],
                 [],
-                [/windows\snt\s6\.0/]
+                [ /windows\snt\s6\.0/ ]
             ],
             [
                 [
@@ -725,7 +727,7 @@ xs.env.Context = xs.context = (function () {
                     '7'
                 ],
                 [],
-                [/windows\snt\s6\.1/]
+                [ /windows\snt\s6\.1/ ]
             ],
             [
                 [
@@ -733,7 +735,7 @@ xs.env.Context = xs.context = (function () {
                     '8'
                 ],
                 [],
-                [/windows\snt\s6\.2/]
+                [ /windows\snt\s6\.2/ ]
             ],
             [
                 [
@@ -741,17 +743,17 @@ xs.env.Context = xs.context = (function () {
                     '8.1'
                 ],
                 [],
-                [/windows\snt\s6\.3/]
+                [ /windows\snt\s6\.3/ ]
             ],
             [
-                [os.windowsPhone],
+                [ os.windowsPhone ],
                 [],
-                [/windows\sphone(?:\sos)?\s([\d\.]+)/]
+                [ /windows\sphone(?:\sos)?\s([\d\.]+)/ ]
             ],
             [
-                [os.android],
+                [ os.android ],
                 [],
-                [/android\s([\d\.]+)/]
+                [ /android\s([\d\.]+)/ ]
             ],
             [
                 [
@@ -762,7 +764,7 @@ xs.env.Context = xs.context = (function () {
                     ]
                 ],
                 [],
-                [/os\sx\s([\d_\.]+)/]
+                [ /os\sx\s([\d_\.]+)/ ]
             ],
             [
                 [
@@ -773,29 +775,29 @@ xs.env.Context = xs.context = (function () {
                     ]
                 ],
                 [],
-                [/iphone\sos\s([\d_\.]+)/]
+                [ /iphone\sos\s([\d_\.]+)/ ]
             ]
         ],
 
         //rules for determining the processor architecture
         cpu: [
             [
-                [arch.x64],
+                [ arch.x64 ],
                 [],
-                [/(?:x86_|x|wow)64/]
+                [ /(?:x86_|x|wow)64/ ]
             ],
             [
-                [arch.x32],
+                [ arch.x32 ],
                 [],
-                [/ia32/]
+                [ /ia32/ ]
             ],
             [
-                [arch.x32],
+                [ arch.x32 ],
                 [
                     /(?:x|wow)64/,
                     /phone/
                 ],
-                [/windows/]
+                [ /windows/ ]
             ]
         ]
     };

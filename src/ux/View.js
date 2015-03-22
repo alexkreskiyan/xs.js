@@ -29,8 +29,12 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
     Class.namespace = 'xs.ux';
 
     Class.imports = [
-        {Element: 'xs.dom.Element'},
-        {Collection: 'xs.util.Collection'}
+        {
+            Element: 'xs.dom.Element'
+        },
+        {
+            Collection: 'xs.util.Collection'
+        }
     ];
 
     Class.extends = 'xs.dom.Element';
@@ -176,13 +180,16 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         //get nodes list
         var nodes = me.private.el.querySelectorAll(selector);
 
-        var i, length = nodes.length, node, element;
+        var i, node, element;
+        var length = nodes.length;
+
         if (!all) {
 
             //handle reverse flag
             if (reverse) {
                 for (i = length - 1; i >= 0; i--) {
                     node = nodes.item(i);
+
                     if (isOwnNode.call(me, node)) {
                         break;
                     }
@@ -191,6 +198,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
             } else {
                 for (i = 0; i < length; i++) {
                     node = nodes.item(i);
+
                     if (isOwnNode.call(me, node)) {
                         break;
                     }
@@ -249,6 +257,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
         //remove element from parent container
         var el = me.private.el;
+
         if (el.parentElement) {
             el.parentElement.removeChild(el);
         }
@@ -343,7 +352,9 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         self.assert.ok(verifyPositions(elements));
 
         //fill positions collection
-        var i, length = elements.length, items = positions.private.items, element, position;
+        var i, element, position;
+        var length = elements.length;
+        var items = positions.private.items;
 
         for (i = 0; i < length; i++) {
             //get element
@@ -456,7 +467,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         }
 
         //get next view relative to inserted
-        var next = me.private.items[event.index + 1].value;
+        var next = me.private.items[ event.index + 1 ].value;
 
         //insert view before next.element
         parent.insertBefore(view.private.el, next.private.el);
@@ -492,7 +503,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         //remove old item
 
         //get old item reference
-        var old = me.private.items[event.index].value;
+        var old = me.private.items[ event.index ].value;
 
         //remove it from position manually
         me.private.el.removeChild(old.private.el);
@@ -553,7 +564,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         }
 
         //get next view relative to inserted
-        var next = me.private.items[event.index + 1].value;
+        var next = me.private.items[ event.index + 1 ].value;
 
         //insert view before next.element
         parent.insertBefore(view.private.el, next.private.el);
@@ -634,7 +645,9 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
     var verifyPositions = function (elements) {
 
         //define variables
-        var i, length = elements.length, element, name, names = [];
+        var i, element, name;
+        var length = elements.length;
+        var names = [];
 
         for (i = 0; i < length; i++) {
             //get element
@@ -717,9 +730,13 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      */
     var isOwnNode = function (node) {
         var me = this;
-        var positions = me.private.positions.private.items, length = positions.length, position;
+        var positions = me.private.positions.private.items;
+        var length = positions.length;
+        var position;
+
         for (var i = 0; i < length; i++) {
-            position = positions[i].value;
+            position = positions[ i ].value;
+
             if (hasParentElement(me.private.el, position.private.el, node)) {
                 return false;
             }

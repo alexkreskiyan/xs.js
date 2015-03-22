@@ -79,7 +79,8 @@ xs.Function = (function () {
             $fn: fn
         });
 
-        var ran = false, memo;
+        var ran = false;
+        var memo;
 
         return function () {
             //return saved result if already ran
@@ -195,6 +196,7 @@ xs.Function = (function () {
         });
 
         getNameRe.lastIndex = 0;
+
         return getNameRe.exec(fn.toString()).pop();
     };
 
@@ -223,6 +225,7 @@ xs.Function = (function () {
         });
 
         getArgumentsRe.lastIndex = 0;
+
         return getArgumentsRe.exec(fn.toString()).pop().split(',').map(function (name) {
 
             return name.trim();
@@ -254,6 +257,7 @@ xs.Function = (function () {
         });
 
         var stringFn = fn.toString();
+
         return stringFn.substring(stringFn.indexOf('{') + 1, stringFn.length - 1);
     };
 
@@ -281,9 +285,10 @@ xs.Function = (function () {
         parseRe.lastIndex = 0;
         var stringFn = fn.toString();
         var data = parseRe.exec(stringFn);
+
         return {
-            name: data[1],
-            args: data[2].split(',').map(function (name) {
+            name: data[ 1 ],
+            args: data[ 2 ].split(',').map(function (name) {
 
                 return name.trim();
             }).filter(function (value) {
@@ -299,7 +304,8 @@ xs.Function = (function () {
      *
      * @method noop
      */
-    me.noop = function () {};
+    me.noop = function () {
+    };
 
     return me;
 })();

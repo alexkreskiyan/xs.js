@@ -91,7 +91,9 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
      * @return {Array} storage values
      */
     Class.static.method.values = function () {
-        var storage = this.storage, size = storage.length, values = [];
+        var storage = this.storage;
+        var size = storage.length;
+        var values = [];
 
         for (var i = 0; i < size; i++) {
             values.push(storage.getItem(storage.key(i)));
@@ -146,7 +148,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
      * @return {String|Number|undefined} found key, or undefined if nothing found
      */
     Class.static.method.keyOf = function (value, flags) {
-        var me = this, index;
+        var me = this;
+        var index;
 
         //assert that value is string
         me.assert.string(value, 'keyOf - given value `$value` is not a string', {
@@ -316,7 +319,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
      * @chainable
      */
     Class.static.method.remove = function (value, flags) {
-        var me = this, values = me.values();
+        var me = this;
+        var values = me.values();
 
         //remove all if no value given
         if (!arguments.length) {
@@ -325,7 +329,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             return me;
         }
 
-        var index, all = false;
+        var index;
+        var all = false;
         //if no flags - remove first occurrence of value
         if (arguments.length === 1) {
             index = values.indexOf(value);
@@ -354,10 +359,13 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         //assert, that item exists
         me.assert.ok(index >= 0, 'remove - given value doesn\'t exist in storage');
 
-        var key, storage = me.storage;
+        var key;
+        var storage = me.storage;
+
         //if all flag is given
         if (all) {
-            var i = 0, item;
+            var i = 0;
+            var item;
 
             //remove all occurrences of value in storage
             while (i < storage.length) {
@@ -405,7 +413,9 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             $finder: finder
         });
 
-        var all = false, reverse = false;
+        var all = false;
+        var reverse = false;
+
         //handle flags
         if (arguments.length > 1) {
 
@@ -424,7 +434,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         }
 
         //init variables
-        var storage = me.storage, i, key, item;
+        var storage = me.storage;
+        var i, key, item;
 
         if (all) {
             i = 0;
@@ -511,6 +522,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
         //handle flags
         var reverse = false;
+
         if (arguments.length >= 2) {
 
             //assert that flags is number
@@ -530,7 +542,10 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         }
 
         //iterate
-        var storage = me.storage, length = storage.length, i, key, item;
+        var storage = me.storage;
+        var length = storage.length;
+        var i, key, item;
+
         if (reverse) {
             for (i = length - 1; i >= 0; i--) {
                 key = storage.key(i);
@@ -569,7 +584,9 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         });
 
         //handle flags
-        var all = false, reverse = false;
+        var all = false;
+        var reverse = false;
+
         if (arguments.length >= 2) {
 
             //assert that flags is number
@@ -592,7 +609,9 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         }
 
         //init variables
-        var storage = me.storage, length = storage.length, i, key, item, found;
+        var storage = me.storage;
+        var length = storage.length;
+        var i, key, item, found;
 
         if (all) {
             //copies of matched items
@@ -601,6 +620,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             for (i = 0; i < length; i++) {
                 key = storage.key(i);
                 item = storage.getItem(key);
+
                 if (finder.call(scope, item, key, me)) {
                     //add index
                     items.push({
@@ -616,6 +636,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             for (i = length - 1; i >= 0; i--) {
                 key = storage.key(i);
                 item = storage.getItem(key);
+
                 if (finder.call(scope, item, key, me)) {
                     found = item;
                     break;
@@ -625,6 +646,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             for (i = 0; i < length; i++) {
                 key = storage.key(i);
                 item = storage.getItem(key);
+
                 if (finder.call(scope, item, key, me)) {
                     found = item;
                     break;
@@ -645,12 +667,15 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     Class.static.method.toSource = function () {
         var me = this;
 
-        var source = {}, storage = me.storage, length = storage.length, key, item;
+        var source = {};
+        var storage = me.storage;
+        var length = storage.length;
+        var key, item;
 
         for (var i = 0; i < length; i++) {
             key = storage.key(i);
             item = storage.getItem(key);
-            source[key] = item;
+            source[ key ] = item;
         }
 
         return source;

@@ -143,7 +143,7 @@ function applyMixins(Class, mixins) {
         mixinClass(Class.descriptor, Mixin.descriptor);
 
         //save mixed into Class.mixins
-        Class.mixins[alias] = Mixin;
+        Class.mixins[ alias ] = Mixin;
     });
 }
 

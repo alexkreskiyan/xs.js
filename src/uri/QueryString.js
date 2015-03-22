@@ -100,26 +100,28 @@ xs.define(xs.Class, 'ns.QueryString', function (self) {
      * @return {Object}
      */
     var fromQueryString = function (string) {
-        var params = {}, rawParams = new xs.core.Collection(string.split('&'));
+        var params = {};
+        var rawParams = new xs.core.Collection(string.split('&'));
 
         rawParams.each(function (param) {
             //split name and value
             var pair = param.split('=');
 
             //try to get name
-            var name = pair[0].match(queryParamNameRe);
+            var name = pair[ 0 ].match(queryParamNameRe);
+
             if (!name) {
 
                 return;
             }
 
-            name = name[0];
+            name = name[ 0 ];
 
             //get value
-            var value = xs.isString(pair[1]) ? pair[1] : '';
+            var value = xs.isString(pair[ 1 ]) ? pair[ 1 ] : '';
 
             //try to get indexes (for nested values)
-            var indexes = pair[0].match(queryParamIndexesRe);
+            var indexes = pair[ 0 ].match(queryParamIndexesRe);
 
             //remove brackets from indexes
             indexes = indexes ? indexes.map(function (index) {
@@ -171,9 +173,9 @@ xs.define(xs.Class, 'ns.QueryString', function (self) {
 
             //JSON.parse is used to process from string to JS natives
             try {
-                params[name] = JSON.parse(value);
+                params[ name ] = JSON.parse(value);
             } catch (e) {
-                params[name] = value;
+                params[ name ] = value;
             }
 
             return;
@@ -183,12 +185,12 @@ xs.define(xs.Class, 'ns.QueryString', function (self) {
         var index = indexes.shift();
 
         //the default optimistic setting of params[name] is array
-        if (!params[name]) {
-            params[name] = [];
+        if (!params[ name ]) {
+            params[ name ] = [];
         }
 
         //shortcut
-        var param = params[name];
+        var param = params[ name ];
 
         if (index) {
             if (xs.isNumeric(index)) {
@@ -200,10 +202,10 @@ xs.define(xs.Class, 'ns.QueryString', function (self) {
 
         //convert array to object if needed
         if (xs.isArray(param) && xs.isString(index)) {
-            params[name] = (new xs.core.Collection(param)).toSource();
+            params[ name ] = (new xs.core.Collection(param)).toSource();
         }
 
-        fromQueryObjects(params[name], index, value, indexes);
+        fromQueryObjects(params[ name ], index, value, indexes);
     };
 
     /**
@@ -225,7 +227,9 @@ xs.define(xs.Class, 'ns.QueryString', function (self) {
         }
 
         //return first free number index for object
-        var index = 0, keys = Object.keys(params);
+        var index = 0;
+        var keys = Object.keys(params);
+
         while (keys.indexOf(index) >= 0) {
             index++;
         }
@@ -247,7 +251,8 @@ xs.define(xs.Class, 'ns.QueryString', function (self) {
      * @return {String} query string
      */
     var toQueryString = function (object, encode) {
-        var paramObjects = [], params = [];
+        var paramObjects = [];
+        var params = [];
 
         //use object as collection
         object = new xs.core.Collection(object);

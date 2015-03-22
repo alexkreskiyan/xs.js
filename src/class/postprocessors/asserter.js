@@ -39,7 +39,7 @@ function getErrorClassName(label) {
 
     var name = '';
     parts.forEach(function (part) {
-        name += part[0].toUpperCase() + part.slice(1);
+        name += part[ 0 ].toUpperCase() + part.slice(1);
     });
 
     return name + 'Error';

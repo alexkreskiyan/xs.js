@@ -17,7 +17,7 @@ xs.define(xs.Class, 'ns.Route', function (self) {
 
     Class.namespace = 'xs.log.route';
 
-    Class.implements = ['ns.IRoute'];
+    Class.implements = [ 'ns.IRoute' ];
 
     /**
      * Route constructor. Achieves rules array as single argument. Rules specify, when this route handles log entry.
@@ -146,30 +146,36 @@ xs.define(xs.Class, 'ns.Route', function (self) {
     var needsProcessing = function (category, level) {
         var me = this;
 
-        //rule needs processing if there are no rules, or at least one rule, that matches category and level
-        return !me.rules.size || me.rules.some(function (rule) {
+        //rule needs processing if there are no rules
+        if (!me.rules.size) {
 
-                //to match, category must start with rule.category (if given) and level must match rule.level (if given)
+            return true;
+        }
 
-                //init as true
-                var match = true;
+        //or at least one rule, that matches category and level
+        return me.rules.some(function (rule) {
 
-                //check level if rule.level given
-                if (rule.hasOwnProperty('level')) {
-                    if (!(level & rule.level)) {
-                        match = false;
-                    }
+            //to match, category must start with rule.category (if given) and level must match rule.level (if given)
+
+            //init as true
+            var match = true;
+
+            //check level if rule.level given
+            if (rule.hasOwnProperty('level')) {
+                if (!(level & rule.level)) {
+                    match = false;
                 }
+            }
 
-                //check category if rule.category given
-                if (rule.hasOwnProperty('category')) {
-                    if (category.indexOf(rule.category) !== 0) {
-                        match = false;
-                    }
+            //check category if rule.category given
+            if (rule.hasOwnProperty('category')) {
+                if (category.indexOf(rule.category) !== 0) {
+                    match = false;
                 }
+            }
 
-                return match;
-            });
+            return match;
+        });
     };
 
 });

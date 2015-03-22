@@ -133,7 +133,7 @@ xs.define(xs.Class, 'ns.Element', function (self) {
 
 
         //get eventConfig
-        var eventConfig = me.self.events[event];
+        var eventConfig = me.self.events[ event ];
         var own = !eventConfig.hasOwnProperty('domType');
 
         //if own event - return
@@ -146,7 +146,7 @@ xs.define(xs.Class, 'ns.Element', function (self) {
         self.log.trace('on - DOM event, processing domHandlers');
 
         //get references
-        var handlers = me.private.eventsHandlers[event];
+        var handlers = me.private.eventsHandlers[ event ];
 
         //return if there is more than one handler - domHandler was already added
         if (handlers.size > 1) {

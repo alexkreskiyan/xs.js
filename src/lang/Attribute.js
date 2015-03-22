@@ -336,6 +336,7 @@ xs.Attribute = (function () {
         if (descriptor.hasOwnProperty('get') && !xs.isFunction(descriptor.get)) {
             delete descriptor.get;
         }
+
         if (descriptor.hasOwnProperty('set') && !xs.isFunction(descriptor.set)) {
             delete descriptor.set;
         }
@@ -350,9 +351,11 @@ xs.Attribute = (function () {
         if (descriptor.hasOwnProperty('writable')) {
             descriptor.writable = Boolean(descriptor.writable);
         }
+
         if (descriptor.hasOwnProperty('configurable')) {
             descriptor.configurable = Boolean(descriptor.configurable);
         }
+
         if (descriptor.hasOwnProperty('enumerable')) {
             descriptor.enumerable = Boolean(descriptor.enumerable);
         }
@@ -472,6 +475,7 @@ xs.Attribute = (function () {
                 if (!descriptor.get) {
                     eval('descriptor.get = function () { \'use strict\'; return this.private.' + name + ';};');
                 }
+
                 if (!descriptor.set) {
                     eval('descriptor.set = function (value) { \'use strict\'; this.private.' + name + ' = value;};');
                 }

@@ -186,7 +186,7 @@ var DependenciesManager = (function () {
 
         //self lock case
         if (deadLock.size === 2) {
-            return 'Contract `' + deadLock[0].contract.label + '` depends on itself';
+            return 'Contract `' + deadLock[ 0 ].contract.label + '` depends on itself';
         }
 
         //chain lock case. get locked contract label

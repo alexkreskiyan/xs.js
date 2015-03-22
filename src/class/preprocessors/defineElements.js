@@ -1,7 +1,5 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.class.preprocessors.defineElements');
-
 /**
  * Preprocessor defineElements
  * Is used to inherit parent elements to class descriptor
@@ -68,7 +66,7 @@ function processProperties(Class) {
 
         //set undefined for assigned properties
         if (descriptor.hasOwnProperty('value')) {
-            prototype[name] = undefined;
+            prototype[ name ] = undefined;
         }
     });
 }

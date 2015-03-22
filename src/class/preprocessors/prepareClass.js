@@ -61,8 +61,8 @@ function processImports(Class, descriptor) {
         }
 
         //get name and alias
-        var alias = Object.keys(imported)[0];
-        var name = imported[alias];
+        var alias = Object.keys(imported)[ 0 ];
+        var name = imported[ alias ];
 
         //verify imported name
         assert.ok(xs.ContractsManager.isName(name), '$Class: given imported name `$name` is not correct', {

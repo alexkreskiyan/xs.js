@@ -20,18 +20,30 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
     Class.namespace = 'xs.data';
 
     Class.imports = [
-        {IAttribute: 'ns.attribute.IAttribute'},
-        {IProxy: 'ns.proxy.IProxy'},
+        {
+            IAttribute: 'ns.attribute.IAttribute'
+        },
+        {
+            IProxy: 'ns.proxy.IProxy'
+        },
         'ns.model.Event',
-        {'operation.Create': 'ns.operation.Create'},
-        {'operation.Read': 'ns.operation.Read'},
-        {'operation.Update': 'ns.operation.Update'},
-        {'operation.Delete': 'ns.operation.Delete'}
+        {
+            'operation.Create': 'ns.operation.Create'
+        },
+        {
+            'operation.Read': 'ns.operation.Read'
+        },
+        {
+            'operation.Update': 'ns.operation.Update'
+        },
+        {
+            'operation.Delete': 'ns.operation.Delete'
+        }
     ];
 
     Class.mixins.observable = 'xs.event.Observable';
 
-    Class.implements = ['ns.IModel'];
+    Class.implements = [ 'ns.IModel' ];
 
     Class.abstract = true;
 
@@ -70,7 +82,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
          *
          * @event load
          */
-        'load': {
+        load: {
             type: 'xs.event.Event'
         },
         /**
@@ -78,7 +90,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
          *
          * @event save
          */
-        'save': {
+        save: {
             type: 'xs.event.Event'
         },
         /**
@@ -100,7 +112,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
          *
          * @event change
          */
-        'change': {
+        change: {
             type: 'xs.data.model.Event'
         },
         /**
@@ -116,6 +128,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
     Class.static.property.primaryAttributes = {
         get: function () {
             var me = this;
+
             if (me.private.hasOwnProperty('primaryAttributes')) {
                 return me.private.primaryAttributes;
             }
@@ -421,8 +434,8 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
             //set attributes
             model.self.private.attributes.each(function (attribute, name) {
-                var attr = me.private[name] = new Attribute(model, attribute, name);
-                attr.private.value = attribute.set(data[name]);
+                var attr = me.private[ name ] = new Attribute(model, attribute, name);
+                attr.private.value = attribute.set(data[ name ]);
             });
         };
 
@@ -446,7 +459,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
         //destroy attributes
         me.private.model.self.private.attributes.each(function (attribute, name) {
-            this[name].destroy();
+            this[ name ].destroy();
         }, 0, me.private);
 
         //remove model reference
@@ -503,7 +516,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
         var descriptor = xs.property.prepare(name, {
             get: function () {
-                return this.private[name];
+                return this.private[ name ];
             },
             set: xs.noop
         });

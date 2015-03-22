@@ -84,7 +84,8 @@ xs.Loader = (function () {
         log.trace('require. Acquired ' + name);
 
         //init loaded classes list
-        var loadList = getLoadList(new xs.core.Collection(xs.isArray(name) ? name : [name]));
+        var loadList = getLoadList(new xs.core.Collection(xs.isArray(name) ? name : [ name ]));
+
         log.trace('require. LoadList formed', {
             loaded: loadList.loaded.toSource(),
             failed: loadList.failed.toSource(),
@@ -774,7 +775,7 @@ xs.Loader = (function () {
         me.add = function (name) {
             var me = this;
 
-            log.trace('' + listName + '::add. Add name `' + name + '`');
+            log.trace(listName + '::add. Add name `' + name + '`');
             //assert that name is not in list
             assert.not(me.has(name), '$list::add - class `$name` is already in $list list', {
                 $list: listName,
@@ -811,7 +812,7 @@ xs.Loader = (function () {
         me.remove = function (name) {
             var me = this;
 
-            log.trace('' + listName + '::remove. Delete name `' + name + '`');
+            log.trace(listName + '::remove. Delete name `' + name + '`');
             //assert that name is in list
             assert.ok(me.has(name), '$list::remove - class `$name` is not in $list list', {
                 $list: listName,

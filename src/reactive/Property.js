@@ -29,7 +29,7 @@ var Property = xs.reactive.Property = function (generator, value, sources) {
         ].concat(Array.prototype.slice.call(arguments, 1)));
     };
 
-    Reactive.apply(me, [propertyGenerator].concat(Array.prototype.slice.call(arguments, 2)));
+    Reactive.apply(me, [ propertyGenerator ].concat(Array.prototype.slice.call(arguments, 2)));
 
     //set initial property value
     me.private.value = value;
@@ -77,7 +77,7 @@ Property.fromPromise = function (promise) {
     }, {
         state: xs.core.Promise.Pending,
         progress: undefined
-    }, [promise]);
+    }, [ promise ]);
 };
 
 /**

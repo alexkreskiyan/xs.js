@@ -238,12 +238,14 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
 
             //assign values
             var properties = descriptor.property.private.items; //xs.core.Collection
-            var i, length = properties.length, item;
+            var i, item;
+            var length = properties.length;
 
             for (i = 0; i < length; i++) {
-                item = properties[i];
+                item = properties[ i ];
+
                 if (item.value.hasOwnProperty('value')) {
-                    me[item.key] = item.value.value;
+                    me[ item.key ] = item.value.value;
                 }
             }
 
@@ -296,6 +298,7 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
      */
     var getArgumentsList = function (count) {
         var list = [];
+
         for (var i = 0; i < count; i++) {
             list.push('arguments[' + i + ']');
         }

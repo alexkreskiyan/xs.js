@@ -18,15 +18,27 @@ xs.define(xs.Class, 'ns.proxy.Proxy', function (self, imports) {
     Class.namespace = 'xs.data';
 
     Class.imports = [
-        {'operation.Create': 'ns.operation.Create'},
-        {'operation.Read': 'ns.operation.Read'},
-        {'operation.Update': 'ns.operation.Update'},
-        {'operation.Delete': 'ns.operation.Delete'},
-        {IReader: 'ns.reader.IReader'},
-        {IWriter: 'ns.writer.IWriter'}
+        {
+            'operation.Create': 'ns.operation.Create'
+        },
+        {
+            'operation.Read': 'ns.operation.Read'
+        },
+        {
+            'operation.Update': 'ns.operation.Update'
+        },
+        {
+            'operation.Delete': 'ns.operation.Delete'
+        },
+        {
+            IReader: 'ns.reader.IReader'
+        },
+        {
+            IWriter: 'ns.writer.IWriter'
+        }
     ];
 
-    Class.implements = ['ns.proxy.IProxy'];
+    Class.implements = [ 'ns.proxy.IProxy' ];
 
     Class.abstract = true;
 

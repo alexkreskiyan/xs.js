@@ -50,7 +50,7 @@ xs.String = (function () {
         });
 
         Object.keys(replaces).forEach(function (from) {
-            var to = replaces[from];
+            var to = replaces[ from ];
             string = string.split(from).join(to);
         });
 
@@ -77,5 +77,5 @@ XsLangStringError.prototype = new Error();
 
 //extend xs with string
 Object.keys(xs.String).forEach(function (key) {
-    xs[key] = xs.String[key];
+    xs[ key ] = xs.String[ key ];
 });

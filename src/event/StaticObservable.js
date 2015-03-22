@@ -18,10 +18,12 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
     Class.namespace = 'xs.event';
 
     Class.imports = [
-        {IEvent: 'ns.IEvent'}
+        {
+            IEvent: 'ns.IEvent'
+        }
     ];
 
-    Class.implements = ['ns.IStaticObservable'];
+    Class.implements = [ 'ns.IStaticObservable' ];
 
     /**
      * Observable is abstract class - can be only mixed
@@ -127,7 +129,7 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
         });
 
         //assert that given event options are object
-        var options = me.events[event];
+        var options = me.events[ event ];
         self.assert.object(options, 'fire - given event `$event` options `$options` are not an object', {
             $event: event,
             $options: options
@@ -169,6 +171,7 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
 
         //handle stoppable option
         var stoppable;
+
         if (options.hasOwnProperty('stoppable')) {
             stoppable = options.stoppable;
 
@@ -192,7 +195,7 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
         }
 
         //get handlers list for event
-        var handlers = me.private.eventsHandlers[event];
+        var handlers = me.private.eventsHandlers[ event ];
 
         //if no handlers exist in a moment - return true
         if (!handlers) {
@@ -282,7 +285,7 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
         var eventsHandlers = me.private.eventsHandlers;
 
         //assert that given handler was not assigned yet
-        self.assert.ok(!eventsHandlers.hasOwnProperty(event) || !eventsHandlers[event].find(function (item) {
+        self.assert.ok(!eventsHandlers.hasOwnProperty(event) || !eventsHandlers[ event ].find(function (item) {
             return item.handler === handler;
         }), 'on - given event `$event` handler `$handler` is already assigned', {
             $event: event,
@@ -297,10 +300,10 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
 
         //add handlers collection for event if not existing yet
         if (!eventsHandlers.hasOwnProperty(event)) {
-            eventsHandlers[event] = new xs.core.Collection();
+            eventsHandlers[ event ] = new xs.core.Collection();
         }
 
-        var handlers = eventsHandlers[event];
+        var handlers = eventsHandlers[ event ];
 
         //if no options given - simply add
         if (!options) {
@@ -310,16 +313,16 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
                 handler: handler,
                 realHandler: function (event) {
                     //item is eventsHandler[event] collection item
-                    var item = this;
+                    var me = this;
 
                     //nothing done if item is suspended
-                    if (item.suspended) {
+                    if (me.suspended) {
 
                         return;
                     }
 
                     //call raw handler
-                    return item.handler(event);
+                    return me.handler(event);
                 },
                 suspended: false,
                 scope: undefined
@@ -336,6 +339,7 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
 
         //check buffer
         var buffer;
+
         if (options.hasOwnProperty('buffer')) {
             buffer = options.buffer;
 
@@ -356,6 +360,7 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
 
         //check calls
         var calls;
+
         if (options.hasOwnProperty('calls')) {
             calls = options.calls;
 
@@ -378,23 +383,25 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
         var realHandler; //real handler called when event is fired
         //create reference to event name
         var eventName = event;
+
         if (buffer) {
             if (calls) {
                 realHandler = function (event) {
                     //item is eventsHandler[event] collection item
-                    var item = this;
+
+                    var me = this;
 
                     //nothing done if item is suspended
-                    if (item.suspended) {
+                    if (me.suspended) {
 
                         return;
                     }
 
-                    if (item.timeout) {
-                        clearTimeout(item.timeout);
+                    if (me.timeout) {
+                        clearTimeout(me.timeout);
                     }
 
-                    item.timeout = setTimeout(function (item, event) {
+                    me.timeout = setTimeout(function (item, event) {
                         //decrease item.calls
                         item.calls--;
 
@@ -410,34 +417,36 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
 
                         //call raw handler
                         handler.call(item.scope, event);
-                    }, buffer, item, event);
+                    }, buffer, me, event);
                 };
             } else {
                 realHandler = function (event) {
                     //item is eventsHandler[event] collection item
-                    var item = this;
+
+                    var me = this;
 
                     //nothing done if item is suspended
-                    if (item.suspended) {
+                    if (me.suspended) {
 
                         return;
                     }
 
-                    if (item.timeout) {
-                        clearTimeout(item.timeout);
+                    if (me.timeout) {
+                        clearTimeout(me.timeout);
                     }
-                    item.timeout = setTimeout(function (item, event) {
+                    me.timeout = setTimeout(function (item, event) {
 
                         //call raw handler
                         item.handler.call(item.scope, event);
-                    }, buffer, item, event);
+                    }, buffer, me, event);
                 };
             }
         } else {
             if (calls) {
                 realHandler = function (event) {
                     //item is eventsHandler[event] collection item
-                    var item = this;
+
+                    var me = this;
 
                     //nothing done if item is suspended
                     if (item.suspended) {
@@ -464,16 +473,17 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
             } else {
                 realHandler = function (event) {
                     //item is eventsHandler[event] collection item
-                    var item = this;
+
+                    var me = this;
 
                     //nothing done if item is suspended
-                    if (item.suspended) {
+                    if (me.suspended) {
 
                         return;
                     }
 
                     //call raw handler
-                    return item.handler.call(item.scope, event);
+                    return me.handler.call(me.scope, event);
                 };
             }
         }
@@ -488,6 +498,7 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
 
         //process priority (if given)
         var priority;
+
         if (options.hasOwnProperty('priority')) {
             priority = options.priority;
 
@@ -579,17 +590,17 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
             self.log.trace('off - truncate scenario: removing all listeners on all events');
 
             Object.keys(eventsHandlers).forEach(function (event) {
-                eventsHandlers[event].remove();
+                eventsHandlers[ event ].remove();
 
                 //remove empty collection
-                delete eventsHandlers[event];
+                delete eventsHandlers[ event ];
             });
 
             return me;
         }
 
         //working with single event
-        var handlers = eventsHandlers[event];
+        var handlers = eventsHandlers[ event ];
 
         //if no handlers exist in a moment - return
         if (!handlers) {
@@ -604,7 +615,7 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
             handlers.remove();
 
             //remove empty collection
-            delete eventsHandlers[event];
+            delete eventsHandlers[ event ];
 
             return me;
         }
@@ -627,7 +638,7 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
         if (!handlers.size) {
 
             //remove empty collection
-            delete eventsHandlers[event];
+            delete eventsHandlers[ event ];
         }
 
         return me;
@@ -708,19 +719,19 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
                 self.log.trace('suspend - selector suspending scenario: suspending all listeners on ' + event + ', that match selector', {
                     selector: selector
                 });
-                handlers = eventsHandlers[event].find(selector);
+                handlers = eventsHandlers[ event ].find(selector);
             } else {
                 self.log.trace('suspend - selector suspending scenario: suspending all listeners on ' + event + ', that match selector with flags', {
                     selector: selector,
                     flags: flags
                 });
-                handlers = eventsHandlers[event].find(selector, flags);
+                handlers = eventsHandlers[ event ].find(selector, flags);
             }
 
             //all handlers suspended
         } else {
             self.log.trace('suspend - event truncate scenario: removing all listeners on ' + event + ' event');
-            handlers = eventsHandlers[event];
+            handlers = eventsHandlers[ event ];
         }
 
         //if handlers collection found
@@ -813,19 +824,19 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
                 self.log.trace('resume - selector suspending scenario: suspending all listeners on ' + event + ', that match selector', {
                     selector: selector
                 });
-                handlers = eventsHandlers[event].find(selector);
+                handlers = eventsHandlers[ event ].find(selector);
             } else {
                 self.log.trace('resume - selector suspending scenario: suspending all listeners on ' + event + ', that match selector with flags', {
                     selector: selector,
                     flags: flags
                 });
-                handlers = eventsHandlers[event].find(selector, flags);
+                handlers = eventsHandlers[ event ].find(selector, flags);
             }
 
             //all handlers resumed
         } else {
             self.log.trace('resume - event truncate scenario: removing all listeners on ' + event + ' event');
-            handlers = eventsHandlers[event];
+            handlers = eventsHandlers[ event ];
         }
 
         //if handlers collection found

@@ -56,11 +56,11 @@ xs.define(xs.Class, 'ns.URI', function (self) {
         });
 
         me.private.raw = {
-            scheme: data[1],
-            namespace: data[2],
-            path: data[3],
-            query: data[4],
-            hash: data[5]
+            scheme: data[ 1 ],
+            namespace: data[ 2 ],
+            path: data[ 3 ],
+            query: data[ 4 ],
+            hash: data[ 5 ]
         };
     };
 

@@ -55,7 +55,7 @@ xs.define(xs.Interface, 'ns.IObservable', function () {
      *
      * @type {Object}
      */
-    Class.constant = ['events'];
+    Class.constant = [ 'events' ];
 
     /**
      * Events firing method.

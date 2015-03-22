@@ -17,7 +17,7 @@ xs.define(xs.Class, 'ns.Reader', function () {
 
     Class.namespace = 'xs.data.reader';
 
-    Class.implements = ['ns.IReader'];
+    Class.implements = [ 'ns.IReader' ];
 
     Class.abstract = true;
 

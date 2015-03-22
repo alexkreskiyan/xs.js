@@ -54,7 +54,7 @@ Stream.fromPromise = function (promise) {
                 progress: progress
             });
         }).always(end);
-    }, [promise]);
+    }, [ promise ]);
 };
 
 /**

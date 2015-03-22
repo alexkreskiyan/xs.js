@@ -54,7 +54,7 @@ var Collection = xs.core.Collection = function (values) {
             //add item
             me.private.items.push({
                 key: i,
-                value: values[i]
+                value: values[ i ]
             });
         }
 
@@ -64,15 +64,16 @@ var Collection = xs.core.Collection = function (values) {
 
     //handle hash source
     //get keys and valuesLength
-    var keys = Object.keys(values), key;
+    var keys = Object.keys(values);
+    var key;
     valuesLength = keys.length;
 
     for (i = 0; i < valuesLength; i++) {
-        key = keys[i];
+        key = keys[ i ];
         //add item
         me.private.items.push({
             key: key,
-            value: values[key]
+            value: values[ key ]
         });
     }
 };
@@ -147,10 +148,11 @@ Object.defineProperty(Collection.prototype, 'size', {
 Collection.prototype.keys = function () {
     var me = this;
 
-    var keys = [], length = me.private.items.length;
+    var keys = [];
+    var length = me.private.items.length;
 
     for (var i = 0; i < length; i++) {
-        keys.push(me.private.items[i].key);
+        keys.push(me.private.items[ i ].key);
     }
 
     return keys;
@@ -184,10 +186,11 @@ Collection.prototype.keys = function () {
 Collection.prototype.values = function () {
     var me = this;
 
-    var values = [], length = me.private.items.length;
+    var values = [];
+    var length = me.private.items.length;
 
     for (var i = 0; i < length; i++) {
-        values.push(me.private.items[i].value);
+        values.push(me.private.items[ i ].value);
     }
 
     return values;
@@ -220,10 +223,12 @@ Collection.prototype.values = function () {
  */
 Collection.prototype.clone = function () {
     var me = this;
-    var source = [], length = me.private.items.length, item;
+    var source = [];
+    var length = me.private.items.length;
+    var item;
 
     for (var i = 0; i < length; i++) {
-        item = me.private.items[i];
+        item = me.private.items[ i ];
         source.push({
             key: item.key,
             value: item.value
@@ -282,7 +287,7 @@ Collection.prototype.hasKey = function (key) {
     if (xs.isNumber(key)) {
 
         //check, that key exists
-        return 0 <= key && key < me.private.items.length;
+        return key >= 0 && key < me.private.items.length;
     }
 
     //if it is string - it's key
@@ -373,7 +378,9 @@ Collection.prototype.has = function (value) {
  * @return {String|Number|undefined} found key, or undefined if nothing found
  */
 Collection.prototype.keyOf = function (value, flags) {
-    var me = this, index, values = me.values();
+    var me = this;
+    var index;
+    var values = me.values();
 
     if (arguments.length === 1) {
         index = values.indexOf(value);
@@ -390,7 +397,7 @@ Collection.prototype.keyOf = function (value, flags) {
         }
     }
 
-    return index >= 0 ? me.private.items[index].key : undefined;
+    return index >= 0 ? me.private.items[ index ].key : undefined;
 };
 
 /**
@@ -473,7 +480,7 @@ Collection.prototype.at = function (key) {
         });
     }
 
-    return me.private.items[index].value;
+    return me.private.items[ index ].value;
 };
 
 /**
@@ -537,7 +544,7 @@ Collection.prototype.first = function () {
     //assert that collection is not empty
     assert.ok(me.private.items.length, 'first - collection is empty');
 
-    return me.private.items[0].value;
+    return me.private.items[ 0 ].value;
 };
 
 /**
@@ -601,7 +608,7 @@ Collection.prototype.last = function () {
     //assert that collection is not empty
     assert.ok(me.private.items.length, 'last - collection is empty');
 
-    return me.private.items[me.private.items.length - 1].value;
+    return me.private.items[ me.private.items.length - 1 ].value;
 };
 
 /**
@@ -828,6 +835,7 @@ Collection.prototype.set = function (key, value) {
 
     //handle number key - it's index
     var index;
+
     if (xs.isNumber(key)) {
         index = key;
 
@@ -860,7 +868,7 @@ Collection.prototype.set = function (key, value) {
     }
 
 
-    me.private.items[index].value = value;
+    me.private.items[ index ].value = value;
 
     return me;
 };
@@ -1063,7 +1071,8 @@ Collection.prototype.removeAt = function (key) {
  * @chainable
  */
 Collection.prototype.remove = function (value, flags) {
-    var me = this, values = me.values();
+    var me = this;
+    var values = me.values();
 
     //remove all if no value given
     if (!arguments.length) {
@@ -1072,7 +1081,8 @@ Collection.prototype.remove = function (value, flags) {
         return me;
     }
 
-    var index, all = false;
+    var index;
+    var all = false;
     //if no flags - remove first occurrence of value
     if (arguments.length === 1) {
         index = values.indexOf(value);
@@ -1104,11 +1114,12 @@ Collection.prototype.remove = function (value, flags) {
     var item;
     //if all flag is given
     if (all) {
-        var i = 0, items = me.private.items;
+        var i = 0;
+        var items = me.private.items;
 
         //remove all occurrences of value in collection
         while (i < items.length) {
-            item = items[i];
+            item = items[ i ];
 
             //if item.value is not equal to value - continue with next item
             if (item.value !== value) {
@@ -1260,7 +1271,8 @@ Collection.prototype.removeBy = function (finder, flags) {
         $finder: finder
     });
 
-    var all = false, reverse = false;
+    var all = false;
+    var reverse = false;
     //handle flags
     if (arguments.length > 1) {
 
@@ -1279,13 +1291,15 @@ Collection.prototype.removeBy = function (finder, flags) {
     }
 
     //init variables
-    var items = me.private.items, i, item, length = items.length;
+    var items = me.private.items;
+    var i, item;
+    var length = items.length;
 
     if (all) {
         i = 0;
         //remove all matched occurrences from collection
         while (i < items.length) {
-            item = items[i];
+            item = items[ i ];
 
             //if item does not match - continue with next item
             if (!finder(item.value, item.key)) {
@@ -1302,7 +1316,7 @@ Collection.prototype.removeBy = function (finder, flags) {
         i = items.length - 1;
         //remove all matched occurrences from collection
         while (i >= 0) {
-            item = items[i];
+            item = items[ i ];
 
             //if item does not match - continue with next item
             if (!finder(item.value, item.key)) {
@@ -1321,7 +1335,7 @@ Collection.prototype.removeBy = function (finder, flags) {
         i = 0;
         //remove first matched occurrence from collection
         while (i < items.length) {
-            item = items[i];
+            item = items[ i ];
 
             //if item does not match - continue with next item
             if (!finder(item.value, item.key)) {
@@ -1441,7 +1455,7 @@ Collection.prototype.shift = function () {
 
 
     //get returned value
-    var value = me.private.items[0].value;
+    var value = me.private.items[ 0 ].value;
 
     //remove first item from collection
     me.private.items.splice(0, 1);
@@ -1549,7 +1563,7 @@ Collection.prototype.pop = function () {
     var index = me.private.items.length - 1;
 
     //get returned value
-    var value = me.private.items[index].value;
+    var value = me.private.items[ index ].value;
 
     //remove last item from collection
     me.private.items.splice(-1, 1);
@@ -1628,6 +1642,7 @@ Collection.prototype.each = function (iterator, flags, scope) {
 
     //handle flags
     var reverse = false;
+
     if (arguments.length >= 2) {
 
         //assert that flags is number
@@ -1647,15 +1662,17 @@ Collection.prototype.each = function (iterator, flags, scope) {
     }
 
     //iterate
-    var i, item, length = me.private.items.length;
+    var i, item;
+    var length = me.private.items.length;
+
     if (reverse) {
         for (i = length - 1; i >= 0; i--) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
             iterator.call(scope, item.value, item.key, me);
         }
     } else {
         for (i = 0; i < length; i++) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
             iterator.call(scope, item.value, item.key, me);
         }
     }
@@ -1746,7 +1763,9 @@ Collection.prototype.find = function (finder, flags, scope) {
     });
 
     //handle flags
-    var all = false, reverse = false;
+    var all = false;
+    var reverse = false;
+
     if (arguments.length >= 2) {
 
         //assert that flags is number
@@ -1769,14 +1788,16 @@ Collection.prototype.find = function (finder, flags, scope) {
     }
 
     //init variables
-    var i, item, length = me.private.items.length, found;
+    var i, item, found;
+    var length = me.private.items.length;
 
     if (all) {
         //copies of matched items
         var items = [];
 
         for (i = 0; i < length; i++) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
+
             if (finder.call(scope, item.value, item.key, me)) {
                 //add index
                 items.push({
@@ -1790,7 +1811,8 @@ Collection.prototype.find = function (finder, flags, scope) {
         found.private.items = items;
     } else if (reverse) {
         for (i = length - 1; i >= 0; i--) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
+
             if (finder.call(scope, item.value, item.key, me)) {
                 found = item.value;
                 break;
@@ -1798,7 +1820,8 @@ Collection.prototype.find = function (finder, flags, scope) {
         }
     } else {
         for (i = 0; i < length; i++) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
+
             if (finder.call(scope, item.value, item.key, me)) {
                 found = item.value;
                 break;
@@ -1868,12 +1891,14 @@ Collection.prototype.map = function (mapper, scope) {
     }
 
     //init variables
-    var i, item, length = me.private.items.length;
+    var i, item;
+    var length = me.private.items.length;
 
     //mapped items
     var items = [];
+
     for (i = 0; i < length; i++) {
-        item = me.private.items[i];
+        item = me.private.items[ i ];
         items.push({
             key: item.key,
             value: mapper.call(scope, item.value, item.key, me)
@@ -1982,6 +2007,7 @@ Collection.prototype.reduce = function (reducer, flags, scope, memo) {
 
     //handle flags
     var reverse = false;
+
     if (arguments.length >= 2) {
 
         //assert that flags is number
@@ -2002,12 +2028,14 @@ Collection.prototype.reduce = function (reducer, flags, scope, memo) {
 
     //check memo
     var hasMemo = false;
+
     if (arguments.length >= 4) {
         hasMemo = true;
     }
 
     //init variables
-    var result, i, item, length = me.private.items.length;
+    var result, i, item;
+    var length = me.private.items.length;
 
     //reduce
     if (reverse) {
@@ -2016,11 +2044,11 @@ Collection.prototype.reduce = function (reducer, flags, scope, memo) {
             result = memo;
         } else {
             i = length - 2;
-            result = me.private.items[length - 1].value;
+            result = me.private.items[ length - 1 ].value;
         }
 
         for (; i >= 0; i--) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
             result = reducer.call(scope, result, item.value, item.key, me);
         }
     } else {
@@ -2029,11 +2057,11 @@ Collection.prototype.reduce = function (reducer, flags, scope, memo) {
             result = memo;
         } else {
             i = 1;
-            result = me.private.items[0].value;
+            result = me.private.items[ 0 ].value;
         }
 
         for (; i < length; i++) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
             result = reducer.call(scope, result, item.value, item.key, me);
         }
     }
@@ -2106,7 +2134,8 @@ Collection.prototype.reduce = function (reducer, flags, scope, memo) {
  * @return {Boolean} whether some values pass tester function
  */
 Collection.prototype.some = function (tester, count, scope) {
-    var me = this, length = me.private.items.length;
+    var me = this;
+    var length = me.private.items.length;
 
     //assert that collection is not empty
     assert.ok(me.private.items.length, 'some - collection is empty');
@@ -2126,7 +2155,7 @@ Collection.prototype.some = function (tester, count, scope) {
         $count: count
     });
 
-    assert.ok(0 <= count && count <= length, 'some - given count `$count` is out of bounds [$min, $max]', {
+    assert.ok(count >= 0 && count <= length, 'some - given count `$count` is out of bounds [$min, $max]', {
         $count: count,
         $min: 0,
         $max: length
@@ -2137,13 +2166,14 @@ Collection.prototype.some = function (tester, count, scope) {
         scope = me;
     }
 
-    var i, item, found = 0;
+    var i, item;
+    var found = 0;
 
     //handle negative scenario
     if (count === 0) {
         //iterate over me.private.items to find matches
         for (i = 0; i < length; i++) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
 
             //increment found if tester returns true
             if (tester.call(scope, item.value, item.key, me)) {
@@ -2163,7 +2193,7 @@ Collection.prototype.some = function (tester, count, scope) {
     //handle positive scenario
     //iterate over me.private.items to find matches
     for (i = 0; i < length; i++) {
-        item = me.private.items[i];
+        item = me.private.items[ i ];
 
         //increment found if tester returns true
         if (tester.call(scope, item.value, item.key, me)) {
@@ -2378,10 +2408,14 @@ Collection.prototype.none = function (tester, scope) {
  * @chainable
  */
 Collection.prototype.unique = function () {
-    var me = this, values = [], i = 0, item, length = me.private.items.length;
+    var me = this;
+    var values = [];
+    var i = 0;
+    var item;
+    var length = me.private.items.length;
 
     while (i < length) {
-        item = me.private.items[i];
+        item = me.private.items[ i ];
 
         //continue to next if no match
         if (values.indexOf(item.value) < 0) {
@@ -2471,9 +2505,13 @@ Collection.prototype.pick = function (keys) {
     });
 
 
-    var length = keys.length, key, i, ownKeys = me.keys(), index, item, items = [];
+    var length = keys.length;
+    var key, i, index, item;
+    var ownKeys = me.keys();
+    var items = [];
+
     for (i = 0; i < length; i++) {
-        key = keys[i];
+        key = keys[ i ];
 
         //assert that key is string or number
         assert.ok(xs.isString(key) || xs.isNumber(key), 'pick - key `$key`, given for collection, is neither number nor string', {
@@ -2514,7 +2552,7 @@ Collection.prototype.pick = function (keys) {
         }
 
         //get picked item
-        item = me.private.items[index];
+        item = me.private.items[ index ];
 
         //copy it to items
         items.push({
@@ -2591,12 +2629,17 @@ Collection.prototype.omit = function (keys) {
     });
 
 
-    var length = keys.length, key, i, ownKeys = me.keys(), maxIndex = ownKeys.length - 1, index, item, items = [];
+    var length = keys.length;
+    var key, i, index, item;
+    var ownKeys = me.keys();
+    var maxIndex = ownKeys.length - 1;
+    var items = [];
 
     var omittedIndexes = [];
+
     //remove blacklisted items
     for (i = 0; i < length; i++) {
-        key = keys[i];
+        key = keys[ i ];
 
         //assert that key is string or number
         assert.ok(xs.isString(key) || xs.isNumber(key), 'omit - key `$key`, given for collection, is neither number nor string', {
@@ -2646,7 +2689,7 @@ Collection.prototype.omit = function (keys) {
             continue;
         }
 
-        item = me.private.items[i];
+        item = me.private.items[ i ];
         items.push({
             key: item.key,
             value: item.value
@@ -2691,11 +2734,13 @@ Collection.prototype.omit = function (keys) {
 Collection.prototype.toSource = function () {
     var me = this;
 
-    var source = {}, length = me.private.items.length, item;
+    var source = {};
+    var length = me.private.items.length;
+    var item;
 
     for (var i = 0; i < length; i++) {
-        item = me.private.items[i];
-        source[item.key] = item.value;
+        item = me.private.items[ i ];
+        source[ item.key ] = item.value;
     }
 
     return source;
@@ -2712,11 +2757,12 @@ Collection.prototype.toSource = function () {
  * @param {Number} index index, update starts from
  */
 function updateIndexes(index) {
-    var me = this, length = me.private.items.length;
+    var me = this;
+    var length = me.private.items.length;
 
     //updated indexes for all items, starting from given index
     for (var i = index; i < length; i++) {
-        var item = me.private.items[i];
+        var item = me.private.items[ i ];
 
         //update if is number
         if (xs.isNumber(item.key)) {
