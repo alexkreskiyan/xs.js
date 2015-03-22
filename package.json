@@ -15,6 +15,7 @@
         "gulp-watch": "latest",
         "gulp-wrap": "latest",
         "gulp.spritesmith": "latest",
+        "jsdoc": "latest",
         "qunitjs": "latest",
         "socket.io": "latest"
     },
