@@ -513,4 +513,123 @@ module('xs.reactive.Property', function () {
         me.property.destroy();
     });
 
+    test('fromPromise', function () {
+        var me = this;
+
+        var promise;
+
+        //resolved promise
+        promise = new xs.core.Promise();
+        var resolved = xs.reactive.Property.fromPromise(promise);
+
+        var logResolved = [];
+        var valueResolved = [];
+        resolved.on(function (value) {
+            logResolved.push(value);
+            valueResolved.push(resolved.value);
+        });
+        resolved.on(function () {
+            strictEqual(JSON.stringify(logResolved), JSON.stringify([
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 35
+                },
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 70
+                },
+                {
+                    state: xs.core.Promise.Resolved,
+                    data: 100
+                }
+            ]));
+            strictEqual(JSON.stringify(valueResolved), JSON.stringify([
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: undefined
+                },
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 35
+                },
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 70
+                }
+            ]));
+        }, {
+            target: xs.reactive.Destroy
+        });
+
+        //check initial state
+        strictEqual(JSON.stringify(resolved.value), '{"state":' + xs.core.Promise.Pending + '}');
+
+        //update one
+        promise.update(35);
+
+        //update two
+        promise.update(70);
+
+        //resolve
+        promise.resolve(100);
+
+        //rejected promise
+        promise = new xs.core.Promise();
+        var rejected = xs.reactive.Property.fromPromise(promise);
+
+        var logRejected = [];
+        var valueRejected = [];
+        rejected.on(function (value) {
+            logRejected.push(value);
+            valueRejected.push(rejected.value);
+        });
+        rejected.on(function () {
+            strictEqual(JSON.stringify(logRejected), JSON.stringify([
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 35
+                },
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 70
+                },
+                {
+                    state: xs.core.Promise.Rejected,
+                    error: 'fail'
+                }
+            ]));
+            strictEqual(JSON.stringify(valueRejected), JSON.stringify([
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: undefined
+                },
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 35
+                },
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 70
+                }
+            ]));
+            me.done();
+        }, {
+            target: xs.reactive.Destroy
+        });
+
+        //check initial state
+        strictEqual(JSON.stringify(rejected.value), '{"state":' + xs.core.Promise.Pending + '}');
+
+        //update one
+        promise.update(35);
+
+        //update two
+        promise.update(70);
+
+        //reject
+        promise.reject('fail');
+
+        return false;
+    });
+
 });

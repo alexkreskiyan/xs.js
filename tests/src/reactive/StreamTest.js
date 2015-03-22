@@ -502,4 +502,85 @@ module('xs.reactive.Stream', function () {
         me.stream.destroy();
     });
 
+    test('fromPromise', function () {
+        var me = this;
+
+        var promise;
+
+        //resolved promise
+        promise = new xs.core.Promise();
+        var resolved = xs.reactive.Stream.fromPromise(promise);
+
+        var logResolved = [];
+        resolved.on(function (value) {
+            logResolved.push(value);
+        });
+        resolved.on(function () {
+            strictEqual(JSON.stringify(logResolved), JSON.stringify([
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 35
+                },
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 70
+                },
+                {
+                    state: xs.core.Promise.Resolved,
+                    data: 100
+                }
+            ]));
+        }, {
+            target: xs.reactive.Destroy
+        });
+
+        //update one
+        promise.update(35);
+
+        //update two
+        promise.update(70);
+
+        //resolve
+        promise.resolve(100);
+
+        //rejected promise
+        promise = new xs.core.Promise();
+        var rejected = xs.reactive.Stream.fromPromise(promise);
+
+        var logRejected = [];
+        rejected.on(function (value) {
+            logRejected.push(value);
+        });
+        rejected.on(function () {
+            strictEqual(JSON.stringify(logRejected), JSON.stringify([
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 35
+                },
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 70
+                },
+                {
+                    state: xs.core.Promise.Rejected,
+                    error: 'fail'
+                }
+            ]));
+            me.done();
+        }, {
+            target: xs.reactive.Destroy
+        });
+
+        //update one
+        promise.update(35);
+
+        //update two
+        promise.update(70);
+
+        //reject
+        promise.reject('fail');
+
+        return false;
+    });
+
 });
