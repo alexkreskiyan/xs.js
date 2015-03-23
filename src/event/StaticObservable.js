@@ -387,21 +387,17 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
         if (buffer) {
             if (calls) {
                 realHandler = function (event) {
-                    //item is eventsHandler[event] collection item
-
-                    var me = this;
-
                     //nothing done if item is suspended
-                    if (me.suspended) {
+                    if (this.suspended) {
 
                         return;
                     }
 
-                    if (me.timeout) {
-                        clearTimeout(me.timeout);
+                    if (this.timeout) {
+                        clearTimeout(this.timeout);
                     }
 
-                    me.timeout = setTimeout(function (item, event) {
+                    this.timeout = setTimeout(function (item, event) {
                         //decrease item.calls
                         item.calls--;
 
@@ -417,50 +413,42 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
 
                         //call raw handler
                         handler.call(item.scope, event);
-                    }, buffer, me, event);
+                    }, buffer, this, event);
                 };
             } else {
                 realHandler = function (event) {
-                    //item is eventsHandler[event] collection item
-
-                    var me = this;
-
                     //nothing done if item is suspended
-                    if (me.suspended) {
+                    if (this.suspended) {
 
                         return;
                     }
 
-                    if (me.timeout) {
-                        clearTimeout(me.timeout);
+                    if (this.timeout) {
+                        clearTimeout(this.timeout);
                     }
-                    me.timeout = setTimeout(function (item, event) {
+                    this.timeout = setTimeout(function (item, event) {
 
                         //call raw handler
                         item.handler.call(item.scope, event);
-                    }, buffer, me, event);
+                    }, buffer, this, event);
                 };
             }
         } else {
             if (calls) {
                 realHandler = function (event) {
-                    //item is eventsHandler[event] collection item
-
-                    var me = this;
-
                     //nothing done if item is suspended
-                    if (item.suspended) {
+                    if (this.suspended) {
 
                         return;
                     }
 
                     //decrease item.calls
-                    item.calls--;
+                    this.calls--;
 
-                    var handler = item.handler;
+                    var handler = this.handler;
 
                     //disable handler if calls is 0
-                    if (!item.calls) {
+                    if (!this.calls) {
                         //turn off event by all name, handler and scope
                         me.off(eventName, function (item) {
                             return item.handler === handler;
@@ -468,22 +456,18 @@ xs.define(xs.Class, 'ns.StaticObservable', function (self, imports) {
                     }
 
                     //call raw handler
-                    return item.handler.call(item.scope, event);
+                    return this.handler.call(this.scope, event);
                 };
             } else {
                 realHandler = function (event) {
-                    //item is eventsHandler[event] collection item
-
-                    var me = this;
-
                     //nothing done if item is suspended
-                    if (me.suspended) {
+                    if (this.suspended) {
 
                         return;
                     }
 
                     //call raw handler
-                    return me.handler.call(me.scope, event);
+                    return this.handler.call(this.scope, event);
                 };
             }
         }
