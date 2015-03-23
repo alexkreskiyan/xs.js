@@ -160,10 +160,6 @@ xs.extend = function (child, parent) {
  * @inheritdoc xs.lang.Attribute#constant
  */
 /**
- * @method bind
- * @inheritdoc xs.lang.Function#bind
- */
-/**
  * @method memorize
  * @inheritdoc xs.lang.Function#memorize
  */

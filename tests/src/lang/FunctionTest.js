@@ -12,30 +12,6 @@ module('xs.lang.Function', function () {
 
     'use strict';
 
-    test('bind', function () {
-        throws(function () {
-            xs.bind([]);
-        });
-
-        throws(function () {
-            xs.bind(xs.noop, null, null);
-        });
-
-        //init test function
-        var fn = function (a, b, c) {
-            return this.x + (a - b) * c;
-        };
-
-        //get bind
-        var binded = xs.bind(fn, {x: 5}, [
-            2,
-            3
-        ]);
-
-        //check bind
-        strictEqual(binded(4), 5 + (2 - 3) * 4);
-    });
-
     test('memorize', function () {
         throws(function () {
             xs.memorize([]);

@@ -18,40 +18,7 @@ var assert = new xs.core.Asserter(log, XsLangFunctionError);
 xs.Function = (function () {
     var me = {};
 
-    var bindFunction = Function.prototype.bind;
     var slice = Function.prototype.apply.bind(Array.prototype.slice);
-    var concatenate = Function.prototype.apply.bind(Array.prototype.concat);
-
-    /**
-     * Creates binded function, that will be called with given scope and optional args, prepended to call arguments
-     *
-     * For example:
-     *
-     *     var fn = function (a, b, c) {
-     *         return this.x + (a - b) * c;
-     *     };
-     *     var bind = xs.bind(fn, {x: 5}, [2, 3]);
-     *     console.log(bind(4));//1
-     *
-     * @method bind
-     *
-     * @param {Function} fn bound function
-     * @param {Object} scope optional execution scope
-     * @param {Array} [args] optional additional arguments, prepended to function
-     *
-     * @return {Function} bound function
-     */
-    var bind = me.bind = function (fn, scope, args) {
-        assert.fn(fn, 'bind - given `$fn` is not a function', {
-            $fn: fn
-        });
-
-        assert.ok(arguments.length < 3 || xs.isArray(args), 'bind - given `$args` is not a array', {
-            $args: args
-        });
-
-        return bindFunction.apply(fn, concatenate(scope, args));
-    };
 
     /**
      * Creates function, that is executed only once. Result is memorized and is simply returned in later calls
@@ -157,18 +124,14 @@ xs.Function = (function () {
      * @method nextTick
      *
      * @param {Function} fn executed function
-     * @param {Object} scope optional execution scope
+     * @param {Object} [scope] optional execution scope
      */
     me.nextTick = function (fn, scope) {
         assert.fn(fn, 'nextTick - given `$fn` is not a function', {
             $fn: fn
         });
 
-        if (scope) {
-            fn = bind(fn, scope);
-        }
-
-        setTimeout(fn, 0);
+        setTimeout(xs.isDefined(scope) ? fn.bind(scope) : fn, 0);
     };
 
     var getNameRe = /^function\s*([A-z_0-9]*)/i;
@@ -325,7 +288,6 @@ function XsLangFunctionError(message) {
 
 XsLangFunctionError.prototype = new Error();
 
-xs.bind = xs.Function.bind;
 xs.memorize = xs.Function.memorize;
 xs.wrap = xs.Function.wrap;
 xs.nextTick = xs.Function.nextTick;
