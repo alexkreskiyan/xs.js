@@ -1470,9 +1470,9 @@ var userAgents = [
     ]
 ];
 xs.Array.each(userAgents, function (testCase) {
-    test('env detection for ' + testCase[0], function () {
-        var userAgent = testCase[0];
-        var std = testCase[1];
+    test('env detection for ' + testCase[ 0 ], function () {
+        var userAgent = testCase[ 0 ];
+        var std = testCase[ 1 ];
         var env = xs.env;
 
         navigator.__defineGetter__('userAgent', function () {

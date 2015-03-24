@@ -20,7 +20,9 @@ module('xs.event.StaticObservable', function () {
             Class.namespace = 'tests.event.StaticObservable';
 
             Class.imports = [
-                {Event: 'xs.event.Event'}
+                {
+                    Event: 'xs.event.Event'
+                }
             ];
 
             Class.mixins.observable = 'xs.event.StaticObservable';
@@ -166,7 +168,9 @@ module('xs.event.StaticObservable', function () {
             Class.namespace = 'tests.event.StaticObservable';
 
             Class.imports = [
-                {Event: 'xs.event.Event'}
+                {
+                    Event: 'xs.event.Event'
+                }
             ];
 
             Class.mixins.observable = 'xs.event.StaticObservable';
@@ -318,10 +322,16 @@ module('xs.event.StaticObservable', function () {
             calls: 1
         });
 
-        me.Class.fire('bufferedCalls', {mod: 5});
-        me.Class.fire('bufferedCalls', {mod: 4});
+        me.Class.fire('bufferedCalls', {
+            mod: 5
+        });
+        me.Class.fire('bufferedCalls', {
+            mod: 4
+        });
         setTimeout(function () {
-            me.Class.fire('bufferedCalls', {mod: 4});
+            me.Class.fire('bufferedCalls', {
+                mod: 4
+            });
             setTimeout(function () {
                 me.Class.off();
                 strictEqual(bufferedCallsSum, 9);
@@ -336,10 +346,16 @@ module('xs.event.StaticObservable', function () {
             buffer: 1
         });
 
-        me.Class.fire('bufferedNoCalls', {mod: 5});
-        me.Class.fire('bufferedNoCalls', {mod: 4});
+        me.Class.fire('bufferedNoCalls', {
+            mod: 5
+        });
+        me.Class.fire('bufferedNoCalls', {
+            mod: 4
+        });
         setTimeout(function () {
-            me.Class.fire('bufferedNoCalls', {mod: 4});
+            me.Class.fire('bufferedNoCalls', {
+                mod: 4
+            });
             setTimeout(function () {
                 me.Class.off();
                 strictEqual(bufferedNoCallsSum, 13);
@@ -355,8 +371,12 @@ module('xs.event.StaticObservable', function () {
             calls: 1
         });
 
-        me.Class.fire('unbufferedCalls', {mod: 5});
-        me.Class.fire('unbufferedCalls', {mod: 4});
+        me.Class.fire('unbufferedCalls', {
+            mod: 5
+        });
+        me.Class.fire('unbufferedCalls', {
+            mod: 4
+        });
         strictEqual(unbufferedCallsSum, 10);
 
         //check unbuffered handler without calls
@@ -365,9 +385,14 @@ module('xs.event.StaticObservable', function () {
             unbufferedNoCallsSum += event.data.mod;
         });
 
-        me.Class.fire('unbufferedNoCalls', {mod: 5});
-        me.Class.fire('unbufferedNoCalls', {mod: 4});
+        me.Class.fire('unbufferedNoCalls', {
+            mod: 5
+        });
+        me.Class.fire('unbufferedNoCalls', {
+            mod: 4
+        });
         strictEqual(unbufferedNoCallsSum, 14);
+
         return false;
     });
 
@@ -379,7 +404,9 @@ module('xs.event.StaticObservable', function () {
             Class.namespace = 'tests.event.StaticObservable';
 
             Class.imports = [
-                {Event: 'xs.event.Event'}
+                {
+                    Event: 'xs.event.Event'
+                }
             ];
 
             Class.mixins.observable = 'xs.event.StaticObservable';
@@ -486,7 +513,9 @@ module('xs.event.StaticObservable', function () {
             Class.namespace = 'tests.event.StaticObservable';
 
             Class.imports = [
-                {Event: 'xs.event.Event'}
+                {
+                    Event: 'xs.event.Event'
+                }
             ];
 
             Class.mixins.observable = 'xs.event.StaticObservable';
@@ -560,11 +589,15 @@ module('xs.event.StaticObservable', function () {
         me.Class.on('add', function (event) {
             allSum *= event.data.mod;
         });
-        me.Class.fire('add', {mod: 5});
+        me.Class.fire('add', {
+            mod: 5
+        });
         strictEqual(allSum, 50);
         allSum = 5;
         me.Class.suspend('add');
-        me.Class.fire('add', {mod: 5});
+        me.Class.fire('add', {
+            mod: 5
+        });
         strictEqual(allSum, 5);
         me.Class.off();
 
@@ -576,13 +609,17 @@ module('xs.event.StaticObservable', function () {
         me.Class.on('add', function (event) {
             scenarioSum *= event.data.mod;
         });
-        me.Class.fire('add', {mod: 5});
+        me.Class.fire('add', {
+            mod: 5
+        });
         strictEqual(scenarioSum, 50);
         scenarioSum = 5;
         me.Class.suspend('add', function () {
             return true; //note, that by default xs.core.Collection.find, used in suspend - matches only first item
         });
-        me.Class.fire('add', {mod: 5});
+        me.Class.fire('add', {
+            mod: 5
+        });
         strictEqual(scenarioSum, 25);
         me.Class.off();
     });
@@ -595,7 +632,9 @@ module('xs.event.StaticObservable', function () {
             Class.namespace = 'tests.event.StaticObservable';
 
             Class.imports = [
-                {Event: 'xs.event.Event'}
+                {
+                    Event: 'xs.event.Event'
+                }
             ];
 
             Class.mixins.observable = 'xs.event.StaticObservable';
@@ -670,12 +709,16 @@ module('xs.event.StaticObservable', function () {
             allSum *= event.data.mod;
         });
         me.Class.suspend('add');
-        me.Class.fire('add', {mod: 5});
+        me.Class.fire('add', {
+            mod: 5
+        });
         strictEqual(allSum, 5);
 
         allSum = 5;
         me.Class.resume('add');
-        me.Class.fire('add', {mod: 5});
+        me.Class.fire('add', {
+            mod: 5
+        });
         strictEqual(allSum, 50);
         me.Class.off();
 
@@ -688,7 +731,9 @@ module('xs.event.StaticObservable', function () {
             scenarioSum *= event.data.mod;
         });
         me.Class.suspend('add');
-        me.Class.fire('add', {mod: 5});
+        me.Class.fire('add', {
+            mod: 5
+        });
         strictEqual(scenarioSum, 5);
 
         scenarioSum = 5;
@@ -696,7 +741,9 @@ module('xs.event.StaticObservable', function () {
         me.Class.resume('add', function () {
             return true; //note, that by default xs.core.Collection.find, used in suspend - matches only first item
         });
-        me.Class.fire('add', {mod: 5});
+        me.Class.fire('add', {
+            mod: 5
+        });
         strictEqual(scenarioSum, 10);
         me.Class.off();
     });

@@ -119,6 +119,7 @@ module('xs.reactive.Property', function () {
                 set(null, true);
 
                 var i = 0;
+
                 while (i < 10) {
                     //if set ok, continue
                     if (set(i)) {
@@ -128,11 +129,13 @@ module('xs.reactive.Property', function () {
                     } else {
                         set(null);
                         end();
+
                         return;
                     }
                 }
                 end();
             };
+
             return {
                 on: function () {
                     xs.nextTick(emitter);
@@ -190,10 +193,12 @@ module('xs.reactive.Property', function () {
             var generator = function () {
                 set(i);
                 i--;
+
                 if (i === 0) {
                     end();
                 }
             };
+
             return {
                 on: function () {
                     intervalId = setInterval(generator, interval);
@@ -278,6 +283,7 @@ module('xs.reactive.Property', function () {
         //method can be positioned. returning false allows to stop event handling
         me.property.on(function (data) {
             log.positioned += data;
+
             if (data === 5) {
                 return false;
             }
@@ -312,10 +318,12 @@ module('xs.reactive.Property', function () {
             var generator = function () {
                 set(i);
                 i--;
+
                 if (i === 0) {
                     end();
                 }
             };
+
             return {
                 on: function () {
                     intervalId = setInterval(generator, interval);
@@ -381,10 +389,12 @@ module('xs.reactive.Property', function () {
             var generator = function () {
                 set(i);
                 i--;
+
                 if (i === 0) {
                     end();
                 }
             };
+
             return {
                 on: function () {
                     intervalId = setInterval(generator, interval);
@@ -450,10 +460,12 @@ module('xs.reactive.Property', function () {
             var generator = function () {
                 set(i);
                 i--;
+
                 if (i === 0) {
                     end();
                 }
             };
+
             return {
                 on: function () {
                     intervalId = setInterval(generator, interval);

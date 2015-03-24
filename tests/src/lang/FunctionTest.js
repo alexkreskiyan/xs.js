@@ -22,7 +22,9 @@ module('xs.lang.Function', function () {
             obj.x++;
         };
         //init scope
-        var obj = {x: 1};
+        var obj = {
+            x: 1
+        };
 
         //get memorized function
         var one = xs.memorize(fn);
@@ -52,7 +54,9 @@ module('xs.lang.Function', function () {
         //get wrapped
         var wrapped = xs.wrap(fn, function (func, a, b, c) {
             return this.x + a + func(b) + c;
-        }, {x: 1});
+        }, {
+            x: 1
+        });
 
         //test wrapped
         strictEqual(wrapped(1, 2, 3), 9);
@@ -68,8 +72,8 @@ module('xs.lang.Function', function () {
         }), '');
 
         //test named function
-        strictEqual(xs.Function.getName(function demo123_Asd() {
-        }), 'demo123_Asd');
+        strictEqual(xs.Function.getName(function demo123Asd() {
+        }), 'demo123Asd');
     });
 
     test('getArguments', function () {
@@ -82,8 +86,8 @@ module('xs.lang.Function', function () {
         }).toString(), '');
 
         //test arguments
-        strictEqual(xs.Function.getArguments(function demo123_Asd(demo123_AsD, asd_123_ASD) {
-        }).toString(), 'demo123_AsD,asd_123_ASD');
+        strictEqual(xs.Function.getArguments(function demo123Asd(demo123AsD, asd123ASD) {
+        }).toString(), 'demo123AsD,asd123ASD');
     });
 
     test('getBody', function () {
@@ -93,14 +97,15 @@ module('xs.lang.Function', function () {
 
         //test empty body
         strictEqual(xs.Function.getBody(function () {
-            "use strict";
-        }).trim(), '"use strict";');
+            'use strict';
+        }).trim(), '\'use strict\';');
 
         //test named function
-        strictEqual(xs.Function.getBody(function demo123_Asd(demo123_AsD, asd_123_ASD) {
-            "use strict";
-            return demo123_AsD + asd_123_ASD + '';
-        }).trim(), '"use strict";\n            return demo123_AsD + asd_123_ASD + \'\';');
+        strictEqual(xs.Function.getBody(function demo123Asd(demo123AsD, asd123ASD) {
+            'use strict';
+
+            return demo123AsD + asd123ASD;
+        }).trim(), '\'use strict\';\n\n            return demo123AsD + asd123ASD;');
     });
 
     test('parse', function () {
@@ -109,15 +114,16 @@ module('xs.lang.Function', function () {
         });
 
         //get parse data
-        var data = xs.Function.parse(function demo123_Asd(demo123_AsD, asd_123_ASD) {
-            "use strict";
-            return demo123_AsD + asd_123_ASD + '';
+        var data = xs.Function.parse(function demo123Asd(demo123AsD, asd123ASD) {
+            'use strict';
+
+            return demo123AsD + asd123ASD;
         });
 
         //test parsing results
-        strictEqual(data.name, 'demo123_Asd');
-        strictEqual(data.args.toString(), 'demo123_AsD,asd_123_ASD');
-        strictEqual(data.body.trim(), '"use strict";\n            return demo123_AsD + asd_123_ASD + \'\';');
+        strictEqual(data.name, 'demo123Asd');
+        strictEqual(data.args.toString(), 'demo123AsD,asd123ASD');
+        strictEqual(data.body.trim(), '\'use strict\';\n\n            return demo123AsD + asd123ASD;');
     });
 
 });

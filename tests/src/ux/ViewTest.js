@@ -70,7 +70,8 @@ module('xs.ux.View', function () {
 
         return false;
     }, function () {
-        var me = this, view;
+        var me = this;
+        var view;
 
         //no argument creates view from template
         view = new me.Class();
@@ -129,7 +130,8 @@ module('xs.ux.View', function () {
 
         return false;
     }, function () {
-        var me = this, view;
+        var me = this;
+        var view;
 
         //view has 2 positions. positions are xs.util.Collection instances
         view = new me.Class();
@@ -219,9 +221,12 @@ module('xs.ux.View', function () {
         var body = view.at('body');
 
         //add two views to title and one - to body
-        var titleA = new me.Class(), elementTitleA = titleA.private.el;
-        var titleB = new me.Class(), elementTitleB = titleB.private.el;
-        var bodyA = new me.Class(), elementBodyA = bodyA.private.el;
+        var titleA = new me.Class();
+        var elementTitleA = titleA.private.el;
+        var titleB = new me.Class();
+        var elementTitleB = titleB.private.el;
+        var bodyA = new me.Class();
+        var elementBodyA = bodyA.private.el;
 
         //verify initial state
         //view
@@ -289,9 +294,12 @@ module('xs.ux.View', function () {
         var body = view.at('body');
 
         //add two views to title and one - to body
-        var titleA = new me.Class(), elementTitleA = titleA.private.el;
-        var titleB = new me.Class(), elementTitleB = titleB.private.el;
-        var bodyA = new me.Class(), elementBodyA = bodyA.private.el;
+        var titleA = new me.Class();
+        var elementTitleA = titleA.private.el;
+        var titleB = new me.Class();
+        var elementTitleB = titleB.private.el;
+        var bodyA = new me.Class();
+        var elementBodyA = bodyA.private.el;
 
         //verify initial state
         //view
@@ -370,8 +378,10 @@ module('xs.ux.View', function () {
         var body = view.at('body');
 
         //use two views
-        var titleA = new me.Class(), elementTitleA = titleA.private.el;
-        var titleB = new me.Class(), elementTitleB = titleB.private.el;
+        var titleA = new me.Class();
+        var elementTitleA = titleA.private.el;
+        var titleB = new me.Class();
+        var elementTitleB = titleB.private.el;
 
         //verify initial state
         //view
@@ -461,9 +471,12 @@ module('xs.ux.View', function () {
         var body = view.at('body');
 
         //add two views to title and one - to body
-        var titleA = new me.Class(), elementTitleA = titleA.private.el;
-        var titleB = new me.Class(), elementTitleB = titleB.private.el;
-        var bodyA = new me.Class(), elementBodyA = bodyA.private.el;
+        var titleA = new me.Class();
+        var elementTitleA = titleA.private.el;
+        var titleB = new me.Class();
+        var elementTitleB = titleB.private.el;
+        var bodyA = new me.Class();
+        var elementBodyA = bodyA.private.el;
         title.add(titleA).add(titleB);
         body.add(bodyA);
 

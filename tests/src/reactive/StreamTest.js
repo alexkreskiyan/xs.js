@@ -118,6 +118,7 @@ module('xs.reactive.Stream', function () {
                 send(null, true);
 
                 var i = 0;
+
                 while (i < 10) {
                     //if send ok, continue
                     if (send(i)) {
@@ -127,11 +128,13 @@ module('xs.reactive.Stream', function () {
                     } else {
                         send(null);
                         end();
+
                         return;
                     }
                 }
                 end();
             };
+
             return {
                 on: function () {
                     xs.nextTick(emitter);
@@ -185,10 +188,12 @@ module('xs.reactive.Stream', function () {
             var generator = function () {
                 send(i);
                 i--;
+
                 if (i === 0) {
                     end();
                 }
             };
+
             return {
                 on: function () {
                     intervalId = setInterval(generator, interval);
@@ -269,6 +274,7 @@ module('xs.reactive.Stream', function () {
         //method can be positioned. returning false allows to stop event handling
         me.stream.on(function (data) {
             log.positioned += data;
+
             if (data === 5) {
                 return false;
             }
@@ -301,10 +307,12 @@ module('xs.reactive.Stream', function () {
             var generator = function () {
                 send(i);
                 i--;
+
                 if (i === 0) {
                     end();
                 }
             };
+
             return {
                 on: function () {
                     intervalId = setInterval(generator, interval);
@@ -370,10 +378,12 @@ module('xs.reactive.Stream', function () {
             var generator = function () {
                 send(i);
                 i--;
+
                 if (i === 0) {
                     end();
                 }
             };
+
             return {
                 on: function () {
                     intervalId = setInterval(generator, interval);
@@ -439,10 +449,12 @@ module('xs.reactive.Stream', function () {
             var generator = function () {
                 send(i);
                 i--;
+
                 if (i === 0) {
                     end();
                 }
             };
+
             return {
                 on: function () {
                     intervalId = setInterval(generator, interval);

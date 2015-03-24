@@ -294,11 +294,11 @@ xs.define(xs.Class, 'xs.data.Connection', function () {
                 };
                 async && (request.deferred = xs.create('xs.promise.Deferred'));
 
-                me.requests[request.id] = request;
+                me.requests[ request.id ] = request;
                 me.latestId = request.id;
                 // bind our stateChange listener
                 if (async && !me.isXdr) {
-                    xhr.onreadystatechange = xs.bind(me.stateChange, me, [request]);
+                    xhr.onreadystatechange = xs.bind(me.stateChange, me, [ request ]);
                 }
 
                 if (me.isXdr) {
@@ -409,12 +409,12 @@ xs.define(xs.Class, 'xs.data.Connection', function () {
             setupHeaders: function (xhr, options, data) {
                 var me = this, headers = xs.extend({}, options.headers || {}, me.defaultHeaders || {}), contentType = me.defaultPostHeader;
 
-                if (!headers['Content-Type'] && data) {
-                    headers['Content-Type'] = contentType;
+                if (!headers[ 'Content-Type' ] && data) {
+                    headers[ 'Content-Type' ] = contentType;
                 }
 
-                if (me.useDefaultXhrHeader && !headers['X-Requested-With']) {
-                    headers['X-Requested-With'] = me.defaultXhrHeader;
+                if (me.useDefaultXhrHeader && !headers[ 'X-Requested-With' ]) {
+                    headers[ 'X-Requested-With' ] = me.defaultXhrHeader;
                 }
                 // set up all the request headers on the xhr object
                 xs.each(headers, function (header, name) {
@@ -542,7 +542,7 @@ xs.define(xs.Class, 'xs.data.Connection', function () {
                 var id = this.latestId, request;
 
                 if (id) {
-                    request = this.requests[id];
+                    request = this.requests[ id ];
                 }
                 return request || null;
             },
@@ -618,7 +618,7 @@ xs.define(xs.Class, 'xs.data.Connection', function () {
                     }
                     //deferred here
                 }
-                delete me.requests[request.id];
+                delete me.requests[ request.id ];
                 return response;
             },
 
@@ -668,7 +668,7 @@ xs.define(xs.Class, 'xs.data.Connection', function () {
                     if (line.charAt(index + 1) == ' ') {
                         ++index;
                     }
-                    headers[key] = line.substr(index + 1);
+                    headers[ key ] = line.substr(index + 1);
                 });
 
                 request.xhr = null;
@@ -680,7 +680,7 @@ xs.define(xs.Class, 'xs.data.Connection', function () {
                     status: xhr.status,
                     statusText: xhr.statusText,
                     getResponseHeader: function (header) {
-                        return headers[header.toLowerCase()];
+                        return headers[ header.toLowerCase() ];
                     },
                     getAllResponseHeaders: function () {
                         return headers;

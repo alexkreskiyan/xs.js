@@ -262,8 +262,8 @@ module('xs.Loader', function () {
         ], function (loaded) {
 
             //assert all was loaded nicely
-            strictEqual(loaded['tests.core.Loader.Demo'], 'resources/core/Loader/Demo.js');
-            strictEqual(loaded['tests.core.Loader.Sample'], 'resources/core/Loader/Sample.js');
+            strictEqual(loaded[ 'tests.core.Loader.Demo' ], 'resources/core/Loader/Demo.js');
+            strictEqual(loaded[ 'tests.core.Loader.Sample' ], 'resources/core/Loader/Sample.js');
 
             //assert classes loaded
             strictEqual(xs.ContractsManager.has('tests.core.Loader.Demo'), true);

@@ -74,36 +74,41 @@ module('xs.class.preprocessors.abstract', function () {
 
         return false;
     }, function () {
+        var me = this;
+
         var ns = window.tests.class.preprocessors.abstract;
 
         //Base
-        new ns.Base;
+        me.object = new ns.Base();
 
         //Parent
         throws(function () {
-            new ns.Parent;
+            return new ns.Parent();
         });
 
         //Child
-        new ns.Child;
+        me.object = new ns.Child();
 
     }, function () {
         var me = this;
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }

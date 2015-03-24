@@ -26,7 +26,7 @@
 (function (root, ns) {
 
     //framework shorthand
-    var xs = root[ns];
+    var xs = root[ ns ];
 
     var error = xs.Error = new (function () {
         /**

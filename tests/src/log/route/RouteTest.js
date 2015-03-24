@@ -76,12 +76,12 @@ module('xs.log.route.Route', function () {
 
         //each rule must be an object
         throws(function () {
-            instance = new me.Class('route', [null]);
+            instance = new me.Class('route', [ null ]);
         });
 
         //each rule must be informative - contain category or level
         throws(function () {
-            instance = new me.Class('route', [{}]);
+            instance = new me.Class('route', [ {} ]);
         });
 
         //rule.category must be valid category
@@ -219,7 +219,7 @@ module('xs.log.route.Route', function () {
         (new xs.log.Logger('time')).warn('message4');
 
 
-        // verify logs in routes
+        //verify logs in routes
         //routeAll
         strictEqual(me.routeAll.logs.size, 4);
         strictEqual(me.routeAll.logs.at(0).message, 'message1');

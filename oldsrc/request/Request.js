@@ -50,18 +50,18 @@ xs.define(xs.Class, 'xs.request.Request', function () {
             var pair = param.split('=');
 
             //try to get name
-            var name = pair[0].match(queryParamNameRe);
+            var name = pair[ 0 ].match(queryParamNameRe);
             if (!name) {
                 return;
             } else {
-                name = name[0];
+                name = name[ 0 ];
             }
 
             //get value
-            var value = xs.isString(pair[1]) ? pair[1] : '';
+            var value = xs.isString(pair[ 1 ]) ? pair[ 1 ] : '';
 
             //try to get indexes (for nested values)
-            var indexes = pair[0].match(queryParamIndexesRe);
+            var indexes = pair[ 0 ].match(queryParamIndexesRe);
             indexes = indexes ? indexes.map(removeIndexBrackets) : null;
 
             //process data
@@ -97,21 +97,21 @@ xs.define(xs.Class, 'xs.request.Request', function () {
         if (!indexes || !indexes.length) {
             value = decodeURIComponent(value);
             try {
-                params[name] = JSON.parse(value);
+                params[ name ] = JSON.parse(value);
             } catch (e) {
-                params[name] = value;
+                params[ name ] = value;
             }
             return;
         }
         //else - process down
         //splice indexes
-        var index = indexes[0];
+        var index = indexes[ 0 ];
 
         //the default optimistic setting of params[name] is array
-        params[name] || (params[name] = []);
+        params[ name ] || (params[ name ] = []);
 
         //shortcut
-        var param = params[name];
+        var param = params[ name ];
 
         if (index) {
             xs.isNumeric(index) && (index = Number(index));
@@ -119,9 +119,9 @@ xs.define(xs.Class, 'xs.request.Request', function () {
             index = getNextIndex(param);
         }
         if (xs.isArray(param) && xs.isString(index)) {
-            params[name] = xs.Array.toObject(param);
+            params[ name ] = xs.Array.toObject(param);
         }
-        fromQueryObjects(params[name], index, value, indexes.slice(1));
+        fromQueryObjects(params[ name ], index, value, indexes.slice(1));
     };
     /**
      * process object to query string
@@ -271,13 +271,13 @@ xs.define(xs.Class, 'xs.request.Request', function () {
         var headers = me.headers, xhr = me.xhr;
 
         //if no content type specified, method is not GET and some data is going to be sent - specify
-        if (!headers['Content-Type'] && me.method !== 'get' && xs.Object.size(me.params)) {
-            headers['Content-Type'] = me.postContentType;
+        if (!headers[ 'Content-Type' ] && me.method !== 'get' && xs.Object.size(me.params)) {
+            headers[ 'Content-Type' ] = me.postContentType;
         }
 
         //if default XHR header not specified - specify it
-        if (!headers['X-Requested-With']) {
-            headers['X-Requested-With'] = 'XMLHttpRequest';
+        if (!headers[ 'X-Requested-With' ]) {
+            headers[ 'X-Requested-With' ] = 'XMLHttpRequest';
         }
 
         xs.each(headers, function (header, name) {

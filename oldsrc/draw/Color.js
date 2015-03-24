@@ -1,7 +1,7 @@
 (function (root, ns) {
 
     //framework shorthand
-    var xs = root[ns];
+    var xs = root[ ns ];
     xs.define(xs.Class, ns + '.draw.Color', function () {
         var Color = function () {
             this.red = 0;
@@ -138,24 +138,24 @@
         };
 
         var tryRgbArray = function (value) {
-            if (!xs.isArray(value) || !xs.isNumeric(value[0]) || !xs.isNumeric(value[1]) || !xs.isNumeric(value[2])) {
+            if (!xs.isArray(value) || !xs.isNumeric(value[ 0 ]) || !xs.isNumeric(value[ 1 ]) || !xs.isNumeric(value[ 2 ])) {
                 return false;
             }
 
-            value[0] = +value[0];
-            value[1] = +value[1];
-            value[2] = +value[2];
+            value[ 0 ] = +value[ 0 ];
+            value[ 1 ] = +value[ 1 ];
+            value[ 2 ] = +value[ 2 ];
 
-            if (value[0] < 0 || value[0] > 255 || value[1] < 0 || value[1] > 255 || value[2] < 0 || value[2] > 255) {
+            if (value[ 0 ] < 0 || value[ 0 ] > 255 || value[ 1 ] < 0 || value[ 1 ] > 255 || value[ 2 ] < 0 || value[ 2 ] > 255) {
                 return false;
             }
 
             var color = new Color();
 
-            color.red = value[0];
-            color.green = value[1];
-            color.blue = value[2];
-            xs.isNumeric(value[3]) && (color.alpha = +value[3]);
+            color.red = value[ 0 ];
+            color.green = value[ 1 ];
+            color.blue = value[ 2 ];
+            xs.isNumeric(value[ 3 ]) && (color.alpha = +value[ 3 ]);
 
             return color;
         };
@@ -212,7 +212,7 @@
             if (!value) {
                 return false;
             }
-            var color = new Color(), type = value[1], red = +value[2], green = +value[3], blue = +value[4], alpha = +value[5];
+            var color = new Color(), type = value[ 1 ], red = +value[ 2 ], green = +value[ 3 ], blue = +value[ 4 ], alpha = +value[ 5 ];
 
             if (red < 0 || red > 255 || green < 0 || green > 255 || blue < 0 || blue > 255) {
                 return false;
@@ -227,24 +227,24 @@
         };
 
         var tryHslArray = function (value) {
-            if (!xs.isArray(value) || !xs.isNumeric(value[0]) || !xs.isNumeric(value[1]) || !xs.isNumeric(value[2])) {
+            if (!xs.isArray(value) || !xs.isNumeric(value[ 0 ]) || !xs.isNumeric(value[ 1 ]) || !xs.isNumeric(value[ 2 ])) {
                 return false;
             }
 
-            value[0] = +value[0];
-            value[1] = +value[1];
-            value[2] = +value[2];
+            value[ 0 ] = +value[ 0 ];
+            value[ 1 ] = +value[ 1 ];
+            value[ 2 ] = +value[ 2 ];
 
-            if (value[0] < 0 || value[0] > 360 || value[1] < 0 || value[1] > 1 || value[2] < 0 || value[2] > 1) {
+            if (value[ 0 ] < 0 || value[ 0 ] > 360 || value[ 1 ] < 0 || value[ 1 ] > 1 || value[ 2 ] < 0 || value[ 2 ] > 1) {
                 return false;
             }
 
             var color = new Color();
 
-            color.hue = value[0];
-            color.saturation = value[1];
-            color.lightness = value[2];
-            xs.isNumeric(value[3]) && (color.alpha = +value[3]);
+            color.hue = value[ 0 ];
+            color.saturation = value[ 1 ];
+            color.lightness = value[ 2 ];
+            xs.isNumeric(value[ 3 ]) && (color.alpha = +value[ 3 ]);
 
             return color;
         };
@@ -301,7 +301,7 @@
             if (!value) {
                 return false;
             }
-            var color = new Color(), type = value[1], hue = +value[2], saturation = +value[3] / 100, lightness = +value[4] / 100, alpha = +value[5];
+            var color = new Color(), type = value[ 1 ], hue = +value[ 2 ], saturation = +value[ 3 ] / 100, lightness = +value[ 4 ] / 100, alpha = +value[ 5 ];
 
             if (hue < 0 || hue > 360 || saturation < 0 || saturation > 1 || lightness < 0 || lightness > 1) {
                 return false;
@@ -325,7 +325,7 @@
 
             var color = new Color();
             if (hex.length == 3) {
-                hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                hex = hex[ 0 ] + hex[ 0 ] + hex[ 1 ] + hex[ 1 ] + hex[ 2 ] + hex[ 2 ];
             }
             color.red = parseInt(hex.substr(0, 2), 16);
             color.green = parseInt(hex.substr(2, 2), 16);
@@ -335,7 +335,7 @@
         };
 
         var tryName = function (name) {
-            var color = knownColors[name];
+            var color = knownColors[ name ];
             return color ? xs.extend(new Color(), color) : false;
         };
 
@@ -482,7 +482,7 @@
          * r,g,b,a
          */
         var fromRgb = function () {
-            var args = xs.Array.clone(arguments), len = args.length, info = args[0], color;
+            var args = xs.Array.clone(arguments), len = args.length, info = args[ 0 ], color;
 
             if (len == 1) {
                 if (xs.isArray(info)) {
@@ -504,7 +504,7 @@
          * h,s,l,a
          */
         var fromHsl = function () {
-            var args = xs.Array.clone(arguments), len = args.length, info = args[0], color;
+            var args = xs.Array.clone(arguments), len = args.length, info = args[ 0 ], color;
 
             if (len == 1) {
                 if (xs.isArray(info)) {
@@ -521,7 +521,7 @@
         };
 
         var parse = function () {
-            var args = arguments, len = args.length, info = args[0];
+            var args = arguments, len = args.length, info = args[ 0 ];
 
             if (len == 1 && xs.isString(info)) {
                 return fromCSS(info);
@@ -601,7 +601,7 @@
              * list
              */
             constructor: function () {
-                var me = this, color = arguments[0];
+                var me = this, color = arguments[ 0 ];
                 //if given as color
                 if ((color instanceof Color) || (color = parse.apply(me, arguments))) {
                     me.__set('red', color.red);

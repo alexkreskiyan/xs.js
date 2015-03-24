@@ -26,9 +26,13 @@ module('xs.interface.preprocessors.imports', function () {
             this.namespace = 'tests.interface.preprocessors.imports';
             this.extends = 'ns.Base';
             this.imports = [
-                {one: 'ns.One'},
+                {
+                    one: 'ns.One'
+                },
                 'ns.Two',
-                {three: 'ns.Three'}
+                {
+                    three: 'ns.Three'
+                }
             ];
         });
 

@@ -34,7 +34,7 @@ module('xs.class.Base', function () {
 
         //values are equal
         Object.keys(sample).forEach(function (key) {
-            strictEqual(clone[key], clone[key]);
+            strictEqual(clone[ key ], clone[ key ]);
         });
 
         //clone constructor is ok

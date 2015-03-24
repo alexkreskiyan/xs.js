@@ -27,25 +27,29 @@ module('xs.core.Asserter', function () {
     test('ok', function () {
         var assert = new xs.core.Asserter(new xs.log.Logger('tests.core.Asserter'), Error);
 
+        var x = 1;
+
         //incorrect throws
         throws(function () {
-            assert.ok(1 === '1');
+            assert.ok(x === '1');
         });
 
         //correct is silent
-        assert.ok(1 < 2);
+        assert.ok(x < 2);
     });
 
     test('not', function () {
         var assert = new xs.core.Asserter(new xs.log.Logger('tests.core.Asserter'), Error);
 
+        var x = 1;
+
         //incorrect throws
         throws(function () {
-            assert.not(1 === 1);
+            assert.not(x === 1);
         });
 
         //correct is silent
-        assert.not(1 === 2);
+        assert.not(x === 2);
     });
 
     test('object', function () {
@@ -141,7 +145,7 @@ module('xs.core.Asserter', function () {
         });
 
         //correct is silent
-        assert.error(new Error);
+        assert.error(new Error());
     });
 
     test('null', function () {
@@ -209,7 +213,7 @@ module('xs.core.Asserter', function () {
 
         //incorrect throws
         throws(function () {
-            assert.empty([1]);
+            assert.empty([ 1 ]);
         });
 
         //correct is silent
@@ -274,7 +278,7 @@ module('xs.core.Asserter', function () {
         });
 
         me.Class = xs.Class(function () {
-            this.implements = ['xs.interface.Base'];
+            this.implements = [ 'xs.interface.Base' ];
         }, me.done);
 
         return false;

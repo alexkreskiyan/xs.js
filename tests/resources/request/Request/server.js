@@ -29,8 +29,8 @@ function upload_file(request, response) {
     var file = fs.createWriteStream(filePath);
     request.pipe(file);
     var total = {
-        b: request.headers['content-length'],
-        mb: (request.headers['content-length'] / (1024 * 1024)).toFixed(2)
+        b: request.headers[ 'content-length' ],
+        mb: (request.headers[ 'content-length' ] / (1024 * 1024)).toFixed(2)
     };
     var uploaded = {
         b: 0,

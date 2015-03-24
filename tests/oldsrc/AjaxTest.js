@@ -98,7 +98,7 @@ var onAnything = function () {
 };
 var urlAppend = function (url, params) {
     var urlParts = url.split('?');
-    var lastChar = url[url.length - 1];
+    var lastChar = url[ url.length - 1 ];
     if (urlParts.length == 1) {
         url += '?';
     } else if (lastChar !== '&' && lastChar !== '?') {

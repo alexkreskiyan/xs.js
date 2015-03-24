@@ -78,6 +78,7 @@ module('xs.dom.Element', function () {
 
         //element is destroyed
         strictEqual(el.hasOwnProperty('el'), false);
+
         return false;
     });
 

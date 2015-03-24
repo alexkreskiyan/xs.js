@@ -93,18 +93,21 @@ module('xs.class.preprocessors.prepareClass', function () {
         var me = this;
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
@@ -131,7 +134,7 @@ module('xs.class.preprocessors.prepareClass', function () {
         //add to ContractsManager
         xs.ContractsManager.add(me.ClassName, me.Class);
 
-        xs.onReady([me.ClassName], me.done);
+        xs.onReady([ me.ClassName ], me.done);
 
         return false;
     }, function () {
@@ -145,6 +148,7 @@ module('xs.class.preprocessors.prepareClass', function () {
         var me = this;
         //Class
         xs.ContractsManager.remove(me.ClassName);
+
         if (me.ClassSave) {
             xs.ContractsManager.add(me.ClassName, me.ClassSave);
         }
@@ -160,7 +164,7 @@ module('xs.class.preprocessors.prepareClass', function () {
         //define
         me.Interface = xs.Interface(function () {
             var me = this;
-            me.constant = ['a'];
+            me.constant = [ 'a' ];
             me.static.property.b = undefined;
             me.static.property.c = {
                 get: function () {
@@ -209,17 +213,25 @@ module('xs.class.preprocessors.prepareClass', function () {
         //define
         me.Class = xs.Class(function () {
             var me = this;
-            me.implements = ['tests.class.preprocessors.prepareClass.implements.Interface'];
+            me.implements = [ 'tests.class.preprocessors.prepareClass.implements.Interface' ];
             me.constant.a = 1;
             me.static.property.b = 1;
-            me.static.property.c = {get: xs.noop};
-            me.static.property.d = {set: xs.noop};
+            me.static.property.c = {
+                get: xs.noop
+            };
+            me.static.property.d = {
+                set: xs.noop
+            };
             me.static.method.e = xs.noop;
             me.static.method.f = function (a, b) {
             };
             me.property.g = 1;
-            me.property.h = {get: xs.noop};
-            me.property.i = {set: xs.noop};
+            me.property.h = {
+                get: xs.noop
+            };
+            me.property.i = {
+                set: xs.noop
+            };
             me.method.j = xs.noop;
             me.method.k = function (a, b) {
             };
@@ -234,7 +246,7 @@ module('xs.class.preprocessors.prepareClass', function () {
         //add to ContractsManager
         xs.ContractsManager.add(me.ClassName, me.Class);
 
-        xs.onReady([me.ClassName], me.done);
+        xs.onReady([ me.ClassName ], me.done);
 
         return false;
     }, function () {
@@ -249,12 +261,14 @@ module('xs.class.preprocessors.prepareClass', function () {
 
         //Interface
         xs.ContractsManager.remove(me.InterfaceName);
+
         if (me.InterfaceSave) {
             xs.ContractsManager.add(me.InterfaceName, me.InterfaceSave);
         }
 
         //Class
         xs.ContractsManager.remove(me.ClassName);
+
         if (me.ClassSave) {
             xs.ContractsManager.add(me.ClassName, me.ClassSave);
         }

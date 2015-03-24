@@ -16,7 +16,9 @@ module('xs.enum.Enum', function () {
         //test create without descriptor fails
         throws(xs.Enum);
 
-        var Enum = xs.Enum({a: 1});
+        var Enum = xs.Enum({
+            a: 1
+        });
 
         //enum is object
         strictEqual(xs.isObject(Enum), true);

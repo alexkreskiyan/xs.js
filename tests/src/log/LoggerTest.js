@@ -69,7 +69,9 @@ module('xs.log.Logger', function () {
         //demo category, message and data
         var category = 'some.category';
         var message = 'Message text';
-        var data = {x: 1};
+        var data = {
+            x: 1
+        };
 
         //create logger
         var logger = new xs.log.Logger(category);
@@ -158,7 +160,9 @@ module('xs.log.Logger', function () {
         //demo category, message and data
         var category = 'some.category';
         var message = 'Message text';
-        var data = {x: 1};
+        var data = {
+            x: 1
+        };
 
         //create logger
         var logger = new xs.log.Logger(category);
@@ -247,7 +251,9 @@ module('xs.log.Logger', function () {
         //demo category, message and data
         var category = 'some.category';
         var message = 'Message text';
-        var data = {x: 1};
+        var data = {
+            x: 1
+        };
 
         //create logger
         var logger = new xs.log.Logger(category);
@@ -336,7 +342,9 @@ module('xs.log.Logger', function () {
         //demo category, message and data
         var category = 'some.category';
         var message = 'Message text';
-        var data = {x: 1};
+        var data = {
+            x: 1
+        };
 
         //create logger
         var logger = new xs.log.Logger(category);

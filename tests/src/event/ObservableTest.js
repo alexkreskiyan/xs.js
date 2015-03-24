@@ -20,7 +20,9 @@ module('xs.event.Observable', function () {
             Class.namespace = 'tests.event.Observable';
 
             Class.imports = [
-                {Event: 'xs.event.Event'}
+                {
+                    Event: 'xs.event.Event'
+                }
             ];
 
             Class.mixins.observable = 'xs.event.Observable';
@@ -162,7 +164,9 @@ module('xs.event.Observable', function () {
             Class.namespace = 'tests.event.Observable';
 
             Class.imports = [
-                {Event: 'xs.event.Event'}
+                {
+                    Event: 'xs.event.Event'
+                }
             ];
 
             Class.mixins.observable = 'xs.event.Observable';
@@ -311,10 +315,16 @@ module('xs.event.Observable', function () {
             calls: 1
         });
 
-        bufferedCallsObject.fire('add', {mod: 5});
-        bufferedCallsObject.fire('add', {mod: 4});
+        bufferedCallsObject.fire('add', {
+            mod: 5
+        });
+        bufferedCallsObject.fire('add', {
+            mod: 4
+        });
         setTimeout(function () {
-            bufferedCallsObject.fire('add', {mod: 4});
+            bufferedCallsObject.fire('add', {
+                mod: 4
+            });
             setTimeout(function () {
                 bufferedCallsObject.off();
                 strictEqual(bufferedCallsSum, 9);
@@ -330,10 +340,16 @@ module('xs.event.Observable', function () {
             buffer: 1
         });
 
-        bufferedNoCallsObject.fire('add', {mod: 5});
-        bufferedNoCallsObject.fire('add', {mod: 4});
+        bufferedNoCallsObject.fire('add', {
+            mod: 5
+        });
+        bufferedNoCallsObject.fire('add', {
+            mod: 4
+        });
         setTimeout(function () {
-            bufferedNoCallsObject.fire('add', {mod: 4});
+            bufferedNoCallsObject.fire('add', {
+                mod: 4
+            });
             setTimeout(function () {
                 bufferedNoCallsObject.off();
                 strictEqual(bufferedNoCallsSum, 13);
@@ -350,8 +366,12 @@ module('xs.event.Observable', function () {
             calls: 1
         });
 
-        unbufferedCallsObject.fire('add', {mod: 5});
-        unbufferedCallsObject.fire('add', {mod: 4});
+        unbufferedCallsObject.fire('add', {
+            mod: 5
+        });
+        unbufferedCallsObject.fire('add', {
+            mod: 4
+        });
         strictEqual(unbufferedCallsSum, 10);
 
         //check unbuffered handler without calls
@@ -361,9 +381,14 @@ module('xs.event.Observable', function () {
             unbufferedNoCallsSum += event.data.mod;
         });
 
-        unbufferedNoCallsObject.fire('add', {mod: 5});
-        unbufferedNoCallsObject.fire('add', {mod: 4});
+        unbufferedNoCallsObject.fire('add', {
+            mod: 5
+        });
+        unbufferedNoCallsObject.fire('add', {
+            mod: 4
+        });
         strictEqual(unbufferedNoCallsSum, 14);
+
         return false;
     });
 
@@ -375,7 +400,9 @@ module('xs.event.Observable', function () {
             Class.namespace = 'tests.event.Observable';
 
             Class.imports = [
-                {Event: 'xs.event.Event'}
+                {
+                    Event: 'xs.event.Event'
+                }
             ];
 
             Class.mixins.observable = 'xs.event.Observable';
@@ -478,7 +505,9 @@ module('xs.event.Observable', function () {
             Class.namespace = 'tests.event.Observable';
 
             Class.imports = [
-                {Event: 'xs.event.Event'}
+                {
+                    Event: 'xs.event.Event'
+                }
             ];
 
             Class.mixins.observable = 'xs.event.Observable';
@@ -548,11 +577,15 @@ module('xs.event.Observable', function () {
         object.on('add', function (event) {
             allSum *= event.data.mod;
         });
-        object.fire('add', {mod: 5});
+        object.fire('add', {
+            mod: 5
+        });
         strictEqual(allSum, 50);
         allSum = 5;
         object.suspend('add');
-        object.fire('add', {mod: 5});
+        object.fire('add', {
+            mod: 5
+        });
         strictEqual(allSum, 5);
         object.off();
 
@@ -564,13 +597,17 @@ module('xs.event.Observable', function () {
         object.on('add', function (event) {
             scenarioSum *= event.data.mod;
         });
-        object.fire('add', {mod: 5});
+        object.fire('add', {
+            mod: 5
+        });
         strictEqual(scenarioSum, 50);
         scenarioSum = 5;
         object.suspend('add', function () {
             return true; //note, that by default xs.core.Collection.find, used in suspend - matches only first item
         });
-        object.fire('add', {mod: 5});
+        object.fire('add', {
+            mod: 5
+        });
         strictEqual(scenarioSum, 25);
         object.off();
     });
@@ -583,7 +620,9 @@ module('xs.event.Observable', function () {
             Class.namespace = 'tests.event.Observable';
 
             Class.imports = [
-                {Event: 'xs.event.Event'}
+                {
+                    Event: 'xs.event.Event'
+                }
             ];
 
             Class.mixins.observable = 'xs.event.Observable';
@@ -654,12 +693,16 @@ module('xs.event.Observable', function () {
             allSum *= event.data.mod;
         });
         object.suspend('add');
-        object.fire('add', {mod: 5});
+        object.fire('add', {
+            mod: 5
+        });
         strictEqual(allSum, 5);
 
         allSum = 5;
         object.resume('add');
-        object.fire('add', {mod: 5});
+        object.fire('add', {
+            mod: 5
+        });
         strictEqual(allSum, 50);
         object.off();
 
@@ -672,7 +715,9 @@ module('xs.event.Observable', function () {
             scenarioSum *= event.data.mod;
         });
         object.suspend('add');
-        object.fire('add', {mod: 5});
+        object.fire('add', {
+            mod: 5
+        });
         strictEqual(scenarioSum, 5);
 
         scenarioSum = 5;
@@ -680,7 +725,9 @@ module('xs.event.Observable', function () {
         object.resume('add', function () {
             return true; //note, that by default xs.core.Collection.find, used in suspend - matches only first item
         });
-        object.fire('add', {mod: 5});
+        object.fire('add', {
+            mod: 5
+        });
         strictEqual(scenarioSum, 10);
         object.off();
     });

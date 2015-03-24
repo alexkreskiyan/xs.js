@@ -3,7 +3,7 @@
     'use strict';
 
     var me = this;
-    var head = document.getElementsByTagName('head')[0];
+    var head = document.getElementsByTagName('head')[ 0 ];
 
     var scripts = []; //all scripts sources
 
@@ -19,8 +19,8 @@
         var paramsPairs = result.slice(1).shift().split('&');
         var params = {}, pair;
         for (var idx = 0; idx < paramsPairs.length; idx++) {
-            pair = paramsPairs[idx].split('=');
-            params[pair[0]] = pair[1];
+            pair = paramsPairs[ idx ].split('=');
+            params[ pair[ 0 ] ] = pair[ 1 ];
         }
 
         return params;
@@ -41,7 +41,7 @@
 
     var loadBuild = function (src, mode, callback) {
 
-        load(['../build/' + mode + '/xs.js'], function () {
+        load([ '../build/' + mode + '/xs.js' ], function () {
 
             //add path to loader
             xs.Loader.paths.add('xs', '../src');
@@ -52,7 +52,7 @@
 
     var loadSource = function (src, callback) {
 
-        load(['../build/source/xs.js'], function () {
+        load([ '../build/source/xs.js' ], function () {
 
             //add path to loader
             xs.Loader.paths.add('xs', '../src');
@@ -86,11 +86,11 @@
         };
 
         tested.core = Object.keys(core).filter(function (name) {
-            return core[name].test !== false;
+            return core[ name ].test !== false;
         });
 
         tested.modules = Object.keys(modules).filter(function (name) {
-            var config = modules[name];
+            var config = modules[ name ];
             return config.contract === 'class' && config.test !== false;
         });
 
@@ -109,12 +109,12 @@
 
         for (var i = 0; i < names.length; i++) {
 
-            var name = names[i];
-            var module = modules[name];
+            var name = names[ i ];
+            var module = modules[ name ];
 
             if (isModule(module)) {
 
-                core[name] = module;
+                core[ name ] = module;
 
                 continue;
             }
@@ -122,8 +122,8 @@
             //concat core with module
             var keys = Object.keys(module);
             for (var j = 0; j < keys.length; j++) {
-                var key = keys[j];
-                core[key] = module[key];
+                var key = keys[ j ];
+                core[ key ] = module[ key ];
             }
         }
 
@@ -133,14 +133,14 @@
     function assemblyModules(list, modules, name) {
         //modules is node, if given string contract
         if (typeof modules.contract === 'string') {
-            list[name] = modules;
+            list[ name ] = modules;
 
             return;
         }
 
         //modules is category
         Object.keys(modules).forEach(function (key) {
-            assemblyModules(list, modules[key], name ? (name + '.' + key) : key);
+            assemblyModules(list, modules[ key ], name ? (name + '.' + key) : key);
         });
     }
 

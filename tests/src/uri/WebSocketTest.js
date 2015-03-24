@@ -119,7 +119,9 @@ module('xs.uri.WebSocket', function () {
 
         //test correct behavior
         strictEqual(Object.keys(url.query.params).length, 0);
-        url.query.params = {a: 1};
+        url.query.params = {
+            a: 1
+        };
         strictEqual(url.query.toString(), 'a=1');
     });
 
@@ -176,7 +178,9 @@ module('xs.uri.WebSocket', function () {
 
         //query
         url = new xs.uri.WebSocket();
-        url.query.params = {a: 1};
+        url.query.params = {
+            a: 1
+        };
         strictEqual(url.toString(), '');
 
         //path,
@@ -187,7 +191,9 @@ module('xs.uri.WebSocket', function () {
         //path,query
         url = new xs.uri.WebSocket();
         url.path = '/go';
-        url.query.params = {a: 1};
+        url.query.params = {
+            a: 1
+        };
         strictEqual(url.toString(), url.path + '?' + url.query.toString());
     });
 

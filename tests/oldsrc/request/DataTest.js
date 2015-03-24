@@ -74,8 +74,8 @@ test('toQueryString', function () {
         ]
     }), 'x[0][0]=1&x[0][1]=2&x[1]=3&x[2]=4', 'from complex string without value 2');
     //encode complex objects with URIencode
-    strictEqual(encode({x: ['тест']}), 'x[0]=тест', 'from complex string without value 1');
-    strictEqual(encode({x: ['тест']}, true), 'x[0]=%D1%82%D0%B5%D1%81%D1%82', 'from complex string without value 1');
+    strictEqual(encode({x: [ 'тест' ]}), 'x[0]=тест', 'from complex string without value 1');
+    strictEqual(encode({x: [ 'тест' ]}, true), 'x[0]=%D1%82%D0%B5%D1%81%D1%82', 'from complex string without value 1');
     strictEqual(encode({x: {'тест': 'тест'}}), 'x[тест]=тест', 'from complex string without value 1');
     strictEqual(encode({x: {'тест': 'тест'}}, true), 'x[%D1%82%D0%B5%D1%81%D1%82]=%D1%82%D0%B5%D1%81%D1%82', 'from complex string without value 1');
     strictEqual(encode({

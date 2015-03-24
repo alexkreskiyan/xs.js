@@ -26,10 +26,16 @@ module('xs.class.preprocessors.imports', function () {
             this.namespace = 'tests.class.preprocessors.imports';
             this.extends = 'ns.Base';
             this.imports = [
-                {'sample.One': 'ns.One'},
+                {
+                    'sample.One': 'ns.One'
+                },
                 'ns.Base',
-                {Two: 'ns.Two'},
-                {'sample.Three': 'ns.Three'}
+                {
+                    Two: 'ns.Two'
+                },
+                {
+                    'sample.Three': 'ns.Three'
+                }
             ];
 
             //save imports reference

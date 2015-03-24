@@ -58,9 +58,9 @@ xs.define(xs.Class, 'xs.request.Data', function () {
         methods: {
             add: function (name, value) {
                 var me = this;
-                me.__get('raw')[name] = value;
+                me.__get('raw')[ name ] = value;
                 if (me.isFormData) {
-                    me.__get('data').append[name] = value;
+                    me.__get('data').append[ name ] = value;
                 }
                 console.log(params);
             },
