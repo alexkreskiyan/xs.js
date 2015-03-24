@@ -21,13 +21,17 @@ xs.class.postprocessors.add('asserter', function () {
 }, function (Class) {
 
     var label = Class.label ? Class.label : '';
-    eval('Class.Error = function ' + getErrorClassName(label) + '(message) { this.message = \'' + label + '::\' + message; }');
+    Class.Error = createErrorClass(label);
 
     Class.Error.prototype = new Error();
 
     //assign asserter instance
     Class.assert = new xs.core.Asserter(Class.log, Class.Error);
 });
+
+function createErrorClass(label) {
+    return (new Function('return function ' + getErrorClassName(label) + '(message) { this.message = \'' + label + '::\' + message; }'))();
+}
 
 function getErrorClassName(label) {
     if (!label) {
