@@ -2,9 +2,7 @@
     "name": "xs.js",
     "version": "0.0.1",
     "devDependencies": {
-        "blanket": "latest",
         "del": "latest",
-        "forever": "latest",
         "gulp": "latest",
         "gulp-compass": "latest",
         "gulp-concat": "latest",
@@ -16,6 +14,8 @@
         "gulp-wrap": "latest",
         "gulp.spritesmith": "latest",
         "jscs": "latest",
+        "jsdoc": "latest",
+        "jshint": "latest",
         "qunitjs": "latest",
         "socket.io": "latest"
     },
