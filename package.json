@@ -180,7 +180,6 @@
         "nonew": true,
         "undef": true,
         "unused": "vars",
-        "evil": true,
         "strict": true,
         "validthis": true,
         "browser": true,
