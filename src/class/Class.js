@@ -276,34 +276,15 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
      */
     var createFactory = function (Class) {
 
-        //return factory
         return function () {
-            var instance;
-            eval('instance = new Class(' + getArgumentsList(arguments.length) + ')');
+            //create object from Class.prototype
+            var object = Object.create(Class.prototype);
 
-            return instance;
+            //apply Class as constructor
+            Class.apply(object, arguments);
+
+            return object;
         };
-    };
-
-    /**
-     * Returns arguments list (used in factory)
-     *
-     * @ignore
-     *
-     * @method
-     *
-     * @param {Number} count arguments count
-     *
-     * @return {String} arguments list for given count of arguments
-     */
-    var getArgumentsList = function (count) {
-        var list = [];
-
-        for (var i = 0; i < count; i++) {
-            list.push('arguments[' + i + ']');
-        }
-
-        return list.join(', ');
     };
 
     /**
