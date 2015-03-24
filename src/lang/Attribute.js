@@ -473,11 +473,17 @@ xs.Attribute = (function () {
             //get|set priority
             if (descriptor.get || descriptor.set) {
                 if (!descriptor.get) {
-                    eval('descriptor.get = function () { \'use strict\'; return this.private.' + name + ';};');
+                    descriptor.get = function () {
+
+                        return this.private[ name ];
+                    };
                 }
 
                 if (!descriptor.set) {
-                    eval('descriptor.set = function (value) { \'use strict\'; this.private.' + name + ' = value;};');
+                    descriptor.set = function (value) {
+
+                        this.private[ name ] = value;
+                    };
                 }
             } else {
                 if (!descriptor.hasOwnProperty('value')) {
