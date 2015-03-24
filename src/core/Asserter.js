@@ -15,8 +15,6 @@ var assert = {
     }
 };
 
-var slice = Function.prototype.call.bind(Array.prototype.slice);
-
 /**
  * xs.core.Asserter is key system element, that performs asserting operations within classes and other logged instances
  *
@@ -104,7 +102,7 @@ Asserter.prototype.equal = function (given, expected, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 2));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -135,7 +133,7 @@ Asserter.prototype.ok = function (expression, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -166,7 +164,7 @@ Asserter.prototype.not = function (expression, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -197,7 +195,7 @@ Asserter.prototype.object = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -228,7 +226,7 @@ Asserter.prototype.array = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -259,7 +257,7 @@ Asserter.prototype.fn = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -290,7 +288,7 @@ Asserter.prototype.string = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -321,7 +319,7 @@ Asserter.prototype.number = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -352,7 +350,7 @@ Asserter.prototype.boolean = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -383,7 +381,7 @@ Asserter.prototype.regExp = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -414,7 +412,7 @@ Asserter.prototype.error = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -445,7 +443,7 @@ Asserter.prototype.null = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -476,7 +474,7 @@ Asserter.prototype.iterable = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -507,7 +505,7 @@ Asserter.prototype.primitive = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -538,7 +536,7 @@ Asserter.prototype.numeric = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -569,7 +567,7 @@ Asserter.prototype.defined = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -600,7 +598,7 @@ Asserter.prototype.empty = function (value, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -636,7 +634,7 @@ Asserter.prototype.Class = function (Class, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -672,7 +670,7 @@ Asserter.prototype.Interface = function (Interface, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 1));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -730,7 +728,7 @@ Asserter.prototype.instance = function (instance, Class, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 2));
+    raise.apply(me, message, vars);
 };
 
 /**
@@ -776,7 +774,7 @@ Asserter.prototype.implements = function (instance, Interface, message, vars) {
         return;
     }
 
-    raise.apply(me, slice(arguments, 2));
+    raise.apply(me, message, vars);
 };
 
 /**
