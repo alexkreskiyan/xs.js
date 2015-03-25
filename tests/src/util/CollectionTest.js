@@ -983,7 +983,7 @@ module('xs.util.Collection', function () {
         var itemString = JSON.stringify(item);
         var collection;
 
-        //throws if finder is not array
+        //throws if fn is not array
         collection = new xs.util.Collection();
         throws(function () {
             collection.removeBy([]);
@@ -1109,7 +1109,7 @@ module('xs.util.Collection', function () {
         //init test variables
         var collection, sum;
 
-        //throws if iterator is not a function
+        //throws if fn is not a function
         collection = new xs.util.Collection();
         throws(function () {
             collection.each(null);
@@ -1191,7 +1191,7 @@ module('xs.util.Collection', function () {
         //init test variables
         var collection, found;
 
-        //throws if finder is not a function
+        //throws if fn is not a function
         collection = new xs.util.Collection();
         throws(function () {
             collection.find(null);
@@ -1280,7 +1280,7 @@ module('xs.util.Collection', function () {
             }
         };
 
-        //throws if mapper is not a function
+        //throws if fn is not a function
         collection = new xs.util.Collection();
         throws(function () {
             collection.map(null);
@@ -1313,7 +1313,7 @@ module('xs.util.Collection', function () {
         //init test variables
         var collection;
 
-        //throws if reducer is not a function
+        //throws if fn is not a function
         collection = new xs.util.Collection();
         throws(function () {
             collection.reduce(null);
@@ -1377,7 +1377,7 @@ module('xs.util.Collection', function () {
             collection.some();
         });
 
-        //throws if tester is not a function
+        //throws if fn is not a function
         collection = new xs.util.Collection([ 1 ]);
         throws(function () {
             collection.some(null);
@@ -1497,7 +1497,7 @@ module('xs.util.Collection', function () {
             collection.all();
         });
 
-        //throws if tester is not a function
+        //throws if fn is not a function
         collection = new xs.util.Collection([ 1 ]);
         throws(function () {
             collection.all(null);
@@ -1573,7 +1573,7 @@ module('xs.util.Collection', function () {
             collection.none();
         });
 
-        //throws if tester is not a function
+        //throws if fn is not a function
         collection = new xs.util.Collection([ 1 ]);
         throws(function () {
             collection.none(null);

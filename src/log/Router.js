@@ -246,38 +246,38 @@ var router = xs.log.Router = (function () {
         };
 
         /**
-         * Iterates over routes collection in direct or reverse order via calling given iterator function.
+         * Iterates over routes collection in direct or reverse order via calling given fn function.
          * See {@link xs.core.Collection#each} for docs and usage samples
          *
          * @method each
          *
-         * @param {Function} iterator list iterator
+         * @param {Function} fn list fn
          * @param {Number} [flags] additional iterating flags:
          * - Reverse - to iterate in reverse order
          * @param {Object} [scope] optional scope
          *
          * @chainable
          */
-        me.each = function (iterator, flags, scope) {
+        me.each = function (fn, flags, scope) {
             storage.each.apply(storage, arguments);
 
             return me;
         };
 
         /**
-         * Returns route|routes, that passed given finder function
+         * Returns route|routes, that passed given fn function
          * See {@link xs.core.Collection#find} for docs and usage samples
          *
          * @method find
          *
-         * @param {Function} finder function, returning true if route matches given conditions
+         * @param {Function} fn function, returning true if route matches given conditions
          * @param {Number} [flags] additional search flags:
          * - All - to find all matches
          * @param {Object} [scope] optional scope
          *
          * @return {undefined|xs.log.route.IRoute|xs.core.Collection} found route, undefined if nothing found, or xs.core.Collection with results if All flag was given
          */
-        me.find = function (finder, flags, scope) {
+        me.find = function (fn, flags, scope) {
             storage.find.apply(storage, arguments);
 
             return me;

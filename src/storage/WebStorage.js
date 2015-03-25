@@ -394,23 +394,23 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     };
 
     /**
-     * Deletes value from storage, if it matches given finder function. Function's arguments are: value, key
+     * Deletes value from storage, if it matches given fn function. Function's arguments are: value, key
      *
      * @method removeBy
      *
-     * @param {Function} finder function, that returns whether to remove value or not
+     * @param {Function} fn function, that returns whether to remove value or not
      * @param {Number} [flags] optional remove flags:
      * - Reverse - to lookup for value from the end of the storage
      * - All - to remove all matches
      *
      * @chainable
      */
-    Class.static.method.removeBy = function (finder, flags) {
+    Class.static.method.removeBy = function (fn, flags) {
         var me = this;
 
-        //assert that finder is function
-        me.assert.fn(finder, 'removeBy - given finder `$finder` is not a function', {
-            $finder: finder
+        //assert that fn is function
+        me.assert.fn(fn, 'removeBy - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         var all = false;
@@ -445,7 +445,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 item = storage.getItem(key);
 
                 //if item does not match - continue with next item
-                if (!finder(item, key)) {
+                if (!fn(item, key)) {
                     //increment index
                     i++;
 
@@ -463,7 +463,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 item = storage.getItem(key);
 
                 //if item does not match - continue with next item
-                if (!finder(item, key)) {
+                if (!fn(item, key)) {
                     //decrement index
                     i--;
 
@@ -483,7 +483,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 item = storage.getItem(key);
 
                 //if item does not match - continue with next item
-                if (!finder(item, key)) {
+                if (!fn(item, key)) {
                     //increment index
                     i++;
 
@@ -501,23 +501,23 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     };
 
     /**
-     * Iterates over storage in direct or reverse order via calling given iterator function
+     * Iterates over storage in direct or reverse order via calling given fn function
      *
      * @method each
      *
-     * @param {Function} iterator list iterator
+     * @param {Function} fn list fn
      * @param {Number} [flags] additional iterating flags:
      * - Reverse - to iterate in reverse order
      * @param {Object} [scope] optional scope
      *
      * @chainable
      */
-    Class.static.method.each = function (iterator, flags, scope) {
+    Class.static.method.each = function (fn, flags, scope) {
         var me = this;
 
-        //assert that iterator is function
-        me.assert.fn(iterator, 'each - given iterator `$iterator` is not a function', {
-            $iterator: iterator
+        //assert that fn is function
+        me.assert.fn(fn, 'each - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         //handle flags
@@ -550,13 +550,13 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             for (i = length - 1; i >= 0; i--) {
                 key = storage.key(i);
                 item = storage.getItem(key);
-                iterator.call(scope, item, key, me);
+                fn.call(scope, item, key, me);
             }
         } else {
             for (i = 0; i < length; i++) {
                 key = storage.key(i);
                 item = storage.getItem(key);
-                iterator.call(scope, item, key, me);
+                fn.call(scope, item, key, me);
             }
         }
 
@@ -564,23 +564,23 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     };
 
     /**
-     * Returns storage item|items, that passed given finder function
+     * Returns storage item|items, that passed given fn function
      *
      * @method find
      *
-     * @param {Function} finder function, returning true if value matches given conditions
+     * @param {Function} fn function, returning true if value matches given conditions
      * @param {Number} [flags] additional search flags:
      * - All - to find all matches
      * @param {Object} [scope] optional scope
      *
      * @return {*|xs.core.Collection} found value, undefined if nothing found, or xs.core.Collection with results if All flag was given
      */
-    Class.static.method.find = function (finder, flags, scope) {
+    Class.static.method.find = function (fn, flags, scope) {
         var me = this;
 
-        //assert that finder is function
-        me.assert.fn(finder, 'find - given finder `$finder` is not a function', {
-            $finder: finder
+        //assert that fn is function
+        me.assert.fn(fn, 'find - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         //handle flags
@@ -621,7 +621,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 key = storage.key(i);
                 item = storage.getItem(key);
 
-                if (finder.call(scope, item, key, me)) {
+                if (fn.call(scope, item, key, me)) {
                     //add index
                     items.push({
                         key: key,
@@ -637,7 +637,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 key = storage.key(i);
                 item = storage.getItem(key);
 
-                if (finder.call(scope, item, key, me)) {
+                if (fn.call(scope, item, key, me)) {
                     found = item;
                     break;
                 }
@@ -647,7 +647,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 key = storage.key(i);
                 item = storage.getItem(key);
 
-                if (finder.call(scope, item, key, me)) {
+                if (fn.call(scope, item, key, me)) {
                     found = item;
                     break;
                 }

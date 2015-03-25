@@ -1359,7 +1359,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     };
 
     /**
-     * Deletes value from collection, if it matches given finder function. Function's arguments are: value, key
+     * Deletes value from collection, if it matches given fn function. Function's arguments are: value, key
      *
      * For example:
      *
@@ -1467,19 +1467,19 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method removeBy
      *
-     * @param {Function} finder function, that returns whether to remove value or not
+     * @param {Function} fn function, that returns whether to remove value or not
      * @param {Number} [flags] optional remove flags:
      * - Reverse - to lookup for value from the end of the collection
      * - All - to remove all matches
      *
      * @chainable
      */
-    Class.method.removeBy = function (finder, flags) {
+    Class.method.removeBy = function (fn, flags) {
         var me = this;
 
-        //assert that finder is function
-        self.assert.fn(finder, 'removeBy - given finder `$finder` is not a function', {
-            $finder: finder
+        //assert that fn is function
+        self.assert.fn(fn, 'removeBy - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         var all = false;
@@ -1513,7 +1513,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 item = items[ i ];
 
                 //if item does not match - continue with next item
-                if (!finder(item.value, item.key)) {
+                if (!fn(item.value, item.key)) {
                     //increment index
                     i++;
 
@@ -1546,7 +1546,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 item = items[ i ];
 
                 //if item does not match - continue with next item
-                if (!finder(item.value, item.key)) {
+                if (!fn(item.value, item.key)) {
                     //decrement index
                     i--;
 
@@ -1581,7 +1581,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 item = items[ i ];
 
                 //if item does not match - continue with next item
-                if (!finder(item.value, item.key)) {
+                if (!fn(item.value, item.key)) {
                     //increment index
                     i++;
 
@@ -1625,7 +1625,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     };
 
     /**
-     * Iterates over collection in direct or reverse order via calling given iterator function
+     * Iterates over collection in direct or reverse order via calling given fn function
      *
      * For example:
      *
@@ -1677,19 +1677,19 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method each
      *
-     * @param {Function} iterator list iterator
+     * @param {Function} fn list fn
      * @param {Number} [flags] additional iterating flags:
      * - Reverse - to iterate in reverse order
      * @param {Object} [scope] optional scope
      *
      * @chainable
      */
-    Class.method.each = function (iterator, flags, scope) {
+    Class.method.each = function (fn, flags, scope) {
         var me = this;
 
-        //assert that iterator is function
-        self.assert.fn(iterator, 'each - given iterator `$iterator` is not a function', {
-            $iterator: iterator
+        //assert that fn is function
+        self.assert.fn(fn, 'each - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         //handle flags
@@ -1720,12 +1720,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         if (reverse) {
             for (i = length - 1; i >= 0; i--) {
                 item = me.private.items[ i ];
-                iterator.call(scope, item.value, item.key, me);
+                fn.call(scope, item.value, item.key, me);
             }
         } else {
             for (i = 0; i < length; i++) {
                 item = me.private.items[ i ];
-                iterator.call(scope, item.value, item.key, me);
+                fn.call(scope, item.value, item.key, me);
             }
         }
 
@@ -1733,7 +1733,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     };
 
     /**
-     * Returns collection item|items, that passed given finder function
+     * Returns collection item|items, that passed given fn function
      *
      * For example:
      *
@@ -1756,12 +1756,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *         return this.sum(key, value.x) === 2;
      *     }, scope));
      *     //outputs:
-     *     // {x: 2}, reference to collection[0], first value, passed finder function
+     *     // {x: 2}, reference to collection[0], first value, passed fn function
      *     console.log(collection.find(function(value, key) {
      *         return this.sum(key, value.x) === 2;
      *     }, scope, xs.util.Collection.Reverse));
      *     //outputs:
-     *     // {x: 0}, reference to collection[2], first value, passed finder function
+     *     // {x: 0}, reference to collection[2], first value, passed fn function
      *     console.log(collection.find(function(value, key) {
      *         return this.sum(key, value.x) >= 2;
      *     }, scope, xs.util.Collection.All));
@@ -1782,12 +1782,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *         return this.first(key) === 'a';
      *     }, scope));
      *     //outputs:
-     *     // {x: 2}, reference to collection[0], first value, passed finder function
+     *     // {x: 2}, reference to collection[0], first value, passed fn function
      *     console.log(collection.find(function(value, key) {
      *         return this.first(key) === 'a';
      *     }, scope, xs.util.Collection.Reverse));
      *     //outputs:
-     *     // {x: 0}, reference to collection[2], first value, passed finder function
+     *     // {x: 0}, reference to collection[2], first value, passed fn function
      *     console.log(collection.find(function(value, key) {
      *         return this.first(key) === 'a';
      *     }, scope, xs.util.Collection.All));
@@ -1799,19 +1799,19 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method find
      *
-     * @param {Function} finder function, returning true if value matches given conditions
+     * @param {Function} fn function, returning true if value matches given conditions
      * @param {Number} [flags] additional search flags:
      * - All - to find all matches
      * @param {Object} [scope] optional scope
      *
      * @return {*|xs.util.Collection} found value, undefined if nothing found, or xs.util.Collection with results if All flag was given
      */
-    Class.method.find = function (finder, flags, scope) {
+    Class.method.find = function (fn, flags, scope) {
         var me = this;
 
-        //assert that finder is function
-        self.assert.fn(finder, 'find - given finder `$finder` is not a function', {
-            $finder: finder
+        //assert that fn is function
+        self.assert.fn(fn, 'find - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         //handle flags
@@ -1850,7 +1850,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
                 item = me.private.items[ i ];
 
-                if (finder.call(scope, item.value, item.key, me)) {
+                if (fn.call(scope, item.value, item.key, me)) {
                     //add index
                     items.push({
                         key: item.key,
@@ -1865,7 +1865,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = length - 1; i >= 0; i--) {
                 item = me.private.items[ i ];
 
-                if (finder.call(scope, item.value, item.key, me)) {
+                if (fn.call(scope, item.value, item.key, me)) {
                     found = item.value;
                     break;
                 }
@@ -1874,7 +1874,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
                 item = me.private.items[ i ];
 
-                if (finder.call(scope, item.value, item.key, me)) {
+                if (fn.call(scope, item.value, item.key, me)) {
                     found = item.value;
                     break;
                 }
@@ -1885,7 +1885,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     };
 
     /**
-     * Produces a new list with values, returned by iterator function
+     * Produces a new list with values, returned by fn function
      * if source was array - array is created
      * if source was object - object is created
      *
@@ -1923,17 +1923,17 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method map
      *
-     * @param {Function} mapper mapping function
+     * @param {Function} fn mapping function
      * @param {Object} [scope] optional scope
      *
      * @return {Array|Object} Mapping result
      */
-    Class.method.map = function (mapper, scope) {
+    Class.method.map = function (fn, scope) {
         var me = this;
 
-        //assert that mapper is function
-        self.assert.fn(mapper, 'map - given mapper `$mapper` is not a function', {
-            $mapper: mapper
+        //assert that fn is function
+        self.assert.fn(fn, 'map - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
 
@@ -1953,7 +1953,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             item = me.private.items[ i ];
             items.push({
                 key: item.key,
-                value: mapper.call(scope, item.value, item.key, me)
+                value: fn.call(scope, item.value, item.key, me)
             });
         }
 
@@ -1964,7 +1964,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     };
 
     /**
-     * Reduces collection values by reducer function
+     * Reduces collection values by fn function
      *
      * For example:
      *
@@ -2038,7 +2038,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method reduce
      *
-     * @param {Function} reducer reducing function
+     * @param {Function} fn reducing function
      * @param {Number} [flags] additional iterating flags:
      * - Reverse - to reduce in reverse order
      * @param {Object} [scope] optional scope
@@ -2046,12 +2046,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @return {*} Reducing result
      */
-    Class.method.reduce = function (reducer, flags, scope, memo) {
+    Class.method.reduce = function (fn, flags, scope, memo) {
         var me = this;
 
-        //assert that reducer is function
-        self.assert.fn(reducer, 'reduce - given reducer `$reducer` is not a function', {
-            $reducer: reducer
+        //assert that fn is function
+        self.assert.fn(fn, 'reduce - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         //assert that collection is not empty
@@ -2101,7 +2101,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
             for (; i >= 0; i--) {
                 item = me.private.items[ i ];
-                result = reducer.call(scope, result, item.value, item.key, me);
+                result = fn.call(scope, result, item.value, item.key, me);
             }
         } else {
             if (hasMemo) {
@@ -2114,7 +2114,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
             for (; i < length; i++) {
                 item = me.private.items[ i ];
-                result = reducer.call(scope, result, item.value, item.key, me);
+                result = fn.call(scope, result, item.value, item.key, me);
             }
         }
 
@@ -2122,7 +2122,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     };
 
     /**
-     * Returns whether count of list values pass tester function
+     * Returns whether count of list values pass fn function
      *
      * For example:
      *
@@ -2179,22 +2179,22 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method some
      *
-     * @param {Function} tester tester function
+     * @param {Function} fn fn function
      * @param {Number} [count] count of values needed to resolve as true
      * @param {Object} [scope] optional scope
      *
-     * @return {Boolean} whether some values pass tester function
+     * @return {Boolean} whether some values pass fn function
      */
-    Class.method.some = function (tester, count, scope) {
+    Class.method.some = function (fn, count, scope) {
         var me = this;
         var length = me.private.items.length;
 
         //assert that collection is not empty
         self.assert.ok(me.private.items.length, 'some - collection is empty');
 
-        //assert that tester is function
-        self.assert.fn(tester, 'some - given tester `$tester` is not a function', {
-            $tester: tester
+        //assert that fn is function
+        self.assert.fn(fn, 'some - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         //default count to 1, if not given
@@ -2227,8 +2227,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
                 item = me.private.items[ i ];
 
-                //increment found if tester returns true
-                if (tester.call(scope, item.value, item.key, me)) {
+                //increment found if fn returns true
+                if (fn.call(scope, item.value, item.key, me)) {
                     found++;
                 }
 
@@ -2247,8 +2247,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         for (i = 0; i < length; i++) {
             item = me.private.items[ i ];
 
-            //increment found if tester returns true
-            if (tester.call(scope, item.value, item.key, me)) {
+            //increment found if fn returns true
+            if (fn.call(scope, item.value, item.key, me)) {
                 found++;
             }
 
@@ -2263,7 +2263,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     };
 
     /**
-     * Returns whether all of list values pass tester function
+     * Returns whether all of list values pass fn function
      *
      * For example:
      *
@@ -2310,24 +2310,24 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method all
      *
-     * @param {Function} tester tester function
+     * @param {Function} fn fn function
      * @param {Object} [scope] optional scope
      *
-     * @return {Boolean} whether all values pass tester function
+     * @return {Boolean} whether all values pass fn function
      */
-    Class.method.all = function (tester, scope) {
+    Class.method.all = function (fn, scope) {
         var me = this;
 
         if (arguments.length >= 2) {
 
-            return me.some(tester, me.private.items.length, scope);
+            return me.some(fn, me.private.items.length, scope);
         }
 
-        return me.some(tester, me.private.items.length);
+        return me.some(fn, me.private.items.length);
     };
 
     /**
-     * Returns whether none of list values pass tester function
+     * Returns whether none of list values pass fn function
      *
      * For example:
      *
@@ -2374,20 +2374,20 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method none
      *
-     * @param {Function} tester tester function
+     * @param {Function} fn fn function
      * @param {Object} [scope] optional scope
      *
-     * @return {Boolean} whether none values pass tester function
+     * @return {Boolean} whether none values pass fn function
      */
-    Class.method.none = function (tester, scope) {
+    Class.method.none = function (fn, scope) {
         var me = this;
 
         if (arguments.length >= 2) {
 
-            return me.some(tester, 0, scope);
+            return me.some(fn, 0, scope);
         }
 
-        return me.some(tester, 0);
+        return me.some(fn, 0);
     };
 
     /**

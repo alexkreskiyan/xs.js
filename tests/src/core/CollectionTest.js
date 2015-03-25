@@ -698,7 +698,7 @@ module('xs.core.Collection', function () {
         var itemString = JSON.stringify(item);
         var collection;
 
-        //throws if finder is not array
+        //throws if fn is not array
         collection = new xs.core.Collection();
         throws(function () {
             collection.removeBy([]);
@@ -885,7 +885,7 @@ module('xs.core.Collection', function () {
         //init test variables
         var collection, sum;
 
-        //throws if iterator is not a function
+        //throws if fn is not a function
         collection = new xs.core.Collection();
         throws(function () {
             collection.each(null);
@@ -967,7 +967,7 @@ module('xs.core.Collection', function () {
         //init test variables
         var collection, found;
 
-        //throws if finder is not a function
+        //throws if fn is not a function
         collection = new xs.core.Collection();
         throws(function () {
             collection.find(null);
@@ -1056,7 +1056,7 @@ module('xs.core.Collection', function () {
             }
         };
 
-        //throws if mapper is not a function
+        //throws if fn is not a function
         collection = new xs.core.Collection();
         throws(function () {
             collection.map(null);
@@ -1089,7 +1089,7 @@ module('xs.core.Collection', function () {
         //init test variables
         var collection;
 
-        //throws if reducer is not a function
+        //throws if fn is not a function
         collection = new xs.core.Collection();
         throws(function () {
             collection.reduce(null);
@@ -1153,7 +1153,7 @@ module('xs.core.Collection', function () {
             collection.some();
         });
 
-        //throws if tester is not a function
+        //throws if fn is not a function
         collection = new xs.core.Collection([ 1 ]);
         throws(function () {
             collection.some(null);
@@ -1273,7 +1273,7 @@ module('xs.core.Collection', function () {
             collection.all();
         });
 
-        //throws if tester is not a function
+        //throws if fn is not a function
         collection = new xs.core.Collection([ 1 ]);
         throws(function () {
             collection.all(null);
@@ -1349,7 +1349,7 @@ module('xs.core.Collection', function () {
             collection.none();
         });
 
-        //throws if tester is not a function
+        //throws if fn is not a function
         collection = new xs.core.Collection([ 1 ]);
         throws(function () {
             collection.none(null);
