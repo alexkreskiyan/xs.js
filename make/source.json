@@ -6,6 +6,12 @@
         "xs.log.Logger": {},
         "xs.core.Asserter": {},
         "reactive": {
+            "xs.reactive.Emitter": {
+                "test": false
+            },
+            "xs.reactive.Event": {
+                "test": false
+            },
             "xs.reactive.Reactive": {
                 "test": false
             },

@@ -9,7 +9,7 @@ module.exports = function () {
     var merge = require('gulp-merge');
 
     //remove old files
-    del(['build/debug/*.js']);
+    del([ 'build/debug/*.js' ]);
 
 
     //get core stream

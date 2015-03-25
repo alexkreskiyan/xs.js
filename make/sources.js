@@ -12,7 +12,7 @@ var src = require('./source.json');
 
 //export scripts array
 module.exports = {
-    core: getCoreStream(['src/xs.js'], src.core),
+    core: getCoreStream([ 'src/xs.js' ], src.core),
     modules: getModulesStream(src.modules)
 };
 
@@ -52,8 +52,8 @@ function assemblyCoreStreams(core) {
 
     for (var i = 0; i < names.length; i++) {
 
-        var name = names[i];
-        var module = core[name];
+        var name = names[ i ];
+        var module = core[ name ];
 
         if (isModule(module)) {
 
@@ -170,14 +170,14 @@ function getModulesStream(src) {
 function assemblyModules(list, modules, name) {
     //modules is node, if given string contract
     if (isModule(modules)) {
-        list[name] = modules;
+        list[ name ] = modules;
 
         return;
     }
 
     //modules is category
     Object.keys(modules).forEach(function (key) {
-        assemblyModules(list, modules[key], name ? (name + '.' + key) : key);
+        assemblyModules(list, modules[ key ], name ? (name + '.' + key) : key);
     });
 }
 

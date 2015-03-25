@@ -7,7 +7,7 @@ module.exports = function () {
     var gulp = require('gulp');
 
     //remove old files
-    del(['build/source/*.js']);
+    del([ 'build/source/*.js' ]);
 
 
     //get core stream

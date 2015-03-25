@@ -9,6 +9,7 @@
         "gulp-indent": "latest",
         "gulp-merge": "latest",
         "gulp-minify-css": "latest",
+        "gulp-trimlines": "latest",
         "gulp-uglify": "latest",
         "gulp-watch": "latest",
         "gulp-wrap": "latest",
