@@ -50,3 +50,4 @@ transduce(transducer)
 //FIXME Use emitter object DONE
 //TODO Add events - xs.reactive.event.Data and xs.reactive.event.End DONE
 //TODO Reactive combines via pure constructors
+//TODO rework to make target as event or event's array DONE

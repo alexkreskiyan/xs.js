@@ -10,39 +10,6 @@ if (!xs.reactive) {
 }
 
 /**
- * Reactive targets enum
- *
- * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
- *
- * @class xs.reactive
- *
- * @singleton
- */
-
-/**
- * Data target. Is used to listen to reactive data changes. Default value
- *
- * @readonly
- *
- * @property Data
- *
- * @type {Number}
- */
-xs.reactive.Data = 0x1;
-
-/**
- * Destroy target. Is used to listen to single event of reactive destroying
- *
- * @readonly
- *
- * @property Warning
- *
- * @type {Number}
- */
-xs.reactive.Destroy = 0x2;
-
-
-/**
  * Private reactive core. Represents some reactive object
  *
  * @ignore
@@ -213,7 +180,7 @@ Reactive.prototype.on = function (handler, options) {
 
         handlers.add({
             handler: handler,
-            target: xs.reactive.Data,
+            target: [ xs.reactive.event.Data ],
             suspended: false,
             scope: undefined
         });
@@ -234,14 +201,14 @@ Reactive.prototype.on = function (handler, options) {
     var target;
 
     if (options.hasOwnProperty('target')) {
-        target = options.target;
+        target = xs.isArray(options.target) ? options.target : [ options.target ];
 
-        //assert that target is a number
-        assert.number(target, 'on - given target `$target` is not a number', {
+        //assert that target are an array of module.Event children
+        assert.ok(verifyTargets(target), 'on - given target `$target` are not correct', {
             $target: target
         });
     } else {
-        target = xs.reactive.Data;
+        target = [ xs.reactive.event.Data ];
     }
 
     //process suspended option
@@ -504,11 +471,30 @@ Reactive.prototype.destroy = function () {
     delete me.private;
 
     //send destroy notification
-    module.send(handlers, xs.reactive.Destroy);
+    module.send(handlers, new xs.reactive.event.Destroy());
 
     //remove all handlers
     handlers.remove();
 };
+
+function verifyTargets(targets) {
+
+    (new xs.core.Collection(targets)).each(function (target) {
+
+        //check, that target is a function
+        assert.fn(target, 'verifyTarget - given target `target` is not a function', {
+            $target: target
+        });
+
+        //check, that target inherits from module.Event
+        assert.ok(target.prototype instanceof module.Event, 'verifyTarget - given target `target` is not a child of xs.reactive.event.Event', {
+            $target: target
+        });
+
+    });
+
+    return true;
+}
 
 function syncActive(value) {
     var me = this;

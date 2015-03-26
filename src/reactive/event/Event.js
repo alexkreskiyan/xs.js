@@ -10,12 +10,6 @@ if (!xs.reactive.event) {
     xs.reactive.event = {};
 }
 
-var Event = function (data) {
-    var me = this;
-
-    //save data reference
-    me.data = data;
-};
-
 //save reference to module
-module.Event = Event;
+xs.reactive.event.Event = module.Event = function () {
+};

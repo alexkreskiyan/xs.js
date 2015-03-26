@@ -99,10 +99,13 @@ module('xs.reactive.Property', function () {
         strictEqual(me.property.isDestroyed, false);
 
         var log = '';
-        me.property.on(function (data) {
-            log += arguments.length + data;
+        me.property.on(function (event) {
+            log += arguments.length + event.data;
         }, {
-            target: xs.reactive.Data | xs.reactive.Destroy
+            target: [
+                xs.reactive.event.Data,
+                xs.reactive.event.Destroy
+            ]
         });
 
         //stream is not active and destroyed
@@ -155,16 +158,16 @@ module('xs.reactive.Property', function () {
         var log = '';
         var value = '';
 
-        me.property.on(function (data) {
-            if (data === 5) {
+        me.property.on(function (event) {
+            if (event.data === 5) {
                 return false;
             }
         });
 
-        me.property.on(function (data) {
-            log += data;
+        me.property.on(function (event) {
+            log += event.data;
             value += me.property.value;
-            value += data;
+            value += event.data;
         });
 
         me.property.on(function () {
@@ -177,7 +180,7 @@ module('xs.reactive.Property', function () {
 
             me.done();
         }, {
-            target: xs.reactive.Destroy
+            target: xs.reactive.event.Destroy
         });
 
         return false;
@@ -236,8 +239,8 @@ module('xs.reactive.Property', function () {
         var value = '';
 
         //method can be added with initially suspended state
-        me.property.on(function (data) {
-            log.suspended += data;
+        me.property.on(function (event) {
+            log.suspended += event.data;
         }, {
             suspended: true
         });
@@ -245,11 +248,11 @@ module('xs.reactive.Property', function () {
         //this way stream is still inactive
         strictEqual(me.property.isActive, false);
 
-        //simply method appends new handler, that has undefined scope, xs.reactive.Data target and is not suspended
-        me.property.on(function (data) {
-            log.simple += data;
+        //simply method appends new handler, that has undefined scope, xs.reactive.event.Data target and is not suspended
+        me.property.on(function (event) {
+            log.simple += event.data;
             value += me.property.value;
-            value += data;
+            value += event.data;
         });
 
         //incorrect target throws exception
@@ -267,24 +270,24 @@ module('xs.reactive.Property', function () {
         });
 
         //method can be targeted directly with target type flags
-        me.property.on(function (data) {
-            log.targeted += data;
+        me.property.on(function (event) {
+            log.targeted += event.data;
         }, {
-            target: xs.reactive.Destroy
+            target: xs.reactive.event.Destroy
         });
 
         //method can be called within given scope
-        me.property.on(function (data) {
-            log.scoped += data + this;
+        me.property.on(function (event) {
+            log.scoped += event.data + this;
         }, {
             scope: '!'
         });
 
         //method can be positioned. returning false allows to stop event handling
-        me.property.on(function (data) {
-            log.positioned += data;
+        me.property.on(function (event) {
+            log.positioned += event.data;
 
-            if (data === 5) {
+            if (event.data === 5) {
                 return false;
             }
         }, {
@@ -302,7 +305,7 @@ module('xs.reactive.Property', function () {
             strictEqual(value.toString(), 'undefined1010998877664433221'); //5 is missing - cancelled
             me.done();
         }, {
-            target: xs.reactive.Destroy
+            target: xs.reactive.event.Destroy
         });
 
         return false;
@@ -536,8 +539,8 @@ module('xs.reactive.Property', function () {
 
         var logResolved = [];
         var valueResolved = [];
-        resolved.on(function (value) {
-            logResolved.push(value);
+        resolved.on(function (event) {
+            logResolved.push(event.data);
             valueResolved.push(resolved.value);
         });
         resolved.on(function () {
@@ -570,7 +573,7 @@ module('xs.reactive.Property', function () {
                 }
             ]));
         }, {
-            target: xs.reactive.Destroy
+            target: xs.reactive.event.Destroy
         });
 
         //check initial state
@@ -591,8 +594,8 @@ module('xs.reactive.Property', function () {
 
         var logRejected = [];
         var valueRejected = [];
-        rejected.on(function (value) {
-            logRejected.push(value);
+        rejected.on(function (event) {
+            logRejected.push(event.data);
             valueRejected.push(rejected.value);
         });
         rejected.on(function () {
@@ -626,7 +629,7 @@ module('xs.reactive.Property', function () {
             ]));
             me.done();
         }, {
-            target: xs.reactive.Destroy
+            target: xs.reactive.event.Destroy
         });
 
         //check initial state

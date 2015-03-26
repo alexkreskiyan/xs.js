@@ -33,7 +33,7 @@ function handleSend(data, silent) {
     }
 
     //return send status
-    return module.send(me.private.reactiveHandlers, xs.reactive.Data, data);
+    return module.send(me.private.reactiveHandlers, new xs.reactive.event.Data(data));
 }
 
 /**

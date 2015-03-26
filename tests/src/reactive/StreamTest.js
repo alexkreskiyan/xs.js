@@ -101,7 +101,10 @@ module('xs.reactive.Stream', function () {
         me.stream.on(function (data) {
             log += arguments.length + data;
         }, {
-            target: xs.reactive.Data | xs.reactive.Destroy
+            target: [
+                xs.reactive.event.Data,
+                xs.reactive.event.Destroy
+            ]
         });
 
         //stream is not active and destroyed
@@ -153,14 +156,14 @@ module('xs.reactive.Stream', function () {
 
         var log = '';
 
-        me.stream.on(function (data) {
-            if (data === 5) {
+        me.stream.on(function (event) {
+            if (event.data === 5) {
                 return false;
             }
         });
 
-        me.stream.on(function (data) {
-            log += data;
+        me.stream.on(function (event) {
+            log += event.data;
         });
 
         me.stream.on(function () {
@@ -172,7 +175,7 @@ module('xs.reactive.Stream', function () {
 
             me.done();
         }, {
-            target: xs.reactive.Destroy
+            target: xs.reactive.event.Destroy
         });
 
         return false;
@@ -229,8 +232,8 @@ module('xs.reactive.Stream', function () {
         };
 
         //method can be added with initially suspended state
-        me.stream.on(function (data) {
-            log.suspended += data;
+        me.stream.on(function (event) {
+            log.suspended += event.data;
         }, {
             suspended: true
         });
@@ -238,9 +241,9 @@ module('xs.reactive.Stream', function () {
         //this way stream is still inactive
         strictEqual(me.stream.isActive, false);
 
-        //simply method appends new handler, that has undefined scope, xs.reactive.Data target and is not suspended
-        me.stream.on(function (data) {
-            log.simple += data;
+        //simply method appends new handler, that has undefined scope, xs.reactive.event.Data target and is not suspended
+        me.stream.on(function (event) {
+            log.simple += event.data;
         });
 
         //incorrect target throws exception
@@ -258,24 +261,24 @@ module('xs.reactive.Stream', function () {
         });
 
         //method can be targeted directly with target type flags
-        me.stream.on(function (data) {
-            log.targeted += data;
+        me.stream.on(function (event) {
+            log.targeted += event.data;
         }, {
-            target: xs.reactive.Destroy
+            target: xs.reactive.event.Destroy
         });
 
         //method can be called within given scope
-        me.stream.on(function (data) {
-            log.scoped += data + this;
+        me.stream.on(function (event) {
+            log.scoped += event.data + this;
         }, {
             scope: '!'
         });
 
         //method can be positioned. returning false allows to stop event handling
-        me.stream.on(function (data) {
-            log.positioned += data;
+        me.stream.on(function (event) {
+            log.positioned += event.data;
 
-            if (data === 5) {
+            if (event.data === 5) {
                 return false;
             }
         }, {
@@ -291,7 +294,7 @@ module('xs.reactive.Stream', function () {
             strictEqual(log.positioned, '10987654321'); //5 is presented
             me.done();
         }, {
-            target: xs.reactive.Destroy
+            target: xs.reactive.event.Destroy
         });
 
         return false;
@@ -524,8 +527,8 @@ module('xs.reactive.Stream', function () {
         var resolved = xs.reactive.Stream.fromPromise(promise);
 
         var logResolved = [];
-        resolved.on(function (value) {
-            logResolved.push(value);
+        resolved.on(function (event) {
+            logResolved.push(event.data);
         });
         resolved.on(function () {
             strictEqual(JSON.stringify(logResolved), JSON.stringify([
@@ -543,7 +546,7 @@ module('xs.reactive.Stream', function () {
                 }
             ]));
         }, {
-            target: xs.reactive.Destroy
+            target: xs.reactive.event.Destroy
         });
 
         //update one
@@ -560,8 +563,8 @@ module('xs.reactive.Stream', function () {
         var rejected = xs.reactive.Stream.fromPromise(promise);
 
         var logRejected = [];
-        rejected.on(function (value) {
-            logRejected.push(value);
+        rejected.on(function (event) {
+            logRejected.push(event.data);
         });
         rejected.on(function () {
             strictEqual(JSON.stringify(logRejected), JSON.stringify([
@@ -580,7 +583,7 @@ module('xs.reactive.Stream', function () {
             ]));
             me.done();
         }, {
-            target: xs.reactive.Destroy
+            target: xs.reactive.event.Destroy
         });
 
         //update one
