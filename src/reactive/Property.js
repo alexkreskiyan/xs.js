@@ -13,10 +13,11 @@ var Reactive = module.Reactive;
 var Property = xs.reactive.Property = function (generator, value, sources) {
     var me = this;
 
-    Reactive.apply(me, [
-        generator,
-        new module.EmitterProperty(me)
-    ].concat(Array.prototype.slice.call(arguments, 2)));
+    if (arguments.length < 3) {
+        Reactive.call(me, generator, new module.EmitterProperty(me));
+    } else {
+        Reactive.call(me, generator, new module.EmitterProperty(me), sources);
+    }
 
     //set initial property value
     me.private.value = value;

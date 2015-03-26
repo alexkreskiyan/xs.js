@@ -77,7 +77,7 @@ var Reactive = function (generator, emitter, sources) {
     });
 
     //assert, that emitter is correct instance
-    assert.instance(emitter, module.Emitter, 'constructor - given generator `$generator` is not a function', {
+    assert.ok(emitter instanceof module.Emitter, 'constructor - given generator `$generator` is not a function', {
         $emitter: generator
     });
 

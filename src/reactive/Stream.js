@@ -13,10 +13,11 @@ var Reactive = module.Reactive;
 var Stream = xs.reactive.Stream = function (generator, sources) {
     var me = this;
 
-    Reactive.apply(me, [
-        generator,
-        new module.EmitterStream(me)
-    ].concat(Array.prototype.slice.call(arguments, 1)));
+    if (arguments.length < 2) {
+        Reactive.call(me, generator, new module.EmitterStream(me));
+    } else {
+        Reactive.call(me, generator, new module.EmitterStream(me), sources);
+    }
 };
 
 //extend Stream from Reactive
