@@ -3,6 +3,7 @@
 //require used modules
 var gulp = require('gulp');
 var indent = require('gulp-indent');
+var trimlines = require('gulp-trimlines');
 var wrap = require('gulp-wrap');
 var concat = require('gulp-concat');
 var merge = require('gulp-merge');
@@ -36,6 +37,12 @@ function getCoreStream(entry, core) {
     //wrap concatenated file in framework template
     build = build.pipe(wrap({
         src: 'make/template/framework'
+    }));
+
+    //trim lines
+    build = build.pipe(trimlines({
+        leading: false,
+        trailing: true
     }));
 
     return build;
