@@ -6,10 +6,25 @@
         "xs.log.Logger": {},
         "xs.core.Asserter": {},
         "reactive": {
-            "xs.reactive.Emitter": {
+            "xs.reactive.emitter.Emitter": {
                 "test": false
             },
-            "xs.reactive.Event": {
+            "xs.reactive.emitter.Property": {
+                "test": false
+            },
+            "xs.reactive.emitter.Stream": {
+                "test": false
+            },
+            "xs.reactive.event.Event": {
+                "test": false
+            },
+            "xs.reactive.event.Data": {
+                "test": false
+            },
+            "xs.reactive.event.Destroy": {
+                "test": false
+            },
+            "xs.reactive.send": {
                 "test": false
             },
             "xs.reactive.Reactive": {

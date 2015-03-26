@@ -59,10 +59,11 @@ xs.reactive.Destroy = 0x2;
  *
  * Creates reactive instance
  *
- * @param {Function} generator stream generator function
+ * @param {Function} generator reactive generator function
+ * @param {xs.reactive.emitter.Emitter} emitter reactive emitter
  * @param {Array} sources additional sources, used by reactive object
  */
-var Reactive = function (generator, sources) {
+var Reactive = function (generator, emitter, sources) {
     var me = this;
 
     log.trace('constructor - creating reactive from `$generator` and `$sources`', {
@@ -75,8 +76,13 @@ var Reactive = function (generator, sources) {
         $emitter: generator
     });
 
+    //assert, that emitter is correct instance
+    assert.instance(emitter, module.Emitter, 'constructor - given generator `$generator` is not a function', {
+        $emitter: generator
+    });
+
     //verify sources
-    assert.ok(arguments.length === 1 || xs.isArray(sources), 'constructor - given dependent sources list `$sources` is not an array of reactive elements', {
+    assert.ok(arguments.length === 2 || xs.isArray(sources), 'constructor - given dependent sources list `$sources` is not an array of reactive elements', {
         $sources: sources
     });
 
@@ -94,8 +100,7 @@ var Reactive = function (generator, sources) {
 
     //run generator with send, end and given sources
     var handlers = generator.apply(undefined, [
-        handleSend.bind(me),
-        handleDestroy.bind(me)
+        emitter
     ].concat(sources ? sources : []));
 
     //remove underConstruction flag
@@ -499,59 +504,11 @@ Reactive.prototype.destroy = function () {
     delete me.private;
 
     //send destroy notification
-    send(handlers, xs.reactive.Destroy);
+    module.send(handlers, xs.reactive.Destroy);
 
     //remove all handlers
     handlers.remove();
 };
-
-function handleSend(data, silent) {
-    var me = this;
-
-    //assert, that reactive is not destroyed
-    assert.not(me.isDestroyed, 'send - reactive is destroyed');
-
-    //verify, that reactive is not under construction
-    assert.not(me.underConstruction, 'send - reactive is being constructed');
-
-    if (silent) {
-
-        return true;
-    }
-
-    //send data
-    return send(me.private.reactiveHandlers, xs.reactive.Data, data);
-}
-
-function handleDestroy() {
-    var me = this;
-
-    //assert, that reactive is not destroyed
-    assert.not(me.isDestroyed, 'send - reactive is destroyed');
-
-    //destroy stream
-    me.destroy();
-}
-
-function send(handlers, target, data) {
-
-    log.trace('send - sending `$data` to ' + (target === xs.reactive.Data ? 'Data' : 'Destroy'), {
-        $data: data
-    });
-
-    //return whether handlers processing was cancelled
-    return !handlers.find(function (item) {
-
-        //ignore, if item is suspended or has another target
-        if (item.suspended || !(item.target & target)) {
-
-            return;
-        }
-
-        //if handler returns false - it cancels processing
-        return item.handler.call(item.scope, data) === false;
-    });
-}
 
 function syncActive(value) {
     var me = this;

@@ -15,11 +15,11 @@ module('xs.reactive.Property', function () {
     test('constructor', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (property) {
             return {
                 on: function () {
-                    send(null);
-                    end();
+                    property.set(null);
+                    property.destroy();
                 },
                 off: xs.noop
             };
@@ -80,11 +80,11 @@ module('xs.reactive.Property', function () {
     test('basics', function () {
         var me = this;
 
-        me.generator = function (set, end) {
+        me.generator = function (property) {
             return {
                 on: function () {
-                    set(null);
-                    end();
+                    property.set(null);
+                    property.destroy();
                 },
                 off: xs.noop
             };
@@ -110,30 +110,30 @@ module('xs.reactive.Property', function () {
 
     });
 
-    test('send', function () {
+    test('set', function () {
         var me = this;
 
-        me.generator = function (set, end) {
+        me.generator = function (property) {
             var emitter = function () {
                 //set initial value silently
-                set(null, true);
+                property.set(null, true);
 
                 var i = 0;
 
                 while (i < 10) {
                     //if set ok, continue
-                    if (set(i)) {
+                    if (property.set(i)) {
                         i++;
 
                         //if set cancelled, set null and end
                     } else {
-                        set(null);
-                        end();
+                        property.set(null);
+                        property.destroy();
 
                         return;
                     }
                 }
-                end();
+                property.destroy();
             };
 
             return {
@@ -186,16 +186,16 @@ module('xs.reactive.Property', function () {
     test('on', function () {
         var me = this;
 
-        me.generator = function (set, end) {
+        me.generator = function (property) {
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                set(i);
+                property.set(i);
                 i--;
 
                 if (i === 0) {
-                    end();
+                    property.destroy();
                 }
             };
 
@@ -311,16 +311,16 @@ module('xs.reactive.Property', function () {
     test('off', function () {
         var me = this;
 
-        me.generator = function (set, end) {
+        me.generator = function (property) {
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                set(i);
+                property.set(i);
                 i--;
 
                 if (i === 0) {
-                    end();
+                    property.destroy();
                 }
             };
 
@@ -382,16 +382,16 @@ module('xs.reactive.Property', function () {
     test('suspend', function () {
         var me = this;
 
-        me.generator = function (set, end) {
+        me.generator = function (property) {
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                set(i);
+                property.set(i);
                 i--;
 
                 if (i === 0) {
-                    end();
+                    property.destroy();
                 }
             };
 
@@ -453,16 +453,16 @@ module('xs.reactive.Property', function () {
     test('resume', function () {
         var me = this;
 
-        me.generator = function (set, end) {
+        me.generator = function (property) {
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                set(i);
+                property.set(i);
                 i--;
 
                 if (i === 0) {
-                    end();
+                    property.destroy();
                 }
             };
 

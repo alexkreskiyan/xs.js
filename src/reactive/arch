@@ -17,3 +17,36 @@ Properties can be transformed and combined
 Properties are infinite
 Properties are destroyable
 Each property transformation/combination produces a new property
+
+-----------
+Property:
+class:
+instance:
+toStream([sendCurrent])
+map(fn)
+reduce(fn, [memo])
+filter(handler)
+transform(function(source, set, end, value) {
+
+})
+throttle(wait)
+debounce(wait)
+transduce(transducer)
+
+Stream:
+class:
+-fromEvent(target, eventName) //FIXME perhaps, there will be too many mouse events
+instance:
+toProperty([current])
+map(fn)
+filter(handler)
+transform(function(source, send, end) {
+
+})
+throttle(wait)
+debounce(wait)
+transduce(transducer)
+
+//FIXME Use emitter object DONE
+//TODO Add events - xs.reactive.event.Data and xs.reactive.event.End DONE
+//TODO Reactive combines via pure constructors

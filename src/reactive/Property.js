@@ -13,23 +13,10 @@ var Reactive = module.Reactive;
 var Property = xs.reactive.Property = function (generator, value, sources) {
     var me = this;
 
-    var propertyGenerator = function (send) {
-        return generator.apply(undefined, [
-            function (data, silent) {
-                //send
-                if (!send(data, silent)) {
-                    return false;
-                }
-
-                //set current value
-                me.private.value = data;
-
-                return true;
-            }
-        ].concat(Array.prototype.slice.call(arguments, 1)));
-    };
-
-    Reactive.apply(me, [ propertyGenerator ].concat(Array.prototype.slice.call(arguments, 2)));
+    Reactive.apply(me, [
+        generator,
+        new module.EmitterProperty(me)
+    ].concat(Array.prototype.slice.call(arguments, 2)));
 
     //set initial property value
     me.private.value = value;
@@ -56,24 +43,24 @@ Property.fromPromise = function (promise) {
         $promise: promise
     });
 
-    return new this(function (set, end, promise) {
+    return new this(function (property, promise) {
 
         promise.then(function (data) {
-            set({
+            property.set({
                 state: xs.core.Promise.Resolved,
                 data: data
             });
         }, function (error) {
-            set({
+            property.set({
                 state: xs.core.Promise.Rejected,
                 error: error
             });
         }, function (progress) {
-            set({
+            property.set({
                 state: xs.core.Promise.Pending,
                 progress: progress
             });
-        }).always(end);
+        }).always(property.destroy);
     }, {
         state: xs.core.Promise.Pending,
         progress: undefined

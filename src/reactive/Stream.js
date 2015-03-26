@@ -13,7 +13,10 @@ var Reactive = module.Reactive;
 var Stream = xs.reactive.Stream = function (generator, sources) {
     var me = this;
 
-    Reactive.apply(me, arguments);
+    Reactive.apply(me, [
+        generator,
+        new module.EmitterStream(me)
+    ].concat(Array.prototype.slice.call(arguments, 1)));
 };
 
 //extend Stream from Reactive
@@ -37,23 +40,23 @@ Stream.fromPromise = function (promise) {
         $promise: promise
     });
 
-    return new this(function (send, end, promise) {
+    return new this(function (stream, promise) {
         promise.then(function (data) {
-            send({
+            stream.send({
                 state: xs.core.Promise.Resolved,
                 data: data
             });
         }, function (error) {
-            send({
+            stream.send({
                 state: xs.core.Promise.Rejected,
                 error: error
             });
         }, function (progress) {
-            send({
+            stream.send({
                 state: xs.core.Promise.Pending,
                 progress: progress
             });
-        }).always(end);
+        }).always(stream.destroy);
     }, [ promise ]);
 };
 

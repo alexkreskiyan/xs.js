@@ -15,11 +15,11 @@ module('xs.reactive.Stream', function () {
     test('constructor', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (stream) {
             return {
                 on: function () {
-                    send(null);
-                    end();
+                    stream.send(null);
+                    stream.destroy();
                 },
                 off: xs.noop
             };
@@ -79,11 +79,11 @@ module('xs.reactive.Stream', function () {
     test('basics', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (stream) {
             return {
                 on: function () {
-                    send(null);
-                    end();
+                    stream.send(null);
+                    stream.destroy();
                 },
                 off: xs.noop
             };
@@ -112,27 +112,27 @@ module('xs.reactive.Stream', function () {
     test('send', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (stream) {
             var emitter = function () {
                 //send initial value silently
-                send(null, true);
+                stream.send(null, true);
 
                 var i = 0;
 
                 while (i < 10) {
                     //if send ok, continue
-                    if (send(i)) {
+                    if (stream.send(i)) {
                         i++;
 
                         //if send cancelled, send null and end
                     } else {
-                        send(null);
-                        end();
+                        stream.send(null);
+                        stream.destroy();
 
                         return;
                     }
                 }
-                end();
+                stream.destroy();
             };
 
             return {
@@ -181,16 +181,16 @@ module('xs.reactive.Stream', function () {
     test('on', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (stream) {
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                send(i);
+                stream.send(i);
                 i--;
 
                 if (i === 0) {
-                    end();
+                    stream.destroy();
                 }
             };
 
@@ -300,16 +300,16 @@ module('xs.reactive.Stream', function () {
     test('off', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (stream) {
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                send(i);
+                stream.send(i);
                 i--;
 
                 if (i === 0) {
-                    end();
+                    stream.destroy();
                 }
             };
 
@@ -371,16 +371,16 @@ module('xs.reactive.Stream', function () {
     test('suspend', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (stream) {
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                send(i);
+                stream.send(i);
                 i--;
 
                 if (i === 0) {
-                    end();
+                    stream.destroy();
                 }
             };
 
@@ -442,16 +442,16 @@ module('xs.reactive.Stream', function () {
     test('resume', function () {
         var me = this;
 
-        me.generator = function (send, end) {
+        me.generator = function (stream) {
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                send(i);
+                stream.send(i);
                 i--;
 
                 if (i === 0) {
-                    end();
+                    stream.destroy();
                 }
             };
 
