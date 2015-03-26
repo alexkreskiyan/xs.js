@@ -808,40 +808,4 @@ xs.env.Context = xs.context = (function () {
     return me;
 })();
 
-//Needed simple xs.extend(xs, xs.env.Context)
-xs.extend(xs, (new xs.core.Collection(xs.env.Context)).pick([
-    //desktop browsers
-    'isChrome',
-    'isFirefox',
-    'isOpera',
-    'isSafari',
-    'isIE',
-    //mobile browsers
-    'isChromeMobile',
-    'isFirefoxMobile',
-    'isOperaMobile',
-    'isSafariMobile',
-    'isIEMobile',
-    //platform type
-    'isDesktop',
-    'isMobile',
-    //engine
-    'isWebkit',
-    'isBlink',
-    'isGecko',
-    'isPresto',
-    'isTrident',
-    //desktop os
-    'isLinux',
-    'isWindows',
-    'isMac',
-    //mobile os
-    'isAndroid',
-    'isiOS',
-    'isWindowsPhone',
-    //arch
-    'is32',
-    'is64',
-    //other
-    'isTouch'
-]).toSource());
+xs.apply(xs, xs.env.Context);

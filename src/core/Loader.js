@@ -844,6 +844,6 @@ function XsCoreLoaderError(message) {
 
 XsCoreLoaderError.prototype = new Error();
 
-xs.extend(xs, {
+xs.apply(xs, {
     require: xs.Loader.require
 });

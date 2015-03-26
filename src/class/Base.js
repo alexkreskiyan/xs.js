@@ -48,13 +48,13 @@ xs.define(xs.Class, 'xs.class.Base', function (self) {
         var privates = clone.private;
 
         //assign properties
-        xs.extend(clone, me);
+        xs.apply(clone, me);
 
         //restore private
         clone.private = privates;
 
         //assign privates
-        xs.extend(clone.private, me.private);
+        xs.apply(clone.private, me.private);
 
         //return clone
         return clone;

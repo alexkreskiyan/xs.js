@@ -25,7 +25,7 @@
  *         //perform new async stage
  *         return getData().then(function(update) {
  *             console.log('update loaded');
- *             xs.extend(data, update);
+ *             xs.apply(data, update);
  *
  *             return data;
  *         });

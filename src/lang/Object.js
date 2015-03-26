@@ -29,7 +29,7 @@ xs.Object = (function () {
      *     var list = {
      *         x: 1
      *     };
-     *     xs.extend(list, {
+     *     xs.apply(list, {
      *         x: 2,
      *         c: 1
      *     }, {
@@ -45,14 +45,14 @@ xs.Object = (function () {
      *     //    a: 4
      *     //}
      *
-     * @method extend
+     * @method apply
      *
      * @param {Object} object extended object
      */
-    me.extend = function (object) {
+    me.apply = function (object) {
 
-        //assert that index is in bounds
-        assert.object(object, 'extend - given `$object` is not object', {
+        //assert that object given
+        assert.object(object, 'apply - given `$object` is not object', {
             $object: object
         });
 

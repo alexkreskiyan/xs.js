@@ -478,6 +478,6 @@ function XsCoreContractsManagerError(message) {
 
 XsCoreContractsManagerError.prototype = new Error();
 
-xs.extend(xs, {
+xs.apply(xs, {
     define: xs.ContractsManager.define
 });

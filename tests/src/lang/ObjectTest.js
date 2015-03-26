@@ -34,10 +34,10 @@ module('xs.lang.Object', function () {
     }, function () {
         var me = this;
         throws(function () {
-            xs.extend([]);
+            xs.apply([]);
         });
         //extend
-        xs.extend(me.x, {
+        xs.apply(me.x, {
             a: me.b
         }, 3, [
             4,
