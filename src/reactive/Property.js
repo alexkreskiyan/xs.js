@@ -69,6 +69,52 @@ Property.fromPromise = function (promise) {
 };
 
 /**
+ * Creates reactive property from event
+ *
+ * @static
+ *
+ * @method fromEvent
+ *
+ * @param {Element} element event emitter
+ * @param {String} eventName name of subscribed event
+ *
+ * @return {xs.reactive.Property}
+ */
+Property.fromEvent = function (element, eventName) {
+
+    //assert, that an Element is given
+    assert.ok(element instanceof Element, 'fromEvent - given `$element` is not an Element instance', {
+        $element: element
+    });
+
+    //assert, that an eventName is string
+    assert.string(eventName, 'fromEvent - given `$eventName` is not a string', {
+        $eventName: eventName
+    });
+
+    return new this(fromEvent, undefined, [
+        element,
+        eventName
+    ]);
+};
+
+function fromEvent(property, element, eventName) {
+
+    var handler = function (event) {
+        property.set(event);
+    };
+
+    return {
+        on: function () {
+            element.addEventListener(eventName, handler);
+        },
+        off: function () {
+            element.removeEventListener(eventName, handler);
+        }
+    };
+}
+
+/**
  * Property current value
  *
  * @property value

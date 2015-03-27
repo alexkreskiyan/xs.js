@@ -21,8 +21,9 @@ Each property transformation/combination produces a new property
 -----------
 Property:
 class:
+-fromEvent(element, eventName) //DONE
 instance:
-toStream([sendCurrent])
+toStream([sendCurrent]) //DONE
 map(fn)
 reduce(fn, [memo])
 filter(handler)
@@ -35,9 +36,9 @@ transduce(transducer)
 
 Stream:
 class:
--fromEvent(target, eventName) //FIXME perhaps, there will be too many mouse events
+-fromEvent(element, eventName) //DONE
 instance:
-toProperty([current])
+toProperty([current]) //DONE
 map(fn)
 filter(handler)
 transform(function(source, send, end) {
@@ -47,8 +48,5 @@ throttle(wait)
 debounce(wait)
 transduce(transducer)
 
-//FIXME Use emitter object DONE
-//TODO Add events - xs.reactive.event.Data and xs.reactive.event.End DONE
 //TODO Reactive combines via pure constructors
-//TODO rework to make target as event or event's array DONE
-//TODO - default scope for handler is reactive DONE
+//TODO rewrite fromPromise to use private functions

@@ -647,6 +647,32 @@ module('xs.reactive.Property', function () {
         return false;
     });
 
+    test('fromEvent', function () {
+        var me = this;
+
+        var property = xs.reactive.Property.fromEvent(document.body, 'click');
+
+        var log = [];
+        property.on(function (event) {
+            log.push(event.data);
+        });
+
+        document.body.click();
+
+        property.on(function () {
+            strictEqual(log.length, 1);
+            strictEqual(log[ 0 ].constructor, MouseEvent);
+
+            me.done();
+        }, {
+            target: xs.reactive.event.Destroy
+        });
+
+        property.destroy();
+
+        return false;
+    });
+
     test('toStream', function () {
         var me = this;
 

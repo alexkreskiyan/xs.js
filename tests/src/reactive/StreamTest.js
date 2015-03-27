@@ -598,6 +598,32 @@ module('xs.reactive.Stream', function () {
         return false;
     });
 
+    test('fromEvent', function () {
+        var me = this;
+
+        var stream = xs.reactive.Stream.fromEvent(document.body, 'click');
+
+        var log = [];
+        stream.on(function (event) {
+            log.push(event.data);
+        });
+
+        document.body.click();
+
+        stream.on(function () {
+            strictEqual(log.length, 1);
+            strictEqual(log[ 0 ].constructor, MouseEvent);
+
+            me.done();
+        }, {
+            target: xs.reactive.event.Destroy
+        });
+
+        stream.destroy();
+
+        return false;
+    });
+
     test('toProperty', function () {
         var me = this;
 
