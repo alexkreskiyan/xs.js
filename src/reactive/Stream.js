@@ -140,9 +140,9 @@ function toProperty(property, stream) {
 /**
  * Creates new stream, that maps incoming values via given fn
  *
- * @method resume
+ * @method map
  *
- * @param {Function} fn selector, that matches removed handlers
+ * @param {Function} fn mapping function, that returns mapped value
  *
  * @return {xs.reactive.Stream}
  */
@@ -168,6 +168,47 @@ function map(stream, source, fn) {
     //on value - send
     source.on(function (event) {
         stream.send(fn(event.data));
+    });
+
+    //on destroy - destroy
+    source.on(stream.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
+
+/**
+ * Creates new stream, that filters incoming values via given fn
+ *
+ * @method filter
+ *
+ * @param {Function} fn filtering function, that should return boolean value, saying to allow pass event or not
+ *
+ * @return {xs.reactive.Stream}
+ */
+Stream.prototype.filter = function (fn) {
+    var me = this;
+
+    //assert, that reactive is not destroyed
+    assert.not(me.isDestroyed, 'filter - reactive is destroyed');
+
+    //assert, that function is given
+    assert.fn(fn, 'filter - given `$fn` is not a function', {
+        $fn: fn
+    });
+
+    return new this.constructor(filter, [
+        me,
+        fn
+    ]);
+};
+
+function filter(stream, source, fn) {
+
+    //on value - set
+    source.on(function (event) {
+        if (fn(event.data)) {
+            stream.send(event.data);
+        }
     });
 
     //on destroy - destroy

@@ -744,4 +744,36 @@ module('xs.reactive.Property', function () {
         return false;
     });
 
+    test('filter', function () {
+        var me = this;
+
+        var property = new xs.reactive.Property(function (property) {
+            xs.nextTick(function () {
+                property.set(5);
+                property.set(10);
+                property.destroy();
+            });
+        });
+
+        var log = [];
+        property
+            .filter(function (value) {
+
+                return value > 7;
+            })
+            .on(function (event) {
+                log.push(event.data);
+            });
+
+        property.on(function () {
+            strictEqual(JSON.stringify(log), '[10]');
+
+            me.done();
+        }, {
+            target: xs.reactive.event.Destroy
+        });
+
+        return false;
+    });
+
 });

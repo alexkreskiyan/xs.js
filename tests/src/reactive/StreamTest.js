@@ -694,4 +694,36 @@ module('xs.reactive.Stream', function () {
         return false;
     });
 
+    test('filter', function () {
+        var me = this;
+
+        var stream = new xs.reactive.Stream(function (stream) {
+            xs.nextTick(function () {
+                stream.send(5);
+                stream.send(10);
+                stream.destroy();
+            });
+        });
+
+        var log = [];
+        stream
+            .filter(function (value) {
+
+                return value > 7;
+            })
+            .on(function (event) {
+                log.push(event.data);
+            });
+
+        stream.on(function () {
+            strictEqual(JSON.stringify(log), '[10]');
+
+            me.done();
+        }, {
+            target: xs.reactive.event.Destroy
+        });
+
+        return false;
+    });
+
 });

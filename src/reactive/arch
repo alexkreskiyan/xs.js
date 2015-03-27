@@ -25,7 +25,7 @@ class:
 instance:
 toStream([sendCurrent]) //DONE
 map(fn) //DONE
-reduce(fn, [memo])
+reduce(fn, [memo]) //OMIT
 filter(handler)
 transform(function(source, set, end, value) {
 
@@ -40,7 +40,7 @@ class:
 instance:
 toProperty([current]) //DONE
 map(fn) //DONE
-reduce(fn, [memo])
+reduce(fn, [memo]) //OMIT
 filter(handler)
 transform(function(source, send, end) {
 
