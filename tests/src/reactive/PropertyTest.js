@@ -713,4 +713,35 @@ module('xs.reactive.Property', function () {
         return false;
     });
 
+    test('map', function () {
+        var me = this;
+
+        var property = new xs.reactive.Property(function (property) {
+            xs.nextTick(function () {
+                property.set(5);
+                property.destroy();
+            });
+        });
+
+        var log = [];
+        property
+            .map(function (value) {
+
+                return value * 2;
+            })
+            .on(function (event) {
+                log.push(event.data);
+            });
+
+        property.on(function () {
+            strictEqual(JSON.stringify(log), '[10]');
+
+            me.done();
+        }, {
+            target: xs.reactive.event.Destroy
+        });
+
+        return false;
+    });
+
 });

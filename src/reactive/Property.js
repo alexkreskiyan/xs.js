@@ -179,6 +179,45 @@ function toStream(stream, property, sendCurrent) {
 }
 
 /**
+ * Creates new property, that maps incoming values via given fn
+ *
+ * @method resume
+ *
+ * @param {Function} fn selector, that matches removed handlers
+ *
+ * @return {xs.reactive.Property}
+ */
+Property.prototype.map = function (fn) {
+    var me = this;
+
+    //assert, that reactive is not destroyed
+    assert.not(me.isDestroyed, 'map - reactive is destroyed');
+
+    //assert, that function is given
+    assert.fn(fn, 'map - given `$fn` is not a function', {
+        $fn: fn
+    });
+
+    return new this.constructor(map, fn(me.value), [
+        me,
+        fn
+    ]);
+};
+
+function map(property, source, fn) {
+
+    //on value - set
+    source.on(function (event) {
+        property.set(fn(event.data));
+    });
+
+    //on destroy - destroy
+    source.on(property.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
+
+/**
  * Internal error class
  *
  * @ignore

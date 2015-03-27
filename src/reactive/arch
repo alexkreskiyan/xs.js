@@ -24,7 +24,7 @@ class:
 -fromEvent(element, eventName) //DONE
 instance:
 toStream([sendCurrent]) //DONE
-map(fn)
+map(fn) //DONE
 reduce(fn, [memo])
 filter(handler)
 transform(function(source, set, end, value) {
@@ -39,7 +39,8 @@ class:
 -fromEvent(element, eventName) //DONE
 instance:
 toProperty([current]) //DONE
-map(fn)
+map(fn) //DONE
+reduce(fn, [memo])
 filter(handler)
 transform(function(source, send, end) {
 

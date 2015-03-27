@@ -663,4 +663,35 @@ module('xs.reactive.Stream', function () {
         return false;
     });
 
+    test('map', function () {
+        var me = this;
+
+        var stream = new xs.reactive.Stream(function (stream) {
+            xs.nextTick(function () {
+                stream.send(5);
+                stream.destroy();
+            });
+        });
+
+        var log = [];
+        stream
+            .map(function (value) {
+
+                return value * 2;
+            })
+            .on(function (event) {
+                log.push(event.data);
+            });
+
+        stream.on(function () {
+            strictEqual(JSON.stringify(log), '[10]');
+
+            me.done();
+        }, {
+            target: xs.reactive.event.Destroy
+        });
+
+        return false;
+    });
+
 });

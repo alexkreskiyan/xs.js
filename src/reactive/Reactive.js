@@ -272,7 +272,7 @@ Reactive.prototype.off = function (selector, flags) {
     var me = this;
 
     //assert, that reactive is not destroyed
-    assert.not(me.isDestroyed, 'send - reactive is destroyed');
+    assert.not(me.isDestroyed, 'off - reactive is destroyed');
 
     //get handlers reference
     var handlers = me.private.reactiveHandlers;
@@ -324,7 +324,7 @@ Reactive.prototype.suspend = function (selector, flags) {
     var me = this;
 
     //assert, that reactive is not destroyed
-    assert.not(me.isDestroyed, 'send - reactive is destroyed');
+    assert.not(me.isDestroyed, 'suspend - reactive is destroyed');
 
     //get handlers reference
     var handlers = me.private.reactiveHandlers;
@@ -392,7 +392,7 @@ Reactive.prototype.resume = function (selector, flags) {
     var me = this;
 
     //assert, that reactive is not destroyed
-    assert.not(me.isDestroyed, 'send - reactive is destroyed');
+    assert.not(me.isDestroyed, 'resume  - reactive is destroyed');
 
     //get handlers reference
     var handlers = me.private.reactiveHandlers;
@@ -457,7 +457,7 @@ Reactive.prototype.destroy = function () {
     var me = this;
 
     //assert, that reactive is not destroyed
-    assert.not(me.isDestroyed, 'send - reactive is destroyed');
+    assert.not(me.isDestroyed, 'destroy  - reactive is destroyed');
 
     log.trace('destroy - destroying reactive');
 
