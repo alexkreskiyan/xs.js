@@ -182,7 +182,7 @@ Reactive.prototype.on = function (handler, options) {
             handler: handler,
             target: [ xs.reactive.event.Data ],
             suspended: false,
-            scope: undefined
+            scope: me
         });
 
         //sync active state to true - new item not-suspended was added
@@ -219,7 +219,7 @@ Reactive.prototype.on = function (handler, options) {
         handler: handler,
         target: target,
         suspended: suspended,
-        scope: options.hasOwnProperty('scope') ? options.scope : undefined
+        scope: options.hasOwnProperty('scope') ? options.scope : me
     };
 
     //process priority (if given)

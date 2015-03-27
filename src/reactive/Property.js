@@ -79,12 +79,58 @@ Property.fromPromise = function (promise) {
  */
 Object.defineProperty(Property.prototype, 'value', {
     get: function () {
-        return this.private.value;
+        var me = this;
+
+        //assert, that reactive is not destroyed
+        assert.not(me.isDestroyed, 'get:value - reactive is destroyed');
+
+        return me.private.value;
     },
     set: xs.noop,
     configurable: false,
     enumerable: true
 });
+
+/**
+ * Converts property to a stream, optionally, sending current value immediately
+ *
+ * @method toStream
+ *
+ * @param {Boolean} [sendCurrent] whether to send current value on next tick
+ *
+ * @return {xs.reactive.Stream}
+ */
+Property.prototype.toStream = function (sendCurrent) {
+    var me = this;
+
+    assert.ok(!arguments.length || xs.isBoolean(sendCurrent), 'toStream - given `$sendCurrent` is not a boolean value', {
+        $sendCurrent: sendCurrent
+    });
+
+    return new xs.reactive.Stream(toStream, [
+        me,
+        sendCurrent
+    ]);
+};
+
+function toStream(stream, property, sendCurrent) {
+    if (sendCurrent) {
+        var value = property.value;
+        xs.nextTick(function () {
+            stream.send(value);
+        });
+    }
+
+    //on value - send
+    property.on(function (event) {
+        stream.send(event.data);
+    });
+
+    //on destroy - destroy
+    property.on(stream.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
 
 /**
  * Internal error class

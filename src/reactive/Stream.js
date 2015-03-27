@@ -62,6 +62,36 @@ Stream.fromPromise = function (promise) {
 };
 
 /**
+ * Converts stream to a property, optionally, setting initial property value
+ *
+ * @method toProperty
+ *
+ * @param {Boolean} [current] whether to send current value on next tick
+ *
+ * @return {xs.reactive.Property}
+ */
+Stream.prototype.toProperty = function (current) {
+    var me = this;
+
+    return new xs.reactive.Property(toProperty, current, [
+        me
+    ]);
+};
+
+function toProperty(property, stream) {
+
+    //on value - set
+    stream.on(function (event) {
+        property.set(event.data);
+    });
+
+    //on destroy - destroy
+    stream.on(property.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
+
+/**
  * Internal error class
  *
  * @ignore

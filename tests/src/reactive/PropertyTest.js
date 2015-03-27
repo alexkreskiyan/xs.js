@@ -647,4 +647,44 @@ module('xs.reactive.Property', function () {
         return false;
     });
 
+    test('toStream', function () {
+        var me = this;
+
+        var log = [];
+        (new xs.reactive.Property(function (property) {
+            return {
+                on: function () {
+                    xs.nextTick(function () {
+                        property.set(null);
+                        xs.nextTick(function () {
+                            property.destroy();
+                        });
+                    });
+                },
+                off: xs.noop
+            };
+        }, 5))
+            .toStream(true)
+            .on(function (event) {
+                log.push({
+                    data: event.data
+                });
+            })
+            .on(function () {
+                strictEqual(JSON.stringify(log), JSON.stringify([
+                    {
+                        data: 5
+                    },
+                    {
+                        data: null
+                    }
+                ]));
+                me.done();
+            }, {
+                target: xs.reactive.event.Destroy
+            });
+
+        return false;
+    });
+
 });

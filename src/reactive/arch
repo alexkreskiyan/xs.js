@@ -51,3 +51,4 @@ transduce(transducer)
 //TODO Add events - xs.reactive.event.Data and xs.reactive.event.End DONE
 //TODO Reactive combines via pure constructors
 //TODO rework to make target as event or event's array DONE
+//TODO - default scope for handler is reactive DONE
