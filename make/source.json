@@ -32,7 +32,9 @@
             "xs.reactive.Stream": {},
             "xs.reactive.Property": {}
         },
-        "xs.log.Router": {},
+        "xs.log.Router": {
+            "test": false
+        },
         "xs.lang.Object": {},
         "xs.lang.Array": {},
         "xs.lang.List": {},
