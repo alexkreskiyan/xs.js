@@ -209,6 +209,34 @@ Property.prototype.throttle = function (interval) {
     ]);
 };
 
+/**
+ * Creates new property, that puts aside sending incoming values until given interval goes out
+ *
+ * @method debounce
+ *
+ * @param {Number} interval awaiting interval
+ *
+ * @return {xs.reactive.Property}
+ */
+Property.prototype.debounce = function (interval) {
+    var me = this;
+
+    //assert, that reactive is not destroyed
+    assert.not(me.isDestroyed, 'debounce - reactive is destroyed');
+
+    //assert, that interval is a number
+    assert.number(interval, 'debounce - given `$interval` is not a number', {
+        $interval: interval
+    });
+
+
+    //create property
+    return new me.constructor(debounce, me.value, [
+        me,
+        interval
+    ]);
+};
+
 function fromPromise(property, promise) {
     promise.then(function (data) {
         property.set({
@@ -312,6 +340,48 @@ function throttle(property, source, interval) {
 
     //on destroy - destroy
     source.on(property.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
+
+function debounce(property, source, interval) {
+    var timeoutId;
+
+    //on value - change current
+    source.on(function (event) {
+
+        //clear previous timeout
+        clearTimeout(timeoutId);
+
+        //set timeout for setting value
+        timeoutId = setTimeout(function () {
+
+            //set property value
+            property.set(event.data);
+
+            //if source is destroyed - destroy
+            if (sourceDestroyed) {
+                property.destroy();
+            }
+        }, interval);
+    });
+
+    var sourceDestroyed = false;
+
+    //on destroy - destroy
+    source.on(function () {
+
+        //if timeout defined - awaiting initiated, needed delayed destroy
+        if (xs.isDefined(timeoutId)) {
+
+            //set flag, that source is destroyed
+            sourceDestroyed = true;
+
+            //else - can destroy property immediately
+        } else {
+            property.destroy();
+        }
+    }, {
         target: xs.reactive.event.Destroy
     });
 }

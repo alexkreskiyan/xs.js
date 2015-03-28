@@ -731,15 +731,14 @@ module('xs.reactive.Property', function () {
             })
             .on(function (event) {
                 log.push(event.data);
+            })
+            .on(function () {
+                strictEqual(JSON.stringify(log), '[10]');
+
+                me.done();
+            }, {
+                target: xs.reactive.event.Destroy
             });
-
-        property.on(function () {
-            strictEqual(JSON.stringify(log), '[10]');
-
-            me.done();
-        }, {
-            target: xs.reactive.event.Destroy
-        });
 
         return false;
     });
@@ -763,15 +762,14 @@ module('xs.reactive.Property', function () {
             })
             .on(function (event) {
                 log.push(event.data);
+            })
+            .on(function () {
+                strictEqual(JSON.stringify(log), '[10]');
+
+                me.done();
+            }, {
+                target: xs.reactive.event.Destroy
             });
-
-        property.on(function () {
-            strictEqual(JSON.stringify(log), '[10]');
-
-            me.done();
-        }, {
-            target: xs.reactive.event.Destroy
-        });
 
         return false;
     });
@@ -780,9 +778,8 @@ module('xs.reactive.Property', function () {
         var me = this;
 
         var property = new xs.reactive.Property(function (property) {
-            var i = 0;
             var interval = setInterval(function () {
-                property.set(i++);
+                property.set((new Date()).valueOf());
             }, 0);
             setTimeout(function () {
                 clearInterval(interval);
@@ -795,23 +792,50 @@ module('xs.reactive.Property', function () {
         property
             .throttle(10)
             .on(function (event) {
-                var time = (new Date()).valueOf();
-                log.push({
-                    diff: time - diff,
-                    data: event.data
-                });
-                diff = time;
+                log.push(event.data - diff);
+                diff = event.data;
+            })
+            .on(function () {
+                strictEqual((new xs.core.Collection(log)).all(function (value) {
+                    return value >= 10;
+                }), true);
+
+                me.done();
+            }, {
+                target: xs.reactive.event.Destroy
             });
 
-        property.on(function () {
-            strictEqual((new xs.core.Collection(log)).all(function (value) {
-                return value.data < 100 && (value.diff === null || value.diff >= 10);
-            }), true);
+        return false;
+    });
 
-            me.done();
-        }, {
-            target: xs.reactive.event.Destroy
+    test('debounce', function () {
+        var me = this;
+
+        var property = new xs.reactive.Property(function (property) {
+            var i = 0;
+            var interval = setInterval(function () {
+                property.set(++i);
+
+                if (i === 10) {
+                    clearInterval(interval);
+                    property.destroy();
+                }
+            }, 5);
         });
+
+        var log = [];
+        property
+            .debounce(10)
+            .on(function (event) {
+                log.push(event.data);
+            })
+            .on(function () {
+                strictEqual(JSON.stringify(log), '[10]');
+
+                me.done();
+            }, {
+                target: xs.reactive.event.Destroy
+            });
 
         return false;
     });

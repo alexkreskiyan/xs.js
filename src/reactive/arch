@@ -31,7 +31,7 @@ transform(function(source, set, end, value) {
 
 })//OMIT
 throttle(wait) //DONE
-debounce(wait)
+debounce(wait) //DONE
 transduce(transducer)
 
 Stream:
@@ -46,7 +46,7 @@ transform(function(source, send, end) {
 
 })//OMIT
 throttle(wait) //DONE
-debounce(wait)
+debounce(wait) //DONE
 transduce(transducer)
 
 //TODO Reactive combines via pure constructors

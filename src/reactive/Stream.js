@@ -112,7 +112,7 @@ Stream.prototype.map = function (fn) {
     });
 
 
-    //create property
+    //create stream
     return new me.constructor(map, [
         me,
         fn
@@ -170,6 +170,34 @@ Stream.prototype.throttle = function (interval) {
 
     //create stream
     return new me.constructor(throttle, [
+        me,
+        interval
+    ]);
+};
+
+/**
+ * Creates new stream, that puts aside sending incoming values until given interval goes out
+ *
+ * @method debounce
+ *
+ * @param {Number} interval awaiting interval
+ *
+ * @return {xs.reactive.Stream}
+ */
+Stream.prototype.debounce = function (interval) {
+    var me = this;
+
+    //assert, that reactive is not destroyed
+    assert.not(me.isDestroyed, 'debounce - reactive is destroyed');
+
+    //assert, that interval is a number
+    assert.number(interval, 'debounce - given `$interval` is not a number', {
+        $interval: interval
+    });
+
+
+    //create stream
+    return new me.constructor(debounce, [
         me,
         interval
     ]);
@@ -272,6 +300,48 @@ function throttle(stream, source, interval) {
 
     //on destroy - destroy
     source.on(stream.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
+
+function debounce(stream, source, interval) {
+    var timeoutId;
+
+    //on value - change current
+    source.on(function (event) {
+
+        //clear previous timeout
+        clearTimeout(timeoutId);
+
+        //set timeout for setting value
+        timeoutId = setTimeout(function () {
+
+            //set stream value
+            stream.send(event.data);
+
+            //if source is destroyed - destroy
+            if (sourceDestroyed) {
+                stream.destroy();
+            }
+        }, interval);
+    });
+
+    var sourceDestroyed = false;
+
+    //on destroy - destroy
+    source.on(function () {
+
+        //if timeout defined - awaiting initiated, needed delayed destroy
+        if (xs.isDefined(timeoutId)) {
+
+            //set flag, that source is destroyed
+            sourceDestroyed = true;
+
+            //else - can destroy stream immediately
+        } else {
+            stream.destroy();
+        }
+    }, {
         target: xs.reactive.event.Destroy
     });
 }

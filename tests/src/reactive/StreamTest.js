@@ -730,9 +730,8 @@ module('xs.reactive.Stream', function () {
         var me = this;
 
         var stream = new xs.reactive.Stream(function (stream) {
-            var i = 0;
             var interval = setInterval(function () {
-                stream.send(i++);
+                stream.send((new Date()).valueOf());
             }, 0);
             setTimeout(function () {
                 clearInterval(interval);
@@ -745,23 +744,50 @@ module('xs.reactive.Stream', function () {
         stream
             .throttle(10)
             .on(function (event) {
-                var time = (new Date()).valueOf();
-                log.push({
-                    diff: time - diff,
-                    data: event.data
-                });
-                diff = time;
+                log.push(event.data - diff);
+                diff = event.data;
+            })
+            .on(function () {
+                strictEqual((new xs.core.Collection(log)).all(function (value) {
+                    return value >= 10;
+                }), true);
+
+                me.done();
+            }, {
+                target: xs.reactive.event.Destroy
             });
 
-        stream.on(function () {
-            strictEqual((new xs.core.Collection(log)).all(function (value) {
-                return value.data < 100 && (value.diff === null || value.diff >= 10);
-            }), true);
+        return false;
+    });
 
-            me.done();
-        }, {
-            target: xs.reactive.event.Destroy
+    test('debounce', function () {
+        var me = this;
+
+        var stream = new xs.reactive.Stream(function (stream) {
+            var i = 0;
+            var interval = setInterval(function () {
+                stream.send(++i);
+
+                if (i === 10) {
+                    clearInterval(interval);
+                    stream.destroy();
+                }
+            }, 5);
         });
+
+        var log = [];
+        stream
+            .debounce(10)
+            .on(function (event) {
+                log.push(event.data);
+            })
+            .on(function () {
+                strictEqual(JSON.stringify(log), '[10]');
+
+                me.done();
+            }, {
+                target: xs.reactive.event.Destroy
+            });
 
         return false;
     });
