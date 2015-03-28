@@ -182,6 +182,16 @@ Property.prototype.filter = function (fn) {
 };
 
 /**
+ * Creates new property, that transforms incoming values via given transducer //TODO
+ *
+ * @method transduce
+ *
+ * @return {xs.reactive.Property}
+ */
+Property.prototype.transduce = function () {
+};
+
+/**
  * Creates new property, that throttles incoming values according to given interval
  *
  * @method throttle

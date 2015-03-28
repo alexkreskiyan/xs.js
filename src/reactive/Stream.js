@@ -148,6 +148,16 @@ Stream.prototype.filter = function (fn) {
 };
 
 /**
+ * Creates new stream, that transforms incoming values via given transducer //TODO
+ *
+ * @method transduce
+ *
+ * @return {xs.reactive.Stream}
+ */
+Stream.prototype.transduce = function () {
+};
+
+/**
  * Creates new stream, that throttles incoming values according to given interval
  *
  * @method throttle
