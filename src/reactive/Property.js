@@ -50,25 +50,6 @@ Property.fromPromise = function (promise) {
     }, [ promise ]);
 };
 
-function fromPromise(property, promise) {
-    promise.then(function (data) {
-        property.set({
-            state: xs.core.Promise.Resolved,
-            data: data
-        });
-    }, function (error) {
-        property.set({
-            state: xs.core.Promise.Rejected,
-            error: error
-        });
-    }, function (progress) {
-        property.set({
-            state: xs.core.Promise.Pending,
-            progress: progress
-        });
-    }).always(property.destroy);
-}
-
 /**
  * Creates reactive property from event
  *
@@ -98,22 +79,6 @@ Property.fromEvent = function (element, eventName) {
         eventName
     ]);
 };
-
-function fromEvent(property, element, eventName) {
-
-    var handler = function (event) {
-        property.set(event);
-    };
-
-    return {
-        on: function () {
-            element.addEventListener(eventName, handler);
-        },
-        off: function () {
-            element.removeEventListener(eventName, handler);
-        }
-    };
-}
 
 /**
  * Property current value
@@ -160,25 +125,6 @@ Property.prototype.toStream = function (sendCurrent) {
     ]);
 };
 
-function toStream(stream, property, sendCurrent) {
-    if (sendCurrent) {
-        var value = property.value;
-        xs.nextTick(function () {
-            stream.send(value);
-        });
-    }
-
-    //on value - send
-    property.on(function (event) {
-        stream.send(event.data);
-    });
-
-    //on destroy - destroy
-    property.on(stream.destroy, {
-        target: xs.reactive.event.Destroy
-    });
-}
-
 /**
  * Creates new property, that maps incoming values via given fn
  *
@@ -199,24 +145,13 @@ Property.prototype.map = function (fn) {
         $fn: fn
     });
 
-    return new this.constructor(map, fn(me.value), [
+
+    //create property
+    return new me.constructor(map, fn(me.value), [
         me,
         fn
     ]);
 };
-
-function map(property, source, fn) {
-
-    //on value - set
-    source.on(function (event) {
-        property.set(fn(event.data));
-    });
-
-    //on destroy - destroy
-    source.on(property.destroy, {
-        target: xs.reactive.event.Destroy
-    });
-}
 
 /**
  * Creates new property, that filters incoming values via given fn
@@ -238,26 +173,13 @@ Property.prototype.filter = function (fn) {
         $fn: fn
     });
 
-    return new this.constructor(filter, fn(me.value) ? me.value : undefined, [
+
+    //create property
+    return new me.constructor(filter, fn(me.value) ? me.value : undefined, [
         me,
         fn
     ]);
 };
-
-function filter(property, source, fn) {
-
-    //on value - set
-    source.on(function (event) {
-        if (fn(event.data)) {
-            property.set(event.data);
-        }
-    });
-
-    //on destroy - destroy
-    source.on(property.destroy, {
-        target: xs.reactive.event.Destroy
-    });
-}
 
 /**
  * Creates new property, that throttles incoming values according to given interval
@@ -279,11 +201,95 @@ Property.prototype.throttle = function (interval) {
         $interval: interval
     });
 
-    return new this.constructor(throttle, me.value, [
+
+    //create property
+    return new me.constructor(throttle, me.value, [
         me,
         interval
     ]);
 };
+
+function fromPromise(property, promise) {
+    promise.then(function (data) {
+        property.set({
+            state: xs.core.Promise.Resolved,
+            data: data
+        });
+    }, function (error) {
+        property.set({
+            state: xs.core.Promise.Rejected,
+            error: error
+        });
+    }, function (progress) {
+        property.set({
+            state: xs.core.Promise.Pending,
+            progress: progress
+        });
+    }).always(property.destroy);
+}
+
+function fromEvent(property, element, eventName) {
+
+    var handler = function (event) {
+        property.set(event);
+    };
+
+    return {
+        on: function () {
+            element.addEventListener(eventName, handler);
+        },
+        off: function () {
+            element.removeEventListener(eventName, handler);
+        }
+    };
+}
+
+function toStream(stream, property, sendCurrent) {
+    if (sendCurrent) {
+        var value = property.value;
+        xs.nextTick(function () {
+            stream.send(value);
+        });
+    }
+
+    //on value - send
+    property.on(function (event) {
+        stream.send(event.data);
+    });
+
+    //on destroy - destroy
+    property.on(stream.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
+
+function map(property, source, fn) {
+
+    //on value - set
+    source.on(function (event) {
+        property.set(fn(event.data));
+    });
+
+    //on destroy - destroy
+    source.on(property.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
+
+function filter(property, source, fn) {
+
+    //on value - set
+    source.on(function (event) {
+        if (fn(event.data)) {
+            property.set(event.data);
+        }
+    });
+
+    //on destroy - destroy
+    source.on(property.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
 
 function throttle(property, source, interval) {
     var lastTime = -Infinity;

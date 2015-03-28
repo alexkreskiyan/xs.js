@@ -44,25 +44,6 @@ Stream.fromPromise = function (promise) {
     return new this(fromPromise, [ promise ]);
 };
 
-function fromPromise(stream, promise) {
-    promise.then(function (data) {
-        stream.send({
-            state: xs.core.Promise.Resolved,
-            data: data
-        });
-    }, function (error) {
-        stream.send({
-            state: xs.core.Promise.Rejected,
-            error: error
-        });
-    }, function (progress) {
-        stream.send({
-            state: xs.core.Promise.Pending,
-            progress: progress
-        });
-    }).always(stream.destroy);
-}
-
 /**
  * Creates reactive stream from event
  *
@@ -93,22 +74,6 @@ Stream.fromEvent = function (element, eventName) {
     ]);
 };
 
-function fromEvent(stream, element, eventName) {
-
-    var handler = function (event) {
-        stream.send(event);
-    };
-
-    return {
-        on: function () {
-            element.addEventListener(eventName, handler);
-        },
-        off: function () {
-            element.removeEventListener(eventName, handler);
-        }
-    };
-}
-
 /**
  * Converts stream to a property, optionally, setting initial property value
  *
@@ -125,19 +90,6 @@ Stream.prototype.toProperty = function (current) {
         me
     ]);
 };
-
-function toProperty(property, stream) {
-
-    //on value - set
-    stream.on(function (event) {
-        property.set(event.data);
-    });
-
-    //on destroy - destroy
-    stream.on(property.destroy, {
-        target: xs.reactive.event.Destroy
-    });
-}
 
 /**
  * Creates new stream, that maps incoming values via given fn
@@ -159,24 +111,13 @@ Stream.prototype.map = function (fn) {
         $fn: fn
     });
 
-    return new this.constructor(map, [
+
+    //create property
+    return new me.constructor(map, [
         me,
         fn
     ]);
 };
-
-function map(stream, source, fn) {
-
-    //on value - send
-    source.on(function (event) {
-        stream.send(fn(event.data));
-    });
-
-    //on destroy - destroy
-    source.on(stream.destroy, {
-        target: xs.reactive.event.Destroy
-    });
-}
 
 /**
  * Creates new stream, that filters incoming values via given fn
@@ -198,26 +139,13 @@ Stream.prototype.filter = function (fn) {
         $fn: fn
     });
 
-    return new this.constructor(filter, [
+
+    //create stream
+    return new me.constructor(filter, [
         me,
         fn
     ]);
 };
-
-function filter(stream, source, fn) {
-
-    //on value - set
-    source.on(function (event) {
-        if (fn(event.data)) {
-            stream.send(event.data);
-        }
-    });
-
-    //on destroy - destroy
-    source.on(stream.destroy, {
-        target: xs.reactive.event.Destroy
-    });
-}
 
 /**
  * Creates new stream, that throttles incoming values according to given interval
@@ -239,11 +167,89 @@ Stream.prototype.throttle = function (interval) {
         $interval: interval
     });
 
-    return new this.constructor(throttle, [
+
+    //create stream
+    return new me.constructor(throttle, [
         me,
         interval
     ]);
 };
+
+function fromPromise(stream, promise) {
+    promise.then(function (data) {
+        stream.send({
+            state: xs.core.Promise.Resolved,
+            data: data
+        });
+    }, function (error) {
+        stream.send({
+            state: xs.core.Promise.Rejected,
+            error: error
+        });
+    }, function (progress) {
+        stream.send({
+            state: xs.core.Promise.Pending,
+            progress: progress
+        });
+    }).always(stream.destroy);
+}
+
+function fromEvent(stream, element, eventName) {
+
+    var handler = function (event) {
+        stream.send(event);
+    };
+
+    return {
+        on: function () {
+            element.addEventListener(eventName, handler);
+        },
+        off: function () {
+            element.removeEventListener(eventName, handler);
+        }
+    };
+}
+
+function toProperty(property, stream) {
+
+    //on value - set
+    stream.on(function (event) {
+        property.set(event.data);
+    });
+
+    //on destroy - destroy
+    stream.on(property.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
+
+function map(stream, source, fn) {
+
+    //on value - send
+    source.on(function (event) {
+        stream.send(fn(event.data));
+    });
+
+    //on destroy - destroy
+    source.on(stream.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
+
+function filter(stream, source, fn) {
+
+    //on value - set
+    source.on(function (event) {
+        if (fn(event.data)) {
+            stream.send(event.data);
+        }
+    });
+
+    //on destroy - destroy
+    source.on(stream.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
 
 function throttle(stream, source, interval) {
     var lastTime = -Infinity;
