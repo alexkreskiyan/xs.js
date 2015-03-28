@@ -10,13 +10,15 @@ if (!xs.log) {
  *
  * @ignore
  *
+ * @static
+ *
  * @private
  *
  * @property profiles
  *
- * @type {xs.core.Collection}
+ * @type {Array}
  */
-var profiles = new xs.core.Collection();
+var profiles = {};
 
 //create assert mock
 var assert = {
@@ -243,10 +245,18 @@ function profileStart(mark) {
         $mark: mark
     });
 
-    //add new entry to storage
-    profiles.add(me.category + '.' + mark, {
-        time: (new Date()).valueOf()
+    //get profile mark full name
+    var name = me.category + '.' + mark;
+
+    //assert, that profile is not redefining currently existing one
+    assert.not(profiles.hasOwnProperty(name), 'profile.start - given mark `$mark` is already used', {
+        $mark: mark
     });
+
+    //set profile record
+    profiles[ name ] = {
+        time: (new Date()).valueOf()
+    };
 }
 
 /**
@@ -275,17 +285,22 @@ function profileEnd(mark) {
         $mark: mark
     });
 
-    //evaluate storage key
-    var key = me.category + '.' + mark;
+    //get profile mark full name
+    var name = me.category + '.' + mark;
+
+    //assert, that profile record is defined
+    assert.ok(profiles.hasOwnProperty(name), 'profile.end - given mark `$mark` has not defined a profile', {
+        $mark: mark
+    });
 
     //get profile record
-    var profile = profiles.at(key);
+    var profile = profiles[ name ];
 
     //evaluate execution time
     profile.time = (new Date()).valueOf() - profile.time;
 
     //remove profile from storage
-    profiles.remove(profile);
+    delete profiles[ name ];
 
     //process profiling message (mark) with profile as data
     processEntry(me.category, xs.log.Profile, mark, profile);
