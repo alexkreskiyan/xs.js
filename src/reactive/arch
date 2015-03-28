@@ -26,10 +26,10 @@ instance:
 toStream([sendCurrent]) //DONE
 map(fn) //DONE
 reduce(fn, [memo]) //OMIT
-filter(handler)
+filter(handler) //DONE
 transform(function(source, set, end, value) {
 
-})
+})//OMIT
 throttle(wait)
 debounce(wait)
 transduce(transducer)
@@ -41,10 +41,10 @@ instance:
 toProperty([current]) //DONE
 map(fn) //DONE
 reduce(fn, [memo]) //OMIT
-filter(handler)
+filter(handler) //DONE
 transform(function(source, send, end) {
 
-})
+})//OMIT
 throttle(wait)
 debounce(wait)
 transduce(transducer)

@@ -44,29 +44,30 @@ Property.fromPromise = function (promise) {
         $promise: promise
     });
 
-    return new this(function (property, promise) {
-
-        promise.then(function (data) {
-            property.set({
-                state: xs.core.Promise.Resolved,
-                data: data
-            });
-        }, function (error) {
-            property.set({
-                state: xs.core.Promise.Rejected,
-                error: error
-            });
-        }, function (progress) {
-            property.set({
-                state: xs.core.Promise.Pending,
-                progress: progress
-            });
-        }).always(property.destroy);
-    }, {
+    return new this(fromPromise, {
         state: xs.core.Promise.Pending,
         progress: undefined
     }, [ promise ]);
 };
+
+function fromPromise(property, promise) {
+    promise.then(function (data) {
+        property.set({
+            state: xs.core.Promise.Resolved,
+            data: data
+        });
+    }, function (error) {
+        property.set({
+            state: xs.core.Promise.Rejected,
+            error: error
+        });
+    }, function (progress) {
+        property.set({
+            state: xs.core.Promise.Pending,
+            progress: progress
+        });
+    }).always(property.destroy);
+}
 
 /**
  * Creates reactive property from event

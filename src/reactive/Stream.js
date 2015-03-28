@@ -41,25 +41,27 @@ Stream.fromPromise = function (promise) {
         $promise: promise
     });
 
-    return new this(function (stream, promise) {
-        promise.then(function (data) {
-            stream.send({
-                state: xs.core.Promise.Resolved,
-                data: data
-            });
-        }, function (error) {
-            stream.send({
-                state: xs.core.Promise.Rejected,
-                error: error
-            });
-        }, function (progress) {
-            stream.send({
-                state: xs.core.Promise.Pending,
-                progress: progress
-            });
-        }).always(stream.destroy);
-    }, [ promise ]);
+    return new this(fromPromise, [ promise ]);
 };
+
+function fromPromise(stream, promise) {
+    promise.then(function (data) {
+        stream.send({
+            state: xs.core.Promise.Resolved,
+            data: data
+        });
+    }, function (error) {
+        stream.send({
+            state: xs.core.Promise.Rejected,
+            error: error
+        });
+    }, function (progress) {
+        stream.send({
+            state: xs.core.Promise.Pending,
+            progress: progress
+        });
+    }).always(stream.destroy);
+}
 
 /**
  * Creates reactive stream from event
