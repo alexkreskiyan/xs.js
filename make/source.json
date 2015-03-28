@@ -220,20 +220,6 @@
                     "contract": "class"
                 }
             },
-            "log": {
-                "route": {
-                    "IRoute": {
-                        "contract": "interface"
-                    },
-                    "Route": {
-                        "contract": "class"
-                    },
-                    "Console": {
-                        "contract": "class",
-                        "test": false
-                    }
-                }
-            },
             "storage": {
                 "WebStorage": {
                     "contract": "class",
