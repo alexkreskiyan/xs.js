@@ -3,6 +3,7 @@
         "xs.lang.Type": {},
         "xs.log.Logger": {},
         "xs.core.Asserter": {},
+        "xs.core.Collection": {},
         "reactive": {
             "xs.reactive.emitter.Emitter": {
                 "test": false
@@ -38,7 +39,6 @@
         "xs.lang.Attribute": {},
         "xs.lang.Function": {},
         "xs.lang.String": {},
-        "xs.core.Collection": {},
         "xs.core.Loader": {},
         "xs.core.ContractsManager": {},
         "contracts": {

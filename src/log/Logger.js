@@ -30,7 +30,6 @@ var assert = {
 
 //create reference to a function, that will be called each time, when new log entry appears
 var processEntry = function () {
-    console.log.apply(console, arguments);
 };
 
 /**
@@ -109,11 +108,12 @@ Logger.prototype.error = function (message, data) {
         $data: data
     });
 
-    if (data) {
-        processEntry(me.category, xs.log.Error, message, data);
-    } else {
-        processEntry(me.category, xs.log.Error, message);
-    }
+    processEntry({
+        category: me.category,
+        level: xs.log.Error,
+        message: message,
+        data: data
+    });
 };
 
 /**
@@ -145,11 +145,12 @@ Logger.prototype.warn = function (message, data) {
         $data: data
     });
 
-    if (data) {
-        processEntry(me.category, xs.log.Warning, message, data);
-    } else {
-        processEntry(me.category, xs.log.Warning, message);
-    }
+    processEntry({
+        category: me.category,
+        level: xs.log.Warning,
+        message: message,
+        data: data
+    });
 };
 
 /**
@@ -181,11 +182,12 @@ Logger.prototype.info = function (message, data) {
         $data: data
     });
 
-    if (data) {
-        processEntry(me.category, xs.log.Info, message, data);
-    } else {
-        processEntry(me.category, xs.log.Info, message);
-    }
+    processEntry({
+        category: me.category,
+        level: xs.log.Info,
+        message: message,
+        data: data
+    });
 };
 
 /**
@@ -218,11 +220,12 @@ Logger.prototype.trace = function (message, data) {
         $data: data
     });
 
-    if (data) {
-        processEntry(me.category, xs.log.Trace, message, data);
-    } else {
-        processEntry(me.category, xs.log.Trace, message);
-    }
+    processEntry({
+        category: me.category,
+        level: xs.log.Trace,
+        message: message,
+        data: data
+    });
 };
 
 /**
@@ -339,8 +342,12 @@ function profileEnd(mark) {
     //remove profile from storage
     delete profiles[ name ];
 
-    //process profiling message (mark) with profile as data
-    processEntry(me.category, xs.log.Profile, mark, profile);
+    processEntry({
+        category: me.category,
+        level: xs.log.Profile,
+        message: mark,
+        data: profile
+    });
 }
 
 /**
@@ -362,4 +369,10 @@ XsLogLoggerError.prototype = new Error();
 Logger.hookReady = function () {
     assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Logger'), XsLogLoggerError);
     delete Logger.hookReady;
+};
+
+//hook method to define internal process method
+Logger.hookProcess = function (fn) {
+    processEntry = fn;
+    delete Logger.hookProcess;
 };
