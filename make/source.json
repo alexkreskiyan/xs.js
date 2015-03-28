@@ -1,8 +1,6 @@
 {
     "core": {
         "xs.lang.Type": {},
-        "xs.core.Collection": {},
-        "xs.log.Router": {},
         "xs.log.Logger": {},
         "xs.core.Asserter": {},
         "reactive": {
@@ -33,12 +31,14 @@
             "xs.reactive.Stream": {},
             "xs.reactive.Property": {}
         },
+        "xs.log.Router": {},
         "xs.lang.Object": {},
         "xs.lang.Array": {},
         "xs.lang.List": {},
         "xs.lang.Attribute": {},
         "xs.lang.Function": {},
         "xs.lang.String": {},
+        "xs.core.Collection": {},
         "xs.core.Loader": {},
         "xs.core.ContractsManager": {},
         "contracts": {

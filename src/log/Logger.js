@@ -23,12 +23,15 @@ var profiles = {};
 //create assert mock
 var assert = {
     ok: function () {
+    },
+    string: function () {
     }
 };
 
-//create reference to xs.log.Router.process and remove it
-var processEntry = xs.log.Router.process;
-delete xs.log.Router.process;
+//create reference to a function, that will be called each time, when new log entry appears
+var processEntry = function () {
+    console.log.apply(console, arguments);
+};
 
 /**
  * xs.log.Logger is key system element, that performs logging operations.
@@ -62,7 +65,7 @@ var Logger = xs.log.Logger = function (category) {
     var me = this;
 
     //assert, that category is valid (via xs.log.Router.isCategory)
-    assert.ok(xs.log.Router.isCategory(category), 'Given category `$category` is not a valid category', {
+    assert.ok(isCategory(category), 'Given category `$category` is not a valid category', {
         $category: category
     });
 
@@ -221,6 +224,40 @@ Logger.prototype.trace = function (message, data) {
         processEntry(me.category, xs.log.Trace, message);
     }
 };
+
+/**
+ * Category name testing regular expression
+ *
+ * @ignore
+ *
+ * @type {RegExp}
+ */
+var categoryRe = /^[A-Za-z]{1}[A-Za-z0-9]*(?:\.{1}[A-Za-z]{1}[A-Za-z0-9]*)*$/;
+
+/**
+ * Returns whether given string is correct router category name
+ *
+ * For example:
+ *
+ *     xs.log.router.isCategory('xs.module.my.Class'); //true
+ *
+ * @private
+ *
+ * @method isCategory
+ *
+ * @param {String} category verified category name
+ *
+ * @return {String} whether category name is correct
+ */
+function isCategory(category) {
+
+    //assert that category is a string
+    assert.string(category, 'isCategory - given category `$category` is not a string', {
+        $category: category
+    });
+
+    return categoryRe.test(category);
+}
 
 /**
  * Begins profiling with given mark.

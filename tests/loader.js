@@ -12,12 +12,15 @@
     //fetches tests list from specified query param
     var params = (function (query) {
         var result = /\?([^#\?]+)/.exec(query);
+
         if (!result) {
 
             return {};
         }
         var paramsPairs = result.slice(1).shift().split('&');
-        var params = {}, pair;
+        var params = {};
+        var pair;
+
         for (var idx = 0; idx < paramsPairs.length; idx++) {
             pair = paramsPairs[ idx ].split('=');
             params[ pair[ 0 ] ] = pair[ 1 ];
@@ -73,9 +76,6 @@
         var modules = {};
         assemblyModules(modules, src.modules);
 
-        //mark xs.log.Router as ready
-        xs.log.Router.ready();
-
         loadTests(core, modules, testsList);
     };
 
@@ -91,6 +91,7 @@
 
         tested.modules = Object.keys(modules).filter(function (name) {
             var config = modules[ name ];
+
             return config.contract === 'class' && config.test !== false;
         });
 
@@ -121,6 +122,7 @@
 
             //concat core with module
             var keys = Object.keys(module);
+
             for (var j = 0; j < keys.length; j++) {
                 var key = keys[ j ];
                 core[ key ] = module[ key ];
@@ -200,6 +202,7 @@
 
             var handleSetUp = function () {
                 scope.done = handleRun;
+
                 if (setUp.call(scope) !== false) {
                     handleRun();
                 }
@@ -207,6 +210,7 @@
 
             var handleRun = function () {
                 scope.done = handleTearDown;
+
                 if (run.call(scope) !== false) {
                     handleTearDown();
                 }
@@ -214,13 +218,14 @@
 
             var handleTearDown = function () {
                 scope.done = handleEnd;
+
                 if (tearDown.call(scope) !== false) {
                     handleEnd();
                 }
             };
 
             var handleEnd = function () {
-                console.info(module + '::' + name, '-', +((new Date()).valueOf() - time));
+                console.info(module + '::' + name, '-', Number((new Date()).valueOf() - time));
                 done();
             };
 
@@ -241,6 +246,7 @@
                 }
             });
         });
+
         return list;
     }
 
@@ -334,6 +340,7 @@
     me.benchmark = function (fn, n) {
 
         var start = Date.now();
+
         for (var i = 0; i < n; i++) {
             fn();
         }

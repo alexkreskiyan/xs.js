@@ -1,5 +1,10 @@
 'use strict';
 
+var log = new xs.log.Logger('xs.log.Router');
+
+var assert = new xs.core.Asserter(log, XsLogRouterError);
+
+
 //define xs.log
 if (!xs.log) {
 
@@ -71,13 +76,7 @@ xs.log.Trace = 0x8;
  */
 xs.log.Profile = 0x10;
 
-//create assert mock
-var assert = {
-    string: function () {
-
-    }
-};
-
+return;
 /**
  * xs.log.Router is key system element, that performs logging operations
  *
@@ -87,7 +86,7 @@ var assert = {
  *
  * @singleton
  */
-var router = xs.log.Router = (function () {
+xs.log.Router = (function () {
     var me = {};
 
     /**
@@ -333,9 +332,3 @@ function XsLogRouterError(message) {
 }
 
 XsLogRouterError.prototype = new Error();
-
-//hook method to create asserter. here fake assert is needed for first call
-router.hookReady = function () {
-    assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Router'), XsLogRouterError);
-    delete router.hookReady;
-};

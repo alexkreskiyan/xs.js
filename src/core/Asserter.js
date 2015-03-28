@@ -851,6 +851,4 @@ XsCoreAsserterError.prototype = new Error();
 assert = new xs.core.Asserter(new xs.log.Logger('xs'), XsCoreAsserterError);
 
 //call hooks
-xs.log.Router.hookReady();
 xs.log.Logger.hookReady();
-xs.core.Collection.hookReady();

@@ -1,12 +1,13 @@
 'use strict';
 
+var log = new xs.log.Logger('xs.core.Collection');
+
+var assert = new xs.core.Asserter(log, XsCoreCollectionError);
+
 //define xs.core
 if (!xs.core) {
     xs.core = {};
 }
-
-var assert;
-
 
 /**
  * xs.core.Collection is core framework class, that is used for internal collections
@@ -2785,9 +2786,3 @@ function XsCoreCollectionError(message) {
 }
 
 XsCoreCollectionError.prototype = new Error();
-
-//hook method to create asserter
-Collection.hookReady = function () {
-    assert = new xs.core.Asserter(new xs.log.Logger('xs.core.Collection'), XsCoreCollectionError);
-    delete Collection.hookReady;
-};
