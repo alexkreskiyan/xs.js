@@ -30,7 +30,7 @@ filter(handler) //DONE
 transform(function(source, set, end, value) {
 
 })//OMIT
-throttle(wait)
+throttle(wait) //DONE
 debounce(wait)
 transduce(transducer)
 
@@ -45,9 +45,11 @@ filter(handler) //DONE
 transform(function(source, send, end) {
 
 })//OMIT
-throttle(wait)
+throttle(wait) //DONE
 debounce(wait)
 transduce(transducer)
 
 //TODO Reactive combines via pure constructors
 //TODO rewrite fromPromise to use private functions
+//TODO Rewrite to move privates down
+//TODO all transformer functions are called with reactive as scope

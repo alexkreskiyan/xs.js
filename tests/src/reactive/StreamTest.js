@@ -726,4 +726,44 @@ module('xs.reactive.Stream', function () {
         return false;
     });
 
+    test('throttle', function () {
+        var me = this;
+
+        var stream = new xs.reactive.Stream(function (stream) {
+            var i = 0;
+            var interval = setInterval(function () {
+                stream.send(i++);
+            }, 0);
+            setTimeout(function () {
+                clearInterval(interval);
+                stream.destroy();
+            }, 100);
+        });
+
+        var log = [];
+        var diff = -Infinity;
+        stream
+            .throttle(10)
+            .on(function (event) {
+                var time = (new Date()).valueOf();
+                log.push({
+                    diff: time - diff,
+                    data: event.data
+                });
+                diff = time;
+            });
+
+        stream.on(function () {
+            strictEqual((new xs.core.Collection(log)).all(function (value) {
+                return value.data < 100 && (value.diff === null || value.diff >= 10);
+            }), true);
+
+            me.done();
+        }, {
+            target: xs.reactive.event.Destroy
+        });
+
+        return false;
+    });
+
 });

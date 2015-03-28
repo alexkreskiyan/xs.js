@@ -776,4 +776,44 @@ module('xs.reactive.Property', function () {
         return false;
     });
 
+    test('throttle', function () {
+        var me = this;
+
+        var property = new xs.reactive.Property(function (property) {
+            var i = 0;
+            var interval = setInterval(function () {
+                property.set(i++);
+            }, 0);
+            setTimeout(function () {
+                clearInterval(interval);
+                property.destroy();
+            }, 100);
+        });
+
+        var log = [];
+        var diff = -Infinity;
+        property
+            .throttle(10)
+            .on(function (event) {
+                var time = (new Date()).valueOf();
+                log.push({
+                    diff: time - diff,
+                    data: event.data
+                });
+                diff = time;
+            });
+
+        property.on(function () {
+            strictEqual((new xs.core.Collection(log)).all(function (value) {
+                return value.data < 100 && (value.diff === null || value.diff >= 10);
+            }), true);
+
+            me.done();
+        }, {
+            target: xs.reactive.event.Destroy
+        });
+
+        return false;
+    });
+
 });

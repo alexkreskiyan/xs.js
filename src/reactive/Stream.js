@@ -220,6 +220,57 @@ function filter(stream, source, fn) {
 }
 
 /**
+ * Creates new stream, that throttles incoming values according to given interval
+ *
+ * @method throttle
+ *
+ * @param {Number} interval throttling interval
+ *
+ * @return {xs.reactive.Stream}
+ */
+Stream.prototype.throttle = function (interval) {
+    var me = this;
+
+    //assert, that reactive is not destroyed
+    assert.not(me.isDestroyed, 'throttle - reactive is destroyed');
+
+    //assert, that interval is a number
+    assert.number(interval, 'throttle - given `$interval` is not a number', {
+        $interval: interval
+    });
+
+    return new this.constructor(throttle, [
+        me,
+        interval
+    ]);
+};
+
+function throttle(stream, source, interval) {
+    var lastTime = -Infinity;
+
+    //on value - change current
+    source.on(function (event) {
+        //get current time
+        var time = (new Date()).valueOf();
+
+        //if enough time passed - set value
+        if (time - lastTime >= interval) {
+
+            //update lastTime
+            lastTime = time;
+
+            //set stream value
+            stream.send(event.data);
+        }
+    });
+
+    //on destroy - destroy
+    source.on(stream.destroy, {
+        target: xs.reactive.event.Destroy
+    });
+}
+
+/**
  * Internal error class
  *
  * @ignore
