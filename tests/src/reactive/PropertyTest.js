@@ -790,7 +790,7 @@ module('xs.reactive.Property', function () {
         var log = [];
         var diff = -Infinity;
         property
-            .throttle(10)
+            .throttle(15)
             .on(function (event) {
                 log.push(event.data - diff);
                 diff = event.data;

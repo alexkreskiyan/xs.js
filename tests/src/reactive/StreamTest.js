@@ -742,7 +742,7 @@ module('xs.reactive.Stream', function () {
         var log = [];
         var diff = -Infinity;
         stream
-            .throttle(10)
+            .throttle(15)
             .on(function (event) {
                 log.push(event.data - diff);
                 diff = event.data;

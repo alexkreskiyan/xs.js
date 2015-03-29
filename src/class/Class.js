@@ -238,14 +238,17 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
 
             //assign values
             var properties = descriptor.property.private.items; //xs.core.Collection
-            var i, item;
+            var i, item, value;
             var length = properties.length;
+
+            var Generator = xs.core.Generator;
 
             for (i = 0; i < length; i++) {
                 item = properties[ i ];
 
                 if (item.value.hasOwnProperty('value')) {
-                    me[ item.key ] = item.value.value;
+                    value = item.value.value;
+                    me[ item.key ] = value instanceof Generator ? value.create() : value;
                 }
             }
 
