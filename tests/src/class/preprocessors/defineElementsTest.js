@@ -20,7 +20,7 @@ module('xs.class.preprocessors.defineElements', function () {
 
         //define
         me.Base = xs.Class(function () {
-            this.constant.a = 1;
+            this.constant.a = xs.generator(Object);
         });
 
         //save
@@ -38,7 +38,7 @@ module('xs.class.preprocessors.defineElements', function () {
         //define
         me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineElements.constants.Base';
-            this.constant.a = 2;
+            this.constant.a = xs.generator(Object);
             this.constant.b = 3;
         });
 
@@ -81,13 +81,14 @@ module('xs.class.preprocessors.defineElements', function () {
 
         //Base
         //a
-        strictEqual(ns.Base.a, 1);
+        strictEqual(xs.isObject(ns.Base.a), true);
         strictEqual(xs.Attribute.isWritable(ns.Base, 'a'), false);
         strictEqual(xs.Attribute.isConfigurable(ns.Base, 'a'), false);
 
         //Parent
         //a
-        strictEqual(ns.Parent.a, 2);
+        strictEqual(xs.isObject(ns.Parent.a), true);
+        strictEqual(ns.Parent.a === ns.Base.a, false);
         strictEqual(xs.Attribute.isWritable(ns.Parent, 'a'), false);
         strictEqual(xs.Attribute.isConfigurable(ns.Parent, 'a'), false);
         //b
@@ -97,7 +98,9 @@ module('xs.class.preprocessors.defineElements', function () {
 
         //Child
         //a
-        strictEqual(ns.Child.a, 2);
+        strictEqual(xs.isObject(ns.Child.a), true);
+        strictEqual(ns.Child.a === ns.Base.a, false);
+        strictEqual(ns.Child.a === ns.Parent.a, false);
         strictEqual(xs.Attribute.isWritable(ns.Child, 'a'), false);
         strictEqual(xs.Attribute.isConfigurable(ns.Child, 'a'), false);
         //b
@@ -148,6 +151,7 @@ module('xs.class.preprocessors.defineElements', function () {
             this.static.property.a = {
                 get: me.baseAGet
             };
+            this.static.property.d = xs.generator(Array);
         });
 
         //save
@@ -235,6 +239,8 @@ module('xs.class.preprocessors.defineElements', function () {
         strictEqual(ns.Base.a, 1);
         ns.Base.a = 2; //readonly
         strictEqual(ns.Base.a, 1);
+        //d
+        strictEqual(xs.isArray(ns.Base.d), true);
 
         //Parent
         //a
@@ -247,6 +253,9 @@ module('xs.class.preprocessors.defineElements', function () {
         ns.Parent.b = 2; //getter assigned
         strictEqual(ns.Parent.b, 3);
         strictEqual(ns.Parent.private.b, 3);
+        //d
+        strictEqual(xs.isArray(ns.Base.d), true);
+        strictEqual(ns.Parent.d === ns.Base.d, false);
 
         //Child
         //a
@@ -262,6 +271,10 @@ module('xs.class.preprocessors.defineElements', function () {
         ns.Child.c = 3;
         strictEqual(ns.Child.c, '?3!');
         strictEqual(ns.Child.private.c, '?3');
+        //d
+        strictEqual(xs.isArray(ns.Base.d), true);
+        strictEqual(ns.Child.d === ns.Base.d, false);
+        strictEqual(ns.Child.d === ns.Parent.d, false);
 
     }, function () {
         var me = this;
