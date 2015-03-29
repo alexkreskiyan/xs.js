@@ -53,6 +53,77 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     Class.constant.storage = undefined;
 
     /**
+     * Storage changes stream
+     *
+     * @private
+     *
+     * @property changes
+     *
+     * @type {Object}
+     */
+    Class.constant.changes = xs.generator(function () {
+        var send = null;
+
+        var changes = new xs.reactive.Stream(function (stream) {
+            send = stream.send;
+        });
+
+        changes.on(function () {
+            throw new self.Error('storage changes stream must not be destroyed');
+        }, {
+            target: xs.reactive.event.Destroy
+        });
+
+        changes.send = send;
+
+        return changes;
+    });
+
+    /**
+     * Storage flag, meaning, that change operation was addition
+     *
+     * @property Add
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Add = 0x1;
+
+    /**
+     * Storage flag, meaning, that change operation was replacement
+     *
+     * @property Set
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Set = 0x2;
+
+    /**
+     * Storage flag, meaning, that change operation was removal
+     *
+     * @property Remove
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Remove = 0x4;
+
+    /**
+     * Storage flag, meaning, that change operation was clear
+     *
+     * @property Clear
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Clear = 0x8;
+
+    /**
      * Collection length
      *
      * @property size
@@ -194,7 +265,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         var index = me.keys().indexOf(key);
 
         //check, that key exists
-        me.assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
+        me.assert.ok(index >= 0, 'at - given key `$key` does not exist', {
             $key: key
         });
 
@@ -233,6 +304,13 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         //add item
         me.storage.setItem(key, value);
 
+        //send change
+        me.changes.send({
+            type: self.Add,
+            key: key,
+            value: value
+        });
+
         return me;
     };
 
@@ -263,11 +341,18 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         var index = me.keys().indexOf(key);
 
         //assert that key exists
-        me.assert.ok(index >= 0, 'set - given key `$key` doesn\'t exist', {
+        me.assert.ok(index >= 0, 'set - given key `$key` does not exist', {
             $key: key
         });
 
         me.storage.setItem(key, value);
+
+        //send change
+        me.changes.send({
+            type: self.Set,
+            key: key,
+            value: value
+        });
 
         return me;
     };
@@ -292,12 +377,29 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         var index = me.keys().indexOf(key);
 
         //assert that key exists
-        me.assert.ok(index >= 0, 'removeAt - given key `$key` doesn\'t exist in storage', {
+        me.assert.ok(index >= 0, 'removeAt - given key `$key` does not exist in storage', {
             $key: key
         });
 
+        //get removed value
+        var value = me.storage.getItem(key);
+
         //remove item from storage
         me.storage.removeItem(key);
+
+        //send change
+        me.changes.send({
+            type: self.Remove,
+            key: key,
+            value: value
+        });
+
+        //send clear
+        if (!me.storage.length) {
+            me.changes.send({
+                type: self.Clear
+            });
+        }
 
         return me;
     };
@@ -321,6 +423,11 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         //remove all if no value given
         if (!arguments.length) {
             me.storage.clear();
+
+            //send clear
+            me.changes.send({
+                type: self.Clear
+            });
 
             return me;
         }
@@ -353,7 +460,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
 
         //assert, that item exists
-        me.assert.ok(index >= 0, 'remove - given value doesn\'t exist in storage');
+        me.assert.ok(index >= 0, 'remove - given value does not exist in storage');
 
         var key;
         var storage = me.storage;
@@ -376,6 +483,13 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
                 //remove item from storage
                 storage.removeItem(key);
+
+                //send change
+                me.changes.send({
+                    type: self.Remove,
+                    key: key,
+                    value: value
+                });
             }
 
         } else {
@@ -384,6 +498,20 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
             //remove item from items
             storage.removeItem(key);
+
+            //send change
+            me.changes.send({
+                type: self.Remove,
+                key: key,
+                value: value
+            });
+        }
+
+        //send clear
+        if (!me.storage.length) {
+            me.changes.send({
+                type: self.Clear
+            });
         }
 
         return me;
@@ -450,6 +578,13 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
                 //remove item from storage
                 storage.removeItem(key);
+
+                //send change
+                me.changes.send({
+                    type: self.Remove,
+                    key: key,
+                    value: item
+                });
             }
         } else if (reverse) {
             i = storage.length - 1;
@@ -468,6 +603,13 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
                 //remove item from storage
                 storage.removeItem(key);
+
+                //send change
+                me.changes.send({
+                    type: self.Remove,
+                    key: key,
+                    value: item
+                });
 
                 break;
             }
@@ -489,8 +631,22 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 //remove item from storage
                 storage.removeItem(key);
 
+                //send change
+                me.changes.send({
+                    type: self.Remove,
+                    key: key,
+                    value: item
+                });
+
                 break;
             }
+        }
+
+        //send clear
+        if (!me.storage.length) {
+            me.changes.send({
+                type: self.Clear
+            });
         }
 
         return me;
