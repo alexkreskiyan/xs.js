@@ -64,6 +64,7 @@
             "xs.interface.Interface": {}
         },
         "xs.core.Lazy": {},
+        "xs.core.Generator": {},
         "xs.core.Promise": {},
         "xs.class.preprocessors.namespace": {},
         "xs.class.preprocessors.abstract": {},
