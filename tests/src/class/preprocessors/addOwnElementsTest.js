@@ -39,7 +39,10 @@ module('xs.class.preprocessors.addOwnElements', function () {
         me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.addOwnElements.constants.Base';
             this.constant.a = 2;
-            this.constant.b = 3;
+            this.constant.b = xs.lazy(function () {
+
+                return 3;
+            });
         });
 
         //save
@@ -158,9 +161,11 @@ module('xs.class.preprocessors.addOwnElements', function () {
             this.static.property.a = {
                 get: me.parentAGet
             };
-            this.static.property.b = {
-                set: me.parentBSet
-            };
+            this.static.property.b = xs.lazy(function () {
+                return {
+                    set: me.parentBSet
+                };
+            });
         });
 
         //save
@@ -318,7 +323,9 @@ module('xs.class.preprocessors.addOwnElements', function () {
         me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.addOwnElements.staticMethods.Base';
             this.static.method.a = me.parentA;
-            this.static.method.b = me.parentB;
+            this.static.method.b = xs.lazy(function () {
+                return me.parentB;
+            });
         });
 
         //save
@@ -475,9 +482,11 @@ module('xs.class.preprocessors.addOwnElements', function () {
             this.property.a = {
                 get: me.parentAGet
             };
-            this.property.b = {
-                set: me.parentBSet
-            };
+            this.property.b = xs.lazy(function () {
+                return {
+                    set: me.parentBSet
+                };
+            });
         });
 
         //save
@@ -637,7 +646,9 @@ module('xs.class.preprocessors.addOwnElements', function () {
         me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.addOwnElements.methods.Base';
             this.method.a = me.parentA;
-            this.method.b = me.parentB;
+            this.method.b = xs.lazy(function () {
+                return me.parentB;
+            });
         });
 
         //save

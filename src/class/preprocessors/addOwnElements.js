@@ -77,6 +77,11 @@ function processConstants(Class, descriptor) {
             $name: name
         });
 
+        //process lazy values
+        if (value instanceof xs.core.Lazy) {
+            value = value.get();
+        }
+
         //add/set constant in class descriptor
         if (own.hasKey(name)) {
             own.set(name, value);
@@ -132,6 +137,11 @@ function processStaticProperties(Class, descriptor) {
             $Class: Class,
             $name: name
         });
+
+        //process lazy values
+        if (value instanceof xs.core.Lazy) {
+            value = value.get();
+        }
 
         //prepare property descriptor
         value = xs.property.prepare(name, value);
@@ -194,6 +204,11 @@ function processStaticMethods(Class, descriptor) {
             $name: name
         });
 
+        //process lazy values
+        if (value instanceof xs.core.Lazy) {
+            value = value.get();
+        }
+
         //prepare method descriptor
         value = xs.method.prepare(name, value);
 
@@ -255,6 +270,11 @@ function processProperties(Class, descriptor) {
             $name: name
         });
 
+        //process lazy values
+        if (value instanceof xs.core.Lazy) {
+            value = value.get();
+        }
+
         //prepare property descriptor
         value = xs.property.prepare(name, value);
 
@@ -315,6 +335,11 @@ function processMethods(Class, descriptor) {
             $Class: Class,
             $name: name
         });
+
+        //process lazy values
+        if (value instanceof xs.core.Lazy) {
+            value = value.get();
+        }
 
         //prepare method descriptor
         value = xs.method.prepare(name, value);
