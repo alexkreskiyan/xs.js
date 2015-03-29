@@ -26,9 +26,7 @@ module('xs.log.Logger', function () {
             .filter(function (event) {
                 return event.category === me.category;
             })
-            .on(function (event) {
-                me.logs.add(event.data);
-            });
+            .on(me.logs.add.bind(me.logs));
     }, function () {
         var me = this;
 
@@ -79,9 +77,7 @@ module('xs.log.Logger', function () {
             .filter(function (event) {
                 return event.category === me.category;
             })
-            .on(function (event) {
-                me.logs.add(event.data);
-            });
+            .on(me.logs.add.bind(me.logs));
     }, function () {
         var me = this;
 
@@ -132,9 +128,7 @@ module('xs.log.Logger', function () {
             .filter(function (event) {
                 return event.category === me.category;
             })
-            .on(function (event) {
-                me.logs.add(event.data);
-            });
+            .on(me.logs.add.bind(me.logs));
     }, function () {
         var me = this;
 
@@ -185,9 +179,7 @@ module('xs.log.Logger', function () {
             .filter(function (event) {
                 return event.category === me.category;
             })
-            .on(function (event) {
-                me.logs.add(event.data);
-            });
+            .on(me.logs.add.bind(me.logs));
     }, function () {
         var me = this;
 
@@ -238,9 +230,7 @@ module('xs.log.Logger', function () {
             .filter(function (event) {
                 return event.category === me.category;
             })
-            .on(function (event) {
-                me.logs.add(event.data);
-            });
+            .on(me.logs.add.bind(me.logs));
     }, function () {
         var me = this;
 
