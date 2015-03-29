@@ -10,8 +10,6 @@
  * @class xs.storage.WebStorage
  *
  * @extends xs.class.Base
- *
- * @mixins xs.event.StaticObservable
  */
 xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
@@ -20,8 +18,6 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     var Class = this;
 
     Class.namespace = 'xs.storage';
-
-    Class.mixins.observable = 'xs.event.StaticObservable';
 
     /**
      * Storage flag, meaning, that operation is reverse
