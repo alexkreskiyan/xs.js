@@ -291,9 +291,7 @@ function toStream(stream, property, sendCurrent) {
     }
 
     //on value - send
-    property.on(function (event) {
-        stream.send(event.data);
-    });
+    property.on(stream.send);
 
     //on destroy - destroy
     property.on(stream.destroy, {
@@ -304,8 +302,8 @@ function toStream(stream, property, sendCurrent) {
 function map(property, source, fn) {
 
     //on value - set
-    source.on(function (event) {
-        property.set(fn(event.data));
+    source.on(function (data) {
+        property.set(fn(data));
     });
 
     //on destroy - destroy
@@ -317,9 +315,9 @@ function map(property, source, fn) {
 function filter(property, source, fn) {
 
     //on value - set
-    source.on(function (event) {
-        if (fn(event.data)) {
-            property.set(event.data);
+    source.on(function (data) {
+        if (fn(data)) {
+            property.set(data);
         }
     });
 
@@ -333,7 +331,7 @@ function throttle(property, source, interval) {
     var lastTime = -Infinity;
 
     //on value - change current
-    source.on(function (event) {
+    source.on(function (data) {
         //get current time
         var time = (new Date()).valueOf();
 
@@ -344,7 +342,7 @@ function throttle(property, source, interval) {
             lastTime = time;
 
             //set property value
-            property.set(event.data);
+            property.set(data);
         }
     });
 
@@ -358,7 +356,7 @@ function debounce(property, source, interval) {
     var timeoutId;
 
     //on value - change current
-    source.on(function (event) {
+    source.on(function (data) {
 
         //clear previous timeout
         clearTimeout(timeoutId);
@@ -367,7 +365,7 @@ function debounce(property, source, interval) {
         timeoutId = setTimeout(function () {
 
             //set property value
-            property.set(event.data);
+            property.set(data);
 
             //if source is destroyed - destroy
             if (sourceDestroyed) {

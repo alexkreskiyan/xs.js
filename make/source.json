@@ -17,9 +17,6 @@
             "xs.reactive.event.Event": {
                 "test": false
             },
-            "xs.reactive.event.Data": {
-                "test": false
-            },
             "xs.reactive.event.Destroy": {
                 "test": false
             },

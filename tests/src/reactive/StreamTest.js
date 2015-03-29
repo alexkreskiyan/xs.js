@@ -101,10 +101,7 @@ module('xs.reactive.Stream', function () {
         me.stream.on(function (data) {
             log += arguments.length + data;
         }, {
-            target: [
-                xs.reactive.event.Data,
-                xs.reactive.event.Destroy
-            ]
+            target: xs.reactive.event.Destroy
         });
 
         //stream is not active and destroyed
@@ -156,14 +153,14 @@ module('xs.reactive.Stream', function () {
 
         var log = '';
 
-        me.stream.on(function (event) {
-            if (event.data === 5) {
+        me.stream.on(function (data) {
+            if (data === 5) {
                 return false;
             }
         });
 
-        me.stream.on(function (event) {
-            log += event.data;
+        me.stream.on(function (data) {
+            log += data;
         });
 
         me.stream.on(function () {
@@ -232,8 +229,8 @@ module('xs.reactive.Stream', function () {
         };
 
         //method can be added with initially suspended state
-        me.stream.on(function (event) {
-            log.suspended += event.data;
+        me.stream.on(function (data) {
+            log.suspended += data;
         }, {
             suspended: true
         });
@@ -241,9 +238,9 @@ module('xs.reactive.Stream', function () {
         //this way stream is still inactive
         strictEqual(me.stream.isActive, false);
 
-        //simply method appends new handler, that has undefined scope, xs.reactive.event.Data target and is not suspended
-        me.stream.on(function (event) {
-            log.simple += event.data;
+        //simply method appends new handler, that has undefined scope, undefined target and is not suspended
+        me.stream.on(function (data) {
+            log.simple += data;
         });
 
         //incorrect target throws exception
@@ -261,24 +258,24 @@ module('xs.reactive.Stream', function () {
         });
 
         //method can be targeted directly with target type flags
-        me.stream.on(function (event) {
-            log.targeted += event.data;
+        me.stream.on(function () {
+            log.targeted += 'destroyed';
         }, {
             target: xs.reactive.event.Destroy
         });
 
         //method can be called within given scope
-        me.stream.on(function (event) {
-            log.scoped += event.data + this;
+        me.stream.on(function (data) {
+            log.scoped += data + this;
         }, {
             scope: '!'
         });
 
         //method can be positioned. returning false allows to stop event handling
-        me.stream.on(function (event) {
-            log.positioned += event.data;
+        me.stream.on(function (data) {
+            log.positioned += data;
 
-            if (event.data === 5) {
+            if (data === 5) {
                 return false;
             }
         }, {
@@ -288,7 +285,7 @@ module('xs.reactive.Stream', function () {
         me.stream.on(function () {
             //check logs
             strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
-            strictEqual(log.targeted, 'undefined');
+            strictEqual(log.targeted, 'destroyed');
             strictEqual(log.scoped, '10!9!8!7!6!4!3!2!1!'); //5 is missing - cancelled
             strictEqual(log.suspended, '');
             strictEqual(log.positioned, '10987654321'); //5 is presented
@@ -527,8 +524,8 @@ module('xs.reactive.Stream', function () {
         var resolved = xs.reactive.Stream.fromPromise(promise);
 
         var logResolved = [];
-        resolved.on(function (event) {
-            logResolved.push(event.data);
+        resolved.on(function (data) {
+            logResolved.push(data);
         });
         resolved.on(function () {
             strictEqual(JSON.stringify(logResolved), JSON.stringify([
@@ -563,8 +560,8 @@ module('xs.reactive.Stream', function () {
         var rejected = xs.reactive.Stream.fromPromise(promise);
 
         var logRejected = [];
-        rejected.on(function (event) {
-            logRejected.push(event.data);
+        rejected.on(function (data) {
+            logRejected.push(data);
         });
         rejected.on(function () {
             strictEqual(JSON.stringify(logRejected), JSON.stringify([
@@ -604,8 +601,8 @@ module('xs.reactive.Stream', function () {
         var stream = xs.reactive.Stream.fromEvent(document.body, 'click');
 
         var log = [];
-        stream.on(function (event) {
-            log.push(event.data);
+        stream.on(function (data) {
+            log.push(data);
         });
 
         document.body.click();
@@ -642,9 +639,9 @@ module('xs.reactive.Stream', function () {
             };
         }))
             .toProperty(5)
-            .on(function (event) {
+            .on(function (data) {
                 log.push({
-                    data: event.data,
+                    data: data,
                     current: this.value
                 });
             })
@@ -679,8 +676,8 @@ module('xs.reactive.Stream', function () {
 
                 return value * 2;
             })
-            .on(function (event) {
-                log.push(event.data);
+            .on(function (data) {
+                log.push(data);
             });
 
         stream.on(function () {
@@ -711,8 +708,8 @@ module('xs.reactive.Stream', function () {
 
                 return value > 7;
             })
-            .on(function (event) {
-                log.push(event.data);
+            .on(function (data) {
+                log.push(data);
             });
 
         stream.on(function () {
@@ -743,9 +740,9 @@ module('xs.reactive.Stream', function () {
         var diff = -Infinity;
         stream
             .throttle(15)
-            .on(function (event) {
-                log.push(event.data - diff);
-                diff = event.data;
+            .on(function (data) {
+                log.push(data - diff);
+                diff = data;
             })
             .on(function () {
                 strictEqual((new xs.core.Collection(log)).all(function (value) {
@@ -778,8 +775,8 @@ module('xs.reactive.Stream', function () {
         var log = [];
         stream
             .debounce(10)
-            .on(function (event) {
-                log.push(event.data);
+            .on(function (data) {
+                log.push(data);
             })
             .on(function () {
                 strictEqual(JSON.stringify(log), '[10]');

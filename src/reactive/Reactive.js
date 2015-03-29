@@ -180,7 +180,7 @@ Reactive.prototype.on = function (handler, options) {
 
         handlers.add({
             handler: handler,
-            target: [ xs.reactive.event.Data ],
+            target: undefined,
             suspended: false,
             scope: me
         });
@@ -207,8 +207,6 @@ Reactive.prototype.on = function (handler, options) {
         assert.ok(verifyTargets(target), 'on - given target `$target` are not correct', {
             $target: target
         });
-    } else {
-        target = [ xs.reactive.event.Data ];
     }
 
     //process suspended option
@@ -483,11 +481,6 @@ function verifyTargets(targets) {
 
         //check, that target is a function
         assert.fn(target, 'verifyTarget - given target `target` is not a function', {
-            $target: target
-        });
-
-        //check, that target inherits from module.Event
-        assert.ok(target.prototype instanceof module.Event, 'verifyTarget - given target `target` is not a child of xs.reactive.event.Event', {
             $target: target
         });
 

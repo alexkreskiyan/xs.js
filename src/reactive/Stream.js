@@ -234,8 +234,8 @@ function fromPromise(stream, promise) {
 
 function fromEvent(stream, element, eventName) {
 
-    var handler = function (event) {
-        stream.send(event);
+    var handler = function (data) {
+        stream.send(data);
     };
 
     return {
@@ -251,8 +251,8 @@ function fromEvent(stream, element, eventName) {
 function toProperty(property, stream) {
 
     //on value - set
-    stream.on(function (event) {
-        property.set(event.data);
+    stream.on(function (data) {
+        property.set(data);
     });
 
     //on destroy - destroy
@@ -264,8 +264,8 @@ function toProperty(property, stream) {
 function map(stream, source, fn) {
 
     //on value - send
-    source.on(function (event) {
-        stream.send(fn(event.data));
+    source.on(function (data) {
+        stream.send(fn(data));
     });
 
     //on destroy - destroy
@@ -277,9 +277,9 @@ function map(stream, source, fn) {
 function filter(stream, source, fn) {
 
     //on value - set
-    source.on(function (event) {
-        if (fn(event.data)) {
-            stream.send(event.data);
+    source.on(function (data) {
+        if (fn(data)) {
+            stream.send(data);
         }
     });
 
@@ -293,7 +293,7 @@ function throttle(stream, source, interval) {
     var lastTime = -Infinity;
 
     //on value - change current
-    source.on(function (event) {
+    source.on(function (data) {
         //get current time
         var time = (new Date()).valueOf();
 
@@ -304,7 +304,7 @@ function throttle(stream, source, interval) {
             lastTime = time;
 
             //set stream value
-            stream.send(event.data);
+            stream.send(data);
         }
     });
 
@@ -318,7 +318,7 @@ function debounce(stream, source, interval) {
     var timeoutId;
 
     //on value - change current
-    source.on(function (event) {
+    source.on(function (data) {
 
         //clear previous timeout
         clearTimeout(timeoutId);
@@ -327,7 +327,7 @@ function debounce(stream, source, interval) {
         timeoutId = setTimeout(function () {
 
             //set stream value
-            stream.send(event.data);
+            stream.send(data);
 
             //if source is destroyed - destroy
             if (sourceDestroyed) {

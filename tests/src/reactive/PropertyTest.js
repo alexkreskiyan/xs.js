@@ -99,13 +99,8 @@ module('xs.reactive.Property', function () {
         strictEqual(me.property.isDestroyed, false);
 
         var log = '';
-        me.property.on(function (event) {
-            log += arguments.length + event.data;
-        }, {
-            target: [
-                xs.reactive.event.Data,
-                xs.reactive.event.Destroy
-            ]
+        me.property.on(function (data) {
+            log += arguments.length + data;
         });
 
         //stream is not active and destroyed
@@ -158,16 +153,16 @@ module('xs.reactive.Property', function () {
         var log = '';
         var value = '';
 
-        me.property.on(function (event) {
-            if (event.data === 5) {
+        me.property.on(function (data) {
+            if (data === 5) {
                 return false;
             }
         });
 
-        me.property.on(function (event) {
-            log += event.data;
+        me.property.on(function (data) {
+            log += data;
             value += me.property.value;
-            value += event.data;
+            value += data;
         });
 
         me.property.on(function () {
@@ -239,8 +234,8 @@ module('xs.reactive.Property', function () {
         var value = '';
 
         //method can be added with initially suspended state
-        me.property.on(function (event) {
-            log.suspended += event.data;
+        me.property.on(function (data) {
+            log.suspended += data;
         }, {
             suspended: true
         });
@@ -248,11 +243,11 @@ module('xs.reactive.Property', function () {
         //this way stream is still inactive
         strictEqual(me.property.isActive, false);
 
-        //simply method appends new handler, that has undefined scope, xs.reactive.event.Data target and is not suspended
-        me.property.on(function (event) {
-            log.simple += event.data;
+        //simply method appends new handler, that has undefined scope, undefined target and is not suspended
+        me.property.on(function (data) {
+            log.simple += data;
             value += me.property.value;
-            value += event.data;
+            value += data;
         });
 
         //incorrect target throws exception
@@ -270,24 +265,24 @@ module('xs.reactive.Property', function () {
         });
 
         //method can be targeted directly with target type flags
-        me.property.on(function (event) {
-            log.targeted += event.data;
+        me.property.on(function () {
+            log.targeted += 'destroyed';
         }, {
             target: xs.reactive.event.Destroy
         });
 
         //method can be called within given scope
-        me.property.on(function (event) {
-            log.scoped += event.data + this;
+        me.property.on(function (data) {
+            log.scoped += data + this;
         }, {
             scope: '!'
         });
 
         //method can be positioned. returning false allows to stop event handling
-        me.property.on(function (event) {
-            log.positioned += event.data;
+        me.property.on(function (data) {
+            log.positioned += data;
 
-            if (event.data === 5) {
+            if (data === 5) {
                 return false;
             }
         }, {
@@ -297,7 +292,7 @@ module('xs.reactive.Property', function () {
         me.property.on(function () {
             //check logs
             strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
-            strictEqual(log.targeted, 'undefined');
+            strictEqual(log.targeted, 'destroyed');
             strictEqual(log.scoped, '10!9!8!7!6!4!3!2!1!'); //5 is missing - cancelled
             strictEqual(log.suspended, '');
             strictEqual(log.positioned, '10987654321'); //5 is presented
@@ -539,8 +534,8 @@ module('xs.reactive.Property', function () {
 
         var logResolved = [];
         var valueResolved = [];
-        resolved.on(function (event) {
-            logResolved.push(event.data);
+        resolved.on(function (data) {
+            logResolved.push(data);
             valueResolved.push(resolved.value);
         });
         resolved.on(function () {
@@ -594,8 +589,8 @@ module('xs.reactive.Property', function () {
 
         var logRejected = [];
         var valueRejected = [];
-        rejected.on(function (event) {
-            logRejected.push(event.data);
+        rejected.on(function (data) {
+            logRejected.push(data);
             valueRejected.push(rejected.value);
         });
         rejected.on(function () {
@@ -653,8 +648,8 @@ module('xs.reactive.Property', function () {
         var property = xs.reactive.Property.fromEvent(document.body, 'click');
 
         var log = [];
-        property.on(function (event) {
-            log.push(event.data);
+        property.on(function (data) {
+            log.push(data);
         });
 
         document.body.click();
@@ -691,9 +686,9 @@ module('xs.reactive.Property', function () {
             };
         }, 5))
             .toStream(true)
-            .on(function (event) {
+            .on(function (data) {
                 log.push({
-                    data: event.data
+                    data: data
                 });
             })
             .on(function () {
@@ -729,8 +724,8 @@ module('xs.reactive.Property', function () {
 
                 return value * 2;
             })
-            .on(function (event) {
-                log.push(event.data);
+            .on(function (data) {
+                log.push(data);
             })
             .on(function () {
                 strictEqual(JSON.stringify(log), '[10]');
@@ -760,8 +755,8 @@ module('xs.reactive.Property', function () {
 
                 return value > 7;
             })
-            .on(function (event) {
-                log.push(event.data);
+            .on(function (data) {
+                log.push(data);
             })
             .on(function () {
                 strictEqual(JSON.stringify(log), '[10]');
@@ -791,9 +786,9 @@ module('xs.reactive.Property', function () {
         var diff = -Infinity;
         property
             .throttle(15)
-            .on(function (event) {
-                log.push(event.data - diff);
-                diff = event.data;
+            .on(function (data) {
+                log.push(data - diff);
+                diff = data;
             })
             .on(function () {
                 strictEqual((new xs.core.Collection(log)).all(function (value) {
@@ -826,8 +821,8 @@ module('xs.reactive.Property', function () {
         var log = [];
         property
             .debounce(10)
-            .on(function (event) {
-                log.push(event.data);
+            .on(function (data) {
+                log.push(data);
             })
             .on(function () {
                 strictEqual(JSON.stringify(log), '[10]');
