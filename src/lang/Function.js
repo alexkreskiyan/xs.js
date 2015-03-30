@@ -21,6 +21,34 @@ xs.Function = (function () {
     var slice = Function.prototype.apply.bind(Array.prototype.slice);
 
     /**
+     * Creates binded function, that will be called with given scope and optional args, prepended to call arguments
+     *
+     * For example:
+     *
+     *     var fn = function (a, b, c) {
+     *         return this.x + (a - b) * c;
+     *     };
+     *     var bind = xs.bind(fn, {x: 5});
+     *     console.log(bind(2, 3, 4));//1
+     *
+     * @method bind
+     *
+     * @param {Function} fn bound function
+     * @param {Object} scope optional execution scope
+     *
+     * @return {Function} bound function
+     */
+    var bind = me.bind = function (fn, scope) {
+        assert.fn(fn, 'bind - given `$fn` is not a function', {
+            $fn: fn
+        });
+
+        return function () {
+            return fn.apply(scope, arguments);
+        };
+    };
+
+    /**
      * Creates function, that is executed only once. Result is memorized and is simply returned in later calls
      *
      * For example:
@@ -131,7 +159,7 @@ xs.Function = (function () {
             $fn: fn
         });
 
-        setTimeout(xs.isDefined(scope) ? fn.bind(scope) : fn, 0);
+        setTimeout(xs.isDefined(scope) ? bind(fn, scope) : fn, 0);
     };
 
     var getNameRe = /^function\s*([A-z_0-9]*)/i;
@@ -288,6 +316,7 @@ function XsLangFunctionError(message) {
 
 XsLangFunctionError.prototype = new Error();
 
+xs.bind = xs.Function.bind;
 xs.memorize = xs.Function.memorize;
 xs.wrap = xs.Function.wrap;
 xs.nextTick = xs.Function.nextTick;
