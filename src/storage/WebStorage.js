@@ -64,8 +64,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     Class.constant.changes = xs.generator(function () {
         var send = null;
 
-        var changes = new xs.reactive.Stream(function (stream) {
-            send = stream.send;
+        var changes = new xs.reactive.Stream(function () {
+            send = this.send;
         });
 
         changes.on(function () {
