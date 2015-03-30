@@ -15,11 +15,13 @@ module('xs.reactive.Stream', function () {
     test('constructor', function () {
         var me = this;
 
-        me.generator = function (stream) {
+        me.generator = function () {
+            var me = this;
+
             return {
                 on: function () {
-                    stream.send(null);
-                    stream.destroy();
+                    me.send(null);
+                    me.destroy();
                 },
                 off: xs.noop
             };
@@ -79,11 +81,13 @@ module('xs.reactive.Stream', function () {
     test('basics', function () {
         var me = this;
 
-        me.generator = function (stream) {
+        me.generator = function () {
+            var me = this;
+
             return {
                 on: function () {
-                    stream.send(null);
-                    stream.destroy();
+                    me.send(null);
+                    me.destroy();
                 },
                 off: xs.noop
             };
@@ -112,27 +116,29 @@ module('xs.reactive.Stream', function () {
     test('send', function () {
         var me = this;
 
-        me.generator = function (stream) {
+        me.generator = function () {
+            var me = this;
+
             var emitter = function () {
                 //send initial value silently
-                stream.send(null, true);
+                me.send(null, true);
 
                 var i = 0;
 
                 while (i < 10) {
                     //if send ok, continue
-                    if (stream.send(i)) {
+                    if (me.send(i)) {
                         i++;
 
                         //if send cancelled, send null and end
                     } else {
-                        stream.send(null);
-                        stream.destroy();
+                        me.send(null);
+                        me.destroy();
 
                         return;
                     }
                 }
-                stream.destroy();
+                me.destroy();
             };
 
             return {
@@ -181,16 +187,18 @@ module('xs.reactive.Stream', function () {
     test('on', function () {
         var me = this;
 
-        me.generator = function (stream) {
+        me.generator = function () {
+            var me = this;
+
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                stream.send(i);
+                me.send(i);
                 i--;
 
                 if (i === 0) {
-                    stream.destroy();
+                    me.destroy();
                 }
             };
 
@@ -300,16 +308,18 @@ module('xs.reactive.Stream', function () {
     test('off', function () {
         var me = this;
 
-        me.generator = function (stream) {
+        me.generator = function () {
+            var me = this;
+
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                stream.send(i);
+                me.send(i);
                 i--;
 
                 if (i === 0) {
-                    stream.destroy();
+                    me.destroy();
                 }
             };
 
@@ -371,16 +381,18 @@ module('xs.reactive.Stream', function () {
     test('suspend', function () {
         var me = this;
 
-        me.generator = function (stream) {
+        me.generator = function () {
+            var me = this;
+
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                stream.send(i);
+                me.send(i);
                 i--;
 
                 if (i === 0) {
-                    stream.destroy();
+                    me.destroy();
                 }
             };
 
@@ -442,16 +454,18 @@ module('xs.reactive.Stream', function () {
     test('resume', function () {
         var me = this;
 
-        me.generator = function (stream) {
+        me.generator = function () {
+            var me = this;
+
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                stream.send(i);
+                me.send(i);
                 i--;
 
                 if (i === 0) {
-                    stream.destroy();
+                    me.destroy();
                 }
             };
 
@@ -625,13 +639,15 @@ module('xs.reactive.Stream', function () {
         var me = this;
 
         var log = [];
-        (new xs.reactive.Stream(function (stream) {
+        (new xs.reactive.Stream(function () {
+            var me = this;
+
             return {
                 on: function () {
                     xs.nextTick(function () {
-                        stream.send(null);
+                        me.send(null);
                         xs.nextTick(function () {
-                            stream.destroy();
+                            me.destroy();
                         });
                     });
                 },
@@ -663,10 +679,12 @@ module('xs.reactive.Stream', function () {
     test('map', function () {
         var me = this;
 
-        var stream = new xs.reactive.Stream(function (stream) {
+        var stream = new xs.reactive.Stream(function () {
+            var me = this;
+
             xs.nextTick(function () {
-                stream.send(5);
-                stream.destroy();
+                me.send(5);
+                me.destroy();
             });
         });
 
@@ -694,11 +712,13 @@ module('xs.reactive.Stream', function () {
     test('filter', function () {
         var me = this;
 
-        var stream = new xs.reactive.Stream(function (stream) {
+        var stream = new xs.reactive.Stream(function () {
+            var me = this;
+
             xs.nextTick(function () {
-                stream.send(5);
-                stream.send(10);
-                stream.destroy();
+                me.send(5);
+                me.send(10);
+                me.destroy();
             });
         });
 
@@ -726,13 +746,15 @@ module('xs.reactive.Stream', function () {
     test('throttle', function () {
         var me = this;
 
-        var stream = new xs.reactive.Stream(function (stream) {
+        var stream = new xs.reactive.Stream(function () {
+            var me = this;
+
             var interval = setInterval(function () {
-                stream.send((new Date()).valueOf());
+                me.send((new Date()).valueOf());
             }, 0);
             setTimeout(function () {
                 clearInterval(interval);
-                stream.destroy();
+                me.destroy();
             }, 100);
         });
 
@@ -760,14 +782,16 @@ module('xs.reactive.Stream', function () {
     test('debounce', function () {
         var me = this;
 
-        var stream = new xs.reactive.Stream(function (stream) {
+        var stream = new xs.reactive.Stream(function () {
+            var me = this;
+
             var i = 0;
             var interval = setInterval(function () {
-                stream.send(++i);
+                me.send(++i);
 
                 if (i === 10) {
                     clearInterval(interval);
-                    stream.destroy();
+                    me.destroy();
                 }
             }, 5);
         });

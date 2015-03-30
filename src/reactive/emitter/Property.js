@@ -9,10 +9,10 @@ module.EmitterProperty = function Emitter(reactive) {
     var me = this;
 
     //add set handler
-    me.set = handleSet.bind(reactive);
+    me.set = xs.bind(handleSet, reactive);
 
     //add destroy handler
-    me.destroy = reactive.destroy.bind(reactive);
+    me.destroy = xs.bind(reactive.destroy, reactive);
 };
 
 //extend EmitterProperty from Emitter

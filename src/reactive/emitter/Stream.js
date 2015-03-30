@@ -9,10 +9,10 @@ module.EmitterStream = function Emitter(reactive) {
     var me = this;
 
     //add send handler
-    me.send = handleSend.bind(reactive);
+    me.send = xs.bind(handleSend, reactive);
 
     //add destroy handler
-    me.destroy = reactive.destroy.bind(reactive);
+    me.destroy = xs.bind(reactive.destroy, reactive);
 };
 
 //extend EmitterProperty from Emitter

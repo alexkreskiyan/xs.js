@@ -15,11 +15,13 @@ module('xs.reactive.Property', function () {
     test('constructor', function () {
         var me = this;
 
-        me.generator = function (property) {
+        me.generator = function () {
+            var me = this;
+
             return {
                 on: function () {
-                    property.set(null);
-                    property.destroy();
+                    me.set(null);
+                    me.destroy();
                 },
                 off: xs.noop
             };
@@ -80,11 +82,13 @@ module('xs.reactive.Property', function () {
     test('basics', function () {
         var me = this;
 
-        me.generator = function (property) {
+        me.generator = function () {
+            var me = this;
+
             return {
                 on: function () {
-                    property.set(null);
-                    property.destroy();
+                    me.set(null);
+                    me.destroy();
                 },
                 off: xs.noop
             };
@@ -111,27 +115,29 @@ module('xs.reactive.Property', function () {
     test('set', function () {
         var me = this;
 
-        me.generator = function (property) {
+        me.generator = function () {
+            var me = this;
+
             var emitter = function () {
                 //set initial value silently
-                property.set(null, true);
+                me.set(null, true);
 
                 var i = 0;
 
                 while (i < 10) {
                     //if set ok, continue
-                    if (property.set(i)) {
+                    if (me.set(i)) {
                         i++;
 
                         //if set cancelled, set null and end
                     } else {
-                        property.set(null);
-                        property.destroy();
+                        me.set(null);
+                        me.destroy();
 
                         return;
                     }
                 }
-                property.destroy();
+                me.destroy();
             };
 
             return {
@@ -184,16 +190,18 @@ module('xs.reactive.Property', function () {
     test('on', function () {
         var me = this;
 
-        me.generator = function (property) {
+        me.generator = function () {
+            var me = this;
+
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                property.set(i);
+                me.set(i);
                 i--;
 
                 if (i === 0) {
-                    property.destroy();
+                    me.destroy();
                 }
             };
 
@@ -309,16 +317,18 @@ module('xs.reactive.Property', function () {
     test('off', function () {
         var me = this;
 
-        me.generator = function (property) {
+        me.generator = function () {
+            var me = this;
+
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                property.set(i);
+                me.set(i);
                 i--;
 
                 if (i === 0) {
-                    property.destroy();
+                    me.destroy();
                 }
             };
 
@@ -380,16 +390,18 @@ module('xs.reactive.Property', function () {
     test('suspend', function () {
         var me = this;
 
-        me.generator = function (property) {
+        me.generator = function () {
+            var me = this;
+
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                property.set(i);
+                me.set(i);
                 i--;
 
                 if (i === 0) {
-                    property.destroy();
+                    me.destroy();
                 }
             };
 
@@ -451,16 +463,18 @@ module('xs.reactive.Property', function () {
     test('resume', function () {
         var me = this;
 
-        me.generator = function (property) {
+        me.generator = function () {
+            var me = this;
+
             var i = 10;
             var interval = 0;
             var intervalId;
             var generator = function () {
-                property.set(i);
+                me.set(i);
                 i--;
 
                 if (i === 0) {
-                    property.destroy();
+                    me.destroy();
                 }
             };
 
@@ -672,13 +686,15 @@ module('xs.reactive.Property', function () {
         var me = this;
 
         var log = [];
-        (new xs.reactive.Property(function (property) {
+        (new xs.reactive.Property(function () {
+            var me = this;
+
             return {
                 on: function () {
                     xs.nextTick(function () {
-                        property.set(null);
+                        me.set(null);
                         xs.nextTick(function () {
-                            property.destroy();
+                            me.destroy();
                         });
                     });
                 },
@@ -711,10 +727,12 @@ module('xs.reactive.Property', function () {
     test('map', function () {
         var me = this;
 
-        var property = new xs.reactive.Property(function (property) {
+        var property = new xs.reactive.Property(function () {
+            var me = this;
+
             xs.nextTick(function () {
-                property.set(5);
-                property.destroy();
+                me.set(5);
+                me.destroy();
             });
         });
 
@@ -741,11 +759,13 @@ module('xs.reactive.Property', function () {
     test('filter', function () {
         var me = this;
 
-        var property = new xs.reactive.Property(function (property) {
+        var property = new xs.reactive.Property(function () {
+            var me = this;
+
             xs.nextTick(function () {
-                property.set(5);
-                property.set(10);
-                property.destroy();
+                me.set(5);
+                me.set(10);
+                me.destroy();
             });
         });
 
@@ -772,13 +792,15 @@ module('xs.reactive.Property', function () {
     test('throttle', function () {
         var me = this;
 
-        var property = new xs.reactive.Property(function (property) {
+        var property = new xs.reactive.Property(function () {
+            var me = this;
+
             var interval = setInterval(function () {
-                property.set((new Date()).valueOf());
+                me.set((new Date()).valueOf());
             }, 0);
             setTimeout(function () {
                 clearInterval(interval);
-                property.destroy();
+                me.destroy();
             }, 100);
         });
 
@@ -806,14 +828,16 @@ module('xs.reactive.Property', function () {
     test('debounce', function () {
         var me = this;
 
-        var property = new xs.reactive.Property(function (property) {
+        var property = new xs.reactive.Property(function () {
+            var me = this;
+
             var i = 0;
             var interval = setInterval(function () {
-                property.set(++i);
+                me.set(++i);
 
                 if (i === 10) {
                     clearInterval(interval);
-                    property.destroy();
+                    me.destroy();
                 }
             }, 5);
         });

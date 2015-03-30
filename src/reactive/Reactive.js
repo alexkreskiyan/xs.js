@@ -66,9 +66,13 @@ var Reactive = function (generator, emitter, sources) {
     me.underConstruction = true;
 
     //run generator with send, end and given sources
-    var handlers = generator.apply(undefined, [
-        emitter
-    ].concat(sources ? sources : []));
+    var handlers;
+
+    if (sources) {
+        handlers = generator.apply(emitter, sources);
+    } else {
+        handlers = generator.call(emitter);
+    }
 
     //remove underConstruction flag
     delete me.underConstruction;

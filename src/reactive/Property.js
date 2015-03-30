@@ -247,29 +247,32 @@ Property.prototype.debounce = function (interval) {
     ]);
 };
 
-function fromPromise(property, promise) {
+function fromPromise(promise) {
+    var me = this;
+
     promise.then(function (data) {
-        property.set({
+        me.set({
             state: xs.core.Promise.Resolved,
             data: data
         });
     }, function (error) {
-        property.set({
+        me.set({
             state: xs.core.Promise.Rejected,
             error: error
         });
     }, function (progress) {
-        property.set({
+        me.set({
             state: xs.core.Promise.Pending,
             progress: progress
         });
-    }).always(property.destroy);
+    }).always(me.destroy);
 }
 
-function fromEvent(property, element, eventName) {
+function fromEvent(element, eventName) {
+    var me = this;
 
     var handler = function (event) {
-        property.set(event);
+        me.set(event);
     };
 
     return {
@@ -282,52 +285,58 @@ function fromEvent(property, element, eventName) {
     };
 }
 
-function toStream(stream, property, sendCurrent) {
+function toStream(property, sendCurrent) {
+    var me = this;
+
     if (sendCurrent) {
         var value = property.value;
         xs.nextTick(function () {
-            stream.send(value);
+            me.send(value);
         });
     }
 
     //on value - send
-    property.on(stream.send);
+    property.on(me.send);
 
     //on destroy - destroy
-    property.on(stream.destroy, {
+    property.on(me.destroy, {
         target: xs.reactive.event.Destroy
     });
 }
 
-function map(property, source, fn) {
+function map(source, fn) {
+    var me = this;
 
     //on value - set
     source.on(function (data) {
-        property.set(fn(data));
+        me.set(fn(data));
     });
 
     //on destroy - destroy
-    source.on(property.destroy, {
+    source.on(me.destroy, {
         target: xs.reactive.event.Destroy
     });
 }
 
-function filter(property, source, fn) {
+function filter(source, fn) {
+    var me = this;
 
     //on value - set
     source.on(function (data) {
         if (fn(data)) {
-            property.set(data);
+            me.set(data);
         }
     });
 
     //on destroy - destroy
-    source.on(property.destroy, {
+    source.on(me.destroy, {
         target: xs.reactive.event.Destroy
     });
 }
 
-function throttle(property, source, interval) {
+function throttle(source, interval) {
+    var me = this;
+
     var lastTime = -Infinity;
 
     //on value - change current
@@ -342,17 +351,19 @@ function throttle(property, source, interval) {
             lastTime = time;
 
             //set property value
-            property.set(data);
+            me.set(data);
         }
     });
 
     //on destroy - destroy
-    source.on(property.destroy, {
+    source.on(me.destroy, {
         target: xs.reactive.event.Destroy
     });
 }
 
-function debounce(property, source, interval) {
+function debounce(source, interval) {
+    var me = this;
+
     var timeoutId;
 
     //on value - change current
@@ -365,11 +376,11 @@ function debounce(property, source, interval) {
         timeoutId = setTimeout(function () {
 
             //set property value
-            property.set(data);
+            me.set(data);
 
             //if source is destroyed - destroy
             if (sourceDestroyed) {
-                property.destroy();
+                me.destroy();
             }
         }, interval);
     });
@@ -387,7 +398,7 @@ function debounce(property, source, interval) {
 
             //else - can destroy property immediately
         } else {
-            property.destroy();
+            me.destroy();
         }
     }, {
         target: xs.reactive.event.Destroy
