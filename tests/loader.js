@@ -64,7 +64,9 @@
             assemblyModules(modules, src.modules);
 
             xs.Loader.require(Object.keys(modules), function () {
-                callback(src);
+                xs.onReady(function () {
+                    callback(src);
+                });
             });
         });
     };

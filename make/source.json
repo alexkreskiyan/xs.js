@@ -29,15 +29,15 @@
             "xs.reactive.Stream": {},
             "xs.reactive.Property": {}
         },
-        "xs.log.Router": {
-            "test": false
-        },
         "xs.lang.Object": {},
         "xs.lang.Array": {},
         "xs.lang.List": {},
         "xs.lang.Attribute": {},
         "xs.lang.Function": {},
         "xs.lang.String": {},
+        "xs.log.Router": {
+            "test": false
+        },
         "xs.core.Loader": {},
         "xs.core.ContractsManager": {},
         "contracts": {
@@ -251,7 +251,34 @@
             },
             "util": {
                 "collection": {
-                    "Event": {
+                    "IEvent": {
+                        "contract": "interface"
+                    },
+                    "AddBeforeEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "AddEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "SetBeforeEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "SetEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "RemoveBeforeEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "RemoveEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "ClearEvent": {
                         "contract": "class",
                         "test": false
                     }
@@ -265,7 +292,8 @@
                     "contract": "class"
                 },
                 "View": {
-                    "contract": "class"
+                    "contract": "class",
+                    "test": false
                 }
             }
         }
