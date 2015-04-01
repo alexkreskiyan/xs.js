@@ -50,7 +50,10 @@ xs.class.preprocessors.add('processImplements', function (Class) {
             $Interface: Interface
         });
 
-        return this.descriptor.implements.has(Interface);
+        return Boolean(this.descriptor.implements.find(function (Candidate) {
+
+            return Candidate === Interface || Candidate.inherits(Interface);
+        }));
     });
 
     return true;
