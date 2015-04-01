@@ -299,9 +299,7 @@ function toStream(property, sendCurrent) {
     property.on(me.send);
 
     //on destroy - destroy
-    property.on(me.destroy, {
-        target: xs.reactive.event.Destroy
-    });
+    property.on(xs.reactive.event.Destroy, me.destroy);
 }
 
 function map(source, fn) {
@@ -313,9 +311,7 @@ function map(source, fn) {
     });
 
     //on destroy - destroy
-    source.on(me.destroy, {
-        target: xs.reactive.event.Destroy
-    });
+    source.on(xs.reactive.event.Destroy, me.destroy);
 }
 
 function filter(source, fn) {
@@ -329,9 +325,7 @@ function filter(source, fn) {
     });
 
     //on destroy - destroy
-    source.on(me.destroy, {
-        target: xs.reactive.event.Destroy
-    });
+    source.on(xs.reactive.event.Destroy, me.destroy);
 }
 
 function throttle(source, interval) {
@@ -356,9 +350,7 @@ function throttle(source, interval) {
     });
 
     //on destroy - destroy
-    source.on(me.destroy, {
-        target: xs.reactive.event.Destroy
-    });
+    source.on(xs.reactive.event.Destroy, me.destroy);
 }
 
 function debounce(source, interval) {
@@ -388,7 +380,7 @@ function debounce(source, interval) {
     var sourceDestroyed = false;
 
     //on destroy - destroy
-    source.on(function () {
+    source.on(xs.reactive.event.Destroy, function () {
 
         //if timeout defined - awaiting initiated, needed delayed destroy
         if (xs.isDefined(timeoutId)) {
@@ -400,8 +392,6 @@ function debounce(source, interval) {
         } else {
             me.destroy();
         }
-    }, {
-        target: xs.reactive.event.Destroy
     });
 }
 

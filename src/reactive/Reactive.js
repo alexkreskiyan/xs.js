@@ -151,24 +151,86 @@ Object.defineProperty(Reactive.prototype, 'isActive', {
  *
  * @method on
  *
+ * @param {Function|Function[]} [target] change handler target(s)
  * @param {Function} handler reactive change handler
  * @param {Object} [options] reactive handler options
  *
  * @chainable
  */
-Reactive.prototype.on = function (handler, options) {
+Reactive.prototype.on = function (target, handler, options) {
     var me = this;
 
     //assert, that reactive is not destroyed
     assert.not(me.isDestroyed, 'on - reactive is destroyed');
+
+    //assert, that at least one argument given
+    assert.ok(arguments.length, 'on - no handler given');
+
+    //process different call scenarios
+    if (arguments.length === 1) {
+
+        log.trace('on - adding handler `$handler` only, without target and options', {
+            $handler: arguments[ 0 ]
+        });
+
+        target = undefined;
+        handler = arguments[ 0 ];
+        options = undefined;
+
+    } else if (arguments.length === 2) {
+
+        //assert, that arguments[1] is either a function (target, handler call) or an options (handler, options call)
+        assert.ok(xs.isFunction(arguments[ 1 ]) || xs.isObject(arguments[ 1 ]), 'on - incorrect arguments given');
+
+        //target, handler call
+        if (xs.isFunction(arguments[ 1 ])) {
+
+            log.trace('on - adding handler `$handler` for target `$target` without options', {
+                $target: arguments[ 0 ],
+                $handler: arguments[ 1 ]
+            });
+
+            target = arguments[ 0 ];
+            handler = arguments[ 1 ];
+            options = undefined;
+
+            //handler, options call
+        } else {
+
+            log.trace('on - adding handler `$handler` without target with options `$options`', {
+                $handler: arguments[ 0 ],
+                $options: arguments[ 1 ]
+            });
+
+            target = undefined;
+            handler = arguments[ 0 ];
+            options = arguments[ 1 ];
+
+        }
+    }
+
+
+    //convert target to array
+    if (xs.isDefined(target)) {
+        if (!xs.isArray(target)) {
+            target = [ target ];
+        }
+
+        //assert that target are an array of module.Event children
+        assert.ok(verifyTargets(target), 'on - given target `$target` are not correct', {
+            $target: target
+        });
+    }
+
 
     //assert, that handler is a function
     assert.fn(handler, 'on - given handler `$handler` is not a function', {
         $handler: handler
     });
 
+
     //assert, that options (if given) are an object
-    assert.ok(arguments.length === 1 || xs.isObject(options), 'on - given options `$options` are not an object', {
+    assert.ok(arguments.length <= 2 || xs.isObject(options), 'on - given options `$options` are not an object', {
         $options: options
     });
 
@@ -178,13 +240,14 @@ Reactive.prototype.on = function (handler, options) {
     //if no options given - simply add
     if (!options) {
 
-        log.trace('on - adding handler `$handler` without options', {
+        log.trace('on - adding handler `$handler` with target `$target` without options', {
+            $target: target,
             $handler: handler
         });
 
         handlers.add({
+            target: target,
             handler: handler,
-            target: undefined,
             suspended: false,
             scope: me
         });
@@ -195,31 +258,19 @@ Reactive.prototype.on = function (handler, options) {
         return me;
     }
 
-
-    log.trace('on - add handler `$handler` with options `$options`', {
+    log.trace('on - adding handler `$handler` with target `$target` with options `$options`', {
+        $target: target,
         $handler: handler,
         $options: options
     });
-
-    //process target (if given)
-    var target;
-
-    if (options.hasOwnProperty('target')) {
-        target = xs.isArray(options.target) ? options.target : [ options.target ];
-
-        //assert that target are an array of module.Event children
-        assert.ok(verifyTargets(target), 'on - given target `$target` are not correct', {
-            $target: target
-        });
-    }
 
     //process suspended option
     var suspended = options.hasOwnProperty('suspended') ? Boolean(options.suspended) : false;
 
     //define handler item
     var item = {
-        handler: handler,
         target: target,
+        handler: handler,
         suspended: suspended,
         scope: options.hasOwnProperty('scope') ? options.scope : me
     };
@@ -481,10 +532,13 @@ Reactive.prototype.destroy = function () {
 
 function verifyTargets(targets) {
 
+    //check, that targets are not empty
+    assert.ok(targets.length, 'verifyTarget - given targets array is empty');
+
     (new xs.core.Collection(targets)).each(function (target) {
 
         //check, that target is a function
-        assert.fn(target, 'verifyTarget - given target `target` is not a function', {
+        assert.fn(target, 'verifyTarget - given target `$target` is not a function', {
             $target: target
         });
 

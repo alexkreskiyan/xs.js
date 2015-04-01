@@ -102,10 +102,8 @@ module('xs.reactive.Stream', function () {
         strictEqual(me.stream.isDestroyed, false);
 
         var log = '';
-        me.stream.on(function (data) {
+        me.stream.on(xs.reactive.event.Destroy, function (data) {
             log += arguments.length + data;
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         //stream is not active and destroyed
@@ -169,7 +167,7 @@ module('xs.reactive.Stream', function () {
             log += data;
         });
 
-        me.stream.on(function () {
+        me.stream.on(xs.reactive.event.Destroy, function () {
             //stream is not active and destroyed
             strictEqual(me.stream.isDestroyed, true);
 
@@ -177,8 +175,6 @@ module('xs.reactive.Stream', function () {
             strictEqual(log, '01234null');
 
             me.done();
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         return false;
@@ -217,14 +213,34 @@ module('xs.reactive.Stream', function () {
         //correct generator given
         me.stream = new xs.reactive.Stream(me.generator);
 
+        //no handler throws
+        throws(function () {
+            me.stream.on();
+        });
+
         //not a function handler throws
         throws(function () {
             me.stream.on(null);
         });
 
-        //not an object second argument throws
+        //incorrect target throws
+        throws(function () {
+            me.stream.on(null, xs.noop);
+        });
+
+        //empty target throws
+        throws(function () {
+            me.stream.on([], xs.noop);
+        });
+
+        //incorrect options throws
         throws(function () {
             me.stream.on(xs.noop, null);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.stream.on(MouseEvent, xs.noop, null);
         });
 
 
@@ -251,13 +267,6 @@ module('xs.reactive.Stream', function () {
             log.simple += data;
         });
 
-        //incorrect target throws exception
-        throws(function () {
-            me.stream.on(xs.noop, {
-                target: null
-            });
-        });
-
         //incorrect priority throws exception
         throws(function () {
             me.stream.on(xs.noop, {
@@ -265,11 +274,9 @@ module('xs.reactive.Stream', function () {
             });
         });
 
-        //method can be targeted directly with target type flags
-        me.stream.on(function () {
+        //method can be targeted directly, specifying event constructor(s)
+        me.stream.on(xs.reactive.event.Destroy, function () {
             log.targeted += 'destroyed';
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         //method can be called within given scope
@@ -290,7 +297,7 @@ module('xs.reactive.Stream', function () {
             priority: 0
         });
 
-        me.stream.on(function () {
+        me.stream.on(xs.reactive.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
             strictEqual(log.targeted, 'destroyed');
@@ -298,8 +305,6 @@ module('xs.reactive.Stream', function () {
             strictEqual(log.suspended, '');
             strictEqual(log.positioned, '10987654321'); //5 is presented
             me.done();
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         return false;
@@ -541,7 +546,7 @@ module('xs.reactive.Stream', function () {
         resolved.on(function (data) {
             logResolved.push(data);
         });
-        resolved.on(function () {
+        resolved.on(xs.reactive.event.Destroy, function () {
             strictEqual(JSON.stringify(logResolved), JSON.stringify([
                 {
                     state: xs.core.Promise.Pending,
@@ -556,8 +561,6 @@ module('xs.reactive.Stream', function () {
                     data: 100
                 }
             ]));
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         //update one
@@ -577,7 +580,7 @@ module('xs.reactive.Stream', function () {
         rejected.on(function (data) {
             logRejected.push(data);
         });
-        rejected.on(function () {
+        rejected.on(xs.reactive.event.Destroy, function () {
             strictEqual(JSON.stringify(logRejected), JSON.stringify([
                 {
                     state: xs.core.Promise.Pending,
@@ -593,8 +596,6 @@ module('xs.reactive.Stream', function () {
                 }
             ]));
             me.done();
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         //update one
@@ -621,13 +622,11 @@ module('xs.reactive.Stream', function () {
 
         document.body.click();
 
-        stream.on(function () {
+        stream.on(xs.reactive.event.Destroy, function () {
             strictEqual(log.length, 1);
             strictEqual(log[ 0 ].constructor, MouseEvent);
 
             me.done();
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         stream.destroy();
@@ -661,7 +660,7 @@ module('xs.reactive.Stream', function () {
                     current: this.value
                 });
             })
-            .on(function () {
+            .on(xs.reactive.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), JSON.stringify([
                     {
                         data: null,
@@ -669,8 +668,6 @@ module('xs.reactive.Stream', function () {
                     }
                 ]));
                 me.done();
-            }, {
-                target: xs.reactive.event.Destroy
             });
 
         return false;
@@ -698,12 +695,10 @@ module('xs.reactive.Stream', function () {
                 log.push(data);
             });
 
-        stream.on(function () {
+        stream.on(xs.reactive.event.Destroy, function () {
             strictEqual(JSON.stringify(log), '[10]');
 
             me.done();
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         return false;
@@ -732,12 +727,10 @@ module('xs.reactive.Stream', function () {
                 log.push(data);
             });
 
-        stream.on(function () {
+        stream.on(xs.reactive.event.Destroy, function () {
             strictEqual(JSON.stringify(log), '[10]');
 
             me.done();
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         return false;
@@ -766,14 +759,12 @@ module('xs.reactive.Stream', function () {
                 log.push(data - diff);
                 diff = data;
             })
-            .on(function () {
+            .on(xs.reactive.event.Destroy, function () {
                 strictEqual((new xs.core.Collection(log)).all(function (value) {
                     return value >= 10;
                 }), true);
 
                 me.done();
-            }, {
-                target: xs.reactive.event.Destroy
             });
 
         return false;
@@ -802,12 +793,10 @@ module('xs.reactive.Stream', function () {
             .on(function (data) {
                 log.push(data);
             })
-            .on(function () {
+            .on(xs.reactive.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), '[10]');
 
                 me.done();
-            }, {
-                target: xs.reactive.event.Destroy
             });
 
         return false;

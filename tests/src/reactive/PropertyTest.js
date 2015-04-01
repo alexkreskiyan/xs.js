@@ -171,7 +171,7 @@ module('xs.reactive.Property', function () {
             value += data;
         });
 
-        me.property.on(function () {
+        me.property.on(xs.reactive.event.Destroy, function () {
             //stream is not active and destroyed
             strictEqual(me.property.isDestroyed, true);
 
@@ -180,8 +180,6 @@ module('xs.reactive.Property', function () {
             strictEqual(value, 'null0011223344null');
 
             me.done();
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         return false;
@@ -220,14 +218,34 @@ module('xs.reactive.Property', function () {
         //correct generator given
         me.property = new xs.reactive.Property(me.generator);
 
+        //no handler throws
+        throws(function () {
+            me.property.on();
+        });
+
         //not a function handler throws
         throws(function () {
             me.property.on(null);
         });
 
-        //not an object second argument throws
+        //incorrect target throws
+        throws(function () {
+            me.property.on(null, xs.noop);
+        });
+
+        //empty target throws
+        throws(function () {
+            me.property.on([], xs.noop);
+        });
+
+        //incorrect options throws
         throws(function () {
             me.property.on(xs.noop, null);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.property.on(MouseEvent, xs.noop, null);
         });
 
 
@@ -258,13 +276,6 @@ module('xs.reactive.Property', function () {
             value += data;
         });
 
-        //incorrect target throws exception
-        throws(function () {
-            me.property.on(xs.noop, {
-                target: null
-            });
-        });
-
         //incorrect priority throws exception
         throws(function () {
             me.property.on(xs.noop, {
@@ -272,11 +283,9 @@ module('xs.reactive.Property', function () {
             });
         });
 
-        //method can be targeted directly with target type flags
-        me.property.on(function () {
+        //method can be targeted directly, specifying event constructor(s)
+        me.property.on(xs.reactive.event.Destroy, function () {
             log.targeted += 'destroyed';
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         //method can be called within given scope
@@ -297,7 +306,7 @@ module('xs.reactive.Property', function () {
             priority: 0
         });
 
-        me.property.on(function () {
+        me.property.on(xs.reactive.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
             strictEqual(log.targeted, 'destroyed');
@@ -307,8 +316,6 @@ module('xs.reactive.Property', function () {
             //check value
             strictEqual(value.toString(), 'undefined1010998877664433221'); //5 is missing - cancelled
             me.done();
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         return false;
@@ -552,7 +559,7 @@ module('xs.reactive.Property', function () {
             logResolved.push(data);
             valueResolved.push(resolved.value);
         });
-        resolved.on(function () {
+        resolved.on(xs.reactive.event.Destroy, function () {
             strictEqual(JSON.stringify(logResolved), JSON.stringify([
                 {
                     state: xs.core.Promise.Pending,
@@ -581,8 +588,6 @@ module('xs.reactive.Property', function () {
                     progress: 70
                 }
             ]));
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         //check initial state
@@ -607,7 +612,7 @@ module('xs.reactive.Property', function () {
             logRejected.push(data);
             valueRejected.push(rejected.value);
         });
-        rejected.on(function () {
+        rejected.on(xs.reactive.event.Destroy, function () {
             strictEqual(JSON.stringify(logRejected), JSON.stringify([
                 {
                     state: xs.core.Promise.Pending,
@@ -637,8 +642,6 @@ module('xs.reactive.Property', function () {
                 }
             ]));
             me.done();
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         //check initial state
@@ -668,13 +671,11 @@ module('xs.reactive.Property', function () {
 
         document.body.click();
 
-        property.on(function () {
+        property.on(xs.reactive.event.Destroy, function () {
             strictEqual(log.length, 1);
             strictEqual(log[ 0 ].constructor, MouseEvent);
 
             me.done();
-        }, {
-            target: xs.reactive.event.Destroy
         });
 
         property.destroy();
@@ -707,7 +708,7 @@ module('xs.reactive.Property', function () {
                     data: data
                 });
             })
-            .on(function () {
+            .on(xs.reactive.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), JSON.stringify([
                     {
                         data: 5
@@ -717,8 +718,6 @@ module('xs.reactive.Property', function () {
                     }
                 ]));
                 me.done();
-            }, {
-                target: xs.reactive.event.Destroy
             });
 
         return false;
@@ -745,12 +744,10 @@ module('xs.reactive.Property', function () {
             .on(function (data) {
                 log.push(data);
             })
-            .on(function () {
+            .on(xs.reactive.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), '[10]');
 
                 me.done();
-            }, {
-                target: xs.reactive.event.Destroy
             });
 
         return false;
@@ -778,12 +775,10 @@ module('xs.reactive.Property', function () {
             .on(function (data) {
                 log.push(data);
             })
-            .on(function () {
+            .on(xs.reactive.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), '[10]');
 
                 me.done();
-            }, {
-                target: xs.reactive.event.Destroy
             });
 
         return false;
@@ -812,14 +807,12 @@ module('xs.reactive.Property', function () {
                 log.push(data - diff);
                 diff = data;
             })
-            .on(function () {
+            .on(xs.reactive.event.Destroy, function () {
                 strictEqual((new xs.core.Collection(log)).all(function (value) {
                     return value >= 10;
                 }), true);
 
                 me.done();
-            }, {
-                target: xs.reactive.event.Destroy
             });
 
         return false;
@@ -848,12 +841,10 @@ module('xs.reactive.Property', function () {
             .on(function (data) {
                 log.push(data);
             })
-            .on(function () {
+            .on(xs.reactive.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), '[10]');
 
                 me.done();
-            }, {
-                target: xs.reactive.event.Destroy
             });
 
         return false;
