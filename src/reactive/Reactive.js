@@ -206,87 +206,27 @@ Reactive.prototype.off = function (target, selector, flags) {
     //assert, that reactive is not destroyed
     assert.not(me.isDestroyed, 'off - reactive is destroyed');
 
-    //get handlers reference
-    var handlers = me.private.reactiveHandlers;
-
     //complete truncate of all handlers
     if (!arguments.length) {
 
-        log.trace('off - removing all handlers');
+        handleOff.call(me, false, false, false);
 
-        //remove all handlers
-        handlers.remove();
-
-        //sync active state to false - all handlers were removed
-        syncActive.call(me, false);
-
-        return me;
-    }
-
-    //process different call scenarios
-    var handler;
-    var targetGiven = false;
-    var selectorGiven = false;
-    var flagsGiven = false;
-
-    if (arguments.length === 1) {
+    } else if (arguments.length === 1) {
 
         if (isTarget(arguments[ 0 ])) {
-            targetGiven = true;
-            handler = function (item) {
-                return item.target === target;
-            };
-
-            //use selector instead of target
+            handleOff.call(me, arguments[ 0 ], false, false);
         } else {
-            selectorGiven = true;
-            target = undefined;
-            selector = arguments[ 0 ];
-            handler = selector;
+            handleOff.call(me, false, arguments[ 0 ], false);
         }
 
         //selector, flags scenario
     } else if (!xs.isFunction(arguments[ 1 ])) {
-        selectorGiven = true;
-        flagsGiven = true;
-        selector = arguments[ 0 ];
-        flags = arguments[ 1 ];
-        handler = selector;
+        handleOff.call(me, false, arguments[ 0 ], arguments[ 1 ]);
 
         //target, selector, [flags] scenario
     } else {
-        targetGiven = true;
-        selectorGiven = true;
-        handler = function (item) {
-            return item.target === target && selector(item);
-        };
+        handleOff.apply(me, arguments);
     }
-
-
-    //check, that target (if given) is undefined or a function
-    assert.ok(!targetGiven || !xs.isDefined(target) || xs.isFunction(target), 'off - given target `$target` is not valid', {
-        $target: target
-    });
-
-    //assert, that selector (if given) is a function
-    assert.ok(!selectorGiven || xs.isFunction(selector), 'off - given selector `$selector` is not a function', {
-        $selector: selector
-    });
-
-    if (flagsGiven) {
-        log.trace('off - removing handlers by selector `$selector` and flags `$flags`', {
-            $selector: selector
-        });
-        handlers.removeBy(handler, flags);
-    } else {
-        log.trace('off - removing handlers by selector `$selector`', {
-            $selector: selector
-        });
-        handlers.removeBy(handler);
-    }
-
-    //sync active state - perhaps, no handlers left and it is false
-    syncActive.call(me);
 
     return me;
 };
@@ -553,6 +493,70 @@ function handleOn(target, handler, options) {
     if (!suspended) {
         syncActive.call(me, true);
     }
+}
+
+function handleOff(target, selector, flags) {
+    var me = this;
+
+    //check, that target is false, undefined or a function
+    assert.ok(target === false || !xs.isDefined(target) || isTarget(target), 'handleOff - given target `$target` is not a function', {
+        $target: target
+    });
+
+    //assert, that selector is false or a selector
+    assert.ok(selector === false || xs.isFunction(selector), 'handleOff - given selector `$selector` is not a function', {
+        $selector: selector
+    });
+
+    //assert, that flags are false or a number
+    assert.ok(flags === false || xs.isNumber(flags), 'handleOff - given flags `$flags` are not a number', {
+        $flags: flags
+    });
+
+    //get handlers reference
+    var handlers = me.private.reactiveHandlers;
+    var handler;
+
+
+    //remove by target and selector
+    if (target !== false && selector !== false) {
+        handler = function (item) {
+            return item.target === target && selector(item);
+        };
+
+        //remove by target
+    } else if (target !== false) {
+        handler = function (item) {
+            return item.target === target;
+        };
+
+        //remove by selector
+    } else if (selector !== false) {
+        handler = selector;
+
+        //remove all
+    } else {
+
+        //remove all handlers
+        handlers.remove();
+
+        //sync active state to false - all handlers were removed
+        syncActive.call(me, false);
+
+        return me;
+    }
+
+
+    if (flags === false) {
+        handlers.removeBy(handler);
+    } else {
+        handlers.removeBy(handler, flags);
+    }
+
+    //sync active state - perhaps, no handlers left and it is false
+    syncActive.call(me);
+
+    return me;
 }
 
 function isTarget(candidate) {
