@@ -168,10 +168,7 @@ Reactive.prototype.on = function (target, handler, options) {
 
     //process different call scenarios
     if (arguments.length === 1) {
-
-        target = undefined;
-        handler = arguments[ 0 ];
-
+        handleOn.call(me, false, arguments[ 0 ], false);
     } else if (arguments.length === 2) {
 
         //assert, that arguments[1] is either a function (target, handler call) or an options (handler, options call)
@@ -179,107 +176,14 @@ Reactive.prototype.on = function (target, handler, options) {
 
         //target, handler call
         if (xs.isFunction(arguments[ 1 ])) {
-
-            target = arguments[ 0 ];
-            handler = arguments[ 1 ];
+            handleOn.call(me, arguments[ 0 ], arguments[ 1 ], false);
 
             //handler, options call
         } else {
-
-            target = undefined;
-            handler = arguments[ 0 ];
-            options = arguments[ 1 ];
-
+            handleOn.call(me, false, arguments[ 0 ], arguments[ 1 ]);
         }
-    }
-
-    //check, that target is undefined or a function
-    assert.ok(!xs.isDefined(target) || xs.isFunction(target), 'target - given target `$target` is not a function', {
-        $target: target
-    });
-
-    //assert, that handler is a function
-    assert.fn(handler, 'on - given handler `$handler` is not a function', {
-        $handler: handler
-    });
-
-    //assert, that options (if given) are an object
-    assert.ok(arguments.length <= 2 || xs.isObject(options), 'on - given options `$options` are not an object', {
-        $options: options
-    });
-
-    //get handlers reference
-    var handlers = me.private.reactiveHandlers;
-
-    //if no options given - simply add
-    if (!options) {
-
-        log.trace('on - adding handler `$handler` with target `$target` without options', {
-            $target: target,
-            $handler: handler
-        });
-
-        handlers.add({
-            target: target,
-            handler: handler,
-            suspended: false,
-            scope: me
-        });
-
-        //sync active state to true - new item not-suspended was added
-        syncActive.call(me, true);
-
-        return me;
-    }
-
-    log.trace('on - adding handler `$handler` with target `$target` with options `$options`', {
-        $target: target,
-        $handler: handler,
-        $options: options
-    });
-
-    //process suspended option
-    var suspended = options.hasOwnProperty('suspended') ? Boolean(options.suspended) : false;
-
-    //define handler item
-    var item = {
-        target: target,
-        handler: handler,
-        suspended: suspended,
-        scope: options.hasOwnProperty('scope') ? options.scope : me
-    };
-
-    //process priority (if given)
-    var priority;
-
-    if (options.hasOwnProperty('priority')) {
-        priority = options.priority;
-
-        //assert that priority is number
-        assert.number(priority, 'on - given priority `$priority` is not a number', {
-            $priority: priority
-        });
     } else {
-        priority = false;
-    }
-
-    //if priority not given - add, else - insert
-    if (priority === false) {
-        //add item to collection
-        handlers.add(item);
-    } else {
-        //priority in fact is index of item in handlers collection
-        handlers.insert(priority, item);
-    }
-
-    log.trace('on - handler `$handler` was ' + (priority === false ? 'added' : 'inserted at ' + priority) + 'as `$item`', {
-        $handler: handler,
-        $item: item
-    });
-
-    //sync active state to true - new item not-suspended was added
-    if (!suspended) {
-        syncActive.call(me, true);
+        handleOn.apply(me, arguments);
     }
 
     return me;
@@ -553,6 +457,103 @@ Reactive.prototype.destroy = function () {
     //remove all handlers
     handlers.remove();
 };
+
+function handleOn(target, handler, options) {
+    var me = this;
+
+    //check, that target is false, undefined or a function
+    assert.ok(target === false || !xs.isDefined(target) || isTarget(target), 'target - given target `$target` is not a function', {
+        $target: target
+    });
+
+    //assert, that handler is false or a function
+    assert.ok(handler === false || xs.isFunction(handler), 'on - given handler `$handler` is not a function', {
+        $handler: handler
+    });
+
+    //assert, that options are false or an object
+    assert.ok(options === false || xs.isObject(options), 'on - given options `$options` are not an object', {
+        $options: options
+    });
+
+    //get handlers reference
+    var handlers = me.private.reactiveHandlers;
+
+    //if no options given - simply add
+    if (!options) {
+
+        log.trace('on - adding handler `$handler` with target `$target` without options', {
+            $target: target,
+            $handler: handler
+        });
+
+        handlers.add({
+            target: target,
+            handler: handler,
+            suspended: false,
+            scope: me
+        });
+
+        //sync active state to true - new item not-suspended was added
+        syncActive.call(me, true);
+
+        return me;
+    }
+
+    log.trace('on - adding handler `$handler` with target `$target` with options `$options`', {
+        $target: target,
+        $handler: handler,
+        $options: options
+    });
+
+    //process suspended option
+    var suspended = options.hasOwnProperty('suspended') ? Boolean(options.suspended) : false;
+
+    //define handler item
+    var item = {
+        target: target,
+        handler: handler,
+        suspended: suspended,
+        scope: options.hasOwnProperty('scope') ? options.scope : me
+    };
+
+    //process priority (if given)
+    var priority;
+
+    if (options.hasOwnProperty('priority')) {
+        priority = options.priority;
+
+        //assert that priority is number
+        assert.number(priority, 'on - given priority `$priority` is not a number', {
+            $priority: priority
+        });
+    } else {
+        priority = false;
+    }
+
+    //if priority not given - add, else - insert
+    if (priority === false) {
+
+        //add item to collection
+        handlers.add(item);
+
+    } else {
+
+        //priority in fact is index of item in handlers collection
+        handlers.insert(priority, item);
+
+    }
+
+    log.trace('on - handler `$handler` was ' + (priority === false ? 'added' : 'inserted at ' + priority) + 'as `$item`', {
+        $handler: handler,
+        $item: item
+    });
+
+    //sync active state to true - new item not-suspended was added
+    if (!suspended) {
+        syncActive.call(me, true);
+    }
+}
 
 function isTarget(candidate) {
     if (!xs.isDefined(candidate)) {
