@@ -24,7 +24,7 @@ module.send = function send(handlers, data) {
             }
 
             //ignore, if target does not match data.constructor
-            if (item.target.indexOf(data.constructor) < 0) {
+            if (item.target !== data.constructor) {
 
                 return;
             }

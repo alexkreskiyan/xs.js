@@ -11,5 +11,5 @@ if (!xs.reactive.event) {
 }
 
 //save reference to module
-xs.reactive.event.Event = module.Event = function () {
+module.Event = function () {
 };

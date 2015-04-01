@@ -151,7 +151,7 @@ Object.defineProperty(Reactive.prototype, 'isActive', {
  *
  * @method on
  *
- * @param {Function|Function[]} [target] change handler target(s)
+ * @param {Function} [target] change handler target(s)
  * @param {Function} handler reactive change handler
  * @param {Object} [options] reactive handler options
  *
@@ -169,13 +169,8 @@ Reactive.prototype.on = function (target, handler, options) {
     //process different call scenarios
     if (arguments.length === 1) {
 
-        log.trace('on - adding handler `$handler` only, without target and options', {
-            $handler: arguments[ 0 ]
-        });
-
         target = undefined;
         handler = arguments[ 0 ];
-        options = undefined;
 
     } else if (arguments.length === 2) {
 
@@ -185,22 +180,11 @@ Reactive.prototype.on = function (target, handler, options) {
         //target, handler call
         if (xs.isFunction(arguments[ 1 ])) {
 
-            log.trace('on - adding handler `$handler` for target `$target` without options', {
-                $target: arguments[ 0 ],
-                $handler: arguments[ 1 ]
-            });
-
             target = arguments[ 0 ];
             handler = arguments[ 1 ];
-            options = undefined;
 
             //handler, options call
         } else {
-
-            log.trace('on - adding handler `$handler` without target with options `$options`', {
-                $handler: arguments[ 0 ],
-                $options: arguments[ 1 ]
-            });
 
             target = undefined;
             handler = arguments[ 0 ];
@@ -209,25 +193,15 @@ Reactive.prototype.on = function (target, handler, options) {
         }
     }
 
-
-    //convert target to array
-    if (xs.isDefined(target)) {
-        if (!xs.isArray(target)) {
-            target = [ target ];
-        }
-
-        //assert that target are an array of module.Event children
-        assert.ok(verifyTargets(target), 'on - given target `$target` are not correct', {
-            $target: target
-        });
-    }
-
+    //check, that target is undefined or a function
+    assert.ok(!xs.isDefined(target) || xs.isFunction(target), 'target - given target `$target` is not a function', {
+        $target: target
+    });
 
     //assert, that handler is a function
     assert.fn(handler, 'on - given handler `$handler` is not a function', {
         $handler: handler
     });
-
 
     //assert, that options (if given) are an object
     assert.ok(arguments.length <= 2 || xs.isObject(options), 'on - given options `$options` are not an object', {
@@ -316,12 +290,13 @@ Reactive.prototype.on = function (target, handler, options) {
  *
  * @method off
  *
+ * @param {Function} [target] change handler target(s)
  * @param {Function} [selector] selector, that matches removed handlers
  * @param {Object} [flags] reactive handler options
  *
  * @chainable
  */
-Reactive.prototype.off = function (selector, flags) {
+Reactive.prototype.off = function (target, selector, flags) {
     var me = this;
 
     //assert, that reactive is not destroyed
@@ -344,17 +319,66 @@ Reactive.prototype.off = function (selector, flags) {
         return me;
     }
 
-    //selector given
+    //process different call scenarios
+    var handler;
+    var targetGiven = false;
+    var selectorGiven = false;
+    var flagsGiven = false;
+
     if (arguments.length === 1) {
-        log.trace('off - removing handlers by selector `$selector`', {
-            $selector: selector
-        });
-        handlers.removeBy(selector);
+
+        if (isTarget(arguments[ 0 ])) {
+            targetGiven = true;
+            handler = function (item) {
+                return item.target === target;
+            };
+
+            //use selector instead of target
+        } else {
+            selectorGiven = true;
+            target = undefined;
+            selector = arguments[ 0 ];
+            handler = selector;
+        }
+
+        //selector, flags scenario
+    } else if (!xs.isFunction(arguments[ 1 ])) {
+        selectorGiven = true;
+        flagsGiven = true;
+        selector = arguments[ 0 ];
+        flags = arguments[ 1 ];
+        handler = selector;
+
+        //target, selector, [flags] scenario
     } else {
+        targetGiven = true;
+        selectorGiven = true;
+        handler = function (item) {
+            return item.target === target && selector(item);
+        };
+    }
+
+
+    //check, that target (if given) is undefined or a function
+    assert.ok(!targetGiven || !xs.isDefined(target) || xs.isFunction(target), 'off - given target `$target` is not valid', {
+        $target: target
+    });
+
+    //assert, that selector (if given) is a function
+    assert.ok(!selectorGiven || xs.isFunction(selector), 'off - given selector `$selector` is not a function', {
+        $selector: selector
+    });
+
+    if (flagsGiven) {
         log.trace('off - removing handlers by selector `$selector` and flags `$flags`', {
             $selector: selector
         });
-        handlers.removeBy(selector, flags);
+        handlers.removeBy(handler, flags);
+    } else {
+        log.trace('off - removing handlers by selector `$selector`', {
+            $selector: selector
+        });
+        handlers.removeBy(handler);
     }
 
     //sync active state - perhaps, no handlers left and it is false
@@ -530,21 +554,20 @@ Reactive.prototype.destroy = function () {
     handlers.remove();
 };
 
-function verifyTargets(targets) {
+function isTarget(candidate) {
+    if (!xs.isDefined(candidate)) {
 
-    //check, that targets are not empty
-    assert.ok(targets.length, 'verifyTarget - given targets array is empty');
+        return true;
+    }
 
-    (new xs.core.Collection(targets)).each(function (target) {
+    if (!xs.isFunction(candidate)) {
 
-        //check, that target is a function
-        assert.fn(target, 'verifyTarget - given target `$target` is not a function', {
-            $target: target
-        });
+        return false;
+    }
 
-    });
+    var prototype = candidate.prototype;
 
-    return true;
+    return (prototype instanceof Event) || (prototype instanceof module.Event) || (xs.isClass(candidate) && candidate.implements(xs.event.IEvent));
 }
 
 function syncActive(value) {
