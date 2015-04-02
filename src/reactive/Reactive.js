@@ -236,65 +236,39 @@ Reactive.prototype.off = function (target, selector, flags) {
  *
  * @method suspend
  *
+ * @param {Function} [target] change handler target(s)
  * @param {Function} [selector] selector, that matches removed handlers
  * @param {Object} [flags] reactive handler options
  *
  * @chainable
  */
-Reactive.prototype.suspend = function (selector, flags) {
+Reactive.prototype.suspend = function (target, selector, flags) {
     var me = this;
 
     //assert, that reactive is not destroyed
-    assert.not(me.isDestroyed, 'suspend - reactive is destroyed');
+    assert.not(me.isDestroyed, 'off - reactive is destroyed');
 
-    //get handlers reference
-    var handlers = me.private.reactiveHandlers;
-
-    //all items suspended
+    //complete truncate of all handlers
     if (!arguments.length) {
 
-        log.trace('suspend - suspending all handlers');
+        handleSuspend.call(me, false, false, false);
 
-        //mark each item as suspended
-        handlers.each(function (item) {
-            item.suspended = true;
-        });
+    } else if (arguments.length === 1) {
 
-        //sync active state to false - all handlers were suspended
-        syncActive.call(me, false);
+        if (isTarget(arguments[ 0 ])) {
+            handleSuspend.call(me, arguments[ 0 ], false, false);
+        } else {
+            handleSuspend.call(me, false, arguments[ 0 ], false);
+        }
 
-        return me;
-    }
+        //selector, flags scenario
+    } else if (!xs.isFunction(arguments[ 1 ])) {
+        handleSuspend.call(me, false, arguments[ 0 ], arguments[ 1 ]);
 
-    //get suspended handlers subset
-    var suspended;
-
-    if (arguments.length === 1) {
-        log.trace('suspend - suspending handlers by selector `$selector`', {
-            $selector: selector
-        });
-        suspended = handlers.find(selector);
+        //target, selector, [flags] scenario
     } else {
-        log.trace('suspend - suspending handlers by selector `$selector` and flags `$flags`', {
-            $selector: selector
-        });
-        suspended = handlers.find(selector, flags);
+        handleSuspend.apply(me, arguments);
     }
-
-    //if handlers collection found
-    if (suspended instanceof xs.core.Collection) {
-        //mark each item as suspended
-        suspended.each(function (item) {
-            item.suspended = true;
-        });
-
-        //else if single handler found
-    } else if (xs.isObject(suspended)) {
-        suspended.suspended = true;
-    }
-
-    //sync active state - perhaps, all handlers were suspended and it is false
-    syncActive.call(me);
 
     return me;
 };
@@ -313,58 +287,29 @@ Reactive.prototype.resume = function (selector, flags) {
     var me = this;
 
     //assert, that reactive is not destroyed
-    assert.not(me.isDestroyed, 'resume  - reactive is destroyed');
+    assert.not(me.isDestroyed, 'off - reactive is destroyed');
 
-    //get handlers reference
-    var handlers = me.private.reactiveHandlers;
-
-    //all items resumed
+    //complete truncate of all handlers
     if (!arguments.length) {
 
-        log.trace('resume - resuming all handlers');
+        handleResume.call(me, false, false, false);
 
-        //mark each item as resumed
-        handlers.each(function (item) {
-            item.suspended = false;
-        });
+    } else if (arguments.length === 1) {
 
-        //sync active state to true - all handlers were resumed
-        if (handlers.size) {
-            syncActive.call(me, true);
+        if (isTarget(arguments[ 0 ])) {
+            handleResume.call(me, arguments[ 0 ], false, false);
+        } else {
+            handleResume.call(me, false, arguments[ 0 ], false);
         }
 
-        return me;
-    }
+        //selector, flags scenario
+    } else if (!xs.isFunction(arguments[ 1 ])) {
+        handleResume.call(me, false, arguments[ 0 ], arguments[ 1 ]);
 
-    //get resumed handlers subset
-    var resumed;
-
-    if (arguments.length === 1) {
-        log.trace('resume - resuming handlers by selector `$selector`', {
-            $selector: selector
-        });
-        resumed = handlers.find(selector);
+        //target, selector, [flags] scenario
     } else {
-        log.trace('resume - resuming handlers by selector `$selector` and flags `$flags`', {
-            $selector: selector
-        });
-        resumed = handlers.find(selector, flags);
+        handleResume.apply(me, arguments);
     }
-
-    //if handlers collection found
-    if (resumed instanceof xs.core.Collection) {
-        //mark each item as resumed
-        resumed.each(function (item) {
-            item.suspended = false;
-        });
-
-        //else if single handler found
-    } else if (xs.isObject(resumed)) {
-        resumed.suspended = false;
-    }
-
-    //sync active state - perhaps, some handlers were resumed and it is true
-    syncActive.call(me);
 
     return me;
 };
@@ -522,6 +467,84 @@ function handleOff(target, selector, flags) {
         //sync active state to false - all handlers were removed
         syncActive.call(me, false);
     }
+
+    return me;
+}
+
+function handleSuspend(target, selector, flags) {
+    var me = this;
+
+    //get handlers reference
+    var handlers = me.private.reactiveHandlers;
+
+    var handler = getSelectionHandler(target, selector, flags);
+
+    var suspended;
+
+    if (handler) {
+        if (flags === false) {
+            suspended = handlers.find(handler);
+        } else {
+            suspended = handlers.find(handler, flags);
+        }
+    } else {
+        suspended = handlers;
+    }
+
+    //if handlers collection found
+    if (suspended instanceof xs.core.Collection) {
+
+        //mark each item as suspended
+        suspended.each(function (item) {
+            item.suspended = true;
+        });
+
+        //else if single handler found
+    } else if (xs.isObject(suspended)) {
+        suspended.suspended = true;
+    }
+
+    //sync active state - perhaps, no handlers left and it is false
+    syncActive.call(me);
+
+    return me;
+}
+
+function handleResume(target, selector, flags) {
+    var me = this;
+
+    //get handlers reference
+    var handlers = me.private.reactiveHandlers;
+
+    var handler = getSelectionHandler(target, selector, flags);
+
+    var resumed;
+
+    if (handler) {
+        if (flags === false) {
+            resumed = handlers.find(handler);
+        } else {
+            resumed = handlers.find(handler, flags);
+        }
+    } else {
+        resumed = handlers;
+    }
+
+    //if handlers collection found
+    if (resumed instanceof xs.core.Collection) {
+
+        //mark each item as resumed
+        resumed.each(function (item) {
+            item.suspended = false;
+        });
+
+        //else if single handler found
+    } else if (xs.isObject(resumed)) {
+        resumed.suspended = false;
+    }
+
+    //sync active state - perhaps, no handlers left and it is false
+    syncActive.call(me);
 
     return me;
 }
