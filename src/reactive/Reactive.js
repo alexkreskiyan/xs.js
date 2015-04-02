@@ -498,6 +498,36 @@ function handleOn(target, handler, options) {
 function handleOff(target, selector, flags) {
     var me = this;
 
+    //get handlers reference
+    var handlers = me.private.reactiveHandlers;
+
+    var handler = getSelectionHandler(target, selector, flags);
+
+    if (handler) {
+
+        if (flags === false) {
+            handlers.removeBy(handler);
+        } else {
+            handlers.removeBy(handler, flags);
+        }
+
+        //sync active state - perhaps, no handlers left and it is false
+        syncActive.call(me);
+
+    } else {
+
+        //remove all handlers
+        handlers.remove();
+
+        //sync active state to false - all handlers were removed
+        syncActive.call(me, false);
+    }
+
+    return me;
+}
+
+function getSelectionHandler(target, selector, flags) {
+
     //check, that target is false, undefined or a function
     assert.ok(target === false || !xs.isDefined(target) || isTarget(target), 'handleOff - given target `$target` is not a function', {
         $target: target
@@ -513,50 +543,28 @@ function handleOff(target, selector, flags) {
         $flags: flags
     });
 
-    //get handlers reference
-    var handlers = me.private.reactiveHandlers;
-    var handler;
-
-
     //remove by target and selector
     if (target !== false && selector !== false) {
-        handler = function (item) {
+
+        return function (item) {
+
             return item.target === target && selector(item);
         };
+    }
 
-        //remove by target
-    } else if (target !== false) {
-        handler = function (item) {
+    //remove by target
+    if (target !== false) {
+        return function (item) {
             return item.target === target;
         };
 
-        //remove by selector
-    } else if (selector !== false) {
-        handler = selector;
-
-        //remove all
-    } else {
-
-        //remove all handlers
-        handlers.remove();
-
-        //sync active state to false - all handlers were removed
-        syncActive.call(me, false);
-
-        return me;
     }
 
+    //remove by selector
+    if (selector !== false) {
 
-    if (flags === false) {
-        handlers.removeBy(handler);
-    } else {
-        handlers.removeBy(handler, flags);
+        return selector;
     }
-
-    //sync active state - perhaps, no handlers left and it is false
-    syncActive.call(me);
-
-    return me;
 }
 
 function isTarget(candidate) {
