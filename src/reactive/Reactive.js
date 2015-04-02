@@ -214,7 +214,7 @@ Reactive.prototype.off = function (target, selector, flags) {
     } else if (arguments.length === 1) {
 
         if (isTarget(arguments[ 0 ])) {
-            handleOff.call(me, arguments[ 0 ], false, false);
+            handleOff.call(me, arguments[ 0 ], false, xs.core.Collection.All);
         } else {
             handleOff.call(me, false, arguments[ 0 ], false);
         }
@@ -256,7 +256,7 @@ Reactive.prototype.suspend = function (target, selector, flags) {
     } else if (arguments.length === 1) {
 
         if (isTarget(arguments[ 0 ])) {
-            handleSuspend.call(me, arguments[ 0 ], false, false);
+            handleSuspend.call(me, arguments[ 0 ], false, xs.core.Collection.All);
         } else {
             handleSuspend.call(me, false, arguments[ 0 ], false);
         }
@@ -297,7 +297,7 @@ Reactive.prototype.resume = function (selector, flags) {
     } else if (arguments.length === 1) {
 
         if (isTarget(arguments[ 0 ])) {
-            handleResume.call(me, arguments[ 0 ], false, false);
+            handleResume.call(me, arguments[ 0 ], false, xs.core.Collection.All);
         } else {
             handleResume.call(me, false, arguments[ 0 ], false);
         }
