@@ -228,11 +228,6 @@ module('xs.reactive.Stream', function () {
             me.stream.on(null, xs.noop);
         });
 
-        //empty target throws
-        throws(function () {
-            me.stream.on([], xs.noop);
-        });
-
         //incorrect options throws
         throws(function () {
             me.stream.on(xs.noop, null);
@@ -340,7 +335,28 @@ module('xs.reactive.Stream', function () {
     }, function () {
         var me = this;
 
+        //correct generator given
         me.stream = new xs.reactive.Stream(me.generator);
+
+        //not a function handler throws
+        throws(function () {
+            me.stream.off(null);
+        });
+
+        //incorrect target throws
+        throws(function () {
+            me.stream.off(null, xs.noop);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.stream.off(xs.noop, null);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.stream.off(MouseEvent, xs.noop, null);
+        });
 
         me.stream.on(xs.noop);
 
@@ -413,7 +429,28 @@ module('xs.reactive.Stream', function () {
     }, function () {
         var me = this;
 
+        //correct generator given
         me.stream = new xs.reactive.Stream(me.generator);
+
+        //not a function handler throws
+        throws(function () {
+            me.stream.suspend(null);
+        });
+
+        //incorrect target throws
+        throws(function () {
+            me.stream.suspend(null, xs.noop);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.stream.suspend(xs.noop, null);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.stream.suspend(MouseEvent, xs.noop, null);
+        });
 
         me.stream.on(xs.noop);
 
@@ -486,7 +523,28 @@ module('xs.reactive.Stream', function () {
     }, function () {
         var me = this;
 
+        //correct generator given
         me.stream = new xs.reactive.Stream(me.generator);
+
+        //not a function handler throws
+        throws(function () {
+            me.stream.resume(null);
+        });
+
+        //incorrect target throws
+        throws(function () {
+            me.stream.resume(null, xs.noop);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.stream.resume(xs.noop, null);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.stream.resume(MouseEvent, xs.noop, null);
+        });
 
         me.stream.on(xs.noop);
 

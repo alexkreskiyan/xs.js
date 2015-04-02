@@ -233,11 +233,6 @@ module('xs.reactive.Property', function () {
             me.property.on(null, xs.noop);
         });
 
-        //empty target throws
-        throws(function () {
-            me.property.on([], xs.noop);
-        });
-
         //incorrect options throws
         throws(function () {
             me.property.on(xs.noop, null);
@@ -351,7 +346,28 @@ module('xs.reactive.Property', function () {
     }, function () {
         var me = this;
 
+        //correct generator given
         me.property = new xs.reactive.Property(me.generator);
+
+        //not a function handler throws
+        throws(function () {
+            me.property.off(null);
+        });
+
+        //incorrect target throws
+        throws(function () {
+            me.property.off(null, xs.noop);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.property.off(xs.noop, null);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.property.off(MouseEvent, xs.noop, null);
+        });
 
         me.property.on(xs.noop);
 
@@ -424,7 +440,28 @@ module('xs.reactive.Property', function () {
     }, function () {
         var me = this;
 
+        //correct generator given
         me.property = new xs.reactive.Property(me.generator);
+
+        //not a function handler throws
+        throws(function () {
+            me.property.suspend(null);
+        });
+
+        //incorrect target throws
+        throws(function () {
+            me.property.suspend(null, xs.noop);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.property.suspend(xs.noop, null);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.property.suspend(MouseEvent, xs.noop, null);
+        });
 
         me.property.on(xs.noop);
 
@@ -497,7 +534,28 @@ module('xs.reactive.Property', function () {
     }, function () {
         var me = this;
 
+        //correct generator given
         me.property = new xs.reactive.Property(me.generator);
+
+        //not a function handler throws
+        throws(function () {
+            me.property.resume(null);
+        });
+
+        //incorrect target throws
+        throws(function () {
+            me.property.resume(null, xs.noop);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.property.resume(xs.noop, null);
+        });
+
+        //incorrect options throws
+        throws(function () {
+            me.property.resume(MouseEvent, xs.noop, null);
+        });
 
         me.property.on(xs.noop);
 
