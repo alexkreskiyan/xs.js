@@ -1,16 +1,16 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.reactive.Property');
+var log = new xs.log.Logger('xs.core.reactive.Property');
 
-var assert = new xs.core.Asserter(log, XsReactivePropertyError);
+var assert = new xs.core.Asserter(log, XsCoreReactivePropertyError);
 
-if (!xs.reactive) {
-    xs.reactive = {};
+if (!xs.core.reactive) {
+    xs.core.reactive = {};
 }
 
 var Reactive = module.Reactive;
 
-var Property = xs.reactive.Property = function (generator, value, sources) {
+var Property = xs.core.reactive.Property = function (generator, value, sources) {
     var me = this;
 
     if (arguments.length < 3) {
@@ -35,7 +35,7 @@ xs.extend(Property, Reactive);
  *
  * @param {Object} promise reactive source promise
  *
- * @return {xs.reactive.Property}
+ * @return {xs.core.reactive.Property}
  */
 Property.fromPromise = function (promise) {
 
@@ -60,7 +60,7 @@ Property.fromPromise = function (promise) {
  * @param {Element} element event emitter
  * @param {String} eventName name of subscribed event
  *
- * @return {xs.reactive.Property}
+ * @return {xs.core.reactive.Property}
  */
 Property.fromEvent = function (element, eventName) {
 
@@ -110,7 +110,7 @@ Object.defineProperty(Property.prototype, 'value', {
  *
  * @param {Boolean} [sendCurrent] whether to send current value on next tick
  *
- * @return {xs.reactive.Stream}
+ * @return {xs.core.reactive.Stream}
  */
 Property.prototype.toStream = function (sendCurrent) {
     var me = this;
@@ -119,7 +119,7 @@ Property.prototype.toStream = function (sendCurrent) {
         $sendCurrent: sendCurrent
     });
 
-    return new xs.reactive.Stream(toStream, [
+    return new xs.core.reactive.Stream(toStream, [
         me,
         sendCurrent
     ]);
@@ -132,7 +132,7 @@ Property.prototype.toStream = function (sendCurrent) {
  *
  * @param {Function} fn mapping function, that returns mapped value
  *
- * @return {xs.reactive.Property}
+ * @return {xs.core.reactive.Property}
  */
 Property.prototype.map = function (fn) {
     var me = this;
@@ -160,7 +160,7 @@ Property.prototype.map = function (fn) {
  *
  * @param {Function} fn filtering function, that should return boolean value, saying to allow pass event or not
  *
- * @return {xs.reactive.Property}
+ * @return {xs.core.reactive.Property}
  */
 Property.prototype.filter = function (fn) {
     var me = this;
@@ -186,7 +186,7 @@ Property.prototype.filter = function (fn) {
  *
  * @method transduce
  *
- * @return {xs.reactive.Property}
+ * @return {xs.core.reactive.Property}
  */
 Property.prototype.transduce = function () {
 };
@@ -198,7 +198,7 @@ Property.prototype.transduce = function () {
  *
  * @param {Number} interval throttling interval
  *
- * @return {xs.reactive.Property}
+ * @return {xs.core.reactive.Property}
  */
 Property.prototype.throttle = function (interval) {
     var me = this;
@@ -226,7 +226,7 @@ Property.prototype.throttle = function (interval) {
  *
  * @param {Number} interval awaiting interval
  *
- * @return {xs.reactive.Property}
+ * @return {xs.core.reactive.Property}
  */
 Property.prototype.debounce = function (interval) {
     var me = this;
@@ -299,7 +299,7 @@ function toStream(property, sendCurrent) {
     property.on(me.send);
 
     //on destroy - destroy
-    property.on(xs.reactive.event.Destroy, me.destroy);
+    property.on(xs.core.reactive.event.Destroy, me.destroy);
 }
 
 function map(source, fn) {
@@ -311,7 +311,7 @@ function map(source, fn) {
     });
 
     //on destroy - destroy
-    source.on(xs.reactive.event.Destroy, me.destroy);
+    source.on(xs.core.reactive.event.Destroy, me.destroy);
 }
 
 function filter(source, fn) {
@@ -325,7 +325,7 @@ function filter(source, fn) {
     });
 
     //on destroy - destroy
-    source.on(xs.reactive.event.Destroy, me.destroy);
+    source.on(xs.core.reactive.event.Destroy, me.destroy);
 }
 
 function throttle(source, interval) {
@@ -350,7 +350,7 @@ function throttle(source, interval) {
     });
 
     //on destroy - destroy
-    source.on(xs.reactive.event.Destroy, me.destroy);
+    source.on(xs.core.reactive.event.Destroy, me.destroy);
 }
 
 function debounce(source, interval) {
@@ -380,7 +380,7 @@ function debounce(source, interval) {
     var sourceDestroyed = false;
 
     //on destroy - destroy
-    source.on(xs.reactive.event.Destroy, function () {
+    source.on(xs.core.reactive.event.Destroy, function () {
 
         //if timeout defined - awaiting initiated, needed delayed destroy
         if (xs.isDefined(timeoutId)) {
@@ -402,10 +402,10 @@ function debounce(source, interval) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class XsReactivePropertyError
+ * @class XsCoreReactivePropertyError
  */
-function XsReactivePropertyError(message) {
-    this.message = 'xs.reactive.Property::' + message;
+function XsCoreReactivePropertyError(message) {
+    this.message = 'xs.core.reactive.Property::' + message;
 }
 
-XsReactivePropertyError.prototype = new Error();
+XsCoreReactivePropertyError.prototype = new Error();

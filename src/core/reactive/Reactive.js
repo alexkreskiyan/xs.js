@@ -1,12 +1,12 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.reactive.Reactive');
+var log = new xs.log.Logger('xs.core.reactive.Reactive');
 
-var assert = new xs.core.Asserter(log, XsReactiveReactiveError);
+var assert = new xs.core.Asserter(log, XsCoreReactiveReactiveError);
 
-//define xs.reactive
-if (!xs.reactive) {
-    xs.reactive = {};
+//define xs.core.reactive
+if (!xs.core.reactive) {
+    xs.core.reactive = {};
 }
 
 /**
@@ -27,7 +27,7 @@ if (!xs.reactive) {
  * Creates reactive instance
  *
  * @param {Function} generator reactive generator function
- * @param {xs.reactive.emitter.Emitter} emitter reactive emitter
+ * @param {xs.core.reactive.emitter.Emitter} emitter reactive emitter
  * @param {Array} sources additional sources, used by reactive object
  */
 var Reactive = function (generator, emitter, sources) {
@@ -337,7 +337,7 @@ Reactive.prototype.destroy = function () {
     delete me.private;
 
     //send destroy notification
-    module.send(handlers, new xs.reactive.event.Destroy());
+    module.send(handlers, new xs.core.reactive.event.Destroy());
 
     //remove all handlers
     handlers.remove();
@@ -650,10 +650,10 @@ function syncActive(value) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class XsReactiveReactiveError
+ * @class XsCoreReactiveReactiveError
  */
-function XsReactiveReactiveError(message) {
-    this.message = 'xs.reactive.Reactive::' + message;
+function XsCoreReactiveReactiveError(message) {
+    this.message = 'xs.core.reactive.Reactive::' + message;
 }
 
-XsReactiveReactiveError.prototype = new Error();
+XsCoreReactiveReactiveError.prototype = new Error();

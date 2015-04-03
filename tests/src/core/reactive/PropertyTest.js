@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.reactive.Property', function () {
+module('xs.core.reactive.Property', function () {
 
     'use strict';
 
@@ -31,18 +31,18 @@ module('xs.reactive.Property', function () {
 
         //generator must be given
         throws(function () {
-            return new xs.reactive.Property();
+            return new xs.core.reactive.Property();
         });
 
         //sources must be an array
         throws(function () {
-            return new xs.reactive.Property(me.generator, undefined, undefined);
+            return new xs.core.reactive.Property(me.generator, undefined, undefined);
         });
 
         //generator must return object or undefined
-        me.property = new xs.reactive.Property(xs.noop);
+        me.property = new xs.core.reactive.Property(xs.noop);
         throws(function () {
-            return new xs.reactive.Property(function () {
+            return new xs.core.reactive.Property(function () {
                 return null;
             });
         });
@@ -50,7 +50,7 @@ module('xs.reactive.Property', function () {
         //return.on must be a function
         throws(function () {
 
-            return new xs.reactive.Property(function () {
+            return new xs.core.reactive.Property(function () {
 
                 return {};
             });
@@ -59,7 +59,7 @@ module('xs.reactive.Property', function () {
         //return.off must be a function
         throws(function () {
 
-            return new xs.reactive.Property(function () {
+            return new xs.core.reactive.Property(function () {
 
                 return {
                     on: xs.noop
@@ -68,7 +68,7 @@ module('xs.reactive.Property', function () {
         });
 
         //correct generator given
-        me.property = new xs.reactive.Property(me.generator);
+        me.property = new xs.core.reactive.Property(me.generator);
 
         //check basics
         strictEqual(me.property.isActive, false);
@@ -96,7 +96,7 @@ module('xs.reactive.Property', function () {
     }, function () {
         var me = this;
 
-        me.property = new xs.reactive.Property(me.generator);
+        me.property = new xs.core.reactive.Property(me.generator);
 
         //stream is not active and not destroyed
         strictEqual(me.property.isActive, false);
@@ -150,7 +150,7 @@ module('xs.reactive.Property', function () {
     }, function () {
         var me = this;
 
-        me.property = new xs.reactive.Property(me.generator);
+        me.property = new xs.core.reactive.Property(me.generator);
 
         //stream is not active and not destroyed
         strictEqual(me.property.isActive, false);
@@ -171,7 +171,7 @@ module('xs.reactive.Property', function () {
             value += data;
         });
 
-        me.property.on(xs.reactive.event.Destroy, function () {
+        me.property.on(xs.core.reactive.event.Destroy, function () {
             //stream is not active and destroyed
             strictEqual(me.property.isDestroyed, true);
 
@@ -216,7 +216,7 @@ module('xs.reactive.Property', function () {
         var me = this;
 
         //correct generator given
-        me.property = new xs.reactive.Property(me.generator);
+        me.property = new xs.core.reactive.Property(me.generator);
 
         //no handler throws
         throws(function () {
@@ -279,7 +279,7 @@ module('xs.reactive.Property', function () {
         });
 
         //method can be targeted directly, specifying event constructor(s)
-        me.property.on(xs.reactive.event.Destroy, function () {
+        me.property.on(xs.core.reactive.event.Destroy, function () {
             log.targeted += 'destroyed';
         });
 
@@ -301,7 +301,7 @@ module('xs.reactive.Property', function () {
             priority: 0
         });
 
-        me.property.on(xs.reactive.event.Destroy, function () {
+        me.property.on(xs.core.reactive.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
             strictEqual(log.targeted, 'destroyed');
@@ -347,7 +347,7 @@ module('xs.reactive.Property', function () {
         var me = this;
 
         //correct generator given
-        me.property = new xs.reactive.Property(me.generator);
+        me.property = new xs.core.reactive.Property(me.generator);
 
         //not a function handler throws
         throws(function () {
@@ -441,7 +441,7 @@ module('xs.reactive.Property', function () {
         var me = this;
 
         //correct generator given
-        me.property = new xs.reactive.Property(me.generator);
+        me.property = new xs.core.reactive.Property(me.generator);
 
         //not a function handler throws
         throws(function () {
@@ -535,7 +535,7 @@ module('xs.reactive.Property', function () {
         var me = this;
 
         //correct generator given
-        me.property = new xs.reactive.Property(me.generator);
+        me.property = new xs.core.reactive.Property(me.generator);
 
         //not a function handler throws
         throws(function () {
@@ -609,7 +609,7 @@ module('xs.reactive.Property', function () {
 
         //resolved promise
         promise = new xs.core.Promise();
-        var resolved = xs.reactive.Property.fromPromise(promise);
+        var resolved = xs.core.reactive.Property.fromPromise(promise);
 
         var logResolved = [];
         var valueResolved = [];
@@ -617,7 +617,7 @@ module('xs.reactive.Property', function () {
             logResolved.push(data);
             valueResolved.push(resolved.value);
         });
-        resolved.on(xs.reactive.event.Destroy, function () {
+        resolved.on(xs.core.reactive.event.Destroy, function () {
             strictEqual(JSON.stringify(logResolved), JSON.stringify([
                 {
                     state: xs.core.Promise.Pending,
@@ -662,7 +662,7 @@ module('xs.reactive.Property', function () {
 
         //rejected promise
         promise = new xs.core.Promise();
-        var rejected = xs.reactive.Property.fromPromise(promise);
+        var rejected = xs.core.reactive.Property.fromPromise(promise);
 
         var logRejected = [];
         var valueRejected = [];
@@ -670,7 +670,7 @@ module('xs.reactive.Property', function () {
             logRejected.push(data);
             valueRejected.push(rejected.value);
         });
-        rejected.on(xs.reactive.event.Destroy, function () {
+        rejected.on(xs.core.reactive.event.Destroy, function () {
             strictEqual(JSON.stringify(logRejected), JSON.stringify([
                 {
                     state: xs.core.Promise.Pending,
@@ -720,7 +720,7 @@ module('xs.reactive.Property', function () {
     test('fromEvent', function () {
         var me = this;
 
-        var property = xs.reactive.Property.fromEvent(document.body, 'click');
+        var property = xs.core.reactive.Property.fromEvent(document.body, 'click');
 
         var log = [];
         property.on(function (data) {
@@ -729,7 +729,7 @@ module('xs.reactive.Property', function () {
 
         document.body.click();
 
-        property.on(xs.reactive.event.Destroy, function () {
+        property.on(xs.core.reactive.event.Destroy, function () {
             strictEqual(log.length, 1);
             strictEqual(log[ 0 ].constructor, MouseEvent);
 
@@ -745,7 +745,7 @@ module('xs.reactive.Property', function () {
         var me = this;
 
         var log = [];
-        (new xs.reactive.Property(function () {
+        (new xs.core.reactive.Property(function () {
             var me = this;
 
             return {
@@ -766,7 +766,7 @@ module('xs.reactive.Property', function () {
                     data: data
                 });
             })
-            .on(xs.reactive.event.Destroy, function () {
+            .on(xs.core.reactive.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), JSON.stringify([
                     {
                         data: 5
@@ -784,7 +784,7 @@ module('xs.reactive.Property', function () {
     test('map', function () {
         var me = this;
 
-        var property = new xs.reactive.Property(function () {
+        var property = new xs.core.reactive.Property(function () {
             var me = this;
 
             xs.nextTick(function () {
@@ -802,7 +802,7 @@ module('xs.reactive.Property', function () {
             .on(function (data) {
                 log.push(data);
             })
-            .on(xs.reactive.event.Destroy, function () {
+            .on(xs.core.reactive.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), '[10]');
 
                 me.done();
@@ -814,7 +814,7 @@ module('xs.reactive.Property', function () {
     test('filter', function () {
         var me = this;
 
-        var property = new xs.reactive.Property(function () {
+        var property = new xs.core.reactive.Property(function () {
             var me = this;
 
             xs.nextTick(function () {
@@ -833,7 +833,7 @@ module('xs.reactive.Property', function () {
             .on(function (data) {
                 log.push(data);
             })
-            .on(xs.reactive.event.Destroy, function () {
+            .on(xs.core.reactive.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), '[10]');
 
                 me.done();
@@ -845,7 +845,7 @@ module('xs.reactive.Property', function () {
     test('throttle', function () {
         var me = this;
 
-        var property = new xs.reactive.Property(function () {
+        var property = new xs.core.reactive.Property(function () {
             var me = this;
 
             var interval = setInterval(function () {
@@ -865,7 +865,7 @@ module('xs.reactive.Property', function () {
                 log.push(data - diff);
                 diff = data;
             })
-            .on(xs.reactive.event.Destroy, function () {
+            .on(xs.core.reactive.event.Destroy, function () {
                 strictEqual((new xs.core.Collection(log)).all(function (value) {
                     return value >= 10;
                 }), true);
@@ -879,7 +879,7 @@ module('xs.reactive.Property', function () {
     test('debounce', function () {
         var me = this;
 
-        var property = new xs.reactive.Property(function () {
+        var property = new xs.core.reactive.Property(function () {
             var me = this;
 
             var i = 0;
@@ -899,7 +899,7 @@ module('xs.reactive.Property', function () {
             .on(function (data) {
                 log.push(data);
             })
-            .on(xs.reactive.event.Destroy, function () {
+            .on(xs.core.reactive.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), '[10]');
 
                 me.done();

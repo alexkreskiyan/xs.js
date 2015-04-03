@@ -1,13 +1,13 @@
 'use strict';
 
-//define xs.reactive
-if (!xs.reactive) {
-    xs.reactive = {};
+//define xs.core.reactive
+if (!xs.core.reactive) {
+    xs.core.reactive = {};
 }
 
-//define xs.reactive.event
-if (!xs.reactive.event) {
-    xs.reactive.event = {};
+//define xs.core.reactive.event
+if (!xs.core.reactive.event) {
+    xs.core.reactive.event = {};
 }
 
 //save reference to module
