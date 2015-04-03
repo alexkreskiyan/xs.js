@@ -48,6 +48,49 @@ xs.extend = function (child, parent) {
 };
 
 /**
+ * Returns namespace in root by given full name. If any part does not exist, it is created
+ *
+ * For example:
+ *
+ *     var namespace = xs.getNamespace(window, 'xs.module.my'); //returns window.xs.module.my reference
+ *
+ * @private
+ *
+ * @method getNamespace
+ *
+ * @param {Object|Function} root namespace relative root
+ * @param {String} path relative path to root
+ *
+ * @return {Object|Function} namespace for given path
+ */
+var getNamespace = xs.getNamespace = function (root, path) {
+
+    //use root if no path
+    if (!path) {
+        return root;
+    }
+
+    //explode name to parts
+    var parts = path.split('.');
+
+    //get first path's part
+    var part = parts.shift();
+
+    //create namespace if missing
+    if (!xs.isFunction(root[ part ]) && !xs.isObject(root[ part ])) {
+        root[ part ] = {};
+    }
+
+    //process down or return
+    if (parts.length) {
+
+        return getNamespace(root[ part ], parts.join('.'));
+    }
+
+    return root[ part ];
+};
+
+/**
  * @property isChrome
  * @inheritdoc xs.env.Context#isChrome
  */
