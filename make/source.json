@@ -5,29 +5,29 @@
         "xs.core.Asserter": {},
         "xs.core.Collection": {},
         "reactive": {
-            "xs.reactive.emitter.Emitter": {
+            "xs.core.reactive.emitter.Emitter": {
                 "test": false
             },
-            "xs.reactive.emitter.Property": {
+            "xs.core.reactive.emitter.Property": {
                 "test": false
             },
-            "xs.reactive.emitter.Stream": {
+            "xs.core.reactive.emitter.Stream": {
                 "test": false
             },
-            "xs.reactive.event.Event": {
+            "xs.core.reactive.event.Event": {
                 "test": false
             },
-            "xs.reactive.event.Destroy": {
+            "xs.core.reactive.event.Destroy": {
                 "test": false
             },
-            "xs.reactive.send": {
+            "xs.core.reactive.send": {
                 "test": false
             },
-            "xs.reactive.Reactive": {
+            "xs.core.reactive.Reactive": {
                 "test": false
             },
-            "xs.reactive.Stream": {},
-            "xs.reactive.Property": {}
+            "xs.core.reactive.Stream": {},
+            "xs.core.reactive.Property": {}
         },
         "xs.lang.Object": {},
         "xs.lang.Array": {},
