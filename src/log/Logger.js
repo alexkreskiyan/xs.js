@@ -1,9 +1,7 @@
 'use strict';
 
 //define xs.log
-if (!xs.log) {
-    xs.log = {};
-}
+xs.getNamespace(xs, 'log');
 
 /**
  * Store of all registered profiling records

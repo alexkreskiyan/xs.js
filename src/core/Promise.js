@@ -1,13 +1,11 @@
 'use strict';
 
+//define xs.core
+xs.getNamespace(xs, 'core');
+
 var log = new xs.log.Logger('xs.core.Promise');
 
 var assert = new xs.core.Asserter(log, XsCorePromiseError);
-
-//define xs.core
-if (!xs.core) {
-    xs.core = {};
-}
 
 /**
  * Implementation of Futures & Promises pattern for xs.js.

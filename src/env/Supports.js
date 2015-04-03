@@ -1,9 +1,7 @@
 'use strict';
 
 //define xs.env
-if (!xs.env) {
-    xs.env = {};
-}
+xs.getNamespace(xs, 'env');
 
 /**
  * xs.env.Supports is singleton, providing info about context support of different capabilities

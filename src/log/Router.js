@@ -1,10 +1,7 @@
 'use strict';
 
 //define xs.log
-if (!xs.log) {
-
-    xs.log = {};
-}
+xs.getNamespace(xs, 'log');
 
 /**
  * Log levels enum

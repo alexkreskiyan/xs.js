@@ -1,9 +1,7 @@
 'use strict';
 
 //define xs.enum
-if (!xs.enum) {
-    xs.enum = {};
-}
+xs.getNamespace(xs, 'enum');
 
 var log = new xs.log.Logger('xs.enum.Enum');
 

@@ -1,13 +1,11 @@
 'use strict';
 
+//define xs.core.reactive
+xs.getNamespace(xs, 'core.reactive');
+
 var log = new xs.log.Logger('xs.core.reactive.Reactive');
 
 var assert = new xs.core.Asserter(log, XsCoreReactiveReactiveError);
-
-//define xs.core.reactive
-if (!xs.core.reactive) {
-    xs.core.reactive = {};
-}
 
 /**
  * Private reactive core. Represents some reactive object

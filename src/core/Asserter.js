@@ -1,9 +1,7 @@
 'use strict';
 
 //define xs.core
-if (!xs.core) {
-    xs.core = {};
-}
+xs.getNamespace(xs, 'core');
 
 //create assert mock
 var assert = {

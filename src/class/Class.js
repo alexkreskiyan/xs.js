@@ -1,9 +1,7 @@
 'use strict';
 
 //define xs.class
-if (!xs.class) {
-    xs.class = {};
-}
+xs.getNamespace(xs, 'class');
 
 var log = new xs.log.Logger('xs.class.Class');
 

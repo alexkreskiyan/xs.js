@@ -1,12 +1,11 @@
 'use strict';
 
+//define xs.core.reactive
+xs.getNamespace(xs, 'core.reactive');
+
 var log = new xs.log.Logger('xs.core.reactive.Property');
 
 var assert = new xs.core.Asserter(log, XsCoreReactivePropertyError);
-
-if (!xs.core.reactive) {
-    xs.core.reactive = {};
-}
 
 var Reactive = module.Reactive;
 

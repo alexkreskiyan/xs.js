@@ -1,9 +1,7 @@
 'use strict';
 
 //define xs.env
-if (!xs.env) {
-    xs.env = {};
-}
+xs.getNamespace(xs, 'env');
 
 /**
  * xs.env.Context is singleton, providing basic operations to determine params of execution context

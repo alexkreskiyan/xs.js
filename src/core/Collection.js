@@ -1,13 +1,11 @@
 'use strict';
 
+//define xs.core
+xs.getNamespace(xs, 'core');
+
 var log = new xs.log.Logger('xs.core.Collection');
 
 var assert = new xs.core.Asserter(log, XsCoreCollectionError);
-
-//define xs.core
-if (!xs.core) {
-    xs.core = {};
-}
 
 /**
  * xs.core.Collection is core framework class, that is used for internal collections
