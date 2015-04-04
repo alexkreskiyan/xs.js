@@ -5,29 +5,29 @@
         "xs.core.Asserter": {},
         "xs.core.Collection": {},
         "reactive": {
-            "xs.core.reactive.emitter.Emitter": {
+            "xs.event.emitter.Emitter": {
                 "test": false
             },
-            "xs.core.reactive.emitter.Property": {
+            "xs.event.emitter.Property": {
                 "test": false
             },
-            "xs.core.reactive.emitter.Stream": {
+            "xs.event.emitter.Stream": {
                 "test": false
             },
-            "xs.core.reactive.event.Event": {
+            "xs.event.Event": {
                 "test": false
             },
-            "xs.core.reactive.event.Destroy": {
+            "xs.event.Destroy": {
                 "test": false
             },
-            "xs.core.reactive.send": {
+            "xs.event.send": {
                 "test": false
             },
-            "xs.core.reactive.Reactive": {
+            "xs.event.Reactive": {
                 "test": false
             },
-            "xs.core.reactive.Stream": {},
-            "xs.core.reactive.Property": {}
+            "xs.event.Stream": {},
+            "xs.event.Property": {}
         },
         "xs.lang.Object": {},
         "xs.lang.Array": {},
@@ -202,22 +202,6 @@
             "event": {
                 "IEvent": {
                     "contract": "interface"
-                },
-                "Event": {
-                    "contract": "class",
-                    "test": false
-                },
-                "IObservable": {
-                    "contract": "interface"
-                },
-                "Observable": {
-                    "contract": "class"
-                },
-                "IStaticObservable": {
-                    "contract": "interface"
-                },
-                "StaticObservable": {
-                    "contract": "class"
                 }
             },
             "storage": {
