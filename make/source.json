@@ -97,6 +97,11 @@
     },
     "modules": {
         "xs": {
+            "dom": {
+                "Element": {
+                    "contract": "class"
+                }
+            },
             "event": {
                 "IEvent": {
                     "contract": "interface"
