@@ -223,7 +223,7 @@ module('xs.event.Stream', function () {
             me.stream.on(null);
         });
 
-        //incorrect target throws
+        //incorrect event throws
         throws(function () {
             me.stream.on(null, xs.noop);
         });
@@ -241,7 +241,7 @@ module('xs.event.Stream', function () {
 
         var log = {
             simple: '',
-            targeted: '',
+            evented: '',
             suspended: '',
             scoped: '',
             positioned: ''
@@ -257,7 +257,7 @@ module('xs.event.Stream', function () {
         //this way stream is still inactive
         strictEqual(me.stream.isActive, false);
 
-        //simply method appends new handler, that has undefined scope, undefined target and is not suspended
+        //simply method appends new handler, that has undefined scope, undefined event and is not suspended
         me.stream.on(function (data) {
             log.simple += data;
         });
@@ -269,9 +269,9 @@ module('xs.event.Stream', function () {
             });
         });
 
-        //method can be targeted directly, specifying event constructor(s)
+        //method can be evented directly, specifying event constructor(s)
         me.stream.on(xs.event.Destroy, function () {
-            log.targeted += 'destroyed';
+            log.evented += 'destroyed';
         });
 
         //method can be called within given scope
@@ -295,7 +295,7 @@ module('xs.event.Stream', function () {
         me.stream.on(xs.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
-            strictEqual(log.targeted, 'destroyed');
+            strictEqual(log.evented, 'destroyed');
             strictEqual(log.scoped, '10!9!8!7!6!4!3!2!1!'); //5 is missing - cancelled
             strictEqual(log.suspended, '');
             strictEqual(log.positioned, '10987654321'); //5 is presented
@@ -343,7 +343,7 @@ module('xs.event.Stream', function () {
             me.stream.off(null);
         });
 
-        //incorrect target throws
+        //incorrect event throws
         throws(function () {
             me.stream.off(null, xs.noop);
         });
@@ -437,7 +437,7 @@ module('xs.event.Stream', function () {
             me.stream.suspend(null);
         });
 
-        //incorrect target throws
+        //incorrect event throws
         throws(function () {
             me.stream.suspend(null, xs.noop);
         });
@@ -531,7 +531,7 @@ module('xs.event.Stream', function () {
             me.stream.resume(null);
         });
 
-        //incorrect target throws
+        //incorrect event throws
         throws(function () {
             me.stream.resume(null, xs.noop);
         });

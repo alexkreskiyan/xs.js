@@ -14,8 +14,8 @@ module.send = function send(handlers, data) {
 
         }
 
-        //if target given
-        if (item.target) {
+        //if event given
+        if (item.event) {
 
             //ignore, if data has no constructor
             if (!dataHasConstructor) {
@@ -23,8 +23,8 @@ module.send = function send(handlers, data) {
                 return;
             }
 
-            //ignore, if target does not match data.constructor
-            if (item.target !== data.constructor) {
+            //ignore, if event does not match data.constructor
+            if (item.event !== data.constructor) {
 
                 return;
             }

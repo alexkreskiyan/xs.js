@@ -228,7 +228,7 @@ module('xs.event.Property', function () {
             me.property.on(null);
         });
 
-        //incorrect target throws
+        //incorrect event throws
         throws(function () {
             me.property.on(null, xs.noop);
         });
@@ -246,7 +246,7 @@ module('xs.event.Property', function () {
 
         var log = {
             simple: '',
-            targeted: '',
+            evented: '',
             suspended: '',
             scoped: '',
             positioned: ''
@@ -264,7 +264,7 @@ module('xs.event.Property', function () {
         //this way stream is still inactive
         strictEqual(me.property.isActive, false);
 
-        //simply method appends new handler, that has undefined scope, undefined target and is not suspended
+        //simply method appends new handler, that has undefined scope, undefined event and is not suspended
         me.property.on(function (data) {
             log.simple += data;
             value += me.property.value;
@@ -278,9 +278,9 @@ module('xs.event.Property', function () {
             });
         });
 
-        //method can be targeted directly, specifying event constructor(s)
+        //method can be evented directly, specifying event constructor(s)
         me.property.on(xs.event.Destroy, function () {
-            log.targeted += 'destroyed';
+            log.evented += 'destroyed';
         });
 
         //method can be called within given scope
@@ -304,7 +304,7 @@ module('xs.event.Property', function () {
         me.property.on(xs.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
-            strictEqual(log.targeted, 'destroyed');
+            strictEqual(log.evented, 'destroyed');
             strictEqual(log.scoped, '10!9!8!7!6!4!3!2!1!'); //5 is missing - cancelled
             strictEqual(log.suspended, '');
             strictEqual(log.positioned, '10987654321'); //5 is presented
@@ -354,7 +354,7 @@ module('xs.event.Property', function () {
             me.property.off(null);
         });
 
-        //incorrect target throws
+        //incorrect event throws
         throws(function () {
             me.property.off(null, xs.noop);
         });
@@ -448,7 +448,7 @@ module('xs.event.Property', function () {
             me.property.suspend(null);
         });
 
-        //incorrect target throws
+        //incorrect event throws
         throws(function () {
             me.property.suspend(null, xs.noop);
         });
@@ -542,7 +542,7 @@ module('xs.event.Property', function () {
             me.property.resume(null);
         });
 
-        //incorrect target throws
+        //incorrect event throws
         throws(function () {
             me.property.resume(null, xs.noop);
         });

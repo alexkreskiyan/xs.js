@@ -55,28 +55,28 @@ xs.define(xs.Class, 'ns.Observable', function () {
         set: xs.noop
     };
 
-    Class.method.on = function (target, handler, options) {
+    Class.method.on = function (event, handler, options) {
         var stream = this.private.stream;
         stream.on.apply(stream, arguments);
 
         return this;
     };
 
-    Class.method.off = function (target, selector, flags) {
+    Class.method.off = function (event, selector, flags) {
         var stream = this.private.stream;
         stream.off.apply(stream, arguments);
 
         return this;
     };
 
-    Class.method.suspend = function (target, selector, flags) {
+    Class.method.suspend = function (event, selector, flags) {
         var stream = this.private.stream;
         stream.suspend.apply(stream, arguments);
 
         return this;
     };
 
-    Class.method.resume = function (target, selector, flags) {
+    Class.method.resume = function (event, selector, flags) {
         var stream = this.private.stream;
         stream.resume.apply(stream, arguments);
 

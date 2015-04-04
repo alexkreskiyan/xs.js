@@ -96,8 +96,8 @@ module('xs.event.Observable', function () {
 
         var log = {
             simple: '',
-            targetedOne: '',
-            targetedTwo: '',
+            eventedOne: '',
+            eventedTwo: '',
             suspended: '',
             scoped: '',
             positioned: ''
@@ -113,7 +113,7 @@ module('xs.event.Observable', function () {
         //this way stream is still inactive
         strictEqual(me.observable.events.isActive, false);
 
-        //simply method appends new handler, that has undefined scope, undefined target and is not suspended
+        //simply method appends new handler, that has undefined scope, undefined event and is not suspended
         me.observable.on(function (event) {
             log.simple += event.data;
         });
@@ -125,12 +125,12 @@ module('xs.event.Observable', function () {
             });
         });
 
-        //method can be targeted directly, specifying event constructor(s)
+        //method can be evented directly, specifying event constructor(s)
         me.observable.on(me.EventOne, function (event) {
-            log.targetedOne += event.data;
+            log.eventedOne += event.data;
         });
         me.observable.on(me.EventTwo, function (event) {
-            log.targetedTwo += event.data;
+            log.eventedTwo += event.data;
         });
 
         //method can be called within given scope
@@ -154,8 +154,8 @@ module('xs.event.Observable', function () {
         me.observable.on(xs.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '12346789'); //5 is missing - cancelled
-            strictEqual(log.targetedOne, '2468');
-            strictEqual(log.targetedTwo, '1379'); //5 is missing - cancelled
+            strictEqual(log.eventedOne, '2468');
+            strictEqual(log.eventedTwo, '1379'); //5 is missing - cancelled
             strictEqual(log.scoped, '1!2!3!4!6!7!8!9!'); //5 is missing - cancelled
             strictEqual(log.suspended, '');
             strictEqual(log.positioned, '123456789'); //5 is presented

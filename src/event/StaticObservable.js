@@ -17,28 +17,28 @@ xs.define(xs.Class, 'ns.StaticObservable', function () {
 
     Class.abstract = true;
 
-    Class.static.method.on = function (target, handler, options) {
+    Class.static.method.on = function (event, handler, options) {
         var stream = this.events;
         stream.on.apply(stream, arguments);
 
         return this;
     };
 
-    Class.static.method.off = function (target, selector, flags) {
+    Class.static.method.off = function (event, selector, flags) {
         var stream = this.events;
         stream.off.apply(stream, arguments);
 
         return this;
     };
 
-    Class.static.method.suspend = function (target, selector, flags) {
+    Class.static.method.suspend = function (event, selector, flags) {
         var stream = this.events;
         stream.suspend.apply(stream, arguments);
 
         return this;
     };
 
-    Class.static.method.resume = function (target, selector, flags) {
+    Class.static.method.resume = function (event, selector, flags) {
         var stream = this.events;
         stream.resume.apply(stream, arguments);
 

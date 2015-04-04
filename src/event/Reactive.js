@@ -146,13 +146,13 @@ Object.defineProperty(Reactive.prototype, 'isActive', {
  *
  * @method on
  *
- * @param {Function} [target] change handler target(s)
+ * @param {Function} [event] change handler event
  * @param {Function} handler reactive change handler
  * @param {Object} [options] reactive handler options
  *
  * @chainable
  */
-Reactive.prototype.on = function (target, handler, options) {
+Reactive.prototype.on = function (event, handler, options) {
     var me = this;
 
     //assert, that reactive is not destroyed
@@ -166,10 +166,10 @@ Reactive.prototype.on = function (target, handler, options) {
         handleOn.call(me, false, arguments[ 0 ], false);
     } else if (arguments.length === 2) {
 
-        //assert, that arguments[1] is either a function (target, handler call) or an options (handler, options call)
+        //assert, that arguments[1] is either a function (event, handler call) or an options (handler, options call)
         assert.ok(xs.isFunction(arguments[ 1 ]) || xs.isObject(arguments[ 1 ]), 'on - incorrect arguments given');
 
-        //target, handler call
+        //event, handler call
         if (xs.isFunction(arguments[ 1 ])) {
             handleOn.call(me, arguments[ 0 ], arguments[ 1 ], false);
 
@@ -189,13 +189,13 @@ Reactive.prototype.on = function (target, handler, options) {
  *
  * @method off
  *
- * @param {Function} [target] change handler target(s)
+ * @param {Function} [event] change handler event
  * @param {Function} [selector] selector, that matches removed handlers
  * @param {Object} [flags] reactive handler options
  *
  * @chainable
  */
-Reactive.prototype.off = function (target, selector, flags) {
+Reactive.prototype.off = function (event, selector, flags) {
     var me = this;
 
     //assert, that reactive is not destroyed
@@ -218,7 +218,7 @@ Reactive.prototype.off = function (target, selector, flags) {
     } else if (!xs.isFunction(arguments[ 1 ])) {
         handleOff.call(me, false, arguments[ 0 ], arguments[ 1 ]);
 
-        //target, selector, [flags] scenario
+        //event, selector, [flags] scenario
     } else {
         handleOff.apply(me, arguments);
     }
@@ -231,13 +231,13 @@ Reactive.prototype.off = function (target, selector, flags) {
  *
  * @method suspend
  *
- * @param {Function} [target] change handler target(s)
+ * @param {Function} [event] change handler event
  * @param {Function} [selector] selector, that matches removed handlers
  * @param {Object} [flags] reactive handler options
  *
  * @chainable
  */
-Reactive.prototype.suspend = function (target, selector, flags) {
+Reactive.prototype.suspend = function (event, selector, flags) {
     var me = this;
 
     //assert, that reactive is not destroyed
@@ -260,7 +260,7 @@ Reactive.prototype.suspend = function (target, selector, flags) {
     } else if (!xs.isFunction(arguments[ 1 ])) {
         handleSuspend.call(me, false, arguments[ 0 ], arguments[ 1 ]);
 
-        //target, selector, [flags] scenario
+        //event, selector, [flags] scenario
     } else {
         handleSuspend.apply(me, arguments);
     }
@@ -301,7 +301,7 @@ Reactive.prototype.resume = function (selector, flags) {
     } else if (!xs.isFunction(arguments[ 1 ])) {
         handleResume.call(me, false, arguments[ 0 ], arguments[ 1 ]);
 
-        //target, selector, [flags] scenario
+        //event, selector, [flags] scenario
     } else {
         handleResume.apply(me, arguments);
     }
@@ -338,12 +338,12 @@ Reactive.prototype.destroy = function () {
     handlers.remove();
 };
 
-function handleOn(target, handler, options) {
+function handleOn(event, handler, options) {
     var me = this;
 
-    //check, that target is false, undefined or a function
-    assert.ok(target === false || isTarget(target), 'target - given target `$target` is not a function', {
-        $target: target
+    //check, that event is false, undefined or a function
+    assert.ok(event === false || isTarget(event), 'event - given event `$event` is not a function', {
+        $event: event
     });
 
     //assert, that handler is false or a function
@@ -362,13 +362,13 @@ function handleOn(target, handler, options) {
     //if no options given - simply add
     if (!options) {
 
-        log.trace('on - adding handler `$handler` with target `$target` without options', {
-            $target: target,
+        log.trace('on - adding handler `$handler` with event `$event` without options', {
+            $event: event,
             $handler: handler
         });
 
         handlers.add({
-            target: target,
+            event: event,
             handler: handler,
             suspended: false,
             scope: me
@@ -380,8 +380,8 @@ function handleOn(target, handler, options) {
         return me;
     }
 
-    log.trace('on - adding handler `$handler` with target `$target` with options `$options`', {
-        $target: target,
+    log.trace('on - adding handler `$handler` with event `$event` with options `$options`', {
+        $event: event,
         $handler: handler,
         $options: options
     });
@@ -391,7 +391,7 @@ function handleOn(target, handler, options) {
 
     //define handler item
     var item = {
-        target: target,
+        event: event,
         handler: handler,
         suspended: suspended,
         scope: options.hasOwnProperty('scope') ? options.scope : me
@@ -435,13 +435,13 @@ function handleOn(target, handler, options) {
     }
 }
 
-function handleOff(target, selector, flags) {
+function handleOff(event, selector, flags) {
     var me = this;
 
     //get handlers reference
     var handlers = me.private.reactiveHandlers;
 
-    var handler = getSelectionHandler(target, selector, flags);
+    var handler = getSelectionHandler(event, selector, flags);
 
     if (handler) {
 
@@ -466,13 +466,13 @@ function handleOff(target, selector, flags) {
     return me;
 }
 
-function handleSuspend(target, selector, flags) {
+function handleSuspend(event, selector, flags) {
     var me = this;
 
     //get handlers reference
     var handlers = me.private.reactiveHandlers;
 
-    var handler = getSelectionHandler(target, selector, flags);
+    var handler = getSelectionHandler(event, selector, flags);
 
     var suspended;
 
@@ -505,13 +505,13 @@ function handleSuspend(target, selector, flags) {
     return me;
 }
 
-function handleResume(target, selector, flags) {
+function handleResume(event, selector, flags) {
     var me = this;
 
     //get handlers reference
     var handlers = me.private.reactiveHandlers;
 
-    var handler = getSelectionHandler(target, selector, flags);
+    var handler = getSelectionHandler(event, selector, flags);
 
     var resumed;
 
@@ -544,11 +544,11 @@ function handleResume(target, selector, flags) {
     return me;
 }
 
-function getSelectionHandler(target, selector, flags) {
+function getSelectionHandler(event, selector, flags) {
 
-    //check, that target is false, undefined or a function
-    assert.ok(target === false || isTarget(target), 'handleOff - given target `$target` is not a function', {
-        $target: target
+    //check, that event is false, undefined or a function
+    assert.ok(event === false || isTarget(event), 'handleOff - given event `$event` is not a function', {
+        $event: event
     });
 
     //assert, that selector is false or a selector
@@ -561,19 +561,19 @@ function getSelectionHandler(target, selector, flags) {
         $flags: flags
     });
 
-    //remove by target and selector
-    if (target !== false && selector !== false) {
+    //remove by event and selector
+    if (event !== false && selector !== false) {
 
         return function (item) {
 
-            return item.target === target && selector(item);
+            return item.event === event && selector(item);
         };
     }
 
-    //remove by target
-    if (target !== false) {
+    //remove by event
+    if (event !== false) {
         return function (item) {
-            return item.target === target;
+            return item.event === event;
         };
 
     }
