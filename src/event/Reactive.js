@@ -342,7 +342,7 @@ function handleOn(target, handler, options) {
     var me = this;
 
     //check, that target is false, undefined or a function
-    assert.ok(target === false || !xs.isDefined(target) || isTarget(target), 'target - given target `$target` is not a function', {
+    assert.ok(target === false || isTarget(target), 'target - given target `$target` is not a function', {
         $target: target
     });
 
@@ -547,7 +547,7 @@ function handleResume(target, selector, flags) {
 function getSelectionHandler(target, selector, flags) {
 
     //check, that target is false, undefined or a function
-    assert.ok(target === false || !xs.isDefined(target) || isTarget(target), 'handleOff - given target `$target` is not a function', {
+    assert.ok(target === false || isTarget(target), 'handleOff - given target `$target` is not a function', {
         $target: target
     });
 
