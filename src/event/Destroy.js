@@ -1,6 +1,6 @@
 'use strict';
 
-var Destroy = xs.core.reactive.event.Destroy = function () {
+var Destroy = xs.event.Destroy = function () {
 };
 
 //extend Destroy from module.Event

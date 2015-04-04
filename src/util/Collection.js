@@ -186,7 +186,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         var send = null;
         var destroy = null;
 
-        var changes = new xs.reactive.Stream(function () {
+        var changes = new xs.event.Stream(function () {
             send = this.send;
             destroy = this.destroy;
         });

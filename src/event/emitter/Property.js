@@ -1,8 +1,8 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.core.reactive.emitter.Property');
+var log = new xs.log.Logger('xs.event.emitter.Property');
 
-var assert = new xs.core.Asserter(log, XsCoreReactiveEmitterPropertyError);
+var assert = new xs.core.Asserter(log, XsEventEmitterPropertyError);
 
 //save reference to module
 module.EmitterProperty = function Emitter(reactive) {
@@ -46,10 +46,10 @@ function handleSet(data, silent) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class XsCoreReactiveEmitterPropertyError
+ * @class XsEventEmitterPropertyError
  */
-function XsCoreReactiveEmitterPropertyError(message) {
-    this.message = 'xs.core.reactive.emitter.Property::' + message;
+function XsEventEmitterPropertyError(message) {
+    this.message = 'xs.event.emitter.Property::' + message;
 }
 
-XsCoreReactiveEmitterPropertyError.prototype = new Error();
+XsEventEmitterPropertyError.prototype = new Error();

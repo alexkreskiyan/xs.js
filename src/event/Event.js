@@ -1,7 +1,7 @@
 'use strict';
 
-//define xs.core.reactive.event
-xs.getNamespace(xs, 'core.reactive.event');
+//define xs.event
+xs.getNamespace(xs, 'event');
 
 //save reference to module
 module.Event = function () {

@@ -1,15 +1,12 @@
 'use strict';
 
-//define xs.core.reactive
-xs.getNamespace(xs, 'core.reactive');
+var log = new xs.log.Logger('xs.event.Stream');
 
-var log = new xs.log.Logger('xs.core.reactive.Stream');
-
-var assert = new xs.core.Asserter(log, XsCoreReactiveStreamError);
+var assert = new xs.core.Asserter(log, XsEventStreamError);
 
 var Reactive = module.Reactive;
 
-var Stream = xs.core.reactive.Stream = function (generator, sources) {
+var Stream = xs.event.Stream = function (generator, sources) {
     var me = this;
 
     if (arguments.length < 2) {
@@ -31,7 +28,7 @@ xs.extend(Stream, Reactive);
  *
  * @param {Object} promise reactive source promise
  *
- * @return {xs.core.reactive.Stream}
+ * @return {xs.event.Stream}
  */
 Stream.fromPromise = function (promise) {
 
@@ -53,7 +50,7 @@ Stream.fromPromise = function (promise) {
  * @param {Element} element event emitter
  * @param {String} eventName name of subscribed event
  *
- * @return {xs.core.reactive.Stream}
+ * @return {xs.event.Stream}
  */
 Stream.fromEvent = function (element, eventName) {
 
@@ -80,12 +77,12 @@ Stream.fromEvent = function (element, eventName) {
  *
  * @param {Boolean} [current] whether to send current value on next tick
  *
- * @return {xs.core.reactive.Property}
+ * @return {xs.event.Property}
  */
 Stream.prototype.toProperty = function (current) {
     var me = this;
 
-    return new xs.core.reactive.Property(toProperty, current, [
+    return new xs.event.Property(toProperty, current, [
         me
     ]);
 };
@@ -97,7 +94,7 @@ Stream.prototype.toProperty = function (current) {
  *
  * @param {Function} fn mapping function, that returns mapped value
  *
- * @return {xs.core.reactive.Stream}
+ * @return {xs.event.Stream}
  */
 Stream.prototype.map = function (fn) {
     var me = this;
@@ -125,7 +122,7 @@ Stream.prototype.map = function (fn) {
  *
  * @param {Function} fn filtering function, that should return boolean value, saying to allow pass event or not
  *
- * @return {xs.core.reactive.Stream}
+ * @return {xs.event.Stream}
  */
 Stream.prototype.filter = function (fn) {
     var me = this;
@@ -151,7 +148,7 @@ Stream.prototype.filter = function (fn) {
  *
  * @method transduce
  *
- * @return {xs.core.reactive.Stream}
+ * @return {xs.event.Stream}
  */
 Stream.prototype.transduce = function () {
 };
@@ -163,7 +160,7 @@ Stream.prototype.transduce = function () {
  *
  * @param {Number} interval throttling interval
  *
- * @return {xs.core.reactive.Stream}
+ * @return {xs.event.Stream}
  */
 Stream.prototype.throttle = function (interval) {
     var me = this;
@@ -191,7 +188,7 @@ Stream.prototype.throttle = function (interval) {
  *
  * @param {Number} interval awaiting interval
  *
- * @return {xs.core.reactive.Stream}
+ * @return {xs.event.Stream}
  */
 Stream.prototype.debounce = function (interval) {
     var me = this;
@@ -259,7 +256,7 @@ function toProperty(stream) {
     });
 
     //on destroy - destroy
-    stream.on(xs.core.reactive.event.Destroy, me.destroy);
+    stream.on(xs.event.Destroy, me.destroy);
 }
 
 function map(source, fn) {
@@ -271,7 +268,7 @@ function map(source, fn) {
     });
 
     //on destroy - destroy
-    source.on(xs.core.reactive.event.Destroy, me.destroy);
+    source.on(xs.event.Destroy, me.destroy);
 }
 
 function filter(source, fn) {
@@ -285,7 +282,7 @@ function filter(source, fn) {
     });
 
     //on destroy - destroy
-    source.on(xs.core.reactive.event.Destroy, me.destroy);
+    source.on(xs.event.Destroy, me.destroy);
 }
 
 function throttle(source, interval) {
@@ -310,7 +307,7 @@ function throttle(source, interval) {
     });
 
     //on destroy - destroy
-    source.on(xs.core.reactive.event.Destroy, me.destroy);
+    source.on(xs.event.Destroy, me.destroy);
 }
 
 function debounce(source, interval) {
@@ -340,7 +337,7 @@ function debounce(source, interval) {
     var sourceDestroyed = false;
 
     //on destroy - destroy
-    source.on(xs.core.reactive.event.Destroy, function () {
+    source.on(xs.event.Destroy, function () {
 
         //if timeout defined - awaiting initiated, needed delayed destroy
         if (xs.isDefined(timeoutId)) {
@@ -362,10 +359,10 @@ function debounce(source, interval) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class XsCoreReactiveStreamError
+ * @class XsEventStreamError
  */
-function XsCoreReactiveStreamError(message) {
-    this.message = 'xs.core.reactive.Stream::' + message;
+function XsEventStreamError(message) {
+    this.message = 'xs.event.Stream::' + message;
 }
 
-XsCoreReactiveStreamError.prototype = new Error();
+XsEventStreamError.prototype = new Error();

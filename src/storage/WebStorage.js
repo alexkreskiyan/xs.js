@@ -64,11 +64,11 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     Class.constant.changes = xs.generator(function () {
         var send = null;
 
-        var changes = new xs.core.reactive.Stream(function () {
+        var changes = new xs.event.Stream(function () {
             send = this.send;
         });
 
-        changes.on(xs.core.reactive.event.Destroy, function () {
+        changes.on(xs.event.Destroy, function () {
             throw new self.Error('storage changes stream must not be destroyed');
         });
 

@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.core.reactive.Stream', function () {
+module('xs.event.Stream', function () {
 
     'use strict';
 
@@ -31,18 +31,18 @@ module('xs.core.reactive.Stream', function () {
 
         //generator must be given
         throws(function () {
-            return new xs.core.reactive.Stream();
+            return new xs.event.Stream();
         });
 
         //sources must be an array
         throws(function () {
-            return new xs.core.reactive.Stream(me.generator, undefined);
+            return new xs.event.Stream(me.generator, undefined);
         });
 
         //generator must return object or undefined
-        me.stream = new xs.core.reactive.Stream(xs.noop);
+        me.stream = new xs.event.Stream(xs.noop);
         throws(function () {
-            return new xs.core.reactive.Stream(function () {
+            return new xs.event.Stream(function () {
                 return null;
             });
         });
@@ -50,7 +50,7 @@ module('xs.core.reactive.Stream', function () {
         //return.on must be a function
         throws(function () {
 
-            return new xs.core.reactive.Stream(function () {
+            return new xs.event.Stream(function () {
 
                 return {};
             });
@@ -59,7 +59,7 @@ module('xs.core.reactive.Stream', function () {
         //return.off must be a function
         throws(function () {
 
-            return new xs.core.reactive.Stream(function () {
+            return new xs.event.Stream(function () {
 
                 return {
                     on: xs.noop
@@ -68,7 +68,7 @@ module('xs.core.reactive.Stream', function () {
         });
 
         //correct generator given
-        me.stream = new xs.core.reactive.Stream(me.generator);
+        me.stream = new xs.event.Stream(me.generator);
 
         //check basics
         strictEqual(me.stream.isActive, false);
@@ -95,14 +95,14 @@ module('xs.core.reactive.Stream', function () {
     }, function () {
         var me = this;
 
-        me.stream = new xs.core.reactive.Stream(me.generator);
+        me.stream = new xs.event.Stream(me.generator);
 
         //stream is not active and not destroyed
         strictEqual(me.stream.isActive, false);
         strictEqual(me.stream.isDestroyed, false);
 
         var log = '';
-        me.stream.on(xs.core.reactive.event.Destroy, function (data) {
+        me.stream.on(xs.event.Destroy, function (data) {
             log += arguments.length + data;
         });
 
@@ -149,7 +149,7 @@ module('xs.core.reactive.Stream', function () {
     }, function () {
         var me = this;
 
-        me.stream = new xs.core.reactive.Stream(me.generator);
+        me.stream = new xs.event.Stream(me.generator);
 
         //stream is not active and not destroyed
         strictEqual(me.stream.isActive, false);
@@ -167,7 +167,7 @@ module('xs.core.reactive.Stream', function () {
             log += data;
         });
 
-        me.stream.on(xs.core.reactive.event.Destroy, function () {
+        me.stream.on(xs.event.Destroy, function () {
             //stream is not active and destroyed
             strictEqual(me.stream.isDestroyed, true);
 
@@ -211,7 +211,7 @@ module('xs.core.reactive.Stream', function () {
         var me = this;
 
         //correct generator given
-        me.stream = new xs.core.reactive.Stream(me.generator);
+        me.stream = new xs.event.Stream(me.generator);
 
         //no handler throws
         throws(function () {
@@ -270,7 +270,7 @@ module('xs.core.reactive.Stream', function () {
         });
 
         //method can be targeted directly, specifying event constructor(s)
-        me.stream.on(xs.core.reactive.event.Destroy, function () {
+        me.stream.on(xs.event.Destroy, function () {
             log.targeted += 'destroyed';
         });
 
@@ -292,7 +292,7 @@ module('xs.core.reactive.Stream', function () {
             priority: 0
         });
 
-        me.stream.on(xs.core.reactive.event.Destroy, function () {
+        me.stream.on(xs.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
             strictEqual(log.targeted, 'destroyed');
@@ -336,7 +336,7 @@ module('xs.core.reactive.Stream', function () {
         var me = this;
 
         //correct generator given
-        me.stream = new xs.core.reactive.Stream(me.generator);
+        me.stream = new xs.event.Stream(me.generator);
 
         //not a function handler throws
         throws(function () {
@@ -430,7 +430,7 @@ module('xs.core.reactive.Stream', function () {
         var me = this;
 
         //correct generator given
-        me.stream = new xs.core.reactive.Stream(me.generator);
+        me.stream = new xs.event.Stream(me.generator);
 
         //not a function handler throws
         throws(function () {
@@ -524,7 +524,7 @@ module('xs.core.reactive.Stream', function () {
         var me = this;
 
         //correct generator given
-        me.stream = new xs.core.reactive.Stream(me.generator);
+        me.stream = new xs.event.Stream(me.generator);
 
         //not a function handler throws
         throws(function () {
@@ -598,13 +598,13 @@ module('xs.core.reactive.Stream', function () {
 
         //resolved promise
         promise = new xs.core.Promise();
-        var resolved = xs.core.reactive.Stream.fromPromise(promise);
+        var resolved = xs.event.Stream.fromPromise(promise);
 
         var logResolved = [];
         resolved.on(function (data) {
             logResolved.push(data);
         });
-        resolved.on(xs.core.reactive.event.Destroy, function () {
+        resolved.on(xs.event.Destroy, function () {
             strictEqual(JSON.stringify(logResolved), JSON.stringify([
                 {
                     state: xs.core.Promise.Pending,
@@ -632,13 +632,13 @@ module('xs.core.reactive.Stream', function () {
 
         //rejected promise
         promise = new xs.core.Promise();
-        var rejected = xs.core.reactive.Stream.fromPromise(promise);
+        var rejected = xs.event.Stream.fromPromise(promise);
 
         var logRejected = [];
         rejected.on(function (data) {
             logRejected.push(data);
         });
-        rejected.on(xs.core.reactive.event.Destroy, function () {
+        rejected.on(xs.event.Destroy, function () {
             strictEqual(JSON.stringify(logRejected), JSON.stringify([
                 {
                     state: xs.core.Promise.Pending,
@@ -671,7 +671,7 @@ module('xs.core.reactive.Stream', function () {
     test('fromEvent', function () {
         var me = this;
 
-        var stream = xs.core.reactive.Stream.fromEvent(document.body, 'click');
+        var stream = xs.event.Stream.fromEvent(document.body, 'click');
 
         var log = [];
         stream.on(function (data) {
@@ -680,7 +680,7 @@ module('xs.core.reactive.Stream', function () {
 
         document.body.click();
 
-        stream.on(xs.core.reactive.event.Destroy, function () {
+        stream.on(xs.event.Destroy, function () {
             strictEqual(log.length, 1);
             strictEqual(log[ 0 ].constructor, MouseEvent);
 
@@ -696,7 +696,7 @@ module('xs.core.reactive.Stream', function () {
         var me = this;
 
         var log = [];
-        (new xs.core.reactive.Stream(function () {
+        (new xs.event.Stream(function () {
             var me = this;
 
             return {
@@ -718,7 +718,7 @@ module('xs.core.reactive.Stream', function () {
                     current: this.value
                 });
             })
-            .on(xs.core.reactive.event.Destroy, function () {
+            .on(xs.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), JSON.stringify([
                     {
                         data: null,
@@ -734,7 +734,7 @@ module('xs.core.reactive.Stream', function () {
     test('map', function () {
         var me = this;
 
-        var stream = new xs.core.reactive.Stream(function () {
+        var stream = new xs.event.Stream(function () {
             var me = this;
 
             xs.nextTick(function () {
@@ -753,7 +753,7 @@ module('xs.core.reactive.Stream', function () {
                 log.push(data);
             });
 
-        stream.on(xs.core.reactive.event.Destroy, function () {
+        stream.on(xs.event.Destroy, function () {
             strictEqual(JSON.stringify(log), '[10]');
 
             me.done();
@@ -765,7 +765,7 @@ module('xs.core.reactive.Stream', function () {
     test('filter', function () {
         var me = this;
 
-        var stream = new xs.core.reactive.Stream(function () {
+        var stream = new xs.event.Stream(function () {
             var me = this;
 
             xs.nextTick(function () {
@@ -785,7 +785,7 @@ module('xs.core.reactive.Stream', function () {
                 log.push(data);
             });
 
-        stream.on(xs.core.reactive.event.Destroy, function () {
+        stream.on(xs.event.Destroy, function () {
             strictEqual(JSON.stringify(log), '[10]');
 
             me.done();
@@ -797,7 +797,7 @@ module('xs.core.reactive.Stream', function () {
     test('throttle', function () {
         var me = this;
 
-        var stream = new xs.core.reactive.Stream(function () {
+        var stream = new xs.event.Stream(function () {
             var me = this;
 
             var interval = setInterval(function () {
@@ -817,7 +817,7 @@ module('xs.core.reactive.Stream', function () {
                 log.push(data - diff);
                 diff = data;
             })
-            .on(xs.core.reactive.event.Destroy, function () {
+            .on(xs.event.Destroy, function () {
                 strictEqual((new xs.core.Collection(log)).all(function (value) {
                     return value >= 10;
                 }), true);
@@ -831,7 +831,7 @@ module('xs.core.reactive.Stream', function () {
     test('debounce', function () {
         var me = this;
 
-        var stream = new xs.core.reactive.Stream(function () {
+        var stream = new xs.event.Stream(function () {
             var me = this;
 
             var i = 0;
@@ -851,7 +851,7 @@ module('xs.core.reactive.Stream', function () {
             .on(function (data) {
                 log.push(data);
             })
-            .on(xs.core.reactive.event.Destroy, function () {
+            .on(xs.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), '[10]');
 
                 me.done();

@@ -1,8 +1,8 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.core.reactive.emitter.Stream');
+var log = new xs.log.Logger('xs.event.emitter.Stream');
 
-var assert = new xs.core.Asserter(log, XsCoreReactiveEmitterStreamError);
+var assert = new xs.core.Asserter(log, XsEventEmitterStreamError);
 
 //save reference to module
 module.EmitterStream = function Emitter(reactive) {
@@ -43,10 +43,10 @@ function handleSend(data, silent) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class XsCoreReactiveEmitterStreamError
+ * @class XsEventEmitterStreamError
  */
-function XsCoreReactiveEmitterStreamError(message) {
-    this.message = 'xs.core.reactive.emitter.Stream::' + message;
+function XsEventEmitterStreamError(message) {
+    this.message = 'xs.event.emitter.Stream::' + message;
 }
 
-XsCoreReactiveEmitterStreamError.prototype = new Error();
+XsEventEmitterStreamError.prototype = new Error();

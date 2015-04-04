@@ -77,6 +77,6 @@ xs.log.Profile = 0x10;
  *
  * @singleton
  */
-xs.log.Router = new xs.core.reactive.Stream(function () {
+xs.log.Router = new xs.event.Stream(function () {
     xs.log.Logger.hookProcess(this.send);
 });

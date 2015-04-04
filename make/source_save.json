@@ -97,6 +97,108 @@
     },
     "modules": {
         "xs": {
+            "data": {
+                "attribute": {
+                    "IAttribute": {
+                        "contract": "interface"
+                    },
+                    "Number": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "String": {
+                        "contract": "class",
+                        "test": false
+                    }
+                },
+                "model": {
+                    "Event": {
+                        "contract": "class",
+                        "test": false
+                    }
+                },
+                "operation": {
+                    "Create": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "Delete": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "IOperation": {
+                        "contract": "interface"
+                    },
+                    "Operation": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "Read": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "Update": {
+                        "contract": "class",
+                        "test": false
+                    }
+                },
+                "proxy": {
+                    "storage": {
+                        "Local": {
+                            "contract": "class",
+                            "test": false
+                        }
+                    },
+                    "IProxy": {
+                        "contract": "interface"
+                    },
+                    "Memory": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "Proxy": {
+                        "contract": "class",
+                        "test": false
+                    }
+                },
+                "reader": {
+                    "IReader": {
+                        "contract": "interface"
+                    },
+                    "Reader": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "JSON": {
+                        "contract": "class",
+                        "test": false
+                    }
+                },
+                "writer": {
+                    "IWriter": {
+                        "contract": "interface"
+                    },
+                    "Writer": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "JSON": {
+                        "contract": "class",
+                        "test": false
+                    }
+                },
+                "IModel": {
+                    "contract": "interface"
+                },
+                "Model": {
+                    "contract": "class"
+                }
+            },
+            "dom": {
+                "Element": {
+                    "contract": "class"
+                }
+            },
             "event": {
                 "IEvent": {
                     "contract": "interface"
@@ -172,6 +274,10 @@
             "ux": {
                 "Promise": {
                     "contract": "class"
+                },
+                "View": {
+                    "contract": "class",
+                    "test": false
                 }
             }
         }
