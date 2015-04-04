@@ -39,6 +39,8 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         }
     ];
 
+    Class.mixins.observable = 'xs.event.Observable';
+
     /**
      * xs.util.Collection constructor
      *
@@ -59,6 +61,9 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
 
         //init items array
         me.private.items = [];
+
+        //call observable constructor
+        self.mixins.observable.call(me, xs.noop);
 
         //return if no arguments
         if (!arguments.length) {
@@ -172,30 +177,6 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         },
         set: xs.noop
     };
-
-    /**
-     * Collection changes stream
-     *
-     * @property size
-     *
-     * @readonly
-     *
-     * @type Number
-     */
-    Class.property.changes = xs.generator(function () {
-        var send = null;
-        var destroy = null;
-
-        var changes = new xs.event.Stream(function () {
-            send = this.send;
-            destroy = this.destroy;
-        });
-
-        changes.send = send;
-        changes.destroy = destroy;
-
-        return changes;
-    });
 
     /**
      * Returns all collection keys
@@ -708,7 +689,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         };
 
         //send preventable AddBeforeEvent, that can prevent adding value to collection
-        if (!me.changes.send(new imports.AddBeforeEvent(data))) {
+        if (!me.events.send(new imports.AddBeforeEvent(data))) {
 
             return me;
         }
@@ -720,7 +701,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         });
 
         //send closing AddEvent
-        me.changes.send(new imports.AddEvent(data));
+        me.events.send(new imports.AddEvent(data));
 
         return me;
     };
@@ -827,7 +808,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         };
 
         //send preventable AddBeforeEvent, that can prevent inserting value to collection
-        if (!me.changes.send(new imports.AddBeforeEvent(data))) {
+        if (!me.events.send(new imports.AddBeforeEvent(data))) {
 
             return me;
         }
@@ -843,7 +824,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         updateIndexes.call(me, index + 1);
 
         //send closing AddEvent
-        me.changes.send(new imports.AddEvent(data));
+        me.events.send(new imports.AddEvent(data));
 
         return me;
     };
@@ -950,7 +931,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         };
 
         //send preventable SetBeforeEvent, that can prevent changing value for collection item
-        if (!me.changes.send(new imports.SetBeforeEvent(data))) {
+        if (!me.events.send(new imports.SetBeforeEvent(data))) {
 
             return me;
         }
@@ -958,7 +939,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         me.private.items[ index ].value = value;
 
         //send closing SetEvent
-        me.changes.send(new imports.SetEvent(data));
+        me.events.send(new imports.SetEvent(data));
 
         return me;
     };
@@ -1057,7 +1038,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
 
 
         //send preventable RemoveBeforeEvent, that can prevent removing value from collection
-        if (!me.changes.send(new imports.RemoveBeforeEvent(data))) {
+        if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
 
             return me;
         }
@@ -1069,11 +1050,11 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         updateIndexes.call(me, index);
 
         //send closing RemoveEvent
-        me.changes.send(new imports.RemoveEvent(data));
+        me.events.send(new imports.RemoveEvent(data));
 
         //if no items left - send ClearEvent
         if (!me.private.items.length) {
-            me.changes.send(new imports.ClearEvent());
+            me.events.send(new imports.ClearEvent());
         }
 
         return me;
@@ -1204,7 +1185,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
                 };
 
                 //send preventable RemoveBeforeEvent, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.changes.send(new imports.RemoveBeforeEvent(data))) {
+                if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
                     i++;
                     continue;
                 }
@@ -1213,7 +1194,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing RemoveEvent
-                me.changes.send(new imports.RemoveEvent(data));
+                me.events.send(new imports.RemoveEvent(data));
             }
 
             //update indexes if anything removed
@@ -1222,7 +1203,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
             } else {
 
                 //if no items left - send ClearEvent
-                me.changes.send(new imports.ClearEvent());
+                me.events.send(new imports.ClearEvent());
             }
 
             return me;
@@ -1281,7 +1262,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
                 };
 
                 //send preventable RemoveBeforeEvent, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.changes.send(new imports.RemoveBeforeEvent(data))) {
+                if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
                     i++;
                     continue;
                 }
@@ -1290,7 +1271,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing RemoveEvent
-                me.changes.send(new imports.RemoveEvent(data));
+                me.events.send(new imports.RemoveEvent(data));
             }
 
             //update indexes if anything removed
@@ -1308,7 +1289,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
             };
 
             //send preventable RemoveBeforeEvent, that can prevent removing value for collection
-            if (!me.changes.send(new imports.RemoveBeforeEvent(data))) {
+            if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
 
                 return me;
             }
@@ -1317,7 +1298,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
             items.splice(index, 1);
 
             //send closing RemoveEvent
-            me.changes.send(new imports.RemoveEvent(data));
+            me.events.send(new imports.RemoveEvent(data));
 
             //update indexes
             updateIndexes.call(me, index);
@@ -1326,7 +1307,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
 
         //if no items left - send ClearEvent
         if (!items.length) {
-            me.changes.send(new imports.ClearEvent());
+            me.events.send(new imports.ClearEvent());
         }
 
         return me;
@@ -1501,7 +1482,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
                 };
 
                 //send preventable RemoveBeforeEvent, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.changes.send(new imports.RemoveBeforeEvent(data))) {
+                if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
                     i++;
 
                     continue;
@@ -1511,7 +1492,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing RemoveEvent
-                me.changes.send(new imports.RemoveEvent(data));
+                me.events.send(new imports.RemoveEvent(data));
             }
         } else if (reverse) {
             i = items.length - 1;
@@ -1534,7 +1515,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
                 };
 
                 //send preventable RemoveBeforeEvent, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.changes.send(new imports.RemoveBeforeEvent(data))) {
+                if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
                     i--;
 
                     continue;
@@ -1544,7 +1525,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing RemoveEvent
-                me.changes.send(new imports.RemoveEvent(data));
+                me.events.send(new imports.RemoveEvent(data));
 
                 break;
             }
@@ -1569,7 +1550,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
                 };
 
                 //send preventable RemoveBeforeEvent, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.changes.send(new imports.RemoveBeforeEvent(data))) {
+                if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
                     i++;
 
                     continue;
@@ -1579,7 +1560,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing RemoveEvent
-                me.changes.send(new imports.RemoveEvent(data));
+                me.events.send(new imports.RemoveEvent(data));
 
                 break;
             }
@@ -1592,7 +1573,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
 
         //send ClearEvent if no items left
         if (!items.length) {
-            me.changes.send(new imports.ClearEvent());
+            me.events.send(new imports.ClearEvent());
         }
 
         return me;
