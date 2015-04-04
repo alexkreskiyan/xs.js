@@ -2656,8 +2656,8 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
     Class.method.destroy = function () {
         var me = this;
 
-        //destroy changes stream
-        me.changes.destroy();
+        //call Observable.destroy
+        self.mixins.observable.prototype.destroy.call(me);
 
         //try to remove all items
         me.remove();
