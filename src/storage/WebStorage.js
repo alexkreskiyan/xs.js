@@ -19,6 +19,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
     Class.namespace = 'xs.storage';
 
+    Class.mixins.observable = 'xs.event.StaticObservable';
+
     /**
      * Storage flag, meaning, that operation is reverse
      *
@@ -51,31 +53,6 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
      * @type {Storage}
      */
     Class.constant.storage = undefined;
-
-    /**
-     * Storage changes stream
-     *
-     * @private
-     *
-     * @property changes
-     *
-     * @type {Object}
-     */
-    Class.constant.changes = xs.generator(function () {
-        var send = null;
-
-        var changes = new xs.event.Stream(function () {
-            send = this.send;
-        });
-
-        changes.on(xs.event.Destroy, function () {
-            throw new self.Error('storage changes stream must not be destroyed');
-        });
-
-        changes.send = send;
-
-        return changes;
-    });
 
     /**
      * Storage flag, meaning, that change operation was addition
@@ -303,7 +280,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         me.storage.setItem(key, value);
 
         //send change
-        me.changes.send({
+        me.events.send({
             type: self.Add,
             key: key,
             value: value
@@ -346,7 +323,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         me.storage.setItem(key, value);
 
         //send change
-        me.changes.send({
+        me.events.send({
             type: self.Set,
             key: key,
             value: value
@@ -386,7 +363,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         me.storage.removeItem(key);
 
         //send change
-        me.changes.send({
+        me.events.send({
             type: self.Remove,
             key: key,
             value: value
@@ -394,7 +371,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
         //send clear
         if (!me.storage.length) {
-            me.changes.send({
+            me.events.send({
                 type: self.Clear
             });
         }
@@ -423,7 +400,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             me.storage.clear();
 
             //send clear
-            me.changes.send({
+            me.events.send({
                 type: self.Clear
             });
 
@@ -483,7 +460,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 storage.removeItem(key);
 
                 //send change
-                me.changes.send({
+                me.events.send({
                     type: self.Remove,
                     key: key,
                     value: value
@@ -498,7 +475,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             storage.removeItem(key);
 
             //send change
-            me.changes.send({
+            me.events.send({
                 type: self.Remove,
                 key: key,
                 value: value
@@ -507,7 +484,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
         //send clear
         if (!me.storage.length) {
-            me.changes.send({
+            me.events.send({
                 type: self.Clear
             });
         }
@@ -578,7 +555,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 storage.removeItem(key);
 
                 //send change
-                me.changes.send({
+                me.events.send({
                     type: self.Remove,
                     key: key,
                     value: item
@@ -603,7 +580,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 storage.removeItem(key);
 
                 //send change
-                me.changes.send({
+                me.events.send({
                     type: self.Remove,
                     key: key,
                     value: item
@@ -630,7 +607,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 storage.removeItem(key);
 
                 //send change
-                me.changes.send({
+                me.events.send({
                     type: self.Remove,
                     key: key,
                     value: item
@@ -642,7 +619,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
         //send clear
         if (!me.storage.length) {
-            me.changes.send({
+            me.events.send({
                 type: self.Clear
             });
         }
