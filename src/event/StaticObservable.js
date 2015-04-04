@@ -17,6 +17,23 @@ xs.define(xs.Class, 'ns.StaticObservable', function () {
 
     Class.abstract = true;
 
+    Class.constant.events = xs.generator(function () {
+        var send = null;
+
+        //create event stream
+        //save stream reference
+        var stream = new xs.event.Stream(function () {
+
+            //save send reference
+            send = this.send;
+        });
+
+        //save send to stream
+        stream.send = send;
+
+        return stream;
+    });
+
     Class.static.method.on = function (event, handler, options) {
         var stream = this.events;
         stream.on.apply(stream, arguments);
