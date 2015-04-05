@@ -36,22 +36,22 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
             Collection: 'xs.util.Collection'
         },
         {
-            AddBeforeEvent: 'xs.util.collection.event.AddBefore'
+            'event.AddBefore': 'xs.util.collection.event.AddBefore'
         },
         {
-            AddEvent: 'xs.util.collection.event.Add'
+            'event.Add': 'xs.util.collection.event.Add'
         },
         {
-            SetBeforeEvent: 'xs.util.collection.event.SetBefore'
+            'event.SetBefore': 'xs.util.collection.event.SetBefore'
         },
         {
-            SetEvent: 'xs.util.collection.event.Set'
+            'event.Set': 'xs.util.collection.event.Set'
         },
         {
-            RemoveBeforeEvent: 'xs.util.collection.event.RemoveBefore'
+            'event.RemoveBefore': 'xs.util.collection.event.RemoveBefore'
         },
         {
-            RemoveEvent: 'xs.util.collection.event.Remove'
+            'event.Remove': 'xs.util.collection.event.Remove'
         }
     ];
 
@@ -397,12 +397,12 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
                 scope: position
             };
             //add events handlers for position
-            position.on(imports.AddBeforeEvent, handleAddBefore, options);
-            position.on(imports.AddEvent, handleAdd, options);
-            position.on(imports.SetBeforeEvent, handleSetBefore, options);
-            position.on(imports.SetEvent, handleSet, options);
-            position.on(imports.RemoveBeforeEvent, handleRemoveBefore, options);
-            position.on(imports.RemoveEvent, handleRemove, options);
+            position.on(imports.event.AddBefore, handleAddBefore, options);
+            position.on(imports.event.Add, handleAdd, options);
+            position.on(imports.event.SetBefore, handleSetBefore, options);
+            position.on(imports.event.Set, handleSet, options);
+            position.on(imports.event.RemoveBefore, handleRemoveBefore, options);
+            position.on(imports.event.Remove, handleRemove, options);
 
         }
 
