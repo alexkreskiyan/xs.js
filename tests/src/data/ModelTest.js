@@ -199,8 +199,8 @@ module('xs.data.Model', function () {
         strictEqual(model.data.age.get(), 55);
 
         var state = '';
-        //change:before is called before value is changed
-        model.on(xs.data.attribute.SetBeforeEvent, function (event) {
+        //event.SetBefore is called before value is changed
+        model.on(xs.data.attribute.event.SetBefore, function (event) {
             state += event.attribute + ':' + event.old + ':' + event.new + ';';
 
             //no change if name is number

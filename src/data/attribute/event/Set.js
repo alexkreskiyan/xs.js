@@ -1,19 +1,19 @@
 /**
- * Event class for events, being thrown before attribute value is changed
+ * Event class for events, being thrown after attribute value is changed
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.data.attribute.SetBeforeEvent
+ * @class xs.data.attribute.Set
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.SetBeforeEvent', function (self) {
+xs.define(xs.Class, 'ns.Set', function (self) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.data.attribute';
+    Class.namespace = 'xs.data.attribute.event';
 
     Class.implements = [
         'xs.event.IEvent'

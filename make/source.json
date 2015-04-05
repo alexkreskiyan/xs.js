@@ -99,18 +99,20 @@
         "xs": {
             "data": {
                 "attribute": {
+                    "event":{
+                        "SetBefore": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Set": {
+                            "contract": "class",
+                            "test": false
+                        }
+                    },
                     "IAttribute": {
                         "contract": "interface"
                     },
                     "Number": {
-                        "contract": "class",
-                        "test": false
-                    },
-                    "SetBeforeEvent": {
-                        "contract": "class",
-                        "test": false
-                    },
-                    "SetEvent": {
                         "contract": "class",
                         "test": false
                     },

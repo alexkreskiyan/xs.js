@@ -24,10 +24,10 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             IAttribute: 'ns.attribute.IAttribute'
         },
         {
-            SetBeforeEvent: 'ns.attribute.SetBeforeEvent'
+            'event.SetBefore': 'ns.attribute.event.SetBefore'
         },
         {
-            SetEvent: 'ns.attribute.SetEvent'
+            'event.Set': 'ns.attribute.event.Set'
         },
         {
             IProxy: 'ns.proxy.IProxy'
@@ -551,8 +551,8 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         //get model reference
         var model = me.private.model;
 
-        //send preventable SetBeforeEvent event, that can prevent changing attribute value
-        if (!model.events.send(new imports.SetBeforeEvent(data))) {
+        //send preventable event.SetBefore event, that can prevent changing attribute value
+        if (!model.events.send(new imports.event.SetBefore(data))) {
 
             return;
         }
@@ -560,8 +560,8 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         //set new value
         me.private.value = me.private.attribute.set(value);
 
-        //send closing SetEvent event
-        model.events.send(new imports.SetEvent(data));
+        //send closing event.Set event
+        model.events.send(new imports.event.Set(data));
     };
 
     /**
