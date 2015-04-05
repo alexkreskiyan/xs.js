@@ -219,6 +219,36 @@
                 }
             },
             "storage": {
+                "event": {
+                    "AddBeforeEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "AddEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "SetBeforeEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "SetEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "RemoveBeforeEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "RemoveEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "ClearEvent": {
+                        "contract": "class",
+                        "test": false
+                    }
+                },
                 "WebStorage": {
                     "contract": "class",
                     "test": false

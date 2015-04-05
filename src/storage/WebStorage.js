@@ -11,13 +11,37 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.WebStorage', function (self) {
+xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
     Class.namespace = 'xs.storage';
+
+    Class.imports = [
+        {
+            'event.AddBefore': 'ns.event.AddBefore'
+        },
+        {
+            'event.Add': 'ns.event.Add'
+        },
+        {
+            'event.SetBefore': 'ns.event.SetBefore'
+        },
+        {
+            'event.Set': 'ns.event.Set'
+        },
+        {
+            'event.RemoveBefore': 'ns.event.RemoveBefore'
+        },
+        {
+            'event.Remove': 'ns.event.Remove'
+        },
+        {
+            'event.Clear': 'ns.event.Clear'
+        }
+    ];
 
     Class.mixins.observable = 'xs.event.StaticObservable';
 
@@ -53,50 +77,6 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
      * @type {Storage}
      */
     Class.constant.storage = undefined;
-
-    /**
-     * Storage flag, meaning, that change operation was addition
-     *
-     * @property Add
-     *
-     * @readonly
-     *
-     * @type {Number}
-     */
-    Class.constant.Add = 0x1;
-
-    /**
-     * Storage flag, meaning, that change operation was replacement
-     *
-     * @property Set
-     *
-     * @readonly
-     *
-     * @type {Number}
-     */
-    Class.constant.Set = 0x2;
-
-    /**
-     * Storage flag, meaning, that change operation was removal
-     *
-     * @property Remove
-     *
-     * @readonly
-     *
-     * @type {Number}
-     */
-    Class.constant.Remove = 0x4;
-
-    /**
-     * Storage flag, meaning, that change operation was clear
-     *
-     * @property Clear
-     *
-     * @readonly
-     *
-     * @type {Number}
-     */
-    Class.constant.Clear = 0x8;
 
     /**
      * Collection length
@@ -276,8 +256,22 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         });
 
 
+        var data = {
+            key: key,
+            value: value
+        };
+
+        //send preventable event.AddBefore, that can prevent adding value to storage
+        if (!me.events.send(new imports.event.AddBefore(data))) {
+
+            return me;
+        }
+
         //add item
         me.storage.setItem(key, value);
+
+        //send closing event.Add
+        me.events.send(new imports.event.Add(data));
 
         //send change
         me.events.send({
@@ -320,14 +314,24 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             $key: key
         });
 
+
+        var data = {
+            key: key,
+            old: me.storage.getItem(key),
+            new: value,
+            index: index
+        };
+
+        //send preventable event.SetBefore, that can prevent changing value for storage item
+        if (!me.events.send(new imports.event.SetBefore(data))) {
+
+            return me;
+        }
+
         me.storage.setItem(key, value);
 
-        //send change
-        me.events.send({
-            type: self.Set,
-            key: key,
-            value: value
-        });
+        //send closing event.Set
+        me.events.send(new imports.event.Set(data));
 
         return me;
     };
@@ -356,24 +360,27 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             $key: key
         });
 
-        //get removed value
-        var value = me.storage.getItem(key);
+
+        var data = {
+            key: key,
+            value: me.storage.getItem(key)
+        };
+
+        //send preventable event.RemoveBefore, that can prevent removing value from storage
+        if (!me.events.send(new imports.event.RemoveBefore(data))) {
+
+            return me;
+        }
 
         //remove item from storage
         me.storage.removeItem(key);
 
-        //send change
-        me.events.send({
-            type: self.Remove,
-            key: key,
-            value: value
-        });
+        //send closing event.Remove
+        me.events.send(new imports.event.Remove(data));
 
         //send clear
         if (!me.storage.length) {
-            me.events.send({
-                type: self.Clear
-            });
+            me.events.send(new me.event.Clear());
         }
 
         return me;
@@ -394,6 +401,47 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     Class.static.method.remove = function (value, flags) {
         var me = this;
         var values = me.values();
+
+        var key;
+        var storage = me.storage;
+        var events = me.events;
+
+        var data, item;
+        var i = 0;
+
+        //remove all if no value given
+        if (!arguments.length) {
+
+            //remove all occurrences of value in storage
+            while (i < storage.length) {
+                key = storage.key(i);
+                item = storage.getItem(key);
+
+                data = {
+                    key: key,
+                    value: value
+                };
+
+                //send preventable event.RemoveBefore, that can prevent removing value from storage. if happens - continue with next item
+                if (!events.send(new imports.event.RemoveBefore(data))) {
+                    i++;
+                    continue;
+                }
+
+                //remove item from storage
+                storage.removeItem(key);
+
+                //send closing event.Remove
+                events.send(new imports.event.Remove(data));
+            }
+
+            //send clear
+            if (!me.storage.length) {
+                me.events.send(new me.event.Clear());
+            }
+
+            return me;
+        }
 
         //remove all if no value given
         if (!arguments.length) {
@@ -437,13 +485,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         //assert, that item exists
         me.assert.ok(index >= 0, 'remove - given value does not exist in storage');
 
-        var key;
-        var storage = me.storage;
-
         //if all flag is given
         if (all) {
-            var i = 0;
-            var item;
 
             //remove all occurrences of value in storage
             while (i < storage.length) {
@@ -456,37 +499,49 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                     continue;
                 }
 
+                data = {
+                    key: key,
+                    value: value
+                };
+
+                //send preventable event.RemoveBefore, that can prevent removing value from storage. if happens - continue with next item
+                if (!events.send(new imports.event.RemoveBefore(data))) {
+                    i++;
+                    continue;
+                }
+
                 //remove item from storage
                 storage.removeItem(key);
 
-                //send change
-                me.events.send({
-                    type: self.Remove,
-                    key: key,
-                    value: value
-                });
+                //send closing event.Remove
+                events.send(new imports.event.Remove(data));
             }
 
         } else {
 
             key = storage.key(index);
 
-            //remove item from items
-            storage.removeItem(key);
-
-            //send change
-            me.events.send({
-                type: self.Remove,
+            data = {
                 key: key,
                 value: value
-            });
+            };
+
+            //send preventable event.RemoveBefore, that can prevent removing value from storage. if happens - continue with next item
+            if (!events.send(new imports.event.RemoveBefore(data))) {
+
+                return me;
+            }
+
+            //remove item from storage
+            storage.removeItem(key);
+
+            //send closing event.Remove
+            events.send(new imports.event.Remove(data));
         }
 
         //send clear
         if (!me.storage.length) {
-            me.events.send({
-                type: self.Clear
-            });
+            me.events.send(new me.event.Clear());
         }
 
         return me;
@@ -534,18 +589,31 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
         //init variables
         var storage = me.storage;
-        var i, key, item;
+        var events = me.events;
+        var i, key, value, data;
 
         if (all) {
             i = 0;
             //remove all matched occurrences from storage
             while (i < storage.length) {
                 key = storage.key(i);
-                item = storage.getItem(key);
+                value = storage.getItem(key);
 
-                //if item does not match - continue with next item
-                if (!fn(item, key)) {
+                //if value does not match - continue with next value
+                if (!fn(value, key)) {
                     //increment index
+                    i++;
+
+                    continue;
+                }
+
+                data = {
+                    key: key,
+                    value: value
+                };
+
+                //send preventable event.RemoveBefore, that can prevent removing value from storage. if happens - continue with next value
+                if (!events.send(new imports.event.RemoveBefore(data))) {
                     i++;
 
                     continue;
@@ -554,23 +622,31 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 //remove item from storage
                 storage.removeItem(key);
 
-                //send change
-                me.events.send({
-                    type: self.Remove,
-                    key: key,
-                    value: item
-                });
+                //send closing event.Remove
+                events.send(new imports.event.Remove(data));
             }
         } else if (reverse) {
             i = storage.length - 1;
             //remove all matched occurrences from storage
             while (i >= 0) {
                 key = storage.key(i);
-                item = storage.getItem(key);
+                value = storage.getItem(key);
 
-                //if item does not match - continue with next item
-                if (!fn(item, key)) {
+                //if value does not match - continue with next value
+                if (!fn(value, key)) {
                     //decrement index
+                    i--;
+
+                    continue;
+                }
+
+                data = {
+                    key: key,
+                    value: value
+                };
+
+                //send preventable event.RemoveBefore, that can prevent removing value from storage. if happens - continue with next value
+                if (!events.send(new imports.event.RemoveBefore(data))) {
                     i--;
 
                     continue;
@@ -579,12 +655,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 //remove item from storage
                 storage.removeItem(key);
 
-                //send change
-                me.events.send({
-                    type: self.Remove,
-                    key: key,
-                    value: item
-                });
+                //send closing event.Remove
+                events.send(new imports.event.Remove(data));
 
                 break;
             }
@@ -593,11 +665,23 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             //remove first matched occurrence from storage
             while (i < storage.length) {
                 key = storage.key(i);
-                item = storage.getItem(key);
+                value = storage.getItem(key);
 
-                //if item does not match - continue with next item
-                if (!fn(item, key)) {
+                //if value does not match - continue with next value
+                if (!fn(value, key)) {
                     //increment index
+                    i++;
+
+                    continue;
+                }
+
+                data = {
+                    key: key,
+                    value: value
+                };
+
+                //send preventable event.RemoveBefore, that can prevent removing value from storage. if happens - continue with next value
+                if (!events.send(new imports.event.RemoveBefore(data))) {
                     i++;
 
                     continue;
@@ -606,12 +690,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 //remove item from storage
                 storage.removeItem(key);
 
-                //send change
-                me.events.send({
-                    type: self.Remove,
-                    key: key,
-                    value: item
-                });
+                //send closing event.Remove
+                events.send(new imports.event.Remove(data));
 
                 break;
             }
@@ -619,9 +699,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
         //send clear
         if (!me.storage.length) {
-            me.events.send({
-                type: self.Clear
-            });
+            me.events.send(new me.event.Clear());
         }
 
         return me;

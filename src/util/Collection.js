@@ -682,6 +682,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         //assert, that value is valid
         self.assert.ok(isValid.call(me, value), 'Not valid');
 
+
         var data = {
             key: key,
             value: value,
@@ -800,6 +801,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
 
         //assert, that value is valid
         self.assert.ok(isValid.call(me, value), 'Not valid');
+
 
         var data = {
             key: key,
@@ -923,6 +925,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         //assert, that value is valid
         self.assert.ok(isValid.call(me, value), 'Not valid');
 
+
         var data = {
             key: key,
             old: me.private.items[ index ].value,
@@ -1028,6 +1031,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
             });
         }
 
+
         var item = me.private.items[ index ];
 
         var data = {
@@ -1035,7 +1039,6 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
             value: item.value,
             index: index
         };
-
 
         //send preventable RemoveBeforeEvent, that can prevent removing value from collection
         if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
