@@ -1,19 +1,19 @@
 /**
- * Event class for events, being thrown before some data is replaced in xs.util.Collection
+ * Event class for events, being thrown after some data is removed from xs.util.Collection
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.util.collection.SetBeforeEvent
+ * @class xs.util.collection.event.Remove
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.SetBeforeEvent', function (self) {
+xs.define(xs.Class, 'ns.Remove', function (self) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.util.collection';
+    Class.namespace = 'xs.util.collection.event';
 
     Class.implements = [
         'xs.event.IEvent'
@@ -41,31 +41,19 @@ xs.define(xs.Class, 'ns.SetBeforeEvent', function (self) {
         });
 
         //assign attributes
-        me.private.old = data.old;
-        me.private.new = data.new;
+        me.private.value = data.value;
         me.private.key = data.key;
         me.private.index = data.index;
     };
 
     /**
-     * Event `old` property. Event old is old value at given position
+     * Event `value` property. Event value is value, operation is performed on
      *
-     * @property old
-     *
-     * @type {Object}
-     */
-    Class.property.old = {
-        set: xs.noop
-    };
-
-    /**
-     * Event `new` property. Event new is a value, that replaces current one
-     *
-     * @property new
+     * @property value
      *
      * @type {Object}
      */
-    Class.property.new = {
+    Class.property.value = {
         set: xs.noop
     };
 

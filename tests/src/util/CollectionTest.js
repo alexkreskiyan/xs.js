@@ -572,14 +572,14 @@ module('xs.util.Collection', function () {
         };
 
         //add:before - add only values, that are greater than five
-        collection.events.on(xs.util.collection.AddBeforeEvent, function (event) {
+        collection.events.on(xs.util.collection.event.AddBefore, function (event) {
             log.addBefore.push(event.value + ':' + event.key + ':' + event.index);
 
             return event.value > 5 && event.value < 10;
         });
 
         //add - post-processing added values
-        collection.events.on(xs.util.collection.AddEvent, function (event) {
+        collection.events.on(xs.util.collection.event.Add, function (event) {
             log.add.push(event.value + ':' + event.key + ':' + event.index);
 
             str += event.value + event.key + event.index + ':';
@@ -689,14 +689,14 @@ module('xs.util.Collection', function () {
         };
 
         //add:before - insert only values, that are greater than five
-        collection.events.on(xs.util.collection.AddBeforeEvent, function (event) {
+        collection.events.on(xs.util.collection.event.AddBefore, function (event) {
             log.addBefore.push(event.value + ':' + event.key + ':' + event.index);
 
             return event.value > 5 && event.value < 10;
         });
 
         //add - post-processing inserted values
-        collection.events.on(xs.util.collection.AddEvent, function (event) {
+        collection.events.on(xs.util.collection.event.Add, function (event) {
             log.add.push(event.value + ':' + event.key + ':' + event.index);
 
             str += event.value + event.key + event.index + ':';
@@ -807,14 +807,14 @@ module('xs.util.Collection', function () {
         };
 
         //set:before - set only values, that are greater than five
-        collection.events.on(xs.util.collection.SetBeforeEvent, function (event) {
+        collection.events.on(xs.util.collection.event.SetBefore, function (event) {
             log.setBefore.push(event.old + ':' + event.new + ':' + event.key + ':' + event.index);
 
             return event.new > 5 && event.new < 10;
         });
 
         //set - post-processing of set values
-        collection.events.on(xs.util.collection.SetEvent, function (event) {
+        collection.events.on(xs.util.collection.event.Set, function (event) {
             log.set.push(event.old + ':' + event.new + ':' + event.key + ':' + event.index);
 
             str += event.new + event.key + event.index + ':';
@@ -918,21 +918,21 @@ module('xs.util.Collection', function () {
         };
 
         //remove:before - remove only values, that are greater than five
-        collection.events.on(xs.util.collection.RemoveBeforeEvent, function (event) {
+        collection.events.on(xs.util.collection.event.RemoveBefore, function (event) {
             log.removeBefore.push(event.value + ':' + event.key + ':' + event.index);
 
             return event.value > 5 && event.value < 10;
         });
 
         //remove - post-processing removed values
-        collection.events.on(xs.util.collection.RemoveEvent, function (event) {
+        collection.events.on(xs.util.collection.event.Remove, function (event) {
             log.remove.push(event.value + ':' + event.key + ':' + event.index);
 
             str += event.value + event.key + event.index + ':';
         });
 
         //clear - when all items removed
-        collection.events.on(xs.util.collection.ClearEvent, function () {
+        collection.events.on(xs.util.collection.event.Clear, function () {
             str += '!!!';
         });
 
@@ -1064,21 +1064,21 @@ module('xs.util.Collection', function () {
         };
 
         //remove:before - remove only values, that are greater than five
-        collection.events.on(xs.util.collection.RemoveBeforeEvent, function (event) {
+        collection.events.on(xs.util.collection.event.RemoveBefore, function (event) {
             log.removeBefore.push(event.value + ':' + event.key + ':' + event.index);
 
             return event.value > 5 && event.value < 10;
         });
 
         //remove - post-processing removed values
-        collection.events.on(xs.util.collection.RemoveEvent, function (event) {
+        collection.events.on(xs.util.collection.event.Remove, function (event) {
             log.remove.push(event.value + ':' + event.key + ':' + event.index);
 
             str += event.value + event.key + event.index + ':';
         });
 
         //clear - when all items removed
-        collection.events.on(xs.util.collection.ClearEvent, function () {
+        collection.events.on(xs.util.collection.event.Clear, function () {
             str += '!!!';
         });
 
@@ -1089,9 +1089,9 @@ module('xs.util.Collection', function () {
         collection.remove(10);
         strictEqual(JSON.stringify(collection.toSource()), '{"a":4,"e":8,"g":10}');
 
-        //off RemoveBeforeEvent and RemoveEvent
-        collection.events.off(xs.util.collection.RemoveBeforeEvent);
-        collection.events.off(xs.util.collection.RemoveEvent);
+        //off event.RemoveBefore and event.Remove
+        collection.events.off(xs.util.collection.event.RemoveBefore);
+        collection.events.off(xs.util.collection.event.Remove);
         collection.remove();
 
         strictEqual(str, '6b1:6c1:8d1:8f2:!!!');
@@ -1211,21 +1211,21 @@ module('xs.util.Collection', function () {
         };
 
         //remove:before - remove only values, that are greater than five
-        collection.events.on(xs.util.collection.RemoveBeforeEvent, function (event) {
+        collection.events.on(xs.util.collection.event.RemoveBefore, function (event) {
             log.removeBefore.push(event.value + ':' + event.key + ':' + event.index);
 
             return event.value > 5 && event.value < 10;
         });
 
         //remove - post-processing removed values
-        collection.events.on(xs.util.collection.RemoveEvent, function (event) {
+        collection.events.on(xs.util.collection.event.Remove, function (event) {
             log.remove.push(event.value + ':' + event.key + ':' + event.index);
 
             str += event.value + event.key + event.index + ':';
         });
 
         //clear - when all items removed
-        collection.events.on(xs.util.collection.ClearEvent, function () {
+        collection.events.on(xs.util.collection.event.Clear, function () {
             str += '!!!';
         });
 
@@ -1246,9 +1246,9 @@ module('xs.util.Collection', function () {
         });
         strictEqual(JSON.stringify(collection.toSource()), '{"a":4,"e":8,"g":10}');
 
-        //off RemoveBeforeEvent and RemoveEvent
-        collection.events.off(xs.util.collection.RemoveBeforeEvent);
-        collection.events.off(xs.util.collection.RemoveEvent);
+        //off event.RemoveBefore and event.Remove
+        collection.events.off(xs.util.collection.event.RemoveBefore);
+        collection.events.off(xs.util.collection.event.Remove);
         collection.removeBy(function () {
             return true;
         }, xs.util.Collection.All);

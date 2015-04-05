@@ -1,19 +1,19 @@
 /**
- * Event class for events, being thrown before some data is removed from xs.util.Collection
+ * Event class for events, being thrown after some data is added to xs.util.Collection
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.util.collection.RemoveBeforeEvent
+ * @class xs.util.collection.event.Add
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.RemoveBeforeEvent', function (self) {
+xs.define(xs.Class, 'ns.Add', function (self) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.util.collection';
+    Class.namespace = 'xs.util.collection.event';
 
     Class.implements = [
         'xs.event.IEvent'

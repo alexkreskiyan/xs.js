@@ -1,19 +1,19 @@
 /**
- * Event class for events, being thrown after some data is replaced in xs.util.Collection
+ * Event class for events, being thrown before some data is replaced in xs.util.Collection
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.util.collection.SetEvent
+ * @class xs.util.collection.event.SetBefore
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.SetEvent', function (self) {
+xs.define(xs.Class, 'ns.SetBefore', function (self) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.util.collection';
+    Class.namespace = 'xs.util.collection.event';
 
     Class.implements = [
         'xs.event.IEvent'

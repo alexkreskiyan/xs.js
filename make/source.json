@@ -220,31 +220,31 @@
             },
             "storage": {
                 "event": {
-                    "AddBeforeEvent": {
+                    "AddBefore": {
                         "contract": "class",
                         "test": false
                     },
-                    "AddEvent": {
+                    "Add": {
                         "contract": "class",
                         "test": false
                     },
-                    "SetBeforeEvent": {
+                    "SetBefore": {
                         "contract": "class",
                         "test": false
                     },
-                    "SetEvent": {
+                    "Set": {
                         "contract": "class",
                         "test": false
                     },
-                    "RemoveBeforeEvent": {
+                    "RemoveBefore": {
                         "contract": "class",
                         "test": false
                     },
-                    "RemoveEvent": {
+                    "Remove": {
                         "contract": "class",
                         "test": false
                     },
-                    "ClearEvent": {
+                    "Clear": {
                         "contract": "class",
                         "test": false
                     }
@@ -279,33 +279,35 @@
             },
             "util": {
                 "collection": {
-                    "AddBeforeEvent": {
-                        "contract": "class",
-                        "test": false
-                    },
-                    "AddEvent": {
-                        "contract": "class",
-                        "test": false
-                    },
-                    "SetBeforeEvent": {
-                        "contract": "class",
-                        "test": false
-                    },
-                    "SetEvent": {
-                        "contract": "class",
-                        "test": false
-                    },
-                    "RemoveBeforeEvent": {
-                        "contract": "class",
-                        "test": false
-                    },
-                    "RemoveEvent": {
-                        "contract": "class",
-                        "test": false
-                    },
-                    "ClearEvent": {
-                        "contract": "class",
-                        "test": false
+                    "event": {
+                        "AddBefore": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Add": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "SetBefore": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Set": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "RemoveBefore": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Remove": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Clear": {
+                            "contract": "class",
+                            "test": false
+                        }
                     }
                 },
                 "Collection": {

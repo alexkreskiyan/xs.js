@@ -36,22 +36,22 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
             Collection: 'xs.util.Collection'
         },
         {
-            AddBeforeEvent: 'xs.util.collection.AddBeforeEvent'
+            AddBeforeEvent: 'xs.util.collection.event.AddBefore'
         },
         {
-            AddEvent: 'xs.util.collection.AddEvent'
+            AddEvent: 'xs.util.collection.event.Add'
         },
         {
-            SetBeforeEvent: 'xs.util.collection.SetBeforeEvent'
+            SetBeforeEvent: 'xs.util.collection.event.SetBefore'
         },
         {
-            SetEvent: 'xs.util.collection.SetEvent'
+            SetEvent: 'xs.util.collection.event.Set'
         },
         {
-            RemoveBeforeEvent: 'xs.util.collection.RemoveBeforeEvent'
+            RemoveBeforeEvent: 'xs.util.collection.event.RemoveBefore'
         },
         {
-            RemoveEvent: 'xs.util.collection.RemoveEvent'
+            RemoveEvent: 'xs.util.collection.event.Remove'
         }
     ];
 
