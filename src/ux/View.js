@@ -34,6 +34,24 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         },
         {
             Collection: 'xs.util.Collection'
+        },
+        {
+            AddBeforeEvent: 'xs.util.collection.AddBeforeEvent'
+        },
+        {
+            AddEvent: 'xs.util.collection.AddEvent'
+        },
+        {
+            SetBeforeEvent: 'xs.util.collection.SetBeforeEvent'
+        },
+        {
+            SetEvent: 'xs.util.collection.SetEvent'
+        },
+        {
+            RemoveBeforeEvent: 'xs.util.collection.RemoveBeforeEvent'
+        },
+        {
+            RemoveEvent: 'xs.util.collection.RemoveEvent'
         }
     ];
 
@@ -285,7 +303,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @param {String} template
      *
-     * @return {xs.core.Collection} collection of nodes in parsed template
+     * @return {Element} root of parsed template
      */
     var parseTemplate = function (template) {
 
@@ -379,12 +397,12 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
                 scope: position
             };
             //add events handlers for position
-            position.on('add:before', handleAddBefore, options);
-            position.on('add', handleAdd, options);
-            position.on('set:before', handleSetBefore, options);
-            position.on('set', handleSet, options);
-            position.on('remove:before', handleRemoveBefore, options);
-            position.on('remove', handleRemove, options);
+            position.on(imports.AddBeforeEvent, handleAddBefore, options);
+            position.on(imports.AddEvent, handleAdd, options);
+            position.on(imports.SetBeforeEvent, handleSetBefore, options);
+            position.on(imports.SetEvent, handleSet, options);
+            position.on(imports.RemoveBeforeEvent, handleRemoveBefore, options);
+            position.on(imports.RemoveEvent, handleRemove, options);
 
         }
 
@@ -488,7 +506,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var me = this;
 
         //get view reference;
-        var view = event.value;
+        var view = event.new;
 
         self.log.trace('set:before', {
             event: event
@@ -503,7 +521,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         //remove old item
 
         //get old item reference
-        var old = me.private.items[ event.index ].value;
+        var old = event.old;
 
         //remove it from position manually
         me.private.el.removeChild(old.private.el);
@@ -544,7 +562,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var me = this;
 
         //get view reference;
-        var view = event.value;
+        var view = event.new;
 
         self.log.trace('set', {
             event: event
