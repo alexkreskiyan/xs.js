@@ -925,7 +925,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
 
         var data = {
             key: key,
-            old: value,
+            old: me.private.items[ index ].value,
             new: value,
             index: index
         };
@@ -2656,17 +2656,14 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
     Class.method.destroy = function () {
         var me = this;
 
-        //call Observable.destroy
-        self.mixins.observable.prototype.destroy.call(me);
-
         //try to remove all items
         me.remove();
 
         //assert that collection is clear
         self.assert.empty(me.private.items, 'destroy - some remove:before handlers blocked removing items from collection');
 
-        //toggle off all events
-        me.off();
+        //call Observable.destroy
+        self.mixins.observable.prototype.destroy.call(me);
 
         //call parent destroy
         self.parent.prototype.destroy.call(me);
