@@ -15,9 +15,15 @@ module('xs.lang.Object', function () {
     test('extend', function () {
         var me = this;
         //init test data
-        me.a = {a: 1};
-        me.b = {b: 1};
-        me.c = {c: 1};
+        me.a = {
+            a: 1
+        };
+        me.b = {
+            b: 1
+        };
+        me.c = {
+            c: 1
+        };
         me.x = {
             a: me.a,
             b: me.b,
@@ -28,13 +34,19 @@ module('xs.lang.Object', function () {
     }, function () {
         var me = this;
         throws(function () {
-            xs.extend([]);
+            xs.apply([]);
         });
         //extend
-        xs.extend(me.x, {a: me.b}, 3, [
+        xs.apply(me.x, {
+            a: me.b
+        }, 3, [
             4,
             5
-        ], {b: 1}, {e: me.a});
+        ], {
+            b: 1
+        }, {
+            e: me.a
+        });
 
         //check replacements
         strictEqual(me.x.a, me.b);

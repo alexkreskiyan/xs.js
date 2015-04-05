@@ -1,7 +1,5 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.class.preprocessors.defineElements');
-
 /**
  * Preprocessor defineElements
  * Is used to inherit parent elements to class descriptor
@@ -32,18 +30,32 @@ xs.class.preprocessors.add('defineElements', function () {
 });
 
 function processConstants(Class) {
+    //get xs.core.Generator reference
+    var Generator = xs.core.Generator;
+
     Class.descriptor.constant.each(function (value, name) {
 
-        xs.constant(Class, name, value);
+        xs.constant(Class, name, value instanceof Generator ? value.create() : value);
     });
 }
 
 function processStaticProperties(Class) {
+    //get xs.core.Generator reference
+    var Generator = xs.core.Generator;
+
     //create privates storage in class
     Class.private = {};
 
     //apply
     Class.descriptor.static.property.each(function (descriptor, name) {
+
+        //set value to a generated one
+        if (descriptor.value instanceof Generator) {
+            //use clone
+            descriptor = xs.clone(descriptor);
+
+            descriptor.value = descriptor.value.create();
+        }
 
         //save property to class
         xs.property.define(Class, name, descriptor);
@@ -68,7 +80,7 @@ function processProperties(Class) {
 
         //set undefined for assigned properties
         if (descriptor.hasOwnProperty('value')) {
-            prototype[name] = undefined;
+            prototype[ name ] = undefined;
         }
     });
 }

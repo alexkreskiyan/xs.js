@@ -119,7 +119,7 @@ Dependency.prototype.getLock = function (chain) {
         me.dependencies.find(function (dependency) {
 
             //try to find lock down recursively
-            lock = dependency.getLock(new xs.core.Collection([me]));
+            lock = dependency.getLock(new xs.core.Collection([ me ]));
 
             //lock is found, return
             return lock;

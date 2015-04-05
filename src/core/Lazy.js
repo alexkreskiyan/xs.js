@@ -1,9 +1,7 @@
 'use strict';
 
 //define xs.core
-if (!xs.core) {
-    xs.core = {};
-}
+xs.getNamespace(xs, 'core');
 
 var log = new xs.log.Logger('xs.core.Lazy');
 
@@ -109,6 +107,6 @@ function XsCoreLazyError(message) {
 
 XsCoreLazyError.prototype = new Error();
 
-xs.extend(xs, {
+xs.apply(xs, {
     define: xs.ContractsManager.define
 });

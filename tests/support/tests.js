@@ -21,6 +21,7 @@
 
     var windowApplicationCache = function () {
         log('window.applicationCache');
+
         if ('applicationCache' in window) {
             info('application cache supported');
         } else {
@@ -30,6 +31,7 @@
 
     var windowDevicePixelRatio = function () {
         log('window.devicePixelRatio');
+
         if ('devicePixelRatio' in window) {
             info('window.devicePixelRatio supported: ' + window.devicePixelRatio);
         } else {
@@ -39,6 +41,7 @@
 
     var windowHistory = function () {
         log('window.history');
+
         if ('history' in window) {
             info('window.history supported');
         } else {
@@ -48,6 +51,7 @@
 
     var windowInnerWidth = function () {
         log('window.innerWidth');
+
         if ('innerWidth' in window) {
             info('window.innerWidth supported: ' + window.innerWidth);
         } else {
@@ -57,6 +61,7 @@
 
     var windowInnerHeight = function () {
         log('window.innerHeight');
+
         if ('innerHeight' in window) {
             info('window.innerHeight supported: ' + window.innerHeight);
         } else {
@@ -66,6 +71,7 @@
 
     var windowLocalStorage = function () {
         log('window.localStorage');
+
         if ('localStorage' in window) {
             info('window.localStorage supported');
         } else {
@@ -75,6 +81,7 @@
 
     var windowLocation = function () {
         log('window.location');
+
         if ('location' in window) {
             info('window.location supported');
         } else {
@@ -84,6 +91,7 @@
 
     var windowOuterWidth = function () {
         log('window.outerWidth');
+
         if ('outerWidth' in window) {
             info('window.outerWidth supported: ' + window.outerWidth);
         } else {
@@ -93,6 +101,7 @@
 
     var windowOuterHeight = function () {
         log('window.outerHeight');
+
         if ('outerHeight' in window) {
             info('window.outerHeight supported: ' + window.outerHeight);
         } else {
@@ -102,6 +111,7 @@
 
     var windowPerformance = function () {
         log('window.performance');
+
         if (!window.performance) {
             warn('window.performance not supported');
 
@@ -129,6 +139,7 @@
 
     var windowScreen = function () {
         log('window.screen');
+
         if (!window.screen) {
             warn('window.screen not supported');
 
@@ -145,6 +156,7 @@
 
     var windowSessionStorage = function () {
         log('window.sessionStorage');
+
         if ('sessionStorage' in window) {
             info('window.sessionStorage supported');
         } else {
@@ -152,17 +164,9 @@
         }
     };
 
-    var windowLocalStorage = function () {
-        log('window.localStorage');
-        if ('localStorage' in window) {
-            info('window.localStorage supported');
-        } else {
-            warn('window.localStorage missing');
-        }
-    };
-
     var windowOnBlur = function () {
         log('window.onblur');
+
         if (!('onblur' in window)) {
             warn('window.onblur missing');
 
@@ -178,6 +182,7 @@
 
     var windowOnChange = function () {
         log('window.onchange');
+
         if (!('onchange' in window)) {
             warn('window.onchange missing');
 
@@ -193,6 +198,7 @@
 
     var windowOnClick = function () {
         log('window.onclick');
+
         if (!('onclick' in window)) {
             warn('window.onclick missing');
 
@@ -208,6 +214,7 @@
 
     var windowOnFocus = function () {
         log('window.onfocus');
+
         if (!('onfocus' in window)) {
             warn('window.onfocus missing');
 
@@ -223,6 +230,7 @@
 
     var windowOnKeyDown = function () {
         log('window.onkeydown');
+
         if (!('onkeydown' in window)) {
             warn('window.onkeydown missing');
 
@@ -238,6 +246,7 @@
 
     var windowOnKeyUp = function () {
         log('window.onkeyup');
+
         if (!('onkeyup' in window)) {
             warn('window.onkeyup missing');
 
@@ -253,6 +262,7 @@
 
     var windowOnKeyPress = function () {
         log('window.onkeypress');
+
         if (!('onkeypress' in window)) {
             warn('window.onkeypress missing');
 
@@ -268,6 +278,7 @@
 
     var windowOnMouseDown = function () {
         log('window.onmousedown');
+
         if (!('onmousedown' in window)) {
             warn('window.onmousedown missing');
 
@@ -283,6 +294,7 @@
 
     var windowOnMouseUp = function () {
         log('window.onmouseup');
+
         if (!('onmouseup' in window)) {
             warn('window.onmouseup missing');
 
@@ -298,6 +310,7 @@
 
     var windowOnMouseMove = function () {
         log('window.onmousemove');
+
         if (!('onmousemove' in window)) {
             warn('window.onmousemove missing');
 
@@ -313,6 +326,7 @@
 
     var windowOnMouseOver = function () {
         log('window.onmouseover');
+
         if (!('onmouseover' in window)) {
             warn('window.onmouseover missing');
 
@@ -328,6 +342,7 @@
 
     var windowOnMouseOut = function () {
         log('window.onmouseout');
+
         if (!('onmouseout' in window)) {
             warn('window.onmouseout missing');
 
@@ -343,6 +358,7 @@
 
     var windowOnResize = function () {
         log('window.onresize');
+
         if (!('onresize' in window)) {
             warn('window.onresize missing');
 
@@ -358,6 +374,7 @@
 
     var windowGetComputedStyle = function () {
         log('window.getComputedStyle');
+
         if ('getComputedStyle' in window) {
             info('window.getComputedStyle supported');
         } else {
@@ -367,6 +384,7 @@
 
     var windowPostMessage = function () {
         log('window.postMessage');
+
         if ('postMessage' in window) {
             info('window.postMessage supported');
         } else {
@@ -376,6 +394,7 @@
 
     var windowRequestAnimationFrame = function () {
         log('window.requestAnimationFrame');
+
         if ('requestAnimationFrame' in window) {
             info('window.requestAnimationFrame supported');
         } else {
@@ -385,6 +404,7 @@
 
     var navigatorOnLine = function () {
         log('navigator.onLine');
+
         if (!('onLine' in navigator)) {
             warn('navigator.onLine missing');
 
@@ -504,7 +524,7 @@
         var shallow = {};
         var keys = Object.keys(object);
         keys.forEach(function (key) {
-            shallow[key] = String(object[key]);
+            shallow[ key ] = String(object[ key ]);
         });
 
         return JSON.stringify(shallow);

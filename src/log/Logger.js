@@ -1,32 +1,34 @@
 'use strict';
 
 //define xs.log
-if (!xs.log) {
-    xs.log = {};
-}
+xs.getNamespace(xs, 'log');
 
 /**
  * Store of all registered profiling records
  *
  * @ignore
  *
+ * @static
+ *
  * @private
  *
  * @property profiles
  *
- * @type {xs.core.Collection}
+ * @type {Array}
  */
-var profiles = new xs.core.Collection();
+var profiles = {};
 
 //create assert mock
 var assert = {
     ok: function () {
+    },
+    string: function () {
     }
 };
 
-//create reference to xs.log.Router.process and remove it
-var processEntry = xs.log.Router.process;
-delete xs.log.Router.process;
+//create reference to a function, that will be called each time, when new log entry appears
+var processEntry = function () {
+};
 
 /**
  * xs.log.Logger is key system element, that performs logging operations.
@@ -60,7 +62,7 @@ var Logger = xs.log.Logger = function (category) {
     var me = this;
 
     //assert, that category is valid (via xs.log.Router.isCategory)
-    assert.ok(xs.log.Router.isCategory(category), 'Given category `$category` is not a valid category', {
+    assert.ok(isCategory(category), 'Given category `$category` is not a valid category', {
         $category: category
     });
 
@@ -104,11 +106,12 @@ Logger.prototype.error = function (message, data) {
         $data: data
     });
 
-    if (data) {
-        processEntry(me.category, xs.log.Error, message, data);
-    } else {
-        processEntry(me.category, xs.log.Error, message);
-    }
+    processEntry({
+        category: me.category,
+        level: xs.log.Error,
+        message: message,
+        data: data
+    });
 };
 
 /**
@@ -140,11 +143,12 @@ Logger.prototype.warn = function (message, data) {
         $data: data
     });
 
-    if (data) {
-        processEntry(me.category, xs.log.Warning, message, data);
-    } else {
-        processEntry(me.category, xs.log.Warning, message);
-    }
+    processEntry({
+        category: me.category,
+        level: xs.log.Warning,
+        message: message,
+        data: data
+    });
 };
 
 /**
@@ -176,11 +180,12 @@ Logger.prototype.info = function (message, data) {
         $data: data
     });
 
-    if (data) {
-        processEntry(me.category, xs.log.Info, message, data);
-    } else {
-        processEntry(me.category, xs.log.Info, message);
-    }
+    processEntry({
+        category: me.category,
+        level: xs.log.Info,
+        message: message,
+        data: data
+    });
 };
 
 /**
@@ -213,12 +218,47 @@ Logger.prototype.trace = function (message, data) {
         $data: data
     });
 
-    if (data) {
-        processEntry(me.category, xs.log.Trace, message, data);
-    } else {
-        processEntry(me.category, xs.log.Trace, message);
-    }
+    processEntry({
+        category: me.category,
+        level: xs.log.Trace,
+        message: message,
+        data: data
+    });
 };
+
+/**
+ * Category name testing regular expression
+ *
+ * @ignore
+ *
+ * @type {RegExp}
+ */
+var categoryRe = /^[A-Za-z]{1}[A-Za-z0-9]*(?:\.{1}[A-Za-z]{1}[A-Za-z0-9]*)*$/;
+
+/**
+ * Returns whether given string is correct router category name
+ *
+ * For example:
+ *
+ *     xs.log.router.isCategory('xs.module.my.Class'); //true
+ *
+ * @private
+ *
+ * @method isCategory
+ *
+ * @param {String} category verified category name
+ *
+ * @return {String} whether category name is correct
+ */
+function isCategory(category) {
+
+    //assert that category is a string
+    assert.string(category, 'isCategory - given category `$category` is not a string', {
+        $category: category
+    });
+
+    return categoryRe.test(category);
+}
 
 /**
  * Begins profiling with given mark.
@@ -243,10 +283,18 @@ function profileStart(mark) {
         $mark: mark
     });
 
-    //add new entry to storage
-    profiles.add(me.category + '.' + mark, {
-        time: (new Date()).valueOf()
+    //get profile mark full name
+    var name = me.category + '.' + mark;
+
+    //assert, that profile is not redefining currently existing one
+    assert.not(profiles.hasOwnProperty(name), 'profile.start - given mark `$mark` is already used', {
+        $mark: mark
     });
+
+    //set profile record
+    profiles[ name ] = {
+        time: (new Date()).valueOf()
+    };
 }
 
 /**
@@ -275,20 +323,29 @@ function profileEnd(mark) {
         $mark: mark
     });
 
-    //evaluate storage key
-    var key = me.category + '.' + mark;
+    //get profile mark full name
+    var name = me.category + '.' + mark;
+
+    //assert, that profile record is defined
+    assert.ok(profiles.hasOwnProperty(name), 'profile.end - given mark `$mark` has not defined a profile', {
+        $mark: mark
+    });
 
     //get profile record
-    var profile = profiles.at(key);
+    var profile = profiles[ name ];
 
     //evaluate execution time
     profile.time = (new Date()).valueOf() - profile.time;
 
     //remove profile from storage
-    profiles.remove(profile);
+    delete profiles[ name ];
 
-    //process profiling message (mark) with profile as data
-    processEntry(me.category, xs.log.Profile, mark, profile);
+    processEntry({
+        category: me.category,
+        level: xs.log.Profile,
+        message: mark,
+        data: profile
+    });
 }
 
 /**
@@ -310,4 +367,10 @@ XsLogLoggerError.prototype = new Error();
 Logger.hookReady = function () {
     assert = new xs.core.Asserter(new xs.log.Logger('xs.log.Logger'), XsLogLoggerError);
     delete Logger.hookReady;
+};
+
+//hook method to define internal process method
+Logger.hookProcess = function (fn) {
+    processEntry = fn;
+    delete Logger.hookProcess;
 };

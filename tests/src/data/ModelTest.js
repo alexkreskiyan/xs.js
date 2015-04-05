@@ -200,7 +200,7 @@ module('xs.data.Model', function () {
 
         var state = '';
         //change:before is called before value is changed
-        model.on('change:before', function (event) {
+        model.on(xs.data.attribute.SetBeforeEvent, function (event) {
             state += event.attribute + ':' + event.old + ':' + event.new + ';';
 
             //no change if name is number
@@ -264,7 +264,7 @@ module('xs.data.Model', function () {
 
         var value = 0;
 
-        model.on('destroy', function () {
+        model.on(xs.event.Destroy, function () {
             value = 1;
         });
 

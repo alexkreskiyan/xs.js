@@ -52,7 +52,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -125,7 +125,7 @@ module('xs.lang.Type', function () {
                 ok: true
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: true
             },
             {
@@ -198,7 +198,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -271,7 +271,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -344,7 +344,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -417,7 +417,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -490,7 +490,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -567,7 +567,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -591,7 +591,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: new Error,
+                data: new Error(),
                 ok: true
             }
         ];
@@ -644,7 +644,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -717,7 +717,7 @@ module('xs.lang.Type', function () {
                 ok: true
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: true
             },
             {
@@ -790,7 +790,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -863,7 +863,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -936,7 +936,7 @@ module('xs.lang.Type', function () {
                 ok: true
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: true
             },
             {
@@ -1005,7 +1005,7 @@ module('xs.lang.Type', function () {
                 ok: true
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -1081,7 +1081,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -1155,7 +1155,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {
@@ -1228,7 +1228,7 @@ module('xs.lang.Type', function () {
                 ok: false
             },
             {
-                data: [1],
+                data: [ 1 ],
                 ok: false
             },
             {

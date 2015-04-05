@@ -81,6 +81,7 @@ xs.class.preprocessors.add('imports', function () {
 
         if (xs.isString(imported)) {
             name = resolveName(imported);
+
             if (!requires.has(name)) {
                 requires.add(name);
             }
@@ -92,8 +93,8 @@ xs.class.preprocessors.add('imports', function () {
         //handle imported key=>value pair
 
         //get name and alias
-        var alias = Object.keys(imported)[0];
-        name = resolveName(imported[alias]);
+        var alias = Object.keys(imported)[ 0 ];
+        name = resolveName(imported[ alias ]);
 
         if (!requires.has(name)) {
             requires.add(name);
@@ -169,7 +170,7 @@ function applyImports(target, imports) {
         var namespace = xs.ContractsManager.getNamespace(target.imports, xs.ContractsManager.getPath(alias));
 
         //save class by alias in imports list
-        namespace[shortAlias] = xs.ContractsManager.get(name);
+        namespace[ shortAlias ] = xs.ContractsManager.get(name);
     });
 
     //remove imports from Class

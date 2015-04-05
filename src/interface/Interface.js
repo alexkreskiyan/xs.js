@@ -1,9 +1,7 @@
 'use strict';
 
 //define xs.interface
-if (!xs.interface) {
-    xs.interface = {};
-}
+xs.getNamespace(xs, 'interface');
 
 var log = new xs.log.Logger('xs.interface.Interface');
 

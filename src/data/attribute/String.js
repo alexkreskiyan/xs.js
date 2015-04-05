@@ -17,7 +17,7 @@ xs.define(xs.Class, 'ns.String', function (self) {
 
     Class.namespace = 'xs.data.attribute';
 
-    Class.implements = ['ns.IAttribute'];
+    Class.implements = [ 'ns.IAttribute' ];
 
     /**
      * String attribute constructor

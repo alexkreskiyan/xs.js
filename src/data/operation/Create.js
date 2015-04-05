@@ -16,7 +16,9 @@ xs.define(xs.Class, 'ns.operation.Create', function (self, imports) {
     Class.namespace = 'xs.data';
 
     Class.imports = [
-        {IModel: 'ns.IModel'}
+        {
+            IModel: 'ns.IModel'
+        }
     ];
 
     Class.extends = 'ns.operation.Operation';

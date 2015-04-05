@@ -20,18 +20,36 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
     Class.namespace = 'xs.data';
 
     Class.imports = [
-        {IAttribute: 'ns.attribute.IAttribute'},
-        {IProxy: 'ns.proxy.IProxy'},
+        {
+            IAttribute: 'ns.attribute.IAttribute'
+        },
+        {
+            SetBeforeEvent: 'ns.attribute.SetBeforeEvent'
+        },
+        {
+            SetEvent: 'ns.attribute.SetEvent'
+        },
+        {
+            IProxy: 'ns.proxy.IProxy'
+        },
         'ns.model.Event',
-        {'operation.Create': 'ns.operation.Create'},
-        {'operation.Read': 'ns.operation.Read'},
-        {'operation.Update': 'ns.operation.Update'},
-        {'operation.Delete': 'ns.operation.Delete'}
+        {
+            'operation.Create': 'ns.operation.Create'
+        },
+        {
+            'operation.Read': 'ns.operation.Read'
+        },
+        {
+            'operation.Update': 'ns.operation.Update'
+        },
+        {
+            'operation.Delete': 'ns.operation.Delete'
+        }
     ];
 
     Class.mixins.observable = 'xs.event.Observable';
 
-    Class.implements = ['ns.IModel'];
+    Class.implements = [ 'ns.IModel' ];
 
     Class.abstract = true;
 
@@ -61,61 +79,12 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      */
     Class.constant.proxy = {};
 
-    /**
-     * Model events list. See {@link xs.event.Observable#events}
-     */
-    Class.constant.events = {
-        /**
-         * load event. Is fired, when model's data is explicitly loaded via proxy. Fires with {@link xs.event.Event}
-         *
-         * @event load
-         */
-        'load': {
-            type: 'xs.event.Event'
-        },
-        /**
-         * save event. Is fired, when model's data is explicitly saved via proxy. Fires with {@link xs.event.Event}
-         *
-         * @event save
-         */
-        'save': {
-            type: 'xs.event.Event'
-        },
-        /**
-         * change:before event. Is fired before some model's attribute changes it's value.
-         *
-         * Stopping this event prevents value change. If new value is equal to current, nothing happens.
-         * Fires with {@link xs.data.model.Event}
-         *
-         * @event change:before
-         */
-        'change:before': {
-            type: 'xs.data.model.Event'
-        },
-        /**
-         * change event. Is fired, when some model's attribute changes it's value.
-         *
-         * If new value is equal to current, nothing happens.
-         * Fires with {@link xs.data.model.Event}
-         *
-         * @event change
-         */
-        'change': {
-            type: 'xs.data.model.Event'
-        },
-        /**
-         * destroy event. Is fired, when element is destroyed. Fires with {@link xs.event.Event}
-         *
-         * @event destroy
-         */
-        destroy: {
-            type: 'xs.event.Event'
-        }
-    };//TODO add operation events: create, create:before, etc
+    //TODO add operation events: create, create:before, etc
 
     Class.static.property.primaryAttributes = {
         get: function () {
             var me = this;
+
             if (me.private.hasOwnProperty('primaryAttributes')) {
                 return me.private.primaryAttributes;
             }
@@ -180,7 +149,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         });
 
         //call observable constructor
-        self.mixins.observable.call(me);
+        self.mixins.observable.call(me, xs.noop);
 
         //get internal Data class
         var Data = getData(me.self);
@@ -279,12 +248,6 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      */
     Class.method.destroy = function () {
         var me = this;
-
-        //fire destroy event
-        me.fire('destroy');
-
-        //toggle off all events
-        me.off();
 
         //call Observable.destroy
         self.mixins.observable.prototype.destroy.call(me);
@@ -421,8 +384,8 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
             //set attributes
             model.self.private.attributes.each(function (attribute, name) {
-                var attr = me.private[name] = new Attribute(model, attribute, name);
-                attr.private.value = attribute.set(data[name]);
+                var attr = me.private[ name ] = new Attribute(model, attribute, name);
+                attr.private.value = attribute.set(data[ name ]);
             });
         };
 
@@ -446,7 +409,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
         //destroy attributes
         me.private.model.self.private.attributes.each(function (attribute, name) {
-            this[name].destroy();
+            this[ name ].destroy();
         }, 0, me.private);
 
         //remove model reference
@@ -503,7 +466,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
         var descriptor = xs.property.prepare(name, {
             get: function () {
-                return this.private[name];
+                return this.private[ name ];
             },
             set: xs.noop
         });
@@ -567,7 +530,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      * @method set
      *
      * @param {*} value
-     * @param {Boolean} [silent] Is used, when no events must be fired
+     * @param {Boolean} [silent] Is used, when no events must be sent
      */
     Attribute.prototype.set = function (value, silent) {
         var me = this;
@@ -588,8 +551,8 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         //get model reference
         var model = me.private.model;
 
-        //fire preventable `change:before` event, that can prevent changing attribute value
-        if (!model.fire('change:before', data)) {
+        //send preventable SetBeforeEvent event, that can prevent changing attribute value
+        if (!model.events.send(new imports.SetBeforeEvent(data))) {
 
             return;
         }
@@ -597,8 +560,8 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         //set new value
         me.private.value = me.private.attribute.set(value);
 
-        //fire closing `change` event
-        model.fire('change', data);
+        //send closing SetEvent event
+        model.events.send(new imports.SetEvent(data));
     };
 
     /**

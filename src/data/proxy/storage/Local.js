@@ -18,7 +18,9 @@ xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
     Class.namespace = 'xs.data';
 
     Class.imports = [
-        {Storage: 'xs.storage.Local'}
+        {
+            Storage: 'xs.storage.Local'
+        }
     ];
 
     Class.extends = 'ns.proxy.Proxy';
@@ -44,7 +46,7 @@ xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
 
         var raw = {};
         model.self.attributes.each(function (config, name) {
-            raw[name] = model.data[name].get(); //TODO needed to use specific saving format
+            raw[ name ] = model.data[ name ].get(); //TODO needed to use specific saving format
         });
 
         //add new value to storage
@@ -82,7 +84,7 @@ xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
 
         var raw = me.reader.read(imports.Storage.at(key));
         model.self.attributes.each(function (config, name) {
-            model.data[name].set(raw[name], true);
+            model.data[ name ].set(raw[ name ], true);
         });
 
         //resolve operation
@@ -124,7 +126,7 @@ xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
 
         var raw = {};
         model.self.attributes.each(function (config, name) {
-            raw[name] = model.data[name].get(); //TODO needed to use specific saving format
+            raw[ name ] = model.data[ name ].get(); //TODO needed to use specific saving format
         });
 
         //add new value to storage
@@ -177,7 +179,7 @@ xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
     var getKey = function (model) {
 
         return model.self.primaryAttributes.reduce(function (memo, value) {
-            return memo + ':' + model.data[value].get(); //TODO needed to use specific saving format
+            return memo + ':' + model.data[ value ].get(); //TODO needed to use specific saving format
         }, 0, undefined, model.self.label);
     };
 });

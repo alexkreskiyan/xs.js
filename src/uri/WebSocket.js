@@ -16,7 +16,9 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
     Class.namespace = 'xs.uri';
 
     Class.imports = [
-        {QueryString: 'ns.QueryString'}
+        {
+            QueryString: 'ns.QueryString'
+        }
     ];
 
     Class.extends = 'ns.URI';
@@ -252,8 +254,8 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
         });
 
         return {
-            host: raw[1],
-            port: raw[2] ? Number(raw[2]) : undefined
+            host: raw[ 1 ],
+            port: raw[ 2 ] ? Number(raw[ 2 ]) : undefined
         };
     };
 

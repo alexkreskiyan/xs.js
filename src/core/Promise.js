@@ -1,13 +1,11 @@
 'use strict';
 
+//define xs.core
+xs.getNamespace(xs, 'core');
+
 var log = new xs.log.Logger('xs.core.Promise');
 
 var assert = new xs.core.Asserter(log, XsCorePromiseError);
-
-//define xs.core
-if (!xs.core) {
-    xs.core = {};
-}
 
 /**
  * Implementation of Futures & Promises pattern for xs.js.
@@ -36,7 +34,7 @@ if (!xs.core) {
  *         //perform new async stage
  *         return getData().then(function(update) {
  *             console.log('update loaded');
- *             xs.extend(data, update);
+ *             xs.apply(data, update);
  *
  *             return data;
  *         });
@@ -174,7 +172,7 @@ xs.core.Promise.some = function (promises, count) {
         });
     }
 
-    assert.ok(0 < count && count <= promises.length, 'some - given count `$count` is out of bounds [$min, $max]', {
+    assert.ok(count > 0 && count <= promises.length, 'some - given count `$count` is out of bounds [$min, $max]', {
         $count: count,
         $min: 0,
         $max: promises.length
@@ -319,7 +317,7 @@ xs.core.Promise.prototype.then = function (handleResolved, handleRejected, handl
     var item = createItem(handleResolved, handleRejected, handleProgress);
 
     //assert, that item is created
-    assert.ok(item,'then - no promise handlers given');
+    assert.ok(item, 'then - no promise handlers given');
 
 
     //create new promise as item.promise
@@ -429,7 +427,7 @@ function processPromise(action, data) {
 
     //process promise handlers
     me.private.handlers.each(function (item) {
-        if (item[action]) {
+        if (item[ action ]) {
             handleItem(item, action, data);
         }
     });
@@ -454,7 +452,7 @@ function processPromise(action, data) {
 function handleItem(item, action, data) {
 
     //get handler for given type
-    var handler = item[action];
+    var handler = item[ action ];
 
     //get item.promise ref
     var promise = item.promise;
@@ -503,7 +501,7 @@ function resolveValue(promise, action, value) {
 
     }
 
-    promise[action](value);
+    promise[ action ](value);
 }
 
 /**

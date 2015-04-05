@@ -395,5 +395,5 @@ xs.Type = (function () {
 
 //extend xs with type
 Object.keys(xs.Type).forEach(function (method) {
-    xs[method] = xs.Type[method];
+    xs[ method ] = xs.Type[ method ];
 });

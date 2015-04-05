@@ -142,7 +142,9 @@ module('xs.uri.HTTP', function () {
 
         //test correct behavior
         strictEqual(Object.keys(url.query.params).length, 0);
-        url.query.params = {a: 1};
+        url.query.params = {
+            a: 1
+        };
         strictEqual(url.query.toString(), 'a=1');
     });
 
@@ -272,12 +274,16 @@ module('xs.uri.HTTP', function () {
 
         //query
         url = new xs.uri.HTTP();
-        url.query.params = {a: 1};
+        url.query.params = {
+            a: 1
+        };
         strictEqual(url.toString(), '');
 
         //query,hash
         url = new xs.uri.HTTP();
-        url.query.params = {a: 1};
+        url.query.params = {
+            a: 1
+        };
         url.hash = 'anchor';
         strictEqual(url.toString(), '');
 
@@ -295,13 +301,17 @@ module('xs.uri.HTTP', function () {
         //path,query
         url = new xs.uri.HTTP();
         url.path = '/go';
-        url.query.params = {a: 1};
+        url.query.params = {
+            a: 1
+        };
         strictEqual(url.toString(), url.path + '?' + url.query.toString());
 
         //path,query,hash
         url = new xs.uri.HTTP();
         url.path = '/go';
-        url.query.params = {a: 1};
+        url.query.params = {
+            a: 1
+        };
         url.hash = 'anchor';
         strictEqual(url.toString(), url.path + '?' + url.query.toString() + '#' + url.hash);
     });

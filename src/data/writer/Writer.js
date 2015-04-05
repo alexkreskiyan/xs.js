@@ -17,7 +17,7 @@ xs.define(xs.Class, 'ns.Writer', function () {
 
     Class.namespace = 'xs.data.writer';
 
-    Class.implements = ['ns.IWriter'];
+    Class.implements = [ 'ns.IWriter' ];
 
     Class.abstract = true;
 

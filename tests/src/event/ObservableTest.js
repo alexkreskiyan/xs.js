@@ -12,191 +12,78 @@ module('xs.event.Observable', function () {
 
     'use strict';
 
-    test('fire', function () {
-        var me = this;
-        me.Class = xs.Class(function (self) {
-            var Class = this;
-
-            Class.namespace = 'tests.event.Observable';
-
-            Class.imports = [
-                {Event: 'xs.event.Event'}
-            ];
-
-            Class.mixins.observable = 'xs.event.Observable';
-
-            Class.constant.events = {
-                add: {
-                    type: 'xs.event.Event'
-                },
-                remove: {
-                    type: 'xs.event.Event',
-                    stoppable: false
-                },
-                eventWithoutOptions: undefined,
-                eventWithoutType: {},
-                eventWithIncorrectType: {
-                    type: undefined
-                },
-                eventWithNonClassType: {
-                    type: 'NotClass'
-                },
-                eventWithClassNotEvent: {
-                    type: 'xs.class.Base'
-                },
-                eventWithIncorrectStoppable: {
-                    type: 'xs.event.Event',
-                    stoppable: null
-                }
-            };
-
-            Class.constructor = function () {
-                var me = this;
-
-                //call mixin constructor
-                self.mixins.observable.call(me);
-            };
-
-        }, me.done);
-
-        return false;
-    }, function () {
-        var me = this;
-        var object = new me.Class();
-
-        //check string event name only allowed
-        throws(function () {
-            object.fire();
-        });
-        throws(function () {
-            object.fire(1);
-        });
-
-        //check data must be either given as object or not given
-        throws(function () {
-            object.fire('unknown', []);
-        });
-
-        //check event has to be registered
-        throws(function () {
-            object.fire('unknown');
-        });
-
-        //check event options must be an object
-        throws(function () {
-            object.fire('eventWithoutOptions');
-        });
-
-        //check event constructor name must be given
-        throws(function () {
-            object.fire('eventWithoutType');
-        });
-
-        //check event constructor name must be a string
-        throws(function () {
-            object.fire('eventWithIncorrectType');
-        });
-
-        //check event constructor is class
-        throws(function () {
-            object.fire('eventWithNonClassType');
-        });
-
-        //check event constructor implements IEvent interface
-        throws(function () {
-            object.fire('eventWithClassNotEvent');
-        });
-
-        //check stoppable, if given, is boolean
-        throws(function () {
-            object.fire('eventWithIncorrectStoppable');
-        });
-
-        //by default - no eventsHandlers collection
-        strictEqual(Object.keys(object.private.eventsHandlers).length, 0);
-
-        //check stoppable event firing
-        var stoppableSum = 5;
-        object.on('add', function (event) {
-            stoppableSum *= event.data.mod;
-        });
-        object.on('add', function (event) {
-            stoppableSum -= event.data.mod;
-
-            return false;
-        });
-        object.on('add', function (event) {
-            stoppableSum /= event.data.mod;
-        });
-
-        //verify value, returned by fire
-        strictEqual(object.fire('add', {
-            mod: 5
-        }), false);
-        strictEqual(stoppableSum, 20);
-
-        //check non-stoppable event firing
-        var unstoppableSum = 5;
-        object.on('remove', function (event) {
-            unstoppableSum *= event.data.mod;
-        });
-        object.on('remove', function (event) {
-            unstoppableSum -= event.data.mod;
-
-            return false;
-        });
-        object.on('remove', function (event) {
-            unstoppableSum /= event.data.mod;
-        });
-        strictEqual(object.fire('remove', {
-            mod: 5
-        }), true);
-        strictEqual(unstoppableSum, 4);
-    });
-
     test('on', function () {
         var me = this;
-        me.Class = xs.Class(function (self) {
+
+        var EventOne = me.EventOne = xs.Class(function () {
+
             var Class = this;
 
-            Class.namespace = 'tests.event.Observable';
-
-            Class.imports = [
-                {Event: 'xs.event.Event'}
+            Class.implements = [
+                'xs.event.IEvent'
             ];
 
-            Class.mixins.observable = 'xs.event.Observable';
-
-            Class.constant.events = {
-                add: {
-                    type: 'xs.event.Event'
-                },
-                remove: {
-                    type: 'xs.event.Event',
-                    stoppable: false
-                },
-                eventWithoutOptions: undefined,
-                eventWithoutType: {},
-                eventWithIncorrectType: {
-                    type: undefined
-                },
-                eventWithNonClassType: {
-                    type: 'NotClass'
-                },
-                eventWithClassNotEvent: {
-                    type: 'xs.class.Base'
-                },
-                eventWithIncorrectStoppable: {
-                    type: 'xs.event.Event',
-                    stoppable: null
-                }
+            Class.constructor = function (data) {
+                this.data = data;
             };
+
+        });
+
+        var EventTwo = me.EventTwo = xs.Class(function () {
+
+            var Class = this;
+
+            Class.implements = [
+                'xs.event.IEvent'
+            ];
+
+            Class.constructor = function (data) {
+                this.data = data;
+            };
+
+        });
+
+        me.Observable = xs.Class(function (self) {
+            var Class = this;
+
+            Class.mixins.observable = 'xs.event.Observable';
 
             Class.constructor = function () {
                 var me = this;
 
                 //call mixin constructor
-                self.mixins.observable.call(me);
+                self.mixins.observable.call(me, generator);
+            };
+
+            var generator = function () {
+                var me = this;
+
+                var count = 10;
+                var i = 1;
+                var interval = 0;
+                var intervalId;
+                var generator = function () {
+                    if (i % 2 === 0) {
+                        me.send(new EventOne(i));
+                    } else {
+                        me.send(new EventTwo(i));
+                    }
+
+                    i++;
+
+                    if (i === count) {
+                        me.destroy();
+                    }
+                };
+
+                return {
+                    on: function () {
+                        intervalId = setInterval(generator, interval);
+                    },
+                    off: function () {
+                        clearInterval(intervalId);
+                    }
+                };
             };
 
         }, me.done);
@@ -204,212 +91,152 @@ module('xs.event.Observable', function () {
         return false;
     }, function () {
         var me = this;
-        var object = new me.Class();
 
-        //check string event name only allowed
-        throws(function () {
-            object.on();
-        });
-        throws(function () {
-            object.on(1);
-        });
+        me.observable = new me.Observable();
 
-        //check event has to be registered
-        throws(function () {
-            object.on('unknown');
-        });
-
-        //check handler has to be function
-        throws(function () {
-            object.on('add');
-        });
-        throws(function () {
-            object.on('add', {});
-        });
-
-        //check duplicate handler denied
-        var duplicateHandler = function () {
+        var log = {
+            simple: '',
+            eventedOne: '',
+            eventedTwo: '',
+            suspended: '',
+            scoped: '',
+            positioned: ''
         };
 
-        //by default - no eventsHandlers collection
-        strictEqual(Object.keys(object.private.eventsHandlers).length, 0);
-
-        object.on('add', duplicateHandler);
-        throws(function () {
-            object.on('add', duplicateHandler);
+        //method can be added with initially suspended state
+        me.observable.on(function (event) {
+            log.suspended += event.data;
+        }, {
+            suspended: true
         });
 
-        //add listeners collection created
-        strictEqual(object.private.eventsHandlers.hasOwnProperty('add'), true);
+        //this way stream is still inactive
+        strictEqual(me.observable.events.isActive, false);
 
-        object.off();
-
-        //check options must be either given as object or not given
-        throws(function () {
-            object.on('add', xs.noop, undefined);
+        //simply method appends new handler, that has undefined scope, undefined event and is not suspended
+        me.observable.on(function (event) {
+            log.simple += event.data;
         });
 
-        //check simple case without options - only event and handler
-        object.on('add', xs.noop);
-        strictEqual(object.private.eventsHandlers.add.size, 1);
-        strictEqual(object.private.eventsHandlers.add.at(0).handler, xs.noop);
-        object.off();
-
-        //check buffer, if given, must be number
+        //incorrect priority throws exception
         throws(function () {
-            object.on('add', xs.noop, {
-                buffer: undefined
+            me.observable.on(xs.noop, {
+                priority: null
             });
         });
 
-        //check buffer must be positive integer number
-        throws(function () {
-            object.on('add', xs.noop, {
-                buffer: 0.5
-            });
+        //method can be evented directly, specifying event constructor(s)
+        me.observable.on(me.EventOne, function (event) {
+            log.eventedOne += event.data;
+        });
+        me.observable.on(me.EventTwo, function (event) {
+            log.eventedTwo += event.data;
         });
 
-        //check calls, if given, must be number
-        throws(function () {
-            object.on('add', xs.noop, {
-                calls: undefined
-            });
+        //method can be called within given scope
+        me.observable.on(function (event) {
+            log.scoped += event.data + this;
+        }, {
+            scope: '!'
         });
 
-        //check calls must be positive integer number
-        throws(function () {
-            object.on('add', xs.noop, {
-                calls: 0.5
-            });
-        });
+        //method can be positioned. returning false allows to stop event handling
+        me.observable.on(function (event) {
+            log.positioned += event.data;
 
-        //check priority, if given, must be number
-        throws(function () {
-            object.on('add', xs.noop, {
-                priority: undefined
-            });
-        });
-
-        //check simple case with priority
-        var fn1 = function () {
-        };
-        var fn2 = function () {
-        };
-        object.on('add', fn1);
-        object.on('add', fn2, {
+            if (event.data === 5) {
+                return false;
+            }
+        }, {
             priority: 0
         });
-        object.off();
 
-        //check buffered handler with calls
-        var bufferedCallsSum = 5;
-        var bufferedCallsObject = new me.Class();
-        bufferedCallsObject.on('add', function (event) {
-            bufferedCallsSum += event.data.mod;
-        }, {
-            buffer: 1,
-            calls: 1
+        me.observable.on(xs.event.Destroy, function () {
+            //check logs
+            strictEqual(log.simple, '12346789'); //5 is missing - cancelled
+            strictEqual(log.eventedOne, '2468');
+            strictEqual(log.eventedTwo, '1379'); //5 is missing - cancelled
+            strictEqual(log.scoped, '1!2!3!4!6!7!8!9!'); //5 is missing - cancelled
+            strictEqual(log.suspended, '');
+            strictEqual(log.positioned, '123456789'); //5 is presented
+            me.done();
         });
 
-        bufferedCallsObject.fire('add', {mod: 5});
-        bufferedCallsObject.fire('add', {mod: 4});
-        setTimeout(function () {
-            bufferedCallsObject.fire('add', {mod: 4});
-            setTimeout(function () {
-                bufferedCallsObject.off();
-                strictEqual(bufferedCallsSum, 9);
-            }, 5);
-        }, 5);
-
-        //check buffered handler without calls
-        var bufferedNoCallsSum = 5;
-        var bufferedNoCallsObject = new me.Class();
-        bufferedNoCallsObject.on('add', function (event) {
-            bufferedNoCallsSum += event.data.mod;
-        }, {
-            buffer: 1
-        });
-
-        bufferedNoCallsObject.fire('add', {mod: 5});
-        bufferedNoCallsObject.fire('add', {mod: 4});
-        setTimeout(function () {
-            bufferedNoCallsObject.fire('add', {mod: 4});
-            setTimeout(function () {
-                bufferedNoCallsObject.off();
-                strictEqual(bufferedNoCallsSum, 13);
-                me.done();
-            }, 5);
-        }, 5);
-
-        //check unbuffered handler with calls
-        var unbufferedCallsSum = 5;
-        var unbufferedCallsObject = new me.Class();
-        unbufferedCallsObject.on('add', function (event) {
-            unbufferedCallsSum += event.data.mod;
-        }, {
-            calls: 1
-        });
-
-        unbufferedCallsObject.fire('add', {mod: 5});
-        unbufferedCallsObject.fire('add', {mod: 4});
-        strictEqual(unbufferedCallsSum, 10);
-
-        //check unbuffered handler without calls
-        var unbufferedNoCallsSum = 5;
-        var unbufferedNoCallsObject = new me.Class();
-        unbufferedNoCallsObject.on('add', function (event) {
-            unbufferedNoCallsSum += event.data.mod;
-        });
-
-        unbufferedNoCallsObject.fire('add', {mod: 5});
-        unbufferedNoCallsObject.fire('add', {mod: 4});
-        strictEqual(unbufferedNoCallsSum, 14);
         return false;
     });
 
     test('off', function () {
         var me = this;
-        me.Class = xs.Class(function (self) {
+
+        var EventOne = me.EventOne = xs.Class(function () {
+
             var Class = this;
 
-            Class.namespace = 'tests.event.Observable';
-
-            Class.imports = [
-                {Event: 'xs.event.Event'}
+            Class.implements = [
+                'xs.event.IEvent'
             ];
 
-            Class.mixins.observable = 'xs.event.Observable';
-
-            Class.constant.events = {
-                add: {
-                    type: 'xs.event.Event'
-                },
-                remove: {
-                    type: 'xs.event.Event',
-                    stoppable: false
-                },
-                eventWithoutOptions: undefined,
-                eventWithoutType: {},
-                eventWithIncorrectType: {
-                    type: undefined
-                },
-                eventWithNonClassType: {
-                    type: 'NotClass'
-                },
-                eventWithClassNotEvent: {
-                    type: 'xs.class.Base'
-                },
-                eventWithIncorrectStoppable: {
-                    type: 'xs.event.Event',
-                    stoppable: null
-                }
+            Class.constructor = function (data) {
+                this.data = data;
             };
+
+        });
+
+        var EventTwo = me.EventTwo = xs.Class(function () {
+
+            var Class = this;
+
+            Class.implements = [
+                'xs.event.IEvent'
+            ];
+
+            Class.constructor = function (data) {
+                this.data = data;
+            };
+
+        });
+
+        me.Observable = xs.Class(function (self) {
+            var Class = this;
+
+            Class.mixins.observable = 'xs.event.Observable';
 
             Class.constructor = function () {
                 var me = this;
 
                 //call mixin constructor
-                self.mixins.observable.call(me);
+                self.mixins.observable.call(me, generator);
+            };
+
+            var generator = function () {
+                var me = this;
+
+                var count = 10;
+                var i = 1;
+                var interval = 0;
+                var intervalId;
+                var generator = function () {
+                    if (i % 2 === 0) {
+                        me.send(new EventOne(i));
+                    } else {
+                        me.send(new EventTwo(i));
+                    }
+
+                    i++;
+
+                    if (i === count) {
+                        me.destroy();
+                    }
+                };
+
+                return {
+                    on: function () {
+                        intervalId = setInterval(generator, interval);
+                    },
+                    off: function () {
+                        clearInterval(intervalId);
+                    }
+                };
             };
 
         }, me.done);
@@ -417,102 +244,122 @@ module('xs.event.Observable', function () {
         return false;
     }, function () {
         var me = this;
-        var object = new me.Class();
 
-        //check string event name only allowed
-        throws(function () {
-            object.off(1);
+        me.observable = new me.Observable();
+
+        me.observable.on(xs.noop);
+
+        //stream is active
+        strictEqual(me.observable.events.isActive, true);
+
+        //empty argument - removes all handlers
+        me.observable.off();
+
+        //stream is deactivated
+        strictEqual(me.observable.events.isActive, false);
+
+
+        //with given arguments, handlers.removeBy is called
+        me.observable.on(xs.noop);
+        me.observable.on(xs.noop);
+        me.observable.on(function () {
+
         });
 
-        //check event has to be registered
-        throws(function () {
-            object.off('unknown');
+        //remove first handler
+        me.observable.off(function () {
+
+            return true;
         });
 
-        //check selector, if given, has to be function
-        throws(function () {
-            object.off('add', {});
-        });
+        //stream is active
+        strictEqual(me.observable.events.isActive, true);
 
-        //check complete truncate scenario
-        object.on('add', function () {
-        });
-        object.on('add', xs.noop);
-        object.on('remove', xs.noop);
-        strictEqual(object.private.eventsHandlers.add.size, 2);
-        strictEqual(object.private.eventsHandlers.remove.size, 1);
-        object.off();
-        strictEqual(Object.keys(object.private.eventsHandlers).length, 0);
+        //remove all left handlers
+        me.observable.off(function () {
 
-        //check event truncate scenario
-        object.on('add', function () {
-        });
-        object.on('add', xs.noop);
-        object.on('remove', xs.noop);
-        strictEqual(object.private.eventsHandlers.add.size, 2);
-        strictEqual(object.private.eventsHandlers.remove.size, 1);
-        object.off('add');
-        strictEqual(object.private.eventsHandlers.hasOwnProperty('add'), false);
-        strictEqual(object.private.eventsHandlers.remove.size, 1);
-        object.off();
+            return true;
+        }, xs.core.Collection.All);
 
-        //check selector scenario
-        object.on('add', function () {
-        });
-        object.on('add', xs.noop);
-        object.on('remove', xs.noop);
-        strictEqual(object.private.eventsHandlers.add.size, 2);
-        strictEqual(object.private.eventsHandlers.remove.size, 1);
-        object.off('add', function (item) {
-            return item.handler === xs.noop; //note, that by default, xs.core.Collection.removeBy removes only first matched element
-        });
-        strictEqual(object.private.eventsHandlers.add.size, 1);
-        strictEqual(object.private.eventsHandlers.remove.size, 1);
+        //stream is deactivated
+        strictEqual(me.observable.events.isActive, false);
+    }, function () {
+        var me = this;
+        me.observable.destroy();
     });
 
     test('suspend', function () {
         var me = this;
-        me.Class = xs.Class(function (self) {
+
+        var EventOne = me.EventOne = xs.Class(function () {
+
             var Class = this;
 
-            Class.namespace = 'tests.event.Observable';
-
-            Class.imports = [
-                {Event: 'xs.event.Event'}
+            Class.implements = [
+                'xs.event.IEvent'
             ];
 
-            Class.mixins.observable = 'xs.event.Observable';
-
-            Class.constant.events = {
-                add: {
-                    type: 'xs.event.Event'
-                },
-                remove: {
-                    type: 'xs.event.Event',
-                    stoppable: false
-                },
-                eventWithoutOptions: undefined,
-                eventWithoutType: {},
-                eventWithIncorrectType: {
-                    type: undefined
-                },
-                eventWithNonClassType: {
-                    type: 'NotClass'
-                },
-                eventWithClassNotEvent: {
-                    type: 'xs.class.Base'
-                },
-                eventWithIncorrectStoppable: {
-                    type: 'xs.event.Event',
-                    stoppable: null
-                }
+            Class.constructor = function (data) {
+                this.data = data;
             };
+
+        });
+
+        var EventTwo = me.EventTwo = xs.Class(function () {
+
+            var Class = this;
+
+            Class.implements = [
+                'xs.event.IEvent'
+            ];
+
+            Class.constructor = function (data) {
+                this.data = data;
+            };
+
+        });
+
+        me.Observable = xs.Class(function (self) {
+            var Class = this;
+
+            Class.mixins.observable = 'xs.event.Observable';
 
             Class.constructor = function () {
                 var me = this;
 
                 //call mixin constructor
-                self.mixins.observable.call(me);
+                self.mixins.observable.call(me, generator);
+            };
+
+            var generator = function () {
+                var me = this;
+
+                var count = 10;
+                var i = 1;
+                var interval = 0;
+                var intervalId;
+                var generator = function () {
+                    if (i % 2 === 0) {
+                        me.send(new EventOne(i));
+                    } else {
+                        me.send(new EventTwo(i));
+                    }
+
+                    i++;
+
+                    if (i === count) {
+                        me.destroy();
+                    }
+                };
+
+                return {
+                    on: function () {
+                        intervalId = setInterval(generator, interval);
+                    },
+                    off: function () {
+                        clearInterval(intervalId);
+                    }
+                };
             };
 
         }, me.done);
@@ -520,104 +367,122 @@ module('xs.event.Observable', function () {
         return false;
     }, function () {
         var me = this;
-        var object = new me.Class();
 
-        //check string event name only allowed
-        throws(function () {
-            object.suspend();
-        });
-        throws(function () {
-            object.suspend(1);
+        me.observable = new me.Observable();
+
+        me.observable.on(xs.noop);
+
+        //stream is active
+        strictEqual(me.observable.events.isActive, true);
+
+        //empty argument - suspends all handlers
+        me.observable.suspend();
+
+        //stream is deactivated
+        strictEqual(me.observable.events.isActive, false);
+
+
+        //with given arguments, handlers.find is called
+        me.observable.on(xs.noop);
+        me.observable.on(xs.noop);
+        me.observable.on(function () {
+
         });
 
-        //check event has to be registered
-        throws(function () {
-            object.suspend('unknown');
+        //suspend first handler
+        me.observable.suspend(function () {
+
+            return true;
         });
 
-        //check selector, if given, has to be function
-        throws(function () {
-            object.suspend('add', {});
-        });
+        //stream is active
+        strictEqual(me.observable.events.isActive, true);
 
-        //check all scenario
-        var allSum = 5;
-        object.on('add', function (event) {
-            allSum += event.data.mod;
-        });
-        object.on('add', function (event) {
-            allSum *= event.data.mod;
-        });
-        object.fire('add', {mod: 5});
-        strictEqual(allSum, 50);
-        allSum = 5;
-        object.suspend('add');
-        object.fire('add', {mod: 5});
-        strictEqual(allSum, 5);
-        object.off();
+        //suspend all left handlers
+        me.observable.suspend(function () {
 
-        //check selector scenario
-        var scenarioSum = 5;
-        object.on('add', function (event) {
-            scenarioSum += event.data.mod;
-        });
-        object.on('add', function (event) {
-            scenarioSum *= event.data.mod;
-        });
-        object.fire('add', {mod: 5});
-        strictEqual(scenarioSum, 50);
-        scenarioSum = 5;
-        object.suspend('add', function () {
-            return true; //note, that by default xs.core.Collection.find, used in suspend - matches only first item
-        });
-        object.fire('add', {mod: 5});
-        strictEqual(scenarioSum, 25);
-        object.off();
+            return true;
+        }, xs.core.Collection.All);
+
+        //stream is deactivated
+        strictEqual(me.observable.events.isActive, false);
+    }, function () {
+        var me = this;
+        me.observable.destroy();
     });
 
     test('resume', function () {
         var me = this;
-        me.Class = xs.Class(function (self) {
+
+        var EventOne = me.EventOne = xs.Class(function () {
+
             var Class = this;
 
-            Class.namespace = 'tests.event.Observable';
-
-            Class.imports = [
-                {Event: 'xs.event.Event'}
+            Class.implements = [
+                'xs.event.IEvent'
             ];
 
-            Class.mixins.observable = 'xs.event.Observable';
-
-            Class.constant.events = {
-                add: {
-                    type: 'xs.event.Event'
-                },
-                remove: {
-                    type: 'xs.event.Event',
-                    stoppable: false
-                },
-                eventWithoutOptions: undefined,
-                eventWithoutType: {},
-                eventWithIncorrectType: {
-                    type: undefined
-                },
-                eventWithNonClassType: {
-                    type: 'NotClass'
-                },
-                eventWithClassNotEvent: {
-                    type: 'xs.class.Base'
-                },
-                eventWithIncorrectStoppable: {
-                    type: 'xs.event.Event',
-                    stoppable: null
-                }
+            Class.constructor = function (data) {
+                this.data = data;
             };
+
+        });
+
+        var EventTwo = me.EventTwo = xs.Class(function () {
+
+            var Class = this;
+
+            Class.implements = [
+                'xs.event.IEvent'
+            ];
+
+            Class.constructor = function (data) {
+                this.data = data;
+            };
+
+        });
+
+        me.Observable = xs.Class(function (self) {
+            var Class = this;
+
+            Class.mixins.observable = 'xs.event.Observable';
 
             Class.constructor = function () {
                 var me = this;
 
                 //call mixin constructor
-                self.mixins.observable.call(me);
+                self.mixins.observable.call(me, generator);
+            };
+
+            var generator = function () {
+                var me = this;
+
+                var count = 10;
+                var i = 1;
+                var interval = 0;
+                var intervalId;
+                var generator = function () {
+                    if (i % 2 === 0) {
+                        me.send(new EventOne(i));
+                    } else {
+                        me.send(new EventTwo(i));
+                    }
+
+                    i++;
+
+                    if (i === count) {
+                        me.destroy();
+                    }
+                };
+
+                return {
+                    on: function () {
+                        intervalId = setInterval(generator, interval);
+                    },
+                    off: function () {
+                        clearInterval(intervalId);
+                    }
+                };
             };
 
         }, me.done);
@@ -625,64 +490,52 @@ module('xs.event.Observable', function () {
         return false;
     }, function () {
         var me = this;
-        var object = new me.Class();
 
-        //check string event name only allowed
-        throws(function () {
-            object.resume();
-        });
-        throws(function () {
-            object.resume(1);
+        me.observable = new me.Observable();
+
+        me.observable.on(xs.noop);
+
+        me.observable.suspend();
+
+        //stream is inactive
+        strictEqual(me.observable.events.isActive, false);
+
+        //empty argument - resumes all handlers
+        me.observable.resume();
+
+        //stream is activated
+        strictEqual(me.observable.events.isActive, true);
+
+
+        //with given arguments, handlers.removeBy is called
+        me.observable.on(xs.noop);
+        me.observable.on(xs.noop);
+        me.observable.on(function () {
+
         });
 
-        //check event has to be registered
-        throws(function () {
-            object.resume('unknown');
+        me.observable.suspend();
+
+        //resume first handler
+        me.observable.resume(function () {
+
+            return true;
         });
 
-        //check selector, if given, has to be function
-        throws(function () {
-            object.resume('add', {});
-        });
+        //stream is activated
+        strictEqual(me.observable.events.isActive, true);
 
-        //check all scenario
-        var allSum = 5;
-        object.on('add', function (event) {
-            allSum += event.data.mod;
-        });
-        object.on('add', function (event) {
-            allSum *= event.data.mod;
-        });
-        object.suspend('add');
-        object.fire('add', {mod: 5});
-        strictEqual(allSum, 5);
+        //resume all left handlers
+        me.observable.resume(function () {
 
-        allSum = 5;
-        object.resume('add');
-        object.fire('add', {mod: 5});
-        strictEqual(allSum, 50);
-        object.off();
+            return true;
+        }, xs.core.Collection.All);
 
-        //check selector scenario
-        var scenarioSum = 5;
-        object.on('add', function (event) {
-            scenarioSum += event.data.mod;
-        });
-        object.on('add', function (event) {
-            scenarioSum *= event.data.mod;
-        });
-        object.suspend('add');
-        object.fire('add', {mod: 5});
-        strictEqual(scenarioSum, 5);
-
-        scenarioSum = 5;
-        object.suspend('add');
-        object.resume('add', function () {
-            return true; //note, that by default xs.core.Collection.find, used in suspend - matches only first item
-        });
-        object.fire('add', {mod: 5});
-        strictEqual(scenarioSum, 10);
-        object.off();
+        //stream is active
+        strictEqual(me.observable.events.isActive, true);
+    }, function () {
+        var me = this;
+        me.observable.destroy();
     });
 
 });

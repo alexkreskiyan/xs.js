@@ -1,7 +1,5 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.class.preprocessors.inheritElements');
-
 /**
  * Preprocessor inheritElements
  * Is used to inherit parent elements to class descriptor

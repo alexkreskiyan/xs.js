@@ -113,18 +113,21 @@ module('xs.class.preprocessors.inheritElements', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
@@ -265,18 +268,21 @@ module('xs.class.preprocessors.inheritElements', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
@@ -383,18 +389,21 @@ module('xs.class.preprocessors.inheritElements', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
@@ -499,14 +508,14 @@ module('xs.class.preprocessors.inheritElements', function () {
         var ns = window.tests.class.preprocessors.defineElements.properties;
 
         //Base
-        var base = new ns.Base;
+        var base = new ns.Base();
         //a
         strictEqual(base.a, 1);
         base.a = 2; //readonly
         strictEqual(base.a, 1);
 
         //Parent
-        var parent = new ns.Parent;
+        var parent = new ns.Parent();
         //a
         strictEqual(parent.a, undefined);
         parent.a = 2; //setter assigned
@@ -519,7 +528,7 @@ module('xs.class.preprocessors.inheritElements', function () {
         strictEqual(parent.private.b, 3);
 
         //Child
-        var child = new ns.Child;
+        var child = new ns.Child();
         //a
         strictEqual(child.a, 2);
         //b
@@ -540,18 +549,21 @@ module('xs.class.preprocessors.inheritElements', function () {
         //tearDown
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
@@ -642,16 +654,16 @@ module('xs.class.preprocessors.inheritElements', function () {
         var ns = window.tests.class.preprocessors.defineElements.methods;
 
         //Base
-        var base = new ns.Base;
+        var base = new ns.Base();
         strictEqual(base.a(), 1);
 
         //Parent
-        var parent = new ns.Parent;
+        var parent = new ns.Parent();
         strictEqual(parent.a(), 2);
         strictEqual(parent.b(), 3);
 
         //Child
-        var child = new ns.Child;
+        var child = new ns.Child();
         strictEqual(child.a(), 2);
         strictEqual(child.b(), 3);
         strictEqual(child.c(), 5);
@@ -661,18 +673,21 @@ module('xs.class.preprocessors.inheritElements', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }

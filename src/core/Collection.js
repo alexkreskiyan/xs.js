@@ -1,12 +1,11 @@
 'use strict';
 
 //define xs.core
-if (!xs.core) {
-    xs.core = {};
-}
+xs.getNamespace(xs, 'core');
 
-var assert;
+var log = new xs.log.Logger('xs.core.Collection');
 
+var assert = new xs.core.Asserter(log, XsCoreCollectionError);
 
 /**
  * xs.core.Collection is core framework class, that is used for internal collections
@@ -54,7 +53,7 @@ var Collection = xs.core.Collection = function (values) {
             //add item
             me.private.items.push({
                 key: i,
-                value: values[i]
+                value: values[ i ]
             });
         }
 
@@ -64,15 +63,16 @@ var Collection = xs.core.Collection = function (values) {
 
     //handle hash source
     //get keys and valuesLength
-    var keys = Object.keys(values), key;
+    var keys = Object.keys(values);
+    var key;
     valuesLength = keys.length;
 
     for (i = 0; i < valuesLength; i++) {
-        key = keys[i];
+        key = keys[ i ];
         //add item
         me.private.items.push({
             key: key,
-            value: values[key]
+            value: values[ key ]
         });
     }
 };
@@ -147,10 +147,11 @@ Object.defineProperty(Collection.prototype, 'size', {
 Collection.prototype.keys = function () {
     var me = this;
 
-    var keys = [], length = me.private.items.length;
+    var keys = [];
+    var length = me.private.items.length;
 
     for (var i = 0; i < length; i++) {
-        keys.push(me.private.items[i].key);
+        keys.push(me.private.items[ i ].key);
     }
 
     return keys;
@@ -184,10 +185,11 @@ Collection.prototype.keys = function () {
 Collection.prototype.values = function () {
     var me = this;
 
-    var values = [], length = me.private.items.length;
+    var values = [];
+    var length = me.private.items.length;
 
     for (var i = 0; i < length; i++) {
-        values.push(me.private.items[i].value);
+        values.push(me.private.items[ i ].value);
     }
 
     return values;
@@ -220,10 +222,12 @@ Collection.prototype.values = function () {
  */
 Collection.prototype.clone = function () {
     var me = this;
-    var source = [], length = me.private.items.length, item;
+    var source = [];
+    var length = me.private.items.length;
+    var item;
 
     for (var i = 0; i < length; i++) {
-        item = me.private.items[i];
+        item = me.private.items[ i ];
         source.push({
             key: item.key,
             value: item.value
@@ -282,7 +286,7 @@ Collection.prototype.hasKey = function (key) {
     if (xs.isNumber(key)) {
 
         //check, that key exists
-        return 0 <= key && key < me.private.items.length;
+        return key >= 0 && key < me.private.items.length;
     }
 
     //if it is string - it's key
@@ -373,7 +377,9 @@ Collection.prototype.has = function (value) {
  * @return {String|Number|undefined} found key, or undefined if nothing found
  */
 Collection.prototype.keyOf = function (value, flags) {
-    var me = this, index, values = me.values();
+    var me = this;
+    var index;
+    var values = me.values();
 
     if (arguments.length === 1) {
         index = values.indexOf(value);
@@ -390,7 +396,7 @@ Collection.prototype.keyOf = function (value, flags) {
         }
     }
 
-    return index >= 0 ? me.private.items[index].key : undefined;
+    return index >= 0 ? me.private.items[ index ].key : undefined;
 };
 
 /**
@@ -473,7 +479,7 @@ Collection.prototype.at = function (key) {
         });
     }
 
-    return me.private.items[index].value;
+    return me.private.items[ index ].value;
 };
 
 /**
@@ -537,7 +543,7 @@ Collection.prototype.first = function () {
     //assert that collection is not empty
     assert.ok(me.private.items.length, 'first - collection is empty');
 
-    return me.private.items[0].value;
+    return me.private.items[ 0 ].value;
 };
 
 /**
@@ -601,7 +607,7 @@ Collection.prototype.last = function () {
     //assert that collection is not empty
     assert.ok(me.private.items.length, 'last - collection is empty');
 
-    return me.private.items[me.private.items.length - 1].value;
+    return me.private.items[ me.private.items.length - 1 ].value;
 };
 
 /**
@@ -828,6 +834,7 @@ Collection.prototype.set = function (key, value) {
 
     //handle number key - it's index
     var index;
+
     if (xs.isNumber(key)) {
         index = key;
 
@@ -860,7 +867,7 @@ Collection.prototype.set = function (key, value) {
     }
 
 
-    me.private.items[index].value = value;
+    me.private.items[ index ].value = value;
 
     return me;
 };
@@ -1063,7 +1070,8 @@ Collection.prototype.removeAt = function (key) {
  * @chainable
  */
 Collection.prototype.remove = function (value, flags) {
-    var me = this, values = me.values();
+    var me = this;
+    var values = me.values();
 
     //remove all if no value given
     if (!arguments.length) {
@@ -1072,7 +1080,8 @@ Collection.prototype.remove = function (value, flags) {
         return me;
     }
 
-    var index, all = false;
+    var index;
+    var all = false;
     //if no flags - remove first occurrence of value
     if (arguments.length === 1) {
         index = values.indexOf(value);
@@ -1104,11 +1113,12 @@ Collection.prototype.remove = function (value, flags) {
     var item;
     //if all flag is given
     if (all) {
-        var i = 0, items = me.private.items;
+        var i = 0;
+        var items = me.private.items;
 
         //remove all occurrences of value in collection
         while (i < items.length) {
-            item = items[i];
+            item = items[ i ];
 
             //if item.value is not equal to value - continue with next item
             if (item.value !== value) {
@@ -1137,7 +1147,7 @@ Collection.prototype.remove = function (value, flags) {
 };
 
 /**
- * Deletes value from collection, if it matches given finder function. Function's arguments are: value, key
+ * Deletes value from collection, if it matches given fn function. Function's arguments are: value, key
  *
  * For example:
  *
@@ -1245,22 +1255,23 @@ Collection.prototype.remove = function (value, flags) {
  *
  * @method removeBy
  *
- * @param {Function} finder function, that returns whether to remove value or not
+ * @param {Function} fn function, that returns whether to remove value or not
  * @param {Number} [flags] optional remove flags:
  * - Reverse - to lookup for value from the end of the collection
  * - All - to remove all matches
  *
  * @chainable
  */
-Collection.prototype.removeBy = function (finder, flags) {
+Collection.prototype.removeBy = function (fn, flags) {
     var me = this;
 
-    //assert that finder is function
-    assert.fn(finder, 'removeBy - given finder `$finder` is not a function', {
-        $finder: finder
+    //assert that fn is function
+    assert.fn(fn, 'removeBy - given fn `$fn` is not a function', {
+        $fn: fn
     });
 
-    var all = false, reverse = false;
+    var all = false;
+    var reverse = false;
     //handle flags
     if (arguments.length > 1) {
 
@@ -1279,16 +1290,18 @@ Collection.prototype.removeBy = function (finder, flags) {
     }
 
     //init variables
-    var items = me.private.items, i, item, length = items.length;
+    var items = me.private.items;
+    var i, item;
+    var length = items.length;
 
     if (all) {
         i = 0;
         //remove all matched occurrences from collection
         while (i < items.length) {
-            item = items[i];
+            item = items[ i ];
 
             //if item does not match - continue with next item
-            if (!finder(item.value, item.key)) {
+            if (!fn(item.value, item.key)) {
                 //increment index
                 i++;
 
@@ -1302,10 +1315,10 @@ Collection.prototype.removeBy = function (finder, flags) {
         i = items.length - 1;
         //remove all matched occurrences from collection
         while (i >= 0) {
-            item = items[i];
+            item = items[ i ];
 
             //if item does not match - continue with next item
-            if (!finder(item.value, item.key)) {
+            if (!fn(item.value, item.key)) {
                 //decrement index
                 i--;
 
@@ -1321,10 +1334,10 @@ Collection.prototype.removeBy = function (finder, flags) {
         i = 0;
         //remove first matched occurrence from collection
         while (i < items.length) {
-            item = items[i];
+            item = items[ i ];
 
             //if item does not match - continue with next item
-            if (!finder(item.value, item.key)) {
+            if (!fn(item.value, item.key)) {
                 //increment index
                 i++;
 
@@ -1441,7 +1454,7 @@ Collection.prototype.shift = function () {
 
 
     //get returned value
-    var value = me.private.items[0].value;
+    var value = me.private.items[ 0 ].value;
 
     //remove first item from collection
     me.private.items.splice(0, 1);
@@ -1549,7 +1562,7 @@ Collection.prototype.pop = function () {
     var index = me.private.items.length - 1;
 
     //get returned value
-    var value = me.private.items[index].value;
+    var value = me.private.items[ index ].value;
 
     //remove last item from collection
     me.private.items.splice(-1, 1);
@@ -1559,7 +1572,7 @@ Collection.prototype.pop = function () {
 };
 
 /**
- * Iterates over collection in direct or reverse order via calling given iterator function
+ * Iterates over collection in direct or reverse order via calling given fn function
  *
  * For example:
  *
@@ -1611,23 +1624,24 @@ Collection.prototype.pop = function () {
  *
  * @method each
  *
- * @param {Function} iterator list iterator
+ * @param {Function} fn list fn
  * @param {Number} [flags] additional iterating flags:
  * - Reverse - to iterate in reverse order
  * @param {Object} [scope] optional scope
  *
  * @chainable
  */
-Collection.prototype.each = function (iterator, flags, scope) {
+Collection.prototype.each = function (fn, flags, scope) {
     var me = this;
 
-    //assert that iterator is function
-    assert.fn(iterator, 'each - given iterator `$iterator` is not a function', {
-        $iterator: iterator
+    //assert that fn is function
+    assert.fn(fn, 'each - given fn `$fn` is not a function', {
+        $fn: fn
     });
 
     //handle flags
     var reverse = false;
+
     if (arguments.length >= 2) {
 
         //assert that flags is number
@@ -1647,16 +1661,18 @@ Collection.prototype.each = function (iterator, flags, scope) {
     }
 
     //iterate
-    var i, item, length = me.private.items.length;
+    var i, item;
+    var length = me.private.items.length;
+
     if (reverse) {
         for (i = length - 1; i >= 0; i--) {
-            item = me.private.items[i];
-            iterator.call(scope, item.value, item.key, me);
+            item = me.private.items[ i ];
+            fn.call(scope, item.value, item.key, me);
         }
     } else {
         for (i = 0; i < length; i++) {
-            item = me.private.items[i];
-            iterator.call(scope, item.value, item.key, me);
+            item = me.private.items[ i ];
+            fn.call(scope, item.value, item.key, me);
         }
     }
 
@@ -1664,7 +1680,7 @@ Collection.prototype.each = function (iterator, flags, scope) {
 };
 
 /**
- * Returns collection item|items, that passed given finder function
+ * Returns collection item|items, that passed given fn function
  *
  * For example:
  *
@@ -1687,12 +1703,12 @@ Collection.prototype.each = function (iterator, flags, scope) {
  *         return this.sum(key, value.x) === 2;
  *     }, scope));
  *     //outputs:
- *     // {x: 2}, reference to collection[0], first value, passed finder function
+ *     // {x: 2}, reference to collection[0], first value, passed fn function
  *     console.log(collection.find(function(value, key) {
  *         return this.sum(key, value.x) === 2;
  *     }, scope, xs.core.Collection.Reverse));
  *     //outputs:
- *     // {x: 0}, reference to collection[2], first value, passed finder function
+ *     // {x: 0}, reference to collection[2], first value, passed fn function
  *     console.log(collection.find(function(value, key) {
  *         return this.sum(key, value.x) >= 2;
  *     }, scope, xs.core.Collection.All));
@@ -1713,12 +1729,12 @@ Collection.prototype.each = function (iterator, flags, scope) {
  *         return this.first(key) === 'a';
  *     }, scope));
  *     //outputs:
- *     // {x: 2}, reference to collection[0], first value, passed finder function
+ *     // {x: 2}, reference to collection[0], first value, passed fn function
  *     console.log(collection.find(function(value, key) {
  *         return this.first(key) === 'a';
  *     }, scope, xs.core.Collection.Reverse));
  *     //outputs:
- *     // {x: 0}, reference to collection[2], first value, passed finder function
+ *     // {x: 0}, reference to collection[2], first value, passed fn function
  *     console.log(collection.find(function(value, key) {
  *         return this.first(key) === 'a';
  *     }, scope, xs.core.Collection.All));
@@ -1730,23 +1746,25 @@ Collection.prototype.each = function (iterator, flags, scope) {
  *
  * @method find
  *
- * @param {Function} finder function, returning true if value matches given conditions
+ * @param {Function} fn function, returning true if value matches given conditions
  * @param {Number} [flags] additional search flags:
  * - All - to find all matches
  * @param {Object} [scope] optional scope
  *
  * @return {*|xs.core.Collection} found value, undefined if nothing found, or xs.core.Collection with results if All flag was given
  */
-Collection.prototype.find = function (finder, flags, scope) {
+Collection.prototype.find = function (fn, flags, scope) {
     var me = this;
 
-    //assert that finder is function
-    assert.fn(finder, 'find - given finder `$finder` is not a function', {
-        $finder: finder
+    //assert that fn is function
+    assert.fn(fn, 'find - given fn `$fn` is not a function', {
+        $fn: fn
     });
 
     //handle flags
-    var all = false, reverse = false;
+    var all = false;
+    var reverse = false;
+
     if (arguments.length >= 2) {
 
         //assert that flags is number
@@ -1769,15 +1787,17 @@ Collection.prototype.find = function (finder, flags, scope) {
     }
 
     //init variables
-    var i, item, length = me.private.items.length, found;
+    var i, item, found;
+    var length = me.private.items.length;
 
     if (all) {
         //copies of matched items
         var items = [];
 
         for (i = 0; i < length; i++) {
-            item = me.private.items[i];
-            if (finder.call(scope, item.value, item.key, me)) {
+            item = me.private.items[ i ];
+
+            if (fn.call(scope, item.value, item.key, me)) {
                 //add index
                 items.push({
                     key: item.key,
@@ -1790,16 +1810,18 @@ Collection.prototype.find = function (finder, flags, scope) {
         found.private.items = items;
     } else if (reverse) {
         for (i = length - 1; i >= 0; i--) {
-            item = me.private.items[i];
-            if (finder.call(scope, item.value, item.key, me)) {
+            item = me.private.items[ i ];
+
+            if (fn.call(scope, item.value, item.key, me)) {
                 found = item.value;
                 break;
             }
         }
     } else {
         for (i = 0; i < length; i++) {
-            item = me.private.items[i];
-            if (finder.call(scope, item.value, item.key, me)) {
+            item = me.private.items[ i ];
+
+            if (fn.call(scope, item.value, item.key, me)) {
                 found = item.value;
                 break;
             }
@@ -1810,7 +1832,7 @@ Collection.prototype.find = function (finder, flags, scope) {
 };
 
 /**
- * Produces a new list with values, returned by iterator function
+ * Produces a new list with values, returned by fn function
  * if source was array - array is created
  * if source was object - object is created
  *
@@ -1848,17 +1870,17 @@ Collection.prototype.find = function (finder, flags, scope) {
  *
  * @method map
  *
- * @param {Function} mapper mapping function
+ * @param {Function} fn mapping function
  * @param {Object} [scope] optional scope
  *
  * @return {Array|Object} Mapping result
  */
-Collection.prototype.map = function (mapper, scope) {
+Collection.prototype.map = function (fn, scope) {
     var me = this;
 
-    //assert that mapper is function
-    assert.fn(mapper, 'map - given mapper `$mapper` is not a function', {
-        $mapper: mapper
+    //assert that fn is function
+    assert.fn(fn, 'map - given fn `$fn` is not a function', {
+        $fn: fn
     });
 
 
@@ -1868,15 +1890,17 @@ Collection.prototype.map = function (mapper, scope) {
     }
 
     //init variables
-    var i, item, length = me.private.items.length;
+    var i, item;
+    var length = me.private.items.length;
 
     //mapped items
     var items = [];
+
     for (i = 0; i < length; i++) {
-        item = me.private.items[i];
+        item = me.private.items[ i ];
         items.push({
             key: item.key,
-            value: mapper.call(scope, item.value, item.key, me)
+            value: fn.call(scope, item.value, item.key, me)
         });
     }
 
@@ -1887,7 +1911,7 @@ Collection.prototype.map = function (mapper, scope) {
 };
 
 /**
- * Reduces collection values by reducer function
+ * Reduces collection values by fn function
  *
  * For example:
  *
@@ -1961,7 +1985,7 @@ Collection.prototype.map = function (mapper, scope) {
  *
  * @method reduce
  *
- * @param {Function} reducer reducing function
+ * @param {Function} fn reducing function
  * @param {Number} [flags] additional iterating flags:
  * - Reverse - to reduce in reverse order
  * @param {Object} [scope] optional scope
@@ -1969,12 +1993,12 @@ Collection.prototype.map = function (mapper, scope) {
  *
  * @return {*} Reducing result
  */
-Collection.prototype.reduce = function (reducer, flags, scope, memo) {
+Collection.prototype.reduce = function (fn, flags, scope, memo) {
     var me = this;
 
-    //assert that reducer is function
-    assert.fn(reducer, 'reduce - given reducer `$reducer` is not a function', {
-        $reducer: reducer
+    //assert that fn is function
+    assert.fn(fn, 'reduce - given fn `$fn` is not a function', {
+        $fn: fn
     });
 
     //assert that collection is not empty
@@ -1982,6 +2006,7 @@ Collection.prototype.reduce = function (reducer, flags, scope, memo) {
 
     //handle flags
     var reverse = false;
+
     if (arguments.length >= 2) {
 
         //assert that flags is number
@@ -2002,12 +2027,14 @@ Collection.prototype.reduce = function (reducer, flags, scope, memo) {
 
     //check memo
     var hasMemo = false;
+
     if (arguments.length >= 4) {
         hasMemo = true;
     }
 
     //init variables
-    var result, i, item, length = me.private.items.length;
+    var result, i, item;
+    var length = me.private.items.length;
 
     //reduce
     if (reverse) {
@@ -2016,12 +2043,12 @@ Collection.prototype.reduce = function (reducer, flags, scope, memo) {
             result = memo;
         } else {
             i = length - 2;
-            result = me.private.items[length - 1].value;
+            result = me.private.items[ length - 1 ].value;
         }
 
         for (; i >= 0; i--) {
-            item = me.private.items[i];
-            result = reducer.call(scope, result, item.value, item.key, me);
+            item = me.private.items[ i ];
+            result = fn.call(scope, result, item.value, item.key, me);
         }
     } else {
         if (hasMemo) {
@@ -2029,12 +2056,12 @@ Collection.prototype.reduce = function (reducer, flags, scope, memo) {
             result = memo;
         } else {
             i = 1;
-            result = me.private.items[0].value;
+            result = me.private.items[ 0 ].value;
         }
 
         for (; i < length; i++) {
-            item = me.private.items[i];
-            result = reducer.call(scope, result, item.value, item.key, me);
+            item = me.private.items[ i ];
+            result = fn.call(scope, result, item.value, item.key, me);
         }
     }
 
@@ -2042,7 +2069,7 @@ Collection.prototype.reduce = function (reducer, flags, scope, memo) {
 };
 
 /**
- * Returns whether count of list values pass tester function
+ * Returns whether count of list values pass fn function
  *
  * For example:
  *
@@ -2099,21 +2126,22 @@ Collection.prototype.reduce = function (reducer, flags, scope, memo) {
  *
  * @method some
  *
- * @param {Function} tester tester function
+ * @param {Function} fn fn function
  * @param {Number} [count] count of values needed to resolve as true
  * @param {Object} [scope] optional scope
  *
- * @return {Boolean} whether some values pass tester function
+ * @return {Boolean} whether some values pass fn function
  */
-Collection.prototype.some = function (tester, count, scope) {
-    var me = this, length = me.private.items.length;
+Collection.prototype.some = function (fn, count, scope) {
+    var me = this;
+    var length = me.private.items.length;
 
     //assert that collection is not empty
     assert.ok(me.private.items.length, 'some - collection is empty');
 
-    //assert that tester is function
-    assert.fn(tester, 'some - given tester `$tester` is not a function', {
-        $tester: tester
+    //assert that fn is function
+    assert.fn(fn, 'some - given fn `$fn` is not a function', {
+        $fn: fn
     });
 
     //default count to 1, if not given
@@ -2126,7 +2154,7 @@ Collection.prototype.some = function (tester, count, scope) {
         $count: count
     });
 
-    assert.ok(0 <= count && count <= length, 'some - given count `$count` is out of bounds [$min, $max]', {
+    assert.ok(count >= 0 && count <= length, 'some - given count `$count` is out of bounds [$min, $max]', {
         $count: count,
         $min: 0,
         $max: length
@@ -2137,16 +2165,17 @@ Collection.prototype.some = function (tester, count, scope) {
         scope = me;
     }
 
-    var i, item, found = 0;
+    var i, item;
+    var found = 0;
 
     //handle negative scenario
     if (count === 0) {
         //iterate over me.private.items to find matches
         for (i = 0; i < length; i++) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
 
-            //increment found if tester returns true
-            if (tester.call(scope, item.value, item.key, me)) {
+            //increment found if fn returns true
+            if (fn.call(scope, item.value, item.key, me)) {
                 found++;
             }
 
@@ -2163,10 +2192,10 @@ Collection.prototype.some = function (tester, count, scope) {
     //handle positive scenario
     //iterate over me.private.items to find matches
     for (i = 0; i < length; i++) {
-        item = me.private.items[i];
+        item = me.private.items[ i ];
 
-        //increment found if tester returns true
-        if (tester.call(scope, item.value, item.key, me)) {
+        //increment found if fn returns true
+        if (fn.call(scope, item.value, item.key, me)) {
             found++;
         }
 
@@ -2181,7 +2210,7 @@ Collection.prototype.some = function (tester, count, scope) {
 };
 
 /**
- * Returns whether all of list values pass tester function
+ * Returns whether all of list values pass fn function
  *
  * For example:
  *
@@ -2228,24 +2257,24 @@ Collection.prototype.some = function (tester, count, scope) {
  *
  * @method all
  *
- * @param {Function} tester tester function
+ * @param {Function} fn fn function
  * @param {Object} [scope] optional scope
  *
- * @return {Boolean} whether all values pass tester function
+ * @return {Boolean} whether all values pass fn function
  */
-Collection.prototype.all = function (tester, scope) {
+Collection.prototype.all = function (fn, scope) {
     var me = this;
 
     if (arguments.length >= 2) {
 
-        return me.some(tester, me.private.items.length, scope);
+        return me.some(fn, me.private.items.length, scope);
     }
 
-    return me.some(tester, me.private.items.length);
+    return me.some(fn, me.private.items.length);
 };
 
 /**
- * Returns whether none of list values pass tester function
+ * Returns whether none of list values pass fn function
  *
  * For example:
  *
@@ -2292,20 +2321,20 @@ Collection.prototype.all = function (tester, scope) {
  *
  * @method none
  *
- * @param {Function} tester tester function
+ * @param {Function} fn fn function
  * @param {Object} [scope] optional scope
  *
- * @return {Boolean} whether none values pass tester function
+ * @return {Boolean} whether none values pass fn function
  */
-Collection.prototype.none = function (tester, scope) {
+Collection.prototype.none = function (fn, scope) {
     var me = this;
 
     if (arguments.length >= 2) {
 
-        return me.some(tester, 0, scope);
+        return me.some(fn, 0, scope);
     }
 
-    return me.some(tester, 0);
+    return me.some(fn, 0);
 };
 
 /**
@@ -2378,10 +2407,14 @@ Collection.prototype.none = function (tester, scope) {
  * @chainable
  */
 Collection.prototype.unique = function () {
-    var me = this, values = [], i = 0, item, length = me.private.items.length;
+    var me = this;
+    var values = [];
+    var i = 0;
+    var item;
+    var length = me.private.items.length;
 
     while (i < length) {
-        item = me.private.items[i];
+        item = me.private.items[ i ];
 
         //continue to next if no match
         if (values.indexOf(item.value) < 0) {
@@ -2471,9 +2504,13 @@ Collection.prototype.pick = function (keys) {
     });
 
 
-    var length = keys.length, key, i, ownKeys = me.keys(), index, item, items = [];
+    var length = keys.length;
+    var key, i, index, item;
+    var ownKeys = me.keys();
+    var items = [];
+
     for (i = 0; i < length; i++) {
-        key = keys[i];
+        key = keys[ i ];
 
         //assert that key is string or number
         assert.ok(xs.isString(key) || xs.isNumber(key), 'pick - key `$key`, given for collection, is neither number nor string', {
@@ -2514,7 +2551,7 @@ Collection.prototype.pick = function (keys) {
         }
 
         //get picked item
-        item = me.private.items[index];
+        item = me.private.items[ index ];
 
         //copy it to items
         items.push({
@@ -2591,12 +2628,17 @@ Collection.prototype.omit = function (keys) {
     });
 
 
-    var length = keys.length, key, i, ownKeys = me.keys(), maxIndex = ownKeys.length - 1, index, item, items = [];
+    var length = keys.length;
+    var key, i, index, item;
+    var ownKeys = me.keys();
+    var maxIndex = ownKeys.length - 1;
+    var items = [];
 
     var omittedIndexes = [];
+
     //remove blacklisted items
     for (i = 0; i < length; i++) {
-        key = keys[i];
+        key = keys[ i ];
 
         //assert that key is string or number
         assert.ok(xs.isString(key) || xs.isNumber(key), 'omit - key `$key`, given for collection, is neither number nor string', {
@@ -2646,7 +2688,7 @@ Collection.prototype.omit = function (keys) {
             continue;
         }
 
-        item = me.private.items[i];
+        item = me.private.items[ i ];
         items.push({
             key: item.key,
             value: item.value
@@ -2691,11 +2733,13 @@ Collection.prototype.omit = function (keys) {
 Collection.prototype.toSource = function () {
     var me = this;
 
-    var source = {}, length = me.private.items.length, item;
+    var source = {};
+    var length = me.private.items.length;
+    var item;
 
     for (var i = 0; i < length; i++) {
-        item = me.private.items[i];
-        source[item.key] = item.value;
+        item = me.private.items[ i ];
+        source[ item.key ] = item.value;
     }
 
     return source;
@@ -2712,11 +2756,12 @@ Collection.prototype.toSource = function () {
  * @param {Number} index index, update starts from
  */
 function updateIndexes(index) {
-    var me = this, length = me.private.items.length;
+    var me = this;
+    var length = me.private.items.length;
 
     //updated indexes for all items, starting from given index
     for (var i = index; i < length; i++) {
-        var item = me.private.items[i];
+        var item = me.private.items[ i ];
 
         //update if is number
         if (xs.isNumber(item.key)) {
@@ -2739,9 +2784,3 @@ function XsCoreCollectionError(message) {
 }
 
 XsCoreCollectionError.prototype = new Error();
-
-//hook method to create asserter
-Collection.hookReady = function () {
-    assert = new xs.core.Asserter(new xs.log.Logger('xs.core.Collection'), XsCoreCollectionError);
-    delete Collection.hookReady;
-};

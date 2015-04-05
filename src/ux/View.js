@@ -29,8 +29,30 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
     Class.namespace = 'xs.ux';
 
     Class.imports = [
-        {Element: 'xs.dom.Element'},
-        {Collection: 'xs.util.Collection'}
+        {
+            Element: 'xs.dom.Element'
+        },
+        {
+            Collection: 'xs.util.Collection'
+        },
+        {
+            AddBeforeEvent: 'xs.util.collection.AddBeforeEvent'
+        },
+        {
+            AddEvent: 'xs.util.collection.AddEvent'
+        },
+        {
+            SetBeforeEvent: 'xs.util.collection.SetBeforeEvent'
+        },
+        {
+            SetEvent: 'xs.util.collection.SetEvent'
+        },
+        {
+            RemoveBeforeEvent: 'xs.util.collection.RemoveBeforeEvent'
+        },
+        {
+            RemoveEvent: 'xs.util.collection.RemoveEvent'
+        }
     ];
 
     Class.extends = 'xs.dom.Element';
@@ -176,13 +198,16 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         //get nodes list
         var nodes = me.private.el.querySelectorAll(selector);
 
-        var i, length = nodes.length, node, element;
+        var i, node, element;
+        var length = nodes.length;
+
         if (!all) {
 
             //handle reverse flag
             if (reverse) {
                 for (i = length - 1; i >= 0; i--) {
                     node = nodes.item(i);
+
                     if (isOwnNode.call(me, node)) {
                         break;
                     }
@@ -191,6 +216,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
             } else {
                 for (i = 0; i < length; i++) {
                     node = nodes.item(i);
+
                     if (isOwnNode.call(me, node)) {
                         break;
                     }
@@ -249,6 +275,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
         //remove element from parent container
         var el = me.private.el;
+
         if (el.parentElement) {
             el.parentElement.removeChild(el);
         }
@@ -276,7 +303,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @param {String} template
      *
-     * @return {xs.core.Collection} collection of nodes in parsed template
+     * @return {Element} root of parsed template
      */
     var parseTemplate = function (template) {
 
@@ -343,7 +370,9 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         self.assert.ok(verifyPositions(elements));
 
         //fill positions collection
-        var i, length = elements.length, items = positions.private.items, element, position;
+        var i, element, position;
+        var length = elements.length;
+        var items = positions.private.items;
 
         for (i = 0; i < length; i++) {
             //get element
@@ -368,12 +397,12 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
                 scope: position
             };
             //add events handlers for position
-            position.on('add:before', handleAddBefore, options);
-            position.on('add', handleAdd, options);
-            position.on('set:before', handleSetBefore, options);
-            position.on('set', handleSet, options);
-            position.on('remove:before', handleRemoveBefore, options);
-            position.on('remove', handleRemove, options);
+            position.on(imports.AddBeforeEvent, handleAddBefore, options);
+            position.on(imports.AddEvent, handleAdd, options);
+            position.on(imports.SetBeforeEvent, handleSetBefore, options);
+            position.on(imports.SetEvent, handleSet, options);
+            position.on(imports.RemoveBeforeEvent, handleRemoveBefore, options);
+            position.on(imports.RemoveEvent, handleRemove, options);
 
         }
 
@@ -456,7 +485,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         }
 
         //get next view relative to inserted
-        var next = me.private.items[event.index + 1].value;
+        var next = me.private.items[ event.index + 1 ].value;
 
         //insert view before next.element
         parent.insertBefore(view.private.el, next.private.el);
@@ -477,7 +506,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var me = this;
 
         //get view reference;
-        var view = event.value;
+        var view = event.new;
 
         self.log.trace('set:before', {
             event: event
@@ -492,7 +521,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         //remove old item
 
         //get old item reference
-        var old = me.private.items[event.index].value;
+        var old = event.old;
 
         //remove it from position manually
         me.private.el.removeChild(old.private.el);
@@ -533,7 +562,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var me = this;
 
         //get view reference;
-        var view = event.value;
+        var view = event.new;
 
         self.log.trace('set', {
             event: event
@@ -553,7 +582,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         }
 
         //get next view relative to inserted
-        var next = me.private.items[event.index + 1].value;
+        var next = me.private.items[ event.index + 1 ].value;
 
         //insert view before next.element
         parent.insertBefore(view.private.el, next.private.el);
@@ -634,7 +663,9 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
     var verifyPositions = function (elements) {
 
         //define variables
-        var i, length = elements.length, element, name, names = [];
+        var i, element, name;
+        var length = elements.length;
+        var names = [];
 
         for (i = 0; i < length; i++) {
             //get element
@@ -717,9 +748,13 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      */
     var isOwnNode = function (node) {
         var me = this;
-        var positions = me.private.positions.private.items, length = positions.length, position;
+        var positions = me.private.positions.private.items;
+        var length = positions.length;
+        var position;
+
         for (var i = 0; i < length; i++) {
-            position = positions[i].value;
+            position = positions[ i ].value;
+
             if (hasParentElement(me.private.el, position.private.el, node)) {
                 return false;
             }

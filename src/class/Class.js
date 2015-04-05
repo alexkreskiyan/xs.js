@@ -1,9 +1,7 @@
 'use strict';
 
 //define xs.class
-if (!xs.class) {
-    xs.class = {};
-}
+xs.getNamespace(xs, 'class');
 
 var log = new xs.log.Logger('xs.class.Class');
 
@@ -238,12 +236,17 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
 
             //assign values
             var properties = descriptor.property.private.items; //xs.core.Collection
-            var i, length = properties.length, item;
+            var i, item, value;
+            var length = properties.length;
+
+            var Generator = xs.core.Generator;
 
             for (i = 0; i < length; i++) {
-                item = properties[i];
+                item = properties[ i ];
+
                 if (item.value.hasOwnProperty('value')) {
-                    me[item.key] = item.value.value;
+                    value = item.value.value;
+                    me[ item.key ] = value instanceof Generator ? value.create() : value;
                 }
             }
 
@@ -274,33 +277,15 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
      */
     var createFactory = function (Class) {
 
-        //return factory
         return function () {
-            var instance;
-            eval('instance = new Class(' + getArgumentsList(arguments.length) + ')');
+            //create object from Class.prototype
+            var object = Object.create(Class.prototype);
 
-            return instance;
+            //apply Class as constructor
+            Class.apply(object, arguments);
+
+            return object;
         };
-    };
-
-    /**
-     * Returns arguments list (used in factory)
-     *
-     * @ignore
-     *
-     * @method
-     *
-     * @param {Number} count arguments count
-     *
-     * @return {String} arguments list for given count of arguments
-     */
-    var getArgumentsList = function (count) {
-        var list = [];
-        for (var i = 0; i < count; i++) {
-            list.push('arguments[' + i + ']');
-        }
-
-        return list.join(', ');
     };
 
     /**

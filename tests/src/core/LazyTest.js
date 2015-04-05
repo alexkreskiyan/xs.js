@@ -28,7 +28,7 @@ module('xs.core.Lazy', function () {
             return 5;
         });
 
-        //v is xs.core.Lazy instance
+        //lazy is xs.core.Lazy instance
         strictEqual(lazy instanceof xs.core.Lazy, true);
 
         //get function is defined

@@ -102,10 +102,12 @@ module('xs.ContractsManager', function () {
             me.saveOne = xs.ContractsManager.get(me.classOneName);
             xs.ContractsManager.remove(me.classOneName);
         }
+
         if (xs.ContractsManager.has(me.classTwoName)) {
             me.saveTwo = xs.ContractsManager.get(me.classTwoName);
             xs.ContractsManager.remove(me.classTwoName);
         }
+
         if (xs.ContractsManager.has(me.classThreeName)) {
             me.saveThree = xs.ContractsManager.get(me.classThreeName);
             xs.ContractsManager.remove(me.classThreeName);
@@ -221,9 +223,11 @@ module('xs.ContractsManager', function () {
         if (me.saveOne) {
             xs.ContractsManager.add(me.classOneName, me.saveOne);
         }
+
         if (me.saveTwo) {
             xs.ContractsManager.add(me.classTwoName, me.saveTwo);
         }
+
         if (me.saveThree) {
             xs.ContractsManager.add(me.classThreeName, me.saveThree);
         }
@@ -242,10 +246,12 @@ module('xs.ContractsManager', function () {
             me.saveOne = xs.ContractsManager.get(me.classOneName);
             xs.ContractsManager.remove(me.classOneName);
         }
+
         if (xs.ContractsManager.has(me.classTwoName)) {
             me.saveTwo = xs.ContractsManager.get(me.classTwoName);
             xs.ContractsManager.remove(me.classTwoName);
         }
+
         if (xs.ContractsManager.has(me.classThreeName)) {
             me.saveThree = xs.ContractsManager.get(me.classThreeName);
             xs.ContractsManager.remove(me.classThreeName);
@@ -342,9 +348,11 @@ module('xs.ContractsManager', function () {
         if (me.saveOne) {
             xs.ContractsManager.add(me.classOneName, me.saveOne);
         }
+
         if (me.saveTwo) {
             xs.ContractsManager.add(me.classTwoName, me.saveTwo);
         }
+
         if (me.saveThree) {
             xs.ContractsManager.add(me.classThreeName, me.saveThree);
         }

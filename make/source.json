@@ -1,16 +1,33 @@
 {
     "core": {
         "xs.lang.Type": {},
-        "xs.core.Collection": {},
-        "xs.log.Router": {},
         "xs.log.Logger": {},
         "xs.core.Asserter": {},
-        "reactive": {
-            "xs.reactive.Reactive": {
+        "xs.core.Collection": {},
+        "event": {
+            "xs.event.emitter.Emitter": {
                 "test": false
             },
-            "xs.reactive.Stream": {},
-            "xs.reactive.Property": {}
+            "xs.event.emitter.Property": {
+                "test": false
+            },
+            "xs.event.emitter.Stream": {
+                "test": false
+            },
+            "xs.event.Event": {
+                "test": false
+            },
+            "xs.event.Destroy": {
+                "test": false
+            },
+            "xs.event.send": {
+                "test": false
+            },
+            "xs.event.Reactive": {
+                "test": false
+            },
+            "xs.event.Stream": {},
+            "xs.event.Property": {}
         },
         "xs.lang.Object": {},
         "xs.lang.Array": {},
@@ -18,6 +35,9 @@
         "xs.lang.Attribute": {},
         "xs.lang.Function": {},
         "xs.lang.String": {},
+        "xs.log.Router": {
+            "test": false
+        },
         "xs.core.Loader": {},
         "xs.core.ContractsManager": {},
         "contracts": {
@@ -41,6 +61,7 @@
             "xs.interface.Interface": {}
         },
         "xs.core.Lazy": {},
+        "xs.core.Generator": {},
         "xs.core.Promise": {},
         "xs.class.preprocessors.namespace": {},
         "xs.class.preprocessors.abstract": {},
@@ -82,6 +103,14 @@
                         "contract": "interface"
                     },
                     "Number": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "SetBeforeEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "SetEvent": {
                         "contract": "class",
                         "test": false
                     },
@@ -182,35 +211,11 @@
                 "IEvent": {
                     "contract": "interface"
                 },
-                "Event": {
-                    "contract": "class",
-                    "test": false
-                },
-                "IObservable": {
-                    "contract": "interface"
-                },
                 "Observable": {
                     "contract": "class"
                 },
-                "IStaticObservable": {
-                    "contract": "interface"
-                },
                 "StaticObservable": {
                     "contract": "class"
-                }
-            },
-            "log": {
-                "route": {
-                    "IRoute": {
-                        "contract": "interface"
-                    },
-                    "Route": {
-                        "contract": "class"
-                    },
-                    "Console": {
-                        "contract": "class",
-                        "test": false
-                    }
                 }
             },
             "storage": {
@@ -244,7 +249,34 @@
             },
             "util": {
                 "collection": {
-                    "Event": {
+                    "IEvent": {
+                        "contract": "interface"
+                    },
+                    "AddBeforeEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "AddEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "SetBeforeEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "SetEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "RemoveBeforeEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "RemoveEvent": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "ClearEvent": {
                         "contract": "class",
                         "test": false
                     }

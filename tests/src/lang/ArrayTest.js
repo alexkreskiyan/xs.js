@@ -19,7 +19,9 @@ module('xs.lang.Array', function () {
         });
 
         //init sample
-        var item = {x: 1};
+        var item = {
+            x: 1
+        };
 
         //define shuffled array and it's clone
         var x, clone;
@@ -66,7 +68,7 @@ module('xs.lang.Array', function () {
 
         //check items all saved
         Object.keys(clone).forEach(function (key) {
-            strictEqual(true, x.indexOf(clone[key]) >= 0);
+            strictEqual(true, x.indexOf(clone[ key ]) >= 0);
         });
 
         //check all keys exist

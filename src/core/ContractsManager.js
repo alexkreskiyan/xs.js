@@ -157,7 +157,7 @@ xs.ContractsManager = (function () {
         var namespace = getNamespace(window, getPath(name));
 
         //save Contract to namespace
-        namespace[label] = Contract;
+        namespace[ label ] = Contract;
 
         //save Contract to registry
         registry.add(name, Contract);
@@ -200,7 +200,7 @@ xs.ContractsManager = (function () {
         var namespace = getNamespace(window, path);
 
         //unset Contract from namespace
-        delete namespace[label];
+        delete namespace[ label ];
 
         //clean namespace
         cleanNamespace(window, path);
@@ -404,17 +404,17 @@ xs.ContractsManager = (function () {
         var part = parts.shift();
 
         //create namespace if missing
-        if (!xs.isFunction(root[part]) && !xs.isObject(root[part])) {
-            root[part] = {};
+        if (!xs.isFunction(root[ part ]) && !xs.isObject(root[ part ])) {
+            root[ part ] = {};
         }
 
         //process down or return
         if (parts.length) {
 
-            return getNamespace(root[part], parts.join('.'));
+            return getNamespace(root[ part ], parts.join('.'));
         }
 
-        return root[part];
+        return root[ part ];
     };
 
     /**
@@ -450,10 +450,10 @@ xs.ContractsManager = (function () {
         var namespace = getNamespace(root, path);
 
         //remove namespace if empty
-        if (xs.isEmpty(namespace[part])) {
+        if (xs.isEmpty(namespace[ part ])) {
 
             //remove empty namespace
-            delete namespace[part];
+            delete namespace[ part ];
 
             //try to clean parent
             cleanNamespace(root, path);
@@ -478,6 +478,6 @@ function XsCoreContractsManagerError(message) {
 
 XsCoreContractsManagerError.prototype = new Error();
 
-xs.extend(xs, {
+xs.apply(xs, {
     define: xs.ContractsManager.define
 });

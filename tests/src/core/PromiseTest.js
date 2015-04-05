@@ -21,7 +21,9 @@ module('xs.core.Promise', function () {
         var arr = [];
         arr.then = xs.noop;
         strictEqual(xs.core.Promise.isPromise(arr), false);
-        strictEqual(xs.core.Promise.isPromise({then: xs.noop}), true);
+        strictEqual(xs.core.Promise.isPromise({
+            then: xs.noop
+        }), true);
         strictEqual(xs.core.Promise.isPromise(promise), true);
     });
 
@@ -46,7 +48,7 @@ module('xs.core.Promise', function () {
     test('resolve simple plain case normal', function () {
         //simple case - three L1 handlers. All resolved
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         me.source = 5;
         me.promise.then(function (data) {
             me.source *= data;
@@ -64,13 +66,14 @@ module('xs.core.Promise', function () {
             strictEqual(me.source, 4);
             me.done();
         });
+
         return false;
     });
 
     test('resolve simple plain case exception', function () {
         //simple case - three L1 handlers. Second L1 handler throws exception
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         me.source = 5;
         me.promise.then(function (data) {
             me.source *= data;
@@ -88,13 +91,14 @@ module('xs.core.Promise', function () {
             strictEqual(me.source, 30);
             me.done();
         });
+
         return false;
     });
 
     test('resolve simple chain case normal', function () {
         //simple case - promises chain with three steps. All resolved
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         var value = 5;
         me.chain = me.promise.then(function (data) {
             return data * value;
@@ -110,13 +114,14 @@ module('xs.core.Promise', function () {
             strictEqual(data, 4);
             me.done();
         });
+
         return false;
     });
 
     test('resolve simple chain case exception', function () {
         //simple case - promises chain with three steps. Step two throws exception
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         var value = 5;
         me.chain = me.promise.then(function (data) {
             return data * value;
@@ -136,13 +141,14 @@ module('xs.core.Promise', function () {
             strictEqual(reason, '5error');
             me.done();
         });
+
         return false;
     });
 
     test('resolve complex case normal', function () {
         //complex case - promises tree 2 levels with 3 handlers each - 12 total. All resolved
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         me.total = 0;
         me.promise.then(function (data) {
             return data + 2; //7
@@ -180,7 +186,7 @@ module('xs.core.Promise', function () {
     test('resolve complex case exception', function () {
         //complex case - promises tree 2 levels with 3 handlers each - 12 total. Second L1 handler throws exception
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         me.total = 0;
         me.promise.then(function (data) {
             return data + 2; //7
@@ -240,7 +246,7 @@ module('xs.core.Promise', function () {
     test('reject simple plain case normal', function () {
         //simple case - three L1 handlers. All resolved
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         me.source = 5;
         me.promise.otherwise(function (data) {
             me.source *= data;
@@ -258,13 +264,14 @@ module('xs.core.Promise', function () {
             strictEqual(me.source, 4);
             me.done();
         });
+
         return false;
     });
 
     test('reject simple plain case exception', function () {
         //simple case - three L1 handlers. Second L1 handler throws exception
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         me.source = 5;
         me.promise.otherwise(function (data) {
             me.source *= data;
@@ -282,13 +289,14 @@ module('xs.core.Promise', function () {
             strictEqual(me.source, 30);
             me.done();
         });
+
         return false;
     });
 
     test('reject simple chain case normal', function () {
         //simple case - promises chain with three steps. All resolved
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         var value = 5;
         me.chain = me.promise.otherwise(function (data) {
             return data * value;
@@ -304,13 +312,14 @@ module('xs.core.Promise', function () {
             strictEqual(data, 4);
             me.done();
         });
+
         return false;
     });
 
     test('reject simple chain case exception', function () {
         //simple case - promises chain with three steps. Step two throws exception
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         var value = 5;
         me.chain = me.promise.otherwise(function (data) {
             return data * value;
@@ -330,13 +339,14 @@ module('xs.core.Promise', function () {
             strictEqual(reason, '5error');
             me.done();
         });
+
         return false;
     });
 
     test('reject complex case normal', function () {
         //complex case - promises tree 2 levels with 3 handlers each - 12 total. All resolved
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         me.total = 0;
         me.promise.otherwise(function (data) {
             return data + 2; //7
@@ -374,7 +384,7 @@ module('xs.core.Promise', function () {
     test('reject complex case exception', function () {
         //complex case - promises tree 2 levels with 3 handlers each - 12 total. Second L1 handler throws exception
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         me.total = 0;
         me.promise.otherwise(function (data) {
             return data + 2; //7
@@ -416,7 +426,7 @@ module('xs.core.Promise', function () {
     test('progress complex case', function () {
         //complex case - promises tree 2 levels with 3 handlers each - 12 total. All resolved
         var me = this;
-        me.promise = new xs.core.Promise;
+        me.promise = new xs.core.Promise();
         me.total = 0;
         me.promise.progress(function (data) {
             return data + 2; //4; 3
@@ -469,6 +479,7 @@ module('xs.core.Promise', function () {
         setTimeout(function () {
             promise.then(function (data) {
                 strictEqual(data, 5);
+
                 return data * 2;
             }).then(function (data) {
                 strictEqual(data, 10);
@@ -493,12 +504,12 @@ module('xs.core.Promise', function () {
 
         //count should be either omitted or be number
         throws(function () {
-            xs.core.Promise.some([xs.core.Promise.factory()], null);
+            xs.core.Promise.some([ xs.core.Promise.factory() ], null);
         });
 
         //count should be in bounds: 0 < count <= promises.length
         throws(function () {
-            xs.core.Promise.some([xs.core.Promise.factory()], 2);
+            xs.core.Promise.some([ xs.core.Promise.factory() ], 2);
         });
 
 

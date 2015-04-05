@@ -20,7 +20,7 @@ module('xs.class.preprocessors.defineElements', function () {
 
         //define
         me.Base = xs.Class(function () {
-            this.constant.a = 1;
+            this.constant.a = xs.generator(Object);
         });
 
         //save
@@ -38,7 +38,7 @@ module('xs.class.preprocessors.defineElements', function () {
         //define
         me.Parent = xs.Class(function () {
             this.extends = 'tests.class.preprocessors.defineElements.constants.Base';
-            this.constant.a = 2;
+            this.constant.a = xs.generator(Object);
             this.constant.b = 3;
         });
 
@@ -81,13 +81,14 @@ module('xs.class.preprocessors.defineElements', function () {
 
         //Base
         //a
-        strictEqual(ns.Base.a, 1);
+        strictEqual(xs.isObject(ns.Base.a), true);
         strictEqual(xs.Attribute.isWritable(ns.Base, 'a'), false);
         strictEqual(xs.Attribute.isConfigurable(ns.Base, 'a'), false);
 
         //Parent
         //a
-        strictEqual(ns.Parent.a, 2);
+        strictEqual(xs.isObject(ns.Parent.a), true);
+        strictEqual(ns.Parent.a === ns.Base.a, false);
         strictEqual(xs.Attribute.isWritable(ns.Parent, 'a'), false);
         strictEqual(xs.Attribute.isConfigurable(ns.Parent, 'a'), false);
         //b
@@ -97,7 +98,9 @@ module('xs.class.preprocessors.defineElements', function () {
 
         //Child
         //a
-        strictEqual(ns.Child.a, 2);
+        strictEqual(xs.isObject(ns.Child.a), true);
+        strictEqual(ns.Child.a === ns.Base.a, false);
+        strictEqual(ns.Child.a === ns.Parent.a, false);
         strictEqual(xs.Attribute.isWritable(ns.Child, 'a'), false);
         strictEqual(xs.Attribute.isConfigurable(ns.Child, 'a'), false);
         //b
@@ -113,18 +116,21 @@ module('xs.class.preprocessors.defineElements', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
@@ -145,6 +151,7 @@ module('xs.class.preprocessors.defineElements', function () {
             this.static.property.a = {
                 get: me.baseAGet
             };
+            this.static.property.d = xs.generator(Array);
         });
 
         //save
@@ -232,6 +239,8 @@ module('xs.class.preprocessors.defineElements', function () {
         strictEqual(ns.Base.a, 1);
         ns.Base.a = 2; //readonly
         strictEqual(ns.Base.a, 1);
+        //d
+        strictEqual(xs.isArray(ns.Base.d), true);
 
         //Parent
         //a
@@ -244,6 +253,9 @@ module('xs.class.preprocessors.defineElements', function () {
         ns.Parent.b = 2; //getter assigned
         strictEqual(ns.Parent.b, 3);
         strictEqual(ns.Parent.private.b, 3);
+        //d
+        strictEqual(xs.isArray(ns.Base.d), true);
+        strictEqual(ns.Parent.d === ns.Base.d, false);
 
         //Child
         //a
@@ -259,24 +271,31 @@ module('xs.class.preprocessors.defineElements', function () {
         ns.Child.c = 3;
         strictEqual(ns.Child.c, '?3!');
         strictEqual(ns.Child.private.c, '?3');
+        //d
+        strictEqual(xs.isArray(ns.Base.d), true);
+        strictEqual(ns.Child.d === ns.Base.d, false);
+        strictEqual(ns.Child.d === ns.Parent.d, false);
 
     }, function () {
         var me = this;
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
@@ -383,18 +402,21 @@ module('xs.class.preprocessors.defineElements', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
@@ -499,14 +521,14 @@ module('xs.class.preprocessors.defineElements', function () {
         var ns = window.tests.class.preprocessors.defineElements.properties;
 
         //Base
-        var base = new ns.Base;
+        var base = new ns.Base();
         //a
         strictEqual(base.a, 1);
         base.a = 2; //readonly
         strictEqual(base.a, 1);
 
         //Parent
-        var parent = new ns.Parent;
+        var parent = new ns.Parent();
         //a
         strictEqual(parent.a, undefined);
         parent.a = 2; //setter assigned
@@ -519,7 +541,7 @@ module('xs.class.preprocessors.defineElements', function () {
         strictEqual(parent.private.b, 3);
 
         //Child
-        var child = new ns.Child;
+        var child = new ns.Child();
         //a
         strictEqual(child.a, 2);
         //b
@@ -540,18 +562,21 @@ module('xs.class.preprocessors.defineElements', function () {
         //tearDown
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }
@@ -642,16 +667,16 @@ module('xs.class.preprocessors.defineElements', function () {
         var ns = window.tests.class.preprocessors.defineElements.methods;
 
         //Base
-        var base = new ns.Base;
+        var base = new ns.Base();
         strictEqual(base.a(), 1);
 
         //Parent
-        var parent = new ns.Parent;
+        var parent = new ns.Parent();
         strictEqual(parent.a(), 2);
         strictEqual(parent.b(), 3);
 
         //Child
-        var child = new ns.Child;
+        var child = new ns.Child();
         strictEqual(child.a(), 2);
         strictEqual(child.b(), 3);
         strictEqual(child.c(), 5);
@@ -661,18 +686,21 @@ module('xs.class.preprocessors.defineElements', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }

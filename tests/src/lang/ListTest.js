@@ -18,7 +18,9 @@ module('xs.lang.List', function () {
         });
 
         //init test variables
-        var item = {x: 1};
+        var item = {
+            x: 1
+        };
         var x, clone;
 
         //test array list
@@ -31,7 +33,7 @@ module('xs.lang.List', function () {
         //equals
         strictEqual(JSON.stringify(clone), JSON.stringify(x));
         //links are saved
-        strictEqual(x[2] === clone[2], true);
+        strictEqual(x[ 2 ] === clone[ 2 ], true);
 
         //test object list
         x = {

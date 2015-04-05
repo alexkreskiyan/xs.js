@@ -16,7 +16,9 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
     Class.namespace = 'xs.uri';
 
     Class.imports = [
-        {QueryString: 'ns.QueryString'}
+        {
+            QueryString: 'ns.QueryString'
+        }
     ];
 
     Class.extends = 'ns.URI';
@@ -322,9 +324,9 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         });
 
         return {
-            user: raw[1],
-            host: raw[2],
-            port: raw[3] ? Number(raw[3]) : undefined
+            user: raw[ 1 ],
+            host: raw[ 2 ],
+            port: raw[ 3 ] ? Number(raw[ 3 ]) : undefined
         };
     };
 

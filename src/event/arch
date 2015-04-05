@@ -1,0 +1,53 @@
+1. Stream
+1.1 Common
+Stream is a stream of events, produced by some event emitter
+Stream is constructed with:
+- subscriber
+- unsubscriber
+Streams can be transformed and combined
+Streams are infinite, but are endable
+Streams are destroyable and endable (destroy leads to stream end, but not visa versa)
+Each stream transformation/combination produces a new stream
+1.2 Event emitters
+
+2. Property
+2.1
+Property is value-over-time, value, that changes over time, notifying it's listeners about that
+Properties can be transformed and combined
+Properties are infinite
+Properties are destroyable
+Each property transformation/combination produces a new property
+
+-----------
+Property:
+class:
+-fromEvent(element, eventName) //DONE
+instance:
+toStream([sendCurrent]) //DONE
+map(fn) //DONE
+reduce(fn, [memo]) //OMIT
+filter(handler) //DONE
+transform(function(source, set, end, value) {
+
+})//OMIT
+throttle(wait) //DONE
+debounce(wait) //DONE
+transduce(transducer)
+
+Stream:
+class:
+-fromEvent(element, eventName) //DONE
+instance:
+toProperty([current]) //DONE
+map(fn) //DONE
+reduce(fn, [memo]) //OMIT
+filter(handler) //DONE
+transform(function(source, send, end) {
+
+})//OMIT
+throttle(wait) //DONE
+debounce(wait) //DONE
+transduce(transducer)
+
+//TODO Reactive combines via pure constructors
+//TODO rewrite fromPromise to use private functions

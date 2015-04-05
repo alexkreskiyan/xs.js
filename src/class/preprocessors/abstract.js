@@ -1,7 +1,5 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.class.preprocessors.abstract');
-
 /**
  * Directive abstract
  *

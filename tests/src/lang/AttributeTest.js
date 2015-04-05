@@ -44,7 +44,11 @@ module('xs.lang.Attribute', function () {
 
         strictEqual(xs.Attribute.defined(obj, 'a'), false);
 
-        xs.Attribute.define(obj, 'a', {value: {x: 1}});
+        xs.Attribute.define(obj, 'a', {
+            value: {
+                x: 1
+            }
+        });
 
         strictEqual(xs.Attribute.defined(obj, 'a'), true);
     });
@@ -59,7 +63,9 @@ module('xs.lang.Attribute', function () {
         me.setter = function (value) {
             this.value = value;
         };
-        me.value = {x: 1};
+        me.value = {
+            x: 1
+        };
     }, function () {
         var me = this;
 
@@ -118,7 +124,9 @@ module('xs.lang.Attribute', function () {
         me.setter = function (value) {
             this.value = value;
         };
-        me.value = {x: 1};
+        me.value = {
+            x: 1
+        };
 
     }, function () {
         var me = this;
@@ -164,7 +172,9 @@ module('xs.lang.Attribute', function () {
         me.setter = function (value) {
             this.value = value;
         };
-        me.value = {x: 1};
+        me.value = {
+            x: 1
+        };
 
     }, function () {
         var me = this;
@@ -210,7 +220,9 @@ module('xs.lang.Attribute', function () {
         me.setter = function (value) {
             this.value = value;
         };
-        me.value = {x: 1};
+        me.value = {
+            x: 1
+        };
 
     }, function () {
         var me = this;
@@ -259,7 +271,9 @@ module('xs.lang.Attribute', function () {
         var me = this;
         //init test objects
         me.obj = {};
-        me.value = {x: 1};
+        me.value = {
+            x: 1
+        };
 
     }, function () {
         var me = this;
@@ -298,7 +312,9 @@ module('xs.lang.Attribute', function () {
         var me = this;
         //init test objects
         me.obj = {};
-        me.value = {x: 1};
+        me.value = {
+            x: 1
+        };
 
     }, function () {
         var me = this;
@@ -339,7 +355,9 @@ module('xs.lang.Attribute', function () {
         strictEqual(xs.Attribute.isDescriptor([]), false);
 
         //object desc without any properties
-        strictEqual(xs.Attribute.isDescriptor({a: 1}), false);
+        strictEqual(xs.Attribute.isDescriptor({
+            a: 1
+        }), false);
 
         //object desc with any property
         strictEqual(xs.Attribute.isDescriptor({
@@ -389,7 +407,9 @@ module('xs.lang.Attribute', function () {
         var me = this;
         //init test objects
         me.obj = {};
-        me.value = {x: 1};
+        me.value = {
+            x: 1
+        };
 
     }, function () {
         var me = this;
@@ -445,7 +465,6 @@ module('xs.lang.Attribute', function () {
 
         strictEqual(Object.keys(result).sort().toString(), 'configurable,default,enumerable,get,set');
         strictEqual(result.get, getter);
-        strictEqual(result.set.toString(), 'function (value) { \'use strict\'; this.private.x = value;}');
         strictEqual(result.default, 6);
         strictEqual(result.configurable, false);
         strictEqual(result.enumerable, true);
@@ -472,7 +491,9 @@ module('xs.lang.Attribute', function () {
         me.setter = function (value) {
             this.value = value;
         };
-        me.value = {x: 1};
+        me.value = {
+            x: 1
+        };
 
     }, function () {
         var me = this;
@@ -577,7 +598,9 @@ module('xs.lang.Attribute', function () {
         });
 
         throws(function () {
-            xs.Attribute.method.define('a', {value: null});
+            xs.Attribute.method.define('a', {
+                value: null
+            });
         });
 
         //init test objects
@@ -587,7 +610,9 @@ module('xs.lang.Attribute', function () {
         };
 
         //rights assignments are not writable, enumerable and not configurable
-        xs.Attribute.method.define(obj, 'simple', {value: value});
+        xs.Attribute.method.define(obj, 'simple', {
+            value: value
+        });
         strictEqual(xs.Attribute.isWritable(obj, 'simple'), false);
         strictEqual(xs.Attribute.isConfigurable(obj, 'simple'), false);
         strictEqual(xs.Attribute.isEnumerable(obj, 'simple'), true);

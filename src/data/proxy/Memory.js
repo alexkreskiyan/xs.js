@@ -8,8 +8,6 @@
  * @class xs.data.Model
  *
  * @extends xs.class.Base
- *
- * @mixins xs.event.Observable
  */
 xs.define(xs.Class, 'ns.proxy.Memory', function (self, imports) {
 

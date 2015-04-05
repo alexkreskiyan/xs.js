@@ -154,6 +154,7 @@ var ProcessorsStack = function () {
      */
     var process = function (items, verifierArgs, handlerArgs, callback) {
         var me = this;
+
         if (!items.size) {
             callback();
 

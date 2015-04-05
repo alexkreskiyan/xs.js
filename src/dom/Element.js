@@ -32,41 +32,14 @@ xs.define(xs.Class, 'ns.Element', function (self) {
 
     Class.mixins.observable = 'xs.event.Observable';
 
-    Class.constant.events = {
-        /**
-         * click event. Is a proxy to DOM `click` event. Fires with {@link xs.event.Event}
-         *
-         * @event click
-         */
-        click: {
-            domType: 'click',
-            type: 'xs.event.Event'
-        },
-        /**
-         * double click event. Is a proxy to DOM `dblclick` event. Fires with {@link xs.event.Event}
-         *
-         * @event dblClick
-         */
-        dblClick: {
-            domType: 'dblclick',
-            type: 'xs.event.Event'
-        },
-        /**
-         * destroy event. Is fired, when element is destroyed. Fires with {@link xs.event.Event}
-         *
-         * @event destroy
-         */
-        destroy: {
-            type: 'xs.event.Event'
-        }
-    };
-
     /**
      * xs.dom.Element constructor
      *
      * @param {Element} element wrapped element
+     * @param {Function} [generator] generator for underlying observable
+     * @param {Array} [sources] additional sources for generator
      */
-    Class.constructor = function (element) {
+    Class.constructor = function (element, generator, sources) {
         var me = this;
 
         self.assert.ok(element instanceof Element, 'Given element `$element` is not an instance of Element', {
@@ -77,10 +50,19 @@ xs.define(xs.Class, 'ns.Element', function (self) {
         me.private.el = element;
 
         //call observable constructor
-        self.mixins.observable.call(me);
 
-        //create collection for dom handlers
-        me.private.domHandlers = new xs.core.Collection();
+        //without events generator
+        if (arguments.length === 1) {
+            self.mixins.observable.call(me, xs.noop);
+
+            //with events generator only
+        } else if (arguments.length === 2) {
+            self.mixins.observable.call(me, generator);
+
+            //with events generator and sources
+        } else {
+            self.mixins.observable.call(me, generator, sources);
+        }
 
         //create access gate to element's attributes
         me.private.attributes = new Attributes(element);
@@ -125,97 +107,8 @@ xs.define(xs.Class, 'ns.Element', function (self) {
         set: xs.noop
     };
 
-    Class.method.on = function (event, handler, options) {
-        var me = this;
-
-        //call Observable.on
-        self.mixins.observable.prototype.on.apply(me, arguments);
-
-
-        //get eventConfig
-        var eventConfig = me.self.events[event];
-        var own = !eventConfig.hasOwnProperty('domType');
-
-        //if own event - return
-        if (own) {
-
-            return me;
-        }
-
-
-        self.log.trace('on - DOM event, processing domHandlers');
-
-        //get references
-        var handlers = me.private.eventsHandlers[event];
-
-        //return if there is more than one handler - domHandler was already added
-        if (handlers.size > 1) {
-            self.log.trace('on - DOM event, listener is already created');
-
-            return me;
-        }
-
-        self.log.trace('on - DOM event, creating listener');
-
-
-        //add single handler to DOM
-
-        //get event domType
-        var domType = eventConfig.domType;
-
-        //define domHandler
-        var domHandler = function (domEvent) {
-            me.fire(event, domEvent);
-        };
-
-        //save handler to domHandlers collection
-        me.private.domHandlers.add(event, domHandler);
-
-        //add domHandler as event listener to el
-        me.private.el.addEventListener(domType, domHandler);
-
-        return me;
-    };
-
-    Class.method.off = function (event, selector, flags) {
-        var me = this;
-
-        //call Observable.on
-        self.mixins.observable.prototype.off.apply(me, arguments);
-
-        self.log.trace('on - DOM event, processing domHandlers');
-
-        //get references
-        var eventsHandlers = me.private.eventsHandlers;
-        var domHandlers = me.private.domHandlers;
-        var el = me.private.el;
-
-        //remove useless domHandlers
-        domHandlers.removeBy(function (domHandler, event) {
-
-            //if eventsHandlers contains collection for event - all ok
-            if (eventsHandlers.hasOwnProperty(event)) {
-
-                return false;
-            }
-
-            //remove event domHandler from el
-            el.removeEventListener(event, domHandler);
-
-            return true;
-        }, xs.core.Collection.All);
-
-        return me;
-    };
-
     Class.method.destroy = function () {
         var me = this;
-
-        //fire destroy event
-        me.fire('destroy');
-
-        //toggle off all events
-        me.off();
 
         //call Observable.destroy
         self.mixins.observable.prototype.destroy.call(me);

@@ -18,9 +18,7 @@ var assert = new xs.core.Asserter(log, XsLangFunctionError);
 xs.Function = (function () {
     var me = {};
 
-    var bindFunction = Function.prototype.bind;
     var slice = Function.prototype.apply.bind(Array.prototype.slice);
-    var concatenate = Function.prototype.apply.bind(Array.prototype.concat);
 
     /**
      * Creates binded function, that will be called with given scope and optional args, prepended to call arguments
@@ -30,27 +28,24 @@ xs.Function = (function () {
      *     var fn = function (a, b, c) {
      *         return this.x + (a - b) * c;
      *     };
-     *     var bind = xs.bind(fn, {x: 5}, [2, 3]);
-     *     console.log(bind(4));//1
+     *     var bind = xs.bind(fn, {x: 5});
+     *     console.log(bind(2, 3, 4));//1
      *
      * @method bind
      *
      * @param {Function} fn bound function
      * @param {Object} scope optional execution scope
-     * @param {Array} [args] optional additional arguments, prepended to function
      *
      * @return {Function} bound function
      */
-    var bind = me.bind = function (fn, scope, args) {
+    var bind = me.bind = function (fn, scope) {
         assert.fn(fn, 'bind - given `$fn` is not a function', {
             $fn: fn
         });
 
-        assert.ok(arguments.length < 3 || xs.isArray(args), 'bind - given `$args` is not a array', {
-            $args: args
-        });
-
-        return bindFunction.apply(fn, concatenate(scope, args));
+        return function () {
+            return fn.apply(scope, arguments);
+        };
     };
 
     /**
@@ -79,7 +74,8 @@ xs.Function = (function () {
             $fn: fn
         });
 
-        var ran = false, memo;
+        var ran = false;
+        var memo;
 
         return function () {
             //return saved result if already ran
@@ -156,18 +152,14 @@ xs.Function = (function () {
      * @method nextTick
      *
      * @param {Function} fn executed function
-     * @param {Object} scope optional execution scope
+     * @param {Object} [scope] optional execution scope
      */
     me.nextTick = function (fn, scope) {
         assert.fn(fn, 'nextTick - given `$fn` is not a function', {
             $fn: fn
         });
 
-        if (scope) {
-            fn = bind(fn, scope);
-        }
-
-        setTimeout(fn, 0);
+        setTimeout(xs.isDefined(scope) ? bind(fn, scope) : fn, 0);
     };
 
     var getNameRe = /^function\s*([A-z_0-9]*)/i;
@@ -195,6 +187,7 @@ xs.Function = (function () {
         });
 
         getNameRe.lastIndex = 0;
+
         return getNameRe.exec(fn.toString()).pop();
     };
 
@@ -223,6 +216,7 @@ xs.Function = (function () {
         });
 
         getArgumentsRe.lastIndex = 0;
+
         return getArgumentsRe.exec(fn.toString()).pop().split(',').map(function (name) {
 
             return name.trim();
@@ -254,6 +248,7 @@ xs.Function = (function () {
         });
 
         var stringFn = fn.toString();
+
         return stringFn.substring(stringFn.indexOf('{') + 1, stringFn.length - 1);
     };
 
@@ -281,9 +276,10 @@ xs.Function = (function () {
         parseRe.lastIndex = 0;
         var stringFn = fn.toString();
         var data = parseRe.exec(stringFn);
+
         return {
-            name: data[1],
-            args: data[2].split(',').map(function (name) {
+            name: data[ 1 ],
+            args: data[ 2 ].split(',').map(function (name) {
 
                 return name.trim();
             }).filter(function (value) {
@@ -299,7 +295,8 @@ xs.Function = (function () {
      *
      * @method noop
      */
-    me.noop = function () {};
+    me.noop = function () {
+    };
 
     return me;
 })();

@@ -18,7 +18,7 @@ var assert = new xs.core.Asserter(log, XsLangListError);
 xs.List = (function () {
     var me = {};
 
-    // Create quick reference variables for speed access to core prototypes.
+    //Create quick reference variables for speed access to core prototypes.
     var slice = Function.prototype.call.bind(Array.prototype.slice);
 
     /**
@@ -59,13 +59,15 @@ xs.List = (function () {
         }
 
         //init variables
-        var copy = {}, index, keysLength, keys = Object.keys(list), key;
+        var copy = {};
+        var index, keysLength, key;
+        var keys = Object.keys(list);
         keysLength = keys.length;
 
         //copy values
         for (index = 0; index < keysLength; index++) {
-            key = keys[index];
-            copy[key] = list[key];
+            key = keys[ index ];
+            copy[ key ] = list[ key ];
         }
 
         return copy;
@@ -92,5 +94,5 @@ XsLangListError.prototype = new Error();
 
 //extend xs with list
 Object.keys(xs.List).forEach(function (key) {
-    xs[key] = xs.List[key];
+    xs[ key ] = xs.List[ key ];
 });

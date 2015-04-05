@@ -6,10 +6,8 @@
  * @class xs.util.Collection
  *
  * @extends xs.class.Base
- *
- * @mixins xs.event.Observable
  */
-xs.define(xs.Class, 'ns.Collection', function (self) {
+xs.define(xs.Class, 'ns.Collection', function (self, imports) {
 
     'use strict';
 
@@ -17,77 +15,31 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
     Class.namespace = 'xs.util';
 
-    Class.mixins.observable = 'xs.event.Observable';
-
-    Class.constant.events = {
-        /**
-         * add:before event. Is fired before new value added/inserted into collection.
-         * Stopping that event prevents adding item to collection. Fires with {@link xs.util.collection.Event}
-         *
-         * @event add:before
-         */
-        'add:before': {
-            type: 'ns.collection.Event'
+    Class.imports = [
+        {
+            AddBeforeEvent: 'ns.collection.AddBeforeEvent'
         },
-        /**
-         * add event. Is fired after new value added/inserted into collection. Fires with {@link xs.util.collection.Event}
-         *
-         * @event add
-         */
-        'add': {
-            type: 'ns.collection.Event'
+        {
+            AddEvent: 'ns.collection.AddEvent'
         },
-        /**
-         * set:before event. Is fired before new value set to collection item.
-         * Stopping that event prevents changing value of collection item. Fires with {@link xs.util.collection.Event}
-         *
-         * @event set:before
-         */
-        'set:before': {
-            type: 'ns.collection.Event'
+        {
+            SetBeforeEvent: 'ns.collection.SetBeforeEvent'
         },
-        /**
-         * set event. Is fired after new value set to collection item. Fires with {@link xs.util.collection.Event}
-         *
-         * @event set
-         */
-        'set': {
-            type: 'ns.collection.Event'
+        {
+            SetEvent: 'ns.collection.SetEvent'
         },
-        /**
-         * remove:before event. Is fired before item is removed from collection.
-         * Stopping that event prevents removing item from collection. Fires with {@link xs.util.collection.Event}
-         *
-         * @event remove:before
-         */
-        'remove:before': {
-            type: 'ns.collection.Event'
+        {
+            RemoveBeforeEvent: 'ns.collection.RemoveBeforeEvent'
         },
-        /**
-         * remove event. Is fired after item is removed from collection. Fires with {@link xs.util.collection.Event}
-         *
-         * @event remove
-         */
-        'remove': {
-            type: 'ns.collection.Event'
+        {
+            RemoveEvent: 'ns.collection.RemoveEvent'
         },
-        /**
-         * clear event. Is fired after all items are removed from collection. Fires with {@link xs.util.collection.Event}
-         *
-         * @event clear
-         */
-        'clear': {
-            type: 'ns.collection.Event'
-        },
-        /**
-         * destroy event. Is fired, when collection is destroyed. Fires with {@link xs.event.Event}
-         *
-         * @event destroy
-         */
-        'destroy': {
-            type: 'xs.event.Event'
+        {
+            ClearEvent: 'ns.collection.ClearEvent'
         }
-    };
+    ];
+
+    Class.mixins.observable = 'xs.event.Observable';
 
     /**
      * xs.util.Collection constructor
@@ -107,10 +59,11 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     Class.constructor = function (values, type) {
         var me = this;
 
-        self.mixins.observable.call(me);
-
         //init items array
         me.private.items = [];
+
+        //call observable constructor
+        self.mixins.observable.call(me, xs.noop);
 
         //return if no arguments
         if (!arguments.length) {
@@ -157,7 +110,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //add item
                 me.private.items.push({
                     key: i,
-                    value: values[i]
+                    value: values[ i ]
                 });
             }
 
@@ -168,16 +121,17 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //handle hash source
 
         //get keys and length
-        var keys = Object.keys(values), key;
+        var keys = Object.keys(values);
+        var key;
         length = keys.length;
 
         for (i = 0; i < length; i++) {
-            key = keys[i];
+            key = keys[ i ];
 
             //add item
             me.private.items.push({
                 key: key,
-                value: values[key]
+                value: values[ key ]
             });
         }
     };
@@ -252,10 +206,11 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     Class.method.keys = function () {
         var me = this;
 
-        var keys = [], length = me.private.items.length;
+        var keys = [];
+        var length = me.private.items.length;
 
         for (var i = 0; i < length; i++) {
-            keys.push(me.private.items[i].key);
+            keys.push(me.private.items[ i ].key);
         }
 
         return keys;
@@ -289,10 +244,11 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     Class.method.values = function () {
         var me = this;
 
-        var values = [], length = me.private.items.length;
+        var values = [];
+        var length = me.private.items.length;
 
         for (var i = 0; i < length; i++) {
-            values.push(me.private.items[i].value);
+            values.push(me.private.items[ i ].value);
         }
 
         return values;
@@ -343,7 +299,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         if (xs.isNumber(key)) {
 
             //check, that key exists
-            return 0 <= key && key < me.private.items.length;
+            return key >= 0 && key < me.private.items.length;
         }
 
         //if it is string - it's key
@@ -438,7 +394,9 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      * @return {String|Number|undefined} found key, or undefined if nothing found
      */
     Class.method.keyOf = function (value, flags) {
-        var me = this, index, values = me.values();
+        var me = this;
+        var index;
+        var values = me.values();
 
         //assert, that value is valid
         self.assert.ok(isValid.call(me, value), 'Not valid');
@@ -458,7 +416,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             }
         }
 
-        return index >= 0 ? me.private.items[index].key : undefined;
+        return index >= 0 ? me.private.items[ index ].key : undefined;
     };
 
     /**
@@ -541,7 +499,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             });
         }
 
-        return me.private.items[index].value;
+        return me.private.items[ index ].value;
     };
 
     /**
@@ -605,7 +563,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //assert that collection is not empty
         self.assert.ok(me.private.items.length, 'first - collection is empty');
 
-        return me.private.items[0].value;
+        return me.private.items[ 0 ].value;
     };
 
     /**
@@ -669,7 +627,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //assert that collection is not empty
         self.assert.ok(me.private.items.length, 'last - collection is empty');
 
-        return me.private.items[me.private.items.length - 1].value;
+        return me.private.items[ me.private.items.length - 1 ].value;
     };
 
     /**
@@ -730,8 +688,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index: me.private.items.length
         };
 
-        //fire preventable `add:before` event, that can prevent adding value to collection
-        if (!me.fire('add:before', data)) {
+        //send preventable AddBeforeEvent, that can prevent adding value to collection
+        if (!me.events.send(new imports.AddBeforeEvent(data))) {
 
             return me;
         }
@@ -742,8 +700,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             value: value
         });
 
-        //fire closing `add` event
-        me.fire('add', data);
+        //send closing AddEvent
+        me.events.send(new imports.AddEvent(data));
 
         return me;
     };
@@ -849,8 +807,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index: index
         };
 
-        //fire preventable `add:before` event, that can prevent insert value into collection
-        if (!me.fire('add:before', data)) {
+        //send preventable AddBeforeEvent, that can prevent inserting value to collection
+        if (!me.events.send(new imports.AddBeforeEvent(data))) {
 
             return me;
         }
@@ -865,8 +823,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //updated indexes
         updateIndexes.call(me, index + 1);
 
-        //fire closing `add` event
-        me.fire('add', data);
+        //send closing AddEvent
+        me.events.send(new imports.AddEvent(data));
 
         return me;
     };
@@ -930,6 +888,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
         //handle number key - it's index
         var index;
+
         if (xs.isNumber(key)) {
             index = key;
 
@@ -966,20 +925,21 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
         var data = {
             key: key,
-            value: value,
+            old: me.private.items[ index ].value,
+            new: value,
             index: index
         };
 
-        //fire preventable `set:before` event, that can prevent setting value for collection item
-        if (!me.fire('set:before', data)) {
+        //send preventable SetBeforeEvent, that can prevent changing value for collection item
+        if (!me.events.send(new imports.SetBeforeEvent(data))) {
 
             return me;
         }
 
-        me.private.items[index].value = value;
+        me.private.items[ index ].value = value;
 
-        //fire closing `set` event
-        me.fire('set', data);
+        //send closing SetEvent
+        me.events.send(new imports.SetEvent(data));
 
         return me;
     };
@@ -1068,7 +1028,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             });
         }
 
-        var item = me.private.items[index];
+        var item = me.private.items[ index ];
 
         var data = {
             key: item.key,
@@ -1076,8 +1036,9 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             index: index
         };
 
-        //fire preventable `remove:before` event, that can prevent removing value for collection
-        if (!me.fire('remove:before', data)) {
+
+        //send preventable RemoveBeforeEvent, that can prevent removing value from collection
+        if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
 
             return me;
         }
@@ -1088,12 +1049,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //update indexes
         updateIndexes.call(me, index);
 
-        //fire closing `remove` event
-        me.fire('remove', data);
+        //send closing RemoveEvent
+        me.events.send(new imports.RemoveEvent(data));
 
-        //if no items left - fire clear event
+        //if no items left - send ClearEvent
         if (!me.private.items.length) {
-            me.fire('clear');
+            me.events.send(new imports.ClearEvent());
         }
 
         return me;
@@ -1204,15 +1165,18 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      * @chainable
      */
     Class.method.remove = function (value, flags) {
-        var me = this, values = me.values();
-        var data, item, i = 0, items = me.private.items;
+        var me = this;
+        var values = me.values();
+        var data, item;
+        var i = 0;
+        var items = me.private.items;
 
         //remove all if no value given
         if (!arguments.length) {
 
             //remove all occurrences of value in collection
             while (i < items.length) {
-                item = items[i];
+                item = items[ i ];
 
                 data = {
                     key: item.key,
@@ -1220,8 +1184,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //fire preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.fire('remove:before', data)) {
+                //send preventable RemoveBeforeEvent, that can prevent removing value for collection. if happens - continue with next item
+                if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
                     i++;
                     continue;
                 }
@@ -1229,8 +1193,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //fire closing `remove` event
-                me.fire('remove', data);
+                //send closing RemoveEvent
+                me.events.send(new imports.RemoveEvent(data));
             }
 
             //update indexes if anything removed
@@ -1238,8 +1202,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 updateIndexes.call(me, 0);
             } else {
 
-                //if no items left - fire clear event
-                me.fire('clear');
+                //if no items left - send ClearEvent
+                me.events.send(new imports.ClearEvent());
             }
 
             return me;
@@ -1248,7 +1212,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //assert, that value is valid
         self.assert.ok(isValid.call(me, value), 'Not valid');
 
-        var index, all = false;
+        var index;
+        var all = false;
         //if no flags - remove first occurrence of value
         if (arguments.length === 1) {
             index = values.indexOf(value);
@@ -1282,7 +1247,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
             //remove all occurrences of value in collection
             while (i < items.length) {
-                item = items[i];
+                item = items[ i ];
 
                 //if item.value is not equal to value - continue with next item
                 if (item.value !== value) {
@@ -1296,8 +1261,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //fire preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.fire('remove:before', data)) {
+                //send preventable RemoveBeforeEvent, that can prevent removing value for collection. if happens - continue with next item
+                if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
                     i++;
                     continue;
                 }
@@ -1305,8 +1270,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //fire closing `remove` event
-                me.fire('remove', data);
+                //send closing RemoveEvent
+                me.events.send(new imports.RemoveEvent(data));
             }
 
             //update indexes if anything removed
@@ -1315,7 +1280,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             }
         } else {
 
-            item = items[index];
+            item = items[ index ];
 
             data = {
                 key: item.key,
@@ -1323,8 +1288,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 index: index
             };
 
-            //fire preventable `remove:before` event, that can prevent removing value for collection
-            if (!me.fire('remove:before', data)) {
+            //send preventable RemoveBeforeEvent, that can prevent removing value for collection
+            if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
 
                 return me;
             }
@@ -1332,24 +1297,24 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             //remove item from items
             items.splice(index, 1);
 
-            //fire closing `remove` event
-            me.fire('remove', data);
+            //send closing RemoveEvent
+            me.events.send(new imports.RemoveEvent(data));
 
             //update indexes
             updateIndexes.call(me, index);
         }
 
 
-        //if no items left - fire clear event
+        //if no items left - send ClearEvent
         if (!items.length) {
-            me.fire('clear');
+            me.events.send(new imports.ClearEvent());
         }
 
         return me;
     };
 
     /**
-     * Deletes value from collection, if it matches given finder function. Function's arguments are: value, key
+     * Deletes value from collection, if it matches given fn function. Function's arguments are: value, key
      *
      * For example:
      *
@@ -1457,22 +1422,23 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method removeBy
      *
-     * @param {Function} finder function, that returns whether to remove value or not
+     * @param {Function} fn function, that returns whether to remove value or not
      * @param {Number} [flags] optional remove flags:
      * - Reverse - to lookup for value from the end of the collection
      * - All - to remove all matches
      *
      * @chainable
      */
-    Class.method.removeBy = function (finder, flags) {
+    Class.method.removeBy = function (fn, flags) {
         var me = this;
 
-        //assert that finder is function
-        self.assert.fn(finder, 'removeBy - given finder `$finder` is not a function', {
-            $finder: finder
+        //assert that fn is function
+        self.assert.fn(fn, 'removeBy - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
-        var all = false, reverse = false;
+        var all = false;
+        var reverse = false;
         //handle flags
         if (arguments.length > 1) {
 
@@ -1491,16 +1457,18 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         }
 
         //init variables
-        var items = me.private.items, i, item, data, length = items.length;
+        var items = me.private.items;
+        var i, item, data;
+        var length = items.length;
 
         if (all) {
             i = 0;
             //remove all matched occurrences from collection
             while (i < items.length) {
-                item = items[i];
+                item = items[ i ];
 
                 //if item does not match - continue with next item
-                if (!finder(item.value, item.key)) {
+                if (!fn(item.value, item.key)) {
                     //increment index
                     i++;
 
@@ -1513,8 +1481,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //fire preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.fire('remove:before', data)) {
+                //send preventable RemoveBeforeEvent, that can prevent removing value for collection. if happens - continue with next item
+                if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
                     i++;
 
                     continue;
@@ -1523,17 +1491,17 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //fire closing `remove` event
-                me.fire('remove', data);
+                //send closing RemoveEvent
+                me.events.send(new imports.RemoveEvent(data));
             }
         } else if (reverse) {
             i = items.length - 1;
             //remove all matched occurrences from collection
             while (i >= 0) {
-                item = items[i];
+                item = items[ i ];
 
                 //if item does not match - continue with next item
-                if (!finder(item.value, item.key)) {
+                if (!fn(item.value, item.key)) {
                     //decrement index
                     i--;
 
@@ -1546,8 +1514,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //fire preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.fire('remove:before', data)) {
+                //send preventable RemoveBeforeEvent, that can prevent removing value for collection. if happens - continue with next item
+                if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
                     i--;
 
                     continue;
@@ -1556,8 +1524,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //fire closing `remove` event
-                me.fire('remove', data);
+                //send closing RemoveEvent
+                me.events.send(new imports.RemoveEvent(data));
 
                 break;
             }
@@ -1565,10 +1533,10 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             i = 0;
             //remove first matched occurrence from collection
             while (i < items.length) {
-                item = items[i];
+                item = items[ i ];
 
                 //if item does not match - continue with next item
-                if (!finder(item.value, item.key)) {
+                if (!fn(item.value, item.key)) {
                     //increment index
                     i++;
 
@@ -1581,8 +1549,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                     index: i
                 };
 
-                //fire preventable `remove:before` event, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.fire('remove:before', data)) {
+                //send preventable RemoveBeforeEvent, that can prevent removing value for collection. if happens - continue with next item
+                if (!me.events.send(new imports.RemoveBeforeEvent(data))) {
                     i++;
 
                     continue;
@@ -1591,8 +1559,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 //remove item from collection
                 items.splice(i, 1);
 
-                //fire closing `remove` event
-                me.fire('remove', data);
+                //send closing RemoveEvent
+                me.events.send(new imports.RemoveEvent(data));
 
                 break;
             }
@@ -1603,16 +1571,16 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             updateIndexes.call(me, 0);
         }
 
-        //fire clear event if no items left
+        //send ClearEvent if no items left
         if (!items.length) {
-            me.fire('clear');
+            me.events.send(new imports.ClearEvent());
         }
 
         return me;
     };
 
     /**
-     * Iterates over collection in direct or reverse order via calling given iterator function
+     * Iterates over collection in direct or reverse order via calling given fn function
      *
      * For example:
      *
@@ -1664,23 +1632,24 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method each
      *
-     * @param {Function} iterator list iterator
+     * @param {Function} fn list fn
      * @param {Number} [flags] additional iterating flags:
      * - Reverse - to iterate in reverse order
      * @param {Object} [scope] optional scope
      *
      * @chainable
      */
-    Class.method.each = function (iterator, flags, scope) {
+    Class.method.each = function (fn, flags, scope) {
         var me = this;
 
-        //assert that iterator is function
-        self.assert.fn(iterator, 'each - given iterator `$iterator` is not a function', {
-            $iterator: iterator
+        //assert that fn is function
+        self.assert.fn(fn, 'each - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         //handle flags
         var reverse = false;
+
         if (arguments.length >= 2) {
 
             //assert that flags is number
@@ -1700,16 +1669,18 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         }
 
         //iterate
-        var i, item, length = me.private.items.length;
+        var i, item;
+        var length = me.private.items.length;
+
         if (reverse) {
             for (i = length - 1; i >= 0; i--) {
-                item = me.private.items[i];
-                iterator.call(scope, item.value, item.key, me);
+                item = me.private.items[ i ];
+                fn.call(scope, item.value, item.key, me);
             }
         } else {
             for (i = 0; i < length; i++) {
-                item = me.private.items[i];
-                iterator.call(scope, item.value, item.key, me);
+                item = me.private.items[ i ];
+                fn.call(scope, item.value, item.key, me);
             }
         }
 
@@ -1717,7 +1688,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     };
 
     /**
-     * Returns collection item|items, that passed given finder function
+     * Returns collection item|items, that passed given fn function
      *
      * For example:
      *
@@ -1740,12 +1711,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *         return this.sum(key, value.x) === 2;
      *     }, scope));
      *     //outputs:
-     *     // {x: 2}, reference to collection[0], first value, passed finder function
+     *     // {x: 2}, reference to collection[0], first value, passed fn function
      *     console.log(collection.find(function(value, key) {
      *         return this.sum(key, value.x) === 2;
      *     }, scope, xs.util.Collection.Reverse));
      *     //outputs:
-     *     // {x: 0}, reference to collection[2], first value, passed finder function
+     *     // {x: 0}, reference to collection[2], first value, passed fn function
      *     console.log(collection.find(function(value, key) {
      *         return this.sum(key, value.x) >= 2;
      *     }, scope, xs.util.Collection.All));
@@ -1766,12 +1737,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *         return this.first(key) === 'a';
      *     }, scope));
      *     //outputs:
-     *     // {x: 2}, reference to collection[0], first value, passed finder function
+     *     // {x: 2}, reference to collection[0], first value, passed fn function
      *     console.log(collection.find(function(value, key) {
      *         return this.first(key) === 'a';
      *     }, scope, xs.util.Collection.Reverse));
      *     //outputs:
-     *     // {x: 0}, reference to collection[2], first value, passed finder function
+     *     // {x: 0}, reference to collection[2], first value, passed fn function
      *     console.log(collection.find(function(value, key) {
      *         return this.first(key) === 'a';
      *     }, scope, xs.util.Collection.All));
@@ -1783,23 +1754,25 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method find
      *
-     * @param {Function} finder function, returning true if value matches given conditions
+     * @param {Function} fn function, returning true if value matches given conditions
      * @param {Number} [flags] additional search flags:
      * - All - to find all matches
      * @param {Object} [scope] optional scope
      *
      * @return {*|xs.util.Collection} found value, undefined if nothing found, or xs.util.Collection with results if All flag was given
      */
-    Class.method.find = function (finder, flags, scope) {
+    Class.method.find = function (fn, flags, scope) {
         var me = this;
 
-        //assert that finder is function
-        self.assert.fn(finder, 'find - given finder `$finder` is not a function', {
-            $finder: finder
+        //assert that fn is function
+        self.assert.fn(fn, 'find - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         //handle flags
-        var all = false, reverse = false;
+        var all = false;
+        var reverse = false;
+
         if (arguments.length >= 2) {
 
             //assert that flags is number
@@ -1822,15 +1795,17 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         }
 
         //init variables
-        var i, item, length = me.private.items.length, found;
+        var i, item, found;
+        var length = me.private.items.length;
 
         if (all) {
             //copies of matched items
             var items = [];
 
             for (i = 0; i < length; i++) {
-                item = me.private.items[i];
-                if (finder.call(scope, item.value, item.key, me)) {
+                item = me.private.items[ i ];
+
+                if (fn.call(scope, item.value, item.key, me)) {
                     //add index
                     items.push({
                         key: item.key,
@@ -1843,16 +1818,18 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             found.private.items = items;
         } else if (reverse) {
             for (i = length - 1; i >= 0; i--) {
-                item = me.private.items[i];
-                if (finder.call(scope, item.value, item.key, me)) {
+                item = me.private.items[ i ];
+
+                if (fn.call(scope, item.value, item.key, me)) {
                     found = item.value;
                     break;
                 }
             }
         } else {
             for (i = 0; i < length; i++) {
-                item = me.private.items[i];
-                if (finder.call(scope, item.value, item.key, me)) {
+                item = me.private.items[ i ];
+
+                if (fn.call(scope, item.value, item.key, me)) {
                     found = item.value;
                     break;
                 }
@@ -1863,7 +1840,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     };
 
     /**
-     * Produces a new list with values, returned by iterator function
+     * Produces a new list with values, returned by fn function
      * if source was array - array is created
      * if source was object - object is created
      *
@@ -1901,17 +1878,17 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method map
      *
-     * @param {Function} mapper mapping function
+     * @param {Function} fn mapping function
      * @param {Object} [scope] optional scope
      *
      * @return {Array|Object} Mapping result
      */
-    Class.method.map = function (mapper, scope) {
+    Class.method.map = function (fn, scope) {
         var me = this;
 
-        //assert that mapper is function
-        self.assert.fn(mapper, 'map - given mapper `$mapper` is not a function', {
-            $mapper: mapper
+        //assert that fn is function
+        self.assert.fn(fn, 'map - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
 
@@ -1921,15 +1898,17 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         }
 
         //init variables
-        var i, item, length = me.private.items.length;
+        var i, item;
+        var length = me.private.items.length;
 
         //mapped items
         var items = [];
+
         for (i = 0; i < length; i++) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
             items.push({
                 key: item.key,
-                value: mapper.call(scope, item.value, item.key, me)
+                value: fn.call(scope, item.value, item.key, me)
             });
         }
 
@@ -1940,7 +1919,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     };
 
     /**
-     * Reduces collection values by reducer function
+     * Reduces collection values by fn function
      *
      * For example:
      *
@@ -2014,7 +1993,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method reduce
      *
-     * @param {Function} reducer reducing function
+     * @param {Function} fn reducing function
      * @param {Number} [flags] additional iterating flags:
      * - Reverse - to reduce in reverse order
      * @param {Object} [scope] optional scope
@@ -2022,12 +2001,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @return {*} Reducing result
      */
-    Class.method.reduce = function (reducer, flags, scope, memo) {
+    Class.method.reduce = function (fn, flags, scope, memo) {
         var me = this;
 
-        //assert that reducer is function
-        self.assert.fn(reducer, 'reduce - given reducer `$reducer` is not a function', {
-            $reducer: reducer
+        //assert that fn is function
+        self.assert.fn(fn, 'reduce - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         //assert that collection is not empty
@@ -2035,6 +2014,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
         //handle flags
         var reverse = false;
+
         if (arguments.length >= 2) {
 
             //assert that flags is number
@@ -2055,12 +2035,14 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
 
         //check memo
         var hasMemo = false;
+
         if (arguments.length >= 4) {
             hasMemo = true;
         }
 
         //init variables
-        var result, i, item, length = me.private.items.length;
+        var result, i, item;
+        var length = me.private.items.length;
 
         //reduce
         if (reverse) {
@@ -2069,12 +2051,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 result = memo;
             } else {
                 i = length - 2;
-                result = me.private.items[length - 1].value;
+                result = me.private.items[ length - 1 ].value;
             }
 
             for (; i >= 0; i--) {
-                item = me.private.items[i];
-                result = reducer.call(scope, result, item.value, item.key, me);
+                item = me.private.items[ i ];
+                result = fn.call(scope, result, item.value, item.key, me);
             }
         } else {
             if (hasMemo) {
@@ -2082,12 +2064,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 result = memo;
             } else {
                 i = 1;
-                result = me.private.items[0].value;
+                result = me.private.items[ 0 ].value;
             }
 
             for (; i < length; i++) {
-                item = me.private.items[i];
-                result = reducer.call(scope, result, item.value, item.key, me);
+                item = me.private.items[ i ];
+                result = fn.call(scope, result, item.value, item.key, me);
             }
         }
 
@@ -2095,7 +2077,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     };
 
     /**
-     * Returns whether count of list values pass tester function
+     * Returns whether count of list values pass fn function
      *
      * For example:
      *
@@ -2152,21 +2134,22 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method some
      *
-     * @param {Function} tester tester function
+     * @param {Function} fn fn function
      * @param {Number} [count] count of values needed to resolve as true
      * @param {Object} [scope] optional scope
      *
-     * @return {Boolean} whether some values pass tester function
+     * @return {Boolean} whether some values pass fn function
      */
-    Class.method.some = function (tester, count, scope) {
-        var me = this, length = me.private.items.length;
+    Class.method.some = function (fn, count, scope) {
+        var me = this;
+        var length = me.private.items.length;
 
         //assert that collection is not empty
         self.assert.ok(me.private.items.length, 'some - collection is empty');
 
-        //assert that tester is function
-        self.assert.fn(tester, 'some - given tester `$tester` is not a function', {
-            $tester: tester
+        //assert that fn is function
+        self.assert.fn(fn, 'some - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         //default count to 1, if not given
@@ -2179,7 +2162,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             $count: count
         });
 
-        self.assert.ok(0 <= count && count <= length, 'some - given count `$count` is out of bounds [$min, $max]', {
+        self.assert.ok(count >= 0 && count <= length, 'some - given count `$count` is out of bounds [$min, $max]', {
             $count: count,
             $min: 0,
             $max: length
@@ -2190,16 +2173,17 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             scope = me;
         }
 
-        var i, item, found = 0;
+        var i, item;
+        var found = 0;
 
         //handle negative scenario
         if (count === 0) {
             //iterate over me.private.items to find matches
             for (i = 0; i < length; i++) {
-                item = me.private.items[i];
+                item = me.private.items[ i ];
 
-                //increment found if tester returns true
-                if (tester.call(scope, item.value, item.key, me)) {
+                //increment found if fn returns true
+                if (fn.call(scope, item.value, item.key, me)) {
                     found++;
                 }
 
@@ -2216,10 +2200,10 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         //handle positive scenario
         //iterate over me.private.items to find matches
         for (i = 0; i < length; i++) {
-            item = me.private.items[i];
+            item = me.private.items[ i ];
 
-            //increment found if tester returns true
-            if (tester.call(scope, item.value, item.key, me)) {
+            //increment found if fn returns true
+            if (fn.call(scope, item.value, item.key, me)) {
                 found++;
             }
 
@@ -2234,7 +2218,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     };
 
     /**
-     * Returns whether all of list values pass tester function
+     * Returns whether all of list values pass fn function
      *
      * For example:
      *
@@ -2281,24 +2265,24 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method all
      *
-     * @param {Function} tester tester function
+     * @param {Function} fn fn function
      * @param {Object} [scope] optional scope
      *
-     * @return {Boolean} whether all values pass tester function
+     * @return {Boolean} whether all values pass fn function
      */
-    Class.method.all = function (tester, scope) {
+    Class.method.all = function (fn, scope) {
         var me = this;
 
         if (arguments.length >= 2) {
 
-            return me.some(tester, me.private.items.length, scope);
+            return me.some(fn, me.private.items.length, scope);
         }
 
-        return me.some(tester, me.private.items.length);
+        return me.some(fn, me.private.items.length);
     };
 
     /**
-     * Returns whether none of list values pass tester function
+     * Returns whether none of list values pass fn function
      *
      * For example:
      *
@@ -2345,20 +2329,20 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method none
      *
-     * @param {Function} tester tester function
+     * @param {Function} fn fn function
      * @param {Object} [scope] optional scope
      *
-     * @return {Boolean} whether none values pass tester function
+     * @return {Boolean} whether none values pass fn function
      */
-    Class.method.none = function (tester, scope) {
+    Class.method.none = function (fn, scope) {
         var me = this;
 
         if (arguments.length >= 2) {
 
-            return me.some(tester, 0, scope);
+            return me.some(fn, 0, scope);
         }
 
-        return me.some(tester, 0);
+        return me.some(fn, 0);
     };
 
     /**
@@ -2424,9 +2408,13 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         });
 
 
-        var length = keys.length, key, i, ownKeys = me.keys(), index, item, items = [];
+        var length = keys.length;
+        var key, i, index, item;
+        var ownKeys = me.keys();
+        var items = [];
+
         for (i = 0; i < length; i++) {
-            key = keys[i];
+            key = keys[ i ];
 
             //assert that key is string or number
             self.assert.ok(xs.isString(key) || xs.isNumber(key), 'pick - key `$key`, given for collection, is neither number nor string', {
@@ -2467,7 +2455,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             }
 
             //get picked item
-            item = me.private.items[index];
+            item = me.private.items[ index ];
 
             //copy it to items
             items.push({
@@ -2544,12 +2532,16 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
         });
 
 
-        var length = keys.length, key, i, ownKeys = me.keys(), maxIndex = ownKeys.length - 1, index, item, items = [];
+        var length = keys.length;
+        var key, i, index, item;
+        var ownKeys = me.keys();
+        var maxIndex = ownKeys.length - 1;
+        var items = [];
 
         var omittedIndexes = [];
         //remove blacklisted items
         for (i = 0; i < length; i++) {
-            key = keys[i];
+            key = keys[ i ];
 
             //assert that key is string or number
             self.assert.ok(xs.isString(key) || xs.isNumber(key), 'omit - key `$key`, given for collection, is neither number nor string', {
@@ -2599,7 +2591,7 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
                 continue;
             }
 
-            item = me.private.items[i];
+            item = me.private.items[ i ];
             items.push({
                 key: item.key,
                 value: item.value
@@ -2644,11 +2636,13 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     Class.method.toSource = function () {
         var me = this;
 
-        var source = {}, length = me.private.items.length, item;
+        var source = {};
+        var length = me.private.items.length;
+        var item;
 
         for (var i = 0; i < length; i++) {
-            item = me.private.items[i];
-            source[item.key] = item.value;
+            item = me.private.items[ i ];
+            source[ item.key ] = item.value;
         }
 
         return source;
@@ -2662,19 +2656,13 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     Class.method.destroy = function () {
         var me = this;
 
-        //fire destroy event
-        me.fire('destroy');
-
         //try to remove all items
         me.remove();
 
         //assert that collection is clear
         self.assert.empty(me.private.items, 'destroy - some remove:before handlers blocked removing items from collection');
 
-        //toggle off all events
-        me.off();
-
-        //fire Observable.destroy
+        //call Observable.destroy
         self.mixins.observable.prototype.destroy.call(me);
 
         //call parent destroy
@@ -2704,7 +2692,10 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     var verifySourceValues = function (values) {
         var me = this;
 
-        var type = me.private.type, kind = me.private.kind, i, length = values.length;
+        var type = me.private.type;
+        var kind = me.private.kind;
+        var i;
+        var length = values.length;
 
         //if class
         if (kind === 'class') {
@@ -2712,8 +2703,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
 
                 //assert, that value is instance of type or Class, that mixes type
-                self.assert.ok(isClassInstance.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of `$Class` of instance of class, that mixins `$Class`', {
-                    $value: values[i],
+                self.assert.ok(isClassInstance.call(me, values[ i ]), 'verifySourceValues - given value `$value` is not an instance of `$Class` of instance of class, that mixins `$Class`', {
+                    $value: values[ i ],
                     $Class: type
                 });
             }
@@ -2724,8 +2715,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
 
                 //assert, that value is instance of Class that implements type
-                self.assert.ok(isImplementation.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of class, that implements interface `$Interface`', {
-                    $value: values[i],
+                self.assert.ok(isImplementation.call(me, values[ i ]), 'verifySourceValues - given value `$value` is not an instance of class, that implements interface `$Interface`', {
+                    $value: values[ i ],
                     $Interface: type
                 });
             }
@@ -2736,8 +2727,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
 
                 //assert, that value is instance of given constructor
-                self.assert.ok(isInstance.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of `$Class`', {
-                    $value: values[i],
+                self.assert.ok(isInstance.call(me, values[ i ]), 'verifySourceValues - given value `$value` is not an instance of `$Class`', {
+                    $value: values[ i ],
                     $Class: type
                 });
             }
@@ -2748,8 +2739,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
             for (i = 0; i < length; i++) {
 
                 //assert, that value passes given primitive verifier
-                self.assert.ok(isType.call(me, values[i]), 'verifySourceValues - given value `$value` is not an instance of `$Class`', {
-                    $value: values[i],
+                self.assert.ok(isType.call(me, values[ i ]), 'verifySourceValues - given value `$value` is not an instance of `$Class`', {
+                    $value: values[ i ],
                     $Class: type.name
                 });
             }
@@ -2762,7 +2753,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
     var isValid = function (value) {
         var me = this;
 
-        var type = me.private.type, kind = me.private.kind;
+        var type = me.private.type;
+        var kind = me.private.kind;
 
         //return true if not typed collection
         if (!type) {
@@ -2860,11 +2852,12 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      * @param {Number} index index, update starts from
      */
     var updateIndexes = function (index) {
-        var me = this, length = me.private.items.length;
+        var me = this;
+        var length = me.private.items.length;
 
         //updated indexes for all items, starting from given index
         for (var i = index; i < length; i++) {
-            var item = me.private.items[i];
+            var item = me.private.items[ i ];
 
             //update if is number
             if (xs.isNumber(item.key)) {

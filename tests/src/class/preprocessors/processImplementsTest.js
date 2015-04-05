@@ -23,7 +23,7 @@ module('xs.class.preprocessors.processImplements', function () {
         //define
         me.BaseInterface = xs.Interface(function () {
             var me = this;
-            me.constant = ['a'];
+            me.constant = [ 'a' ];
             me.static.property.b = undefined;
             me.static.property.c = {
                 get: function () {
@@ -93,11 +93,15 @@ module('xs.class.preprocessors.processImplements', function () {
         //define
         me.BaseClass = xs.Class(function () {
             var me = this;
-            me.implements = ['tests.class.preprocessors.processImplements.BaseInterface'];
+            me.implements = [ 'tests.class.preprocessors.processImplements.BaseInterface' ];
             me.constant.a = 1;
             me.static.property.b = 1;
-            me.static.property.c = {get: xs.noop};
-            me.static.property.d = {set: xs.noop};
+            me.static.property.c = {
+                get: xs.noop
+            };
+            me.static.property.d = {
+                set: xs.noop
+            };
             me.static.method.e = xs.noop;
             me.static.method.f = function (a, b) {
             };
@@ -120,13 +124,17 @@ module('xs.class.preprocessors.processImplements', function () {
         me.ChildClass = xs.Class(function () {
             var me = this;
             me.extends = 'tests.class.preprocessors.processImplements.BaseClass';
-            me.implements = ['tests.class.preprocessors.processImplements.ChildInterface'];
+            me.implements = [ 'tests.class.preprocessors.processImplements.ChildInterface' ];
             me.constructor = function (a, b) {
 
             };
             me.property.g = 1;
-            me.property.h = {get: xs.noop};
-            me.property.i = {set: xs.noop};
+            me.property.h = {
+                get: xs.noop
+            };
+            me.property.i = {
+                set: xs.noop
+            };
             me.method.j = xs.noop;
             me.method.k = function (a, b) {
             };
@@ -141,7 +149,7 @@ module('xs.class.preprocessors.processImplements', function () {
         //add to ContractsManager
         xs.ContractsManager.add(me.ChildClassName, me.ChildClass);
 
-        xs.onReady([me.ChildClassName], me.done);
+        xs.onReady([ me.ChildClassName ], me.done);
 
         return false;
     }, function () {
@@ -165,24 +173,28 @@ module('xs.class.preprocessors.processImplements', function () {
 
         //BaseInterface
         xs.ContractsManager.remove(me.BaseInterfaceName);
+
         if (me.BaseInterfaceSave) {
             xs.ContractsManager.add(me.BaseInterfaceName, me.BaseInterfaceSave);
         }
 
         //ChildInterface
         xs.ContractsManager.remove(me.ChildInterfaceName);
+
         if (me.ChildInterfaceSave) {
             xs.ContractsManager.add(me.ChildInterfaceName, me.ChildInterfaceSave);
         }
 
         //BaseClass
         xs.ContractsManager.remove(me.BaseClassName);
+
         if (me.BaseClassSave) {
             xs.ContractsManager.add(me.BaseClassName, me.BaseClassSave);
         }
 
         //ChildClass
         xs.ContractsManager.remove(me.ChildClassName);
+
         if (me.ChildClassSave) {
             xs.ContractsManager.add(me.ChildClassName, me.ChildClassSave);
         }

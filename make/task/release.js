@@ -11,7 +11,7 @@ module.exports = function () {
     var pure = require('../pureFunctions');
 
     //remove old files
-    del(['build/release/*.js']);
+    del([ 'build/release/*.js' ]);
 
 
     //get core stream

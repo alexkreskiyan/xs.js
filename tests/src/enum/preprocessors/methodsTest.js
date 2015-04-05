@@ -62,6 +62,7 @@ module('xs.enum.preprocessors.methods', function () {
 
         //Enum
         xs.ContractsManager.remove(me.EnumName);
+
         if (me.EnumSave) {
             xs.ContractsManager.add(me.EnumName, me.EnumSave);
         }

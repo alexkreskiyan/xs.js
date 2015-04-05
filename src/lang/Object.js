@@ -18,7 +18,7 @@ var assert = new xs.core.Asserter(log, XsLangObjectError);
 xs.Object = (function () {
     var me = {};
 
-    // Create quick reference variables for speed access to core prototypes.
+    //Create quick reference variables for speed access to core prototypes.
     var slice = Function.prototype.call.bind(Array.prototype.slice);
 
     /**
@@ -29,7 +29,7 @@ xs.Object = (function () {
      *     var list = {
      *         x: 1
      *     };
-     *     xs.extend(list, {
+     *     xs.apply(list, {
      *         x: 2,
      *         c: 1
      *     }, {
@@ -45,33 +45,35 @@ xs.Object = (function () {
      *     //    a: 4
      *     //}
      *
-     * @method extend
+     * @method apply
      *
      * @param {Object} object extended object
      */
-    me.extend = function (object) {
+    me.apply = function (object) {
 
-        //assert that index is in bounds
-        assert.object(object, 'extend - given `$object` is not object', {
+        //assert that object given
+        assert.object(object, 'apply - given `$object` is not object', {
             $object: object
         });
 
-        var adds = slice(arguments, 1), addsLength = adds.length;
+        var adds = slice(arguments, 1);
+        var addsLength = adds.length;
 
         //iterate over add-ons
         for (var i = 0; i < addsLength; i++) {
-            var source = adds[i];
+            var source = adds[ i ];
 
             //continue if source is not object
             if (!xs.isObject(source)) {
                 continue;
             }
 
-            var sourceKeys = Object.keys(source), sourceLength = sourceKeys.length;
+            var sourceKeys = Object.keys(source);
+            var sourceLength = sourceKeys.length;
 
             for (var j = 0; j < sourceLength; j++) {
-                var key = sourceKeys[j];
-                object[key] = source[key];
+                var key = sourceKeys[ j ];
+                object[ key ] = source[ key ];
             }
         }
     };
@@ -96,5 +98,5 @@ XsLangObjectError.prototype = new Error();
 
 //extend xs with object
 Object.keys(xs.Object).forEach(function (key) {
-    xs[key] = xs.Object[key];
+    xs[ key ] = xs.Object[ key ];
 });

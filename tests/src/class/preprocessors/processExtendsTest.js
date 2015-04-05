@@ -21,7 +21,7 @@ module('xs.class.preprocessors.processExtends', function () {
         me.Class = xs.define(xs.Class, 'tests.class.preprocessors.processExtends.Class', function () {
         });
 
-        xs.onReady([me.ClassName], me.done);
+        xs.onReady([ me.ClassName ], me.done);
 
         return false;
     }, function () {
@@ -120,18 +120,21 @@ module('xs.class.preprocessors.processExtends', function () {
 
         //Base
         xs.ContractsManager.remove(me.BaseName);
+
         if (me.BaseSave) {
             xs.ContractsManager.add(me.BaseName, me.BaseSave);
         }
 
         //Parent
         xs.ContractsManager.remove(me.ParentName);
+
         if (me.ParentSave) {
             xs.ContractsManager.add(me.ParentName, me.ParentSave);
         }
 
         //Child
         xs.ContractsManager.remove(me.ChildName);
+
         if (me.ChildSave) {
             xs.ContractsManager.add(me.ChildName, me.ChildSave);
         }

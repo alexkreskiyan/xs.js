@@ -3,6 +3,7 @@
 //require used modules
 var gulp = require('gulp');
 var indent = require('gulp-indent');
+var trimlines = require('gulp-trimlines');
 var wrap = require('gulp-wrap');
 var concat = require('gulp-concat');
 var merge = require('gulp-merge');
@@ -12,7 +13,7 @@ var src = require('./source.json');
 
 //export scripts array
 module.exports = {
-    core: getCoreStream(['src/xs.js'], src.core),
+    core: getCoreStream([ 'src/xs.js' ], src.core),
     modules: getModulesStream(src.modules)
 };
 
@@ -38,6 +39,12 @@ function getCoreStream(entry, core) {
         src: 'make/template/framework'
     }));
 
+    //trim lines
+    build = build.pipe(trimlines({
+        leading: false,
+        trailing: true
+    }));
+
     return build;
 }
 
@@ -52,8 +59,8 @@ function assemblyCoreStreams(core) {
 
     for (var i = 0; i < names.length; i++) {
 
-        var name = names[i];
-        var module = core[name];
+        var name = names[ i ];
+        var module = core[ name ];
 
         if (isModule(module)) {
 
@@ -170,14 +177,14 @@ function getModulesStream(src) {
 function assemblyModules(list, modules, name) {
     //modules is node, if given string contract
     if (isModule(modules)) {
-        list[name] = modules;
+        list[ name ] = modules;
 
         return;
     }
 
     //modules is category
     Object.keys(modules).forEach(function (key) {
-        assemblyModules(list, modules[key], name ? (name + '.' + key) : key);
+        assemblyModules(list, modules[ key ], name ? (name + '.' + key) : key);
     });
 }
 

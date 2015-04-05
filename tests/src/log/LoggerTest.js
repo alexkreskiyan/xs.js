@@ -15,51 +15,18 @@ module('xs.log.Logger', function () {
     test('logger.error', function () {
         var me = this;
 
-        //define Memory route
-        xs.Class(function (self) {
+        //create logs storage
+        me.logs = new xs.core.Collection();
 
-            var Class = this;
+        //test category
+        me.category = 'tests.xs.log.Logger.error';
 
-            Class.extends = 'xs.log.route.Route';
-
-            Class.constructor = function (name, rules) {
-                var me = this;
-
-                if (arguments.length > 1) {
-                    self.parent.call(me, name, rules);
-                } else {
-                    self.parent.call(me, name);
-                }
-
-                //create logs storage
-                me.logs = new xs.core.Collection();
-            };
-
-            Class.method.process = function (category, level, message, data) {
-                var me = this;
-
-                if (!self.parent.prototype.process.call(me, category, level)) {
-
-                    return;
-                }
-
-                me.logs.add({
-                    category: category,
-                    level: level,
-                    message: message,
-                    data: data
-                });
-            };
-        }, function (Class) {
-
-            //add new route to router
-            me.route = new Class('memory');
-            xs.log.Router.routes.add(me.route);
-
-            me.done();
-        });
-
-        return false;
+        //stream to logs
+        me.stream = xs.log.Router
+            .filter(function (event) {
+                return event.category === me.category;
+            })
+            .on(me.logs.add.bind(me.logs));
     }, function () {
         var me = this;
 
@@ -67,88 +34,50 @@ module('xs.log.Logger', function () {
         //init test variables
 
         //demo category, message and data
-        var category = 'some.category';
         var message = 'Message text';
-        var data = {x: 1};
+        var data = {
+            x: 1
+        };
 
         //create logger
-        var logger = new xs.log.Logger(category);
-
-        //reset logs collection
-        me.route.logs.remove();
+        var logger = new xs.log.Logger(me.category);
 
 
         //run test
-
-        //assert, that logs storage is empty
-        strictEqual(me.route.logs.size, 0);
 
         //process message
         logger.error(message, data);
 
         //assert, that logs storage has new entry
-        strictEqual(me.route.logs.size, 1);
+        strictEqual(me.logs.size, 1);
 
         //assert, that message is related to demo data
-        var entry = me.route.logs.at(0);
-        strictEqual(entry.category, category);
+        var entry = me.logs.at(0);
+        strictEqual(entry.category, me.category);
         strictEqual(entry.level, xs.log.Error);
         strictEqual(entry.message, message);
         strictEqual(entry.data, data);
     }, function () {
         var me = this;
 
-        xs.log.Router.routes.remove(me.route);
+        me.stream.destroy();
     });
 
     test('logger.warn', function () {
         var me = this;
 
-        //define Memory route
-        xs.Class(function (self) {
+        //create logs storage
+        me.logs = new xs.core.Collection();
 
-            var Class = this;
+        //test category
+        me.category = 'tests.xs.log.Logger.warn';
 
-            Class.extends = 'xs.log.route.Route';
-
-            Class.constructor = function (name, rules) {
-                var me = this;
-
-                if (arguments.length > 1) {
-                    self.parent.call(me, name, rules);
-                } else {
-                    self.parent.call(me, name);
-                }
-
-                //create logs storage
-                me.logs = new xs.core.Collection();
-            };
-
-            Class.method.process = function (category, level, message, data) {
-                var me = this;
-
-                if (!self.parent.prototype.process.call(me, category, level)) {
-
-                    return;
-                }
-
-                me.logs.add({
-                    category: category,
-                    level: level,
-                    message: message,
-                    data: data
-                });
-            };
-        }, function (Class) {
-
-            //add new route to router
-            me.route = new Class('memory');
-            xs.log.Router.routes.add(me.route);
-
-            me.done();
-        });
-
-        return false;
+        //stream to logs
+        me.stream = xs.log.Router
+            .filter(function (event) {
+                return event.category === me.category;
+            })
+            .on(me.logs.add.bind(me.logs));
     }, function () {
         var me = this;
 
@@ -156,88 +85,50 @@ module('xs.log.Logger', function () {
         //init test variables
 
         //demo category, message and data
-        var category = 'some.category';
         var message = 'Message text';
-        var data = {x: 1};
+        var data = {
+            x: 1
+        };
 
         //create logger
-        var logger = new xs.log.Logger(category);
-
-        //reset logs collection
-        me.route.logs.remove();
+        var logger = new xs.log.Logger(me.category);
 
 
         //run test
-
-        //assert, that logs storage is empty
-        strictEqual(me.route.logs.size, 0);
 
         //process message
         logger.warn(message, data);
 
         //assert, that logs storage has new entry
-        strictEqual(me.route.logs.size, 1);
+        strictEqual(me.logs.size, 1);
 
         //assert, that message is related to demo data
-        var entry = me.route.logs.at(0);
-        strictEqual(entry.category, category);
+        var entry = me.logs.at(0);
+        strictEqual(entry.category, me.category);
         strictEqual(entry.level, xs.log.Warning);
         strictEqual(entry.message, message);
         strictEqual(entry.data, data);
     }, function () {
         var me = this;
 
-        xs.log.Router.routes.remove(me.route);
+        me.stream.destroy();
     });
 
     test('logger.info', function () {
         var me = this;
 
-        //define Memory route
-        xs.Class(function (self) {
+        //create logs storage
+        me.logs = new xs.core.Collection();
 
-            var Class = this;
+        //test category
+        me.category = 'tests.xs.log.Logger.info';
 
-            Class.extends = 'xs.log.route.Route';
-
-            Class.constructor = function (name, rules) {
-                var me = this;
-
-                if (arguments.length > 1) {
-                    self.parent.call(me, name, rules);
-                } else {
-                    self.parent.call(me, name);
-                }
-
-                //create logs storage
-                me.logs = new xs.core.Collection();
-            };
-
-            Class.method.process = function (category, level, message, data) {
-                var me = this;
-
-                if (!self.parent.prototype.process.call(me, category, level)) {
-
-                    return;
-                }
-
-                me.logs.add({
-                    category: category,
-                    level: level,
-                    message: message,
-                    data: data
-                });
-            };
-        }, function (Class) {
-
-            //add new route to router
-            me.route = new Class('memory');
-            xs.log.Router.routes.add(me.route);
-
-            me.done();
-        });
-
-        return false;
+        //stream to logs
+        me.stream = xs.log.Router
+            .filter(function (event) {
+                return event.category === me.category;
+            })
+            .on(me.logs.add.bind(me.logs));
     }, function () {
         var me = this;
 
@@ -245,88 +136,50 @@ module('xs.log.Logger', function () {
         //init test variables
 
         //demo category, message and data
-        var category = 'some.category';
         var message = 'Message text';
-        var data = {x: 1};
+        var data = {
+            x: 1
+        };
 
         //create logger
-        var logger = new xs.log.Logger(category);
-
-        //reset logs collection
-        me.route.logs.remove();
+        var logger = new xs.log.Logger(me.category);
 
 
         //run test
-
-        //assert, that logs storage is empty
-        strictEqual(me.route.logs.size, 0);
 
         //process message
         logger.info(message, data);
 
         //assert, that logs storage has new entry
-        strictEqual(me.route.logs.size, 1);
+        strictEqual(me.logs.size, 1);
 
         //assert, that message is related to demo data
-        var entry = me.route.logs.at(0);
-        strictEqual(entry.category, category);
+        var entry = me.logs.at(0);
+        strictEqual(entry.category, me.category);
         strictEqual(entry.level, xs.log.Info);
         strictEqual(entry.message, message);
         strictEqual(entry.data, data);
     }, function () {
         var me = this;
 
-        xs.log.Router.routes.remove(me.route);
+        me.stream.destroy();
     });
 
     test('logger.trace', function () {
         var me = this;
 
-        //define Memory route
-        xs.Class(function (self) {
+        //create logs storage
+        me.logs = new xs.core.Collection();
 
-            var Class = this;
+        //test category
+        me.category = 'tests.xs.log.Logger.trace';
 
-            Class.extends = 'xs.log.route.Route';
-
-            Class.constructor = function (name, rules) {
-                var me = this;
-
-                if (arguments.length > 1) {
-                    self.parent.call(me, name, rules);
-                } else {
-                    self.parent.call(me, name);
-                }
-
-                //create logs storage
-                me.logs = new xs.core.Collection();
-            };
-
-            Class.method.process = function (category, level, message, data) {
-                var me = this;
-
-                if (!self.parent.prototype.process.call(me, category, level)) {
-
-                    return;
-                }
-
-                me.logs.add({
-                    category: category,
-                    level: level,
-                    message: message,
-                    data: data
-                });
-            };
-        }, function (Class) {
-
-            //add new route to router
-            me.route = new Class('memory');
-            xs.log.Router.routes.add(me.route);
-
-            me.done();
-        });
-
-        return false;
+        //stream to logs
+        me.stream = xs.log.Router
+            .filter(function (event) {
+                return event.category === me.category;
+            })
+            .on(me.logs.add.bind(me.logs));
     }, function () {
         var me = this;
 
@@ -334,88 +187,50 @@ module('xs.log.Logger', function () {
         //init test variables
 
         //demo category, message and data
-        var category = 'some.category';
         var message = 'Message text';
-        var data = {x: 1};
+        var data = {
+            x: 1
+        };
 
         //create logger
-        var logger = new xs.log.Logger(category);
-
-        //reset logs collection
-        me.route.logs.remove();
+        var logger = new xs.log.Logger(me.category);
 
 
         //run test
-
-        //assert, that logs storage is empty
-        strictEqual(me.route.logs.size, 0);
 
         //process message
         logger.trace(message, data);
 
         //assert, that logs storage has new entry
-        strictEqual(me.route.logs.size, 1);
+        strictEqual(me.logs.size, 1);
 
         //assert, that message is related to demo data
-        var entry = me.route.logs.at(0);
-        strictEqual(entry.category, category);
+        var entry = me.logs.at(0);
+        strictEqual(entry.category, me.category);
         strictEqual(entry.level, xs.log.Trace);
         strictEqual(entry.message, message);
         strictEqual(entry.data, data);
     }, function () {
         var me = this;
 
-        xs.log.Router.routes.remove(me.route);
+        me.stream.destroy();
     });
 
     test('logger.profile', function () {
         var me = this;
 
-        //define Memory route
-        xs.Class(function (self) {
+        //create logs storage
+        me.logs = new xs.core.Collection();
 
-            var Class = this;
+        //test category
+        me.category = 'tests.xs.log.Logger.profile';
 
-            Class.extends = 'xs.log.route.Route';
-
-            Class.constructor = function (name, rules) {
-                var me = this;
-
-                if (arguments.length > 1) {
-                    self.parent.call(me, name, rules);
-                } else {
-                    self.parent.call(me, name);
-                }
-
-                //create logs storage
-                me.logs = new xs.core.Collection();
-            };
-
-            Class.method.process = function (category, level, message, data) {
-                var me = this;
-
-                if (!self.parent.prototype.process.call(me, category, level)) {
-
-                    return;
-                }
-
-                me.logs.add({
-                    category: category,
-                    level: level,
-                    message: message,
-                    data: data
-                });
-            };
-        }, function (Class) {
-
-            //add new route to router
-            me.route = new Class('memory');
-            xs.log.Router.routes.add(me.route);
-
-            me.done();
-        });
-
-        return false;
+        //stream to logs
+        me.stream = xs.log.Router
+            .filter(function (event) {
+                return event.category === me.category;
+            })
+            .on(me.logs.add.bind(me.logs));
     }, function () {
         var me = this;
 
@@ -423,11 +238,10 @@ module('xs.log.Logger', function () {
         //init test variables
 
         //demo category, message and data
-        var category = 'some.category';
         var mark = 'Profile mark';
 
         //create logger
-        var logger = new xs.log.Logger(category);
+        var logger = new xs.log.Logger(me.category);
 
 
         //run test
@@ -437,21 +251,15 @@ module('xs.log.Logger', function () {
 
         setTimeout(function () {
 
-            //reset logs collection
-            me.route.logs.remove();
-
-            //assert, that logs storage is empty
-            strictEqual(me.route.logs.size, 0);
-
             //end profile
             logger.profile.end(mark);
 
             //assert, that logs storage has new entry
-            strictEqual(me.route.logs.size, 1);
+            strictEqual(me.logs.size, 1);
 
             //assert, that message is related to demo data
-            var entry = me.route.logs.at(0);
-            strictEqual(entry.category, category);
+            var entry = me.logs.at(0);
+            strictEqual(entry.category, me.category);
             strictEqual(entry.level, xs.log.Profile);
             strictEqual(entry.message, mark);
             strictEqual(Object.keys(entry.data).toString(), 'time');
@@ -464,7 +272,7 @@ module('xs.log.Logger', function () {
     }, function () {
         var me = this;
 
-        xs.log.Router.routes.remove(me.route);
+        me.stream.destroy();
     });
 
 });

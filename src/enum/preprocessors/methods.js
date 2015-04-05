@@ -24,7 +24,7 @@ xs.enum.preprocessors.add('methods', function () {
 
         var key = keys.filter(function (name) {
 
-            return values[name] === value;
+            return values[ name ] === value;
         }).shift();
 
         assert.defined(key, 'keyOf - given value `$value` is not a part of enum', {
@@ -41,7 +41,7 @@ xs.enum.preprocessors.add('methods', function () {
 
         return keys.some(function (name) {
 
-            return values[name] === value;
+            return values[ name ] === value;
         });
     }));
 });

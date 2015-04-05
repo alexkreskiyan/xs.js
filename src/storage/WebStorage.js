@@ -10,8 +10,6 @@
  * @class xs.storage.WebStorage
  *
  * @extends xs.class.Base
- *
- * @mixins xs.event.StaticObservable
  */
 xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
@@ -57,6 +55,50 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     Class.constant.storage = undefined;
 
     /**
+     * Storage flag, meaning, that change operation was addition
+     *
+     * @property Add
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Add = 0x1;
+
+    /**
+     * Storage flag, meaning, that change operation was replacement
+     *
+     * @property Set
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Set = 0x2;
+
+    /**
+     * Storage flag, meaning, that change operation was removal
+     *
+     * @property Remove
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Remove = 0x4;
+
+    /**
+     * Storage flag, meaning, that change operation was clear
+     *
+     * @property Clear
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Clear = 0x8;
+
+    /**
      * Collection length
      *
      * @property size
@@ -91,7 +133,9 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
      * @return {Array} storage values
      */
     Class.static.method.values = function () {
-        var storage = this.storage, size = storage.length, values = [];
+        var storage = this.storage;
+        var size = storage.length;
+        var values = [];
 
         for (var i = 0; i < size; i++) {
             values.push(storage.getItem(storage.key(i)));
@@ -146,7 +190,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
      * @return {String|Number|undefined} found key, or undefined if nothing found
      */
     Class.static.method.keyOf = function (value, flags) {
-        var me = this, index;
+        var me = this;
+        var index;
 
         //assert that value is string
         me.assert.string(value, 'keyOf - given value `$value` is not a string', {
@@ -195,7 +240,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         var index = me.keys().indexOf(key);
 
         //check, that key exists
-        me.assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
+        me.assert.ok(index >= 0, 'at - given key `$key` does not exist', {
             $key: key
         });
 
@@ -234,6 +279,13 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         //add item
         me.storage.setItem(key, value);
 
+        //send change
+        me.events.send({
+            type: self.Add,
+            key: key,
+            value: value
+        });
+
         return me;
     };
 
@@ -264,11 +316,18 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         var index = me.keys().indexOf(key);
 
         //assert that key exists
-        me.assert.ok(index >= 0, 'set - given key `$key` doesn\'t exist', {
+        me.assert.ok(index >= 0, 'set - given key `$key` does not exist', {
             $key: key
         });
 
         me.storage.setItem(key, value);
+
+        //send change
+        me.events.send({
+            type: self.Set,
+            key: key,
+            value: value
+        });
 
         return me;
     };
@@ -293,12 +352,29 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         var index = me.keys().indexOf(key);
 
         //assert that key exists
-        me.assert.ok(index >= 0, 'removeAt - given key `$key` doesn\'t exist in storage', {
+        me.assert.ok(index >= 0, 'removeAt - given key `$key` does not exist in storage', {
             $key: key
         });
 
+        //get removed value
+        var value = me.storage.getItem(key);
+
         //remove item from storage
         me.storage.removeItem(key);
+
+        //send change
+        me.events.send({
+            type: self.Remove,
+            key: key,
+            value: value
+        });
+
+        //send clear
+        if (!me.storage.length) {
+            me.events.send({
+                type: self.Clear
+            });
+        }
 
         return me;
     };
@@ -316,16 +392,23 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
      * @chainable
      */
     Class.static.method.remove = function (value, flags) {
-        var me = this, values = me.values();
+        var me = this;
+        var values = me.values();
 
         //remove all if no value given
         if (!arguments.length) {
             me.storage.clear();
 
+            //send clear
+            me.events.send({
+                type: self.Clear
+            });
+
             return me;
         }
 
-        var index, all = false;
+        var index;
+        var all = false;
         //if no flags - remove first occurrence of value
         if (arguments.length === 1) {
             index = values.indexOf(value);
@@ -352,12 +435,15 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
 
         //assert, that item exists
-        me.assert.ok(index >= 0, 'remove - given value doesn\'t exist in storage');
+        me.assert.ok(index >= 0, 'remove - given value does not exist in storage');
 
-        var key, storage = me.storage;
+        var key;
+        var storage = me.storage;
+
         //if all flag is given
         if (all) {
-            var i = 0, item;
+            var i = 0;
+            var item;
 
             //remove all occurrences of value in storage
             while (i < storage.length) {
@@ -372,6 +458,13 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
                 //remove item from storage
                 storage.removeItem(key);
+
+                //send change
+                me.events.send({
+                    type: self.Remove,
+                    key: key,
+                    value: value
+                });
             }
 
         } else {
@@ -380,32 +473,48 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
             //remove item from items
             storage.removeItem(key);
+
+            //send change
+            me.events.send({
+                type: self.Remove,
+                key: key,
+                value: value
+            });
+        }
+
+        //send clear
+        if (!me.storage.length) {
+            me.events.send({
+                type: self.Clear
+            });
         }
 
         return me;
     };
 
     /**
-     * Deletes value from storage, if it matches given finder function. Function's arguments are: value, key
+     * Deletes value from storage, if it matches given fn function. Function's arguments are: value, key
      *
      * @method removeBy
      *
-     * @param {Function} finder function, that returns whether to remove value or not
+     * @param {Function} fn function, that returns whether to remove value or not
      * @param {Number} [flags] optional remove flags:
      * - Reverse - to lookup for value from the end of the storage
      * - All - to remove all matches
      *
      * @chainable
      */
-    Class.static.method.removeBy = function (finder, flags) {
+    Class.static.method.removeBy = function (fn, flags) {
         var me = this;
 
-        //assert that finder is function
-        me.assert.fn(finder, 'removeBy - given finder `$finder` is not a function', {
-            $finder: finder
+        //assert that fn is function
+        me.assert.fn(fn, 'removeBy - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
-        var all = false, reverse = false;
+        var all = false;
+        var reverse = false;
+
         //handle flags
         if (arguments.length > 1) {
 
@@ -424,7 +533,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         }
 
         //init variables
-        var storage = me.storage, i, key, item;
+        var storage = me.storage;
+        var i, key, item;
 
         if (all) {
             i = 0;
@@ -434,7 +544,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 item = storage.getItem(key);
 
                 //if item does not match - continue with next item
-                if (!finder(item, key)) {
+                if (!fn(item, key)) {
                     //increment index
                     i++;
 
@@ -443,6 +553,13 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
                 //remove item from storage
                 storage.removeItem(key);
+
+                //send change
+                me.events.send({
+                    type: self.Remove,
+                    key: key,
+                    value: item
+                });
             }
         } else if (reverse) {
             i = storage.length - 1;
@@ -452,7 +569,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 item = storage.getItem(key);
 
                 //if item does not match - continue with next item
-                if (!finder(item, key)) {
+                if (!fn(item, key)) {
                     //decrement index
                     i--;
 
@@ -461,6 +578,13 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
 
                 //remove item from storage
                 storage.removeItem(key);
+
+                //send change
+                me.events.send({
+                    type: self.Remove,
+                    key: key,
+                    value: item
+                });
 
                 break;
             }
@@ -472,7 +596,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 item = storage.getItem(key);
 
                 //if item does not match - continue with next item
-                if (!finder(item, key)) {
+                if (!fn(item, key)) {
                     //increment index
                     i++;
 
@@ -482,35 +606,50 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
                 //remove item from storage
                 storage.removeItem(key);
 
+                //send change
+                me.events.send({
+                    type: self.Remove,
+                    key: key,
+                    value: item
+                });
+
                 break;
             }
+        }
+
+        //send clear
+        if (!me.storage.length) {
+            me.events.send({
+                type: self.Clear
+            });
         }
 
         return me;
     };
 
     /**
-     * Iterates over storage in direct or reverse order via calling given iterator function
+     * Iterates over storage in direct or reverse order via calling given fn function
      *
      * @method each
      *
-     * @param {Function} iterator list iterator
+     * @param {Function} fn list fn
      * @param {Number} [flags] additional iterating flags:
      * - Reverse - to iterate in reverse order
      * @param {Object} [scope] optional scope
      *
      * @chainable
      */
-    Class.static.method.each = function (iterator, flags, scope) {
+    Class.static.method.each = function (fn, flags, scope) {
         var me = this;
 
-        //assert that iterator is function
-        me.assert.fn(iterator, 'each - given iterator `$iterator` is not a function', {
-            $iterator: iterator
+        //assert that fn is function
+        me.assert.fn(fn, 'each - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         //handle flags
         var reverse = false;
+
         if (arguments.length >= 2) {
 
             //assert that flags is number
@@ -530,18 +669,21 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         }
 
         //iterate
-        var storage = me.storage, length = storage.length, i, key, item;
+        var storage = me.storage;
+        var length = storage.length;
+        var i, key, item;
+
         if (reverse) {
             for (i = length - 1; i >= 0; i--) {
                 key = storage.key(i);
                 item = storage.getItem(key);
-                iterator.call(scope, item, key, me);
+                fn.call(scope, item, key, me);
             }
         } else {
             for (i = 0; i < length; i++) {
                 key = storage.key(i);
                 item = storage.getItem(key);
-                iterator.call(scope, item, key, me);
+                fn.call(scope, item, key, me);
             }
         }
 
@@ -549,27 +691,29 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     };
 
     /**
-     * Returns storage item|items, that passed given finder function
+     * Returns storage item|items, that passed given fn function
      *
      * @method find
      *
-     * @param {Function} finder function, returning true if value matches given conditions
+     * @param {Function} fn function, returning true if value matches given conditions
      * @param {Number} [flags] additional search flags:
      * - All - to find all matches
      * @param {Object} [scope] optional scope
      *
      * @return {*|xs.core.Collection} found value, undefined if nothing found, or xs.core.Collection with results if All flag was given
      */
-    Class.static.method.find = function (finder, flags, scope) {
+    Class.static.method.find = function (fn, flags, scope) {
         var me = this;
 
-        //assert that finder is function
-        me.assert.fn(finder, 'find - given finder `$finder` is not a function', {
-            $finder: finder
+        //assert that fn is function
+        me.assert.fn(fn, 'find - given fn `$fn` is not a function', {
+            $fn: fn
         });
 
         //handle flags
-        var all = false, reverse = false;
+        var all = false;
+        var reverse = false;
+
         if (arguments.length >= 2) {
 
             //assert that flags is number
@@ -592,7 +736,9 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
         }
 
         //init variables
-        var storage = me.storage, length = storage.length, i, key, item, found;
+        var storage = me.storage;
+        var length = storage.length;
+        var i, key, item, found;
 
         if (all) {
             //copies of matched items
@@ -601,7 +747,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             for (i = 0; i < length; i++) {
                 key = storage.key(i);
                 item = storage.getItem(key);
-                if (finder.call(scope, item, key, me)) {
+
+                if (fn.call(scope, item, key, me)) {
                     //add index
                     items.push({
                         key: key,
@@ -616,7 +763,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             for (i = length - 1; i >= 0; i--) {
                 key = storage.key(i);
                 item = storage.getItem(key);
-                if (finder.call(scope, item, key, me)) {
+
+                if (fn.call(scope, item, key, me)) {
                     found = item;
                     break;
                 }
@@ -625,7 +773,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
             for (i = 0; i < length; i++) {
                 key = storage.key(i);
                 item = storage.getItem(key);
-                if (finder.call(scope, item, key, me)) {
+
+                if (fn.call(scope, item, key, me)) {
                     found = item;
                     break;
                 }
@@ -645,12 +794,15 @@ xs.define(xs.Class, 'ns.WebStorage', function (self) {
     Class.static.method.toSource = function () {
         var me = this;
 
-        var source = {}, storage = me.storage, length = storage.length, key, item;
+        var source = {};
+        var storage = me.storage;
+        var length = storage.length;
+        var key, item;
 
         for (var i = 0; i < length; i++) {
             key = storage.key(i);
             item = storage.getItem(key);
-            source[key] = item;
+            source[ key ] = item;
         }
 
         return source;
