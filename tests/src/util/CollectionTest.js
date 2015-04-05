@@ -563,15 +563,25 @@ module('xs.util.Collection', function () {
 
         //test events
         collection = new xs.util.Collection(Number);
+
         var str = '';
+
+        var log = {
+            addBefore: [],
+            add: []
+        };
 
         //add:before - add only values, that are greater than five
         collection.events.on(xs.util.collection.AddBeforeEvent, function (event) {
+            log.addBefore.push(event.value + ':' + event.key + ':' + event.index);
+
             return event.value > 5 && event.value < 10;
         });
 
         //add - post-processing added values
         collection.events.on(xs.util.collection.AddEvent, function (event) {
+            log.add.push(event.value + ':' + event.key + ':' + event.index);
+
             str += event.value + event.key + event.index + ':';
         });
 
@@ -585,6 +595,24 @@ module('xs.util.Collection', function () {
         strictEqual(JSON.stringify(collection.toSource()), '{"b":6,"c":6,"d":8,"e":8,"f":8}');
 
         strictEqual(str, '6b0:6c1:8d2:8e3:8f4:');
+
+        strictEqual(JSON.stringify(log.addBefore), JSON.stringify([
+            '4:a:0',
+            '6:b:0',
+            '6:c:1',
+            '8:d:2',
+            '8:e:3',
+            '8:f:4',
+            '10:g:5'
+        ]));
+
+        strictEqual(JSON.stringify(log.add), JSON.stringify([
+            '6:b:0',
+            '6:c:1',
+            '8:d:2',
+            '8:e:3',
+            '8:f:4'
+        ]));
     });
 
     test('insert', function () {
@@ -652,15 +680,25 @@ module('xs.util.Collection', function () {
 
         //test events
         collection = new xs.util.Collection(Number);
+
         var str = '';
+
+        var log = {
+            addBefore: [],
+            add: []
+        };
 
         //add:before - insert only values, that are greater than five
         collection.events.on(xs.util.collection.AddBeforeEvent, function (event) {
+            log.addBefore.push(event.value + ':' + event.key + ':' + event.index);
+
             return event.value > 5 && event.value < 10;
         });
 
         //add - post-processing inserted values
         collection.events.on(xs.util.collection.AddEvent, function (event) {
+            log.add.push(event.value + ':' + event.key + ':' + event.index);
+
             str += event.value + event.key + event.index + ':';
         });
 
@@ -674,6 +712,24 @@ module('xs.util.Collection', function () {
         strictEqual(JSON.stringify(collection.toSource()), '{"b":6,"f":8,"d":8,"e":8,"c":6}');
 
         strictEqual(str, '6b0:6c1:8d1:8e2:8f1:');
+
+        strictEqual(JSON.stringify(log.addBefore), JSON.stringify([
+            '4:a:0',
+            '6:b:0',
+            '6:c:1',
+            '8:d:1',
+            '8:e:2',
+            '8:f:1',
+            '10:g:4'
+        ]));
+
+        strictEqual(JSON.stringify(log.add), JSON.stringify([
+            '6:b:0',
+            '6:c:1',
+            '8:d:1',
+            '8:e:2',
+            '8:f:1'
+        ]));
     });
 
     test('set', function () {
@@ -742,15 +798,25 @@ module('xs.util.Collection', function () {
             f: 4,
             g: 5
         }, Number);
+
         var str = '';
+
+        var log = {
+            setBefore: [],
+            set: []
+        };
 
         //set:before - set only values, that are greater than five
         collection.events.on(xs.util.collection.SetBeforeEvent, function (event) {
+            log.setBefore.push(event.old + ':' + event.new + ':' + event.key + ':' + event.index);
+
             return event.new > 5 && event.new < 10;
         });
 
         //set - post-processing of set values
         collection.events.on(xs.util.collection.SetEvent, function (event) {
+            log.set.push(event.old + ':' + event.new + ':' + event.key + ':' + event.index);
+
             str += event.new + event.key + event.index + ':';
         });
 
@@ -764,6 +830,23 @@ module('xs.util.Collection', function () {
         strictEqual(JSON.stringify(collection.toSource()), '{"a":10,"b":8,"c":6,"d":6,"e":8,"f":8,"g":5}');
 
         strictEqual(str, '6c2:6d3:8f5:8e4:');
+
+        strictEqual(JSON.stringify(log.setBefore), JSON.stringify([
+            '7:6:c:2',
+            '10:3:a:0',
+            '8:6:d:3',
+            '5:10:g:6',
+            '8:5:b:1',
+            '4:8:f:5',
+            '6:8:e:4'
+        ]));
+
+        strictEqual(JSON.stringify(log.set), JSON.stringify([
+            '7:6:c:2',
+            '8:6:d:3',
+            '4:8:f:5',
+            '6:8:e:4'
+        ]));
     });
 
     test('removeAt', function () {
@@ -826,15 +909,25 @@ module('xs.util.Collection', function () {
             f: 8,
             g: 10
         }, Number);
+
         var str = '';
+
+        var log = {
+            removeBefore: [],
+            remove: []
+        };
 
         //remove:before - remove only values, that are greater than five
         collection.events.on(xs.util.collection.RemoveBeforeEvent, function (event) {
+            log.removeBefore.push(event.value + ':' + event.key + ':' + event.index);
+
             return event.value > 5 && event.value < 10;
         });
 
         //remove - post-processing removed values
         collection.events.on(xs.util.collection.RemoveEvent, function (event) {
+            log.remove.push(event.value + ':' + event.key + ':' + event.index);
+
             str += event.value + event.key + event.index + ':';
         });
 
@@ -853,6 +946,22 @@ module('xs.util.Collection', function () {
         strictEqual(JSON.stringify(collection.toSource()), '{"a":4,"c":6,"e":8,"g":10}');
 
         strictEqual(str, '8f5:6b1:8d2:');
+
+        strictEqual(JSON.stringify(log.removeBefore), JSON.stringify([
+            '8:f:5',
+            '6:b:1',
+            '10:g:4',
+            '4:a:0',
+            '8:d:2',
+            '4:a:0',
+            '4:a:0'
+        ]));
+
+        strictEqual(JSON.stringify(log.remove), JSON.stringify([
+            '8:f:5',
+            '6:b:1',
+            '8:d:2'
+        ]));
     });
 
     test('remove', function () {
@@ -946,15 +1055,25 @@ module('xs.util.Collection', function () {
             f: 8,
             g: 10
         }, Number);
+
         var str = '';
+
+        var log = {
+            removeBefore: [],
+            remove: []
+        };
 
         //remove:before - remove only values, that are greater than five
         collection.events.on(xs.util.collection.RemoveBeforeEvent, function (event) {
+            log.removeBefore.push(event.value + ':' + event.key + ':' + event.index);
+
             return event.value > 5 && event.value < 10;
         });
 
         //remove - post-processing removed values
         collection.events.on(xs.util.collection.RemoveEvent, function (event) {
+            log.remove.push(event.value + ':' + event.key + ':' + event.index);
+
             str += event.value + event.key + event.index + ':';
         });
 
@@ -976,6 +1095,22 @@ module('xs.util.Collection', function () {
         collection.remove();
 
         strictEqual(str, '6b1:6c1:8d1:8f2:!!!');
+
+        strictEqual(JSON.stringify(log.removeBefore), JSON.stringify([
+            '4:a:0',
+            '6:b:1',
+            '6:c:1',
+            '8:d:1',
+            '8:f:2',
+            '10:g:2'
+        ]));
+
+        strictEqual(JSON.stringify(log.remove), JSON.stringify([
+            '6:b:1',
+            '6:c:1',
+            '8:d:1',
+            '8:f:2'
+        ]));
     });
 
     test('removeBy', function () {
@@ -1067,15 +1202,25 @@ module('xs.util.Collection', function () {
             f: 8,
             g: 10
         }, Number);
+
         var str = '';
+
+        var log = {
+            removeBefore: [],
+            remove: []
+        };
 
         //remove:before - remove only values, that are greater than five
         collection.events.on(xs.util.collection.RemoveBeforeEvent, function (event) {
+            log.removeBefore.push(event.value + ':' + event.key + ':' + event.index);
+
             return event.value > 5 && event.value < 10;
         });
 
         //remove - post-processing removed values
         collection.events.on(xs.util.collection.RemoveEvent, function (event) {
+            log.remove.push(event.value + ':' + event.key + ':' + event.index);
+
             str += event.value + event.key + event.index + ':';
         });
 
@@ -1109,6 +1254,22 @@ module('xs.util.Collection', function () {
         }, xs.util.Collection.All);
 
         strictEqual(str, '6b1:6c1:8d1:8f2:!!!');
+
+        strictEqual(JSON.stringify(log.removeBefore), JSON.stringify([
+            '4:a:0',
+            '6:b:1',
+            '6:c:1',
+            '8:d:1',
+            '8:f:2',
+            '10:g:2'
+        ]));
+
+        strictEqual(JSON.stringify(log.remove), JSON.stringify([
+            '6:b:1',
+            '6:c:1',
+            '8:d:1',
+            '8:f:2'
+        ]));
     });
 
     test('each', function () {
