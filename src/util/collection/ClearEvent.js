@@ -16,7 +16,7 @@ xs.define(xs.Class, 'ns.ClearEvent', function () {
     Class.namespace = 'xs.util.collection';
 
     Class.implements = [
-        'ns.IEvent'
+        'xs.event.IEvent'
     ];
 
     /**

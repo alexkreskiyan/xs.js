@@ -16,7 +16,7 @@ xs.define(xs.Class, 'ns.RemoveBeforeEvent', function (self) {
     Class.namespace = 'xs.util.collection';
 
     Class.implements = [
-        'ns.IEvent'
+        'xs.event.IEvent'
     ];
 
     /**

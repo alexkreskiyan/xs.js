@@ -249,9 +249,6 @@
             },
             "util": {
                 "collection": {
-                    "IEvent": {
-                        "contract": "interface"
-                    },
                     "AddBeforeEvent": {
                         "contract": "class",
                         "test": false
