@@ -1,0 +1,4 @@
+WebWorkers - needed review and a decision about how they will be used.
+Perhaps, some convenient wrapper will allow to comfortably run complex calculations within one of workers in pool
+Service workers - will be great for use when supported
+Shared worker - the same

@@ -1,0 +1,5 @@
+XHR - single request
+XHR - connection (to perform multiple requests) - is it necessary?
+XHR must support CORS, binary requests, form data
+XHR although must support uploads and downloads with progress events both sides
+XHR must support custom request headers and access to response headers
