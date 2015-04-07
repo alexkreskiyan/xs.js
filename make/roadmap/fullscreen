@@ -1,0 +1,20 @@
+Fullscreen API support
+
+see
+https://developer.mozilla.org/ru/docs/DOM/Using_fullscreen_mode
+
+is strongly dependent on browser support
+needs to be added to xs.env.Support
+
+xs.dom.Element has `fullscreen` method
+
+xs.fullscreen - singleton
+xs.fullscreen#show(xs.dom.Element element)
+xs.fullscreen#cancel()
+xs.fullscreen#active - state
+xs.fullscreen#element - xs.dom.Element reference
+
+
+fullscreen
+xs.fullscreen.event.Change              fullscreenchange    https://developer.mozilla.org/en-US/docs/Web/Events/fullscreenchange    An element was turned to fullscreen mode or back to normal mode.
+xs.fullscreen.event.Error               fullscreenerror     https://developer.mozilla.org/en-US/docs/Web/Events/fullscreenerror     It was impossible to switch to fullscreen mode for technical reasons or because the permission was denied.
