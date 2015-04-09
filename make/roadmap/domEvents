@@ -56,15 +56,6 @@ xs.dom.event.composition.Start          compositionstart    https://developer.mo
 xs.dom.event.composition.Update         compositionupdate   https://developer.mozilla.org/en-US/docs/Web/Events/compositionupdate   A character is added to a passage of text being composed.
 xs.dom.event.composition.End            compositionend      https://developer.mozilla.org/en-US/docs/Web/Events/compositionend      The composition of a passage of text has been completed or canceled.
 
-dd:
-xs.dom.event.dd.Start                   dragstart           https://developer.mozilla.org/en-US/docs/Web/Events/dragstart           The user starts dragging an element or text selection.
-xs.dom.event.dd.Move                    drag                https://developer.mozilla.org/en-US/docs/Web/Events/drag                An element or text selection is being dragged (every 350ms).
-xs.dom.event.dd.End                     dragend             https://developer.mozilla.org/en-US/docs/Web/Events/dragend             A drag operation is being ended (by releasing a mouse button or hitting the escape key).
-xs.dom.event.dd.Over                    dragover            https://developer.mozilla.org/en-US/docs/Web/Events/dragover            An element or text selection is being dragged over a valid drop target (every 350ms).
-xs.dom.event.dd.Enter                   dragenter           https://developer.mozilla.org/en-US/docs/Web/Events/dragenter           A dragged element or text selection enters a valid drop target.
-xs.dom.event.dd.Leave                   dragleave           https://developer.mozilla.org/en-US/docs/Web/Events/dragleave           A dragged element or text selection leaves a valid drop target.
-xs.dom.event.dd.Drop                    drop                https://developer.mozilla.org/en-US/docs/Web/Events/drop                An element is dropped on a valid drop target.
-
 key:
 xs.dom.event.key.Down                   keydown             https://developer.mozilla.org/en-US/docs/Web/Events/keydown             A key is pressed down.
 xs.dom.event.key.Press                  keypress            https://developer.mozilla.org/en-US/docs/Web/Events/keypress            A key is pressed down and that key normally produces a character value (use input instead).
