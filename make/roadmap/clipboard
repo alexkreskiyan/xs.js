@@ -1,0 +1,5 @@
+clipboard support. is it needed? how it can be used?
+
+clipboard:
+xs.clipboard.event.Copy                 copy                https://developer.mozilla.org/en-US/docs/Web/Events/copy                The text selection has been added to the clipboard.
+xs.clipboard.event.Cut                  cut                 https://developer.mozilla.org/en-US/docs/Web/Events/cut                 The text selection has been removed from the document and added to the clipboard.
