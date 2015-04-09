@@ -1,0 +1,9 @@
+Resources - NEEDED
+
+Resource - is another contract type.
+
+There must be an abstract resource ancestor and easily defined inheritable?? children resources
+
+Resource is static entity by itself
+
+TODO detailed review needed to match all use cases
