@@ -1,1 +1,11 @@
 Touch events are supported through domEvents proposal
+
+touch events will be although used in dd implementation
+
+dom events:
+touchstart          https://developer.mozilla.org/en-US/docs/Web/Events/touchstart          A touch point is placed on the touch surface.
+touchend            https://developer.mozilla.org/en-US/docs/Web/Events/touchend            A touch point is removed from the touch surface.
+touchmove           https://developer.mozilla.org/en-US/docs/Web/Events/touchmove           A touch point is moved along the touch surface.
+touchcancel         https://developer.mozilla.org/en-US/docs/Web/Events/touchcancel         A touch point has been disrupted in an implementation-specific manners (too many touch points for example).
+
+https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
