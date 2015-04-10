@@ -1,5 +1,0 @@
-Data storage
-Models temporary collections are provided via queries - they are selections, that are (optionally) syncronized with sources
-Sources are responsive for interaction with other data layers - on the server and in the local storage
-
-Here transactions mechanism is introduced
