@@ -1,0 +1,122 @@
+1. Reader
+base contracts:
+xs.data.reader.IReader - base reader contract, all readers must implement it
+IReader = xs.data.reader.IReader
+- IReader.constructor = function(config)
+config has options for reader
+- IReader.read = function(raw)
+processes raw data according to internal configuration and returns it
+xs.data.Reader - not needed TODO remove
+
+2. Writer
+base contracts:
+xs.data.writer.IWriter - base writer contract, all writers must implement it
+IWriter = xs.data.writer.IWriter
+- IWriter.constructor = function(config)
+config has options for writer
+- IWriter.write = function(data)
+transform data to raw according to internal configuration and returns it
+xs.data.Writer - not needed TODO remove
+
+3. Operation
+base contracts:
+xs.data.operation.Operation - not needed TODO remove
+xs.data.operation.IOperation - base interface, all operations have to implement
+
+xs.data.operation.ISourceOperation - inherited interface, all source operations have to implement
+ISourceOperation = xs.data.operation.ISourceOperation
+- ISourceOperation.method.<method name> = function(<method formal arguments>);
+ISourceOperation that way defines an operation, that must be supported by both proxy and source
+
+xs.data.operation.IModelOperation - inherited interface, all model operations have to implement
+IModelOperation = xs.data.operation.IModelOperation
+- IModelOperation.method.<method name> = function(<method formal arguments>);
+IModelOperation that way defines an operation, that must be supported by both model and source
+
+Default operations:
+- xs.data.operation.source.ICreate
+Model is created externally, saved - with store, when added to it
+- xs.data.operation.source.ICreateSome
+Models are created externally, saved - either sequentially or in batch mode (if source supports respective operation)
+- xs.data.operation.source.IRead
+Model is fetched via source's proxy by primary key. Optionally - added to source
+- xs.data.operation.source.IReadSome
+All models are fetched via source's proxy by primary keys (returned as xs.core.Collection). Optionally - added to source
+- xs.data.operation.source.IReadAll
+All models are fetched via source's proxy. Optionally - added to source
+- xs.data.operation.source.IUpdate
+Model must be attached to source to be saved.
+- xs.data.operation.source.IUpdateSome
+Models must be attached to source to be saved. Saved - either sequentially or in batch mode (if source supports respective operation)
+- xs.data.operation.source.IDelete
+Source removes either model (then it will be destroyed), or achieves primary key.
+If model is destroyed - it is removed from source, but no delete is sent
+- xs.data.operation.source.IDeleteSome
+Source removes either models (then it will be destroyed), or achieves primary keys (if batch mode supported)
+If model is destroyed - it is removed from source, but no delete is sent
+- xs.data.operation.source.IDeleteAll
+Source's remove method was called without params
+
+
+4. Proxy
+base contracts:
+xs.data.proxy.IProxy - not needed TODO remove
+xs.data.proxy.Proxy - base class, that all proxies extend
+Proxy = xs.data.proxy.Proxy
+- Proxy.constructor = function(config)
+- Proxy.property.reader = {set:function(value)}
+- Proxy.property.writer = {set:function(value)}
+
+Concrete proxy class defines implemented operations
+
+5. Source
+base contracts:
+xs.data.source.Source
+Various methods are defined by implementing some operations
+Source = xs.data.Source
+- Source.property.proxy = {set:function(value)}
+on set - proxy is validated to implement all operations, source implements itself
+- Source.const.model = xs.lazy(function() {return imports.Model});
+- Source.method.bind = function(<relation name>, <source>)
+
+6. Model
+base contracts:
+xs.data.IModel - not needed TODO remove
+
+Model introduces own preprocessor (is needed for attributes, primary and foreign keys and relations processing)
+xs.data.Model - base class, that implements most logic of model
+Model = xs.data.Model
+- Model.attributes = [
+];
+Attributes and primary keys are declared here
+
+- Model.relations = {
+    <relation name> : {
+        fields: <foreign key>
+        model: <model name>
+    }
+};
+Relations and foreign keys are defined here
+
+- Model.constant.source = <Boolean>
+Whether model is used with source.
+- Model.property.source = {set:xs.noop}
+Model can be moved between sources (model.private.source)
+- Model.property.proxy = {set,get}
+
+Additionally, model, when declared, contains:
+- attributes
+- some attributes are declared as primary ones
+- foreign keys specifications (complex keys support needed)
+when foreign keys are specified, source can be binded to another one (that one should be mentioned by one of foreign keys)
+and force that store to load dependent data.
+
+Model's behavior depends on whether it can be attached to source
+If model can not be attached, it can have it's own proxy
+If model is defined as attachable to source, it can not have it's own proxy
+
+
+7. Query (result depends on joins and calculated fields)
+base contracts:
+xs.data.Query
+query is like a collection, but provides more possibilities
