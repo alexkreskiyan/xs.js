@@ -167,6 +167,10 @@ module('xs.class.preprocessors.processImplements', function () {
         strictEqual(ns.BaseClass.implements(ns.ChildInterface), false);
         strictEqual(ns.ChildClass.implements(ns.BaseInterface), true);
         strictEqual(ns.ChildClass.implements(ns.ChildInterface), true);
+        strictEqual(ns.ChildClass.implements([
+            ns.BaseInterface,
+            ns.ChildInterface
+        ]), true);
 
     }, function () {
         var me = this;

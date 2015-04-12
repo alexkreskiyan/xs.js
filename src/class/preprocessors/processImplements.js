@@ -40,20 +40,32 @@ xs.class.preprocessors.add('processImplements', function (Class) {
      *
      * @method implements
      *
-     * @param {Function} Interface verified interface
+     * @param {Function|Function[]} Interface verified interface(s)
      *
      * @return {Boolean} whether Class.descriptor.implements collection contains label of given interface
      */
     xs.constant(Class, 'implements', function (Interface) {
-        assert.Interface(Interface, '$Class: given `$Interface` is not an interface', {
-            $Class: Class,
-            $Interface: Interface
+        var Class = this;
+
+        //convert to collection
+        var Interfaces = new xs.core.Collection(xs.isArray(Interface) ? Interface : [ Interface ]);
+
+        var interfaces = Class.descriptor.implements;
+
+        //return whether all Interfaces are implemented
+        return Interfaces.all(function (Interface) {
+
+            assert.Interface(Interface, '$Class: given `$Interface` is not an interface', {
+                $Class: Class,
+                $Interface: Interface
+            });
+
+            //return whether class interfaces contain Interface or it's child
+            return interfaces.find(function (Candidate) {
+
+                return Candidate === Interface || Candidate.inherits(Interface);
+            });
         });
-
-        return Boolean(this.descriptor.implements.find(function (Candidate) {
-
-            return Candidate === Interface || Candidate.inherits(Interface);
-        }));
     });
 
     return true;
