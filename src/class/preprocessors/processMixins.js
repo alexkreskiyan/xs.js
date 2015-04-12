@@ -42,17 +42,32 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
      *
      * @method mixins
      *
-     * @param {Function} Mixin verified mixin class
+     * @param {Function|Function[]} Mixin verified mixin class(es)
      *
      * @return {Boolean} whether given Mixin class is stored with some alias in Class.prototype.mixins
      */
     xs.constant(Class, 'mixins', function (Mixin) {
-        assert.Class(Mixin, '$Class: given non-class value `$Mixin`', {
-            $Class: Class,
-            $Mixin: Mixin
-        });
+        var Class = this;
 
-        return this.descriptor.allMixins.has(Mixin);
+        //convert to collection
+        var Mixins = new xs.core.Collection(xs.isArray(Mixin) ? Mixin : [ Mixin ]);
+
+        var mixins = Class.descriptor.allMixins;
+
+        //return whether all Mixins are used
+        return Mixins.all(function (Mixin) {
+
+            assert.Class(Mixin, '$Class: given `$Mixin` is not a class', {
+                $Class: Class,
+                $Mixin: Mixin
+            });
+
+            //return whether class mixins contain Mixin or it's child
+            return mixins.find(function (Candidate) {
+
+                return Candidate === Mixin || Candidate.inherits(Mixin);
+            });
+        });
     });
 
     return true;

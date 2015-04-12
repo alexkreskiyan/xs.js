@@ -60,8 +60,12 @@ module('xs.class.preprocessors.processMixins', function () {
         //verify mixins function
         strictEqual(Child.mixins(ns.Mix1), true);
         strictEqual(Child.mixins(ns.Mix2), true);
+        strictEqual(Child.mixins([
+            ns.Mix1,
+            ns.Mix2
+        ]), true);
         strictEqual(Child.mixins(ns.Base), false);
-        strictEqual(Child.mixins(xs.class.Base), false);
+        strictEqual(Child.mixins(xs.class.Base), true);
     }, function () {
         xs.Loader.paths.remove('tests');
 
