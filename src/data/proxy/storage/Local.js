@@ -25,14 +25,16 @@ xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
 
     Class.extends = 'ns.proxy.Proxy';
 
-    Class.method.create = function (operation) {
+    Class.implements = [
+        'ns.proxy.IProxy',
+        'ns.operation.source.ICreate',
+        'ns.operation.source.IRead',
+        'ns.operation.source.IUpdate',
+        'ns.operation.source.IDelete'
+    ];
+
+    Class.method.create = function (model) {
         var me = this;
-
-        //call parent
-        self.parent.prototype.create.call(me, operation);
-
-        //get model reference
-        var model = operation.model;
 
         //get key
         var key = getKey(model);

@@ -159,13 +159,6 @@
                             "test": false
                         }
                     },
-                    "IProxy": {
-                        "contract": "interface"
-                    },
-                    "Memory": {
-                        "contract": "class",
-                        "test": false
-                    },
                     "Proxy": {
                         "contract": "class",
                         "test": false
