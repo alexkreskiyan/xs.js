@@ -115,6 +115,7 @@ Model's behavior depends on whether it can be attached to source
 If model can not be attached, it can have it's own proxy
 If model is defined as attachable to source, it can not have it's own proxy
 
+Model can not be saved if it does not have a primaryKey attributes
 
 7. Query (result depends on joins and calculated fields)
 base contracts:
