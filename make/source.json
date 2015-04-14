@@ -128,28 +128,28 @@
                     }
                 },
                 "operation": {
-                    "Create": {
-                        "contract": "class",
-                        "test": false
+                    "source":{
+                        "ICreate": {
+                            "contract": "interface"
+                        },
+                        "IDelete": {
+                            "contract": "interface"
+                        },
+                        "IRead": {
+                            "contract": "interface"
+                        },
+                        "IUpdate": {
+                            "contract": "interface"
+                        }
                     },
-                    "Delete": {
-                        "contract": "class",
-                        "test": false
+                    "IModelOperation": {
+                        "contract": "interface"
                     },
                     "IOperation": {
                         "contract": "interface"
                     },
-                    "Operation": {
-                        "contract": "class",
-                        "test": false
-                    },
-                    "Read": {
-                        "contract": "class",
-                        "test": false
-                    },
-                    "Update": {
-                        "contract": "class",
-                        "test": false
+                    "ISourceOperation": {
+                        "contract": "interface"
                     }
                 },
                 "proxy": {

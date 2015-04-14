@@ -7,12 +7,12 @@
  *
  * @extends xs.interface.Base
  */
-xs.define(xs.Interface, 'ns.operation.IOperation', function () {
+xs.define(xs.Interface, 'ns.IOperation', function () {
 
     'use strict';
 
-    var Class = this;
+    var Interface = this;
 
-    Class.namespace = 'xs.data';
+    Interface.namespace = 'xs.data.operation';
 
 });
