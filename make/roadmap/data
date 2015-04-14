@@ -96,6 +96,9 @@ Attributes and primary keys are declared here
         model: <model name>
     }
 };
+
+Each attribute defines valueOf method, that holds default, user-friendly data representation
+
 Relations and foreign keys are defined here
 
 - Model.constant.source = <Boolean>
