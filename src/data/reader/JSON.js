@@ -15,9 +15,29 @@ xs.define(xs.Class, 'ns.JSON', function (self) {
 
     Class.namespace = 'xs.data.reader';
 
-    Class.extends = 'ns.Reader';
+    Class.implements = [ 'ns.IReader' ];
 
     Class.constructor = function (config) {
+        var me = this;
+
+        //config must be an object (if given)
+        self.assert.ok(!arguments.length || xs.isObject(config), 'constructor - given `$config` is not an object', {
+            $config: config
+        });
+
+        if (config && config.hasOwnProperty('select')) {
+
+            //assert, that select is a function
+            self.assert.fn(config.select, 'constructor - given `$select` is not a function', {
+                $select: config.select
+            });
+
+            me.select = config.select;
+
+        } else {
+
+            me.select = selectAll;
+        }
     };
 
     Class.method.read = function (raw) {
@@ -27,5 +47,9 @@ xs.define(xs.Class, 'ns.JSON', function (self) {
 
         return JSON.parse(raw);
     };
+
+    function selectAll(data) {
+        return data;
+    }
 
 });

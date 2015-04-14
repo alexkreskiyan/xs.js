@@ -175,10 +175,6 @@
                     "IReader": {
                         "contract": "interface"
                     },
-                    "Reader": {
-                        "contract": "class",
-                        "test": false
-                    },
                     "JSON": {
                         "contract": "class",
                         "test": false
@@ -187,10 +183,6 @@
                 "writer": {
                     "IWriter": {
                         "contract": "interface"
-                    },
-                    "Writer": {
-                        "contract": "class",
-                        "test": false
                     },
                     "JSON": {
                         "contract": "class",

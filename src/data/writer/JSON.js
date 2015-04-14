@@ -7,7 +7,7 @@
  *
  * @extends xs.data.writer.Writer
  */
-xs.define(xs.Class, 'ns.JSON', function () {
+xs.define(xs.Class, 'ns.JSON', function (self) {
 
     'use strict';
 
@@ -15,13 +15,39 @@ xs.define(xs.Class, 'ns.JSON', function () {
 
     Class.namespace = 'xs.data.writer';
 
-    Class.extends = 'ns.Writer';
+    Class.implements = [ 'ns.IWriter' ];
 
     Class.constructor = function (config) {
+        var me = this;
+
+        //config must be an object (if given)
+        self.assert.ok(!arguments.length || xs.isObject(config), 'constructor - given `$config` is not an object', {
+            $config: config
+        });
+
+        if (config && config.hasOwnProperty('select')) {
+
+            //assert, that select is a function
+            self.assert.fn(config.select, 'constructor - given `$select` is not a function', {
+                $select: config.select
+            });
+
+            me.select = config.select;
+
+        } else {
+
+            me.select = selectAll;
+        }
     };
 
     Class.method.write = function (data) {
+
         return JSON.stringify(data);
     };
+
+    function selectAll(data) {
+
+        return data;
+    }
 
 });
