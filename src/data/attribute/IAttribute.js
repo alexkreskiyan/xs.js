@@ -38,10 +38,11 @@ xs.define(xs.Interface, 'ns.IAttribute', function () {
      *
      * @param {*} value incoming value
      * @param {Number} format format index
+     * @param {Object} [options] optional format options
      *
      * @return {*} transformed returned value
      */
-    Interface.method.get = function (value, format) {
+    Interface.method.get = function (value, format, options) {
 
     };
 
