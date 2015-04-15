@@ -109,6 +109,9 @@
                             "test": false
                         }
                     },
+                    "Format": {
+                        "contract": "enum"
+                    },
                     "IAttribute": {
                         "contract": "interface"
                     },
