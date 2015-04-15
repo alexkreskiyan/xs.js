@@ -20,7 +20,7 @@
             "jsdoc"
         ]
     },
-    "plugins": [],
+    "plugins": [ ],
     "templates": {
         "cleverLinks": true,
         "monospaceLinks": true

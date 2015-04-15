@@ -18,7 +18,7 @@ var server = http.createServer(function (request, response) {
 server.listen(3001);
 
 function display_form(request, response) {
-    response.writeHead(200, {'Content-Type': 'text/html'});
+    response.writeHead(200, { 'Content-Type': 'text/html' });
     response.write('<form action="/upload" method="post" enctype="multipart/form-data">' + '<input type="file" name="upload-file">' + '<input type="submit" value="Upload">' + '</form>');
     response.end();
 }
@@ -90,7 +90,7 @@ function send_file(filePath, response) {
 }
 
 function show_404(request, response) {
-    response.writeHead(404, {'Content-Type': 'text/plain'});
+    response.writeHead(404, { 'Content-Type': 'text/plain' });
     response.write('You are doing it wrong!');
     response.end();
 }

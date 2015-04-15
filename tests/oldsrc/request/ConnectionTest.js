@@ -15,7 +15,7 @@ test('demo', function () {
     var conn = xs.create('xs.data.Connection');
     conn.request = xs.create('xs.request.Request');
     conn.request.url = url;
-    conn.request.params = {x: 1};
+    conn.request.params = { x: 1 };
     conn.async = true;
     conn.timeout = 500;
     conn.send();

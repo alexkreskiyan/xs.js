@@ -42,7 +42,7 @@ test('toQueryString', function () {
     strictEqual(encode([]), '', 'from empty array');
     strictEqual(encode({}), '', 'from empty hash');
     //encode simple object
-    strictEqual(encode({x: ''}), 'x=', 'from simple string without value 1');
+    strictEqual(encode({ x: '' }), 'x=', 'from simple string without value 1');
     strictEqual(encode({
         x: '',
         y: ''
@@ -57,7 +57,7 @@ test('toQueryString', function () {
         y: '25tsdf^*^fsdf`"'
     }, true), 'x=%D1%82%D0%B5%D1%81%D1%82&y=25tsdf%5E*%5Efsdf%60%22', 'from simple string without value 2');
     //encode complex objects
-    strictEqual(encode({x: []}), 'x=', 'from complex string without value 1');
+    strictEqual(encode({ x: [] }), 'x=', 'from complex string without value 1');
     strictEqual(encode({
         x: [
             []
@@ -74,10 +74,10 @@ test('toQueryString', function () {
         ]
     }), 'x[0][0]=1&x[0][1]=2&x[1]=3&x[2]=4', 'from complex string without value 2');
     //encode complex objects with URIencode
-    strictEqual(encode({x: [ 'тест' ]}), 'x[0]=тест', 'from complex string without value 1');
-    strictEqual(encode({x: [ 'тест' ]}, true), 'x[0]=%D1%82%D0%B5%D1%81%D1%82', 'from complex string without value 1');
-    strictEqual(encode({x: {'тест': 'тест'}}), 'x[тест]=тест', 'from complex string without value 1');
-    strictEqual(encode({x: {'тест': 'тест'}}, true), 'x[%D1%82%D0%B5%D1%81%D1%82]=%D1%82%D0%B5%D1%81%D1%82', 'from complex string without value 1');
+    strictEqual(encode({ x: [ 'тест' ] }), 'x[0]=тест', 'from complex string without value 1');
+    strictEqual(encode({ x: [ 'тест' ] }, true), 'x[0]=%D1%82%D0%B5%D1%81%D1%82', 'from complex string without value 1');
+    strictEqual(encode({ x: { 'тест': 'тест' } }), 'x[тест]=тест', 'from complex string without value 1');
+    strictEqual(encode({ x: { 'тест': 'тест' } }, true), 'x[%D1%82%D0%B5%D1%81%D1%82]=%D1%82%D0%B5%D1%81%D1%82', 'from complex string without value 1');
     strictEqual(encode({
         x: [
             [],
@@ -131,7 +131,7 @@ test('constructor', function () {
         url: 'https://тест.me/com/[a=1]/?x=1#asd',
         reqUrl: 'https://тест.me/com/[a=1]/#asd',
         method: 'post',
-        params: {x: 3},
+        params: { x: 3 },
         user: 'alex',
         password: 'lord',
         async: false,
@@ -190,7 +190,7 @@ test('url', function () {
 test('params', function () {
     var req = xs.create('xs.request.Request');
     strictEqual(JSON.stringify(req.params), '{}', 'empty by default');
-    req.params = {x: 1};
+    req.params = { x: 1 };
     strictEqual(JSON.stringify(req.params), '{"x":1}', 'correct value set');
     req.params = 'psot';
     strictEqual(JSON.stringify(req.params), '{"x":1}', 'incorrect value ignored');
@@ -234,7 +234,7 @@ test('credentials', function () {
 test('headers', function () {
     var req = xs.create('xs.request.Request');
     strictEqual(JSON.stringify(req.headers), '{}', 'empty by default');
-    req.headers = {x: 1};
+    req.headers = { x: 1 };
     strictEqual(JSON.stringify(req.headers), '{"x":1}', 'correct value set');
     req.headers = 'psot';
     strictEqual(JSON.stringify(req.headers), '{"x":1}', 'incorrect value ignored');

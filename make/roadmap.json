@@ -1,9 +1,9 @@
 {
     "core": {
-        "xs.lang.Type": {},
-        "xs.log.Logger": {},
-        "xs.core.Asserter": {},
-        "xs.core.Collection": {},
+        "xs.lang.Type": { },
+        "xs.log.Logger": { },
+        "xs.core.Asserter": { },
+        "xs.core.Collection": { },
         "event": {
             "xs.event.emitter.Emitter": {
                 "test": false
@@ -26,20 +26,20 @@
             "xs.event.Reactive": {
                 "test": false
             },
-            "xs.event.Stream": {},
-            "xs.event.Property": {}
+            "xs.event.Stream": { },
+            "xs.event.Property": { }
         },
-        "xs.lang.Object": {},
-        "xs.lang.Array": {},
-        "xs.lang.List": {},
-        "xs.lang.Attribute": {},
-        "xs.lang.Function": {},
-        "xs.lang.String": {},
+        "xs.lang.Object": { },
+        "xs.lang.Array": { },
+        "xs.lang.List": { },
+        "xs.lang.Attribute": { },
+        "xs.lang.Function": { },
+        "xs.lang.String": { },
         "xs.log.Router": {
             "test": false
         },
-        "xs.core.Loader": {},
-        "xs.core.ContractsManager": {},
+        "xs.core.Loader": { },
+        "xs.core.ContractsManager": { },
         "contracts": {
             "xs.core.Dependency": {
                 "test": false
@@ -56,35 +56,35 @@
             "xs.core.ProcessorsStack": {
                 "test": false
             },
-            "xs.class.Class": {},
-            "xs.enum.Enum": {},
-            "xs.interface.Interface": {}
+            "xs.class.Class": { },
+            "xs.enum.Enum": { },
+            "xs.interface.Interface": { }
         },
-        "xs.core.Lazy": {},
-        "xs.core.Generator": {},
-        "xs.core.Promise": {},
-        "xs.class.preprocessors.namespace": {},
-        "xs.class.preprocessors.abstract": {},
-        "xs.class.preprocessors.prepareClass": {},
-        "xs.class.preprocessors.imports": {},
-        "xs.class.preprocessors.processExtends": {},
-        "xs.class.preprocessors.inheritElements": {},
-        "xs.class.preprocessors.processMixins": {},
-        "xs.class.preprocessors.constructor": {},
-        "xs.class.preprocessors.addOwnElements": {},
-        "xs.class.preprocessors.processImplements": {},
-        "xs.class.preprocessors.defineElements": {},
-        "xs.class.postprocessors.logger": {},
-        "xs.class.postprocessors.asserter": {},
-        "xs.class.Base": {},
-        "xs.enum.preprocessors.namespace": {},
-        "xs.enum.preprocessors.values": {},
-        "xs.enum.preprocessors.methods": {},
-        "xs.interface.preprocessors.namespace": {},
-        "xs.interface.preprocessors.prepareInterface": {},
-        "xs.interface.preprocessors.imports": {},
-        "xs.interface.preprocessors.processExtends": {},
-        "xs.interface.preprocessors.prepareElements": {},
+        "xs.core.Lazy": { },
+        "xs.core.Generator": { },
+        "xs.core.Promise": { },
+        "xs.class.preprocessors.namespace": { },
+        "xs.class.preprocessors.abstract": { },
+        "xs.class.preprocessors.prepareClass": { },
+        "xs.class.preprocessors.imports": { },
+        "xs.class.preprocessors.processExtends": { },
+        "xs.class.preprocessors.inheritElements": { },
+        "xs.class.preprocessors.processMixins": { },
+        "xs.class.preprocessors.constructor": { },
+        "xs.class.preprocessors.addOwnElements": { },
+        "xs.class.preprocessors.processImplements": { },
+        "xs.class.preprocessors.defineElements": { },
+        "xs.class.postprocessors.logger": { },
+        "xs.class.postprocessors.asserter": { },
+        "xs.class.Base": { },
+        "xs.enum.preprocessors.namespace": { },
+        "xs.enum.preprocessors.values": { },
+        "xs.enum.preprocessors.methods": { },
+        "xs.interface.preprocessors.namespace": { },
+        "xs.interface.preprocessors.prepareInterface": { },
+        "xs.interface.preprocessors.imports": { },
+        "xs.interface.preprocessors.processExtends": { },
+        "xs.interface.preprocessors.prepareElements": { },
         "xs.interface.Base": {
             "test": false
         },
@@ -99,7 +99,7 @@
         "xs": {
             "data": {
                 "attribute": {
-                    "event":{
+                    "event": {
                         "SetBefore": {
                             "contract": "class",
                             "test": false

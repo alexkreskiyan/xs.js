@@ -786,12 +786,12 @@ test('toRgb formatting', function () {
         blue: data.blue,
         alpha: data.alpha
     }), 'empty args');
-    strictEqual(JSON.stringify(color.toRgb({alpha: false})), JSON.stringify({
+    strictEqual(JSON.stringify(color.toRgb({ alpha: false })), JSON.stringify({
         red: data.red,
         green: data.green,
         blue: data.blue
     }), 'without alpha');
-    strictEqual(JSON.stringify(color.toRgb({format: 'array'})), JSON.stringify([
+    strictEqual(JSON.stringify(color.toRgb({ format: 'array' })), JSON.stringify([
         data.red,
         data.green,
         data.blue,
@@ -825,12 +825,12 @@ test('toHsl formatting', function () {
         lightness: data.lightness,
         alpha: data.alpha
     }), 'empty args');
-    strictEqual(JSON.stringify(color.toHsl({alpha: false})), JSON.stringify({
+    strictEqual(JSON.stringify(color.toHsl({ alpha: false })), JSON.stringify({
         hue: data.hue,
         saturation: data.saturation,
         lightness: data.lightness
     }), 'without alpha');
-    strictEqual(JSON.stringify(color.toHsl({format: 'array'})), JSON.stringify([
+    strictEqual(JSON.stringify(color.toHsl({ format: 'array' })), JSON.stringify([
         data.hue,
         data.saturation,
         data.lightness,

@@ -34,7 +34,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -61,7 +61,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'lenovo'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -88,7 +88,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'lenovo'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -115,7 +115,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'sony'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -142,7 +142,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'sony'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -169,7 +169,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '32'}
+            cpu: { architecture: '32' }
         }
     ],
     [
@@ -196,7 +196,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'google'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -223,7 +223,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'samsung'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -250,7 +250,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -277,7 +277,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'samsung'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -304,7 +304,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -331,7 +331,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -358,7 +358,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -385,7 +385,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '32'}
+            cpu: { architecture: '32' }
         }
     ],
     [
@@ -412,7 +412,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'samsung'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -439,7 +439,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'apple'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -466,7 +466,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'apple'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -493,7 +493,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -520,7 +520,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'samsung'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -547,7 +547,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'samsung'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -574,7 +574,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '32'}
+            cpu: { architecture: '32' }
         }
     ],
     [
@@ -601,7 +601,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -628,7 +628,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '32'}
+            cpu: { architecture: '32' }
         }
     ],
     [
@@ -655,7 +655,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -682,7 +682,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -709,7 +709,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -736,7 +736,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -763,7 +763,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '32'}
+            cpu: { architecture: '32' }
         }
     ],
     [
@@ -790,7 +790,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '32'}
+            cpu: { architecture: '32' }
         }
     ],
     [
@@ -817,7 +817,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'samsung'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -844,7 +844,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '32'}
+            cpu: { architecture: '32' }
         }
     ],
     [
@@ -871,7 +871,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '32'}
+            cpu: { architecture: '32' }
         }
     ],
     [
@@ -898,7 +898,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '32'}
+            cpu: { architecture: '32' }
         }
     ],
     [
@@ -925,7 +925,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'philips'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -952,7 +952,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'philips'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -979,7 +979,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -1006,7 +1006,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -1033,7 +1033,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -1060,7 +1060,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -1087,7 +1087,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'samsung'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -1114,7 +1114,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'samsung'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -1141,7 +1141,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'apple'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -1168,7 +1168,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'zopo'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -1195,7 +1195,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'zopo'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -1222,7 +1222,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '32'}
+            cpu: { architecture: '32' }
         }
     ],
     [
@@ -1249,7 +1249,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: '64'}
+            cpu: { architecture: '64' }
         }
     ],
     [
@@ -1276,7 +1276,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'samsung'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -1303,7 +1303,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'samsung'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -1330,7 +1330,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'google'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -1357,7 +1357,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -1384,7 +1384,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -1411,7 +1411,7 @@ var userAgents = [
                 type: undefined,
                 vendor: undefined
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -1438,7 +1438,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'apple'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ],
     [
@@ -1465,7 +1465,7 @@ var userAgents = [
                 type: 'mobile',
                 vendor: 'nokia'
             },
-            cpu: {architecture: undefined}
+            cpu: { architecture: undefined }
         }
     ]
 ];
