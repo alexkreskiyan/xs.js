@@ -302,7 +302,7 @@ xs.ContractsManager = (function () {
      *
      * @param {String} name verified name
      *
-     * @return {String} whether name is correct short name
+     * @return {Boolean} whether name is correct short name
      */
     me.isShortName = function (name) {
 
