@@ -30,101 +30,13 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             'event.Set': 'ns.attribute.event.Set'
         },
         {
-            IProxy: 'ns.proxy.IProxy'
-        },
-        'ns.model.Event',
-        {
-            'operation.Create': 'ns.operation.Create'
-        },
-        {
-            'operation.Read': 'ns.operation.Read'
-        },
-        {
-            'operation.Update': 'ns.operation.Update'
-        },
-        {
-            'operation.Delete': 'ns.operation.Delete'
+            IModelOperation: 'ns.operation.IModelOperation'
         }
     ];
 
     Class.mixins.observable = 'xs.event.Observable';
 
-    Class.implements = [ 'ns.IModel' ];
-
     Class.abstract = true;
-
-    /**
-     * Model attributes list
-     *
-     * @static
-     *
-     * @readonly
-     *
-     * @property attributes
-     *
-     * @type {Object}
-     */
-    Class.constant.attributes = {};
-
-    /**
-     * Model proxy declaration
-     *
-     * @static
-     *
-     * @readonly
-     *
-     * @property proxy
-     *
-     * @type {Object}
-     */
-    Class.constant.proxy = {};
-
-    //TODO add operation events: create, create:before, etc
-
-    Class.static.property.primaryAttributes = {
-        get: function () {
-            var me = this;
-
-            if (me.private.hasOwnProperty('primaryAttributes')) {
-                return me.private.primaryAttributes;
-            }
-
-            //assert, that attributes list is a xs.core.Collection
-            self.assert.instance(me.attributes, xs.core.Collection, 'primaryAttributes - model `$Model` attributes list `$attributes` is not an xs.core.Collection instance', {
-                $Model: me,
-                $attributes: me.attributes
-            });
-
-            //define attributes collection
-            var attributes = me.private.primaryAttributes = new xs.core.Collection();
-
-            //internal items
-            var items = [];
-
-            //fill items
-            me.attributes.find(function (config, name) {
-                //primary config property marks property as primary
-                if (config.primary === true) {
-                    items.push({
-                        key: items.length,
-                        value: name
-                    });
-                }
-            }, xs.core.Collection.All);
-
-            //at least one primary attribute must exist
-            self.assert.ok(items.length, 'primaryAttributes - model `$Model` has no primary attributes', {
-                $Model: me
-            });
-
-            //set items
-            attributes.private.items = items;
-
-            //return attributes
-            return attributes;
-        },
-        set: xs.noop
-    };
 
     /**
      * Model constructor
@@ -132,9 +44,8 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      * @constructor
      *
      * @param {Object} [data] model raw data
-     * @param {xs.data.proxy.IProxy} [proxy] model proxy
      */
-    Class.constructor = function (data, proxy) {
+    Class.constructor = function (data) {
         var me = this;
 
         //assert, that data is either undefined or an object
@@ -142,103 +53,24 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             $data: data
         });
 
-        //assert, that proxy is xs.data.proxy.IProxy, if given
-        self.assert.ok(arguments.length < 2 || (xs.isInstance(proxy) && proxy.self.implements(imports.IProxy)), 'constructor - given object `$object` is not an instance of Class, that implements interface `$Interface`', {
-            $object: proxy,
-            $Interface: imports.IProxy
-        });
 
         //call observable constructor
         self.mixins.observable.call(me, xs.noop);
 
-        //get internal Data class
-        var Data = getData(me.self);
 
-        //setup instance data storage
-        me.private.data = data ? new Data(me, data) : new Data(me);
+        //define empty data as empty object
+        if (!data) {
+            data = {};
+        }
 
-        //setup proxy
-        me.private.proxy = proxy ? proxy : getProxy(me.self);
-    };
+        //define attributes storage
+        var attributes = me.private.attributes = {};
 
-    /**
-     * Model data accessor
-     *
-     * @readonly
-     *
-     * @property data
-     *
-     * @type {Object}
-     */
-    Class.property.data = {
-        get: function () {
-            return this.private.data;
-        },
-        set: xs.noop
-    };
-
-    Class.method.create = function () {
-        var me = this;
-
-        //get proxy reference
-        var proxy = me.private.proxy;
-
-        //create operation
-        var operation = new imports.operation.Create(me);
-
-        //run operation with proxy
-        proxy.create(operation);
-
-        //return operation (to use it like a promise)
-        return operation;
-    };
-
-    Class.method.read = function () {
-        var me = this;
-
-        //get proxy reference
-        var proxy = me.private.proxy;
-
-        //create operation
-        var operation = new imports.operation.Read(me);
-
-        //run operation with proxy
-        proxy.read(operation);
-
-        //return operation (to use it like a promise)
-        return operation;
-    };
-
-    Class.method.update = function () {
-        var me = this;
-
-        //get proxy reference
-        var proxy = me.private.proxy;
-
-        //create operation
-        var operation = new imports.operation.Update(me);
-
-        //run operation with proxy
-        proxy.update(operation);
-
-        //return operation (to use it like a promise)
-        return operation;
-    };
-
-    Class.method.delete = function () {
-        var me = this;
-
-        //get proxy reference
-        var proxy = me.private.proxy;
-
-        //create operation
-        var operation = new imports.operation.Delete(me);
-
-        //run operation with proxy
-        proxy.delete(operation);
-
-        //return operation (to use it like a promise)
-        return operation;
+        //set attributes
+        me.self.descriptor.attributes.each(function (attribute, name) {
+            attributes[ name ] = new Attribute(me, name, attribute);
+            attributes[ name ].set(data[ name ], true);
+        });
     };
 
     /**
@@ -252,228 +84,12 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         //call Observable.destroy
         self.mixins.observable.prototype.destroy.call(me);
 
-        //destroy data container
-        me.private.data.destroy();
-
-        //remove proxy reference
-        delete me.private.proxy;
+        (new xs.core.Collection(me.private.attributes)).each(function (attribute) {
+            attribute.destroy();
+        });
 
         //call parent destroy
         self.parent.prototype.destroy.call(me);
-    };
-
-    /**
-     * Lazy initialization method for Model attributes
-     *
-     * @ignore
-     *
-     * @private
-     *
-     * @method getAttributes
-     *
-     * @param {xs.data.Model} Class class, being initialized
-     *
-     * @return {Function} Data function
-     */
-    var getData = function (Class) {
-        //return collection if defined
-        if (Class.private.hasOwnProperty('Data')) {
-            return Class.private.Data;
-        }
-
-        //assert that attributes are an xs.core.Collection instance
-        self.assert.instance(Class.attributes, xs.core.Collection, 'getData - given class `$Class` attributes `$attributes` are not an instance of xs.core.Collection', {
-            $attributes: Class.attributes,
-            $Class: Class
-        });
-
-        //define attributes type
-        var Data = Class.private.Data = getDataSample();
-
-        //create Model private attributes' collection
-        Class.private.attributes = new xs.core.Collection();
-
-        //define attributes
-        Class.attributes.each(function (config, name) {
-            defineAttribute(Class, Data, name, config);
-        });
-
-        return Data;
-    };
-
-    /**
-     * Lazy initialization method for Model proxy
-     *
-     * @ignore
-     *
-     * @private
-     *
-     * @method getProxy
-     *
-     * @param {xs.data.Model} Class class, being initialized
-     *
-     * @return {xs.data.proxy.IProxy} Proxy instance
-     */
-    var getProxy = function (Class) {
-        //return collection if defined
-        if (Class.private.hasOwnProperty('proxy')) {
-            return Class.private.proxy;
-        }
-
-        var config = Class.proxy;
-
-        //assert that proxy definition is an object
-        self.assert.object(config, 'getProxy - given class `$Class` proxy definition `$proxy` is not an object', {
-            $proxy: config,
-            $Class: Class
-        });
-
-        //assert that type is specified
-        self.assert.ok(config.hasOwnProperty('type'), 'getProxy - no type given for proxy in config `$config`. Add attribute type to Class.constant.proxy hash constant with property type, which value must be string, referencing name of imported Class', {
-            $config: config
-        });
-
-        //assert that type is non-empty string
-        self.assert.ok(config.type && xs.isString(config.type), 'getProxy - given proxy type `$type` is not a string', {
-            $type: config.type
-        });
-
-        //get Proxy contract
-        var Proxy = xs.ContractsManager.get(Class.descriptor.resolveName(config.type));
-
-        //assert that Proxy is class
-        self.assert.Class(Proxy, 'getProxy - given proxy type `$Proxy` is not a class', {
-            $Proxy: Proxy
-        });
-
-        //assert that Proxy implements IProxy interface
-        self.assert.ok(Proxy.implements(imports.IProxy), 'getProxy - given proxy type `$Proxy` does not implement base proxy interface `$Proxy`', {
-            $Proxy: Proxy,
-            $Interface: imports.IProxy
-        });
-
-        var proxy = Class.private.proxy = new Proxy(config);
-
-        return proxy;
-    };
-
-    /**
-     * Returns sample of Data internal class
-     *
-     * @ignore
-     *
-     * @private
-     *
-     * @method getDataSample
-     *
-     * @return {Function}
-     */
-    var getDataSample = function () {
-        var Data = function (model, data) {
-            var me = this;
-
-            //init private storage
-            me.private = {
-                model: model
-            };
-
-            if (!data) {
-
-                data = {};
-            }
-
-            //set attributes
-            model.self.private.attributes.each(function (attribute, name) {
-                var attr = me.private[ name ] = new Attribute(model, attribute, name);
-                attr.private.value = attribute.set(data[ name ]);
-            });
-        };
-
-        //define destroy method
-        Data.prototype.destroy = destroyData;
-
-        return Data;
-    };
-
-    /**
-     * Data destroy method
-     *
-     * @ignore
-     *
-     * @private
-     *
-     * @method destroyData
-     */
-    var destroyData = function () {
-        var me = this;
-
-        //destroy attributes
-        me.private.model.self.private.attributes.each(function (attribute, name) {
-            this[ name ].destroy();
-        }, 0, me.private);
-
-        //remove model reference
-        delete me.private.model;
-
-        //remove private reference
-        delete me.private;
-    };
-
-    /**
-     * Defines attribute into prototype of Data
-     *
-     * @ignore
-     *
-     * @private
-     *
-     * @method defineAttribute
-     *
-     * @param {Function} Class class
-     * @param {Function} Data data internal class
-     * @param {String} name name of defined attribute
-     * @param {Object} config config of defined attribute
-     */
-    var defineAttribute = function (Class, Data, name, config) {
-
-        //assert that type is specified
-        self.assert.ok(config.hasOwnProperty('type'), 'defineAttribute - no type given for attribute `$attribute`. Add attribute type to Class.constant.attribute hash constant with property type, which value must be string, referencing name of imported Class', {
-            $attribute: name
-        });
-
-        //assert that type is non-empty string
-        self.assert.ok(config.type && xs.isString(config.type), 'defineAttribute - given attribute `$attribute` type `$type` is not a string', {
-            $attribute: name,
-            $type: config.type
-        });
-
-        //get Attribute contract
-        var Attribute = xs.ContractsManager.get(Class.descriptor.resolveName(config.type));
-
-        //assert that Attribute is class
-        self.assert.Class(Attribute, 'defineAttribute - given attribute `$attribute` type `$Attribute` is not a class', {
-            $attribute: name,
-            $Attribute: Attribute
-        });
-
-        //assert that Attribute implements IAttribute interface
-        self.assert.ok(Attribute.implements(imports.IAttribute), 'defineAttribute - given attribute `$attribute` type `$Attribute` does not implement base attribute interface `$Interface`', {
-            $attribute: name,
-            $Attribute: Attribute,
-            $Interface: imports.IAttribute
-        });
-
-        var attribute = new Attribute(config);
-
-        var descriptor = xs.property.prepare(name, {
-            get: function () {
-                return this.private[ name ];
-            },
-            set: xs.noop
-        });
-
-        //add attribute
-        xs.property.define(Data.prototype, name, descriptor);
-        Class.private.attributes.add(name, attribute);
     };
 
     /**
@@ -496,14 +112,15 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      * @constructor
      *
      * @param {xs.data.Model} model
-     * @param {xs.data.attribute.IAttribute} attribute
      * @param {String} name
+     * @param {xs.data.attribute.IAttribute} attribute
      */
-    var Attribute = function (model, attribute, name) {
+    var Attribute = function (model, name, attribute) {
         this.private = {
             model: model,
+            name: name,
             attribute: attribute,
-            name: name
+            value: undefined
         };
     };
 
@@ -519,8 +136,42 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      * @return {*}
      */
     Attribute.prototype.get = function (format) {
+        if (!arguments.length) {
+
+            return this.private.attribute.get(this.private.value, xs.data.attribute.Format.User);
+        }
+
+        self.assert.ok(xs.data.attribute.Format.has(format), 'attribute.get - given unknown `$format`', {
+            $format: format
+        });
+
         return this.private.attribute.get(this.private.value, format);
     };
+
+    /**
+     * Attribute valueOf method
+     *
+     * @ignore
+     *
+     * @method valueOf
+     *
+     * @return {*}
+     */
+    Attribute.prototype.valueOf = function () {
+        return this.private.attribute.get(this.private.value, xs.data.attribute.Format.User);
+    };
+
+
+    /**
+     * Attribute valueOf method
+     *
+     * @ignore
+     *
+     * @method valueOf
+     *
+     * @return {*}
+     */
+    Attribute.prototype.toString = Attribute.prototype.valueOf;
 
     /**
      * Attribute set method
@@ -576,4 +227,130 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         delete this.private.attribute;
         delete this.private;
     };
+
 });
+
+//define xs.data.Model-specific preprocessor
+(function () {
+
+    'use strict';
+
+    var log = new xs.log.Logger('xs.class.preprocessors.xs.data.Model');
+
+    var assert = new xs.core.Asserter(log, XsClassPreprocessorsXsDataModelError);
+
+    xs.class.preprocessors.add('xs.data.Model', function (Class) {
+
+        //use preprocessor only for model classes
+        return Class.inherits(xs.data.Model);
+    }, function (Class, descriptor) {
+
+        //assert, that attributes given
+        assert.ok(descriptor.hasOwnProperty('attributes'), 'no attributes given for `$Model`', {
+            $Model: Class
+        });
+
+        //assert, that attributes are an object
+        assert.object(descriptor.attributes, 'given `$attributes` are not an object', {
+            $attributes: descriptor.attributes
+        });
+
+
+        //define attributes collection for a class
+        var attributes = Class.descriptor.attributes = new xs.core.Collection();
+
+        //get reference to descriptor
+        var properties = Class.descriptor.property;
+
+
+        //process attributes configuration
+        (new xs.core.Collection(descriptor.attributes)).each(function (config, name) {
+            processAttribute(Class, attributes, properties, name, config);
+        });
+
+    }, 'before', 'defineElements');
+
+    function processAttribute(Class, attributes, properties, name, config) {
+
+        //assert, that name is valid
+        assert.ok(xs.ContractsManager.isShortName(name), 'given attribute name `$name` is incorrect', {
+            $name: name
+        });
+
+        //assert, that config is either a string (simple type name) or a configuration object
+        assert.ok(xs.isString(config) || xs.isObject(config), 'attribute `$name` has incorrect `$config`', {
+            $name: name,
+            $config: config
+        });
+
+        //convert string config to object
+        config = xs.isString(config) ? {
+            type: config
+        } : config;
+
+        //assert, that type given
+        assert.ok(config.hasOwnProperty('type'), 'attribute `$name` has no type in it\'s config', {
+            $name: name
+        });
+
+        //assert, that type is a string
+        assert.string(config.type, 'attribute `$name` type `$type` is not a string', {
+            $name: name,
+            $type: config.type
+        });
+
+        //try to get attribute class
+        var Attribute = xs.ContractsManager.get(Class.descriptor.resolveName(config.type));
+
+        //assert, that Attribute is a class
+        assert.Class(Attribute, 'attribute `$name` type contract `$Attribute` is not a class', {
+            $name: name,
+            $Attribute: Attribute
+        });
+
+        //assert, that Attribute implements xs.data.attribute.IAttribute
+        assert.ok(Attribute.implements(xs.data.attribute.IAttribute), 'attribute `$name` type class `$Attribute` does not implement `$IAttribute` interface', {
+            $name: name,
+            $Attribute: Attribute,
+            $IAttribute: xs.data.attribute.IAttribute
+        });
+
+
+        //add attribute to attributes list
+        attributes.add(name, new Attribute(config));
+
+
+        //prepare property descriptor
+        var value = xs.property.prepare(name, {
+            get: function () {
+                return this.private.attributes[ name ];
+            },
+            set: function (value) {
+                this.private.attributes[ name ].set(value);
+            }
+        });
+
+        //add/set property in class descriptor
+        if (properties.hasKey(name)) {
+            properties.set(name, value);
+        } else {
+            properties.add(name, value);
+        }
+    }
+
+    /**
+     * Internal error class
+     *
+     * @ignore
+     *
+     * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
+     *
+     * @class XsClassPreprocessorsXsDataModelError
+     */
+    function XsClassPreprocessorsXsDataModelError(message) {
+        this.message = 'xs.class.preprocessors.xs.data.Model::' + message;
+    }
+
+    XsClassPreprocessorsXsDataModelError.prototype = new Error();
+
+})();
