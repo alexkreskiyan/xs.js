@@ -73,6 +73,49 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         });
     };
 
+    Class.method.primary = function (format) {
+        var me = this;
+
+        //get primary attributes list reference
+        var primary = me.self.descriptor.primaryAttributes;
+
+        //return undefined, if model has no primary attributes
+        if (!primary.length) {
+
+            return;
+        }
+
+        //get model attributes reference
+        var attributes = me.private.attributes;
+
+        //single primary attribute
+        if (primary.length === 1) {
+
+            var primaryAttribute = attributes[ primary[ 0 ] ];
+
+            //return primary attribute value
+            return arguments.length ? primaryAttribute.get(format) : primaryAttribute.get();
+        }
+
+        var i, name;
+        var key = {};
+
+        //form hash for multi-fielded primary key
+        if (arguments.length) {
+            for (i = 0; i < primary.length; i++) {
+                name = primary[ i ];
+                key[ name ] = attributes[ name ].get(format);
+            }
+        } else {
+            for (i = 0; i < primary.length; i++) {
+                name = primary[ i ];
+                key[ name ] = attributes[ name ].get();
+            }
+        }
+
+        return key;
+    };
+
     /**
      * Model destroy method
      *
@@ -147,31 +190,6 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
         return this.private.attribute.get(this.private.value, format);
     };
-
-    /**
-     * Attribute valueOf method
-     *
-     * @ignore
-     *
-     * @method valueOf
-     *
-     * @return {*}
-     */
-    Attribute.prototype.valueOf = function () {
-        return this.private.attribute.get(this.private.value, xs.data.attribute.Format.User);
-    };
-
-
-    /**
-     * Attribute valueOf method
-     *
-     * @ignore
-     *
-     * @method valueOf
-     *
-     * @return {*}
-     */
-    Attribute.prototype.toString = Attribute.prototype.valueOf;
 
     /**
      * Attribute set method
@@ -257,20 +275,21 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
 
         //define attributes collection for a class
-        var attributes = Class.descriptor.attributes = new xs.core.Collection();
+        Class.descriptor.attributes = new xs.core.Collection();
 
-        //get reference to descriptor
-        var properties = Class.descriptor.property;
-
+        //define primary attributes storage
+        Class.descriptor.primaryAttributes = [];
 
         //process attributes configuration
         (new xs.core.Collection(descriptor.attributes)).each(function (config, name) {
-            processAttribute(Class, attributes, properties, name, config);
+
+            processAttribute(Class, name, config);
+
         });
 
     }, 'before', 'defineElements');
 
-    function processAttribute(Class, attributes, properties, name, config) {
+    function processAttribute(Class, name, config) {
 
         //assert, that name is valid
         assert.ok(xs.ContractsManager.isShortName(name), 'given attribute name `$name` is incorrect', {
@@ -317,7 +336,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
 
         //add attribute to attributes list
-        attributes.add(name, new Attribute(config));
+        Class.descriptor.attributes.add(name, new Attribute(config));
 
 
         //prepare property descriptor
@@ -330,11 +349,18 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             }
         });
 
+        var properties = Class.descriptor.property;
+
         //add/set property in class descriptor
         if (properties.hasKey(name)) {
             properties.set(name, value);
         } else {
             properties.add(name, value);
+        }
+
+        //add primary attribute
+        if (config.primary === true) {
+            Class.descriptor.primaryAttributes.push(name);
         }
     }
 
