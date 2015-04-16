@@ -124,12 +124,6 @@
                         "test": false
                     }
                 },
-                "model": {
-                    "Event": {
-                        "contract": "class",
-                        "test": false
-                    }
-                },
                 "operation": {
                     "model": {
                         "IRead": {
@@ -192,9 +186,6 @@
                         "contract": "class",
                         "test": false
                     }
-                },
-                "IModel": {
-                    "contract": "interface"
                 },
                 "Model": {
                     "contract": "class"
