@@ -12,36 +12,152 @@ module('xs.data.Model', function () {
 
     'use strict';
 
-    test('constructor', function () {
+    test('preprocessor. no primary', function () {
         var me = this;
 
-        window.Model = me.Class = xs.Class(function () {
+        me.Class = xs.Class(function () {
 
             var Class = this;
 
             Class.extends = 'xs.data.Model';
 
-            Class.constant.attributes = new xs.core.Collection({
+            Class.attributes = {
+                id: 'xs.data.attribute.Number',
+                name: 'xs.data.attribute.String',
+                age: {
+                    type: 'xs.data.attribute.Number'
+                }
+            };
+
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
+
+        //assert, that attributes formed
+        strictEqual(me.Class.descriptor.hasOwnProperty('attributes'), true);
+
+        //assert, that all attributes processed
+        strictEqual(me.Class.descriptor.attributes.size, 3);
+
+        //verify attributes
+        strictEqual(me.Class.descriptor.attributes.at('id') instanceof xs.data.attribute.Number, true);
+        strictEqual(me.Class.descriptor.attributes.at('name') instanceof xs.data.attribute.String, true);
+        strictEqual(me.Class.descriptor.attributes.at('age') instanceof xs.data.attribute.Number, true);
+
+        //check primary attributes
+        strictEqual(me.Class.descriptor.primaryAttributes.length, 0);
+    });
+
+    test('preprocessor. single primary', function () {
+        var me = this;
+
+        me.Class = xs.Class(function () {
+
+            var Class = this;
+
+            Class.extends = 'xs.data.Model';
+
+            Class.attributes = {
+                id: {
+                    type: 'xs.data.attribute.Number',
+                    default: 0,
+                    primary: true
+                },
+                name: 'xs.data.attribute.String',
+                age: {
+                    type: 'xs.data.attribute.Number'
+                }
+            };
+
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
+
+        //assert, that attributes formed
+        strictEqual(me.Class.descriptor.hasOwnProperty('attributes'), true);
+
+        //assert, that all attributes processed
+        strictEqual(me.Class.descriptor.attributes.size, 3);
+
+        //verify attributes
+        strictEqual(me.Class.descriptor.attributes.at('id') instanceof xs.data.attribute.Number, true);
+        strictEqual(me.Class.descriptor.attributes.at('name') instanceof xs.data.attribute.String, true);
+        strictEqual(me.Class.descriptor.attributes.at('age') instanceof xs.data.attribute.Number, true);
+
+        //check primary attributes
+        strictEqual(me.Class.descriptor.primaryAttributes.toString(), 'id');
+    });
+
+    test('preprocessor. multiple primary', function () {
+        var me = this;
+
+        me.Class = xs.Class(function () {
+
+            var Class = this;
+
+            Class.extends = 'xs.data.Model';
+
+            Class.attributes = {
+                id: {
+                    type: 'xs.data.attribute.Number',
+                    default: 0,
+                    primary: true
+                },
+                name: {
+                    type: 'xs.data.attribute.String',
+                    primary: true
+                },
+                age: {
+                    type: 'xs.data.attribute.Number'
+                }
+            };
+
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
+
+        //assert, that attributes formed
+        strictEqual(me.Class.descriptor.hasOwnProperty('attributes'), true);
+
+        //assert, that all attributes processed
+        strictEqual(me.Class.descriptor.attributes.size, 3);
+
+        //verify attributes
+        strictEqual(me.Class.descriptor.attributes.at('id') instanceof xs.data.attribute.Number, true);
+        strictEqual(me.Class.descriptor.attributes.at('name') instanceof xs.data.attribute.String, true);
+        strictEqual(me.Class.descriptor.attributes.at('age') instanceof xs.data.attribute.Number, true);
+
+        //check primary attributes
+        strictEqual(me.Class.descriptor.primaryAttributes.toString(), 'id,name');
+    });
+
+    test('constructor', function () {
+        var me = this;
+
+        me.Class = xs.Class(function () {
+
+            var Class = this;
+
+            Class.extends = 'xs.data.Model';
+
+            Class.attributes = {
                 id: {
                     type: 'xs.data.attribute.Number',
                     primary: true
                 },
                 name: {
-                    type: 'xs.data.attribute.String'
+                    type: 'xs.data.attribute.String',
+                    default: 'John'
                 },
                 age: {
                     type: 'xs.data.attribute.Number',
                     default: 0
-                }
-            });
-
-            Class.constant.proxy = {
-                type: 'xs.data.proxy.storage.Local',
-                reader: {
-                    type: 'xs.data.reader.JSON'
-                },
-                writer: {
-                    type: 'xs.data.writer.JSON'
                 }
             };
 
@@ -60,27 +176,29 @@ module('xs.data.Model', function () {
 
         //model can be created empty
         model = new me.Class();
-        //no default is given in config, assigned undefined
-        strictEqual(model.data.name.get(), undefined);
-        //default assigned
-        strictEqual(model.data.age.get(), 0);
+
+        //verufy attributes' values
+        strictEqual(model.id.get(), undefined);
+        strictEqual(model.name.get(), 'John');
+        strictEqual(model.age.get(), 0);
 
         model.destroy();
 
         //although, initial data may be passed
         model = new me.Class({
-            name: 'max',
-            age: '5'
+            id: 5,
+            age: '25'
         });
-        //no default is given in config, assigned undefined
-        strictEqual(model.data.name.get(), 'max');
-        //default assigned
-        strictEqual(model.data.age.get(), 5);
+
+        //verufy attributes' values
+        strictEqual(model.id.get(), 5);
+        strictEqual(model.name.get(), 'John');
+        strictEqual(model.age.get(), 25);
 
         model.destroy();
     });
 
-    test('primaryAttributes', function () {
+    test('primary. no primary', function () {
         var me = this;
 
         me.Class = xs.Class(function () {
@@ -89,27 +207,11 @@ module('xs.data.Model', function () {
 
             Class.extends = 'xs.data.Model';
 
-            Class.constant.attributes = new xs.core.Collection({
-                id: {
-                    type: 'xs.data.attribute.Number',
-                    primary: true
-                },
-                name: {
-                    type: 'xs.data.attribute.String'
-                },
+            Class.attributes = {
+                id: 'xs.data.attribute.Number',
+                name: 'xs.data.attribute.String',
                 age: {
-                    type: 'xs.data.attribute.Number',
-                    default: 0
-                }
-            });
-
-            Class.constant.proxy = {
-                type: 'xs.data.proxy.storage.Local',
-                reader: {
-                    type: 'xs.data.reader.JSON'
-                },
-                writer: {
-                    type: 'xs.data.writer.JSON'
+                    type: 'xs.data.attribute.Number'
                 }
             };
 
@@ -119,16 +221,91 @@ module('xs.data.Model', function () {
     }, function () {
         var me = this;
 
-        var primary = me.Class.primaryAttributes;
+        var model = new me.Class({
+            id: 1,
+            name: 'max',
+            age: 25
+        });
 
-        //primary attributes is lazy initiated
-        strictEqual(primary, me.Class.primaryAttributes);
+        //assert, that primary is undefined
+        strictEqual(model.primary(), undefined);
+    });
 
-        //primary attributes is a xs.core.Collection
-        strictEqual(primary instanceof xs.core.Collection, true);
+    test('preprocessor. single primary', function () {
+        var me = this;
 
-        //primary attributes contains
-        strictEqual(JSON.stringify(primary.values()), '["id"]');
+        me.Class = xs.Class(function () {
+
+            var Class = this;
+
+            Class.extends = 'xs.data.Model';
+
+            Class.attributes = {
+                id: {
+                    type: 'xs.data.attribute.Number',
+                    default: 0,
+                    primary: true
+                },
+                name: 'xs.data.attribute.String',
+                age: {
+                    type: 'xs.data.attribute.Number'
+                }
+            };
+
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
+
+        var model = new me.Class({
+            id: 1,
+            name: 'max',
+            age: 25
+        });
+
+        //assert, that primary is equal to id
+        strictEqual(model.primary(), 1);
+    });
+
+    test('preprocessor. multiple primary', function () {
+        var me = this;
+
+        me.Class = xs.Class(function () {
+
+            var Class = this;
+
+            Class.extends = 'xs.data.Model';
+
+            Class.attributes = {
+                id: {
+                    type: 'xs.data.attribute.Number',
+                    default: 0,
+                    primary: true
+                },
+                name: {
+                    type: 'xs.data.attribute.String',
+                    primary: true
+                },
+                age: {
+                    type: 'xs.data.attribute.Number'
+                }
+            };
+
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
+
+        var model = new me.Class({
+            id: 1,
+            name: 'max',
+            age: 25
+        });
+
+        //assert, that primary is id+name composite
+        strictEqual(JSON.stringify(model.primary()), '{"id":1,"name":"max"}');
     });
 
     test('data', function () {
@@ -140,27 +317,18 @@ module('xs.data.Model', function () {
 
             Class.extends = 'xs.data.Model';
 
-            Class.constant.attributes = new xs.core.Collection({
+            Class.attributes = {
                 id: {
                     type: 'xs.data.attribute.Number',
                     primary: true
                 },
                 name: {
-                    type: 'xs.data.attribute.String'
+                    type: 'xs.data.attribute.String',
+                    default: 'John'
                 },
                 age: {
                     type: 'xs.data.attribute.Number',
                     default: 0
-                }
-            });
-
-            Class.constant.proxy = {
-                type: 'xs.data.proxy.storage.Local',
-                reader: {
-                    type: 'xs.data.reader.JSON'
-                },
-                writer: {
-                    type: 'xs.data.writer.JSON'
                 }
             };
 
@@ -175,28 +343,30 @@ module('xs.data.Model', function () {
         //attributes are processed when model is created
         //model can be created empty
         model = new me.Class();
-        //no default is given in config, assigned undefined
-        strictEqual(model.data.name.get(), undefined);
-        //default assigned
-        strictEqual(model.data.age.get(), 0);
+
+        //verufy attributes' values
+        strictEqual(model.id.get(), undefined);
+        strictEqual(model.name.get(), 'John');
+        strictEqual(model.age.get(), 0);
 
         model.destroy();
 
         //although, initial data may be passed
         model = new me.Class({
-            name: 'max',
-            age: '5'
+            id: 5,
+            age: '25'
         });
-        //no default is given in config, assigned undefined
-        strictEqual(model.data.name.get(), 'max');
-        //default assigned
-        strictEqual(model.data.age.get(), 5);
+
+        //verufy attributes' values
+        strictEqual(model.id.get(), 5);
+        strictEqual(model.name.get(), 'John');
+        strictEqual(model.age.get(), 25);
 
         //when attribute is changed
-        model.data.name.set(555);
-        strictEqual(model.data.name.get(), '555');
-        model.data.age.set('55');
-        strictEqual(model.data.age.get(), 55);
+        model.name = 555;
+        strictEqual(model.name.get(), '555');
+        model.age = '55';
+        strictEqual(model.age.get(), 55);
 
         var state = '';
         //event.SetBefore is called before value is changed
@@ -209,13 +379,13 @@ module('xs.data.Model', function () {
             }
         });
 
-        model.data.name.set(5);
+        model.name = 5;
         strictEqual(state, 'name:555:5;');
-        strictEqual(model.data.name.get(), '555');
+        strictEqual(model.name.get(), '555');
 
-        model.data.name.set('max');
+        model.name = 'max';
         strictEqual(state, 'name:555:5;name:555:max;');
-        strictEqual(model.data.name.get(), 'max');
+        strictEqual(model.name.get(), 'max');
 
         model.destroy();
 
@@ -230,27 +400,18 @@ module('xs.data.Model', function () {
 
             Class.extends = 'xs.data.Model';
 
-            Class.constant.attributes = new xs.core.Collection({
+            Class.attributes = {
                 id: {
                     type: 'xs.data.attribute.Number',
                     primary: true
                 },
                 name: {
-                    type: 'xs.data.attribute.String'
+                    type: 'xs.data.attribute.String',
+                    default: 'John'
                 },
                 age: {
                     type: 'xs.data.attribute.Number',
                     default: 0
-                }
-            });
-
-            Class.constant.proxy = {
-                type: 'xs.data.proxy.storage.Local',
-                reader: {
-                    type: 'xs.data.reader.JSON'
-                },
-                writer: {
-                    type: 'xs.data.writer.JSON'
                 }
             };
 
