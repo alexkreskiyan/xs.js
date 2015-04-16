@@ -10,7 +10,7 @@
  * @class xs.data.attribute.Format
  */
 xs.define(xs.Enum, 'xs.data.attribute.Format', {
-    User: 0x1,
+    Raw: 0x1,
     Store: 0x2,
-    Raw: 0x4
+    User: 0x4
 });
