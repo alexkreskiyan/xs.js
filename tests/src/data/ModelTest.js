@@ -177,7 +177,7 @@ module('xs.data.Model', function () {
         //model can be created empty
         model = new me.Class();
 
-        //verufy attributes' values
+        //verify attributes' values
         strictEqual(model.id.get(), undefined);
         strictEqual(model.name.get(), 'John');
         strictEqual(model.age.get(), 0);
@@ -190,7 +190,7 @@ module('xs.data.Model', function () {
             age: '25'
         });
 
-        //verufy attributes' values
+        //verify attributes' values
         strictEqual(model.id.get(), 5);
         strictEqual(model.name.get(), 'John');
         strictEqual(model.age.get(), 25);
@@ -344,7 +344,7 @@ module('xs.data.Model', function () {
         //model can be created empty
         model = new me.Class();
 
-        //verufy attributes' values
+        //verify attributes' values
         strictEqual(model.id.get(), undefined);
         strictEqual(model.name.get(), 'John');
         strictEqual(model.age.get(), 0);
@@ -357,7 +357,7 @@ module('xs.data.Model', function () {
             age: '25'
         });
 
-        //verufy attributes' values
+        //verify attributes' values
         strictEqual(model.id.get(), 5);
         strictEqual(model.name.get(), 'John');
         strictEqual(model.age.get(), 25);
@@ -433,6 +433,76 @@ module('xs.data.Model', function () {
 
         strictEqual(model.isDestroyed, true);
         strictEqual(value, 1);
+    });
+
+    test('preprocessor. source model', function () {
+        var me = this;
+
+        me.Class = xs.Class(function () {
+
+            var Class = this;
+
+            Class.extends = 'xs.data.Model';
+
+            Class.attributes = {
+                id: {
+                    type: 'xs.data.attribute.Number',
+                    default: 0,
+                    primary: true
+                },
+                name: 'xs.data.attribute.String',
+                age: {
+                    type: 'xs.data.attribute.Number'
+                }
+            };
+
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
+
+        //verify source property
+        strictEqual(me.Class.descriptor.property.hasKey('source'), true);
+
+        //verify proxy property
+        strictEqual(me.Class.descriptor.property.hasKey('proxy'), false);
+    });
+
+    test('preprocessor. proxy model', function () {
+        var me = this;
+
+        me.Class = xs.Class(function () {
+
+            var Class = this;
+
+            Class.extends = 'xs.data.Model';
+
+            Class.constant.source = false;
+
+            Class.attributes = {
+                id: {
+                    type: 'xs.data.attribute.Number',
+                    default: 0,
+                    primary: true
+                },
+                name: 'xs.data.attribute.String',
+                age: {
+                    type: 'xs.data.attribute.Number'
+                }
+            };
+
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
+
+        //verify source property
+        strictEqual(me.Class.descriptor.property.hasKey('source'), false);
+
+        //verify proxy property
+        strictEqual(me.Class.descriptor.property.hasKey('proxy'), true);
     });
 
 });

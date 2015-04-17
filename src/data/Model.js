@@ -31,12 +31,17 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         },
         {
             IModelOperation: 'ns.operation.IModelOperation'
+        },
+        {
+            Proxy: 'ns.proxy.Proxy'
         }
     ];
 
     Class.mixins.observable = 'xs.event.Observable';
 
     Class.abstract = true;
+
+    Class.constant.source = true;
 
     /**
      * Model constructor
@@ -71,6 +76,37 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             attributes[ name ] = new Attribute(me, name, attribute);
             attributes[ name ].set(data[ name ], true);
         });
+    };
+
+    Class.property.source = {
+        set: xs.noop
+    };
+
+    Class.property.proxy = {
+        set: function (proxy) {
+
+            //assert, that given instance of imports.Proxy
+            self.assert.ok(proxy instanceof imports.Proxy, 'proxy:set - given proxy candidate `$proxy` is not a proxy instance', {
+                $proxy: proxy
+            });
+
+            //verify, that proxy implements all operations, implemented by model
+            self.assert.ok(this.self.descriptor.implements.all(function (Interface) {
+
+                //return true if Interface is not a IModelOperation child, or it is and proxy implements it too
+                return !Interface.inherits(imports.IModelOperation) || proxy.self.implements(Interface);
+            }), 'proxy:set - given proxy class `$Proxy` implements model operations `$OperationsProxy`, that does not cover required model operations `$OperationsModel`', {
+                $Proxy: proxy.self,
+                $OperationsProxy: proxy.self.descriptor.implements.find(function (Interface) {
+                    return Interface.inherits(imports.IModelOperation);
+                }, xs.core.Collection.All).values(),
+                $OperationsModel: this.self.descriptor.implements.find(function (Interface) {
+                    return Interface.inherits(imports.IModelOperation);
+                }, xs.core.Collection.All).values()
+            });
+
+            this.private.proxy = proxy;
+        }
     };
 
     Class.method.primary = function (format) {
@@ -174,7 +210,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      *
      * @method get
      *
-     * @param {Number} [format] format, attribute's value is fetched in
+     * @param {Number} [format] format, attribute value is fetched in
      * @param {Object} [options] additional format options
      *
      * @return {*}
@@ -294,6 +330,9 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
         });
 
+        //handle source/proxy
+        handleSourceProxy(Class);
+
     }, 'before', 'defineElements');
 
     function processAttribute(Class, name, config) {
@@ -368,6 +407,19 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         //add primary attribute
         if (config.primary === true) {
             Class.descriptor.primaryAttributes.push(name);
+        }
+    }
+
+    function handleSourceProxy(Class) {
+
+        //if model is source-focused - remove Class.property.proxy
+        if (Class.descriptor.constant.at('source')) {
+
+            Class.descriptor.property.removeAt('proxy');
+            //else - remove Class.property.source
+        } else {
+
+            Class.descriptor.property.removeAt('source');
         }
     }
 
