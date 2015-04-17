@@ -1,13 +1,13 @@
 'use strict';
 
 /**
- * This postprocessor automatically creates and saves logger instance for this class as Class.log
+ * This preprocessor automatically creates and saves logger instance for this class as Class.log
  *
  * This is made to automatically create logger instances, that use Class.label as category.
  *
  * Later, logger can be accessed via self.log
  *
- * @member xs.class.postprocessors
+ * @member xs.class.preprocessors
  *
  * @private
  *
@@ -15,7 +15,7 @@
  *
  * @property logger
  */
-xs.class.postprocessors.add('logger', function () {
+xs.class.preprocessors.add('logger', function () {
 
     return true;
 }, function (Class) {

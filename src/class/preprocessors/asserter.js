@@ -1,13 +1,13 @@
 'use strict';
 
 /**
- * This postprocessor automatically creates and saves asserter instance for this class as Class.assert
+ * This preprocessor automatically creates and saves asserter instance for this class as Class.assert
  *
  * This is made to automatically create asserter instances, that use Class.label as category.
  *
  * Later, asserter can be accessed via self.assert
  *
- * @member xs.class.postprocessors
+ * @member xs.class.preprocessors
  *
  * @private
  *
@@ -15,7 +15,7 @@
  *
  * @property asserter
  */
-xs.class.postprocessors.add('asserter', function () {
+xs.class.preprocessors.add('asserter', function () {
 
     return true;
 }, function (Class) {

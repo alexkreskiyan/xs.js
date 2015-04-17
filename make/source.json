@@ -74,8 +74,8 @@
         "xs.class.preprocessors.addOwnElements": { },
         "xs.class.preprocessors.processImplements": { },
         "xs.class.preprocessors.defineElements": { },
-        "xs.class.postprocessors.logger": { },
-        "xs.class.postprocessors.asserter": { },
+        "xs.class.preprocessors.logger": { },
+        "xs.class.preprocessors.asserter": { },
         "xs.class.Base": { },
         "xs.enum.preprocessors.namespace": { },
         "xs.enum.preprocessors.values": { },
@@ -239,8 +239,7 @@
                     }
                 },
                 "WebStorage": {
-                    "contract": "class",
-                    "test": false
+                    "contract": "class"
                 },
                 "Local": {
                     "contract": "class",
