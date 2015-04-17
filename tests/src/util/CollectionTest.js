@@ -564,8 +564,6 @@ module('xs.util.Collection', function () {
         //test events
         collection = new xs.util.Collection(Number);
 
-        var str = '';
-
         var log = {
             addBefore: [],
             add: []
@@ -581,8 +579,6 @@ module('xs.util.Collection', function () {
         //add - post-processing added values
         collection.events.on(xs.util.collection.event.Add, function (event) {
             log.add.push(event.value + ':' + event.key + ':' + event.index);
-
-            str += event.value + event.key + event.index + ':';
         });
 
         collection.add('a', 4);
@@ -593,8 +589,6 @@ module('xs.util.Collection', function () {
         collection.add('f', 8);
         collection.add('g', 10);
         strictEqual(JSON.stringify(collection.toSource()), '{"b":6,"c":6,"d":8,"e":8,"f":8}');
-
-        strictEqual(str, '6b0:6c1:8d2:8e3:8f4:');
 
         strictEqual(JSON.stringify(log.addBefore), JSON.stringify([
             '4:a:0',
@@ -681,8 +675,6 @@ module('xs.util.Collection', function () {
         //test events
         collection = new xs.util.Collection(Number);
 
-        var str = '';
-
         var log = {
             addBefore: [],
             add: []
@@ -698,8 +690,6 @@ module('xs.util.Collection', function () {
         //add - post-processing inserted values
         collection.events.on(xs.util.collection.event.Add, function (event) {
             log.add.push(event.value + ':' + event.key + ':' + event.index);
-
-            str += event.value + event.key + event.index + ':';
         });
 
         collection.insert(0, 'a', 4);
@@ -710,8 +700,6 @@ module('xs.util.Collection', function () {
         collection.insert(-3, 'f', 8);
         collection.insert(4, 'g', 10);
         strictEqual(JSON.stringify(collection.toSource()), '{"b":6,"f":8,"d":8,"e":8,"c":6}');
-
-        strictEqual(str, '6b0:6c1:8d1:8e2:8f1:');
 
         strictEqual(JSON.stringify(log.addBefore), JSON.stringify([
             '4:a:0',
@@ -799,8 +787,6 @@ module('xs.util.Collection', function () {
             g: 5
         }, Number);
 
-        var str = '';
-
         var log = {
             setBefore: [],
             set: []
@@ -816,8 +802,6 @@ module('xs.util.Collection', function () {
         //set - post-processing of set values
         collection.events.on(xs.util.collection.event.Set, function (event) {
             log.set.push(event.old + ':' + event.new + ':' + event.key + ':' + event.index);
-
-            str += event.new + event.key + event.index + ':';
         });
 
         collection.set('c', 6);
@@ -828,8 +812,6 @@ module('xs.util.Collection', function () {
         collection.set('f', 8);
         collection.set('e', 8);
         strictEqual(JSON.stringify(collection.toSource()), '{"a":10,"b":8,"c":6,"d":6,"e":8,"f":8,"g":5}');
-
-        strictEqual(str, '6c2:6d3:8f5:8e4:');
 
         strictEqual(JSON.stringify(log.setBefore), JSON.stringify([
             '7:6:c:2',
