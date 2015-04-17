@@ -26,11 +26,6 @@ xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
     Class.extends = 'ns.proxy.Proxy';
 
     Class.implements = [
-        'ns.proxy.IProxy',
-        'ns.operation.source.ICreate',
-        'ns.operation.source.IRead',
-        'ns.operation.source.IUpdate',
-        'ns.operation.source.IDelete'
     ];
 
     Class.method.create = function (model) {
@@ -65,7 +60,7 @@ xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
         self.parent.prototype.createAll.call(me, operation);
     };
 
-    Class.method.read = function (operation) {
+    Class.method.read = function (key) {
         var me = this;
 
         //call parent
@@ -107,7 +102,7 @@ xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
         self.parent.prototype.readAll.call(me, operation);
     };
 
-    Class.method.update = function (operation) {
+    Class.method.update = function (model) {
         var me = this;
 
         //call parent
@@ -145,7 +140,7 @@ xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
         self.parent.prototype.updateAll.call(me, operation);
     };
 
-    Class.method.delete = function (operation) {
+    Class.method.delete = function (model) {
         var me = this;
 
         //call parent
