@@ -174,21 +174,28 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
      *
      * @method get
      *
-     * @param {Number} format
+     * @param {Number} [format] format, attribute's value is fetched in
+     * @param {Object} [options] additional format options
      *
      * @return {*}
      */
-    Attribute.prototype.get = function (format) {
+    Attribute.prototype.get = function (format, options) {
         if (!arguments.length) {
 
             return this.private.attribute.get(this.private.value, xs.data.attribute.Format.User);
         }
 
-        self.assert.ok(xs.data.attribute.Format.has(format), 'attribute.get - given unknown `$format`', {
+        //assert, that options, if given, are an object
+        self.assert.ok(arguments.length === 1 || xs.isObject(options), 'attribute.get - given format options `$options` are not an object', {
+            $options: options
+        });
+
+        //assert, that format is defined
+        self.assert.ok(xs.data.attribute.Format.has(format), 'attribute.get - given unknown format `$format`', {
             $format: format
         });
 
-        return this.private.attribute.get(this.private.value, format);
+        return options ? this.private.attribute.get(this.private.value, format, options) : this.private.attribute.get(this.private.value, format);
     };
 
     /**
