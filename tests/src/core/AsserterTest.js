@@ -225,11 +225,11 @@ module('xs.core.Asserter', function () {
 
         //incorrect throws
         throws(function () {
-            assert.Class(xs.noop);
+            assert.class(xs.noop);
         });
 
         //correct is silent
-        assert.Class(xs.Class(xs.noop));
+        assert.class(xs.Class(xs.noop));
     });
 
     test('Interface', function () {
@@ -237,11 +237,11 @@ module('xs.core.Asserter', function () {
 
         //incorrect throws
         throws(function () {
-            assert.Class(xs.noop);
+            assert.class(xs.noop);
         });
 
         //correct is silent
-        assert.Interface(xs.Interface(xs.noop));
+        assert.interface(xs.Interface(xs.noop));
     });
 
     test('instance', function () {

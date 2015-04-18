@@ -55,7 +55,7 @@ xs.class.preprocessors.add('processImplements', function (Class) {
         //return whether all Interfaces are implemented
         return Interfaces.all(function (Interface) {
 
-            assert.Interface(Interface, '$Class: given `$Interface` is not an interface', {
+            assert.interface(Interface, '$Class: given `$Interface` is not an interface', {
                 $Class: Class,
                 $Interface: Interface
             });
@@ -99,7 +99,7 @@ xs.class.preprocessors.add('processImplements', function (Class) {
         var Interface = xs.ContractsManager.get(name);
 
         //check that contractor is xs.Interface
-        assert.Interface(Interface, '$Class: given `$Interface` is not interface', {
+        assert.interface(Interface, '$Class: given `$Interface` is not interface', {
             $Class: Class,
             $Interface: Interface
         });

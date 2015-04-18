@@ -43,7 +43,7 @@ xs.interface.preprocessors.add('processExtends', function () {
     var Parent = xs.ContractsManager.get(extended);
 
     //check that parent is interface
-    assert.Interface(Parent, '$Interface: contract `$Parent` is not an interface', {
+    assert.interface(Parent, '$Interface: contract `$Parent` is not an interface', {
         $Interface: Interface,
         $Parent: Parent
     });

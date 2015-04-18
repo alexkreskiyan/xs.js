@@ -368,7 +368,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         var Attribute = xs.ContractsManager.get(Class.descriptor.resolveName(config.type));
 
         //assert, that Attribute is a class
-        assert.Class(Attribute, 'attribute `$name` type contract `$Attribute` is not a class', {
+        assert.class(Attribute, 'attribute `$name` type contract `$Attribute` is not a class', {
             $name: name,
             $Attribute: Attribute
         });

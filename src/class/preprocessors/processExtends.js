@@ -62,7 +62,7 @@ xs.class.preprocessors.add('processExtends', function () {
     var Parent = xs.ContractsManager.get(extended);
 
     //check that parent is class
-    assert.Class(Parent, '$Class: contract `$Parent` is not a class', {
+    assert.class(Parent, '$Class: contract `$Parent` is not a class', {
         $Class: Class,
         $Parent: Parent
     });
@@ -136,7 +136,7 @@ function extend(child, parent) {
      */
     xs.constant(child, 'inherits', function (Parent) {
         //assert, that Parent is class
-        assert.Class(Parent, 'Given Parent `$Parent` is not a class', {
+        assert.class(Parent, 'Given Parent `$Parent` is not a class', {
             $Parent: Parent
         });
 

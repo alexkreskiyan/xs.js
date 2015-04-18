@@ -57,7 +57,7 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
         //return whether all Mixins are used
         return Mixins.all(function (Mixin) {
 
-            assert.Class(Mixin, '$Class: given `$Mixin` is not a class', {
+            assert.class(Mixin, '$Class: given `$Mixin` is not a class', {
                 $Class: Class,
                 $Mixin: Mixin
             });
@@ -113,7 +113,7 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
         var Mixin = xs.ContractsManager.get(name);
 
         //check that contractor is xs.Class
-        assert.Class(Mixin, '$Class: given `$Mixin` is not class', {
+        assert.class(Mixin, '$Class: given `$Mixin` is not class', {
             $Class: Class,
             $Mixin: Mixin
         });

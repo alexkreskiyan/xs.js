@@ -610,7 +610,7 @@ Asserter.prototype.empty = function (value, message, vars) {
  *     //create asserter instance
  *     var asserter = new xs.core.Asserter(logger, Error);
  *
- *     asserter.Class(xs.Class(xs.noop));
+ *     asserter.class(xs.Class(xs.noop));
  *
  * @method Class
  *
@@ -618,7 +618,7 @@ Asserter.prototype.empty = function (value, message, vars) {
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-Asserter.prototype.Class = function (Class, message, vars) {
+Asserter.prototype.class = function (Class, message, vars) {
     var me = this;
 
     //assert, that Class is function
@@ -636,7 +636,7 @@ Asserter.prototype.Class = function (Class, message, vars) {
 };
 
 /**
- * Verifies, that given fn is Interface
+ * Verifies, that given fn is interface
  *
  * For example:
  *
@@ -646,15 +646,15 @@ Asserter.prototype.Class = function (Class, message, vars) {
  *     //create asserter instance
  *     var asserter = new xs.core.Asserter(logger, Error);
  *
- *     asserter.Interface(xs.Interface(xs.noop));
+ *     asserter.interface(xs.Interface(xs.noop));
  *
- * @method Interface
+ * @method interface
  *
  * @param {Function} Interface given constructor
  * @param {String} message error message
  * @param {Object} [vars] error optional vars
  */
-Asserter.prototype.Interface = function (Interface, message, vars) {
+Asserter.prototype.interface = function (Interface, message, vars) {
     var me = this;
 
     //assert, that fn is function
@@ -711,12 +711,12 @@ Asserter.prototype.instance = function (instance, Class, message, vars) {
     });
 
     //assert, that Class is class
-    me.Class(Class, 'Class `$Class` is not a class', {
+    me.class(Class, 'Class `$Class` is not a class', {
         $Class: Class
     });
 
     //assert that object.self is class
-    me.Class(instance.self, 'Instance.self `$Class` is not a class', {
+    me.class(instance.self, 'Instance.self `$Class` is not a class', {
         $Class: instance.self
     });
 
@@ -758,12 +758,12 @@ Asserter.prototype.implements = function (instance, Interface, message, vars) {
     });
 
     //assert, that Interface is interface
-    me.Interface(Interface, 'Interface `$Interface` is not an interface', {
+    me.interface(Interface, 'Interface `$Interface` is not an interface', {
         $Interface: Interface
     });
 
     //assert that instance.self is class
-    me.Class(instance.self, 'Instance.self `$Class` is not a class', {
+    me.class(instance.self, 'Instance.self `$Class` is not a class', {
         $Class: instance.self
     });
 
