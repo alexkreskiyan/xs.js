@@ -1103,7 +1103,7 @@ module('xs.util.Collection', function () {
         var itemString = JSON.stringify(item);
         var collection;
 
-        //throws if fn is not array
+        //throws if fn is not a function
         collection = new xs.util.Collection();
         throws(function () {
             collection.removeBy([]);

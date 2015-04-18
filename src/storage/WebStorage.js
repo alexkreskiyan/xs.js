@@ -45,6 +45,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
 
     Class.mixins.observable = 'xs.event.StaticObservable';
 
+    Class.abstract = true;
+
     /**
      * Storage flag, meaning, that operation is reverse
      *
@@ -102,7 +104,15 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
      * @return {Array} storage keys
      */
     Class.static.method.keys = function () {
-        return Object.keys(this.storage);
+        var storage = this.storage;
+        var length = storage.length;
+        var keys = [];
+
+        for (var i = 0; i < length; i++) {
+            keys.push(storage.key(i));
+        }
+
+        return keys;
     };
 
     /**
@@ -136,7 +146,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
     Class.static.method.hasKey = function (key) {
         var me = this;
 
-        me.assert.ok(xs.isString(key), 'hasKey - key `$key`, given for storage, is not a string', {
+        me.assert.string(key, 'hasKey - key `$key`, given for storage, is not a string', {
             $key: key
         });
 
@@ -149,11 +159,16 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
      *
      * @method has
      *
-     * @param {*} value value to lookup for
+     * @param {String} value value to lookup for
      *
      * @return {Boolean} whether storage has value
      */
     Class.static.method.has = function (value) {
+        var me = this;
+
+        me.assert.string(value, 'has - value `$value`, given for storage, is not a string', {
+            $value: value
+        });
 
         return this.values().indexOf(value) >= 0;
     };
@@ -232,8 +247,8 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
      *
      * @method add
      *
-     * @param {String} key for array storage - added value. for storage - key of added value
-     * @param {*} [value] value, added to storage
+     * @param {String} key key of added value
+     * @param {*} value value, added to storage
      *
      * @chainable
      */
@@ -380,7 +395,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
 
         //send clear
         if (!me.storage.length) {
-            me.events.send(new me.event.Clear());
+            me.events.send(new imports.event.Clear());
         }
 
         return me;
@@ -437,23 +452,15 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
 
             //send clear
             if (!me.storage.length) {
-                me.events.send(new me.event.Clear());
+                me.events.send(new imports.event.Clear());
             }
 
             return me;
         }
 
-        //remove all if no value given
-        if (!arguments.length) {
-            me.storage.clear();
-
-            //send clear
-            me.events.send({
-                type: self.Clear
-            });
-
-            return me;
-        }
+        me.assert.string(value, 'remove - value `$value`, given for storage, is not a string', {
+            $value: value
+        });
 
         var index;
         var all = false;
@@ -541,7 +548,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
 
         //send clear
         if (!me.storage.length) {
-            me.events.send(new me.event.Clear());
+            me.events.send(new imports.event.Clear());
         }
 
         return me;
@@ -699,7 +706,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
 
         //send clear
         if (!me.storage.length) {
-            me.events.send(new me.event.Clear());
+            me.events.send(new imports.event.Clear());
         }
 
         return me;
