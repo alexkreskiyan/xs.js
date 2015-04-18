@@ -22,22 +22,11 @@ module('xs.class.postprocessors.asserter', function () {
     }, function () {
         var me = this;
 
-        //here class is processed, but preprocessors have not run yet
-        strictEqual(me.Class.hasOwnProperty('assert'), false);
+        //assert must be defined
+        strictEqual(me.Class.hasOwnProperty('assert'), true);
 
-        //on next tick - assert must be defined
-        setTimeout(function () {
-            //assert must be defined
-            strictEqual(me.Class.hasOwnProperty('assert'), true);
-
-            //assert must be xs.core.Asserter instance
-            strictEqual(me.Class.assert instanceof xs.core.Asserter, true);
-
-            me.done();
-
-        }, 0);
-
-        return false;
+        //assert must be xs.core.Asserter instance
+        strictEqual(me.Class.assert instanceof xs.core.Asserter, true);
     });
 
 });

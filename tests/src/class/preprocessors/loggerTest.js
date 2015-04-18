@@ -22,22 +22,11 @@ module('xs.class.postprocessors.logger', function () {
     }, function () {
         var me = this;
 
-        //here class is processed, but preprocessors have not run yet
-        strictEqual(me.Class.hasOwnProperty('log'), false);
+        //log must be defined
+        strictEqual(me.Class.hasOwnProperty('log'), true);
 
-        //on next tick - log must be defined
-        setTimeout(function () {
-            //log must be defined
-            strictEqual(me.Class.hasOwnProperty('log'), true);
-
-            //log must be xs.log.Logger instance
-            strictEqual(me.Class.log instanceof xs.log.Logger, true);
-
-            me.done();
-
-        }, 0);
-
-        return false;
+        //log must be xs.log.Logger instance
+        strictEqual(me.Class.log instanceof xs.log.Logger, true);
     });
 
 });
