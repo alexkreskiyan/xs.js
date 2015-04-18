@@ -25,7 +25,7 @@ module('xs.data.Model', function () {
                 id: 'xs.data.attribute.Number',
                 name: 'xs.data.attribute.String',
                 age: {
-                    type: 'xs.data.attribute.Number'
+                    class: 'xs.data.attribute.Number'
                 }
             };
 
@@ -61,13 +61,13 @@ module('xs.data.Model', function () {
 
             Class.attributes = {
                 id: {
-                    type: 'xs.data.attribute.Number',
+                    class: 'xs.data.attribute.Number',
                     default: 0,
                     primary: true
                 },
                 name: 'xs.data.attribute.String',
                 age: {
-                    type: 'xs.data.attribute.Number'
+                    class: 'xs.data.attribute.Number'
                 }
             };
 
@@ -103,16 +103,16 @@ module('xs.data.Model', function () {
 
             Class.attributes = {
                 id: {
-                    type: 'xs.data.attribute.Number',
+                    class: 'xs.data.attribute.Number',
                     default: 0,
                     primary: true
                 },
                 name: {
-                    type: 'xs.data.attribute.String',
+                    class: 'xs.data.attribute.String',
                     primary: true
                 },
                 age: {
-                    type: 'xs.data.attribute.Number'
+                    class: 'xs.data.attribute.Number'
                 }
             };
 
@@ -148,15 +148,15 @@ module('xs.data.Model', function () {
 
             Class.attributes = {
                 id: {
-                    type: 'xs.data.attribute.Number',
+                    class: 'xs.data.attribute.Number',
                     primary: true
                 },
                 name: {
-                    type: 'xs.data.attribute.String',
+                    class: 'xs.data.attribute.String',
                     default: 'John'
                 },
                 age: {
-                    type: 'xs.data.attribute.Number',
+                    class: 'xs.data.attribute.Number',
                     default: 0
                 }
             };
@@ -211,7 +211,7 @@ module('xs.data.Model', function () {
                 id: 'xs.data.attribute.Number',
                 name: 'xs.data.attribute.String',
                 age: {
-                    type: 'xs.data.attribute.Number'
+                    class: 'xs.data.attribute.Number'
                 }
             };
 
@@ -242,13 +242,13 @@ module('xs.data.Model', function () {
 
             Class.attributes = {
                 id: {
-                    type: 'xs.data.attribute.Number',
+                    class: 'xs.data.attribute.Number',
                     default: 0,
                     primary: true
                 },
                 name: 'xs.data.attribute.String',
                 age: {
-                    type: 'xs.data.attribute.Number'
+                    class: 'xs.data.attribute.Number'
                 }
             };
 
@@ -279,16 +279,16 @@ module('xs.data.Model', function () {
 
             Class.attributes = {
                 id: {
-                    type: 'xs.data.attribute.Number',
+                    class: 'xs.data.attribute.Number',
                     default: 0,
                     primary: true
                 },
                 name: {
-                    type: 'xs.data.attribute.String',
+                    class: 'xs.data.attribute.String',
                     primary: true
                 },
                 age: {
-                    type: 'xs.data.attribute.Number'
+                    class: 'xs.data.attribute.Number'
                 }
             };
 
@@ -319,15 +319,15 @@ module('xs.data.Model', function () {
 
             Class.attributes = {
                 id: {
-                    type: 'xs.data.attribute.Number',
+                    class: 'xs.data.attribute.Number',
                     primary: true
                 },
                 name: {
-                    type: 'xs.data.attribute.String',
+                    class: 'xs.data.attribute.String',
                     default: 'John'
                 },
                 age: {
-                    type: 'xs.data.attribute.Number',
+                    class: 'xs.data.attribute.Number',
                     default: 0
                 }
             };
@@ -402,15 +402,15 @@ module('xs.data.Model', function () {
 
             Class.attributes = {
                 id: {
-                    type: 'xs.data.attribute.Number',
+                    class: 'xs.data.attribute.Number',
                     primary: true
                 },
                 name: {
-                    type: 'xs.data.attribute.String',
+                    class: 'xs.data.attribute.String',
                     default: 'John'
                 },
                 age: {
-                    type: 'xs.data.attribute.Number',
+                    class: 'xs.data.attribute.Number',
                     default: 0
                 }
             };
@@ -446,13 +446,13 @@ module('xs.data.Model', function () {
 
             Class.attributes = {
                 id: {
-                    type: 'xs.data.attribute.Number',
+                    class: 'xs.data.attribute.Number',
                     default: 0,
                     primary: true
                 },
                 name: 'xs.data.attribute.String',
                 age: {
-                    type: 'xs.data.attribute.Number'
+                    class: 'xs.data.attribute.Number'
                 }
             };
 
@@ -482,13 +482,13 @@ module('xs.data.Model', function () {
 
             Class.attributes = {
                 id: {
-                    type: 'xs.data.attribute.Number',
+                    class: 'xs.data.attribute.Number',
                     default: 0,
                     primary: true
                 },
                 name: 'xs.data.attribute.String',
                 age: {
-                    type: 'xs.data.attribute.Number'
+                    class: 'xs.data.attribute.Number'
                 }
             };
 

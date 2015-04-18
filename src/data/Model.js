@@ -342,7 +342,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             $name: name
         });
 
-        //assert, that config is either a string (simple type name) or a configuration object
+        //assert, that config is either a string (simple class name) or a configuration object
         assert.ok(xs.isString(config) || xs.isObject(config), 'attribute `$name` has incorrect `$config`', {
             $name: name,
             $config: config
@@ -350,31 +350,31 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
         //convert string config to object
         config = xs.isString(config) ? {
-            type: config
+            class: config
         } : config;
 
-        //assert, that type given
-        assert.ok(config.hasOwnProperty('type'), 'attribute `$name` has no type in it\'s config', {
+        //assert, that class given
+        assert.ok(config.hasOwnProperty('class'), 'attribute `$name` has no class in it\'s config', {
             $name: name
         });
 
-        //assert, that type is a string
-        assert.string(config.type, 'attribute `$name` type `$type` is not a string', {
+        //assert, that class is a string
+        assert.string(config.class, 'attribute `$name` class `$class` is not a string', {
             $name: name,
-            $type: config.type
+            $class: config.class
         });
 
         //try to get attribute class
-        var Attribute = xs.ContractsManager.get(Class.descriptor.resolveName(config.type));
+        var Attribute = xs.ContractsManager.get(Class.descriptor.resolveName(config.class));
 
         //assert, that Attribute is a class
-        assert.class(Attribute, 'attribute `$name` type contract `$Attribute` is not a class', {
+        assert.class(Attribute, 'attribute `$name` class contract `$Attribute` is not a class', {
             $name: name,
             $Attribute: Attribute
         });
 
         //assert, that Attribute implements xs.data.attribute.IAttribute
-        assert.ok(Attribute.implements(xs.data.attribute.IAttribute), 'attribute `$name` type class `$Attribute` does not implement `$IAttribute` interface', {
+        assert.ok(Attribute.implements(xs.data.attribute.IAttribute), 'attribute `$name` class class `$Attribute` does not implement `$IAttribute` interface', {
             $name: name,
             $Attribute: Attribute,
             $IAttribute: xs.data.attribute.IAttribute
