@@ -61,11 +61,13 @@ xs.define(xs.Class, 'ns.Raw', function (self) {
      * @return {String} transformed returned value
      */
     Class.method.set = function (value) {
-        self.assert.ok(!xs.isDefined(value) || xs.isNumeric(value), 'set - given value `$value` is not numeric', {
-            $value: value
-        });
+        if (xs.isDefined(value)) {
 
-        return xs.isDefined(value) ? Number(value) : this.default;
+            return value;
+        } else {
+
+            return this.default instanceof xs.core.Generator ? this.default.create() : this.default;
+        }
     };
 
 });
