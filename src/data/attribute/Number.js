@@ -89,7 +89,7 @@ xs.define(xs.Class, 'ns.Number', function (self, imports) {
     Class.method.set = function (value) {
 
         //assert, that value is either undefined or is numeric
-        self.assert.ok(!xs.isDefined(value) || xs.isNumeric(value), 'set - given value `$value` is not numeric', {
+        self.assert.ok(!xs.isDefined(value) || xs.isNumeric(value), 'set - given value `$value` is not numeric or undefined', {
             $value: value
         });
 
