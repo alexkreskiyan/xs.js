@@ -109,6 +109,18 @@
                             "test": false
                         }
                     },
+                    "Boolean": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "Collection": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "Date": {
+                        "contract": "class",
+                        "test": false
+                    },
                     "Format": {
                         "contract": "enum"
                     },
@@ -116,6 +128,10 @@
                         "contract": "interface"
                     },
                     "Number": {
+                        "contract": "class",
+                        "test": false
+                    },
+                    "Raw": {
                         "contract": "class",
                         "test": false
                     },

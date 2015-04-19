@@ -1,15 +1,15 @@
 /**
- * String attribute
+ * Boolean attribute
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @private
  *
- * @class xs.data.attribute.String
+ * @class xs.data.attribute.Boolean
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.String', function (self) {
+xs.define(xs.Class, 'ns.Boolean', function (self) {
 
     'use strict';
 
@@ -20,7 +20,7 @@ xs.define(xs.Class, 'ns.String', function (self) {
     Class.implements = [ 'ns.IAttribute' ];
 
     /**
-     * String attribute constructor
+     * Boolean attribute constructor
      *
      * @param {Object} config
      */
@@ -39,12 +39,12 @@ xs.define(xs.Class, 'ns.String', function (self) {
     };
 
     /**
-     * String `get` method
+     * Boolean `get` method
      *
      * @method get
      *
      * @param {String} value incoming value
-     * @param {Number} format format index
+     * @param {Boolean} format format index
      * @param {Object} [options] optional format options
      *
      * @return {String} transformed returned value
@@ -55,7 +55,7 @@ xs.define(xs.Class, 'ns.String', function (self) {
     };
 
     /**
-     * String `set` method. Converts any given value to string
+     * Boolean `set` method. Try's to convert given value to number. If value is not numeric, error is thrown
      *
      * @method set
      *
@@ -65,7 +65,7 @@ xs.define(xs.Class, 'ns.String', function (self) {
      */
     Class.method.set = function (value) {
 
-        return xs.isDefined(value) ? String(value) : this.default;
+        return xs.isDefined(value) ? Boolean(value) : this.default;
     };
 
 });

@@ -1,15 +1,15 @@
 /**
- * String attribute
+ * Raw attribute
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @private
  *
- * @class xs.data.attribute.String
+ * @class xs.data.attribute.Raw
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.String', function (self) {
+xs.define(xs.Class, 'ns.Raw', function (self) {
 
     'use strict';
 
@@ -20,42 +20,39 @@ xs.define(xs.Class, 'ns.String', function (self) {
     Class.implements = [ 'ns.IAttribute' ];
 
     /**
-     * String attribute constructor
+     * Raw attribute constructor
      *
      * @param {Object} config
      */
     Class.constructor = function (config) {
         var me = this;
 
-        //assert, that config is an object
         self.assert.object(config, 'constructor - given config `$config` is not an object', {
             $config: config
         });
 
-        //set default value
         if (config.hasOwnProperty('default')) {
             me.default = config.default;
         }
     };
 
     /**
-     * String `get` method
+     * Raw `get` method
      *
      * @method get
      *
      * @param {String} value incoming value
-     * @param {Number} format format index
+     * @param {Raw} format format index
      * @param {Object} [options] optional format options
      *
      * @return {String} transformed returned value
      */
     Class.method.get = function (value, format, options) {
-
         return value;
     };
 
     /**
-     * String `set` method. Converts any given value to string
+     * Raw `set` method. Try's to convert given value to number. If value is not numeric, error is thrown
      *
      * @method set
      *
@@ -64,8 +61,11 @@ xs.define(xs.Class, 'ns.String', function (self) {
      * @return {String} transformed returned value
      */
     Class.method.set = function (value) {
+        self.assert.ok(!xs.isDefined(value) || xs.isNumeric(value), 'set - given value `$value` is not numeric', {
+            $value: value
+        });
 
-        return xs.isDefined(value) ? String(value) : this.default;
+        return xs.isDefined(value) ? Number(value) : this.default;
     };
 
 });

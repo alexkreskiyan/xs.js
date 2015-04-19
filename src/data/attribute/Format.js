@@ -11,6 +11,6 @@
  */
 xs.define(xs.Enum, 'xs.data.attribute.Format', {
     Raw: 0x1,
-    Store: 0x2,
+    Storage: 0x2,
     User: 0x4
 });

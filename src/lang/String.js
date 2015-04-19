@@ -49,10 +49,17 @@ xs.String = (function () {
             $replaces: replaces
         });
 
-        Object.keys(replaces).forEach(function (from) {
+        var keys = Object.keys(replaces);
+        var length = keys.length;
+
+        for (var i = 0; i < length; i++) {
+            var from = keys[ i ];
             var to = replaces[ from ];
-            string = string.split(from).join(to);
-        });
+
+            if (string.indexOf(from) >= 0) {
+                string = string.split(from).join(to);
+            }
+        }
 
         return string;
     };
