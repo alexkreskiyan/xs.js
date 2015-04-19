@@ -40,6 +40,12 @@ xs.define(xs.Class, 'ns.Date', function (self, imports) {
 
         //set default value
         if (config.hasOwnProperty('default')) {
+
+            //assert, that config.default is a generator
+            self.assert.ok(config.default instanceof xs.core.Generator, 'constructor - given default `$default` is not a xs.core.Generator instance', {
+                $default: config.default
+            });
+
             me.default = config.default;
         }
     };
@@ -83,22 +89,53 @@ xs.define(xs.Class, 'ns.Date', function (self, imports) {
     };
 
     /**
-     * Date `set` method. Try's to convert given value to number. If value is not numeric, error is thrown
+     * Date `set` method. Tries to convert given value to number. If value is not numeric, error is thrown
      *
      * @method set
      *
-     * @param {*} value incoming value
+     * @param {undefined|number|string|Date} value incoming value
      *
-     * @return {String} transformed returned value
+     * @return {Date|undefined} transformed returned value
      */
     Class.method.set = function (value) {
 
-        //assert, that value is either undefined or is numeric
-        self.assert.ok(!xs.isDefined(value) || xs.isNumeric(value), 'set - given value `$value` is not numeric', {
+        //assert, that value is either undefined or is numeric or is string or is a Date instance
+        self.assert.ok(!xs.isDefined(value) || xs.isNumber(value) || xs.isString(value) || value instanceof Date, 'set - given value `$value` is not undefined, number, string or Date object', {
             $value: value
         });
 
-        return xs.isDefined(value) ? Number(value) : this.default;
+        //if date given
+        if (value instanceof Date) {
+
+            //return value itself
+            return value;
+
+            //if numeric value
+        } else if (xs.isNumeric(value)) {
+
+            //return date from given timestamp
+            return new Date(Number(value));
+
+            //if value is a string
+        } else if (xs.isString(value)) {
+
+            //try to parse date
+            var timestamp = Date.parse(value);
+
+            if (isNaN(timestamp)) {
+
+                //if default is instance of xs.core.Generator - generate, else - return as is
+                return this.default instanceof xs.core.Generator ? this.default.create() : this.default;
+            } else {
+
+                //return date from given timestamp
+                return new Date(timestamp);
+            }
+        }
+
+        //value is undefined
+        //if default is instance of xs.core.Generator - generate, else - return as is
+        return this.default instanceof xs.core.Generator ? this.default.create() : this.default;
     };
 
     var formatDate = function (date, format) {
