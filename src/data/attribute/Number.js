@@ -78,11 +78,11 @@ xs.define(xs.Class, 'ns.Number', function (self, imports) {
     };
 
     /**
-     * Number `set` method. Tries to convert given value to number. If value is not numeric, error is thrown
+     * Number `set` method. Returns undefined value, return converted numeric value as number or throws exception otherwise
      *
      * @method set
      *
-     * @param {*} value incoming value
+     * @param {Number|String|undefined} value incoming value
      *
      * @return {String} transformed returned value
      */

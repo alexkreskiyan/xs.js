@@ -48,6 +48,7 @@ xs.define(xs.Class, 'ns.Raw', function (self) {
      * @return {String} transformed returned value
      */
     Class.method.get = function (value, format, options) {
+
         return value;
     };
 

@@ -55,7 +55,7 @@ xs.define(xs.Class, 'ns.Boolean', function (self) {
     };
 
     /**
-     * Boolean `set` method. Try's to convert given value to number. If value is not numeric, error is thrown
+     * Boolean `set` method. Returns undefined value or boolean representation of any other value
      *
      * @method set
      *

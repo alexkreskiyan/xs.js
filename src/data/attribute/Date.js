@@ -89,7 +89,7 @@ xs.define(xs.Class, 'ns.Date', function (self, imports) {
     };
 
     /**
-     * Date `set` method. Tries to convert given value to number. If value is not numeric, error is thrown
+     * Date `set` method. Returns undefined value, tries to convert other value to a Date object. On success - returns, on fail - throws respective exception
      *
      * @method set
      *

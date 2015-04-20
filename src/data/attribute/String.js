@@ -55,7 +55,7 @@ xs.define(xs.Class, 'ns.String', function (self) {
     };
 
     /**
-     * String `set` method. Converts any given value to string
+     * String `set` method. Returns undefined value or string representation of any other value
      *
      * @method set
      *

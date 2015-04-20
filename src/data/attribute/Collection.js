@@ -9,13 +9,19 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Collection', function (self) {
+xs.define(xs.Class, 'ns.Collection', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
     Class.namespace = 'xs.data.attribute';
+
+    Class.imports = [
+        {
+            Format: 'ns.Format'
+        }
+    ];
 
     Class.implements = [ 'ns.IAttribute' ];
 
@@ -25,8 +31,8 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      * @param {Object} config
      */
     Class.constructor = function (config) {
-        var me = this;
 
+        //assert, that config is an object
         self.assert.object(config, 'constructor - given config `$config` is not an object', {
             $config: config
         });
@@ -37,31 +43,55 @@ xs.define(xs.Class, 'ns.Collection', function (self) {
      *
      * @method get
      *
-     * @param {String} value incoming value
+     * @param {xs.core.Collection} value incoming value
      * @param {Collection} format format index
      * @param {Object} [options] optional format options
      *
-     * @return {String} transformed returned value
+     * @return {Array|Object} transformed returned value
      */
     Class.method.get = function (value, format, options) {
-        return value;
+        switch (format) {
+            case imports.Format.Raw:
+            case imports.Format.User:
+
+                return value;
+            case imports.Format.Storage:
+
+                //if no options given or no format given - return value as is
+                if (!options || !options.hasOwnProperty('array')) {
+
+                    return value.toSource();
+                }
+
+                //assert, that array config is boolean
+                self.assert.boolean(options.array, 'get - given array flag `$array` is not a boolean value', {
+                    $array: options.array
+                });
+
+                return options.array ? value.values() : value.toSource();
+        }
     };
 
     /**
-     * Collection `set` method. Try's to convert given value to number. If value is not numeric, error is thrown
+     * Collection `set` method. Returns undefined value, converts iterable(array or object) to xs.core.Collection or fails with exception
      *
      * @method set
      *
-     * @param {*} value incoming value
+     * @param {Array|Object} value incoming value
      *
-     * @return {String} transformed returned value
+     * @return {xs.core.Collection} transformed returned value
      */
     Class.method.set = function (value) {
-        self.assert.ok(!xs.isDefined(value) || xs.isNumeric(value), 'set - given value `$value` is not numeric', {
+        self.assert.ok(!xs.isDefined(value) || xs.isIterable(value), 'set - given value `$value` is not numeric', {
             $value: value
         });
 
-        return xs.isDefined(value) ? Number(value) : this.default;
+        if (xs.isDefined(value)) {
+
+            return new xs.core.Collection(value);
+        }
+
+        return this.default instanceof xs.core.Generator ? this.default.create() : this.default;
     };
 
 });
