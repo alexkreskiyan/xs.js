@@ -132,8 +132,7 @@
                         "test": false
                     },
                     "Raw": {
-                        "contract": "class",
-                        "test": false
+                        "contract": "class"
                     },
                     "String": {
                         "contract": "class",
