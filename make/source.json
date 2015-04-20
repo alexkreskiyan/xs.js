@@ -134,8 +134,7 @@
                         "contract": "class"
                     },
                     "String": {
-                        "contract": "class",
-                        "test": false
+                        "contract": "class"
                     }
                 },
                 "operation": {
