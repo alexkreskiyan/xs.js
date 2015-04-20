@@ -110,8 +110,7 @@
                         }
                     },
                     "Boolean": {
-                        "contract": "class",
-                        "test": false
+                        "contract": "class"
                     },
                     "Collection": {
                         "contract": "class",
