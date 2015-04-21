@@ -113,8 +113,7 @@
                         "contract": "class"
                     },
                     "Collection": {
-                        "contract": "class",
-                        "test": false
+                        "contract": "class"
                     },
                     "Date": {
                         "contract": "class",

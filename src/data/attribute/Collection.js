@@ -31,11 +31,23 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * @param {Object} config
      */
     Class.constructor = function (config) {
+        var me = this;
 
         //assert, that config is an object
         self.assert.object(config, 'constructor - given config `$config` is not an object', {
             $config: config
         });
+
+        //set default value
+        if (config.hasOwnProperty('default')) {
+
+            //assert, that config.default is a generator
+            self.assert.ok(config.default instanceof xs.core.Generator, 'constructor - given default `$default` is not a xs.core.Generator instance', {
+                $default: config.default
+            });
+
+            me.default = config.default;
+        }
     };
 
     /**
