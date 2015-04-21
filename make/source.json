@@ -127,8 +127,7 @@
                         "contract": "interface"
                     },
                     "Number": {
-                        "contract": "class",
-                        "test": false
+                        "contract": "class"
                     },
                     "Raw": {
                         "contract": "class"
