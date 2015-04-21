@@ -116,8 +116,7 @@
                         "contract": "class"
                     },
                     "Date": {
-                        "contract": "class",
-                        "test": false
+                        "contract": "class"
                     },
                     "Format": {
                         "contract": "enum"
