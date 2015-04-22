@@ -51,6 +51,11 @@ xs.define(xs.Class, 'ns.Boolean', function (self) {
      */
     Class.method.get = function (value, format, options) {
 
+        //assert, that value is a boolean
+        self.assert.boolean(value, 'get - given value `$value` is not a boolean', {
+            $value: value
+        });
+
         return value;
     };
 

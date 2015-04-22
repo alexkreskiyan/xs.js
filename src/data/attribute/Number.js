@@ -56,6 +56,12 @@ xs.define(xs.Class, 'ns.Number', function (self, imports) {
      * @return {Number} transformed returned value
      */
     Class.method.get = function (value, format, options) {
+
+        //assert, that value is a number
+        self.assert.number(value, 'get - given value `$value` is not a number', {
+            $value: value
+        });
+
         switch (format) {
             case imports.Format.Raw:
             case imports.Format.Storage:

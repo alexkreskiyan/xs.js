@@ -51,6 +51,11 @@ xs.define(xs.Class, 'ns.String', function (self) {
      */
     Class.method.get = function (value, format, options) {
 
+        //assert, that value is a string
+        self.assert.string(value, 'get - given value `$value` is not a string', {
+            $value: value
+        });
+
         return value;
     };
 

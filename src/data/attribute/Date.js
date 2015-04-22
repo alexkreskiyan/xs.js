@@ -62,6 +62,12 @@ xs.define(xs.Class, 'ns.Date', function (self, imports) {
      * @return {String} transformed returned value
      */
     Class.method.get = function (value, format, options) {
+
+        //assert, that value is a Date instance
+        self.assert.ok(value instanceof Date, 'get - given value `$value` is not a Date instance', {
+            $value: value
+        });
+
         switch (format) {
             case imports.Format.Raw:
 

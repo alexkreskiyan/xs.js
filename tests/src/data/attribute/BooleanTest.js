@@ -27,9 +27,7 @@ module('xs.data.attribute.Boolean', function () {
     test('get', function () {
         var attribute = new xs.data.attribute.Boolean({});
 
-        var x = {
-            a: 1
-        };
+        var x = true;
 
         //get returns value as is
         strictEqual(attribute.get(x), x);

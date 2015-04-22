@@ -62,6 +62,12 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * @return {Array|Object} transformed returned value
      */
     Class.method.get = function (value, format, options) {
+
+        //assert, that value is a xs.core.Collection instance
+        self.assert.ok(value instanceof xs.core.Collection, 'get - given value `$value` is not a xs.core.Collection instance', {
+            $value: value
+        });
+
         switch (format) {
             case imports.Format.Raw:
             case imports.Format.User:

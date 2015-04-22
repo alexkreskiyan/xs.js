@@ -27,9 +27,7 @@ module('xs.data.attribute.Number', function () {
     test('get', function () {
         var attribute = new xs.data.attribute.Number({});
 
-        var x = {
-            a: 1
-        };
+        var x = 5;
         var format = xs.data.attribute.Format;
 
 

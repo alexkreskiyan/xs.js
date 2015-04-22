@@ -27,9 +27,7 @@ module('xs.data.attribute.String', function () {
     test('get', function () {
         var attribute = new xs.data.attribute.String({});
 
-        var x = {
-            a: 1
-        };
+        var x = 'a';
 
         //get returns value as is
         strictEqual(attribute.get(x), x);
