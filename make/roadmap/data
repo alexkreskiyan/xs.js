@@ -6,7 +6,7 @@ IReader = xs.data.reader.IReader
 config has options for reader
 - IReader.read = function(raw)
 processes raw data according to internal configuration and returns it
-xs.data.Reader - not needed TODO remove
+DONE
 
 2. Writer
 base contracts:
@@ -16,11 +16,10 @@ IWriter = xs.data.writer.IWriter
 config has options for writer
 - IWriter.write = function(data)
 transform data to raw according to internal configuration and returns it
-xs.data.Writer - not needed TODO remove
+DONE
 
 3. Operation
 base contracts:
-xs.data.operation.Operation - not needed TODO remove
 xs.data.operation.IOperation - base interface, all operations have to implement
 
 xs.data.operation.ISourceOperation - inherited interface, all source operations have to implement
@@ -60,7 +59,6 @@ Source's remove method was called without params
 
 4. Proxy
 base contracts:
-xs.data.proxy.IProxy - not needed TODO remove
 xs.data.proxy.Proxy - base class, that all proxies extend
 Proxy = xs.data.proxy.Proxy
 - Proxy.constructor = function(config)
