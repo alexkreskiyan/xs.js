@@ -217,6 +217,18 @@
                     "contract": "class"
                 }
             },
+            "resource": {
+                "binary": {
+                },
+                "text": {
+                    "HTML": {
+                        "contract": "class"
+                    }
+                },
+                "IResource": {
+                    "contract": "interface"
+                }
+            },
             "storage": {
                 "event": {
                     "AddBefore": {
