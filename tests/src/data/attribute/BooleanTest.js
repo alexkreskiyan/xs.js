@@ -50,7 +50,7 @@ module('xs.data.attribute.Boolean', function () {
             default: false
         });
 
-        //default is undefined
+        //default is ok
         strictEqual(attribute.default, false);
     });
 

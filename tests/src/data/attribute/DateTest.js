@@ -53,7 +53,7 @@ module('xs.data.attribute.Date', function () {
             })
         });
 
-        //default is undefined
+        //default is instance of xs.core.Generator
         strictEqual(attribute.default instanceof xs.core.Generator, true);
     });
 
