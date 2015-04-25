@@ -13,22 +13,48 @@ module('xs.data.attribute.Collection', function () {
     'use strict';
 
     test('constructor', function () {
-        //config is required
-        throws(function () {
-            return new xs.data.attribute.Collection();
-        });
+        var attribute;
 
-        //config must be an object
+        //config is optional
+        attribute = new xs.data.attribute.Collection();
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //config must be an object, if given
         throws(function () {
             return new xs.data.attribute.Collection(null);
         });
 
-        //attribute default value must be a generator if given
+        //empty config given
+        attribute = new xs.data.attribute.Collection({});
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //defined, non-generator value is not accepted
         throws(function () {
             return new xs.data.attribute.Collection({
                 default: new xs.core.Collection()
             });
         });
+
+        //undefined default is accepted
+        attribute = new xs.data.attribute.Collection({
+            default: undefined
+        });
+
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //generator default is accepted
+        attribute = new xs.data.attribute.Collection({
+            default: xs.generator(function () {
+
+                return new xs.core.Collection();
+            })
+        });
+
+        //default is undefined
+        strictEqual(attribute.default instanceof xs.core.Generator, true);
     });
 
     test('get', function () {
@@ -42,13 +68,16 @@ module('xs.data.attribute.Collection', function () {
         var format = xs.data.attribute.Format;
 
 
+        //undefined is always returned as is
+        strictEqual(attribute.get(undefined, format.Raw), undefined);
+
+
         //xs.data.attribute.Format.Raw
         //get returns value as is
         strictEqual(attribute.get(collection, format.Raw), collection);
 
 
         //xs.data.attribute.Format.Storage
-
         //get returns value as converted to object without options
         strictEqual(JSON.stringify(attribute.get(collection, format.Storage)), '{"a":"c","b":"d"}');
 
