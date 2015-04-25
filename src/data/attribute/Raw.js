@@ -27,6 +27,12 @@ xs.define(xs.Class, 'ns.Raw', function (self) {
     Class.constructor = function (config) {
         var me = this;
 
+        //return if no config
+        if (!arguments.length) {
+
+            return;
+        }
+
         self.assert.object(config, 'constructor - given config `$config` is not an object', {
             $config: config
         });

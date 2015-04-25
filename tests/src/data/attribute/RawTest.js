@@ -13,15 +13,38 @@ module('xs.data.attribute.Raw', function () {
     'use strict';
 
     test('constructor', function () {
-        //config is required
-        throws(function () {
-            return new xs.data.attribute.Raw();
-        });
+        var attribute;
 
-        //config must be an object
+        //config is optional
+        attribute = new xs.data.attribute.Raw();
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //config must be an object, if given
         throws(function () {
             return new xs.data.attribute.Raw(null);
         });
+
+        //empty config given
+        attribute = new xs.data.attribute.Raw({});
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //undefined default is accepted
+        attribute = new xs.data.attribute.Raw({
+            default: undefined
+        });
+
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //other value is accepted
+        attribute = new xs.data.attribute.Raw({
+            default: null
+        });
+
+        //default is ok
+        strictEqual(attribute.default, null);
     });
 
     test('get', function () {
