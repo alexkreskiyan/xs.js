@@ -36,7 +36,7 @@ xs.define(xs.Class, 'ns.text.HTML', function (self) {
             });
 
             //save data to private
-            me.private.data = config.data;
+            me.private.data = parseTemplate(config.data);
 
             return;
         }
@@ -60,7 +60,7 @@ xs.define(xs.Class, 'ns.text.HTML', function (self) {
     Class.property.isLoaded = {
         get: function () {
             //resource is loaded when data is filled
-            return xs.isString(this.private.data);
+            return xs.isDefined(this.private.data);
         },
         set: xs.noop
     };
@@ -80,8 +80,45 @@ xs.define(xs.Class, 'ns.text.HTML', function (self) {
 
         //return request promise
         return request(me.private.url).then(function (data) {
-            me.private.data = data;
+            me.private.data = parseTemplate(data);
         });
+    };
+
+    /**
+     * Returns template parsed into an element
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method parseTemplate
+     *
+     * @param {String} template
+     *
+     * @return {Element} root of parsed template
+     */
+    var parseTemplate = function (template) {
+
+        //create container div element to parse html into
+        var container = document.createElement('div');
+
+        //set template as div innerHTML
+        container.innerHTML = template;
+
+        //assert, that template has single root
+        self.assert.equal(container.childNodes.length, 1, 'parseTemplate - template must contain single root element');
+
+        //assert, that template root is element
+        self.assert.instance(container.firstChild, Element, 'parseTemplate - template root must be an Element');
+
+        //get root
+        var root = container.lastChild;
+
+        //remove root from container
+        container.removeChild(root);
+
+        //return root
+        return root;
     };
 
     var request = function (url) {

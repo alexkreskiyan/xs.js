@@ -35,13 +35,14 @@ module('xs.resource.text.HTML', function () {
             });
         });
 
-        //config.data is saved as resource.data as-is
+        //config.data is saved as resource.data
         resource = new xs.resource.text.HTML({
             data: '<div></div>'
         });
 
         //check data
-        strictEqual(resource.data, '<div></div>');
+        strictEqual(resource.data instanceof Element, true);
+        strictEqual(resource.data.outerHTML, '<div></div>');
 
 
         //loaded template

@@ -21,6 +21,10 @@ xs.define(xs.Interface, 'ns.IResource', function () {
 
     };
 
+    Interface.property.data = {
+        set: xs.noop
+    };
+
     Interface.property.isLoaded = {
         set: xs.noop
     };
