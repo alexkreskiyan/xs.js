@@ -20,17 +20,6 @@ xs.define(xs.Interface, 'ns.IAttribute', function () {
     Interface.namespace = 'xs.data.attribute';
 
     /**
-     * Attribute constructor
-     *
-     * @constructor
-     *
-     * @param {Object} config attribute configuration object
-     */
-    Interface.constructor = function (config) {
-
-    };
-
-    /**
      * Attribute get method.
      * Returns given value according to internal transformation rule for scenario `internal => external`
      *
