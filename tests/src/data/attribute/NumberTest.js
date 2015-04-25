@@ -13,15 +13,45 @@ module('xs.data.attribute.Number', function () {
     'use strict';
 
     test('constructor', function () {
-        //config is required
-        throws(function () {
-            return new xs.data.attribute.Number();
-        });
+        var attribute;
 
-        //config must be an object
+        //config is optional
+        attribute = new xs.data.attribute.Number();
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //config must be an object, if given
         throws(function () {
             return new xs.data.attribute.Number(null);
         });
+
+        //empty config given
+        attribute = new xs.data.attribute.Number({});
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //defined, non-number value is not accepted
+        throws(function () {
+            return new xs.data.attribute.Number({
+                default: '5'
+            });
+        });
+
+        //undefined default is accepted
+        attribute = new xs.data.attribute.Number({
+            default: undefined
+        });
+
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //number default is accepted
+        attribute = new xs.data.attribute.Number({
+            default: 0
+        });
+
+        //default is undefined
+        strictEqual(attribute.default, 0);
     });
 
     test('get', function () {
@@ -29,6 +59,10 @@ module('xs.data.attribute.Number', function () {
 
         var x = 5;
         var format = xs.data.attribute.Format;
+
+
+        //undefined is always returned as is
+        strictEqual(attribute.get(undefined, format.Raw), undefined);
 
 
         //xs.data.attribute.Format.Raw
