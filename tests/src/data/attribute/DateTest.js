@@ -13,22 +13,48 @@ module('xs.data.attribute.Date', function () {
     'use strict';
 
     test('constructor', function () {
-        //config is required
-        throws(function () {
-            return new xs.data.attribute.Date();
-        });
+        var attribute;
 
-        //config must be an object
+        //config is optional
+        attribute = new xs.data.attribute.Date();
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //config must be an object, if given
         throws(function () {
             return new xs.data.attribute.Date(null);
         });
 
-        //attribute default value must be a generator if given
+        //empty config given
+        attribute = new xs.data.attribute.Date({});
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //defined, non-generator value is not accepted
         throws(function () {
             return new xs.data.attribute.Date({
                 default: new Date()
             });
         });
+
+        //undefined default is accepted
+        attribute = new xs.data.attribute.Date({
+            default: undefined
+        });
+
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //generator default is accepted
+        attribute = new xs.data.attribute.Date({
+            default: xs.generator(function () {
+
+                return new Date();
+            })
+        });
+
+        //default is undefined
+        strictEqual(attribute.default instanceof xs.core.Generator, true);
     });
 
     test('get', function () {
@@ -37,6 +63,10 @@ module('xs.data.attribute.Date', function () {
         var date = new Date();
 
         var format = xs.data.attribute.Format;
+
+
+        //undefined is always returned as is
+        strictEqual(attribute.get(undefined, format.Raw), undefined);
 
 
         //xs.data.attribute.Format.Raw

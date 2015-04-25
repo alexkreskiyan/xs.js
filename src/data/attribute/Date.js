@@ -33,6 +33,12 @@ xs.define(xs.Class, 'ns.Date', function (self, imports) {
     Class.constructor = function (config) {
         var me = this;
 
+        //return if no config
+        if (!arguments.length) {
+
+            return;
+        }
+
         //assert, that config is an object
         self.assert.object(config, 'constructor - given config `$config` is not an object', {
             $config: config
@@ -41,8 +47,8 @@ xs.define(xs.Class, 'ns.Date', function (self, imports) {
         //set default value
         if (config.hasOwnProperty('default')) {
 
-            //assert, that config.default is a generator
-            self.assert.ok(config.default instanceof xs.core.Generator, 'constructor - given default `$default` is not a xs.core.Generator instance', {
+            //assert, that config.default is undefined or a generator
+            self.assert.ok(!xs.isDefined(config.default) || config.default instanceof xs.core.Generator, 'constructor - given config.default `$default` is not undefined or a generator', {
                 $default: config.default
             });
 
@@ -63,10 +69,16 @@ xs.define(xs.Class, 'ns.Date', function (self, imports) {
      */
     Class.method.get = function (value, format, options) {
 
-        //assert, that value is a Date instance
-        self.assert.ok(value instanceof Date, 'get - given value `$value` is not a Date instance', {
+        //assert, that value is undefined or a Date instance
+        self.assert.ok(!xs.isDefined(value) || value instanceof Date, 'get - given value `$value` is not undefined or a Date instance', {
             $value: value
         });
+
+        //undefined is returned as is
+        if (!value) {
+
+            return value;
+        }
 
         switch (format) {
             case imports.Format.Raw:
