@@ -12,50 +12,6 @@ module('xs.ux.View', function () {
 
     'use strict';
 
-    test('multiple root template', function () {
-        var me = this;
-
-        me.Class = xs.Class(function () {
-            var Class = this;
-
-            Class.extends = 'xs.ux.View';
-
-            Class.constant.template = '<div></div><span></span>';
-
-        }, me.done);
-
-        return false;
-    }, function () {
-        var me = this;
-
-        //can not create view from multiple-rooted template
-        throws(function () {
-            return new me.Class();
-        });
-    });
-
-    test('non-element template root', function () {
-        var me = this;
-
-        me.Class = xs.Class(function () {
-            var Class = this;
-
-            Class.extends = 'xs.ux.View';
-
-            Class.constant.template = 'text here';
-
-        }, me.done);
-
-        return false;
-    }, function () {
-        var me = this;
-
-        //can not create view from template with non-element root
-        throws(function () {
-            return new me.Class();
-        });
-    });
-
     test('simple constructor', function () {
         var me = this;
 
@@ -64,7 +20,9 @@ module('xs.ux.View', function () {
 
             Class.extends = 'xs.ux.View';
 
-            Class.constant.template = '<input type="text" placeholder="search">';
+            Class.constant.template = new xs.resource.text.HTML({
+                data: '<input type="text" placeholder="search">'
+            });
 
         }, me.done);
 
@@ -94,28 +52,6 @@ module('xs.ux.View', function () {
         view.destroy();
     });
 
-    test('duplicate positions in template', function () {
-        var me = this;
-
-        me.Class = xs.Class(function () {
-            var Class = this;
-
-            Class.extends = 'xs.ux.View';
-
-            Class.constant.template = '<div><div><xs-view-position name="body"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>';
-
-        }, me.done);
-
-        return false;
-    }, function () {
-        var me = this;
-
-        //can not create view from template with duplicate position names
-        throws(function () {
-            return new me.Class();
-        });
-    });
-
     test('simple positions', function () {
         var me = this;
 
@@ -124,7 +60,14 @@ module('xs.ux.View', function () {
 
             Class.extends = 'xs.ux.View';
 
-            Class.constant.template = '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>';
+            Class.constant.template = new xs.resource.text.HTML({
+                data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
+            });
+
+            Class.positions = [
+                'title',
+                'body'
+            ];
 
         }, me.done);
 
@@ -135,9 +78,9 @@ module('xs.ux.View', function () {
 
         //view has 2 positions. positions are xs.util.Collection instances
         view = new me.Class();
-        strictEqual(JSON.stringify(view.private.positions.keys()), '["title","body"]');
-        strictEqual(view.at('title') instanceof xs.util.Collection, true);
-        strictEqual(view.at('body') instanceof xs.util.Collection, true);
+        strictEqual(JSON.stringify(Object.keys(view.private.positions)), '["title","body"]');
+        strictEqual(view.title instanceof xs.util.Collection, true);
+        strictEqual(view.body instanceof xs.util.Collection, true);
         view.destroy();
     });
 
@@ -149,7 +92,14 @@ module('xs.ux.View', function () {
 
             Class.extends = 'xs.ux.View';
 
-            Class.constant.template = '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>';
+            Class.constant.template = new xs.resource.text.HTML({
+                data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
+            });
+
+            Class.positions = [
+                'title',
+                'body'
+            ];
 
         }, me.done);
 
@@ -158,8 +108,8 @@ module('xs.ux.View', function () {
         var me = this;
 
         var view = new me.Class();
-        var title = view.at('title');
-        var body = view.at('body');
+        var title = view.title;
+        var body = view.body;
 
         var label = new xs.ux.View(document.createElement('label'));
         var input = new xs.ux.View(document.createElement('input'));
@@ -208,7 +158,14 @@ module('xs.ux.View', function () {
 
             Class.extends = 'xs.ux.View';
 
-            Class.constant.template = '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>';
+            Class.constant.template = new xs.resource.text.HTML({
+                data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
+            });
+
+            Class.positions = [
+                'title',
+                'body'
+            ];
 
         }, me.done);
 
@@ -217,8 +174,8 @@ module('xs.ux.View', function () {
         var me = this;
 
         var view = new me.Class();
-        var title = view.at('title');
-        var body = view.at('body');
+        var title = view.title;
+        var body = view.body;
 
         //add two views to title and one - to body
         var titleA = new me.Class();
@@ -281,7 +238,14 @@ module('xs.ux.View', function () {
 
             Class.extends = 'xs.ux.View';
 
-            Class.constant.template = '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>';
+            Class.constant.template = new xs.resource.text.HTML({
+                data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
+            });
+
+            Class.positions = [
+                'title',
+                'body'
+            ];
 
         }, me.done);
 
@@ -290,8 +254,8 @@ module('xs.ux.View', function () {
         var me = this;
 
         var view = new me.Class();
-        var title = view.at('title');
-        var body = view.at('body');
+        var title = view.title;
+        var body = view.body;
 
         //add two views to title and one - to body
         var titleA = new me.Class();
@@ -365,7 +329,14 @@ module('xs.ux.View', function () {
 
             Class.extends = 'xs.ux.View';
 
-            Class.constant.template = '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>';
+            Class.constant.template = new xs.resource.text.HTML({
+                data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
+            });
+
+            Class.positions = [
+                'title',
+                'body'
+            ];
 
         }, me.done);
 
@@ -374,8 +345,8 @@ module('xs.ux.View', function () {
         var me = this;
 
         var view = new me.Class();
-        var title = view.at('title');
-        var body = view.at('body');
+        var title = view.title;
+        var body = view.body;
 
         //use two views
         var titleA = new me.Class();
@@ -458,7 +429,14 @@ module('xs.ux.View', function () {
 
             Class.extends = 'xs.ux.View';
 
-            Class.constant.template = '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>';
+            Class.constant.template = new xs.resource.text.HTML({
+                data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
+            });
+
+            Class.positions = [
+                'title',
+                'body'
+            ];
 
         }, me.done);
 
@@ -467,8 +445,8 @@ module('xs.ux.View', function () {
         var me = this;
 
         var view = new me.Class();
-        var title = view.at('title');
-        var body = view.at('body');
+        var title = view.title;
+        var body = view.body;
 
         //add two views to title and one - to body
         var titleA = new me.Class();

@@ -36,6 +36,9 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
             Collection: 'xs.util.Collection'
         },
         {
+            'resource.text.HTML': 'xs.resource.text.HTML'
+        },
+        {
             'event.AddBefore': 'xs.util.collection.event.AddBefore'
         },
         {
@@ -83,6 +86,8 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      */
     Class.constant.All = 0x2;
 
+    Class.constant.template = undefined;
+
     /**
      * View constructor
      *
@@ -102,45 +107,31 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
         var el;
 
+        //if element given
         if (element) {
-            self.log.trace('constructor - creating new view from given element `$element`', {
-                $element: element
-            });
 
+            //verify element
+            self.assert.ok(verifyElement(me.self.descriptor.positions, getElementPositions(element)));
+
+            //use it as is
             el = element;
         } else {
 
-            //assert, that constant.template is a non-empty string
-            self.assert.ok(me.self.template && xs.isString(me.self.template), 'constructor - given template `$template` is not a non-empty string', {
-                $template: me.self.template
-            });
-
-            //parse view template into node
-            el = parseTemplate(me.self.template);
+            //set element as template clone
+            el = me.self.template.data.cloneNode(true);
         }
 
         //call parent constructor
         self.parent.call(me, el);
 
         //fetch positions from template
-        me.private.positions = getPositionsCollection(el);
+        if (me.self.descriptor.positions) {
+
+            me.private.positions = getPositions(me.self.descriptor.positions, getElementPositions(el));
+        }
 
         //define selected elements collection
         me.private.selection = new xs.core.Collection();
-    };
-
-    /**
-     * Returns reference to one of view's positions
-     *
-     * @method at
-     *
-     * @param {String|Number} key
-     *
-     * @return {xs.util.Collection}
-     */
-    Class.method.at = function (key) {
-
-        return this.private.positions.at(key);
     };
 
     /**
@@ -154,7 +145,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      * - Reverse - to find last matched element
      * - All - to fetch all matched elements
      *
-     * @returns {xs.core.Collection}
+     * @return {xs.core.Collection|xs.dom.Element|undefined}
      */
     Class.method.query = function (selector, flags) {
         var me = this;
@@ -165,6 +156,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         });
 
         var all, reverse;
+
         //if no flags - single element is selected
         if (arguments.length === 1) {
             all = false;
@@ -198,7 +190,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         //get nodes list
         var nodes = me.private.el.querySelectorAll(selector);
 
-        var i, node, element;
+        var i, node;
         var length = nodes.length;
 
         if (!all) {
@@ -209,29 +201,25 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
                     node = nodes.item(i);
 
                     if (isOwnNode.call(me, node)) {
-                        break;
+
+                        //return element
+                        return getSelectionElement.call(me, node);
                     }
-                    node = undefined;
                 }
             } else {
                 for (i = 0; i < length; i++) {
                     node = nodes.item(i);
 
                     if (isOwnNode.call(me, node)) {
-                        break;
+
+                        //return element
+                        return getSelectionElement.call(me, node);
                     }
-                    node = undefined;
                 }
             }
 
-            //return undefined if nothing found
-            if (!node) {
-
-                return;
-            }
-
-            //return element
-            return getSelectionElement.call(me, node);
+            //return undefined - nothing found
+            return;
         }
 
         //create selection collection
@@ -245,11 +233,8 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
                 continue;
             }
 
-            //get element from internal selection
-            element = getSelectionElement.call(me, node);
-
             //add element to selection
-            selection.add(element);
+            selection.add(getSelectionElement.call(me, node));
         }
 
         //return selection
@@ -281,7 +266,13 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         }
 
         //clean up positions
-        me.private.positions.destroy();
+        if (me.private.positions) {
+            Object.keys(me.private.positions).forEach(function (name) {
+                me.private.positions[ name ].destroy();
+
+                delete me.private.positions[ name ];
+            });
+        }
 
         //clean up elements
         me.private.selection.each(function (element) {
@@ -292,43 +283,80 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         self.parent.prototype.destroy.call(me);
     };
 
+    var verifyElement = function (declaredPositions, elementPositions) {
+
+        //all ok if no positions declared
+        if (!declaredPositions) {
+
+            return true;
+        }
+
+        //assert, that all declared positions are presented
+        declaredPositions.each(function (position) {
+
+            //assert, that position is presented
+            self.assert.ok(elementPositions.hasOwnProperty(position), 'verifyTtemplate - declared position `$position` is not presented');
+        });
+
+        return true;
+    };
+
     /**
-     * Returns template parsed into an element
+     * Returns collection of template's positions
      *
      * @ignore
      *
      * @private
      *
-     * @method parseTemplate
+     * @method getPositionsCollection
      *
-     * @param {String} template
+     * @param {xs.core.Collection} declaredPositions
+     * @param {Object} elementPositions
      *
-     * @return {Element} root of parsed template
+     * @return {Object} object with element position collections
      */
-    var parseTemplate = function (template) {
+    var getPositions = function (declaredPositions, elementPositions) {
 
-        self.log.trace('parseTemplate - fetching nodes from template `' + template + '`');
+        //define positions collection
+        var positions = {};
 
-        //create container div element to parse html into
-        var container = document.createElement('div');
+        //fill positions
+        declaredPositions.each(function (name) {
 
-        //set template as div innerHTML
-        container.innerHTML = template;
+            //get position element
+            var element = elementPositions[ name ];
 
-        //assert, that template has single root
-        self.assert.equal(container.childNodes.length, 1, 'parseTemplate - template must contain single root element');
+            //get element parent reference
+            var parent = element.parentElement;
 
-        //assert, that template root is element
-        self.assert.instance(container.firstChild, Element, 'parseTemplate - template root must be an Element');
+            //remove element from parent
+            element.parentElement.removeChild(element);
 
-        //get root
-        var root = container.lastChild;
+            positions[ name ] = xs.lazy(function () {
 
-        //remove root from container
-        container.removeChild(root);
+                //position is a collection of views
+                var position = new imports.Collection(self);
 
-        //return root
-        return root;
+                //save reference to parent
+                position.private.el = parent;
+
+                //add events handlers for position
+                var options = {
+                    scope: position
+                };
+                position.on(imports.event.AddBefore, handleAddBefore, options);
+                position.on(imports.event.Add, handleAdd, options);
+                position.on(imports.event.SetBefore, handleSetBefore, options);
+                position.on(imports.event.Set, handleSet, options);
+                position.on(imports.event.RemoveBefore, handleRemoveBefore, options);
+                position.on(imports.event.Remove, handleRemove, options);
+
+                return position;
+            });
+
+        });
+
+        return positions;
     };
 
     /**
@@ -340,70 +368,38 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      */
     var positionSelector = 'xs-view-position[name]';
 
-    /**
-     * Returns collection of template's positions
-     *
-     * @ignore
-     *
-     * @private
-     *
-     * @method getPositionsCollection
-     *
-     * @param {Element} el
-     *
-     * @return {PositionsCollection} collection of positions elements
-     */
-    var getPositionsCollection = function (el) {
+    var getElementPositions = function (element) {
 
-        //define positions collection
-        var positions = new PositionsCollection();
+        var elements = element.querySelectorAll(positionSelector);
 
-        var elements = el.querySelectorAll(positionSelector);
-
-        //return undefined if no positions found
-        if (!elements.length) {
-
-            return positions;
-        }
-
-        //assert positions are ok
-        self.assert.ok(verifyPositions(elements));
-
-        //fill positions collection
-        var i, element, position;
+        //define variables
+        var i, item, name;
         var length = elements.length;
-        var items = positions.private.items;
+        var positions = {};
 
         for (i = 0; i < length; i++) {
             //get element
-            element = elements.item(i);
+            item = elements.item(i);
 
-            //collection of views
-            position = new imports.Collection(self);
+            //get name
+            name = item.getAttribute('name');
 
-            //save reference to element's parentElement
-            position.private.el = element.parentElement;
-
-            //add position to items
-            items.push({
-                key: element.getAttribute('name'),
-                value: position
+            //assert, that element name is unique
+            self.assert.not(positions.hasOwnProperty(name), 'getElementPositions - given position name `$name` is already taken', {
+                $name: name
             });
 
-            //remove element from parent
-            element.parentElement.removeChild(element);
+            //element.parentElement must be defined
+            self.assert.ok(item.parentElement, 'getElementPositions - position `$item` does not have a parent element', {
+                $item: item
+            });
 
-            var options = {
-                scope: position
-            };
-            //add events handlers for position
-            position.on(imports.event.AddBefore, handleAddBefore, options);
-            position.on(imports.event.Add, handleAdd, options);
-            position.on(imports.event.SetBefore, handleSetBefore, options);
-            position.on(imports.event.Set, handleSet, options);
-            position.on(imports.event.RemoveBefore, handleRemoveBefore, options);
-            position.on(imports.event.Remove, handleRemove, options);
+            //element.parentElement must contain only position
+            self.assert.equal(item.parentElement.childNodes.length, 1, 'getElementPositions - position `$item` does not have a parent element', {
+                $item: item
+            });
 
+            positions[ name ] = item;
         }
 
         return positions;
@@ -648,54 +644,6 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
     };
 
     /**
-     * Verifies list of positions to be correct one
-     *
-     * @ignore
-     *
-     * @private
-     *
-     * @method verifyPositions
-     *
-     * @param {NodeList} elements
-     *
-     * @return {Boolean} whether positions are correct
-     */
-    var verifyPositions = function (elements) {
-
-        //define variables
-        var i, element, name;
-        var length = elements.length;
-        var names = [];
-
-        for (i = 0; i < length; i++) {
-            //get element
-            element = elements.item(i);
-
-            //get name
-            name = element.getAttribute('name');
-
-            //assert, that element name is unique
-            self.assert.ok(names.indexOf(name) < 0, 'Given position name `$name` is already taken', {
-                $name: name
-            });
-
-            names.push(name);
-
-            //element.parentElement must be defined
-            self.assert.ok(element.parentElement, 'Position `$element` does not have a parent element', {
-                $element: element
-            });
-
-            //element.parentElement must contain only position
-            self.assert.equal(element.parentElement.childNodes.length, 1, 'Position `$element` does not have a parent element', {
-                $element: element
-            });
-        }
-
-        return true;
-    };
-
-    /**
      * Returns selection element (or caches one)
      *
      * @ignore
@@ -748,12 +696,13 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      */
     var isOwnNode = function (node) {
         var me = this;
-        var positions = me.private.positions.private.items;
+        var positions = me.private.positions;
+        var names = Object.keys(positions);
         var length = positions.length;
         var position;
 
         for (var i = 0; i < length; i++) {
-            position = positions[ i ].value;
+            position = positions[ names[ i ] ];
 
             if (hasParentElement(me.private.el, position.private.el, node)) {
                 return false;
@@ -790,62 +739,175 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         return false;
     };
 
+});
+
+//define xs.ux.View-specific preprocessor
+(function () {
+
+    'use strict';
+
+    var log = new xs.log.Logger('xs.class.preprocessors.xs.ux.View');
+
+    var assert = new xs.core.Asserter(log, XsClassPreprocessorsXsUxViewError);
+
+    xs.class.preprocessors.add('xs.ux.View', function (Class) {
+
+        //use preprocessor only for view classes
+        return Class.inherits(xs.ux.View);
+    }, function (Class, descriptor) {
+
+        //process positions
+        processPositions(Class, descriptor);
+
+        //process sequentially
+        processTemplate(Class);
+    }, 'before', 'defineElements');
+
+    function processPositions(Class, descriptor) {
+
+        //if no positions given
+        if (!descriptor.hasOwnProperty('positions')) {
+
+            return;
+        }
+
+        //assert, that positions is an array
+        assert.array(descriptor.positions, 'processPositions - given positions `$positions` are not an array', {
+            $positions: descriptor.positions
+        });
+
+        //define positions collection for a class
+        var positions = Class.descriptor.positions = new xs.core.Collection(descriptor.positions);
+
+        //verify positions
+        assert.ok(positions.all(function (position) {
+
+            //assert, that position is a short name
+            assert.ok(xs.ContractsManager.isShortName(position), 'processPositions - given position `$position` is not a valid short name', {
+                $position: position
+            });
+
+            return true;
+        }));
+
+
+        //save all positions as properties
+        var properties = Class.descriptor.property;
+        positions.each(function (position) {
+
+            //prepare property descriptor
+            var value = xs.property.prepare(position, {
+                get: function () {
+                    var positions = this.private.positions;
+
+                    //lazy evaluate position
+                    if (positions[ position ] instanceof xs.core.Lazy) {
+                        positions[ position ] = positions[ position ].get();
+                    }
+
+                    return positions[ position ];
+                },
+                set: xs.noop
+            });
+
+            //add/set property in class descriptor
+            if (properties.hasKey(position)) {
+                properties.set(position, value);
+            } else {
+                properties.add(position, value);
+            }
+        });
+    }
+
+    function processTemplate(Class) {
+
+        var template = Class.descriptor.constant.at('template');
+
+        //assert, that template is an instance of xs.resource.text.HTML
+        assert.ok(template instanceof xs.resource.text.HTML, 'processTemplate - given template `$template` is not an instance of xs.resource.text.HTML', {
+            $template: template
+        });
+
+        //assert, that template is loaded
+        assert.ok(template.isLoaded, 'processTemplate - given template `$template` is not loaded. Add it to resouces section, if needed', {
+            $template: template
+        });
+
+
+        //verify template element
+        assert.ok(verifyElement(Class.descriptor.positions, getElementPositions(template.data)));
+    }
+
+    var verifyElement = function (declaredPositions, elementPositions) {
+
+        //all ok if no positions declared
+        if (!declaredPositions) {
+
+            return true;
+        }
+
+        //assert, that all declared positions are presented
+        declaredPositions.each(function (position) {
+
+            //assert, that position is presented
+            assert.ok(elementPositions.hasOwnProperty(position), 'verifyTtemplate - declared position `$position` is not presented');
+        });
+
+        return true;
+    };
+
+    var positionSelector = 'xs-view-position[name]';
+
+    var getElementPositions = function (element) {
+
+        var elements = element.querySelectorAll(positionSelector);
+
+        //define variables
+        var i, item, name;
+        var length = elements.length;
+        var positions = {};
+
+        for (i = 0; i < length; i++) {
+            //get element
+            item = elements.item(i);
+
+            //get name
+            name = item.getAttribute('name');
+
+            //assert, that element name is unique
+            assert.not(positions.hasOwnProperty(name), 'getElementPositions - given position name `$name` is already taken', {
+                $name: name
+            });
+
+            //element.parentElement must be defined
+            assert.ok(item.parentElement, 'getElementPositions - position `$item` does not have a parent element', {
+                $item: item
+            });
+
+            //element.parentElement must contain only position
+            assert.equal(item.parentElement.childNodes.length, 1, 'getElementPositions - position `$item` does not have a parent element', {
+                $item: item
+            });
+
+            positions[ name ] = item;
+        }
+
+        return positions;
+    };
+
     /**
-     * Internal class, used in View. Provides handy access to collection of positions in view
+     * Internal error class
      *
      * @ignore
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class PositionsCollection
+     * @class XsClassPreprocessorsXsUxViewError
      */
+    function XsClassPreprocessorsXsUxViewError(message) {
+        this.message = 'xs.class.preprocessors.xs.ux.View::' + message;
+    }
 
-    /**
-     * Creates positions collection
-     *
-     * @constructor
-     */
-    var PositionsCollection = function () {
-        this.private = {};
-        this.private.items = [];
-    };
+    XsClassPreprocessorsXsUxViewError.prototype = new Error();
 
-    /**
-     * Returns list of positions name
-     *
-     * @method keys
-     *
-     * @return {String[]}
-     */
-    PositionsCollection.prototype.keys = xs.core.Collection.prototype.keys;
-
-    /**
-     * Returns position with specified name
-     *
-     * @method at
-     *
-     * @return {xs.util.Collection} position for given index/key
-     */
-    PositionsCollection.prototype.at = xs.core.Collection.prototype.at;
-
-    /**
-     * Destroys positions collection
-     *
-     * @method destroy
-     */
-    PositionsCollection.prototype.destroy = function () {
-        var me = this;
-
-        //destroy all items
-        me.private.items.forEach(function (item) {
-            item.value.destroy();
-        });
-
-        //remove references to them
-        me.private.items.splice(0, me.private.items.length);
-
-        //remove private
-        delete me.private;
-    };
-
-});
+})();
