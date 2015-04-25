@@ -270,8 +270,6 @@ xs.ContractsManager = (function () {
      *
      *     xs.ContractsManager.isName('xs.module.my.Class'); //true
      *
-     * @private
-     *
      * @method isName
      *
      * @param {String} name verified full name
@@ -295,8 +293,6 @@ xs.ContractsManager = (function () {
      *
      *     xs.ContractsManager.isShortName('xs.module.my.Class'); //false
      *     xs.ContractsManager.isShortName('Class'); //true
-     *
-     * @private
      *
      * @method isShortName
      *
