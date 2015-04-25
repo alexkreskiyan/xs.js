@@ -86,6 +86,7 @@ xs.define(xs.Class, 'ns.Number', function (self, imports) {
 
                 return value;
             case imports.Format.User:
+
                 //if no options given or no precision given - return value as is
                 if (!options || !options.hasOwnProperty('precision')) {
 

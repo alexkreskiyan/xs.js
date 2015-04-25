@@ -50,7 +50,7 @@ module('xs.data.attribute.Number', function () {
             default: 0
         });
 
-        //default is undefined
+        //default is ok
         strictEqual(attribute.default, 0);
     });
 

@@ -13,15 +13,45 @@ module('xs.data.attribute.String', function () {
     'use strict';
 
     test('constructor', function () {
-        //config is required
-        throws(function () {
-            return new xs.data.attribute.String();
-        });
+        var attribute;
 
-        //config must be an object
+        //config is optional
+        attribute = new xs.data.attribute.String();
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //config must be an object, if given
         throws(function () {
             return new xs.data.attribute.String(null);
         });
+
+        //empty config given
+        attribute = new xs.data.attribute.String({});
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //defined, non-String value is not accepted
+        throws(function () {
+            return new xs.data.attribute.String({
+                default: 5
+            });
+        });
+
+        //undefined default is accepted
+        attribute = new xs.data.attribute.String({
+            default: undefined
+        });
+
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //String default is accepted
+        attribute = new xs.data.attribute.String({
+            default: 'a'
+        });
+
+        //default is ok
+        strictEqual(attribute.default, 'a');
     });
 
     test('get', function () {
@@ -53,14 +83,14 @@ module('xs.data.attribute.String', function () {
 
         //attribute with simple default value
         attribute = new xs.data.attribute.String({
-            default: true
+            default: 'true'
         });
 
         //given value is returned as-is
         strictEqual(attribute.set(false), 'false');
 
         //undefined value is defaulted
-        strictEqual(attribute.set(), true);
+        strictEqual(attribute.set(), 'true');
     });
 
 });
