@@ -13,23 +13,62 @@ module('xs.data.attribute.Boolean', function () {
     'use strict';
 
     test('constructor', function () {
-        //config is required
-        throws(function () {
-            return new xs.data.attribute.Boolean();
-        });
+        var attribute;
 
-        //config must be an object
+        //config is optional
+        attribute = new xs.data.attribute.Boolean();
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //config must be an object, if given
         throws(function () {
             return new xs.data.attribute.Boolean(null);
         });
+
+        //empty config given
+        attribute = new xs.data.attribute.Boolean({});
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //defined, non-boolean value is not accepted
+        throws(function () {
+            return new xs.data.attribute.Boolean({
+                default: null
+            });
+        });
+
+        //undefined default is accepted
+        attribute = new xs.data.attribute.Boolean({
+            default: undefined
+        });
+
+        //default is undefined
+        strictEqual(attribute.default, undefined);
+
+        //boolean default is accepted
+        attribute = new xs.data.attribute.Boolean({
+            default: false
+        });
+
+        //default is undefined
+        strictEqual(attribute.default, false);
     });
 
     test('get', function () {
         var attribute = new xs.data.attribute.Boolean({});
+        var x;
 
-        var x = true;
+        //defined, non-boolean value is not accepted
+        throws(function () {
+            return attribute.get(null);
+        });
 
-        //get returns value as is
+        //get returns value as is - undefined
+        x = undefined;
+        strictEqual(attribute.get(x), x);
+
+        //get returns value as is - boolean
+        x = true;
         strictEqual(attribute.get(x), x);
     });
 

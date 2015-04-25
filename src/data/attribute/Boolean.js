@@ -27,6 +27,12 @@ xs.define(xs.Class, 'ns.Boolean', function (self) {
     Class.constructor = function (config) {
         var me = this;
 
+        //return if no config
+        if (!arguments.length) {
+
+            return;
+        }
+
         //assert, that config is an object
         self.assert.object(config, 'constructor - given config `$config` is not an object', {
             $config: config
@@ -34,6 +40,12 @@ xs.define(xs.Class, 'ns.Boolean', function (self) {
 
         //set default value
         if (config.hasOwnProperty('default')) {
+
+            //assert, that config.default is undefined or a boolean
+            self.assert.ok(!xs.isDefined(config.default) || xs.isBoolean(config.default), 'constructor - given config.default `$default` is not undefined or a boolean', {
+                $default: config.default
+            });
+
             me.default = config.default;
         }
     };
@@ -51,8 +63,8 @@ xs.define(xs.Class, 'ns.Boolean', function (self) {
      */
     Class.method.get = function (value, format, options) {
 
-        //assert, that value is a boolean
-        self.assert.boolean(value, 'get - given value `$value` is not a boolean', {
+        //assert, that value is undefined or a boolean
+        self.assert.ok(!xs.isDefined(value) || xs.isBoolean(value), 'get - given value `$value` is not undefined or a boolean', {
             $value: value
         });
 
