@@ -78,6 +78,16 @@ xs.core.Lazy = function (evaluation) {
     };
 };
 
+/**
+ * Destroys lazy evaluated value
+ *
+ * @method destroy
+ */
+xs.core.Lazy.prototype.destroy = function () {
+    //delete get function
+    delete this.get;
+};
+
 
 /**
  * Returns instance of xs.core.Lazy for given evaluation

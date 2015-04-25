@@ -70,6 +70,16 @@ xs.core.Generator = function (evaluation) {
     me.create = evaluation;
 };
 
+/**
+ * Destroys generator
+ *
+ * @method destroy
+ */
+xs.core.Lazy.prototype.destroy = function () {
+    //delete create function
+    delete this.create;
+};
+
 
 /**
  * Returns instance of xs.core.Generator for given evaluation
