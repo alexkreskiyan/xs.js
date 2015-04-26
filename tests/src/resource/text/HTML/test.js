@@ -55,7 +55,7 @@ module('xs.resource.text.HTML', function () {
 
         //config.data is undefined by default
         resource = new xs.resource.text.HTML({
-            url: '/tests/resources/resource/text/HTML/demo.html'
+            url: '/tests/src/resource/text/HTML/resources/demo.html'
         });
 
         //check data
