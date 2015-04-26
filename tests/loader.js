@@ -64,7 +64,7 @@
             xs.Loader.paths.add('xs', '../src');
 
             //add tests path to loader
-            xs.Loader.paths.add('tests', '../tests/src');
+            xs.Loader.paths.add('tests', 'src');
 
             var modules = {};
             assemblyModules(modules, src.modules);
