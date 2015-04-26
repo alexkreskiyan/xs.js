@@ -202,6 +202,16 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
         var Class = function xClass() {
             var me = this;
 
+            //save call arguments
+            var i, length;
+            var args = [];
+
+            length = arguments.length;
+
+            for (i = 0; i < length; i++) {
+                args[ i ] = arguments[ i ];
+            }
+
             //define class constructor
             var descriptor = Class.descriptor;
 
@@ -211,7 +221,7 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
             //if parent constructor - just call it
             if (me.self && me.self !== Class) {
                 if (constructor) {
-                    constructor.apply(me, arguments);
+                    constructor.apply(me, args);
                 }
 
                 return;
@@ -225,9 +235,7 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
                 $Class: Class
             });
 
-
-            //save call arguments
-            me.initArguments = arguments;
+            me.initArguments = args;
 
             //properties processing
 
@@ -236,10 +244,10 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
 
             //assign values
             var properties = descriptor.property.private.items; //xs.core.Collection
-            var i, item, value;
-            var length = properties.length;
-
+            var item, value;
             var Generator = xs.core.Generator;
+
+            length = properties.length;
 
             for (i = 0; i < length; i++) {
                 item = properties[ i ];
@@ -257,7 +265,7 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
 
             //apply constructor
             if (constructor) {
-                constructor.apply(me, arguments);
+                constructor.apply(me, args);
             }
         };
 
