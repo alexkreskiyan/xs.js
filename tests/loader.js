@@ -254,7 +254,7 @@
 
     //resolves test file name from class name
     function resolveTestFile(name) {
-        return '../tests/src/' + name.split('.').slice(1).join('/') + 'Test.js';
+        return '../tests/src/' + name.split('.').slice(1).join('/') + '/test.js';
     }
 
     function request(url, callback) {
