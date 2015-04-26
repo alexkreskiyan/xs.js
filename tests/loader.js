@@ -46,8 +46,11 @@
 
         load([ '../build/' + mode + '/xs.js' ], function () {
 
-            //add path to loader
+            //add sources path to loader
             xs.Loader.paths.add('xs', '../src');
+
+            //add tests path to loader
+            xs.Loader.paths.add('tests', '../tests/src');
 
             callback(src);
         });
@@ -57,8 +60,11 @@
 
         load([ '../build/source/xs.js' ], function () {
 
-            //add path to loader
+            //add sources path to loader
             xs.Loader.paths.add('xs', '../src');
+
+            //add tests path to loader
+            xs.Loader.paths.add('tests', '../tests/src');
 
             var modules = {};
             assemblyModules(modules, src.modules);

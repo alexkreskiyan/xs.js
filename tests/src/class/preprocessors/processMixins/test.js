@@ -15,23 +15,13 @@ module('xs.class.preprocessors.processMixins', function () {
     test('mixins chain', function () {
         var me = this;
 
-        //add tests path
-        xs.Loader.paths.add('tests', 'resources');
-
         //define child class
         xs.define(xs.Class, 'ns.Child', function () {
             var Class = this;
             Class.namespace = 'tests.class.preprocessors.processMixins';
-            Class.extends = 'ns.Base';
-            Class.mixins.mix2 = 'ns.Mix2';
-        });
-
-        xs.onReady([
-            'tests.class.preprocessors.processMixins.Child',
-            'tests.class.preprocessors.processMixins.Base',
-            'tests.class.preprocessors.processMixins.Mix1',
-            'tests.class.preprocessors.processMixins.Mix2'
-        ], me.done);
+            Class.extends = 'ns.resources.Base';
+            Class.mixins.mix2 = 'ns.resources.Mix2';
+        }, me.done);
 
         return false;
     }, function () {
@@ -40,41 +30,39 @@ module('xs.class.preprocessors.processMixins', function () {
 
         //verify descriptor
         strictEqual(Child.descriptor.mixins.size, 1);
-        strictEqual(Child.descriptor.mixins.at(0), ns.Mix2);
+        strictEqual(Child.descriptor.mixins.at(0), ns.resources.Mix2);
         strictEqual(Child.descriptor.allMixins.size, 2);
-        strictEqual(Child.descriptor.allMixins.at(0), ns.Mix1);
-        strictEqual(Child.descriptor.allMixins.at(1), ns.Mix2);
+        strictEqual(Child.descriptor.allMixins.at(0), ns.resources.Mix1);
+        strictEqual(Child.descriptor.allMixins.at(1), ns.resources.Mix2);
 
         //check attributes from Mix1
-        var Mix1 = ns.Mix1;
+        var Mix1 = ns.resources.Mix1;
         strictEqual(Child.descriptor.constant.a, Mix1.descriptor.constant.a);
         strictEqual(Child.descriptor.property.a, Mix1.descriptor.property.a);
         strictEqual(Child.descriptor.method.printA, Mix1.descriptor.method.printA);
 
         //check attributes from Mix2
-        var Mix2 = ns.Mix2;
+        var Mix2 = ns.resources.Mix2;
         strictEqual(Child.descriptor.constant.b, Mix2.descriptor.constant.b);
         strictEqual(Child.descriptor.property.b, Mix2.descriptor.property.b);
         strictEqual(Child.descriptor.method.printB, Mix2.descriptor.method.printB);
 
         //verify mixins function
-        strictEqual(Child.mixins(ns.Mix1), true);
-        strictEqual(Child.mixins(ns.Mix2), true);
+        strictEqual(Child.mixins(Mix1), true);
+        strictEqual(Child.mixins(Mix2), true);
         strictEqual(Child.mixins([
-            ns.Mix1,
-            ns.Mix2
+            Mix1,
+            Mix2
         ]), true);
-        strictEqual(Child.mixins(ns.Base), false);
+        strictEqual(Child.mixins(ns.resources.Base), false);
         strictEqual(Child.mixins(xs.class.Base), true);
     }, function () {
-        xs.Loader.paths.remove('tests');
-
         //remove created classes from namespace
         var ns = window.tests.class.preprocessors.processMixins;
         xs.ContractsManager.remove(ns.Child.label);
-        xs.ContractsManager.remove(ns.Base.label);
-        xs.ContractsManager.remove(ns.Mix1.label);
-        xs.ContractsManager.remove(ns.Mix2.label);
+        xs.ContractsManager.remove(ns.resources.Base.label);
+        xs.ContractsManager.remove(ns.resources.Mix1.label);
+        xs.ContractsManager.remove(ns.resources.Mix2.label);
     });
 
 });
