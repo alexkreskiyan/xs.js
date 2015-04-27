@@ -81,6 +81,8 @@ xs.define(xs.Class, 'ns.text.HTML', function (self) {
         //return request promise
         return request(me.private.url).then(function (data) {
             me.private.data = parseTemplate(data);
+
+            return me.private.data;
         });
     };
 

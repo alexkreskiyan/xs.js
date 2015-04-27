@@ -44,6 +44,9 @@ module('xs.resource.text.HTML', function () {
         strictEqual(resource.data instanceof Element, true);
         strictEqual(resource.data.outerHTML, '<div></div>');
 
+        //check isLoaded
+        strictEqual(resource.isLoaded, true);
+
 
         //loaded template
         //config.url must be a string
@@ -60,6 +63,58 @@ module('xs.resource.text.HTML', function () {
 
         //check data
         strictEqual(resource.data, undefined);
+
+        //check isLoaded
+        strictEqual(resource.isLoaded, false);
+    });
+
+    test('load', function () {
+        var me = this;
+
+        //init test variables
+        var resource;
+
+        //config.data is undefined by default
+        resource = new xs.resource.text.HTML({
+            url: 'src/resource/text/HTML/resources/demo.html'
+        });
+
+        //check data
+        strictEqual(resource.data, undefined);
+
+        //check isLoaded
+        strictEqual(resource.isLoaded, false);
+
+        var resourceData;
+
+        //load returns a promise
+        resource.load().then(function (data) {
+
+            //check data
+            strictEqual(resource.data instanceof Element, true);
+            strictEqual(resource.data.outerHTML, '<div>\n    <button></button>\n</div>');
+
+            strictEqual(resource.data, data);
+
+            //check isLoaded
+            strictEqual(resource.isLoaded, true);
+
+            //save data
+            resourceData = data;
+
+            //try to load resource again
+            return resource.load();
+        }).then(function (data) {
+
+            //check data
+            //resource data is not reloaded
+            strictEqual(resource.data, data);
+            strictEqual(resource.data, resourceData);
+
+            me.done();
+        });
+
+        return false;
     });
 
 });
