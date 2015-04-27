@@ -829,7 +829,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         });
 
         //assert, that template is loaded
-        assert.ok(template.isLoaded, 'processTemplate - given template `$template` is not loaded. Add it to resouces section, if needed', {
+        assert.ok(template.isLoaded, 'processTemplate - given template `$template` is not loaded. Add it to resources section, if needed', {
             $template: template
         });
 
