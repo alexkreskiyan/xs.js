@@ -74,6 +74,7 @@
         "xs.class.preprocessors.addOwnElements": { },
         "xs.class.preprocessors.processImplements": { },
         "xs.class.preprocessors.defineElements": { },
+        "xs.class.preprocessors.resources": { },
         "xs.class.preprocessors.logger": { },
         "xs.class.preprocessors.asserter": { },
         "xs.class.Base": { },

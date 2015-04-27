@@ -16,9 +16,14 @@ module('xs.class.preprocessors.imports', function () {
         var me = this;
 
         xs.define(xs.Class, 'ns.Child', function (Class, imports) {
-            this.namespace = 'tests.class.preprocessors.imports';
-            this.extends = 'ns.resources.Base';
-            this.imports = [
+
+            var Class = this;
+
+            Class.namespace = 'tests.class.preprocessors.imports';
+
+            Class.extends = 'ns.resources.Base';
+
+            Class.imports = [
                 {
                     'sample.One': 'ns.resources.One'
                 },

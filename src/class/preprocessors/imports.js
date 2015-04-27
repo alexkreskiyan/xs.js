@@ -6,7 +6,7 @@ var log = new xs.log.Logger('xs.class.preprocessors.imports');
  * Directive imports
  *
  * Is used to process class imports
- * Allows to declare and preload all classes, used by current class, including specific ones:
+ * Allows to declare and preload all contracts, used by current class, including specific ones:
  *
  * - extended class name
  * - class mixins' names
