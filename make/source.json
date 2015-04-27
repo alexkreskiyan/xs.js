@@ -173,10 +173,6 @@
                             "contract": "class",
                             "test": false
                         }
-                    },
-                    "Proxy": {
-                        "contract": "class",
-                        "test": false
                     }
                 },
                 "reader": {
@@ -199,6 +195,10 @@
                 },
                 "Model": {
                     "contract": "class"
+                },
+                "Proxy": {
+                    "contract": "class",
+                    "test": false
                 }
             },
             "dom": {

@@ -59,8 +59,8 @@ Source's remove method was called without params
 
 4. Proxy
 base contracts:
-xs.data.proxy.Proxy - base class, that all proxies extend
-Proxy = xs.data.proxy.Proxy
+xs.data.Proxy - base class, that all proxies extend
+Proxy = xs.data.Proxy
 - Proxy.constructor = function(config)
 - Proxy.property.reader = {set:function(value)}
 - Proxy.property.writer = {set:function(value)}

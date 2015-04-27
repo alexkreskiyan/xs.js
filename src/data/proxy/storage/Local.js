@@ -7,7 +7,7 @@
  *
  * @class xs.data.proxy.storage.Local
  *
- * @extends xs.data.proxy.Proxy
+ * @extends xs.data.Proxy
  */
 xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
 
@@ -23,7 +23,7 @@ xs.define(xs.Class, 'ns.proxy.storage.Local', function (self, imports) {
         }
     ];
 
-    Class.extends = 'ns.proxy.Proxy';
+    Class.extends = 'ns.Proxy';
 
     Class.implements = [
     ];

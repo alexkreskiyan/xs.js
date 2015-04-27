@@ -33,7 +33,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             IModelOperation: 'ns.operation.IModelOperation'
         },
         {
-            Proxy: 'ns.proxy.Proxy'
+            Proxy: 'ns.Proxy'
         }
     ];
 

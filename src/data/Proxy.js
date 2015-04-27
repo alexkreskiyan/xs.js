@@ -5,11 +5,11 @@
  *
  * @abstract
  *
- * @class xs.data.proxy.Proxy
+ * @class xs.data.Proxy
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.proxy.Proxy', function (self, imports) {
+xs.define(xs.Class, 'ns.Proxy', function (self, imports) {
 
     'use strict';
 
