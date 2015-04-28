@@ -19,9 +19,7 @@ module('xs.class.preprocessors.imports', function () {
 
             var Class = this;
 
-            Class.namespace = 'tests.class.preprocessors.imports';
-
-            Class.extends = 'ns.resources.Base';
+            Class.namespace = 'tests.class.preprocessors.resources';
 
             Class.resources = {
                 demo: new xs.resource.text.HTML({

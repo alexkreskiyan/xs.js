@@ -216,8 +216,8 @@ function verifyInterface(Class, Interface) {
         var requiredArguments = config.args.toString();
         var declaredArguments = xs.Function.getArguments(descriptor.static.method.at(name).value).toString();
 
-        //assert, that arguments' lists are equal
-        assert.equal(declaredArguments, requiredArguments, '$Class: implemented interface `$Interface` requires static method `$name` to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
+        //assert, that requiredArguments are in the beginning of the declared ones
+        assert.ok(declaredArguments.indexOf(requiredArguments) === 0, '$Class: implemented interface `$Interface` requires static method `$name` to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
             $Class: Class,
             $Interface: Interface,
             $name: name,
@@ -244,8 +244,8 @@ function verifyInterface(Class, Interface) {
         var requiredArguments = Interface.descriptor.constructor.args.toString();
         var declaredArguments = xs.Function.getArguments(descriptor.constructor).toString();
 
-        //assert, that arguments' lists are equal
-        assert.equal(declaredArguments, requiredArguments, '$Class: implemented interface `$Interface` requires constructor to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
+        //assert, that requiredArguments are in the beginning of the declared ones
+        assert.ok(declaredArguments.indexOf(requiredArguments) === 0, '$Class: implemented interface `$Interface` requires constructor to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
             $Class: Class,
             $Interface: Interface,
             $requiredArguments: requiredArguments,
@@ -304,8 +304,8 @@ function verifyInterface(Class, Interface) {
         var requiredArguments = config.args.toString();
         var declaredArguments = xs.Function.getArguments(descriptor.method.at(name).value).toString();
 
-        //assert, that arguments' lists are equal
-        assert.equal(declaredArguments, requiredArguments, '$Class: implemented interface `$Interface` requires method `$name` to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
+        //assert, that requiredArguments are in the beginning of the declared ones
+        assert.ok(declaredArguments.indexOf(requiredArguments) === 0, '$Class: implemented interface `$Interface` requires method `$name` to have arguments list: $requiredArguments, but declared function has list: $declaredArguments', {
             $Class: Class,
             $Interface: Interface,
             $name: name,
