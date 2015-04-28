@@ -3,7 +3,7 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.uri.QueryString
+ * @class xs.uri.query.QueryString
  *
  * @extends xs.class.Base
  */
@@ -13,7 +13,9 @@ xs.define(xs.Class, 'ns.QueryString', function (self) {
 
     var Class = this;
 
-    Class.namespace = 'xs.uri';
+    Class.namespace = 'xs.uri.query';
+
+    Class.implements = [ 'ns.IQuery' ];
 
     /**
      * QueryString constructor

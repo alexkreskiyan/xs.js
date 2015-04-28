@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.uri.QueryString', function () {
+module('xs.uri.query.QueryString', function () {
 
     'use strict';
 
@@ -22,11 +22,11 @@ module('xs.uri.QueryString', function () {
         var qs;
 
         //check decoded
-        qs = new xs.uri.QueryString(me.decoded);
+        qs = new xs.uri.query.QueryString(me.decoded);
         strictEqual(JSON.stringify(qs.params), '{"a":[1,{"b":1}],"c":[2,{"x":2},"3фыв"]}');
 
         //check encoded
-        qs = new xs.uri.QueryString(me.encoded);
+        qs = new xs.uri.query.QueryString(me.encoded);
         strictEqual(JSON.stringify(qs.params), '{"a":[1,{"b":1}],"c":[2,{"x":2},"3фыв"]}');
     });
 
@@ -53,7 +53,7 @@ module('xs.uri.QueryString', function () {
         };
     }, function () {
         var me = this;
-        var qs = new xs.uri.QueryString(me.source);
+        var qs = new xs.uri.query.QueryString(me.source);
 
         //check decoded
         strictEqual(qs.toString(), me.decoded);

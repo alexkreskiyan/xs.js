@@ -274,15 +274,20 @@
                 }
             },
             "uri": {
-                "URI": {
-                    "contract": "class",
-                    "test": false
-                },
-                "QueryString": {
-                    "contract": "class"
+                "query": {
+                    "IQuery": {
+                        "contract": "interface"
+                    },
+                    "QueryString": {
+                        "contract": "class"
+                    }
                 },
                 "HTTP": {
                     "contract": "class"
+                },
+                "URI": {
+                    "contract": "class",
+                    "test": false
                 },
                 "WebSocket": {
                     "contract": "class"
