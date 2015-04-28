@@ -77,6 +77,8 @@ on set - proxy is validated to implement all operations, source implements itsel
 - Source.const.model = xs.lazy(function() {return imports.Model});
 - Source.method.bind = function(<relation name>, <source>)
 
+binding is used to let bound stores being notified on changes
+
 6. Model
 base contracts:
 xs.data.IModel - not needed TODO remove
@@ -90,7 +92,7 @@ Attributes and primary keys are declared here
 
 - Model.relations = {
     <relation name> : {
-        fields: <foreign key>
+        key: <foreign key>
         model: <model name>
     }
 };

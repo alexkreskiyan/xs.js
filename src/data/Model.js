@@ -330,6 +330,13 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
         });
 
+        //handle relations
+        Class.descriptor.relations = {};
+
+        if (descriptor.hasOwnProperty('relations')) {
+            handleRelations(Class, descriptor);
+        }
+
         //handle source/proxy
         handleSourceProxy(Class);
 
@@ -408,6 +415,133 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         if (config.primary === true) {
             Class.descriptor.primaryAttributes.push(name);
         }
+    }
+
+    function handleRelations(Class, descriptor) {
+
+        //assert, that relations are an object
+        assert.object(descriptor.relations, 'given `$attributes` are not an object', {
+            $attributes: descriptor.attributes
+        });
+
+        //handle each relation
+        (new xs.core.Collection(descriptor.relations)).each(function (config, name) {
+            handleRelation(Class, name, config);
+        });
+    }
+
+    function handleRelation(Class, relation, config) {
+
+        //assert, that name is valid
+        assert.ok(xs.ContractsManager.isShortName(relation), 'given relation name `$relation` is incorrect', {
+            $relation: relation
+        });
+
+
+        //assert, that config is an object
+        assert.object(config, 'relation `$relation` config `$config` is not an object', {
+            $relation: relation,
+            $config: config
+        });
+
+        //assert, that config contains model and key
+        assert.ok(config.hasOwnProperty('key'), 'relation `$relation` config `$config` has no key specified', {
+            $relation: relation,
+            $config: config
+        });
+        assert.ok(config.hasOwnProperty('model'), 'relation `$relation` config `$config` has no model specified', {
+            $relation: relation,
+            $config: config
+        });
+
+
+        //assert, that model is a string
+        assert.string(config.model, 'relation `$relation` model `$model` is not a string', {
+            $relation: relation,
+            $model: config.model
+        });
+
+        //try to get model class
+        var Model = xs.ContractsManager.get(Class.descriptor.resolveName(config.model));
+
+        //assert, that Attribute is a class
+        assert.class(Model, 'relation `$relation` model contract `$Model` is not a class', {
+            $relation: relation,
+            $Model: Model
+        });
+
+        //assert, that Model is a xs.data.Model ancestor
+        assert.ok(Model.inherits(xs.data.Model), 'relation `$relation` class class `$Model` is not a xs.data.Model ancestor', {
+            $relation: relation,
+            $Model: Model
+        });
+
+
+        //assert, that key is an object
+        assert.object(config.key, 'relation `$relation` key `$key` is not an object', {
+            $relation: relation,
+            $key: config.key
+        });
+
+        //check, that all key attributes match respective in foreign Model
+        assert.ok((function () {
+
+            //convert key to collection
+            var key = new xs.core.Collection(config.key);
+
+            //get foreign primary attributes names' list
+            var foreignPrimary = new xs.core.Collection(Model.descriptor.primaryAttributes);
+
+            //get foreign attributes collection
+            var foreignAttributes = Model.descriptor.attributes;
+
+            //assert, that length matches
+            assert.equal(Object.keys(config.key).length, foreignPrimary.size, 'relation `$relation` key `$key` has incorrect number of fields `$result`, while expected `$expected`', {
+                $name: name,
+                $key: config.key,
+                $result: Object.keys(config.key).length,
+                $expected: foreignPrimary.length
+            });
+
+            //verify key match
+            foreignPrimary.each(function (foreignName) {
+
+                //assert, that attribute is presented in key
+                assert.ok(key.has(foreignName), 'relation `$relation` key `$key` has no attribute bound to foreign key attribute `$name`', {
+                    $relation: relation,
+                    $key: config.key,
+                    $foreignName: foreignName
+                });
+
+                //get bound attribute name
+                var name = key.keyOf(foreignName);
+
+                //get model attribute instance
+                var attribute = Class.descriptor.attributes.at(name);
+
+                //get foreign attribute instance
+                var foreignAttribute = foreignAttributes.at(foreignName);
+
+                //assert, that types match
+                assert.equal(attribute.self, foreignAttribute.self, 'relation `$relation` key `$key` has types mismatch between attribute `$name` (`$type`) and `$foreignName` (`$foreignType`)', {
+                    $relation: relation,
+                    $key: config.key,
+                    $name: name,
+                    $type: attribute.self,
+                    $foreignName: foreignName,
+                    $foreignType: foreignAttribute.self
+                });
+
+            });
+
+            return true;
+        })());
+
+        //save relation
+        Class.descriptor.relations[ relation ] = {
+            key: config.key,
+            model: Model
+        };
     }
 
     function handleSourceProxy(Class) {
