@@ -17,7 +17,7 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
 
     Class.imports = [
         {
-            QueryString: 'ns.QueryString'
+            IQuery: 'ns.query.IQuery'
         }
     ];
 
@@ -29,13 +29,29 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
      * @constructor
      *
      * @param {String} [URI] URI, object is created from, or undefined, if starting from the beginning
+     * @param {xs.uri.query.IQuery} Query Query constructor, URI query is parsed with
      */
-    Class.constructor = function (URI) {
+    Class.constructor = function (URI, Query) {
         var me = this;
 
-        //call parent constructor
-        self.parent.apply(me, arguments);
+        //assert, that at least Query is given
+        self.assert.ok(arguments.length, 'constructor - no Query given');
 
+        //call parent constructor
+        if (arguments.length === 1) {
+            self.parent.call(me);
+
+            //reassign Query
+            Query = URI;
+        } else {
+            self.parent.call(me, URI);
+        }
+
+        //assert, that Query implements imports.IQuery
+        self.assert.ok(xs.isClass(Query) && Query.implements(imports.IQuery), 'constructor - given Query class `$Query` does not implement base query interface `$IQuery`', {
+            $Query: Query,
+            $IQuery: imports.IQuery
+        });
 
         //set defaults from raw URI data
         //get raw reference
@@ -61,7 +77,7 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
         me.path = raw.path;
 
         //parse query into params
-        me.query = raw.query ? new imports.QueryString(raw.query) : new imports.QueryString();
+        me.query = raw.query ? new Query(raw.query) : new Query();
     };
 
     /**
@@ -200,9 +216,9 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
         set: function (query) {
             var me = this;
 
-            self.assert.instance(query, imports.QueryString, 'query - given query `$query` is not instance of `$QueryString`', {
+            self.assert.implements(query, imports.IQuery, 'query - given query `$query` is not implementing `$IQuery`', {
                 $query: query,
-                $QueryString: imports.QueryString
+                $IQuery: imports.IQuery
             });
 
             //assign query
