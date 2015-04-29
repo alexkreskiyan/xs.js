@@ -535,7 +535,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             });
 
             return true;
-        })());
+        })(), 'key verification failed');
 
         //save relation
         Class.descriptor.relations[ relation ] = {
