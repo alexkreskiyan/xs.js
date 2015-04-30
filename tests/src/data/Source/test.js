@@ -257,6 +257,7 @@ module('xs.data.Source', function () {
         strictEqual(source.proxy, relevantProxy);
 
     }, function () {
+        xs.ContractsManager.remove('tests.data.Source.proxy.Model');
         xs.ContractsManager.remove('tests.data.Source.proxy.RelevantProxy');
         xs.ContractsManager.remove('tests.data.Source.proxy.IrrelevantProxy');
         xs.ContractsManager.remove('tests.data.Source.proxy.Source');
