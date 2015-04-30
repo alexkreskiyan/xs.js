@@ -46,6 +46,11 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
             $model: me.self.model
         });
 
+        //assert, that model class is not processing
+        self.assert.not(me.self.model.isProcessing, 'constructor - model `$model` is being processed. Add it to imports, to be sure that it will be loaded', {
+            $model: me.self.model
+        });
+
         //assert, that model is a xs.data.Model
         self.assert.ok(me.self.model.inherits(imports.Model), 'constructor - model `$model` is not a `$Model` ancestor', {
             $model: me.self.model,

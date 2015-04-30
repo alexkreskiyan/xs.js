@@ -158,6 +158,10 @@
                             "contract": "interface"
                         }
                     },
+                    "Event": {
+                        "contract": "class",
+                        "test": false
+                    },
                     "IModelOperation": {
                         "contract": "interface"
                     },
@@ -200,6 +204,9 @@
                 "Proxy": {
                     "contract": "class",
                     "test": false
+                },
+                "Source": {
+                    "contract": "class"
                 }
             },
             "dom": {
