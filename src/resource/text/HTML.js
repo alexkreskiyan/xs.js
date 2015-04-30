@@ -111,7 +111,7 @@ xs.define(xs.Class, 'ns.text.HTML', function (self) {
         self.assert.equal(container.childNodes.length, 1, 'parseTemplate - template must contain single root element');
 
         //assert, that template root is element
-        self.assert.instance(container.firstChild, Element, 'parseTemplate - template root must be an Element');
+        self.assert.ok(container.firstChild instanceof Element, 'parseTemplate - template root must be an Element');
 
         //get root
         var root = container.lastChild;
