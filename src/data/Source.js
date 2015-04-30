@@ -138,7 +138,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         });
 
         //assert, that source is a xs.data.Source instance
-        self.assert.instance(source, self, 'bind - given source `$source` is not an instance of `$Source`', {
+        self.assert.ok(source instanceof self, 'bind - given source `$source` is not an instance of `$Source`', {
             $source: source,
             $Source: self
         });
