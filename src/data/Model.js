@@ -464,8 +464,14 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         //try to get model class
         var Model = xs.ContractsManager.get(Class.descriptor.resolveName(config.model));
 
-        //assert, that Attribute is a class
+        //assert, that Model is a class
         assert.class(Model, 'relation `$relation` model contract `$Model` is not a class', {
+            $relation: relation,
+            $Model: Model
+        });
+
+        //assert, that Model is not processing
+        assert.not(Model.isProcessing, 'relation `$relation` model contract `$Model` is not ready yet. add it to imports', {
             $relation: relation,
             $Model: Model
         });
