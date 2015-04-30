@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.data.Model', function () {
+module('xs.data.Source', function () {
 
     'use strict';
 
