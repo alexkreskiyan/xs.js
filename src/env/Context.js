@@ -744,6 +744,14 @@ xs.env.Context = xs.context = (function () {
                 [ /windows\snt\s6\.3/ ]
             ],
             [
+                [
+                    os.windows,
+                    '10'
+                ],
+                [],
+                [ /windows\snt\s10\.0/ ]
+            ],
+            [
                 [ os.windowsPhone ],
                 [],
                 [ /windows\sphone(?:\sos)?\s([\d\.]+)/ ]

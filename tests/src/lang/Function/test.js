@@ -124,7 +124,7 @@ module('xs.lang.Function', function () {
             'use strict';
 
             return demo123AsD + asd123ASD;
-        }).trim(), '\'use strict\';\n\n            return demo123AsD + asd123ASD;');
+        }).trim(), '\'use strict\';' + (xs.isWindows ? '\r\n\r\n' : '\n\n') + '            return demo123AsD + asd123ASD;');
     });
 
     test('parse', function () {
@@ -142,7 +142,7 @@ module('xs.lang.Function', function () {
         //test parsing results
         strictEqual(data.name, 'demo123Asd');
         strictEqual(data.args.toString(), 'demo123AsD,asd123ASD');
-        strictEqual(data.body.trim(), '\'use strict\';\n\n            return demo123AsD + asd123ASD;');
+        strictEqual(data.body.trim(), '\'use strict\';' + (xs.isWindows ? '\r\n\r\n' : '\n\n') + '            return demo123AsD + asd123ASD;');
     });
 
 });
