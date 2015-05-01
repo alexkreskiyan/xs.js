@@ -7,13 +7,19 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Event', function (self) {
+xs.define(xs.Class, 'ns.Event', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
     Class.namespace = 'xs.data.operation';
+
+    Class.imports = [
+        {
+            IOperation: 'ns.IOperation'
+        }
+    ];
 
     Class.implements = [
         'xs.event.IEvent'
@@ -38,6 +44,16 @@ xs.define(xs.Class, 'ns.Event', function (self) {
         //assert that data is object
         self.assert.ok(xs.isObject(data), 'constructor - given data `$data` is not an object', {
             $data: data
+        });
+
+        //assert that operation is an interface
+        self.assert.interface(data.operation, 'constructor - given data.operation `$Operation` is not a interface', {
+            $Operation: data.operation
+        });
+
+        //assert that operation is an imports.IOperation ancestor
+        self.assert.ok(data.operation.inherits(imports.IOperation), 'constructor - given data.operation `$Operation` is not a interface', {
+            $Operation: data.operation
         });
 
         //assign attributes
