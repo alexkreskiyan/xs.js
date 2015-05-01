@@ -169,14 +169,17 @@ Reactive.prototype.on = function (event, handler, options) {
         //assert, that arguments[1] is either a function (event, handler call) or an options (handler, options call)
         assert.ok(xs.isFunction(arguments[ 1 ]) || xs.isObject(arguments[ 1 ]), 'on - incorrect arguments given');
 
-        //event, handler call
         if (xs.isFunction(arguments[ 1 ])) {
+
+            //event, handler call
             handleOn.call(me, arguments[ 0 ], arguments[ 1 ], false);
 
-            //handler, options call
         } else {
+
+            //handler, options call
             handleOn.call(me, false, arguments[ 0 ], arguments[ 1 ]);
         }
+
     } else {
         handleOn.apply(me, arguments);
     }
@@ -208,19 +211,32 @@ Reactive.prototype.off = function (event, selector, flags) {
 
     } else if (arguments.length === 1) {
 
+        //if given target
         if (isTarget(arguments[ 0 ])) {
+
+            //event scenario
             handleOff.call(me, arguments[ 0 ], false, xs.core.Collection.All);
         } else {
+
+            //selector scenario
             handleOff.call(me, false, arguments[ 0 ], false);
         }
 
-        //selector, flags scenario
-    } else if (!xs.isFunction(arguments[ 1 ])) {
-        handleOff.call(me, false, arguments[ 0 ], arguments[ 1 ]);
+    } else if (arguments.length === 2) {
 
-        //event, selector, [flags] scenario
+        if (xs.isFunction(arguments[ 1 ])) {
+
+            //event, selector scenario
+            handleOff.call(me, arguments[ 0 ], arguments[ 1 ], false);
+        } else {
+
+            //selector, flags scenario
+            handleOff.call(me, false, arguments[ 0 ], arguments[ 1 ]);
+        }
+
+        //event, selector, flags scenario
     } else {
-        handleOff.apply(me, arguments);
+        handleOff.call(me, arguments[ 0 ], arguments[ 1 ], arguments[ 2 ]);
     }
 
     return me;
@@ -243,26 +259,39 @@ Reactive.prototype.suspend = function (event, selector, flags) {
     //assert, that reactive is not destroyed
     assert.not(me.isDestroyed, 'off - reactive is destroyed');
 
-    //complete truncate of all handlers
+    //complete suspend of all handlers
     if (!arguments.length) {
 
         handleSuspend.call(me, false, false, false);
 
     } else if (arguments.length === 1) {
 
+        //if given target
         if (isTarget(arguments[ 0 ])) {
+
+            //event scenario
             handleSuspend.call(me, arguments[ 0 ], false, xs.core.Collection.All);
         } else {
+
+            //selector scenario
             handleSuspend.call(me, false, arguments[ 0 ], false);
         }
 
-        //selector, flags scenario
-    } else if (!xs.isFunction(arguments[ 1 ])) {
-        handleSuspend.call(me, false, arguments[ 0 ], arguments[ 1 ]);
+    } else if (arguments.length === 2) {
 
-        //event, selector, [flags] scenario
+        if (xs.isFunction(arguments[ 1 ])) {
+
+            //event, selector scenario
+            handleSuspend.call(me, arguments[ 0 ], arguments[ 1 ], false);
+        } else {
+
+            //selector, flags scenario
+            handleSuspend.call(me, false, arguments[ 0 ], arguments[ 1 ]);
+        }
+
+        //event, selector, flags scenario
     } else {
-        handleSuspend.apply(me, arguments);
+        handleSuspend.call(me, arguments[ 0 ], arguments[ 1 ], arguments[ 2 ]);
     }
 
     return me;
@@ -291,19 +320,32 @@ Reactive.prototype.resume = function (selector, flags) {
 
     } else if (arguments.length === 1) {
 
+        //if given target
         if (isTarget(arguments[ 0 ])) {
+
+            //event scenario
             handleResume.call(me, arguments[ 0 ], false, xs.core.Collection.All);
         } else {
+
+            //selector scenario
             handleResume.call(me, false, arguments[ 0 ], false);
         }
 
-        //selector, flags scenario
-    } else if (!xs.isFunction(arguments[ 1 ])) {
-        handleResume.call(me, false, arguments[ 0 ], arguments[ 1 ]);
+    } else if (arguments.length === 2) {
 
-        //event, selector, [flags] scenario
+        if (xs.isFunction(arguments[ 1 ])) {
+
+            //event, selector scenario
+            handleResume.call(me, arguments[ 0 ], arguments[ 1 ], false);
+        } else {
+
+            //selector, flags scenario
+            handleResume.call(me, false, arguments[ 0 ], arguments[ 1 ]);
+        }
+
+        //event, selector, flags scenario
     } else {
-        handleResume.apply(me, arguments);
+        handleResume.call(me, arguments[ 0 ], arguments[ 1 ], arguments[ 2 ]);
     }
 
     return me;
@@ -610,8 +652,8 @@ function syncActive(value) {
         log.trace('syncActive - no value given, evaluating');
 
         value = me.private.reactiveHandlers.find(function (item) {
-            return !item.suspended;
-        }) !== undefined;
+                return !item.suspended;
+            }) !== undefined;
 
         log.trace('syncActive - evaluated value is ' + (value ? 'true' : 'false'));
     }
