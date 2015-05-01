@@ -57,6 +57,9 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
             $Model: imports.Model
         });
 
+        //define source bindings
+        me.private.bindings = {};
+
         //call observable constructor
         self.mixins.observable.call(me, xs.noop);
 
@@ -73,9 +76,6 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         if (config.hasOwnProperty('proxy')) {
             me.proxy = config.proxy;
         }
-
-        //define source bindings
-        me.private.bindings = {};
 
         //handle bindings, if given
         if (config.hasOwnProperty('bind')) {
@@ -118,10 +118,10 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         }
     };
 
-    Class.method.isBinded = function (relation) {
+    Class.method.isBound = function (relation) {
         var me = this;
 
-        //assert, that relation is a valid shortname
+        //assert, that relation is valid
         self.assert.ok(validateRelation.call(me, me.self.model.descriptor.relations, relation), 'bind - relation `$relation` validation failed', {
             $relation: relation
         });
@@ -133,7 +133,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         var me = this;
 
         //assert, that relation is not bound
-        self.assert.not(me.isBinded(relation), 'bind - relation `$relation` is already binded', {
+        self.assert.not(me.isBound(relation), 'bind - relation `$relation` is already binded', {
             $relation: relation
         });
 
@@ -156,15 +156,26 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         //set relation binding
         var binding = me.private.bindings[ relation ] = {
             source: source,
-            handler: function (event) {
-                var me = this;
-                event.relation = relation;
-                me.private.stream.send(event);
+            handlers: {
+                operation: function (event) {
+                    var me = this;
+                    event.relation = relation;
+                    me.private.stream.send(event);
+                },
+                destroy: function () {
+                    var me = this;
+                    delete me.private.bindings[ relation ];
+                }
             }
         };
 
-        //add relation handler
-        binding.source.on(imports.OperationEvent, binding.handler, me);
+        //add binding handlers
+        binding.source.on(imports.OperationEvent, binding.handlers.operation, {
+            scope: me
+        });
+        binding.source.on(xs.event.Destroy, binding.handlers.destroy, {
+            scope: me
+        });
     };
 
     Class.method.unbind = function (relation) {
@@ -175,9 +186,12 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
             //remove all bindings
             (new xs.core.Collection(me.private.bindings)).each(function (binding) {
 
-                //remove relation handler
+                //remove relation handlers
                 binding.source.off(imports.OperationEvent, function (item) {
-                    return item.handler === binding.handler;
+                    return item.handler === binding.handlers.operation;
+                });
+                binding.source.off(xs.event.Destroy, function (item) {
+                    return item.handler === binding.handlers.destroy;
                 });
             });
 
@@ -188,7 +202,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
 
         //assert, that relation is bound
-        self.assert.ok(me.isBinded(relation), 'bind - relation `$relation` is already binded', {
+        self.assert.ok(me.isBound(relation), 'bind - relation `$relation` is already binded', {
             $relation: relation
         });
 
@@ -200,8 +214,24 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
         //remove relation binding handler
         binding.source.off(imports.OperationEvent, function (item) {
-            return item.handler === binding.handler;
+            return item.handler === binding.handlers.operation;
         });
+        binding.source.off(xs.event.Destroy, function (item) {
+            return item.handler === binding.handlers.destroy;
+        });
+    };
+
+    Class.method.destroy = function () {
+        var me = this;
+
+        //call Observable.destroy
+        self.mixins.observable.prototype.destroy.call(me);
+
+        //unbind
+        me.unbind();
+
+        //call parent destroy
+        self.parent.prototype.destroy.call(me);
     };
 
     var validateRelation = function (relations, relation) {
