@@ -250,4 +250,5 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
         return true;
     };
+    
 });
