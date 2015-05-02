@@ -33,28 +33,28 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
             Element: 'xs.dom.Element'
         },
         {
-            Collection: 'xs.util.Collection'
+            Collection: 'xs.data.Collection'
         },
         {
             'resource.text.HTML': 'xs.resource.text.HTML'
         },
         {
-            'event.AddBefore': 'xs.util.collection.event.AddBefore'
+            'event.AddBefore': 'xs.data.enumerable.event.AddBefore'
         },
         {
-            'event.Add': 'xs.util.collection.event.Add'
+            'event.Add': 'xs.data.enumerable.event.Add'
         },
         {
-            'event.SetBefore': 'xs.util.collection.event.SetBefore'
+            'event.SetBefore': 'xs.data.enumerable.event.SetBefore'
         },
         {
-            'event.Set': 'xs.util.collection.event.Set'
+            'event.Set': 'xs.data.enumerable.event.Set'
         },
         {
-            'event.RemoveBefore': 'xs.util.collection.event.RemoveBefore'
+            'event.RemoveBefore': 'xs.data.enumerable.event.RemoveBefore'
         },
         {
-            'event.Remove': 'xs.util.collection.event.Remove'
+            'event.Remove': 'xs.data.enumerable.event.Remove'
         }
     ];
 
@@ -414,7 +414,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @method handleAddBefore
      *
-     * @param {xs.util.collection.Event} event
+     * @param {xs.data.enumerable.event.AddBefore} event
      */
     var handleAddBefore = function (event) {
         //get view reference;
@@ -455,7 +455,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @method handleAdd
      *
-     * @param {xs.util.collection.Event} event
+     * @param {xs.data.enumerable.event.Add} event
      */
     var handleAdd = function (event) {
         var me = this;
@@ -496,7 +496,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @method handleSetBefore
      *
-     * @param {xs.util.collection.Event} event
+     * @param {xs.data.enumerable.event.SetBefore} event
      */
     var handleSetBefore = function (event) {
         var me = this;
@@ -552,7 +552,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @method handleSet
      *
-     * @param {xs.util.collection.Event} event
+     * @param {xs.data.enumerable.event.Set} event
      */
     var handleSet = function (event) {
         var me = this;
@@ -593,7 +593,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @method handleRemoveBefore
      *
-     * @param {xs.util.collection.Event} event
+     * @param {xs.data.enumerable.event.RemoveBefore} event
      */
     var handleRemoveBefore = function (event) {
 
@@ -619,7 +619,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @method handleRemove
      *
-     * @param {xs.util.collection.Event} event
+     * @param {xs.data.enumerable.event.Remove} event
      */
     var handleRemove = function (event) {
         var me = this;

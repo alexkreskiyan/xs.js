@@ -1,9 +1,9 @@
 /**
- * Event class for events, being thrown after some data is added to xs.util.Collection
+ * Event class for events, being thrown after some data is added to xs.data.Collection
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.util.collection.event.Add
+ * @class xs.data.enumerable.event.Add
  *
  * @extends xs.class.Base
  */
@@ -13,7 +13,7 @@ xs.define(xs.Class, 'ns.Add', function (self) {
 
     var Class = this;
 
-    Class.namespace = 'xs.util.collection.event';
+    Class.namespace = 'xs.data.enumerable.event';
 
     Class.implements = [
         'xs.event.IEvent'

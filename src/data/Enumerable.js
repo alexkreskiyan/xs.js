@@ -17,25 +17,25 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
 
     Class.imports = [
         {
-            'event.AddBefore': 'ns.collection.event.AddBefore'
+            'event.AddBefore': 'ns.enumerable.event.AddBefore'
         },
         {
-            'event.Add': 'ns.collection.event.Add'
+            'event.Add': 'ns.enumerable.event.Add'
         },
         {
-            'event.SetBefore': 'ns.collection.event.SetBefore'
+            'event.SetBefore': 'ns.enumerable.event.SetBefore'
         },
         {
-            'event.Set': 'ns.collection.event.Set'
+            'event.Set': 'ns.enumerable.event.Set'
         },
         {
-            'event.RemoveBefore': 'ns.collection.event.RemoveBefore'
+            'event.RemoveBefore': 'ns.enumerable.event.RemoveBefore'
         },
         {
-            'event.Remove': 'ns.collection.event.Remove'
+            'event.Remove': 'ns.enumerable.event.Remove'
         },
         {
-            'event.Clear': 'ns.collection.event.Clear'
+            'event.Clear': 'ns.enumerable.event.Clear'
         },
         {
             Observable: 'xs.event.Observable'
