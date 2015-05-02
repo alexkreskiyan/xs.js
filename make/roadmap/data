@@ -81,7 +81,6 @@ binding is used to let bound stores being notified on changes
 
 6. Model
 base contracts:
-xs.data.IModel - not needed TODO remove
 
 Model introduces own preprocessor (is needed for attributes, primary and foreign keys and relations processing)
 xs.data.Model - base class, that implements most logic of model
@@ -124,3 +123,52 @@ Model can not be saved if it does not have a primaryKey attributes
 base contracts:
 xs.data.Query
 query is like a collection, but provides more possibilities
+Query = xs.data.Query
+- Query.constructor = function(source) {
+    //Source is xs.data.Iterable, xs.core.Collection or object/array
+    TODO query itself uses xs.data.Iterable mixin too (untyped)
+}
+constructor is used as `from` sentence
+- Query.property.isExecuted = {set:xs.noop}
+- Query.method.innerJoin(source, condition)
+- Query.method.outerJoin(source, condition, emptyValue)
+- Query.method.groupJoin(source, condition, alias)
+- Query.method.where(selector)
+- Query.method.sort(sorter)
+- Query.method.group(grouper)
+- Query.method.select(selector)
+- Query.method.execute()
+
+TODO add xs.data.Iterable mixin as base of xs.data.Collection and xs.data.Source
+Query logic:
+- main operations:
+-- from: select data source - any xs.data.Iterable, or a xs.core.Collection, or object/array (they are transformed into xs.core.Collection)
+   from is released implicitly - new Query(source)
+-- where: data filtering - is released via where method: where(function(item)). where can be called several times - then it will work like && operator
+-- sort: data ordering is executed in the end anyway - orderBy(function(a, b) { return bool; }) bool - true, if that is correct to be a to the left of b, else - false
+-- group: data grouping converts collection into collection of collections: [{key:key,items:items},...]. syntax: group(function(item) { return key; })
+-- join: way to join results of two queries
+--- group join selects results from right query as lists while joining to left query (group join specifies shortName alias):
+
+Left Query (categories):        Right Query (products):
+ id     name                    id      category    name
+ 1      food                    1       1           water
+ 2      sport                   2       1           bakery
+ 3      house                   3       2           ball
+
+Result:
+ id     name    products
+ 1      food    [{id: 1, category: 1, name: water}, {id: 2, category: 1, name: bakery}]
+ 2      sport   [{id: 3, category: 2, name: ball}]
+ 3      house   []
+- Query.method.groupJoin(source, condition, alias)
+--- inner join
+- Query.method.innerJoin(source, condition)
+--- group join
+- Query.method.outerJoin(source, condition, emptyValue)
+
+- define used data source
+- define data sources' that are used
+-
+- choose data source
+- select data source fields
