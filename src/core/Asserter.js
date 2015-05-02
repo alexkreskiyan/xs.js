@@ -631,6 +631,44 @@ Asserter.prototype.contract = function (contract, message, vars) {
 };
 
 /**
+ * Verifies, that given contract is processed
+ *
+ * For example:
+ *
+ *     //create asserter instance
+ *     var logger = new xs.log.Logger('xs');
+ *
+ *     //create asserter instance
+ *     var asserter = new xs.core.Asserter(logger, Error);
+ *
+ *     xs.Class(xs.noop,function(Class){
+ *         asserter.processed(Class);
+ *     });
+ *
+ * @method Class
+ *
+ * @param {Function} contract given contract candidate
+ * @param {String} message error message
+ * @param {Object} [vars] error optional vars
+ */
+Asserter.prototype.processed = function (contract, message, vars) {
+    var me = this;
+
+    //assert, that contract is a contract
+    me.contract(contract, 'Contract `$contract` is not a contract', {
+        $contract: contract
+    });
+
+    //assert
+    if (!contract.hasOwnProperty('isProcessing')) {
+
+        return;
+    }
+
+    raise.call(me, message, vars);
+};
+
+/**
  * Verifies, that given fn is Class
  *
  * For example:

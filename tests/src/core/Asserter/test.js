@@ -234,6 +234,25 @@ module('xs.core.Asserter', function () {
         assert.contract(xs.Enum({}));
     });
 
+    test('processed', function () {
+        var me = this;
+        
+        var assert = new xs.core.Asserter(new xs.log.Logger('tests.core.Asserter'), Error);
+
+        //incorrect throws
+        throws(function () {
+            assert.processed(xs.Class(xs.noop));
+        });
+
+        //correct is silent
+        xs.Class(xs.noop, function (Class) {
+            assert.processed(Class);
+            me.done();
+        });
+
+        return false;
+    });
+
     test('class', function () {
         var assert = new xs.core.Asserter(new xs.log.Logger('tests.core.Asserter'), Error);
 
