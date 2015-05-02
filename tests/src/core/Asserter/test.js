@@ -220,7 +220,21 @@ module('xs.core.Asserter', function () {
         assert.empty({});
     });
 
-    test('Class', function () {
+    test('contract', function () {
+        var assert = new xs.core.Asserter(new xs.log.Logger('tests.core.Asserter'), Error);
+
+        //incorrect throws
+        throws(function () {
+            assert.contract(xs.noop);
+        });
+
+        //correct is silent
+        assert.contract(xs.Class(xs.noop));
+        assert.contract(xs.Interface(xs.noop));
+        assert.contract(xs.Enum({}));
+    });
+
+    test('class', function () {
         var assert = new xs.core.Asserter(new xs.log.Logger('tests.core.Asserter'), Error);
 
         //incorrect throws
@@ -232,7 +246,7 @@ module('xs.core.Asserter', function () {
         assert.class(xs.Class(xs.noop));
     });
 
-    test('Interface', function () {
+    test('interface', function () {
         var assert = new xs.core.Asserter(new xs.log.Logger('tests.core.Asserter'), Error);
 
         //incorrect throws

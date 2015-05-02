@@ -600,6 +600,37 @@ Asserter.prototype.empty = function (value, message, vars) {
 };
 
 /**
+ * Verifies, that given candidate is a contract
+ *
+ * For example:
+ *
+ *     //create asserter instance
+ *     var logger = new xs.log.Logger('xs');
+ *
+ *     //create asserter instance
+ *     var asserter = new xs.core.Asserter(logger, Error);
+ *
+ *     asserter.contract(xs.Class(xs.noop));
+ *
+ * @method Class
+ *
+ * @param {Function} contract given contract candidate
+ * @param {String} message error message
+ * @param {Object} [vars] error optional vars
+ */
+Asserter.prototype.contract = function (contract, message, vars) {
+    var me = this;
+
+    //assert
+    if (xs.isContract(contract)) {
+
+        return;
+    }
+
+    raise.call(me, message, vars);
+};
+
+/**
  * Verifies, that given fn is Class
  *
  * For example:
