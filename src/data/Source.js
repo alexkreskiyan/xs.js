@@ -34,6 +34,8 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
     Class.mixins.observable = 'xs.event.Observable';
 
+    Class.mixins.enumerable = 'xs.data.Enumerable';
+
     Class.abstract = true;
 
     Class.constant.model = null;
@@ -59,6 +61,9 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
         //define source bindings
         me.private.bindings = {};
+
+        //call enumerable constructor
+        self.mixins.enumerable.call(me, me.self.model);
 
         //call observable constructor
         self.mixins.observable.call(me, xs.noop);
@@ -223,6 +228,9 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
     Class.method.destroy = function () {
         var me = this;
+
+        //call Enumerable.destroy
+        self.mixins.enumerable.prototype.destroy.call(me);
 
         //call Observable.destroy
         self.mixins.observable.prototype.destroy.call(me);

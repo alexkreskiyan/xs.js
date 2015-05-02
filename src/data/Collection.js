@@ -37,11 +37,11 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
     Class.constructor = function (values, type) {
         var me = this;
 
-        //call observable constructor
-        self.mixins.observable.call(me, xs.noop);
-
         //call enumerable constructor
         self.mixins.enumerable.apply(me, arguments);
+
+        //call observable constructor
+        self.mixins.observable.call(me, xs.noop);
     };
 
     /**
