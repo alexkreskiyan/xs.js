@@ -96,8 +96,8 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
 
         //save type if given
         if (type) {
-            me.private.kind = getTypeKind(type);
-            me.private.type = type;
+            me.private.itemKind = getTypeKind(type);
+            me.private.itemType = type;
         }
 
         //verify values (if type given)
@@ -2695,8 +2695,8 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
     var verifySourceValues = function (values) {
         var me = this;
 
-        var type = me.private.type;
-        var kind = me.private.kind;
+        var type = me.private.itemType;
+        var kind = me.private.itemKind;
         var i;
         var length = values.length;
 
@@ -2756,8 +2756,8 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
     var isValid = function (value) {
         var me = this;
 
-        var type = me.private.type;
-        var kind = me.private.kind;
+        var type = me.private.itemType;
+        var kind = me.private.itemKind;
 
         //return true if not typed collection
         if (!type) {
@@ -2809,7 +2809,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
     var isClassInstance = function (value) {
         var me = this;
 
-        var type = me.private.type;
+        var type = me.private.itemType;
 
         self.assert.instance(value, type, 'isClassInstance - given value `$value` is not an instance of class `$Class`', {
             $value: value,
@@ -2822,7 +2822,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
     var isImplementation = function (value) {
         var me = this;
 
-        var type = me.private.type;
+        var type = me.private.itemType;
 
         //assert, that value is instance of some class
         self.assert.implements(value, type, 'isImplementation - given value `$value` is not an instance of class, that implements interface `$Interface`', {
@@ -2837,11 +2837,11 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
     };
 
     var isInstance = function (value) {
-        return value instanceof this.private.type;
+        return value instanceof this.private.itemType;
     };
 
     var isType = function (value) {
-        return value.constructor === this.private.type;
+        return value.constructor === this.private.itemType;
     };
 
     /**

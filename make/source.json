@@ -231,7 +231,8 @@
                     }
                 },
                 "Collection": {
-                    "contract": "class"
+                    "contract": "class",
+                    "test": false
                 },
                 "Enumerable": {
                     "contract": "class"

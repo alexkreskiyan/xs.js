@@ -46,7 +46,7 @@ module('xs.data.Enumerable', function () {
         //values are empty
         strictEqual(collection.private.items.length, 0);
         //type is assigned
-        strictEqual(collection.private.type, Function);
+        strictEqual(collection.private.itemType, Function);
 
         //otherwise - it's error
         throws(function () {
@@ -59,7 +59,7 @@ module('xs.data.Enumerable', function () {
         strictEqual(collection.private.items[ 0 ].key, 0);
         strictEqual(collection.private.items[ 0 ].value, 1);
         //type is assigned
-        strictEqual(collection.private.type, Number);
+        strictEqual(collection.private.itemType, Number);
 
         //incorrect initial value must fail
         //primitive
