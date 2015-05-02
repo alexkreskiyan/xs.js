@@ -353,6 +353,25 @@ xs.Type = (function () {
     };
 
     /**
+     * Returns whether given value is a contract
+     *
+     * For example:
+     *
+     *     console.log(xs.isContract(xs.class.Base)); //true
+     *     console.log(xs.isContract(xs.noop)); //false
+     *
+     * @method isContract
+     *
+     * @param {*} value verified value
+     *
+     * @return {Boolean} verification result
+     */
+    me.isContract = function (value) {
+
+        return ((typeof value === 'function') || this.isObject(value)) && (typeof value.contractor === 'function');
+    };
+
+    /**
      * Returns whether given value is a class
      *
      * For example:

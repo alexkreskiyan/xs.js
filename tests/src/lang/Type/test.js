@@ -1115,6 +1115,87 @@ module('xs.lang.Type', function () {
         });
     });
 
+    test('isContract', function () {
+        var me = this;
+        //init test cases
+        me.tests = [
+            {
+                data: null,
+                ok: false
+            },
+            {
+                data: xs.class.Base,
+                ok: true
+            },
+            {
+                data: xs.interface.Base,
+                ok: true
+            },
+            {
+                data: xs.Enum({}),
+                ok: true
+            },
+            {
+                data: true,
+                ok: false
+            },
+            {
+                data: new Date(),
+                ok: false
+            },
+            {
+                data: function () {
+                },
+                ok: false
+            },
+            {
+                data: {},
+                ok: false
+            },
+            {
+                data: {
+                    a: 1
+                },
+                ok: false
+            },
+            {
+                data: [],
+                ok: false
+            },
+            {
+                data: [ 1 ],
+                ok: false
+            },
+            {
+                data: 1,
+                ok: false
+            },
+            {
+                data: 0,
+                ok: false
+            },
+            {
+                data: '1',
+                ok: false
+            },
+            {
+                data: 'a',
+                ok: false
+            },
+            {
+                data: '',
+                ok: false
+            }
+        ];
+
+    }, function () {
+        var me = this;
+        //run test cases
+        me.tests.forEach(function (test) {
+            strictEqual(xs.isContract(test.data), test.ok);
+        });
+    });
+
     test('isClass', function () {
         var me = this;
         //init test cases
