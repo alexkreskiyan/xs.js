@@ -105,7 +105,7 @@ xs.class.preprocessors.add('processImplements', function (Class) {
         });
 
         //check that interface is ready
-        assert.not(Interface.isProcessing, '$Class: implemented interface `$Interface` is not processed yet. Move it to imports section, please', {
+        assert.processed(Interface, '$Class: implemented interface `$Interface` is not processed yet. Move it to imports section, please', {
             $Class: Class,
             $Interface: Interface
         });

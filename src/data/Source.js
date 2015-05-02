@@ -49,7 +49,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         });
 
         //assert, that model class is not processing
-        self.assert.not(me.self.model.isProcessing, 'constructor - model `$model` is being processed. Add it to imports, to be sure that it will be loaded', {
+        self.assert.processed(me.self.model, 'constructor - model `$model` is being processed. Add it to imports, to be sure that it will be loaded', {
             $model: me.self.model
         });
 

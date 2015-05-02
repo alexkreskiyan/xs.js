@@ -380,6 +380,12 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             $Attribute: Attribute
         });
 
+        //assert, that Attribute class is processed
+        assert.processed(Attribute, 'attribute `$name` class contract `$Attribute` is not processed', {
+            $name: name,
+            $Attribute: Attribute
+        });
+
         //assert, that Attribute implements xs.data.attribute.IAttribute
         assert.ok(Attribute.implements(xs.data.attribute.IAttribute), 'attribute `$name` class class `$Attribute` does not implement `$IAttribute` interface', {
             $name: name,
@@ -470,8 +476,8 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
             $Model: Model
         });
 
-        //assert, that Model is not processing
-        assert.not(Model.isProcessing, 'relation `$relation` model contract `$Model` is not ready yet. add it to imports', {
+        //assert, that Model is processed
+        assert.processed(Model, 'relation `$relation` model contract `$Model` is not processed', {
             $relation: relation,
             $Model: Model
         });

@@ -49,7 +49,7 @@ xs.interface.preprocessors.add('processExtends', function () {
     });
 
     //check that interface is ready
-    assert.not(Parent.isProcessing, '$Interface: parent interface `$Parent` is not processed yet. Move it to imports section, please', {
+    assert.processed(Parent, '$Interface: parent interface `$Parent` is not processed yet. Move it to imports section, please', {
         $Interface: Interface,
         $Parent: Parent
     });

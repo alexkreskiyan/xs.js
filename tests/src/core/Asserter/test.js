@@ -236,7 +236,7 @@ module('xs.core.Asserter', function () {
 
     test('processed', function () {
         var me = this;
-        
+
         var assert = new xs.core.Asserter(new xs.log.Logger('tests.core.Asserter'), Error);
 
         //incorrect throws

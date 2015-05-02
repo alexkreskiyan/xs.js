@@ -47,8 +47,18 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
             self.parent.call(me, URI);
         }
 
+        //assert, that Query is a class
+        self.assert.class(Query, 'constructor - given Query class `$Query` is not a class', {
+            $Query: Query
+        });
+
+        //assert, that Query is processed
+        self.assert.processed(Query, 'constructor - given Query class `$Query` is not processed. Add it to imports, if needed', {
+            $Query: Query
+        });
+
         //assert, that Query implements imports.IQuery
-        self.assert.ok(xs.isClass(Query) && Query.implements(imports.IQuery), 'constructor - given Query class `$Query` does not implement base query interface `$IQuery`', {
+        self.assert.ok(Query.implements(imports.IQuery), 'constructor - given Query class `$Query` does not implement base query interface `$IQuery`', {
             $Query: Query,
             $IQuery: imports.IQuery
         });
@@ -219,6 +229,10 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
             self.assert.implements(query, imports.IQuery, 'query - given query `$query` is not implementing `$IQuery`', {
                 $query: query,
                 $IQuery: imports.IQuery
+            });
+
+            self.assert.processed(query.self, 'query - given query class `$Query` is not processed', {
+                $Query: query.self
             });
 
             //assign query

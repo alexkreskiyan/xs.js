@@ -119,7 +119,7 @@ xs.class.preprocessors.add('processMixins', function (Class, descriptor) {
         });
 
         //check that mixin is ready
-        assert.not(Mixin.isProcessing, '$Class: mixed class `$Mixin` is not processed yet. Move it to imports section, please', {
+        assert.processed(Mixin, '$Class: mixed class `$Mixin` is not processed yet. Move it to imports section, please', {
             $Class: Class,
             $Mixin: Mixin
         });

@@ -68,7 +68,7 @@ xs.class.preprocessors.add('processExtends', function () {
     });
 
     //check that class is ready
-    assert.not(Parent.isProcessing, '$Class: parent class `$Parent` is not processed yet. Move it to imports section, please', {
+    assert.processed(Parent, '$Class: parent class `$Parent` is not processed yet. Move it to imports section, please', {
         $Class: Class,
         $Parent: Parent
     });
