@@ -44,7 +44,7 @@ module('xs.data.Source', function () {
 
             Class.extends = 'xs.data.Source';
 
-            Class.constant.model = xs.util.Collection;
+            Class.constant.model = xs.data.Collection;
 
         }, me.done);
 

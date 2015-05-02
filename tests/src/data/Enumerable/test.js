@@ -570,14 +570,14 @@ module('xs.data.Enumerable', function () {
         };
 
         //add:before - add only values, that are greater than five
-        collection.events.on(xs.util.collection.event.AddBefore, function (event) {
+        collection.events.on(xs.data.enumerable.event.AddBefore, function (event) {
             log.addBefore.push(event.value + ':' + event.key + ':' + event.index);
 
             return event.value > 5 && event.value < 10;
         });
 
         //add - post-processing added values
-        collection.events.on(xs.util.collection.event.Add, function (event) {
+        collection.events.on(xs.data.enumerable.event.Add, function (event) {
             log.add.push(event.value + ':' + event.key + ':' + event.index);
         });
 
@@ -681,14 +681,14 @@ module('xs.data.Enumerable', function () {
         };
 
         //add:before - insert only values, that are greater than five
-        collection.events.on(xs.util.collection.event.AddBefore, function (event) {
+        collection.events.on(xs.data.enumerable.event.AddBefore, function (event) {
             log.addBefore.push(event.value + ':' + event.key + ':' + event.index);
 
             return event.value > 5 && event.value < 10;
         });
 
         //add - post-processing inserted values
-        collection.events.on(xs.util.collection.event.Add, function (event) {
+        collection.events.on(xs.data.enumerable.event.Add, function (event) {
             log.add.push(event.value + ':' + event.key + ':' + event.index);
         });
 
@@ -793,14 +793,14 @@ module('xs.data.Enumerable', function () {
         };
 
         //set:before - set only values, that are greater than five
-        collection.events.on(xs.util.collection.event.SetBefore, function (event) {
+        collection.events.on(xs.data.enumerable.event.SetBefore, function (event) {
             log.setBefore.push(event.old + ':' + event.new + ':' + event.key + ':' + event.index);
 
             return event.new > 5 && event.new < 10;
         });
 
         //set - post-processing of set values
-        collection.events.on(xs.util.collection.event.Set, function (event) {
+        collection.events.on(xs.data.enumerable.event.Set, function (event) {
             log.set.push(event.old + ':' + event.new + ':' + event.key + ':' + event.index);
         });
 
@@ -900,21 +900,21 @@ module('xs.data.Enumerable', function () {
         };
 
         //remove:before - remove only values, that are greater than five
-        collection.events.on(xs.util.collection.event.RemoveBefore, function (event) {
+        collection.events.on(xs.data.enumerable.event.RemoveBefore, function (event) {
             log.removeBefore.push(event.value + ':' + event.key + ':' + event.index);
 
             return event.value > 5 && event.value < 10;
         });
 
         //remove - post-processing removed values
-        collection.events.on(xs.util.collection.event.Remove, function (event) {
+        collection.events.on(xs.data.enumerable.event.Remove, function (event) {
             log.remove.push(event.value + ':' + event.key + ':' + event.index);
 
             str += event.value + event.key + event.index + ':';
         });
 
         //clear - when all items removed
-        collection.events.on(xs.util.collection.event.Clear, function () {
+        collection.events.on(xs.data.enumerable.event.Clear, function () {
             str += '!!!';
         });
 
@@ -1046,21 +1046,21 @@ module('xs.data.Enumerable', function () {
         };
 
         //remove:before - remove only values, that are greater than five
-        collection.events.on(xs.util.collection.event.RemoveBefore, function (event) {
+        collection.events.on(xs.data.enumerable.event.RemoveBefore, function (event) {
             log.removeBefore.push(event.value + ':' + event.key + ':' + event.index);
 
             return event.value > 5 && event.value < 10;
         });
 
         //remove - post-processing removed values
-        collection.events.on(xs.util.collection.event.Remove, function (event) {
+        collection.events.on(xs.data.enumerable.event.Remove, function (event) {
             log.remove.push(event.value + ':' + event.key + ':' + event.index);
 
             str += event.value + event.key + event.index + ':';
         });
 
         //clear - when all items removed
-        collection.events.on(xs.util.collection.event.Clear, function () {
+        collection.events.on(xs.data.enumerable.event.Clear, function () {
             str += '!!!';
         });
 
@@ -1072,8 +1072,8 @@ module('xs.data.Enumerable', function () {
         strictEqual(JSON.stringify(collection.toSource()), '{"a":4,"e":8,"g":10}');
 
         //off event.RemoveBefore and event.Remove
-        collection.events.off(xs.util.collection.event.RemoveBefore);
-        collection.events.off(xs.util.collection.event.Remove);
+        collection.events.off(xs.data.enumerable.event.RemoveBefore);
+        collection.events.off(xs.data.enumerable.event.Remove);
         collection.remove();
 
         strictEqual(str, '6b1:6c1:8d1:8f2:!!!');
@@ -1193,21 +1193,21 @@ module('xs.data.Enumerable', function () {
         };
 
         //remove:before - remove only values, that are greater than five
-        collection.events.on(xs.util.collection.event.RemoveBefore, function (event) {
+        collection.events.on(xs.data.enumerable.event.RemoveBefore, function (event) {
             log.removeBefore.push(event.value + ':' + event.key + ':' + event.index);
 
             return event.value > 5 && event.value < 10;
         });
 
         //remove - post-processing removed values
-        collection.events.on(xs.util.collection.event.Remove, function (event) {
+        collection.events.on(xs.data.enumerable.event.Remove, function (event) {
             log.remove.push(event.value + ':' + event.key + ':' + event.index);
 
             str += event.value + event.key + event.index + ':';
         });
 
         //clear - when all items removed
-        collection.events.on(xs.util.collection.event.Clear, function () {
+        collection.events.on(xs.data.enumerable.event.Clear, function () {
             str += '!!!';
         });
 
@@ -1229,8 +1229,8 @@ module('xs.data.Enumerable', function () {
         strictEqual(JSON.stringify(collection.toSource()), '{"a":4,"e":8,"g":10}');
 
         //off event.RemoveBefore and event.Remove
-        collection.events.off(xs.util.collection.event.RemoveBefore);
-        collection.events.off(xs.util.collection.event.Remove);
+        collection.events.off(xs.data.enumerable.event.RemoveBefore);
+        collection.events.off(xs.data.enumerable.event.Remove);
         collection.removeBy(function () {
             return true;
         }, xs.data.Collection.All);

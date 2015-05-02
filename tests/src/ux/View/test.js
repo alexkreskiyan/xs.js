@@ -76,11 +76,11 @@ module('xs.ux.View', function () {
         var me = this;
         var view;
 
-        //view has 2 positions. positions are xs.util.Collection instances
+        //view has 2 positions. positions are xs.data.Collection instances
         view = new me.Class();
         strictEqual(JSON.stringify(Object.keys(view.private.positions)), '["title","body"]');
-        strictEqual(view.title instanceof xs.util.Collection, true);
-        strictEqual(view.body instanceof xs.util.Collection, true);
+        strictEqual(view.title instanceof xs.data.Collection, true);
+        strictEqual(view.body instanceof xs.data.Collection, true);
         view.destroy();
     });
 
