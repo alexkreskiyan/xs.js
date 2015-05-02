@@ -1,19 +1,19 @@
 /**
- * xs.util.Collection is framework class, that is widely used for internal classes' collections
+ * xs.data.Enumerable is framework class, that is widely used for internal classes' collections
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.util.Collection
+ * @class xs.data.Enumerable
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Collection', function (self, imports) {
+xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.util';
+    Class.namespace = 'xs.data';
 
     Class.imports = [
         {
@@ -36,13 +36,16 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
         },
         {
             'event.Clear': 'ns.collection.event.Clear'
+        },
+        {
+            Observable: 'xs.event.Observable'
         }
     ];
 
-    Class.mixins.observable = 'xs.event.Observable';
+    Class.abstract = true;
 
     /**
-     * xs.util.Collection constructor
+     * xs.data.Collection constructor
      *
      * @constructor
      *
@@ -59,11 +62,14 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
     Class.constructor = function (values, type) {
         var me = this;
 
+        //assert, that mixing class mixes Observable
+        self.assert.ok(me.self.mixins(imports.Observable), 'constructor - mixin`$Enumerable` must be used with mixin `$Observable', {
+            $Enumerable: self,
+            $Observable: imports.Observable
+        });
+
         //init items array
         me.private.items = [];
-
-        //call observable constructor
-        self.mixins.observable.call(me, xs.noop);
 
         //return if no arguments
         if (!arguments.length) {
@@ -184,7 +190,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * For example:
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         2,
      *         3
@@ -192,7 +198,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     console.log(collection.keys()); //[0, 1, 2]
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         b: 2,
      *         c: 3
@@ -222,7 +228,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * For example:
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         2,
      *         3
@@ -230,7 +236,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     console.log(collection.values()); //[1, 2, 3] - returns copy of source array
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         b: 2,
      *         c: 3
@@ -260,7 +266,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * For example:
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         2,
      *         3
@@ -271,7 +277,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     console.log(collection.hasKey(1)); //true - key exists
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         b: 2,
      *         c: 3,
@@ -314,7 +320,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     var value = {};
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         2,
      *         value
@@ -325,7 +331,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     console.log(collection.has(value)); //true - value exists
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         c: 2,
      *         b: value
@@ -358,7 +364,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     var value = {};
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         2,
      *         1,
@@ -369,10 +375,10 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     console.log(collection.keyOf(0)); //undefined - no value
      *     console.log(collection.keyOf({})); //undefined - another object in array
      *     console.log(collection.keyOf(1)); //0
-     *     console.log(collection.keyOf(value, xs.util.Collection.Reverse)); //5
+     *     console.log(collection.keyOf(value, xs.data.Collection.Reverse)); //5
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         b: 2,
      *         c: 1,
@@ -383,7 +389,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     console.log(collection.keyOf(0)); //undefined - no value
      *     console.log(collection.keyOf({})); //undefined - another object in array
      *     console.log(collection.keyOf(1)); //'a'
-     *     console.log(collection.keyOf(value, xs.util.Collection.Reverse)); //'e'
+     *     console.log(collection.keyOf(value, xs.data.Collection.Reverse)); //'e'
      *
      * @method keyOf
      *
@@ -427,7 +433,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     var value = {};
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         2,
      *         1,
@@ -439,7 +445,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     console.log(collection.at(3)); //value
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         b: 2,
      *         c: 1,
@@ -508,7 +514,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * For example:
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         {
      *             x: 1,
      *             y: 2
@@ -531,7 +537,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     // {x: 1, y: 2}, reference to collection[0] respectively
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: {
      *             x: 1,
      *             y: 2
@@ -572,7 +578,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * For example:
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         {
      *             x: 1,
      *             y: 2
@@ -595,7 +601,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     // {x: 1, y: 1}, reference to collection[0] respectively
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: {
      *             x: 1,
      *             y: 2
@@ -636,14 +642,14 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * For example:
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([]);
+     *     var collection = new xs.data.Collection([]);
      *     collection.add({x: 1});
      *     console.log(collection.last());
      *     //outputs:
      *     // {x: 1}
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({});
+     *     var collection = new xs.data.Collection({});
      *     collection.add('a', {x: 1});
      *     console.log(collection.last());
      *     //outputs:
@@ -713,7 +719,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * For example:
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([]);
+     *     var collection = new xs.data.Collection([]);
      *     collection.insert(0, {x: 2});
      *     collection.insert(0, {x: 1});
      *     console.log(collection.keys());
@@ -730,7 +736,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //]
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({});
+     *     var collection = new xs.data.Collection({});
      *     collection.insert(0, 'b', {x: 2});
      *     collection.insert(0, 'a', {x: 1});
      *     console.log(collection.keys());
@@ -837,7 +843,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * For example:
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([1,2]);
+     *     var collection = new xs.data.Collection([1,2]);
      *     collection.set(1, {x: 2});
      *     collection.set(0, {x: 1});
      *     console.log(collection.keys());
@@ -854,7 +860,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //]
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({a: 2, b: 1});
+     *     var collection = new xs.data.Collection({a: 2, b: 1});
      *     collection.set('b', {x: 2});
      *     collection.set('a', {x: 1});
      *     console.log(collection.keys());
@@ -956,7 +962,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *         x: 1
      *     };
      *
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         2,
      *         value,
@@ -969,7 +975,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //    value
      *     //]
      *
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         c: 2,
      *         b: value,
@@ -1072,7 +1078,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *         x: 1
      *     };
      *
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         value,
      *         2,
@@ -1094,7 +1100,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //    1,
      *     //    value
      *     //]
-     *     collection.remove(value, xs.util.Collection.Reverse);
+     *     collection.remove(value, xs.data.Collection.Reverse);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1105,7 +1111,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //    value
      *     //    1
      *     //]
-     *     collection.remove(value, xs.util.Collection.All);
+     *     collection.remove(value, xs.data.Collection.All);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1115,7 +1121,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //    1
      *     //]
      *
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         b: value,
      *         c: 2,
@@ -1137,7 +1143,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //    1,
      *     //    value
      *     //]
-     *     collection.remove(value, xs.util.Collection.Reverse);
+     *     collection.remove(value, xs.data.Collection.Reverse);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1148,7 +1154,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //    value
      *     //    1
      *     //]
-     *     collection.remove(value, xs.util.Collection.All);
+     *     collection.remove(value, xs.data.Collection.All);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1325,7 +1331,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *         x: 1
      *     };
      *
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         value,
      *         2,
@@ -1351,7 +1357,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //]
      *     collection.removeBy(function(val){
      *         return val === value;
-     *     }, xs.util.Collection.Reverse);
+     *     }, xs.data.Collection.Reverse);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1364,7 +1370,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //]
      *     collection.removeBy(function(val){
      *         return val === value;
-     *     }, xs.util.Collection.All);
+     *     }, xs.data.Collection.All);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1374,7 +1380,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //    1
      *     //]
      *
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         b: value,
      *         c: 2,
@@ -1400,7 +1406,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //]
      *     collection.removeBy(function(val){
      *         return val === value;
-     *     }, xs.util.Collection.Reverse);
+     *     }, xs.data.Collection.Reverse);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1413,7 +1419,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //]
      *     collection.removeBy(function(val){
      *         return val === value;
-     *     }, xs.util.Collection.All);
+     *     }, xs.data.Collection.All);
      *     console.log(collection.values());
      *     //outputs:
      *     //[
@@ -1592,7 +1598,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     };
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         2,
      *         {}
@@ -1606,14 +1612,14 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     // {x:1}, {}, 2, collection
      *     collection.each(function(value, key, collection) {
      *         console.log(this, value, key, collection);
-     *     }, scope, xs.util.Collection.Reverse);
+     *     }, scope, xs.data.Collection.Reverse);
      *     //outputs:
      *     // {x:1}, {}, 2, collection
      *     // {x:1}, 2, 1, collection
      *     // {x:1}, 1, 0, collection
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         c: 2,
      *         b: {}
@@ -1627,7 +1633,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     // {x:1}, {}, b, collection
      *     collection.each(function(value, key, collection) {
      *         console.log(this, value, key, collection);
-     *     }, scope, xs.util.Collection.Reverse);
+     *     }, scope, xs.data.Collection.Reverse);
      *     //outputs:
      *     // {x:1}, {}, b, collection
      *     // {x:1}, 2, c, collection
@@ -1705,7 +1711,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     };
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         {x: 2},
      *         {x: 2},
      *         {x: 0}
@@ -1717,12 +1723,12 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     // {x: 2}, reference to collection[0], first value, passed fn function
      *     console.log(collection.find(function(value, key) {
      *         return this.sum(key, value.x) === 2;
-     *     }, scope, xs.util.Collection.Reverse));
+     *     }, scope, xs.data.Collection.Reverse));
      *     //outputs:
      *     // {x: 0}, reference to collection[2], first value, passed fn function
      *     console.log(collection.find(function(value, key) {
      *         return this.sum(key, value.x) >= 2;
-     *     }, scope, xs.util.Collection.All));
+     *     }, scope, xs.data.Collection.All));
      *     //outputs:
      *     //[
      *     //    {x: 2},
@@ -1731,7 +1737,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //]
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         aa: {x: 1},
      *         c: {x: 2},
      *         ab: {x: 3}
@@ -1743,12 +1749,12 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     // {x: 2}, reference to collection[0], first value, passed fn function
      *     console.log(collection.find(function(value, key) {
      *         return this.first(key) === 'a';
-     *     }, scope, xs.util.Collection.Reverse));
+     *     }, scope, xs.data.Collection.Reverse));
      *     //outputs:
      *     // {x: 0}, reference to collection[2], first value, passed fn function
      *     console.log(collection.find(function(value, key) {
      *         return this.first(key) === 'a';
-     *     }, scope, xs.util.Collection.All));
+     *     }, scope, xs.data.Collection.All));
      *     //outputs:
      *     //{
      *     //    aa: {x: 2},
@@ -1762,7 +1768,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * - All - to find all matches
      * @param {Object} [scope] optional scope
      *
-     * @return {*|xs.util.Collection} found value, undefined if nothing found, or xs.util.Collection with results if All flag was given
+     * @return {*|xs.data.Collection} found value, undefined if nothing found, or xs.data.Collection with results if All flag was given
      */
     Class.method.find = function (fn, flags, scope) {
         var me = this;
@@ -1856,7 +1862,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     };
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         2,
      *         4
@@ -1868,7 +1874,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     // [ 2, 5, 10 ]
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         c: 2,
      *         b: 4
@@ -1933,7 +1939,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     };
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         2,
      *         4
@@ -1954,17 +1960,17 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //reverse
      *     console.log(collection.reduce(function(memo, value, key) {
      *         return memo + key + this.twice(value);
-     *     }, scope, xs.util.Collection.Reverse, 5));
+     *     }, scope, xs.data.Collection.Reverse, 5));
      *     //outputs:
      *     // 22, evaluated as 5 + (2 + 4 * 2) + (1 + 2 * 2) + (0 + 1 * 2)
      *     console.log(collection.reduce(function(memo, value, key) {
      *         return memo + key + 2 * value;
-     *     }, scope, xs.util.Collection.Reverse));
+     *     }, scope, xs.data.Collection.Reverse));
      *     //outputs:
      *     // 11, evaluated as 4 + (1 + 2 * 2) + (0 + 1 * 2)
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         c: 2,
      *         b: 4
@@ -1985,12 +1991,12 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //direct
      *     console.log(collection.reduce(function(memo, value, key) {
      *         return memo + key + this.twice(value);
-     *     }, scope, xs.util.Collection.Reverse, 5));
+     *     }, scope, xs.data.Collection.Reverse, 5));
      *     //outputs:
      *     // '5b8c4a2', evaluated as 5 + ('b' + 2 * 4) + ('c' + 2 * 2) + ('a' + 1 * 2)
      *     console.log(collection.reduce(function(memo, value, key) {
      *         return memo + key + 2 * value;
-     *     }, scope, xs.util.Collection.Reverse));
+     *     }, scope, xs.data.Collection.Reverse));
      *     //outputs:
      *     // '4c4a2', evaluated as 4 + ('c' + 2 * 2) + ('a' + 1 * 2)
      *
@@ -2090,7 +2096,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *        },
      *     }
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         1,
      *         2,
@@ -2113,7 +2119,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     // true
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         c: 1,
      *         b: 2,
@@ -2231,7 +2237,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *        },
      *     }
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         1,
      *         2,
@@ -2249,7 +2255,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     // true
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         c: 1,
      *         b: 2,
@@ -2295,7 +2301,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *        },
      *     }
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         1,
      *         2,
@@ -2313,7 +2319,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     // true
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         c: 1,
      *         b: 2,
@@ -2354,7 +2360,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * For example:
      *
      *     //for Array
-     *     console.log(new xs.util.Collection([
+     *     console.log(new xs.data.Collection([
      *         1,
      *         2,
      *         3,
@@ -2371,7 +2377,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //]
      *
      *     //for Object
-     *     var pick = new xs.util.Collection({
+     *     var pick = new xs.data.Collection({
      *         a: 1,
      *         c: 2,
      *         d: 3,
@@ -2400,7 +2406,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *
      * @param {String[]|Number[]} keys list with keys of picked items
      *
-     * @return {xs.util.Collection} collection of picked items
+     * @return {xs.data.Collection} collection of picked items
      */
     Class.method.pick = function (keys) {
         var me = this;
@@ -2484,7 +2490,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * For example:
      *
      *     //for Array
-     *     console.log(new xs.util.Collection([
+     *     console.log(new xs.data.Collection([
      *         1,
      *         2,
      *         3,
@@ -2499,7 +2505,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     //]
      *
      *     //for Object
-     *     var omit = new xs.util.Collection({
+     *     var omit = new xs.data.Collection({
      *         a: 1,
      *         c: 2,
      *         d: 3,
@@ -2524,7 +2530,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *
      * @param {String[]|Number[]} keys list with keys of omitted items
      *
-     * @return {xs.util.Collection} collection of without omitted items
+     * @return {xs.data.Collection} collection of without omitted items
      */
     Class.method.omit = function (keys) {
         var me = this;
@@ -2617,7 +2623,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      * For example:
      *
      *     //for Array
-     *     var collection = new xs.util.Collection([
+     *     var collection = new xs.data.Collection([
      *         1,
      *         2,
      *         3
@@ -2625,7 +2631,7 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
      *     console.log(collection.toSource()); //{0: 1, 1: 2, 2: 3}
      *
      *     //for Object
-     *     var collection = new xs.util.Collection({
+     *     var collection = new xs.data.Collection({
      *         a: 1,
      *         b: 2,
      *         c: 3
@@ -2664,12 +2670,6 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
 
         //assert that collection is clear
         self.assert.empty(me.private.items, 'destroy - some remove:before handlers blocked removing items from collection');
-
-        //call Observable.destroy
-        self.mixins.observable.prototype.destroy.call(me);
-
-        //call parent destroy
-        self.parent.prototype.destroy.call(me);
     };
 
     var getTypeKind = function (type) {

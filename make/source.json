@@ -135,6 +135,38 @@
                         "contract": "class"
                     }
                 },
+                "enumerable": {
+                    "event": {
+                        "AddBefore": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Add": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "SetBefore": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Set": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "RemoveBefore": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Remove": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Clear": {
+                            "contract": "class",
+                            "test": false
+                        }
+                    }
+                },
                 "operation": {
                     "model": {
                         "IRead": {
@@ -197,6 +229,12 @@
                         "contract": "class",
                         "test": false
                     }
+                },
+                "Collection": {
+                    "contract": "class"
+                },
+                "Enumerable": {
+                    "contract": "class"
                 },
                 "Model": {
                     "contract": "class"
@@ -297,43 +335,6 @@
                     "test": false
                 },
                 "WebSocket": {
-                    "contract": "class"
-                }
-            },
-            "util": {
-                "collection": {
-                    "event": {
-                        "AddBefore": {
-                            "contract": "class",
-                            "test": false
-                        },
-                        "Add": {
-                            "contract": "class",
-                            "test": false
-                        },
-                        "SetBefore": {
-                            "contract": "class",
-                            "test": false
-                        },
-                        "Set": {
-                            "contract": "class",
-                            "test": false
-                        },
-                        "RemoveBefore": {
-                            "contract": "class",
-                            "test": false
-                        },
-                        "Remove": {
-                            "contract": "class",
-                            "test": false
-                        },
-                        "Clear": {
-                            "contract": "class",
-                            "test": false
-                        }
-                    }
-                },
-                "Collection": {
                     "contract": "class"
                 }
             },
