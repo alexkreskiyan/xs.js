@@ -19,126 +19,87 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
 
     Class.imports = [
         {
-            ISourceOperation: 'ns.operation.ISourceOperation'
-        },
-        {
-            OperationEvent: 'ns.operation.Event'
-        },
-        {
-            Model: 'ns.Model'
-        },
-        {
-            Proxy: 'ns.Proxy'
+            Enumerable: 'ns.Enumerable'
         }
     ];
 
     Class.mixins.observable = 'xs.event.Observable';
 
-    Class.abstract = true;
+    Class.mixins.enumerable = 'xs.data.Enumerable';
 
-    Class.constant.model = null;
-
-    Class.constructor = function (config) {
+    Class.constructor = function (source) {
         var me = this;
 
-        //assert, that model is a class
-        self.assert.class(me.self.model, 'constructor - model `$model` is not a class', {
-            $model: me.self.model
+        //assert, that source is iterable
+        self.assert.iterable(source, 'constructor - given `$source` is not an iterable', {
+            $source: source
         });
 
-        //assert, that model class is not processing
-        self.assert.processed(me.self.model, 'constructor - model `$model` is not processed. Add it to imports, to be sure that it will be loaded', {
-            $model: me.self.model
-        });
+        //call enumerable constructor
+        self.mixins.enumerable.call(me);
 
-        //assert, that model is a xs.data.Model
-        self.assert.ok(me.self.model.inherits(imports.Model), 'constructor - model `$model` is not a `$Model` ancestor', {
-            $model: me.self.model,
-            $Model: imports.Model
-        });
-
-        //define source bindings
-        me.private.bindings = {};
+        setSource.call(me, source);
 
         //call observable constructor
         self.mixins.observable.call(me, xs.noop);
-
-        if (!arguments.length) {
-            return;
-        }
-
-        //assert, that config is an object
-        self.assert.object(config, 'constructor - given config `$config` is not an object', {
-            $config: config
-        });
-
-        //handle proxy, if given
-        if (config.hasOwnProperty('proxy')) {
-            me.proxy = config.proxy;
-        }
-
-        //handle bindings, if given
-        if (config.hasOwnProperty('bind')) {
-
-            //assert, that config is an object
-            self.assert.object(config.bind, 'constructor - given config.bind `$bind` is not an object', {
-                $bind: config.bind
-            });
-
-            (new xs.core.Collection(config.bind)).each(function (source, relation) {
-                me.bind(relation, source);
-            });
-        }
     };
 
-    Class.property.proxy = {
-        set: function (proxy) {
-
-            //assert, that given instance of imports.Proxy
-            self.assert.ok(proxy instanceof imports.Proxy, 'proxy:set - given proxy candidate `$proxy` is not a proxy instance', {
-                $proxy: proxy
-            });
-
-            //verify, that proxy implements all operations, implemented by model
-            self.assert.ok(this.self.descriptor.implements.all(function (Interface) {
-
-                //return true if Interface is not a ISourceOperation child, or it is and proxy implements it too
-                return !Interface.inherits(imports.ISourceOperation) || proxy.self.implements(Interface);
-            }), 'proxy:set - given proxy class `$Proxy` implements model operations `$OperationsProxy`, that does not cover required model operations `$OperationsModel`', {
-                $Proxy: proxy.self,
-                $OperationsProxy: proxy.self.descriptor.implements.find(function (Interface) {
-                    return Interface.inherits(imports.ISourceOperation);
-                }, xs.core.Collection.All).values(),
-                $OperationsModel: this.self.descriptor.implements.find(function (Interface) {
-                    return Interface.inherits(imports.ISourceOperation);
-                }, xs.core.Collection.All).values()
-            });
-
-            this.private.proxy = proxy;
-        }
+    Class.property.isExecuted = {
+        set: xs.noop
     };
 
-    Class.method.isBound = function (relation) {
-        var me = this;
+    Class.method.innerJoin = function (source, condition) {
+    };
 
-        //assert, that relation is valid
-        self.assert.ok(validateRelation.call(me, me.self.model.descriptor.relations, relation), 'bind - relation `$relation` validation failed', {
-            $relation: relation
-        });
+    Class.method.outerJoin = function (source, condition, emptyValue) {
+    };
 
-        return me.private.bindings.hasOwnProperty(relation);
+    Class.method.groupJoin = function (source, condition, alias) {
+    };
+
+    Class.method.where = function (selector) {
+    };
+
+    Class.method.sort = function (sorter) {
+    };
+
+    Class.method.group = function (grouper) {
+    };
+
+    Class.method.select = function (selector) {
+    };
+
+    Class.method.execute = function () {
     };
 
     Class.method.destroy = function () {
         var me = this;
 
+        //call Enumerable.destroy
+        self.mixins.enumerable.prototype.destroy.call(me);
+
         //call Observable.destroy
         self.mixins.observable.prototype.destroy.call(me);
-
-        //unbind
-        me.unbind();
 
         //call parent destroy
         self.parent.prototype.destroy.call(me);
     };
+
+    var setSource = function (source) {
+        var me = this;
+
+        if (xs.isInstance(source) && source.self.mixins(imports.Enumerable)) {
+
+            me.private.source = xs.lazy(function () {
+                return source;
+            });
+        } else {
+
+            me.private.source = xs.lazy(function () {
+                return new xs.core.Collection(source);
+            });
+        }
+
+    };
+
 });
