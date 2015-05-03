@@ -783,7 +783,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         assert.ok(positions.all(function (position) {
 
             //assert, that position is a short name
-            assert.ok(xs.ContractsManager.isShortName(position), 'processPositions - given position `$position` is not a valid short name', {
+            assert.shortName(position, 'processPositions - given position `$position` is not a valid short name', {
                 $position: position
             });
 

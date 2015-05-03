@@ -166,7 +166,7 @@ xs.Loader = (function () {
         //process loaded and missing classes
         classes.each(function (name) {
             //assert, that name is correct
-            assert.ok(xs.ContractsManager.isName(name), 'getLoadList - given loaded class name `$name` has incorrect format', {
+            assert.fullName(name, 'getLoadList - given loaded class name `$name` has incorrect format', {
                 $name: name
             });
 
@@ -345,7 +345,7 @@ xs.Loader = (function () {
         me.has = function (alias) {
 
             //assert that alias is correct name
-            assert.ok(xs.ContractsManager.isName(alias), 'paths::has - given alias `$alias` is not correct', {
+            assert.fullName(alias, 'paths::has - given alias `$alias` is not correct', {
                 $alias: alias
             });
 
@@ -430,7 +430,7 @@ xs.Loader = (function () {
         me.resolve = function (name) {
 
             //assert that name is correct
-            assert.ok(xs.ContractsManager.isName(name), 'paths::resolve - given class name `$name` is not correct', {
+            assert.fullName(name, 'paths::resolve - given class name `$name` is not correct', {
                 $name: name
             });
 

@@ -116,7 +116,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         });
 
         //assert, that alias is a shortName
-        self.assert.ok(xs.ContractsManager.isShortName(alias), 'groupJoin - given alias `$alias` is not valid', {
+        self.assert.shortName(alias, 'groupJoin - given alias `$alias` is not valid', {
             $alias: alias
         });
 

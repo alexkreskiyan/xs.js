@@ -345,7 +345,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
     function processAttribute(Class, name, config) {
 
         //assert, that name is valid
-        assert.ok(xs.ContractsManager.isShortName(name), 'given attribute name `$name` is incorrect', {
+        assert.shortName(name, 'given attribute name `$name` is incorrect', {
             $name: name
         });
 
@@ -439,7 +439,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
     function handleRelation(Class, relation, config) {
 
         //assert, that name is valid
-        assert.ok(xs.ContractsManager.isShortName(relation), 'given relation name `$relation` is incorrect', {
+        assert.shortName(relation, 'given relation name `$relation` is incorrect', {
             $relation: relation
         });
 

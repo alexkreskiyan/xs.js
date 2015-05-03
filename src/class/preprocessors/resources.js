@@ -36,7 +36,7 @@ xs.class.preprocessors.add('resources', function (Class, descriptor) {
     //assert, that all resources are identified with a valid short name and are resources
     assert.ok(resources.all(function (resource, name) {
 
-        assert.ok(xs.ContractsManager.isShortName(name), '$Class: given resource name `$name` is not a valid short name', {
+        assert.shortName(name, '$Class: given resource name `$name` is not a valid short name', {
             $Class: Class,
             $name: name
         });

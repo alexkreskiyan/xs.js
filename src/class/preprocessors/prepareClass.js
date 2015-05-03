@@ -52,7 +52,7 @@ function processImports(Class, descriptor) {
 
         if (xs.isString(imported)) {
             //verify imported name
-            assert.ok(xs.ContractsManager.isName(imported), '$Class: given imported name `$name` is not correct', {
+            assert.fullName(imported, '$Class: given imported name `$name` is not correct', {
                 $Class: Class,
                 $name: imported
             });
@@ -65,13 +65,13 @@ function processImports(Class, descriptor) {
         var name = imported[ alias ];
 
         //verify imported name
-        assert.ok(xs.ContractsManager.isName(name), '$Class: given imported name `$name` is not correct', {
+        assert.fullName(name, '$Class: given imported name `$name` is not correct', {
             $Class: Class,
             $name: name
         });
 
         //verify imported alias
-        assert.ok(xs.ContractsManager.isName(alias), '$Class: given imported alias `$alias` is not correct', {
+        assert.fullName(alias, '$Class: given imported alias `$alias` is not correct', {
             $Class: Class,
             $alias: alias
         });
@@ -83,16 +83,19 @@ function processExtends(Class, descriptor) {
     var extended = descriptor.extends;
     log.trace(Class + '. Extended:' + extended);
 
+    if (!xs.isDefined(extended)) {
+
+        return;
+    }
+
     //assert that either extended is not defined or is defined as non-empty string
-    assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '$Class: given extended `$extended` is incorrect', {
+    assert.fullName(extended, '$Class: given extended `$extended` is incorrect', {
         $Class: Class,
         $extended: extended
     });
 
     //if extended is given - add it to imports
-    if (extended) {
-        descriptor.imports.add(extended);
-    }
+    descriptor.imports.add(extended);
 }
 
 function processMixins(Class, descriptor) {
@@ -115,13 +118,13 @@ function processMixins(Class, descriptor) {
     });
     mixins.each(function (name, alias) {
         //verify mixed class name
-        assert.ok(xs.ContractsManager.isName(name), '$Class: given mixed class name `$name` is not a string', {
+        assert.fullName(name, '$Class: given mixed class name `$name` is not a string', {
             $Class: Class,
             $name: name
         });
 
         //verify mixed class alias
-        assert.ok(xs.ContractsManager.isShortName(alias), '$Class: given mixed class alias `$alias` is not correct', {
+        assert.shortName(alias, '$Class: given mixed class alias `$alias` is not correct', {
             $Class: Class,
             $alias: alias
         });
@@ -150,7 +153,7 @@ function processImplements(Class, descriptor) {
     });
     interfaces.each(function (name) {
         //verify implemented interface name
-        assert.ok(xs.ContractsManager.isName(name), '$Class: given implemented interface name `$name` is incorrect', {
+        assert.fullName(name, '$Class: given implemented interface name `$name` is incorrect', {
             $Class: Class,
             $name: name
         });

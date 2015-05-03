@@ -70,7 +70,7 @@ var ReadyManager = (function () {
         waiting = waiting.find(function (name) {
 
             //assert, that name is correct
-            assert.ok(xs.ContractsManager.isName(name), 'Given name `$name` is not a valid contract name', {
+            assert.fullName(name, 'Given name `$name` is not a valid contract name', {
                 $name: name
             });
 

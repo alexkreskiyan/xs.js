@@ -30,16 +30,19 @@ xs.interface.preprocessors.add('prepareInterface', function () {
         extended: extended
     });
 
+    if (!extended) {
+
+        return;
+    }
+
     //assert that either extended is not defined or is defined as non-empty string
-    assert.ok(!xs.isDefined(extended) || (xs.ContractsManager.isName(extended)), '$Interface: given extended `$extended` is incorrect', {
+    assert.fullName(extended, '$Interface: given extended `$extended` is incorrect', {
         $Interface: Interface,
         $extended: extended
     });
 
     //if extended is given - add it to imports
-    if (extended) {
-        descriptor.imports.add(extended);
-    }
+    descriptor.imports.add(extended);
 
 });
 

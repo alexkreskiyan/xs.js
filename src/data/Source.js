@@ -246,7 +246,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         var me = this;
 
         //assert, that relation is a valid short name
-        self.assert.ok(xs.ContractsManager.isShortName(relation), 'bind - given relation `$relation` is not a valid short name', {
+        self.assert.shortName(relation, 'bind - given relation `$relation` is not a valid short name', {
             $relation: relation
         });
 

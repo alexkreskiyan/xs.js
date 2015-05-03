@@ -19,24 +19,6 @@ xs.ContractsManager = (function () {
     var me = {};
 
     /**
-     * Name testing regular expression
-     *
-     * @ignore
-     *
-     * @type {RegExp}
-     */
-    var nameRe = /^[A-Za-z]{1}[A-Za-z0-9]*(?:\.{1}[A-Za-z]{1}[A-Za-z0-9]*)*$/;
-
-    /**
-     * Short name testing regular expression
-     *
-     * @ignore
-     *
-     * @type {RegExp}
-     */
-    var shortNameRe = /^[A-Za-z]{1}[A-Za-z0-9]*$/;
-
-    /**
      * Store of all registered contracts
      *
      * @private
@@ -63,7 +45,7 @@ xs.ContractsManager = (function () {
     me.has = function (name) {
 
         //assert, that name is valid string
-        assert.ok(isName(name), 'has - given name `$name` is not valid', {
+        assert.fullName(name, 'has - given name `$name` is not valid', {
             $name: name
         });
 
@@ -86,7 +68,7 @@ xs.ContractsManager = (function () {
     me.get = function (name) {
 
         //assert, that name is valid string
-        assert.ok(isName(name), 'get - given name `$name` is not valid', {
+        assert.fullName(name, 'get - given name `$name` is not valid', {
             $name: name
         });
 
@@ -117,7 +99,7 @@ xs.ContractsManager = (function () {
     var add = me.add = function (name, Contract) {
 
         //assert, that name is valid string
-        assert.ok(isName(name), 'add - given name `$name` is not valid', {
+        assert.fullName(name, 'add - given name `$name` is not valid', {
             $name: name
         });
 
@@ -242,7 +224,7 @@ xs.ContractsManager = (function () {
     me.define = function (contractor, name, descFn, createdFn) {
 
         //assert, that name is valid string
-        assert.ok(isName(name), 'define - given name `$name` is not valid', {
+        assert.fullName(name, 'define - given name `$name` is not valid', {
             $name: name
         });
 
@@ -264,53 +246,6 @@ xs.ContractsManager = (function () {
     };
 
     /**
-     * Returns whether given string is correct full name
-     *
-     * For example:
-     *
-     *     xs.ContractsManager.isName('xs.module.my.Class'); //true
-     *
-     * @method isName
-     *
-     * @param {String} name verified full name
-     *
-     * @return {String} whether name is correct
-     */
-    var isName = me.isName = function (name) {
-
-        //assert that name is a string
-        assert.string(name, 'isName - given name `$name` is not a string', {
-            $name: name
-        });
-
-        return nameRe.test(name);
-    };
-
-    /**
-     * Returns whether given string is correct short name
-     *
-     * For example:
-     *
-     *     xs.ContractsManager.isShortName('xs.module.my.Class'); //false
-     *     xs.ContractsManager.isShortName('Class'); //true
-     *
-     * @method isShortName
-     *
-     * @param {String} name verified name
-     *
-     * @return {Boolean} whether name is correct short name
-     */
-    me.isShortName = function (name) {
-
-        //assert that name is a string
-        assert.string(name, 'isShortName - given name `$name` is not a string', {
-            $name: name
-        });
-
-        return shortNameRe.test(name);
-    };
-
-    /**
      * Returns short name of by full name
      *
      * For example:
@@ -328,7 +263,7 @@ xs.ContractsManager = (function () {
     var getName = me.getName = function (name) {
 
         //assert, that name is valid string
-        assert.ok(isName(name), 'getName - given name `$name` is not valid', {
+        assert.fullName(name, 'getName - given name `$name` is not valid', {
             $name: name
         });
 
@@ -353,7 +288,7 @@ xs.ContractsManager = (function () {
     var getPath = me.getPath = function (name) {
 
         //assert, that name is valid string
-        assert.ok(isName(name), 'getPath - given name `$name` is not valid', {
+        assert.fullName(name, 'getPath - given name `$name` is not valid', {
             $name: name
         });
 
@@ -383,15 +318,15 @@ xs.ContractsManager = (function () {
             $root: root
         });
 
-        //assert, that path is empty string or valid name
-        assert.ok(path === '' || isName(path), 'getNamespace - given name `$name` is not valid', {
-            $name: path
-        });
-
         //use root if no path
-        if (!path) {
+        if (path === '') {
             return root;
         }
+
+        //assert, that path is empty string or valid name
+        assert.fullName(path, 'getNamespace - given name `$name` is not valid', {
+            $name: path
+        });
 
         //explode name to parts
         var parts = path.split('.');
