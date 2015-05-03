@@ -5,11 +5,11 @@
  *
  * @abstract
  *
- * @class xs.data.Source
+ * @class xs.data.Query
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Source', function (self, imports) {
+xs.define(xs.Class, 'ns.Query', function (self, imports) {
 
     'use strict';
 
