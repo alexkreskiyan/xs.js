@@ -56,6 +56,7 @@ xs.define(xs.Class, 'ns.Proxy', function (self, imports) {
         //save reader
         me.private.reader = config.reader;
 
+
         //process writer
 
         //assert writer implements IWriter || is object
