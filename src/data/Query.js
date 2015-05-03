@@ -44,7 +44,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         self.mixins.observable.call(me, xs.noop);
 
         //init operations stack
-        me.private.stack = {};
+        me.private.stack = new xs.core.Collection();
     };
 
     Class.property.isExecuted = {
@@ -53,99 +53,103 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
 
     Class.method.innerJoin = function (source, condition) {
         var me = this;
-
-        //assert, that source is iterable
-        self.assert.iterable(source, 'innerJoin - given `$source` is not an iterable', {
-            $source: source
-        });
-
-        //assert, that condition is a function
-        self.assert.fn(condition, 'innerJoin - given join condition `$condition` is not a function', {
-            $condition: condition
-        });
+        var Query = self;
 
         var stack = me.private.stack;
 
-        //assert, that it's an only join
-        self.assert.not(stack.join, 'innerJoin - query already has a join condition');
+        //assert, that it's an only join in stack
+        self.assert.not(stack.find(function (processor) {
+            return processor instanceof JoinProcessor;
+        }), 'innerJoin - query already has a join condition');
 
         //save join condition to stack
-        stack.join = {
-            source: source,
-            condition: condition
-        };
+        stack.add(new InnerJoinProcessor(source, condition));
+
+        return new Query(me);
     };
 
     Class.method.outerJoin = function (source, condition, emptyValue) {
         var me = this;
-
-        //assert, that source is iterable
-        self.assert.iterable(source, 'outerJoin - given `$source` is not an iterable', {
-            $source: source
-        });
-
-        //assert, that condition is a function
-        self.assert.fn(condition, 'outerJoin - given join condition `$condition` is not a function', {
-            $condition: condition
-        });
+        var Query = self;
 
         var stack = me.private.stack;
 
-        //assert, that it's an only join
-        self.assert.not(stack.join, 'outerJoin - query already has a join condition');
+        //assert, that it's an only join in stack
+        self.assert.not(stack.find(function (processor) {
+            return processor instanceof JoinProcessor;
+        }), 'outerJoin - query already has a join condition');
 
         //save join condition to stack
-        stack.join = {
-            source: source,
-            condition: condition,
-            emptyValue: emptyValue
-        };
+        stack.add(new OuterJoinProcessor(source, condition, emptyValue));
+
+        return new Query(me);
     };
 
     Class.method.groupJoin = function (source, condition, alias) {
         var me = this;
-
-        //assert, that source is iterable
-        self.assert.iterable(source, 'groupJoin - given `$source` is not an iterable', {
-            $source: source
-        });
-
-        //assert, that condition is a function
-        self.assert.fn(condition, 'groupJoin - given join condition `$condition` is not a function', {
-            $condition: condition
-        });
-
-        //assert, that alias is a shortName
-        self.assert.shortName(alias, 'groupJoin - given alias `$alias` is not valid', {
-            $alias: alias
-        });
+        var Query = self;
 
         var stack = me.private.stack;
 
-        //assert, that it's an only join
-        self.assert.not(stack.join, 'groupJoin - query already has a join condition');
+        //assert, that it's an only join in stack
+        self.assert.not(stack.find(function (processor) {
+            return processor instanceof JoinProcessor;
+        }), 'groupJoin - query already has a join condition');
 
         //save join condition to stack
-        stack.join = {
-            source: source,
-            condition: condition,
-            alias: alias
-        };
+        stack.add(new OuterJoinProcessor(source, condition, alias));
+
+        return new Query(me);
     };
 
     Class.method.where = function (selector) {
+        var me = this;
+
+        //save new where processor
+        me.private.stack.add(new WhereProcessor(selector));
+
+        return me;
     };
 
     Class.method.sort = function (sorter) {
+        var me = this;
+
+        //save new sort processor
+        me.private.stack.add(new SortProcessor(sorter));
+
+        return me;
     };
 
     Class.method.group = function (grouper) {
+        var me = this;
+
+        //save new sort processor
+        me.private.stack.add(new GroupProcessor(grouper));
+
+        return me;
     };
 
     Class.method.select = function (selector) {
+        var me = this;
+
+        //save new sort processor
+        me.private.stack.add(new SelectProcessor(selector));
+
+        return me;
     };
 
     Class.method.execute = function () {
+        var me = this;
+
+        var result = me.private.stack.reduce(function (source, processor) {
+            return processor.process(source);
+        }, 0, null, me.private.source);
+
+        //set items of result
+        me.private.items = result.private.items;
+
+        //set isExecuted flag
+        me.private.isExecuted = true;
     };
 
     Class.method.destroy = function () {
@@ -176,6 +180,163 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             });
         }
 
+    };
+
+
+    var JoinProcessor = function () {
+    };
+
+
+    var InnerJoinProcessor = function (source, condition) {
+        var me = this;
+
+        //assert, that source is iterable
+        self.assert.iterable(source, 'innerJoin - given `$source` is not an iterable', {
+            $source: source
+        });
+
+        //assert, that condition is a function
+        self.assert.fn(condition, 'innerJoin - given join condition `$condition` is not a function', {
+            $condition: condition
+        });
+
+        me.source = source;
+        me.condition = condition;
+    };
+
+    //extend from JoinProcessor
+    xs.extend(InnerJoinProcessor, JoinProcessor);
+
+    InnerJoinProcessor.prototype.process = function (source) {
+
+        return source;
+    };
+
+
+    var OuterJoinProcessor = function (source, condition, emptyValue) {
+        var me = this;
+
+        //assert, that source is iterable
+        self.assert.iterable(source, 'outerJoin - given `$source` is not an iterable', {
+            $source: source
+        });
+
+        //assert, that condition is a function
+        self.assert.fn(condition, 'outerJoin - given join condition `$condition` is not a function', {
+            $condition: condition
+        });
+
+        me.source = source;
+        me.condition = condition;
+        me.emptyValue = emptyValue;
+    };
+
+    //extend from JoinProcessor
+    xs.extend(InnerJoinProcessor, JoinProcessor);
+
+    OuterJoinProcessor.prototype.process = function (source) {
+
+        return source;
+    };
+
+
+    var GroupJoinProcessor = function (source, condition, alias) {
+        var me = this;
+
+        //assert, that source is iterable
+        self.assert.iterable(source, 'groupJoin - given `$source` is not an iterable', {
+            $source: source
+        });
+
+        //assert, that condition is a function
+        self.assert.fn(condition, 'groupJoin - given join condition `$condition` is not a function', {
+            $condition: condition
+        });
+
+        //assert, that alias is a shortName
+        self.assert.shortName(alias, 'groupJoin - given alias `$alias` is not valid', {
+            $alias: alias
+        });
+
+        me.source = source;
+        me.condition = condition;
+        me.alias = alias;
+    };
+
+    //extend from JoinProcessor
+    xs.extend(InnerJoinProcessor, JoinProcessor);
+
+    GroupJoinProcessor.prototype.process = function (source) {
+
+        return source;
+    };
+
+
+    var WhereProcessor = function (selector) {
+        var me = this;
+
+        //assert, that selector is a function
+        self.assert.fn(selector, 'WhereProcessor - given `$selector` is not a function', {
+            $selector: selector
+        });
+
+        me.selector = selector;
+    };
+
+    WhereProcessor.prototype.process = function (source) {
+
+        return source;
+    };
+
+
+    var SortProcessor = function (sorter) {
+        var me = this;
+
+        //assert, that sorter is a function
+        self.assert.fn(sorter, 'SortProcessor - given `$sorter` is not a function', {
+            $sorter: sorter
+        });
+
+        me.sorter = sorter;
+    };
+
+    SortProcessor.prototype.process = function (source) {
+
+        return source;
+    };
+
+
+    var GroupProcessor = function (grouper) {
+        var me = this;
+
+        //assert, that grouper is a function
+        self.assert.fn(grouper, 'group - given `$grouper` is not a function', {
+            $grouper: grouper
+        });
+
+        me.grouper = grouper;
+    };
+
+    GroupProcessor.prototype.process = function (source) {
+
+        return source;
+    };
+
+
+    var SelectProcessor = function (selector) {
+        var me = this;
+
+        //assert, that selector is a function
+        self.assert.fn(selector, 'group - given `$selector` is not a function', {
+            $selector: selector
+        });
+
+        me.selector = selector;
+    };
+
+    SelectProcessor.prototype.process = function (source) {
+
+        return source;
     };
 
 });
