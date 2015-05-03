@@ -42,6 +42,9 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
 
         //call observable constructor
         self.mixins.observable.call(me, xs.noop);
+
+        //init operations stack
+        me.private.stack = {};
     };
 
     Class.property.isExecuted = {
@@ -49,12 +52,85 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     };
 
     Class.method.innerJoin = function (source, condition) {
+        var me = this;
+
+        //assert, that source is iterable
+        self.assert.iterable(source, 'innerJoin - given `$source` is not an iterable', {
+            $source: source
+        });
+
+        //assert, that condition is a function
+        self.assert.fn(condition, 'innerJoin - given join condition `$condition` is not a function', {
+            $condition: condition
+        });
+
+        var stack = me.private.stack;
+
+        //assert, that it's an only join
+        self.assert.not(stack.join, 'innerJoin - query already has a join condition');
+
+        //save join condition to stack
+        stack.join = {
+            source: source,
+            condition: condition
+        };
     };
 
     Class.method.outerJoin = function (source, condition, emptyValue) {
+        var me = this;
+
+        //assert, that source is iterable
+        self.assert.iterable(source, 'outerJoin - given `$source` is not an iterable', {
+            $source: source
+        });
+
+        //assert, that condition is a function
+        self.assert.fn(condition, 'outerJoin - given join condition `$condition` is not a function', {
+            $condition: condition
+        });
+
+        var stack = me.private.stack;
+
+        //assert, that it's an only join
+        self.assert.not(stack.join, 'outerJoin - query already has a join condition');
+
+        //save join condition to stack
+        stack.join = {
+            source: source,
+            condition: condition,
+            emptyValue: emptyValue
+        };
     };
 
     Class.method.groupJoin = function (source, condition, alias) {
+        var me = this;
+
+        //assert, that source is iterable
+        self.assert.iterable(source, 'groupJoin - given `$source` is not an iterable', {
+            $source: source
+        });
+
+        //assert, that condition is a function
+        self.assert.fn(condition, 'groupJoin - given join condition `$condition` is not a function', {
+            $condition: condition
+        });
+
+        //assert, that alias is a shortName
+        self.assert.ok(xs.ContractsManager.isShortName(alias), 'groupJoin - given alias `$alias` is not valid', {
+            $alias: alias
+        });
+
+        var stack = me.private.stack;
+
+        //assert, that it's an only join
+        self.assert.not(stack.join, 'groupJoin - query already has a join condition');
+
+        //save join condition to stack
+        stack.join = {
+            source: source,
+            condition: condition,
+            alias: alias
+        };
     };
 
     Class.method.where = function (selector) {
