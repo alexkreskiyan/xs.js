@@ -234,6 +234,37 @@ module('xs.core.Asserter', function () {
         assert.contract(xs.Enum({}));
     });
 
+    test('shortName', function () {
+        var assert = new xs.core.Asserter(new xs.log.Logger('tests.core.Asserter'), Error);
+
+        //incorrect throws
+        throws(function () {
+            assert.shortName(1);
+        });
+        throws(function () {
+            assert.shortName('1a');
+        });
+
+        //correct is silent
+        assert.shortName('a');
+    });
+
+    test('fullName', function () {
+        var assert = new xs.core.Asserter(new xs.log.Logger('tests.core.Asserter'), Error);
+
+        //incorrect throws
+        throws(function () {
+            assert.fullName(1);
+        });
+        throws(function () {
+            assert.fullName('1a');
+        });
+
+        //correct is silent
+        assert.fullName('a');
+        assert.fullName('a.b');
+    });
+
     test('processed', function () {
         var me = this;
 

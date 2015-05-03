@@ -600,6 +600,96 @@ Asserter.prototype.empty = function (value, message, vars) {
 };
 
 /**
+ * Short name testing regular expression
+ *
+ * @ignore
+ *
+ * @type {RegExp}
+ */
+var shortNameRe = /^[A-Za-z][A-Za-z0-9]*$/;
+
+/**
+ * Verifies, that given string is a valid shortName
+ *
+ * For example:
+ *
+ *     //create asserter instance
+ *     var logger = new xs.log.Logger('xs');
+ *
+ *     //create asserter instance
+ *     var asserter = new xs.core.Asserter(logger, Error);
+ *
+ *     asserter.shortName('name');
+ *
+ * @method shortName
+ *
+ * @param {String} name given name
+ * @param {String} message error message
+ * @param {Object} [vars] error optional vars
+ */
+Asserter.prototype.shortName = function (name, message, vars) {
+    var me = this;
+
+    //assert that name is a string
+    me.string(name, 'shortName - given name `$name` is not a string', {
+        $name: name
+    });
+
+    //assert
+    if (shortNameRe.test(name)) {
+
+        return;
+    }
+
+    raise.call(me, message, vars);
+};
+
+/**
+ * Full name testing regular expression
+ *
+ * @ignore
+ *
+ * @type {RegExp}
+ */
+var fullNameRe = /^[A-Za-z][A-Za-z0-9]*(?:\.[A-Za-z][A-Za-z0-9]*)*$/;
+
+/**
+ * Verifies, that given string is a valid shortName
+ *
+ * For example:
+ *
+ *     //create asserter instance
+ *     var logger = new xs.log.Logger('xs');
+ *
+ *     //create asserter instance
+ *     var asserter = new xs.core.Asserter(logger, Error);
+ *
+ *     asserter.fullName('name.sub');
+ *
+ * @method fullName
+ *
+ * @param {String} name given name
+ * @param {String} message error message
+ * @param {Object} [vars] error optional vars
+ */
+Asserter.prototype.fullName = function (name, message, vars) {
+    var me = this;
+
+    //assert that name is a string
+    me.string(name, 'fullName - given name `$name` is not a string', {
+        $name: name
+    });
+
+    //assert
+    if (fullNameRe.test(name)) {
+
+        return;
+    }
+
+    raise.call(me, message, vars);
+};
+
+/**
  * Verifies, that given candidate is a contract
  *
  * For example:
@@ -612,7 +702,7 @@ Asserter.prototype.empty = function (value, message, vars) {
  *
  *     asserter.contract(xs.Class(xs.noop));
  *
- * @method Class
+ * @method contract
  *
  * @param {Function} contract given contract candidate
  * @param {String} message error message
@@ -645,7 +735,7 @@ Asserter.prototype.contract = function (contract, message, vars) {
  *         asserter.processed(Class);
  *     });
  *
- * @method Class
+ * @method processed
  *
  * @param {Function} contract given contract candidate
  * @param {String} message error message
@@ -681,7 +771,7 @@ Asserter.prototype.processed = function (contract, message, vars) {
  *
  *     asserter.class(xs.Class(xs.noop));
  *
- * @method Class
+ * @method class
  *
  * @param {Function} Class given constructor
  * @param {String} message error message
