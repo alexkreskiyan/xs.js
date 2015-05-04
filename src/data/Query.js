@@ -38,7 +38,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         //call enumerable constructor
         self.mixins.enumerable.call(me);
 
-        setSource.call(me, source);
+        me.private.source = getSource(source);
 
         //call observable constructor
         self.mixins.observable.call(me, xs.noop);
@@ -181,27 +181,32 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         self.parent.prototype.destroy.call(me);
     };
 
-    var setSource = function (source) {
-        var me = this;
+    var getSource = function (source) {
 
         //if given imports.Enumerable or xs.core.Collection - use as-is
         if ((xs.isInstance(source) && source.self.mixins(imports.Enumerable)) || source instanceof xs.core.Collection) {
 
-            me.private.source = xs.lazy(function () {
+            return xs.lazy(function () {
                 return source;
             });
         } else {
 
-            me.private.source = xs.lazy(function () {
+            return xs.lazy(function () {
                 return new xs.core.Collection(source);
             });
         }
     };
 
 
-    var JoinProcessor = function () {
-    };
+    var findJoinItem = function (item) {
+        var me = this;
 
+        self.assert.object(item, 'findJoinItem - can not join with non object item `$item`', {
+            $item: item
+        });
+
+        return me.condition(me.item, item);
+    };
 
     var InnerJoinProcessor = function (origin, source, condition) {
         var me = this;
@@ -217,16 +222,56 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         });
 
         me.origin = origin;
-        me.source = source;
+        me.source = getSource(source);
         me.condition = condition;
     };
 
-    //extend from JoinProcessor
-    xs.extend(InnerJoinProcessor, JoinProcessor);
+    InnerJoinProcessor.prototype.process = function () {
+        var me = this;
 
-    InnerJoinProcessor.prototype.process = function (source) {
+        //lazy evaluate source
+        if (me.source instanceof xs.core.Lazy) {
+            me.source = me.source.get();
+        }
 
-        return source;
+        //get origin
+        var origin = me.origin;
+
+        //execute origin query
+        origin.execute();
+
+        //get joined source
+        var source = me.source;
+
+        //if source is a query - execute it
+        if (source instanceof self) {
+            source.execute();
+        }
+
+        //use xs.core.Collection
+        var result = new xs.core.Collection();
+
+        origin.each(function (originItem) {
+
+            self.assert.object(originItem, 'InnerJoinProcessor - can not join non object item `$item`', {
+                $originItem: originItem
+            });
+
+            var joinedItem = source.find(findJoinItem, 0, {
+                item: originItem,
+                condition: me.condition
+            });
+
+            //if no match - return
+            if (!joinedItem) {
+
+                return;
+            }
+
+            result.add(xs.apply({}, originItem, joinedItem));
+        });
+
+        return result;
     };
 
 
@@ -248,9 +293,6 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         me.condition = condition;
         me.emptyValue = emptyValue;
     };
-
-    //extend from JoinProcessor
-    xs.extend(InnerJoinProcessor, JoinProcessor);
 
     OuterJoinProcessor.prototype.process = function (source) {
 
@@ -308,9 +350,6 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             me.asArray = false;
         }
     };
-
-    //extend from JoinProcessor
-    xs.extend(InnerJoinProcessor, JoinProcessor);
 
     GroupJoinProcessor.prototype.process = function (source) {
 
@@ -371,6 +410,8 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         });
 
         me.grouper = grouper;
+        me.alias = 'group';
+        me.asArray = false;
 
         if (arguments.length === 1) {
             return;
@@ -389,8 +430,6 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             });
 
             me.alias = options.alias;
-        } else {
-            me.alias = 'group';
         }
 
         if (options.hasOwnProperty('selector')) {
@@ -411,8 +450,6 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             });
 
             me.asArray = options.asArray;
-        } else {
-            me.asArray = false;
         }
     };
 

@@ -82,6 +82,116 @@ module('xs.data.Query', function () {
         strictEqual(query.values().toString(), '1,2,3');
     });
 
+    test('innerJoin', function () {
+        var query;
+
+        query = new xs.data.Query([
+            1
+        ]);
+
+        //source must be iterable
+        throws(function () {
+            query.innerJoin(null);
+        });
+
+        //condition must be a function
+        throws(function () {
+            query.innerJoin([]);
+        });
+
+        //all items must be objects to perform joins
+        //source
+        query = (new xs.data.Query([
+            1
+        ]))
+            .innerJoin(new xs.data.Query([
+                {
+                    x: 1
+                }
+            ]), xs.noop);
+        throws(function () {
+            query.execute();
+        });
+
+        //joined
+        query = (new xs.data.Query([
+            {
+                x: 1
+            }
+        ]))
+            .innerJoin(new xs.data.Query([
+                1
+            ]), xs.noop);
+        throws(function () {
+            query.execute();
+        });
+
+
+        //verify
+        var queryLeft = new xs.data.Query([
+            {
+                x: 1
+            },
+            {
+                x: 2
+            },
+            {
+                x: 3
+            },
+            {
+                x: 4
+            },
+            {
+                x: 5
+            }
+        ]);
+
+        var queryRight = new xs.data.Query([
+            {
+                x: 1,
+                a: 2
+            },
+            {
+                x: 2,
+                a: 5
+            },
+            {
+                x: 2,
+                a: 3
+            },
+            {
+                x: 3,
+                a: 4
+            }
+        ]);
+
+        queryLeft.select(function (item) {
+            return {
+                x: item.x,
+                y: item.x * 2 - 1
+            };
+        });
+
+        queryRight.select(function (item) {
+            return {
+                a: item.x,
+                b: item.a
+            };
+        });
+
+        query = queryLeft
+            .innerJoin(queryRight, function (left, right) {
+                return left.x === right.a;
+            });
+
+        query.execute();
+
+        strictEqual(query.size, 3);
+        strictEqual(JSON.stringify(query.at(0)), '{"x":1,"y":1,"a":1,"b":2}');
+        strictEqual(JSON.stringify(query.at(1)), '{"x":2,"y":3,"a":2,"b":5}');
+        strictEqual(JSON.stringify(query.at(2)), '{"x":3,"y":5,"a":3,"b":4}');
+    });
+
     test('select', function () {
         var query, source;
 
