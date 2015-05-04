@@ -52,54 +52,42 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     };
 
     Class.method.innerJoin = function (source, condition) {
-        var me = this;
         var Query = self;
+        var me = this;
 
-        var stack = me.private.stack;
+        //join results in new query
+        var query = new Query([]);
 
-        //assert, that it's an only join in stack
-        self.assert.not(stack.find(function (processor) {
-            return processor instanceof JoinProcessor;
-        }), 'innerJoin - query already has a join condition');
+        //save join condition to stack of new query
+        query.private.stack.add(new InnerJoinProcessor(me, source, condition));
 
-        //save join condition to stack
-        stack.add(new InnerJoinProcessor(source, condition));
-
-        return new Query(me);
+        return query;
     };
 
     Class.method.outerJoin = function (source, condition, emptyValue) {
-        var me = this;
         var Query = self;
+        var me = this;
 
-        var stack = me.private.stack;
+        //join results in new query
+        var query = new Query([]);
 
-        //assert, that it's an only join in stack
-        self.assert.not(stack.find(function (processor) {
-            return processor instanceof JoinProcessor;
-        }), 'outerJoin - query already has a join condition');
+        //save join condition to stack of new query
+        query.private.stack.add(new OuterJoinProcessor(me, source, condition, emptyValue));
 
-        //save join condition to stack
-        stack.add(new OuterJoinProcessor(source, condition, emptyValue));
-
-        return new Query(me);
+        return query;
     };
 
     Class.method.groupJoin = function (source, condition, alias) {
-        var me = this;
         var Query = self;
+        var me = this;
 
-        var stack = me.private.stack;
+        //join results in new query
+        var query = new Query([]);
 
-        //assert, that it's an only join in stack
-        self.assert.not(stack.find(function (processor) {
-            return processor instanceof JoinProcessor;
-        }), 'groupJoin - query already has a join condition');
+        //save join condition to stack of new query
+        query.private.stack.add(new GroupJoinProcessor(me, source, condition, alias));
 
-        //save join condition to stack
-        stack.add(new OuterJoinProcessor(source, condition, alias));
-
-        return new Query(me);
+        return query;
     };
 
     Class.method.where = function (selector) {
@@ -141,6 +129,11 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     Class.method.execute = function () {
         var me = this;
 
+        //lazy evaluate source
+        if (me.private.source instanceof xs.core.Lazy) {
+            me.private.source = me.private.source.get();
+        }
+
         var result = me.private.stack.reduce(function (source, processor) {
             return processor.process(source);
         }, 0, null, me.private.source);
@@ -179,7 +172,6 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
                 return new xs.core.Collection(source);
             });
         }
-
     };
 
 
@@ -187,7 +179,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     };
 
 
-    var InnerJoinProcessor = function (source, condition) {
+    var InnerJoinProcessor = function (origin, source, condition) {
         var me = this;
 
         //assert, that source is iterable
@@ -200,6 +192,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             $condition: condition
         });
 
+        me.origin = origin;
         me.source = source;
         me.condition = condition;
     };
@@ -213,7 +206,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     };
 
 
-    var OuterJoinProcessor = function (source, condition, emptyValue) {
+    var OuterJoinProcessor = function (origin, source, condition, emptyValue) {
         var me = this;
 
         //assert, that source is iterable
@@ -226,6 +219,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             $condition: condition
         });
 
+        me.origin = origin;
         me.source = source;
         me.condition = condition;
         me.emptyValue = emptyValue;
@@ -240,7 +234,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     };
 
 
-    var GroupJoinProcessor = function (source, condition, alias) {
+    var GroupJoinProcessor = function (origin, source, condition, alias) {
         var me = this;
 
         //assert, that source is iterable
@@ -258,6 +252,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             $alias: alias
         });
 
+        me.origin = origin;
         me.source = source;
         me.condition = condition;
         me.alias = alias;
