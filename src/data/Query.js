@@ -45,6 +45,9 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
 
         //init operations stack
         me.private.stack = new xs.core.Collection();
+
+        //set isExecuted to false
+        me.private.isExecuted = false;
     };
 
     Class.property.isExecuted = {
@@ -90,6 +93,15 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         return query;
     };
 
+    Class.method.select = function (selector) {
+        var me = this;
+
+        //save new sort processor
+        me.private.stack.add(new SelectProcessor(selector));
+
+        return me;
+    };
+
     Class.method.where = function (selector) {
         var me = this;
 
@@ -99,29 +111,24 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         return me;
     };
 
+    Class.method.group = function (grouper, options) {
+        var me = this;
+
+        //save new sort processor
+        if (arguments.length > 1) {
+            me.private.stack.add(new GroupProcessor(grouper, options));
+        } else {
+            me.private.stack.add(new GroupProcessor(grouper));
+        }
+
+        return me;
+    };
+
     Class.method.sort = function (sorter) {
         var me = this;
 
         //save new sort processor
         me.private.stack.add(new SortProcessor(sorter));
-
-        return me;
-    };
-
-    Class.method.group = function (grouper, alias, selector) {
-        var me = this;
-
-        //save new sort processor
-        me.private.stack.add(new GroupProcessor(grouper, alias, selector));
-
-        return me;
-    };
-
-    Class.method.select = function (selector) {
-        var me = this;
-
-        //save new sort processor
-        me.private.stack.add(new SelectProcessor(selector));
 
         return me;
     };
@@ -139,12 +146,19 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             me.private.source.execute();
         }
 
-        var result = me.private.stack.reduce(function (source, processor) {
-            return processor.process(source);
-        }, 0, null, me.private.source);
+        if (me.private.stack.size) {
 
-        //set items of result
-        me.private.items = result.private.items;
+            var result = me.private.stack.reduce(function (source, processor) {
+                return processor.process(source);
+            }, 0, null, me.private.source);
+
+            //set items of result
+            me.private.items = result.private.items;
+        } else {
+
+            //set items as source's items' copy
+            me.private.items = me.private.source.private.items.slice();
+        }
 
         //set isExecuted flag
         me.private.isExecuted = true;
@@ -166,7 +180,8 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     var setSource = function (source) {
         var me = this;
 
-        if (xs.isInstance(source) && source.self.mixins(imports.Enumerable)) {
+        //if given imports.Enumerable or xs.core.Collection - use as-is
+        if ((xs.isInstance(source) && source.self.mixins(imports.Enumerable)) || source instanceof xs.core.Collection) {
 
             me.private.source = xs.lazy(function () {
                 return source;
@@ -272,6 +287,28 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     };
 
 
+    var SelectProcessor = function (selector) {
+        var me = this;
+
+        //assert, that selector is a function
+        self.assert.fn(selector, 'group - given `$selector` is not a function', {
+            $selector: selector
+        });
+
+        me.selector = selector;
+    };
+
+    SelectProcessor.prototype.process = function (source) {
+        var me = this;
+
+        //map to xs.core.Collection
+        var result = new xs.core.Collection();
+        result.private.items = source.map(me.selector, source.constructor.All).private.items;
+
+        return result;
+    };
+
+
     var WhereProcessor = function (selector) {
         var me = this;
 
@@ -291,6 +328,216 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         result.private.items = source.find(me.selector, source.constructor.All).private.items;
 
         return result;
+    };
+
+
+    var GroupProcessor = function (grouper, options) {
+        var me = this;
+
+        //assert, that grouper is a function
+        self.assert.fn(grouper, 'GroupProcessor - given grouper `$grouper` is not a function', {
+            $grouper: grouper
+        });
+
+        me.grouper = grouper;
+
+        if (arguments.length === 1) {
+            return;
+        }
+
+        //assert, that options is an object
+        self.assert.object(options, 'GroupProcessor - given options `$options` are not an object', {
+            $options: options
+        });
+
+        if (options.hasOwnProperty('alias')) {
+
+            //assert, that alias is a shortName
+            self.assert.shortName(options.alias, 'GroupProcessor - given options.alias `$alias` is not valid', {
+                $alias: options.alias
+            });
+
+            me.alias = options.alias;
+        }
+
+        if (options.hasOwnProperty('selector')) {
+
+            //assert, that selector is a function
+            self.assert.fn(options.selector, 'GroupProcessor - given options.selector `$selector` is not a function', {
+                $selector: options.selector
+            });
+
+            me.selector = options.selector;
+        }
+
+        if (options.hasOwnProperty('asArray')) {
+
+            //assert, that asArray is a boolean
+            self.assert.boolean(options.asArray, 'GroupProcessor - given options.asArray `$asArray` is not a boolean', {
+                $asArray: options.asArray
+            });
+
+            me.asArray = options.asArray;
+        }
+    };
+
+    GroupProcessor.prototype.process = function (source) {
+        var me = this;
+
+        //create result container
+        var result = new xs.core.Collection();
+
+        var alias = me.alias ? me.alias : 'group';
+        var selector = me.selector;
+        var asArray = me.asArray;
+
+        if (selector) {
+            if (asArray) {
+                source.each(function (item) {
+
+                    //evaluate group key
+                    var key = me.grouper(item);
+
+                    //convert key to object
+                    if (!xs.isObject(key)) {
+                        key = {
+                            key: key
+                        };
+                    }
+
+                    //find group with same key
+                    var group = result.find(findGroup, 0, key);
+
+                    //add new item to group
+                    if (group) {
+
+                        //add new item to group
+                        group[ alias ].push(selector(item));
+                    } else {
+
+                        //create group from key
+                        key[ alias ] = [ selector(item) ];
+
+                        //add new group to result
+                        result.add(key);
+                    }
+                });
+            } else {
+                source.each(function (item) {
+
+                    //evaluate group key
+                    var key = me.grouper(item);
+
+                    //convert key to object
+                    if (!xs.isObject(key)) {
+                        key = {
+                            key: key
+                        };
+                    }
+
+                    //find group with same key
+                    var group = result.find(findGroup, 0, key);
+
+                    //add new item to group
+                    if (group) {
+
+                        //add new item to group
+                        group[ alias ].add(selector(item));
+                    } else {
+
+                        //create group from key
+                        key[ alias ] = new xs.core.Collection([ selector(item) ]);
+
+                        //add new group to result
+                        result.add(key);
+                    }
+                });
+            }
+        } else {
+            if (asArray) {
+                source.each(function (item) {
+
+                    //evaluate group key
+                    var key = me.grouper(item);
+
+                    //convert key to object
+                    if (!xs.isObject(key)) {
+                        key = {
+                            key: key
+                        };
+                    }
+
+                    //find group with same key
+                    var group = result.find(findGroup, 0, key);
+
+                    //add new item to group
+                    if (group) {
+
+                        //add new item to group
+                        group[ alias ].push(item);
+                    } else {
+
+                        //create group from key
+                        key[ alias ] = [ item ];
+
+                        //add new group to result
+                        result.add(key);
+                    }
+                });
+            } else {
+                source.each(function (item) {
+
+                    //evaluate group key
+                    var key = me.grouper(item);
+
+                    //convert key to object
+                    if (!xs.isObject(key)) {
+                        key = {
+                            key: key
+                        };
+                    }
+
+                    //find group with same key
+                    var group = result.find(findGroup, 0, key);
+
+                    //add new item to group
+                    if (group) {
+
+                        //add new item to group
+                        group[ alias ].add(item);
+                    } else {
+
+                        //create group from key
+                        key[ alias ] = new xs.core.Collection([ item ]);
+
+                        //add new group to result
+                        result.add(key);
+                    }
+                });
+            }
+        }
+
+        return result;
+    };
+
+    var findGroup = function (group) {
+        var me = this;
+
+        var keys = Object.keys(me);
+        var length = keys.length;
+
+        //check group
+        for (var i = 0; i < length; i++) {
+            var key = keys[ i ];
+
+            //if group does not match key - continue
+            if (!group.hasOwnProperty(key) || group[ key ] !== me[ key ]) {
+
+                return false;
+            }
+        }
+
+        return true;
     };
 
 
@@ -326,111 +573,6 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
 
         //save items to result
         result.private.items = items;
-
-        return result;
-    };
-
-
-    var GroupProcessor = function (grouper, alias, selector) {
-        var me = this;
-
-        //assert, that grouper is a function
-        self.assert.fn(grouper, 'group - given `$grouper` is not a function', {
-            $grouper: grouper
-        });
-
-        //assert, that alias is a shortName
-        self.assert.shortName(alias, 'groupJoin - given alias `$alias` is not valid', {
-            $alias: alias
-        });
-
-        //assert, that selector is a function
-        self.assert.fn(selector, 'group - given `$selector` is not a function', {
-            $grouper: selector
-        });
-
-        me.grouper = grouper;
-        me.alias = alias;
-        me.selector = selector;
-    };
-
-    GroupProcessor.prototype.process = function (source) {
-        var me = this;
-
-        //create result container
-        var result = new xs.core.Collection();
-
-        source.each(function (item) {
-
-            //evaluate group key
-            var key = me.grouper(item);
-
-            //convert key to object
-            if (!xs.isObject(key)) {
-                key = {
-                    key: key
-                };
-            }
-
-            //find group with same key
-            var group = result.find(findGroup, 0, key);
-
-            //add new item to group
-            if (group) {
-
-                //add new item to group
-                group[ me.alias ].add(me.selector(item));
-            } else {
-
-                //create group from key
-                key[ me.alias ] = new xs.core.Collection([ me.selector(item) ]);
-
-                //add new group to result
-                result.add(key);
-            }
-        });
-
-        return result;
-    };
-
-    var findGroup = function (group) {
-        var me = this;
-
-        var keys = Object.keys(me);
-        var length = keys.length;
-
-        //check group
-        for (var i = 0; i < length; i++) {
-            var key = keys[ i ];
-
-            //if group does not match key - continue
-            if (!group.hasOwnProperty(key) || group[ key ] !== me[ key ]) {
-
-                return false;
-            }
-        }
-
-        return true;
-    };
-
-
-    var SelectProcessor = function (selector) {
-        var me = this;
-
-        //assert, that selector is a function
-        self.assert.fn(selector, 'group - given `$selector` is not a function', {
-            $selector: selector
-        });
-
-        me.selector = selector;
-    };
-
-    SelectProcessor.prototype.process = function (source) {
-        var me = this;
-
-        //map to xs.core.Collection
-        var result = new xs.core.Collection();
-        result.private.items = source.map(me.selector, source.constructor.All).private.items;
 
         return result;
     };
