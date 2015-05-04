@@ -347,6 +347,13 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     };
 
 
+    var findGroupJoinItem = function (item) {
+        var me = this;
+
+        return me.condition(me.item, item);
+    };
+
+
     var GroupJoinProcessor = function (origin, source, condition, options) {
         var me = this;
 
@@ -363,6 +370,8 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         me.origin = origin;
         me.source = source;
         me.condition = condition;
+        me.alias = 'group';
+        me.asArray = false;
 
         if (arguments.length < 4) {
             return;
@@ -381,8 +390,6 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             });
 
             me.alias = options.alias;
-        } else {
-            me.alias = 'group';
         }
 
         if (options.hasOwnProperty('asArray')) {
@@ -393,14 +400,64 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             });
 
             me.asArray = options.asArray;
-        } else {
-            me.asArray = false;
         }
     };
 
-    GroupJoinProcessor.prototype.process = function (source) {
+    GroupJoinProcessor.prototype.process = function () {
+        var me = this;
 
-        return source;
+        //lazy evaluate source
+        if (me.source instanceof xs.core.Lazy) {
+            me.source = me.source.get();
+        }
+
+        //get origin
+        var origin = me.origin;
+
+        //execute origin query
+        origin.execute();
+
+        //get joined source
+        var source = me.source;
+
+        //if source is a query - execute it
+        if (source instanceof self) {
+            source.execute();
+        }
+
+        //use xs.core.Collection
+        var result = new xs.core.Collection();
+
+        if (me.asArray) {
+            origin.each(function (originItem) {
+
+                var joinedItems = source.find(findGroupJoinItem, source.constructor.All, {
+                    item: originItem,
+                    condition: me.condition
+                });
+
+                var item = xs.apply({}, originItem);
+                item[ me.alias ] = joinedItems.values();
+
+                result.add(item);
+            });
+        } else {
+            origin.each(function (originItem) {
+
+                var joinedItems = source.find(findGroupJoinItem, source.constructor.All, {
+                    item: originItem,
+                    condition: me.condition
+                });
+
+                var item = xs.apply({}, originItem);
+                item[ me.alias ] = new xs.core.Collection();
+                item[ me.alias ].private.items = joinedItems.private.items.slice();
+
+                result.add(item);
+            });
+        }
+
+        return result;
     };
 
 
