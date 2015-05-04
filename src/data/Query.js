@@ -108,11 +108,11 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         return me;
     };
 
-    Class.method.group = function (grouper) {
+    Class.method.group = function (grouper, alias, selector) {
         var me = this;
 
         //save new sort processor
-        me.private.stack.add(new GroupProcessor(grouper));
+        me.private.stack.add(new GroupProcessor(grouper, alias, selector));
 
         return me;
     };
@@ -132,6 +132,11 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         //lazy evaluate source
         if (me.private.source instanceof xs.core.Lazy) {
             me.private.source = me.private.source.get();
+        }
+
+        //if source is a query - execute it
+        if (me.private.source instanceof self) {
+            me.private.source.execute();
         }
 
         var result = me.private.stack.reduce(function (source, processor) {
@@ -279,8 +284,13 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     };
 
     WhereProcessor.prototype.process = function (source) {
+        var me = this;
 
-        return source;
+        //find as xs.core.Collection
+        var result = new xs.core.Collection();
+        result.private.items = source.find(me.selector, source.constructor.All).private.items;
+
+        return result;
     };
 
 
@@ -296,12 +306,32 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     };
 
     SortProcessor.prototype.process = function (source) {
+        var me = this;
 
-        return source;
+        //create result container
+        var result = new xs.core.Collection();
+
+        //get items copy
+        var items = source.private.items.slice();
+
+        //sort
+        items.sort(function (a, b) {
+            return me.sorter(a.value, b.value) ? -1 : 1;
+        });
+
+        //update indexes
+        for (var i = 0; i < items.length; i++) {
+            items[ i ].key = i;
+        }
+
+        //save items to result
+        result.private.items = items;
+
+        return result;
     };
 
 
-    var GroupProcessor = function (grouper) {
+    var GroupProcessor = function (grouper, alias, selector) {
         var me = this;
 
         //assert, that grouper is a function
@@ -309,12 +339,78 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             $grouper: grouper
         });
 
+        //assert, that alias is a shortName
+        self.assert.shortName(alias, 'groupJoin - given alias `$alias` is not valid', {
+            $alias: alias
+        });
+
+        //assert, that selector is a function
+        self.assert.fn(selector, 'group - given `$selector` is not a function', {
+            $grouper: selector
+        });
+
         me.grouper = grouper;
+        me.alias = alias;
+        me.selector = selector;
     };
 
     GroupProcessor.prototype.process = function (source) {
+        var me = this;
 
-        return source;
+        //create result container
+        var result = new xs.core.Collection();
+
+        source.each(function (item) {
+
+            //evaluate group key
+            var key = me.grouper(item);
+
+            //convert key to object
+            if (!xs.isObject(key)) {
+                key = {
+                    key: key
+                };
+            }
+
+            //find group with same key
+            var group = result.find(findGroup, 0, key);
+
+            //add new item to group
+            if (group) {
+
+                //add new item to group
+                group[ me.alias ].add(me.selector(item));
+            } else {
+
+                //create group from key
+                key[ me.alias ] = new xs.core.Collection([ me.selector(item) ]);
+
+                //add new group to result
+                result.add(key);
+            }
+        });
+
+        return result;
+    };
+
+    var findGroup = function (group) {
+        var me = this;
+
+        var keys = Object.keys(me);
+        var length = keys.length;
+
+        //check group
+        for (var i = 0; i < length; i++) {
+            var key = keys[ i ];
+
+            //if group does not match key - continue
+            if (!group.hasOwnProperty(key) || group[ key ] !== me[ key ]) {
+
+                return false;
+            }
+        }
+
+        return true;
     };
 
 
@@ -330,8 +426,13 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     };
 
     SelectProcessor.prototype.process = function (source) {
+        var me = this;
 
-        return source;
+        //map to xs.core.Collection
+        var result = new xs.core.Collection();
+        result.private.items = source.map(me.selector, source.constructor.All).private.items;
+
+        return result;
     };
 
 });
