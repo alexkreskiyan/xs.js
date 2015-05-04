@@ -192,6 +192,120 @@ module('xs.data.Query', function () {
         strictEqual(JSON.stringify(query.at(2)), '{"x":3,"y":5,"a":3,"b":4}');
     });
 
+    test('outerJoin', function () {
+        var query;
+
+        query = new xs.data.Query([
+            1
+        ]);
+
+        //source must be iterable
+        throws(function () {
+            query.outerJoin(null);
+        });
+
+        //condition must be a function
+        throws(function () {
+            query.outerJoin([]);
+        });
+
+        //all items must be objects to perform joins
+        //source
+        query = (new xs.data.Query([
+            1
+        ]))
+            .outerJoin(new xs.data.Query([
+                {
+                    x: 1
+                }
+            ]), xs.noop);
+        throws(function () {
+            query.execute();
+        });
+
+        //joined
+        query = (new xs.data.Query([
+            {
+                x: 1
+            }
+        ]))
+            .outerJoin(new xs.data.Query([
+                1
+            ]), xs.noop);
+        throws(function () {
+            query.execute();
+        });
+
+
+        //verify
+        var queryLeft = new xs.data.Query([
+            {
+                x: 1
+            },
+            {
+                x: 2
+            },
+            {
+                x: 3
+            },
+            {
+                x: 4
+            },
+            {
+                x: 5
+            }
+        ]);
+
+        var queryRight = new xs.data.Query([
+            {
+                x: 1,
+                a: 2
+            },
+            {
+                x: 2,
+                a: 5
+            },
+            {
+                x: 2,
+                a: 3
+            },
+            {
+                x: 3,
+                a: 4
+            }
+        ]);
+
+        queryLeft.select(function (item) {
+            return {
+                x: item.x,
+                y: item.x * 2 - 1
+            };
+        });
+
+        queryRight.select(function (item) {
+            return {
+                a: item.x,
+                b: item.a
+            };
+        });
+
+        query = queryLeft
+            .outerJoin(queryRight, function (left, right) {
+                return left.x === right.a;
+            }, xs.generator(function () {
+                return {};
+            }));
+
+        query.execute();
+
+        strictEqual(query.size, 5);
+        strictEqual(JSON.stringify(query.at(0)), '{"x":1,"y":1,"a":1,"b":2}');
+        strictEqual(JSON.stringify(query.at(1)), '{"x":2,"y":3,"a":2,"b":5}');
+        strictEqual(JSON.stringify(query.at(2)), '{"x":3,"y":5,"a":3,"b":4}');
+        strictEqual(JSON.stringify(query.at(3)), '{"x":4,"y":7}');
+        strictEqual(JSON.stringify(query.at(4)), '{"x":5,"y":9}');
+    });
+
     test('select', function () {
         var query, source;
 
@@ -443,125 +557,5 @@ module('xs.data.Query', function () {
         //source is not touched
         strictEqual(source.values().toString(), '2,1,3');
     });
-
-    //test('simple', function () {
-    //
-    //    var query = (new xs.data.Query([
-    //        {
-    //            x: 1,
-    //            a: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            a: 5
-    //        },
-    //        {
-    //            x: 2,
-    //            a: 3
-    //        },
-    //        {
-    //            x: 3,
-    //            a: 4
-    //        }
-    //    ]))
-    //        .where(function (item) {
-    //            return item.x > 1;
-    //        })
-    //        .group(function (item) {
-    //            return {
-    //                x: item.x,
-    //                y: item.a % 2
-    //            };
-    //        }, 'group', function (item) {
-    //            return {
-    //                x1: item.x,
-    //                x2: item.a
-    //            };
-    //        })
-    //        .sort(function (a, b) {
-    //            return a.group.size < b.group.size;
-    //        })
-    //        .select(function (item) {
-    //            return {
-    //                x1: item.x,
-    //                y1: item.y,
-    //                items: item.group
-    //            };
-    //        });
-    //
-    //    query.execute();
-    //    console.log(query.values());
-    //
-    //});
-    //
-    //test('constructor', function () {
-    //    var queryLeft = new xs.data.Query([
-    //        {
-    //            x: 1
-    //        },
-    //        {
-    //            x: 2
-    //        },
-    //        {
-    //            x: 3
-    //        },
-    //        {
-    //            x: 4
-    //        },
-    //        {
-    //            x: 5
-    //        }
-    //    ]);
-    //
-    //    var queryRight = new xs.data.Query([
-    //        {
-    //            x: 1,
-    //            a: 2
-    //        },
-    //        {
-    //            x: 2,
-    //            a: 5
-    //        },
-    //        {
-    //            x: 2,
-    //            a: 3
-    //        },
-    //        {
-    //            x: 3,
-    //            a: 4
-    //        }
-    //    ]);
-    //
-    //    queryLeft.select(function (item) {
-    //        return {
-    //            x: item.x,
-    //            y: item.x * 2 - 1
-    //        };
-    //    });
-    //
-    //    queryRight.select(function (item) {
-    //        return {
-    //            x: item.x,
-    //            b: item.a
-    //        };
-    //    });
-    //
-    //    var query = queryLeft
-    //        .outerJoin(queryRight, function (left, right) {
-    //            return left.x === right.x;
-    //        })
-    //        .where(function (item) {
-    //            return item.x > 1;
-    //        })
-    //        .group(function (item) {
-    //            return item.x;
-    //        }, 'items', function (item) {
-    //            return item;
-    //        })
-    //        .sort(function (a, b) {
-    //            return a < b;
-    //        });
-    //    //query.execute();
-    //});
 
 });

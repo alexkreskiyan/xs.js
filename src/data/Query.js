@@ -294,9 +294,56 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         me.emptyValue = emptyValue;
     };
 
-    OuterJoinProcessor.prototype.process = function (source) {
+    OuterJoinProcessor.prototype.process = function () {
+        var me = this;
 
-        return source;
+        //lazy evaluate source
+        if (me.source instanceof xs.core.Lazy) {
+            me.source = me.source.get();
+        }
+
+        //get origin
+        var origin = me.origin;
+
+        //execute origin query
+        origin.execute();
+
+        //get joined source
+        var source = me.source;
+
+        //if source is a query - execute it
+        if (source instanceof self) {
+            source.execute();
+        }
+
+        //use xs.core.Collection
+        var result = new xs.core.Collection();
+
+        origin.each(function (originItem) {
+
+            self.assert.object(originItem, 'OuterJoinProcessor - can not join non object item `$item`', {
+                $originItem: originItem
+            });
+
+            var joinedItem = source.find(findJoinItem, 0, {
+                item: originItem,
+                condition: me.condition
+            });
+
+            //if no match - use default
+            if (!joinedItem) {
+
+                joinedItem = me.emptyValue instanceof xs.core.Generator ? me.emptyValue.create() : me.emptyValue;
+
+                self.assert.object(joinedItem, 'OuterJoinProcessor - can not join with non object item `$item`', {
+                    $joinedItem: joinedItem
+                });
+            }
+
+            result.add(xs.apply({}, originItem, joinedItem));
+        });
+
+        return result;
     };
 
 
