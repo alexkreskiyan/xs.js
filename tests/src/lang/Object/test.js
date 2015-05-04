@@ -12,7 +12,7 @@ module('xs.lang.Object', function () {
 
     'use strict';
 
-    test('extend', function () {
+    test('apply', function () {
         var me = this;
         //init test data
         me.a = {

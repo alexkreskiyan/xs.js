@@ -18,9 +18,6 @@ var assert = new xs.core.Asserter(log, XsLangObjectError);
 xs.Object = (function () {
     var me = {};
 
-    //Create quick reference variables for speed access to core prototypes.
-    var slice = Function.prototype.call.bind(Array.prototype.slice);
-
     /**
      * Copies all properties from objects, passed as arguments to given obj
      *
@@ -56,12 +53,11 @@ xs.Object = (function () {
             $object: object
         });
 
-        var adds = slice(arguments, 1);
-        var addsLength = adds.length;
+        var length = arguments.length;
 
         //iterate over add-ons
-        for (var i = 0; i < addsLength; i++) {
-            var source = adds[ i ];
+        for (var i = 1; i < length; i++) {
+            var source = arguments[ i ];
 
             //continue if source is not object
             if (!xs.isObject(source)) {
@@ -76,6 +72,8 @@ xs.Object = (function () {
                 object[ key ] = source[ key ];
             }
         }
+
+        return object;
     };
 
     return me;
