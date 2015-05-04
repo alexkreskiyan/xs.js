@@ -80,7 +80,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         return query;
     };
 
-    Class.method.groupJoin = function (source, condition, alias) {
+    Class.method.groupJoin = function (source, condition, options) {
         var Query = self;
         var me = this;
 
@@ -88,7 +88,11 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         var query = new Query([]);
 
         //save join condition to stack of new query
-        query.private.stack.add(new GroupJoinProcessor(me, source, condition, alias));
+        if (arguments.length > 2) {
+            query.private.stack.add(new GroupJoinProcessor(me, source, condition, options));
+        } else {
+            query.private.stack.add(new GroupJoinProcessor(me, source, condition));
+        }
 
         return query;
     };
@@ -254,28 +258,55 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     };
 
 
-    var GroupJoinProcessor = function (origin, source, condition, alias) {
+    var GroupJoinProcessor = function (origin, source, condition, options) {
         var me = this;
 
         //assert, that source is iterable
-        self.assert.iterable(source, 'groupJoin - given `$source` is not an iterable', {
+        self.assert.iterable(source, 'GroupJoinProcessor - given `$source` is not an iterable', {
             $source: source
         });
 
         //assert, that condition is a function
-        self.assert.fn(condition, 'groupJoin - given join condition `$condition` is not a function', {
+        self.assert.fn(condition, 'GroupJoinProcessor - given join condition `$condition` is not a function', {
             $condition: condition
-        });
-
-        //assert, that alias is a shortName
-        self.assert.shortName(alias, 'groupJoin - given alias `$alias` is not valid', {
-            $alias: alias
         });
 
         me.origin = origin;
         me.source = source;
         me.condition = condition;
-        me.alias = alias;
+
+        if (arguments.length < 4) {
+            return;
+        }
+
+        //assert, that options is an object
+        self.assert.object(options, 'GroupJoinProcessor - given options `$options` are not an object', {
+            $options: options
+        });
+
+        if (options.hasOwnProperty('alias')) {
+
+            //assert, that alias is a shortName
+            self.assert.shortName(options.alias, 'GroupJoinProcessor - given options.alias `$alias` is not valid', {
+                $alias: options.alias
+            });
+
+            me.alias = options.alias;
+        } else {
+            me.alias = 'group';
+        }
+
+        if (options.hasOwnProperty('asArray')) {
+
+            //assert, that asArray is a boolean
+            self.assert.boolean(options.asArray, 'GroupJoinProcessor - given options.asArray `$asArray` is not a boolean', {
+                $asArray: options.asArray
+            });
+
+            me.asArray = options.asArray;
+        } else {
+            me.asArray = false;
+        }
     };
 
     //extend from JoinProcessor
@@ -358,6 +389,8 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             });
 
             me.alias = options.alias;
+        } else {
+            me.alias = 'group';
         }
 
         if (options.hasOwnProperty('selector')) {
@@ -378,6 +411,8 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             });
 
             me.asArray = options.asArray;
+        } else {
+            me.asArray = false;
         }
     };
 
@@ -387,7 +422,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         //create result container
         var result = new xs.core.Collection();
 
-        var alias = me.alias ? me.alias : 'group';
+        var alias = me.alias;
         var selector = me.selector;
         var asArray = me.asArray;
 
