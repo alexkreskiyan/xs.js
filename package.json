@@ -160,6 +160,7 @@
         "validateQuoteMarks": "'"
     },
     "jshintConfig": {
+        "bitwise": false,
         "eqeqeq": true,
         "forin": true,
         "freeze": true,

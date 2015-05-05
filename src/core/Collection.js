@@ -104,6 +104,58 @@ Collection.Reverse = 0x1;
 Collection.All = 0x2;
 
 /**
+ * Collection flag, meaning, that item is reordered to be the first one
+ *
+ * @static
+ *
+ * @property First
+ *
+ * @readonly
+ *
+ * @type {Number}
+ */
+Collection.First = 0x1;
+
+/**
+ * Collection flag, meaning, that item is reordered to be the last one
+ *
+ * @static
+ *
+ * @property Last
+ *
+ * @readonly
+ *
+ * @type {Number}
+ */
+Collection.Last = 0x2;
+
+/**
+ * Collection flag, meaning, that item is reordered to be before given item
+ *
+ * @static
+ *
+ * @property Before
+ *
+ * @readonly
+ *
+ * @type {Number}
+ */
+Collection.Before = 0x4;
+
+/**
+ * Collection flag, meaning, that item is reordered to be after given item
+ *
+ * @static
+ *
+ * @property After
+ *
+ * @readonly
+ *
+ * @type {Number}
+ */
+Collection.After = 0x8;
+
+/**
  * Collection size
  *
  * @property size
@@ -868,6 +920,119 @@ Collection.prototype.set = function (key, value) {
 
 
     me.private.items[ index ].value = value;
+
+    return me;
+};
+
+/**
+ * Reorders given item relative to another item. Although, may move item to the beginning or to the end of the collection
+ *
+ * For example:
+ *
+ *     var value = {
+ *         x: 1
+ *     };
+ *
+ *     var collection = new xs.core.Collection([
+ *         1,
+ *         2,
+ *         value
+ *     ]);
+ *
+ *     //reorder as the last item in collection
+ *     collection.reorder(1, xs.core.Collection.First);
+ *
+ *     console.log(collection.values());
+ *     //outputs:
+ *     //[
+ *     //    2,
+ *     //    1,
+ *     //    value
+ *     //]
+ *
+ *     //reorder as the relatively by key
+ *     collection.reorder(collection.keyOf(value), xs.core.Collection.After, 0);
+ *
+ *     console.log(collection.values());
+ *     //outputs:
+ *     //[
+ *     //    2,
+ *     //    value,
+ *     //    1
+ *     //]
+ *
+ * @method removeAt
+ *
+ * @param {String|Number} source reorder options
+ * @param {Number} position reorder options
+ * @param {String|Number} target reorder options
+ *
+ * @chainable
+ */
+Collection.prototype.reorder = function (source, position, target) {
+    var me = this;
+    var item;
+
+    //assert, that collection, has key `source`
+    assert.ok(me.hasKey(source), 'reorder - collection has no element with given source key `$source`', {
+        $source: source
+    });
+
+    //assert, that `position` key is a number
+    assert.number(position, 'reorder - given position `$position` is not a number', {
+        $position: position
+    });
+
+    var index = me.keys().indexOf(source);
+    var items = me.private.items;
+
+    //insert to specified position
+    if (position & xs.core.Collection.First || position & xs.core.Collection.Last) {
+
+        //get item from items
+        item = items[ index ];
+
+        //remove item from items
+        items.splice(index, 1);
+
+        //insert first
+        if (position & xs.core.Collection.First) {
+
+            items.splice(0, 0, item);
+
+            //update indexes
+            updateIndexes.call(me, 0);
+        } else {
+            //or add last
+            items.push(item);
+
+            //update indexes
+            updateIndexes.call(me, index);
+        }
+    } else {
+        //assert, that collection, has key `target`
+        assert.ok(me.hasKey(target), 'reorder - collection has no element with given target key `$target`', {
+            $target: target
+        });
+
+        var targetIndex = me.keys().indexOf(target);
+
+        //get item from items
+        item = items[ index ];
+
+        //remove item from items
+        items.splice(index, 1);
+
+        if (position & xs.core.Collection.After) {
+            targetIndex++;
+        }
+
+        //insert to new position
+        items.splice(targetIndex, 0, item);
+
+        //update indexes
+        updateIndexes.call(me, targetIndex);
+    }
 
     return me;
 };
