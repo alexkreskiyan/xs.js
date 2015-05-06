@@ -983,7 +983,8 @@ Collection.prototype.reorder = function (source, position, target) {
         $position: position
     });
 
-    var index = me.keys().indexOf(source);
+    var keys = me.keys();
+    var index = xs.isNumber(source) ? source : keys.indexOf(source);
     var items = me.private.items;
 
     //insert to specified position
@@ -1015,7 +1016,7 @@ Collection.prototype.reorder = function (source, position, target) {
             $target: target
         });
 
-        var targetIndex = me.keys().indexOf(target);
+        var targetIndex = xs.isNumber(target) ? target : keys.indexOf(target);
 
         //get item from items
         item = items[ index ];
@@ -1023,7 +1024,10 @@ Collection.prototype.reorder = function (source, position, target) {
         //remove item from items
         items.splice(index, 1);
 
-        if (position & xs.core.Collection.After) {
+        //apply targetIndex transform
+        if (position & xs.core.Collection.Before && targetIndex > index) {
+            targetIndex--;
+        } else if (position & xs.core.Collection.After && targetIndex < index) {
             targetIndex++;
         }
 
@@ -1031,7 +1035,7 @@ Collection.prototype.reorder = function (source, position, target) {
         items.splice(targetIndex, 0, item);
 
         //update indexes
-        updateIndexes.call(me, targetIndex);
+        updateIndexes.call(me, Math.min(index, targetIndex));
     }
 
     return me;

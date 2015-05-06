@@ -571,6 +571,271 @@ module('xs.core.Collection', function () {
         strictEqual(collection.at('a'), 5);
     });
 
+    test('reorder', function () {
+        //init test variables
+        var collection, data;
+
+        //test array collection
+        data = [
+            1,
+            2,
+            3,
+            4,
+            5
+        ];
+
+        //move first to first
+        collection = new xs.core.Collection(data);
+        collection.reorder(0, xs.core.Collection.First);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move second to first
+        collection = new xs.core.Collection(data);
+        collection.reorder(1, xs.core.Collection.First);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '2,1,3,4,5');
+
+        //move any to first
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.First);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '3,1,2,4,5');
+
+        //move last to last
+        collection = new xs.core.Collection(data);
+        collection.reorder(4, xs.core.Collection.Last);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move penultimate to last
+        collection = new xs.core.Collection(data);
+        collection.reorder(3, xs.core.Collection.Last);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,3,5,4');
+
+        //move any to last
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.Last);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,4,5,3');
+
+        //move first before first
+        collection = new xs.core.Collection(data);
+        collection.reorder(0, xs.core.Collection.Before, 0);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move second before first
+        collection = new xs.core.Collection(data);
+        collection.reorder(1, xs.core.Collection.Before, 0);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '2,1,3,4,5');
+
+        //move any before first
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.Before, 0);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '3,1,2,4,5');
+
+        //move next before previous
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.Before, 1);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,3,2,4,5');
+
+        //move any before itself
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.Before, 2);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move next before next
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.Before, 3);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move next before next+1
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.Before, 4);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,4,3,5');
+
+        //move last after last
+        collection = new xs.core.Collection(data);
+        collection.reorder(4, xs.core.Collection.After, 4);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move penultimate after last
+        collection = new xs.core.Collection(data);
+        collection.reorder(3, xs.core.Collection.After, 4);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,3,5,4');
+
+        //move any after last
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.After, 4);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,4,5,3');
+
+        //move next after previous-1
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.After, 0);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,3,2,4,5');
+
+        //move next after previous
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.After, 1);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move next after itself
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.After, 2);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move next after next+1
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.After, 3);
+        strictEqual(collection.keys().toString(), '0,1,2,3,4');
+        strictEqual(collection.values().toString(), '1,2,4,3,5');
+
+
+        //test object collection
+        data = {
+            a: 1,
+            b: 2,
+            c: 3,
+            d: 4,
+            e: 5
+        };
+
+        //move first to first
+        collection = new xs.core.Collection(data);
+        collection.reorder(0, xs.core.Collection.First);
+        strictEqual(collection.keys().toString(), 'a,b,c,d,e');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move second to first
+        collection = new xs.core.Collection(data);
+        collection.reorder('b', xs.core.Collection.First);
+        strictEqual(collection.keys().toString(), 'b,a,c,d,e');
+        strictEqual(collection.values().toString(), '2,1,3,4,5');
+
+        //move any to first
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.First);
+        strictEqual(collection.keys().toString(), 'c,a,b,d,e');
+        strictEqual(collection.values().toString(), '3,1,2,4,5');
+
+        //move last to last
+        collection = new xs.core.Collection(data);
+        collection.reorder('e', xs.core.Collection.Last);
+        strictEqual(collection.keys().toString(), 'a,b,c,d,e');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move penultimate to last
+        collection = new xs.core.Collection(data);
+        collection.reorder(3, xs.core.Collection.Last);
+        strictEqual(collection.keys().toString(), 'a,b,c,e,d');
+        strictEqual(collection.values().toString(), '1,2,3,5,4');
+
+        //move any to last
+        collection = new xs.core.Collection(data);
+        collection.reorder('c', xs.core.Collection.Last);
+        strictEqual(collection.keys().toString(), 'a,b,d,e,c');
+        strictEqual(collection.values().toString(), '1,2,4,5,3');
+
+        //move first before first
+        collection = new xs.core.Collection(data);
+        collection.reorder(0, xs.core.Collection.Before, 0);
+        strictEqual(collection.keys().toString(), 'a,b,c,d,e');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move second before first
+        collection = new xs.core.Collection(data);
+        collection.reorder('b', xs.core.Collection.Before, 'a');
+        strictEqual(collection.keys().toString(), 'b,a,c,d,e');
+        strictEqual(collection.values().toString(), '2,1,3,4,5');
+
+        //move any before first
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.Before, 0);
+        strictEqual(collection.keys().toString(), 'c,a,b,d,e');
+        strictEqual(collection.values().toString(), '3,1,2,4,5');
+
+        //move next before previous
+        collection = new xs.core.Collection(data);
+        collection.reorder('c', xs.core.Collection.Before, 'b');
+        strictEqual(collection.keys().toString(), 'a,c,b,d,e');
+        strictEqual(collection.values().toString(), '1,3,2,4,5');
+
+        //move any before itself
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.Before, 2);
+        strictEqual(collection.keys().toString(), 'a,b,c,d,e');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move next before next
+        collection = new xs.core.Collection(data);
+        collection.reorder('c', xs.core.Collection.Before, 'd');
+        strictEqual(collection.keys().toString(), 'a,b,c,d,e');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move next before next+1
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.Before, 4);
+        strictEqual(collection.keys().toString(), 'a,b,d,c,e');
+        strictEqual(collection.values().toString(), '1,2,4,3,5');
+
+        //move last after last
+        collection = new xs.core.Collection(data);
+        collection.reorder('e', xs.core.Collection.After, 'e');
+        strictEqual(collection.keys().toString(), 'a,b,c,d,e');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move penultimate after last
+        collection = new xs.core.Collection(data);
+        collection.reorder(3, xs.core.Collection.After, 4);
+        strictEqual(collection.keys().toString(), 'a,b,c,e,d');
+        strictEqual(collection.values().toString(), '1,2,3,5,4');
+
+        //move any after last
+        collection = new xs.core.Collection(data);
+        collection.reorder('c', xs.core.Collection.After, 'e');
+        strictEqual(collection.keys().toString(), 'a,b,d,e,c');
+        strictEqual(collection.values().toString(), '1,2,4,5,3');
+
+        //move next after previous-1
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.After, 0);
+        strictEqual(collection.keys().toString(), 'a,c,b,d,e');
+        strictEqual(collection.values().toString(), '1,3,2,4,5');
+
+        //move next after previous
+        collection = new xs.core.Collection(data);
+        collection.reorder('c', xs.core.Collection.After, 'b');
+        strictEqual(collection.keys().toString(), 'a,b,c,d,e');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move next after itself
+        collection = new xs.core.Collection(data);
+        collection.reorder(2, xs.core.Collection.After, 2);
+        strictEqual(collection.keys().toString(), 'a,b,c,d,e');
+        strictEqual(collection.values().toString(), '1,2,3,4,5');
+
+        //move next after next+1
+        collection = new xs.core.Collection(data);
+        collection.reorder('c', xs.core.Collection.After, 'd');
+        strictEqual(collection.keys().toString(), 'a,b,d,c,e');
+        strictEqual(collection.values().toString(), '1,2,4,3,5');
+
+    });
+
     test('removeAt', function () {
         //init test variables
         var collection;
