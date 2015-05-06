@@ -45,6 +45,84 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
     Class.abstract = true;
 
     /**
+     * Collection flag, meaning, that operation is reverse
+     *
+     * @static
+     *
+     * @property Reverse
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Reverse = 0x1;
+
+    /**
+     * Collection flag, meaning, that operation is made for all matches.
+     *
+     * @static
+     *
+     * @property All
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.All = 0x2;
+
+    /**
+     * Collection flag, meaning, that item is reordered to be the first one
+     *
+     * @static
+     *
+     * @property First
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.First = 0x1;
+
+    /**
+     * Collection flag, meaning, that item is reordered to be the last one
+     *
+     * @static
+     *
+     * @property Last
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Last = 0x2;
+
+    /**
+     * Collection flag, meaning, that item is reordered to be before given item
+     *
+     * @static
+     *
+     * @property Before
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Before = 0x4;
+
+    /**
+     * Collection flag, meaning, that item is reordered to be after given item
+     *
+     * @static
+     *
+     * @property After
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.After = 0x8;
+
+    /**
      * xs.data.Collection constructor
      *
      * @constructor
@@ -141,32 +219,6 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             });
         }
     };
-
-    /**
-     * Collection flag, meaning, that operation is reverse
-     *
-     * @static
-     *
-     * @property Reverse
-     *
-     * @readonly
-     *
-     * @type {Number}
-     */
-    Class.constant.Reverse = 0x1;
-
-    /**
-     * Collection flag, meaning, that operation is made for all matches.
-     *
-     * @static
-     *
-     * @property All
-     *
-     * @readonly
-     *
-     * @type {Number}
-     */
-    Class.constant.All = 0x2;
 
     /**
      * Collection size
@@ -949,6 +1001,123 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
 
         //send closing event.Set
         me.events.send(new imports.event.Set(data));
+
+        return me;
+    };
+
+    /**
+     * Reorders given item relative to another item. Although, may move item to the beginning or to the end of the collection
+     *
+     * For example:
+     *
+     *     var value = {
+     *         x: 1
+     *     };
+     *
+     *     var collection = new xs.data.Collection([
+     *         1,
+     *         2,
+     *         value
+     *     ]);
+     *
+     *     //reorder as the last item in collection
+     *     collection.reorder(1, xs.data.Collection.First);
+     *
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    2,
+     *     //    1,
+     *     //    value
+     *     //]
+     *
+     *     //reorder as the relatively by key
+     *     collection.reorder(collection.keyOf(value), xs.data.Collection.After, 0);
+     *
+     *     console.log(collection.values());
+     *     //outputs:
+     *     //[
+     *     //    2,
+     *     //    value,
+     *     //    1
+     *     //]
+     *
+     * @method removeAt
+     *
+     * @param {String|Number} source reorder options
+     * @param {Number} position reorder options
+     * @param {String|Number} target reorder options
+     *
+     * @chainable
+     */
+    Class.method.reorder = function (source, position, target) {
+        var me = this;
+        var item;
+
+        //assert, that collection, has key `source`
+        self.assert.ok(me.hasKey(source), 'reorder - collection has no element with given source key `$source`', {
+            $source: source
+        });
+
+        //assert, that `position` key is a number
+        self.assert.number(position, 'reorder - given position `$position` is not a number', {
+            $position: position
+        });
+
+        var keys = me.keys();
+        var index = xs.isNumber(source) ? source : keys.indexOf(source);
+        var items = me.private.items;
+
+        //insert to specified position
+        if (position & self.First || position & self.Last) {
+
+            //get item from items
+            item = items[ index ];
+
+            //remove item from items
+            items.splice(index, 1);
+
+            //insert first
+            if (position & self.First) {
+
+                items.splice(0, 0, item);
+
+                //update indexes
+                updateIndexes.call(me, 0);
+            } else {
+                //or add last
+                items.push(item);
+
+                //update indexes
+                updateIndexes.call(me, index);
+            }
+        } else {
+            //assert, that collection, has key `target`
+            self.assert.ok(me.hasKey(target), 'reorder - collection has no element with given target key `$target`', {
+                $target: target
+            });
+
+            var targetIndex = xs.isNumber(target) ? target : keys.indexOf(target);
+
+            //get item from items
+            item = items[ index ];
+
+            //remove item from items
+            items.splice(index, 1);
+
+            //apply targetIndex transform
+            if (position & self.Before && targetIndex > index) {
+                targetIndex--;
+            } else if (position & self.After && targetIndex < index) {
+                targetIndex++;
+            }
+
+            //insert to new position
+            items.splice(targetIndex, 0, item);
+
+            //update indexes
+            updateIndexes.call(me, Math.min(index, targetIndex));
+        }
 
         return me;
     };
