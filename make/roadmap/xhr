@@ -22,9 +22,12 @@ Request.property.url = {
     set: function(xs.uri.HTTP)
 }
 Request.property.data = {
-    set: function(xs.uri.HTTP) //FormData
+    set: function(xs.uri.HTTP) //FormData xs.data.Form
 }
-Request.property.state = {
+Request.property.type = { //Enum needed
+    set: xs.noop
+}
+Request.property.headers = {
     set: xs.noop
 }
 Request.property.timeout = {
@@ -42,9 +45,10 @@ Request.property.credentials = {
 
     }
 }
-Request.property.headers = {
+Request.property.state = {
     set: xs.noop
 }
+
 
 Request.method.abort = function(){} //aborts XHR and calls reject
 
@@ -57,9 +61,6 @@ Response.constructor = function(request) {
 
 }
 Response.property.request = {
-    set: xs.noop
-}
-Response.property.type = { //Enum needed
     set: xs.noop
 }
 Response.property.response = {
