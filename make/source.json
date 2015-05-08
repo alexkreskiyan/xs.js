@@ -322,6 +322,51 @@
                     "test": false
                 }
             },
+            "transport": {
+                "xhr": {
+                    "event": {
+                        "Abort": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Error": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Headers": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Load": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Progress": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Timeout": {
+                            "contract": "class",
+                            "test": false
+                        }
+                    },
+                    "Method": {
+                        "contract": "enum"
+                    },
+                    "Request": {
+                        "contract": "class"
+                    },
+                    "State": {
+                        "contract": "class"
+                    },
+                    "Status": {
+                        "contract": "enum"
+                    },
+                    "Type": {
+                        "contract": "enum"
+                    }
+                }
+            },
             "uri": {
                 "query": {
                     "IQuery": {
