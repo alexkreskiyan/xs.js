@@ -4,15 +4,76 @@ XHR must support CORS, binary requests, form data
 XHR although must support uploads and downloads with progress events both sides
 XHR must support custom request headers and access to response headers
 
+Events:
+xs.transport.xhr.event.Headers - is fired, when response headers are received. The first event, that contains Response object
+xs.transport.xhr.event.Progress
+xs.transport.xhr.event.Load
+xs.transport.xhr.event.Error
+xs.transport.xhr.event.Timeout
+xs.transport.xhr.event.Abort
+
+
 xs.transport.xhr.Request - Request class
-Request.constructor = xs.noop
+Request.constructor = xs.noop;
 Request.property.method = {
-   set: function(xs.uri.HTTP)
+    set: function(Enum xs.transport.xhr.Method)
 }
 Request.property.url = {
-   set: function(xs.uri.HTTP)
+    set: function(xs.uri.HTTP)
 }
 Request.property.data = {
-   set: function(xs.uri.HTTP)
+    set: function(xs.uri.HTTP) //FormData
 }
-xs.transport.xhr.Response
+Request.property.state = {
+    set: xs.noop
+}
+Request.property.timeout = {
+    set: function(number) {
+
+    }
+}
+Request.property.upload = { //marks request as an upload one, this way progress events are sent on XMLHttpRequestUpload
+    set: function(boolean) {
+
+    }
+}
+Request.property.credentials = {
+    set: function(boolean) {
+
+    }
+}
+Request.property.headers = {
+    set: xs.noop
+}
+Request.property.isSent = {
+
+}
+
+Request.method.abort = function(){} //aborts XHR and calls reject
+
+Request.method.send = function(){} //aborts XHR and calls reject
+
+
+
+xs.transport.xhr.Response - Response class
+Response.constructor = function(request) {
+
+}
+Response.property.request = {
+    set: xs.noop
+}
+Response.property.type = { //Enum needed
+    set: xs.noop
+}
+Response.property.response = {
+    set: xs.noop
+}
+Response.property.status = {
+    set: xs.noop
+}
+Response.property.statusText = {
+    set: xs.noop
+}
+Response.property.headers = {
+    set: xs.noop
+}
