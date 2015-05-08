@@ -45,13 +45,10 @@ Request.property.credentials = {
 Request.property.headers = {
     set: xs.noop
 }
-Request.property.isSent = {
-
-}
 
 Request.method.abort = function(){} //aborts XHR and calls reject
 
-Request.method.send = function(){} //aborts XHR and calls reject
+Request.method.send = function(){} //forms and sends XHR. Returns xs.core.Promise
 
 
 
