@@ -1,13 +1,13 @@
 /**
- * Event class for events, being thrown
+ * Event class for events, being thrown, when request execution failed due to some error
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.event.Headers
+ * @class xs.transport.xhr.event.Error
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Set', function (self) {
+xs.define(xs.Class, 'ns.Error', function () {
 
     'use strict';
 
@@ -23,22 +23,9 @@ xs.define(xs.Class, 'ns.Set', function (self) {
      * Event constructor
      *
      * @constructor
-     *
-     * @param {Object} [data] event data
      */
-    Class.constructor = function (data) {
+    Class.constructor = function () {
 
-    };
-
-    /**
-     * Event `attribute` property. Event attribute is name of changed attribute
-     *
-     * @property attribute
-     *
-     * @type {Object}
-     */
-    Class.property.attribute = {
-        set: xs.noop
     };
 
 });

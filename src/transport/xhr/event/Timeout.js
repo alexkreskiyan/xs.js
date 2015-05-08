@@ -1,13 +1,13 @@
 /**
- * Event class for events, being thrown
+ * Event class for events, being thrown, when response is aborted because of timeout
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.event.Headers
+ * @class xs.transport.xhr.event.Timeout
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Set', function (self) {
+xs.define(xs.Class, 'ns.Timeout', function () {
 
     'use strict';
 
@@ -18,27 +18,5 @@ xs.define(xs.Class, 'ns.Set', function (self) {
     Class.implements = [
         'xs.event.IEvent'
     ];
-
-    /**
-     * Event constructor
-     *
-     * @constructor
-     *
-     * @param {Object} [data] event data
-     */
-    Class.constructor = function (data) {
-
-    };
-
-    /**
-     * Event `attribute` property. Event attribute is name of changed attribute
-     *
-     * @property attribute
-     *
-     * @type {Object}
-     */
-    Class.property.attribute = {
-        set: xs.noop
-    };
 
 });

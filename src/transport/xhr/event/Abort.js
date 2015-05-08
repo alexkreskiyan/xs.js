@@ -1,13 +1,13 @@
 /**
- * Event class for events, being thrown
+ * Event class for events, being thrown, when executed request is aborted
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.event.Headers
+ * @class xs.transport.xhr.event.Abort
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Set', function (self) {
+xs.define(xs.Class, 'ns.Abort', function () {
 
     'use strict';
 
@@ -24,20 +24,23 @@ xs.define(xs.Class, 'ns.Set', function (self) {
      *
      * @constructor
      *
-     * @param {Object} [data] event data
+     * @param {*} [reason] event abort reason
      */
-    Class.constructor = function (data) {
+    Class.constructor = function (reason) {
+        var me = this;
 
+        //save abort reason
+        me.private.reason = reason;
     };
 
     /**
-     * Event `attribute` property. Event attribute is name of changed attribute
+     * Event `reason` property. Event reason is a reason, that describes, why was request aborted
      *
-     * @property attribute
+     * @property reason
      *
      * @type {Object}
      */
-    Class.property.attribute = {
+    Class.property.reason = {
         set: xs.noop
     };
 
