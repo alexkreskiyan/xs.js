@@ -62,18 +62,79 @@ module('xs.transport.xhr.Request', function () {
             } else {
                 xhr.send();
             }
+
+            return xhr;
         };
 
         window.upload = function () {
-            window.request('post', 'http://localhost:3000/upload', true);
+            return window.request('post', 'http://localhost:3000/upload', true);
         };
 
         window.download = function () {
-            window.request('get', 'http://localhost:3000/download');
+            return window.request('get', 'http://localhost:3000/download');
         };
 
         window.revert = function () {
-            window.request('post', 'http://localhost:3000/revert', true);
+            return window.request('post', 'http://localhost:3000/revert', true);
+        };
+
+        window.xrequest = function (method, url, upload, file) {
+            var xhr = new xs.transport.xhr.Request();
+            var event = xs.transport.xhr.event;
+
+            //add upload event listeners
+            xhr.on(event.UploadProgress, console.log.bind(console, 'upload.progress'));
+            xhr.on(event.Upload, console.log.bind(console, 'upload.load'));
+
+            //add download event listeners
+            xhr.on(event.Headers, console.log.bind(console, 'load.headers'));
+            xhr.on(event.LoadProgress, console.log.bind(console, 'load.progress'));
+            xhr.on(event.Load, console.log.bind(console, 'load.load'));
+
+            xhr.on(event.Done, console.log.bind(console, 'done'));
+            xhr.on(event.Error, console.log.bind(console, 'error'));
+            xhr.on(event.Abort, console.log.bind(console, 'abort'));
+            xhr.on(event.Timeout, console.log.bind(console, 'timeout'));
+
+            xhr.method = method;
+            xhr.url = new xs.uri.HTTP(url, xs.uri.query.QueryString);
+
+            if (upload) {
+
+                if (file) {
+                    xhr.data = file;
+                } else {
+
+                    //works if not set. is ok?
+                    //xhr.headers.add('Content-Type', 'application/x-www-form-urlencoded');
+
+
+                    file = new File([ data ], {
+                        type: 'text/plain'
+                    });
+
+                    var formData = new FormData();
+                    formData.append('data', file);
+
+                    xhr.data = data; //or formData
+                }
+            }
+
+            xhr.send().then(console.log.bind(console, 'resolved'), console.log.bind(console, 'rejected'), console.log.bind(console, 'updated'));
+
+            return xhr;
+        };
+
+        window.xupload = function () {
+            return window.xrequest(xs.transport.xhr.Method.POST, 'http://localhost:3000/upload', true);
+        };
+
+        window.xdownload = function () {
+            return window.xrequest(xs.transport.xhr.Method.GET, 'http://localhost:3000/download');
+        };
+
+        window.xrevert = function () {
+            return window.xrequest(xs.transport.xhr.Method.POST, 'http://localhost:3000/revert', true);
         };
 
     });

@@ -7,25 +7,16 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Upload', function () {
+xs.define(xs.Class, 'ns.event.Upload', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.transport.xhr.event';
+    Class.namespace = 'xs.transport.xhr';
 
     Class.implements = [
         'xs.event.IEvent'
     ];
-
-    /**
-     * Event constructor
-     *
-     * @constructor
-     */
-    Class.constructor = function () {
-
-    };
 
 });

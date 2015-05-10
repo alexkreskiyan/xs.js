@@ -7,13 +7,13 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Abort', function () {
+xs.define(xs.Class, 'ns.event.Abort', function () {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.transport.xhr.event';
+    Class.namespace = 'xs.transport.xhr';
 
     Class.implements = [
         'xs.event.IEvent'

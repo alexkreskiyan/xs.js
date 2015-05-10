@@ -134,7 +134,9 @@ function revertFile(request, response) {
 
         response.writeHead(200, {
             'Content-Type': 'application/octet-stream',
+            'Web-Server': 'node',
             'Access-Control-Allow-Origin': '*',
+            'Access-Control-Expose-Headers': 'Web-Server',
             'Content-Length': size
         });
 

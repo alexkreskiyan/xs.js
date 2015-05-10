@@ -7,13 +7,13 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Error', function () {
+xs.define(xs.Class, 'ns.event.Error', function () {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.transport.xhr.event';
+    Class.namespace = 'xs.transport.xhr';
 
     Class.implements = [
         'xs.event.IEvent'
@@ -23,9 +23,25 @@ xs.define(xs.Class, 'ns.Error', function () {
      * Event constructor
      *
      * @constructor
+     *
+     * @param {*} [reason] event error reason
      */
-    Class.constructor = function () {
+    Class.constructor = function (reason) {
+        var me = this;
 
+        //save abort reason
+        me.private.reason = reason;
+    };
+
+    /**
+     * Event `reason` property. Event reason is a reason, that describes, why request failed
+     *
+     * @property reason
+     *
+     * @type {Object}
+     */
+    Class.property.reason = {
+        set: xs.noop
     };
 
 });

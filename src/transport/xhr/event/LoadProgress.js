@@ -7,13 +7,13 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.LoadProgress', function () {
+xs.define(xs.Class, 'ns.event.LoadProgress', function (self) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.transport.xhr.event';
+    Class.namespace = 'xs.transport.xhr';
 
     Class.implements = [
         'xs.event.IEvent'
@@ -24,8 +24,38 @@ xs.define(xs.Class, 'ns.LoadProgress', function () {
      *
      * @constructor
      */
-    Class.constructor = function () {
+    Class.constructor = function (data) {
+        var me = this;
 
+        //assert, that data is an object
+        self.assert.object(data, 'constructor - given data `$data` is not an object', {
+            $data: data
+        });
+
+        me.private.loaded = data.loaded;
+        me.private.total = data.total;
+    };
+
+    /**
+     * Event `loaded` property. Event loaded is a size of loaded response's part in bytes
+     *
+     * @property loaded
+     *
+     * @type {Number}
+     */
+    Class.property.loaded = {
+        set: xs.noop
+    };
+
+    /**
+     * Event `total` property. Event total is a response size in bytes
+     *
+     * @property total
+     *
+     * @type {Number}
+     */
+    Class.property.total = {
+        set: xs.noop
     };
 
 });
