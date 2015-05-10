@@ -1,13 +1,13 @@
 /**
- * Event class for events, being thrown, while request body is uploaded to remote or while response body is downloaded to mark process progress
+ * Event class for events, being thrown, when response is done (with any result - abort, error, timeout, success)
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.event.Progress
+ * @class xs.transport.xhr.event.Done
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Progress', function () {
+xs.define(xs.Class, 'ns.Done', function () {
 
     'use strict';
 

@@ -329,6 +329,10 @@
                             "contract": "class",
                             "test": false
                         },
+                        "Done": {
+                            "contract": "class",
+                            "test": false
+                        },
                         "Error": {
                             "contract": "class",
                             "test": false
@@ -341,11 +345,19 @@
                             "contract": "class",
                             "test": false
                         },
-                        "Progress": {
+                        "LoadProgress": {
                             "contract": "class",
                             "test": false
                         },
                         "Timeout": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Upload": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "UploadProgress": {
                             "contract": "class",
                             "test": false
                         }
