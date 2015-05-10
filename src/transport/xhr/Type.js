@@ -10,4 +10,9 @@
  * @class xs.transport.xhr.Type
  */
 xs.define(xs.Enum, 'xs.transport.xhr.Type', {
+    Text: '',
+    ArrayBuffer: 'arraybuffer',
+    Blob: 'blob',
+    Document: 'document',
+    JSON: 'json'
 });
