@@ -50,6 +50,7 @@ module('xs.transport.xhr.Request', function () {
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.PUT;
         request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        strictEqual(request.method, xs.transport.xhr.Method.PUT);
         request.send().then(function (response) {
 
             //validate echoed method
@@ -68,22 +69,98 @@ module('xs.transport.xhr.Request', function () {
     });
 
     test('url', function () {
-        expect(0);
-        //must be set when request is unsent
+        var me = this;
+
+        var request;
+
+        //url must be set when request is unsent
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.GET;
+        request.url = new xs.uri.HTTP('', xs.uri.query.QueryString);
+        request.send();
+
+        throws(function () {
+            request.url = new xs.uri.HTTP('', xs.uri.query.QueryString);
+        });
+
         //must be xs.uri.HTTP instance
+        request = new xs.transport.xhr.Request();
+        throws(function () {
+            request.url = 'localhost';
+        });
+
         //is implemented correctly
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.GET;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        strictEqual(request.url.toString(), server + '/echo');
+        request.send().then(function (response) {
+
+            //validate echoed uri
+            strictEqual(response.headers.at('x-request-uri'), '/echo');
+
+            me.done();
+        }, function () {
+
+            //handle fail
+            strictEqual(true, false, 'request failed');
+
+            me.done();
+        });
+
+        return false;
     });
 
     test('user', function () {
-        expect(0);
-        //must be set when request is unsent
+        var request;
+
+        //url must be set when request is unsent
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.GET;
+        request.url = new xs.uri.HTTP('', xs.uri.query.QueryString);
+        request.user = 'max';
+        request.send();
+
+        throws(function () {
+            request.user = 'max';
+        });
+
         //must be a string
+        request = new xs.transport.xhr.Request();
+        throws(function () {
+            request.user = null;
+        });
+
+        //is implemented correctly
+        request = new xs.transport.xhr.Request();
+        request.user = 'max';
+        strictEqual(request.user, 'max');
     });
 
     test('password', function () {
-        expect(0);
-        //must be set when request is unsent
+        var request;
+
+        //url must be set when request is unsent
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.GET;
+        request.url = new xs.uri.HTTP('', xs.uri.query.QueryString);
+        request.password = 'max';
+        request.send();
+
+        throws(function () {
+            request.password = 'max';
+        });
+
         //must be a string
+        request = new xs.transport.xhr.Request();
+        throws(function () {
+            request.password = null;
+        });
+
+        //is implemented correctly
+        request = new xs.transport.xhr.Request();
+        request.password = 'max';
+        strictEqual(request.password, 'max');
     });
 
     test('data', function () {
@@ -101,22 +178,152 @@ module('xs.transport.xhr.Request', function () {
     });
 
     test('headers', function () {
-        expect(0);
-        //are set correctly
+        var me = this;
+
+        var request;
+
+        //headers must be set when request is unsent
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.GET;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.headers.add('x-custom-header', 'custom header value');
+
+        //is implemented correctly
+        strictEqual(JSON.stringify(request.headers.toSource()), '{"x-custom-header":"custom header value"}');
+        request.send().then(function (response) {
+
+            //validate echoed header
+            strictEqual(response.headers.at('x-custom-header'), 'custom header value');
+
+            me.done();
+        }, function () {
+
+            //handle fail
+            strictEqual(true, false, 'request failed');
+
+            me.done();
+        });
+
+        return false;
     });
 
     test('timeout', function () {
-        expect(0);
-        //must be set when request is unsent
-        //must be a string
-        //works correctly
+        var me = this;
+
+        var request;
+
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.GET;
+        request.url = new xs.uri.HTTP('', xs.uri.query.QueryString);
+        request.timeout = 50;
+
+        //timeout must be a positive number
+        throws(function () {
+            request.timeout = '10';
+        });
+        throws(function () {
+            request.timeout = -1;
+        });
+
+        request.send();
+
+        //timeout must be set when request is unsent
+        throws(function () {
+            request.timeout = 10;
+        });
+
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.GET;
+        request.url = new xs.uri.HTTP(server + '/long', xs.uri.query.QueryString);
+        request.timeout = 10;
+
+
+        //is implemented correctly
+        var timedOut = false;
+        strictEqual(request.timeout, 10);
+        request.on(xs.transport.xhr.event.Timeout, function () {
+            //request must be timed out
+            me.done();
+            timedOut = true;
+        });
+        request.send().always(function () {
+            if (timedOut) {
+                return;
+            }
+
+            //handle fail
+            strictEqual(true, false, 'request failed');
+
+            me.done();
+        });
+
+        return false;
     });
 
     test('credentials', function () {
-        expect(0);
-        //must be set when request is unsent
-        //must be a string
-        //are sent, if allowed
+        var me = this;
+
+        var request;
+
+        //credentials flag must be set when request is unsent
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.GET;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.credentials = true;
+
+        //credentials must be a boolean
+        throws(function () {
+            request.credentials = '10';
+        });
+
+        request.send();
+
+        //credentials must be set when request is unsent
+        throws(function () {
+            request.credentials = false;
+        });
+
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.GET;
+        request.url = new xs.uri.HTTP(server + '/credentials', xs.uri.query.QueryString);
+        var cookie = 'custom=demo';
+        request.headers.add('cookies', cookie);
+        request.credentials = true;
+
+
+        //is implemented correctly
+        strictEqual(request.credentials, true);
+        request.send().then(function (response) {
+
+            request = new xs.transport.xhr.Request();
+            request.method = xs.transport.xhr.Method.GET;
+            request.url = new xs.uri.HTTP(server + '/credentials', xs.uri.query.QueryString);
+            request.credentials = true;
+
+
+            request.send().then(function (response) {
+
+                //validate echoed header
+                strictEqual(response.headers.at('cookies'), cookie);
+
+                me.done();
+            }, function () {
+
+                //handle fail
+                strictEqual(true, false, 'request failed');
+
+                me.done();
+            });
+
+        }, function () {
+
+            //handle fail
+            strictEqual(true, false, 'request failed');
+
+            me.done();
+        });
+
+        return false;
     });
 
     test('state', function () {

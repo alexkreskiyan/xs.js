@@ -9,6 +9,12 @@ var server = http.createServer(function (request, response) {
         case '/echo':
             handleEcho(request, response);
             break;
+        case '/long':
+            handleLong(request, response);
+            break;
+        case '/credentials':
+            handleCredentials(request, response);
+            break;
         case '/upload':
             handleUpload(request, response);
             break;
@@ -33,8 +39,9 @@ function handleEcho(request, response) {
     ];
 
     var headers = {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': request.headers.origin,
         'Access-Control-Allow-Methods': 'OPTIONS,GET,HEAD,POST,PUT,DELETE',
+        'Access-Control-Allow-Credentials': true,
         'Access-Control-Allow-Headers': allowedHeaders.join(','),
         'Access-Control-Expose-Headers': allowedHeaders.concat(exposedHeaders).join(',')
     };
@@ -68,6 +75,57 @@ function handleEcho(request, response) {
 
         response.end();
     });
+}
+
+function handleLong(request, response) {
+
+    response.writeHead(200, {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'OPTIONS,GET,HEAD,POST,PUT,DELETE'
+    });
+
+    if (request.method === 'OPTIONS') {
+        response.end();
+
+        return;
+    }
+
+    setTimeout(function () {
+        response.end();
+
+    }, 100);
+}
+
+function handleCredentials(request, response) {
+    var headers = {
+        'Access-Control-Allow-Origin': request.headers.origin,
+        'Access-Control-Allow-Methods': 'OPTIONS,GET,HEAD,POST,PUT,DELETE',
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Headers': 'cookies',
+        'Access-Control-Expose-Headers': 'cookies'
+    };
+
+    if (request.method === 'OPTIONS') {
+        response.writeHead(200, headers);
+        response.end();
+
+        return;
+    }
+
+    //if no cookie - set. else - remove
+    console.log('request headers', request.headers);
+
+    if (request.headers.cookie) {
+        headers[ 'set-cookie' ] = 'custom=;expires=' + (new Date(0)).toString();
+        headers.cookies = request.headers.cookie;
+    } else {
+        headers[ 'set-cookie' ] = request.headers.cookies;
+    }
+
+    console.log('response headers', headers);
+
+    response.writeHead(200, headers);
+    response.end();
 }
 
 function handleUpload(request, response) {

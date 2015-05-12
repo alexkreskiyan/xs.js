@@ -202,7 +202,7 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
             });
 
             //assert, that timeout is a positive number
-            self.assert.ok(timeout > 0, 'timeout:set - given timeout `$timeout` is negative', {
+            self.assert.ok(timeout >= 0, 'timeout:set - given timeout `$timeout` is negative', {
                 $timeout: timeout
             });
 
@@ -234,7 +234,7 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
         var me = this;
 
         //assert, that request is not sent yet
-        self.assert.equal(me.private.state, imports.State.Unsent, 'send - request must not be sent to set data');
+        self.assert.equal(me.private.state, imports.State.Unsent, 'send - request must not be sent yet');
 
         //assert, that method is specified
         self.assert.defined(me.private.method, 'send - request method is not specified');
@@ -279,9 +279,9 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
 
         //open request
         if (me.private.user || me.private.password) {
-            xhr.open(me.private.method, me.private.url, true, me.private.user, me.private.password);
+            xhr.open(me.private.method, me.private.url.toString(), true, me.private.user, me.private.password);
         } else {
-            xhr.open(me.private.method, me.private.url);
+            xhr.open(me.private.method, me.private.url.toString());
         }
 
 
