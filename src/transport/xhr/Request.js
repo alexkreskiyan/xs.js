@@ -235,7 +235,7 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
 
 
         //assert, that request is not sent yet
-        self.assert.equal(me.private.state, imports.State.Unsent, 'method:set - request must not be sent to set data');
+        self.assert.equal(me.private.state, imports.State.Unsent, 'send - request must not be sent to set data');
 
         //set request state
         me.private.state = imports.State.UploadStarted;
@@ -304,8 +304,15 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
     };
 
     Class.method.abort = function () {
+        var me = this;
 
-    }; //aborts XHR and calls reject
+        //assert, that request is sent
+        self.assert.ok(me.private.state === imports.State.Unsent, 'abort - request must be sent to abort it');
+
+        //abort request
+        me.private.xhr.abort();
+    };
+
 
     var handleUploadProgress = function (event) {
         var me = this;

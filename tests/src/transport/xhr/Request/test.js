@@ -22,12 +22,47 @@ module('xs.transport.xhr.Request', function () {
         //must be xs.uri.HTTP instance
     });
 
-    test('url', function () {
+    test('user', function () {
         //must be set when request is unsent
         //must be a string
     });
 
-    test('url', function () {
+    test('password', function () {
+        //must be set when request is unsent
+        //must be a string
+    });
+
+    test('data', function () {
+        //must be set when request is unsent
+        //must be a string
+    });
+
+    test('type', function () {
+        //must be set when request is unsent
+        //must be a string
+    });
+
+    test('headers', function () {
+        //must be set when request is unsent
+        //must be a string
+    });
+
+    test('timeout', function () {
+        //must be set when request is unsent
+        //must be a string
+    });
+
+    test('credentials', function () {
+        //must be set when request is unsent
+        //must be a string
+    });
+
+    test('state', function () {
+        //must be set when request is unsent
+        //must be a string
+    });
+
+    test('password', function () {
         //must be set when request is unsent
         //must be a string
     });
