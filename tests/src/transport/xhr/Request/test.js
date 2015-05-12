@@ -12,70 +12,122 @@ module('xs.transport.xhr.Request', function () {
 
     'use strict';
 
+    var data = (function () {
+        var length = 1e6;
+        var data = '';
+
+        for (var i = 0; i < length; i++) {
+            data += 'abcdefghijklmntoprst';
+        }
+
+        return data;
+    })();
+
+    var server = 'http://localhost:3000';
+
     test('method', function () {
+        var me = this;
+
         var request;
 
-        //must be set when request is unsent
+        //method must be set when request is unsent
         request = new xs.transport.xhr.Request();
-        strictEqual(request.method, undefined);
+        request.method = xs.transport.xhr.Method.GET;
+        request.url = new xs.uri.HTTP('', xs.uri.query.QueryString);
+        request.send();
 
-        request.send()
+        throws(function () {
+            request.method = xs.transport.xhr.Method.GET;
+        });
 
         //must be valid xs.transport.xhr.Method element
+        request = new xs.transport.xhr.Request();
+        throws(function () {
+            request.method = 'TRACE';
+        });
+
         //is implemented correctly
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.PUT;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.send().then(function (response) {
+
+            //validate echoed method
+            strictEqual(response.headers.at('x-request-method'), xs.transport.xhr.Method.PUT);
+
+            me.done();
+        }, function () {
+
+            //handle fail
+            strictEqual(true, false, 'request failed');
+
+            me.done();
+        });
+
+        return false;
     });
 
     test('url', function () {
+        expect(0);
         //must be set when request is unsent
         //must be xs.uri.HTTP instance
         //is implemented correctly
     });
 
     test('user', function () {
+        expect(0);
         //must be set when request is unsent
         //must be a string
     });
 
     test('password', function () {
+        expect(0);
         //must be set when request is unsent
         //must be a string
     });
 
     test('data', function () {
+        expect(0);
         //must be set when request is unsent
         //must be of valid type
         //every type is implemented correctly
     });
 
     test('type', function () {
+        expect(0);
         //must be set when request is unsent
         //must be valid xs.transport.xhr.Type element
         //every type is implemented correctly
     });
 
     test('headers', function () {
+        expect(0);
         //are set correctly
     });
 
     test('timeout', function () {
+        expect(0);
         //must be set when request is unsent
         //must be a string
         //works correctly
     });
 
     test('credentials', function () {
+        expect(0);
         //must be set when request is unsent
         //must be a string
         //are sent, if allowed
     });
 
     test('state', function () {
+        expect(0);
         //must be set when request is unsent
         //must be a string
         //changes correctly during request
     });
 
     test('send', function () {
+        expect(0);
         //request must be unsent
         //headers are applied (server returns headers)
         //data may be sent with POST/PUT method only
@@ -83,18 +135,12 @@ module('xs.transport.xhr.Request', function () {
     });
 
     test('abort', function () {
+        expect(0);
         //must be called when request is sent
     });
 
     test('demo', function () {
         expect(0);
-
-        var length = 1e6;
-        var data = '';
-
-        for (var i = 0; i < length; i++) {
-            data += 'abcdefghijklmntoprst';
-        }
 
         window.request = function (method, url, upload, file) {
             var xhr = new XMLHttpRequest();

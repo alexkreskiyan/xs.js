@@ -6,6 +6,9 @@ var path = require('path');
 
 var server = http.createServer(function (request, response) {
     switch (request.url) {
+        case '/echo':
+            handleEcho(request, response);
+            break;
         case '/upload':
             handleUpload(request, response);
             break;
@@ -21,6 +24,51 @@ var server = http.createServer(function (request, response) {
     }
 });
 server.listen(3000);
+
+function handleEcho(request, response) {
+    var allowedHeaders = [ 'x-custom-header' ];
+    var exposedHeaders = [
+        'x-request-method',
+        'x-request-uri'
+    ];
+
+    var headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'OPTIONS,GET,HEAD,POST,PUT,DELETE',
+        'Access-Control-Allow-Headers': allowedHeaders.join(','),
+        'Access-Control-Expose-Headers': allowedHeaders.concat(exposedHeaders).join(',')
+    };
+
+    if (request.method === 'OPTIONS') {
+        response.writeHead(200, headers);
+        response.end();
+
+        return;
+    }
+
+    for (var i = 0; i < allowedHeaders.length; i++) {
+        var header = allowedHeaders[ i ];
+
+        if (request.headers.hasOwnProperty(header)) {
+            headers[ header ] = request.headers[ header ];
+        }
+    }
+
+    headers[ 'x-request-method' ] = request.method;
+    headers[ 'x-request-uri' ] = request.url;
+
+    response.writeHead(200, headers);
+
+    var body = '';
+    request.on('data', function (data) {
+        body += data;
+    });
+
+    request.on('end', function () {
+
+        response.end();
+    });
+}
 
 function handleUpload(request, response) {
 

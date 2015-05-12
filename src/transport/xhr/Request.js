@@ -340,9 +340,6 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
 
         //send event
         me.send(new imports.event.Abort(me.response));
-
-        //reject promise
-        me.promise.reject(me.response);
     };
 
     var handleUploadError = function () {
@@ -353,9 +350,6 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
 
         //send event
         me.send(new imports.event.Error(me.response));
-
-        //reject promise
-        me.promise.reject(me.response);
     };
 
     var handleUploadTimeout = function () {
@@ -366,9 +360,6 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
 
         //send event
         me.send(new imports.event.Timeout(me.response));
-
-        //reject promise
-        me.promise.reject(me.response);
     };
 
     var handleUpload = function () {
@@ -400,7 +391,7 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
         var headers = {};
 
         if (headersString) {
-            var rawHeaders = xhr.getAllResponseHeaders().trim().toLowerCase().split('\r\n');
+            var rawHeaders = xhr.getAllResponseHeaders().trim().split('\r\n');
 
             for (var i = 0; i < rawHeaders.length; i++) {
                 var header = rawHeaders[ i ].split(':');
