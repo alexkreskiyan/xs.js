@@ -12,6 +12,26 @@ module('xs.transport.xhr.Request', function () {
 
     'use strict';
 
+    test('method', function () {
+        //must be set when request is unsent
+        //must be valid xs.transport.xhr.Method element
+    });
+
+    test('url', function () {
+        //must be set when request is unsent
+        //must be xs.uri.HTTP instance
+    });
+
+    test('url', function () {
+        //must be set when request is unsent
+        //must be a string
+    });
+
+    test('url', function () {
+        //must be set when request is unsent
+        //must be a string
+    });
+
     test('demo', function () {
         expect(0);
 
