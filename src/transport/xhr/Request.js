@@ -233,9 +233,14 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
     Class.method.send = function () {
         var me = this;
 
-
         //assert, that request is not sent yet
         self.assert.equal(me.private.state, imports.State.Unsent, 'send - request must not be sent to set data');
+
+        //assert, that method is specified
+        self.assert.defined(me.private.method, 'send - request method is not specified');
+
+        //assert, that url is specified
+        self.assert.defined(me.private.url, 'send - request url is not specified');
 
         //set request state
         me.private.state = imports.State.UploadStarted;

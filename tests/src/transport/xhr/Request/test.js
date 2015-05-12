@@ -13,13 +13,22 @@ module('xs.transport.xhr.Request', function () {
     'use strict';
 
     test('method', function () {
+        var request;
+
         //must be set when request is unsent
+        request = new xs.transport.xhr.Request();
+        strictEqual(request.method, undefined);
+
+        request.send()
+
         //must be valid xs.transport.xhr.Method element
+        //is implemented correctly
     });
 
     test('url', function () {
         //must be set when request is unsent
         //must be xs.uri.HTTP instance
+        //is implemented correctly
     });
 
     test('user', function () {
@@ -34,37 +43,47 @@ module('xs.transport.xhr.Request', function () {
 
     test('data', function () {
         //must be set when request is unsent
-        //must be a string
+        //must be of valid type
+        //every type is implemented correctly
     });
 
     test('type', function () {
         //must be set when request is unsent
-        //must be a string
+        //must be valid xs.transport.xhr.Type element
+        //every type is implemented correctly
     });
 
     test('headers', function () {
-        //must be set when request is unsent
-        //must be a string
+        //are set correctly
     });
 
     test('timeout', function () {
         //must be set when request is unsent
         //must be a string
+        //works correctly
     });
 
     test('credentials', function () {
         //must be set when request is unsent
         //must be a string
+        //are sent, if allowed
     });
 
     test('state', function () {
         //must be set when request is unsent
         //must be a string
+        //changes correctly during request
     });
 
-    test('password', function () {
-        //must be set when request is unsent
-        //must be a string
+    test('send', function () {
+        //request must be unsent
+        //headers are applied (server returns headers)
+        //data may be sent with POST/PUT method only
+        //send returns promise
+    });
+
+    test('abort', function () {
+        //must be called when request is sent
     });
 
     test('demo', function () {
