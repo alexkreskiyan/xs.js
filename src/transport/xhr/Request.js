@@ -119,6 +119,12 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
         set: function (user) {
             var me = this;
 
+            if (!xs.isDefined(user)) {
+                delete me.private.user;
+
+                return;
+            }
+
             //assert, that request is not sent yet
             self.assert.equal(me.private.state, imports.State.Unsent, 'user:set - request must not be sent to set method');
 
@@ -135,6 +141,12 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
         set: function (password) {
             var me = this;
 
+            if (!xs.isDefined(password)) {
+                delete me.private.password;
+
+                return;
+            }
+
             //assert, that request is not sent yet
             self.assert.equal(me.private.state, imports.State.Unsent, 'user:set - request must not be sent to set method');
 
@@ -150,6 +162,12 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
     Class.property.data = {
         set: function (data) {
             var me = this;
+
+            if (!xs.isDefined(data)) {
+                delete me.private.data;
+
+                return;
+            }
 
             //assert, that request is not sent yet
             self.assert.equal(me.private.state, imports.State.Unsent, 'data:set - request must not be sent to set data');

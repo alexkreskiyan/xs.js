@@ -113,16 +113,12 @@ function handleCredentials(request, response) {
     }
 
     //if no cookie - set. else - remove
-    console.log('request headers', request.headers);
-
     if (request.headers.cookie) {
         headers[ 'set-cookie' ] = 'custom=;expires=' + (new Date(0)).toString();
         headers.cookies = request.headers.cookie;
     } else {
         headers[ 'set-cookie' ] = request.headers.cookies;
     }
-
-    console.log('response headers', headers);
 
     response.writeHead(200, headers);
     response.end();
