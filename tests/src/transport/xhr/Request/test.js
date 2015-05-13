@@ -12,7 +12,7 @@ module('xs.transport.xhr.Request', function () {
 
     'use strict';
 
-    var data = (function () {
+    var bigData = (function () {
         var length = 1e6;
         var data = '';
 
@@ -135,6 +135,8 @@ module('xs.transport.xhr.Request', function () {
         request = new xs.transport.xhr.Request();
         request.user = 'max';
         strictEqual(request.user, 'max');
+        request.user = undefined;
+        strictEqual(request.user, undefined);
     });
 
     test('password', function () {
@@ -161,13 +163,129 @@ module('xs.transport.xhr.Request', function () {
         request = new xs.transport.xhr.Request();
         request.password = 'max';
         strictEqual(request.password, 'max');
+        request.password = undefined;
+        strictEqual(request.password, undefined);
     });
 
     test('data', function () {
-        expect(0);
-        //must be set when request is unsent
-        //must be of valid type
-        //every type is implemented correctly
+        var me = this;
+
+        var request;
+        var promises = [];
+
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+
+        //data must be of accepted type
+        throws(function () {
+            request.data = 10;
+        });
+
+        request.send();
+
+        //data must be set when request is unsent
+        throws(function () {
+            request.data = '';
+        });
+
+
+        var raw = '<node>demo</node>';
+        var length = raw.length;
+        var data, view, i;
+
+
+        //verify ArrayBuffer sending
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+
+        request.data = data = new ArrayBuffer(length);
+        view = new Uint8Array(data);
+
+        for (i = 0; i < length; i++) {
+            view[ i ] = raw.charCodeAt(i);
+        }
+
+        promises.push(request.send().then(function (response) {
+            strictEqual(response.response, raw);
+        }));
+
+
+        //verify ArrayBufferView sending
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+
+        data = new ArrayBuffer(length);
+        request.data = view = new Uint8Array(data);
+
+        for (i = 0; i < length; i++) {
+            view[ i ] = raw.charCodeAt(i);
+        }
+
+        promises.push(request.send().then(function (response) {
+            strictEqual(response.response, raw);
+        }));
+
+
+        //verify Blob sending
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+
+        request.data = new Blob([ data ], {
+            type: 'text/plain'
+        });
+
+        promises.push(request.send().then(function (response) {
+            strictEqual(response.response, raw);
+        }));
+
+
+        //verify Document sending
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+
+        request.data = (new DOMParser()).parseFromString(raw, 'text/xml');
+
+        promises.push(request.send().then(function (response) {
+            strictEqual(response.response, raw);
+        }));
+
+
+        //verify String sending
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+
+        request.data = raw;
+
+        promises.push(request.send().then(function (response) {
+            strictEqual(response.response, raw);
+        }));
+
+
+        //verify FormData sending
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+
+        request.data = new FormData();
+        request.data.append('raw', raw);
+
+
+        promises.push(request.send().then(function (response) {
+            strictEqual(response.response.indexOf(raw) > 0, true);
+        }));
+
+
+        xs.core.Promise.all(promises).then(function () {
+            me.done();
+        });
+
+        return false;
     });
 
     test('type', function () {
@@ -377,7 +495,7 @@ module('xs.transport.xhr.Request', function () {
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
 
-                    file = new File([ data ], {
+                    file = new File([ bigData ], {
                         type: 'text/plain'
                     });
 
@@ -436,14 +554,14 @@ module('xs.transport.xhr.Request', function () {
                     //xhr.headers.add('Content-Type', 'application/x-www-form-urlencoded');
 
 
-                    file = new File([ data ], {
+                    file = new File([ bigData ], {
                         type: 'text/plain'
                     });
 
                     var formData = new FormData();
                     formData.append('data', file);
 
-                    xhr.data = data; //or formData
+                    xhr.data = bigData; //or formData
                 }
             }
 

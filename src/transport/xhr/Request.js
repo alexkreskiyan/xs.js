@@ -180,7 +180,7 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
                 data instanceof Document,
                 xs.isString(data),
                 data instanceof FormData
-            ], 'data:set - given data `$data` can not be sent with XMLHttpRequest. Use ArrayBuffer/ArrayBufferView/Blob/Document/DOMString/FormData');
+            ].indexOf(true) >= 0, 'data:set - given data `$data` can not be sent with XMLHttpRequest. Use ArrayBuffer/ArrayBufferView/Blob/Document/DOMString/FormData');
 
             //set data
             me.private.data = data;

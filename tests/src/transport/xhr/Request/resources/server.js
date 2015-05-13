@@ -32,7 +32,10 @@ var server = http.createServer(function (request, response) {
 server.listen(3000);
 
 function handleEcho(request, response) {
-    var allowedHeaders = [ 'x-custom-header' ];
+    var allowedHeaders = [
+        'x-custom-header',
+        'content-type'
+    ];
     var exposedHeaders = [
         'x-request-method',
         'x-request-uri'
@@ -72,7 +75,7 @@ function handleEcho(request, response) {
     });
 
     request.on('end', function () {
-
+        response.write(body);
         response.end();
     });
 }
