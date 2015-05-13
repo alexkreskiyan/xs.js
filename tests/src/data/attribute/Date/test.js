@@ -113,7 +113,7 @@ module('xs.data.attribute.Date', function () {
         strictEqual(date.valueOf(), 1);
 
         //string value
-        date = attribute.set('10.07.2015');
+        date = attribute.set('10/07/2015');
         strictEqual(date.getDate(), 7);
         strictEqual(date.getMonth(), 9);
         strictEqual(date.getFullYear(), 2015);

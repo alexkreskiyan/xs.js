@@ -731,7 +731,6 @@ module('xs.event.Property', function () {
 
         property.on(xs.event.Destroy, function () {
             strictEqual(log.length, 1);
-            strictEqual(log[ 0 ].constructor, MouseEvent);
 
             me.done();
         });
