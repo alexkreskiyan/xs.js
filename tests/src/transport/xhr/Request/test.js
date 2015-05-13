@@ -13,11 +13,11 @@ module('xs.transport.xhr.Request', function () {
     'use strict';
 
     var bigData = (function () {
-        var length = 1e4;
+        var length = 1e3;
         var data = '';
 
         for (var i = 0; i < length; i++) {
-            data += 'abcdefghijklmntoprst';
+            data += 'someRandomText';
         }
 
         return data;
@@ -134,7 +134,7 @@ module('xs.transport.xhr.Request', function () {
         });
 
 
-        var raw = '<node>demo</node>';
+        var raw = '<label>demo</label>';
         var length = raw.length;
         var data, view, i;
 
@@ -399,17 +399,12 @@ module('xs.transport.xhr.Request', function () {
         var timedOut = false;
         strictEqual(request.timeout, 10);
         request.on(xs.transport.xhr.event.Timeout, function () {
-            //request must be timed out
-            me.done();
             timedOut = true;
         });
         request.send().always(function () {
-            if (timedOut) {
-                return;
-            }
-
-            //handle fail
-            strictEqual(true, false, 'request failed');
+            //request must be timed out
+            strictEqual(request.state, xs.transport.xhr.State.TimedOut, 'request failed');
+            strictEqual(timedOut, true, 'request failed');
 
             me.done();
         });
@@ -496,7 +491,7 @@ module('xs.transport.xhr.Request', function () {
         //push current state
         state.push(request.state);
 
-        request.on(function (event) {
+        request.on(function () {
 
             //if duplicate - no action
             if (state[ state.length - 1 ] === request.state) {
@@ -530,135 +525,68 @@ module('xs.transport.xhr.Request', function () {
     });
 
     test('send', function () {
-        expect(0);
-        //request must be unsent
-        //headers are applied (server returns headers)
-        //data may be sent with POST/PUT method only
-        //send returns promise
+        var me = this;
+
+        var request = new xs.transport.xhr.Request();
+        request.data = 'data';
+
+        //method is required
+        throws(function () {
+            request.send();
+        });
+
+        request.method = xs.transport.xhr.Method.GET;
+
+        //url is required
+        throws(function () {
+            request.send();
+        });
+
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+
+        //invalid method for data request
+        throws(function () {
+            request.send();
+        });
+
+        request.method = xs.transport.xhr.Method.POST;
+
+        //all goes ok
+        request.send().then(me.done);
+
+        //state must be unsent
+        throws(function () {
+            request.send();
+        });
+
+        return false;
     });
 
     test('abort', function () {
-        expect(0);
-        //must be called when request is sent
+        var me = this;
+
+        var request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.data = 'data';
+
+        var aborted = false;
+        request.on(xs.transport.xhr.event.Abort, function () {
+            aborted = true;
+        });
+        request.send().always(function () {
+            //request must be aborted
+            strictEqual(request.state, xs.transport.xhr.State.Aborted, 'request failed');
+            strictEqual(aborted, true, 'request failed');
+
+            me.done();
+        });
+
+        xs.nextTick(function () {
+            request.abort();
+        });
+
+        return false;
     });
 
-    test('demo', function () {
-        expect(0);
-
-        window.request = function (method, url, upload, file) {
-            var xhr = new XMLHttpRequest();
-
-            //add upload event listeners
-            xhr.upload.onloadstart = console.log.bind(console, 'upload.loadstart');
-            xhr.upload.onprogress = console.log.bind(console, 'upload.progress');
-            xhr.upload.onload = console.log.bind(console, 'upload.load');
-            xhr.upload.onerror = console.log.bind(console, 'upload.error');
-            xhr.upload.onabort = console.log.bind(console, 'upload.abort');
-
-            //add event listeners
-            xhr.onprogress = console.log.bind(console, 'progress');
-            xhr.onload = console.log.bind(console, 'load');
-            xhr.onerror = console.log.bind(console, 'error');
-            xhr.onabort = console.log.bind(console, 'abort');
-
-            xhr.open(method, url, true);
-
-            if (upload) {
-
-                if (file) {
-                    xhr.send(file);
-                } else {
-
-                    //works if not set. is ok?
-                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-
-                    file = new File([ bigData ], {
-                        type: 'text/plain'
-                    });
-
-                    var formData = new FormData();
-                    formData.append('data', file);
-
-                    xhr.send(file); //or formData
-                }
-            } else {
-                xhr.send();
-            }
-
-            return xhr;
-        };
-
-        window.upload = function () {
-            return window.request('post', 'http://localhost:3000/upload', true);
-        };
-
-        window.download = function () {
-            return window.request('get', 'http://localhost:3000/download');
-        };
-
-        window.revert = function () {
-            return window.request('post', 'http://localhost:3000/revert', true);
-        };
-
-        window.xrequest = function (method, url, upload, file) {
-            var xhr = new xs.transport.xhr.Request();
-            var event = xs.transport.xhr.event;
-
-            //add upload event listeners
-            xhr.on(event.UploadProgress, console.log.bind(console, 'upload.progress'));
-            xhr.on(event.Upload, console.log.bind(console, 'upload.load'));
-
-            //add download event listeners
-            xhr.on(event.Headers, console.log.bind(console, 'load.headers'));
-            xhr.on(event.LoadProgress, console.log.bind(console, 'load.progress'));
-            xhr.on(event.Load, console.log.bind(console, 'load.load'));
-
-            xhr.on(event.Done, console.log.bind(console, 'done'));
-            xhr.on(event.Error, console.log.bind(console, 'error'));
-            xhr.on(event.Abort, console.log.bind(console, 'abort'));
-            xhr.on(event.Timeout, console.log.bind(console, 'timeout'));
-
-            xhr.method = method;
-            xhr.url = new xs.uri.HTTP(url, xs.uri.query.QueryString);
-
-            if (upload) {
-
-                if (file) {
-                    xhr.data = file;
-                } else {
-
-                    //works if not set. is ok?
-                    //xhr.headers.add('Content-Type', 'application/x-www-form-urlencoded');
-
-
-                    file = new File([ bigData ], {
-                        type: 'text/plain'
-                    });
-
-                    var formData = new FormData();
-                    formData.append('data', file);
-
-                    xhr.data = bigData; //or formData
-                }
-            }
-
-            xhr.send().then(console.log.bind(console, 'resolved'), console.log.bind(console, 'rejected'), console.log.bind(console, 'updated'));
-
-            return xhr;
-        };
-
-        window.xupload = function () {
-            return window.xrequest(xs.transport.xhr.Method.POST, 'http://localhost:3000/upload', true);
-        };
-
-        window.xdownload = function () {
-            return window.xrequest(xs.transport.xhr.Method.GET, 'http://localhost:3000/download');
-        };
-
-        window.xrevert = function () {
-            return window.xrequest(xs.transport.xhr.Method.POST, 'http://localhost:3000/revert', true);
-        };
-
-    });
 });

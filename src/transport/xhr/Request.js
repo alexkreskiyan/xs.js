@@ -221,6 +221,11 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
         //assert, that url is specified
         self.assert.defined(me.private.url, 'send - request url is not specified');
 
+        //assert, that request is either POST or PUT when data given
+        self.assert.ok(!me.private.data || me.private.method === imports.Method.POST || me.private.method === imports.Method.PUT, 'send - can not send data with method `$method`', {
+            $method: imports.Method.keyOf(me.private.method)
+        });
+
         //set request state
         me.private.state = imports.State.UploadStarted;
 
@@ -272,15 +277,8 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
 
         //send request
         if (me.private.data) {
-
-            //assert, that request is either POST or PUT
-            self.assert.ok(me.private.method === imports.Method.POST || me.private.method === imports.Method.PUT, 'send - can not send data with method `$method`', {
-                $method: imports.Method.keyOf(me.private.method)
-            });
-
             xhr.send(me.private.data);
         } else {
-
             xhr.send();
         }
 
@@ -291,7 +289,7 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
         var me = this;
 
         //assert, that request is sent
-        self.assert.ok(me.private.state === imports.State.Unsent, 'abort - request must be sent to abort it');
+        self.assert.ok(me.private.state !== imports.State.Unsent, 'abort - request must be sent to abort it');
 
         //abort request
         me.private.xhr.abort();
