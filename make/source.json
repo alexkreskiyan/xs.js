@@ -369,7 +369,8 @@
                         "contract": "class"
                     },
                     "Response": {
-                        "contract": "class"
+                        "contract": "class",
+                        "test": false
                     },
                     "State": {
                         "contract": "enum"
