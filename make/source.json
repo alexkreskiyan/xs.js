@@ -368,8 +368,11 @@
                     "Request": {
                         "contract": "class"
                     },
-                    "State": {
+                    "Response": {
                         "contract": "class"
+                    },
+                    "State": {
+                        "contract": "enum"
                     },
                     "Status": {
                         "contract": "enum"
