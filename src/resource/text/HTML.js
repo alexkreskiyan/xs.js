@@ -133,15 +133,15 @@ xs.define(xs.Class, 'ns.text.HTML', function (self) {
 
         var xhr = new XMLHttpRequest();
 
-        xhr.open('GET', url);
+        xhr.open('GET', url, true);
 
-        xhr.addEventListener('load', function () {
+        xhr.onload = function () {
             promise.resolve(xhr.responseText);
-        });
+        };
 
-        xhr.addEventListener('error', function () {
+        xhr.onerror = function () {
             promise.reject(xhr);
-        });
+        };
 
         xhr.send();
 
