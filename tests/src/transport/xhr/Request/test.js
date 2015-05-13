@@ -13,7 +13,7 @@ module('xs.transport.xhr.Request', function () {
     'use strict';
 
     var bigData = (function () {
-        var length = 1e6;
+        var length = 1e4;
         var data = '';
 
         for (var i = 0; i < length; i++) {
@@ -484,10 +484,49 @@ module('xs.transport.xhr.Request', function () {
     });
 
     test('state', function () {
-        expect(0);
-        //must be set when request is unsent
-        //must be a string
-        //changes correctly during request
+        var me = this;
+
+        var state = [];
+
+        var request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/revert', xs.uri.query.QueryString);
+        request.data = bigData;
+
+        //push current state
+        state.push(request.state);
+
+        request.on(function (event) {
+
+            //if duplicate - no action
+            if (state[ state.length - 1 ] === request.state) {
+                return;
+            }
+
+            //push new state to log
+            state.push(request.state);
+        });
+
+        request.send().then(function () {
+
+            strictEqual(state.toString(), [
+                xs.transport.xhr.State.Unsent,
+                xs.transport.xhr.State.UploadStarted,
+                xs.transport.xhr.State.Uploading,
+                xs.transport.xhr.State.Uploaded,
+                xs.transport.xhr.State.HeadersReceived,
+                xs.transport.xhr.State.Loading,
+                xs.transport.xhr.State.Loaded
+            ].toString());
+
+            me.done();
+        });
+
+        //push state after sent
+        state.push(request.state);
+
+
+        return false;
     });
 
     test('send', function () {
