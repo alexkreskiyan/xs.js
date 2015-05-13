@@ -266,12 +266,10 @@
     function request(url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url);
-        xhr.send();
-        var handleLoad = function () {
+        xhr.onload = function () {
             callback(JSON.parse(xhr.response));
-            xhr.removeEventListener('load', handleLoad);
         };
-        xhr.addEventListener('load', handleLoad);
+        xhr.send();
     }
 
     //adds script to container
@@ -289,30 +287,24 @@
         //assign type
         script.type = 'text/javascript';
 
-        //assign src attribute
-        script.src = src;
-
         //append script to head
         container.appendChild(script);
 
         //create loadHandler, that will be called once
-        var loadHandler = function () {
-            script.removeEventListener('load', loadHandler);
+        //add load handler as event listener for script
+        script.onload = function () {
             onLoad();
         };
 
-        //add load handler as event listener for script
-        script.addEventListener('load', loadHandler);
-
         //create errorHandler, that will be called once
-        var errorHandler = function () {
-            script.removeEventListener('error', errorHandler);
+        //add error handler as event listener for script
+        script.onerror = function () {
             me.write.error('failed ' + src);
             onLoad();
         };
 
-        //add error handler as event listener for script
-        script.addEventListener('error', errorHandler);
+        //assign src attribute
+        script.src = src;
     }
 
     //loads given files list in order

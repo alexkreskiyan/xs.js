@@ -686,20 +686,20 @@ xs.Loader = (function () {
             //set name - class name
             script.name = name;
 
-            //set path as src
-            script.src = path;
-
             //script is loaded asynchronously, without blocking page rendering
             script.async = true;
 
             //add load event listener
-            script.addEventListener('load', processLoad);
+            script.onload = processLoad;
 
             //add error event listener
-            script.addEventListener('error', processFail);
+            script.onerror = processFail;
 
             //append script to head
             document.head.appendChild(script);
+
+            //set path as src
+            script.src = path;
         };
 
         /**
