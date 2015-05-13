@@ -73,8 +73,6 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
 
         //set defaults
         me.private.method = imports.Method.GET;
-        me.private.user = '';
-        me.private.password = '';
         me.private.type = imports.Type.Text;
         me.private.headers = new xs.core.Collection();
         me.private.timeout = 0;
@@ -115,50 +113,6 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
         }
     };
 
-    Class.property.user = {
-        set: function (user) {
-            var me = this;
-
-            if (!xs.isDefined(user)) {
-                delete me.private.user;
-
-                return;
-            }
-
-            //assert, that request is not sent yet
-            self.assert.equal(me.private.state, imports.State.Unsent, 'user:set - request must not be sent to set method');
-
-            //assert, that user is a string
-            self.assert.string(user, 'user:set - given user `$user` is not a string', {
-                $user: user
-            });
-
-            me.private.user = user;
-        }
-    };
-
-    Class.property.password = {
-        set: function (password) {
-            var me = this;
-
-            if (!xs.isDefined(password)) {
-                delete me.private.password;
-
-                return;
-            }
-
-            //assert, that request is not sent yet
-            self.assert.equal(me.private.state, imports.State.Unsent, 'user:set - request must not be sent to set method');
-
-            //assert, that password is a string
-            self.assert.string(password, 'password:set - given password `$password` is not a string', {
-                $password: password
-            });
-
-            me.private.password = password;
-        }
-    };
-
     Class.property.data = {
         set: function (data) {
             var me = this;
@@ -175,7 +129,14 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
             //assert, that data is acceptable
             self.assert.ok([
                 data instanceof ArrayBuffer,
-                ArrayBuffer.isView(data),
+                data instanceof Int8Array,
+                data instanceof Uint8Array,
+                data instanceof Int16Array,
+                data instanceof Uint16Array,
+                data instanceof Int32Array,
+                data instanceof Uint32Array,
+                data instanceof Float32Array,
+                data instanceof Float64Array,
                 data instanceof Blob,
                 data instanceof Document,
                 xs.isString(data),
@@ -199,7 +160,7 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
                 $type: type
             });
 
-            me.private.type = me.private.xhr.responseType = type;
+            me.private.type = type;
         }
     };
 
@@ -224,7 +185,7 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
                 $timeout: timeout
             });
 
-            me.private.timeout = me.private.xhr.timeout = timeout;
+            me.private.timeout = timeout;
         }
     };
 
@@ -240,7 +201,7 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
                 $credentials: credentials
             });
 
-            me.private.credentials = me.private.xhr.withCredentials = credentials;
+            me.private.credentials = credentials;
         }
     };
 
@@ -277,36 +238,36 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
 
 
         //add upload listeners
-        xhr.upload.addEventListener('progress', xs.bind(handleUploadProgress, state));
-        xhr.upload.addEventListener('abort', xs.bind(handleUploadAbort, state));
-        xhr.upload.addEventListener('timeout', xs.bind(handleUploadTimeout, state));
-        xhr.upload.addEventListener('error', xs.bind(handleUploadError, state));
-        xhr.upload.addEventListener('load', xs.bind(handleUpload, state));
+        xhr.upload.onprogress = xs.bind(handleUploadProgress, state);
+        xhr.upload.onabort = xs.bind(handleUploadAbort, state);
+        xhr.upload.ontimeout = xs.bind(handleUploadTimeout, state);
+        xhr.upload.onerror = xs.bind(handleUploadError, state);
+        xhr.upload.onload = xs.bind(handleUpload, state);
 
         //catch headers received moment
-        xhr.addEventListener('readystatechange', xs.bind(handleHeadersReceived, state));
+        xhr.onreadystatechange = xs.bind(handleHeadersReceived, state);
 
         //add load listeners
-        xhr.addEventListener('progress', xs.bind(handleLoadProgress, state));
-        xhr.addEventListener('abort', xs.bind(handleAbort, state));
-        xhr.addEventListener('timeout', xs.bind(handleTimeout, state));
-        xhr.addEventListener('error', xs.bind(handleError, state));
-        xhr.addEventListener('load', xs.bind(handleLoad, state));
-        xhr.addEventListener('loadend', xs.bind(handleDone, state));
+        xhr.onprogress = xs.bind(handleLoadProgress, state);
+        xhr.onabort = xs.bind(handleAbort, state);
+        xhr.ontimeout = xs.bind(handleTimeout, state);
+        xhr.onerror = xs.bind(handleError, state);
+        xhr.onload = xs.bind(handleLoad, state);
+        xhr.onloadend = xs.bind(handleDone, state);
 
 
         //open request
-        if (me.private.user || me.private.password) {
-            xhr.open(me.private.method, me.private.url.toString(), true, me.private.user, me.private.password);
-        } else {
-            xhr.open(me.private.method, me.private.url.toString());
-        }
-
+        xhr.open(me.private.method, me.private.url.toString(), true);
 
         //set headers
         me.private.headers.each(function (value, header) {
             xhr.setRequestHeader(header, value);
         });
+
+        //set xhr options
+        xhr.timeout = me.private.timeout;
+        xhr.responseType = me.private.type;
+        xhr.withCredentials = me.private.credentials;
 
 
         //send request

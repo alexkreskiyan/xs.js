@@ -117,7 +117,7 @@ function handleCredentials(request, response) {
 
     //if no cookie - set. else - remove
     if (request.headers.cookie) {
-        headers[ 'set-cookie' ] = 'custom=;expires=' + (new Date(0)).toString();
+        headers[ 'set-cookie' ] = 'custom=;expires=' + (new Date(0)).toUTCString();
         headers.cookies = request.headers.cookie;
     } else {
         headers[ 'set-cookie' ] = request.headers.cookies;

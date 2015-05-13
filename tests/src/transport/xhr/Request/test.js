@@ -33,7 +33,7 @@ module('xs.transport.xhr.Request', function () {
         //method must be set when request is unsent
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP('', xs.uri.query.QueryString);
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
         request.send();
 
         throws(function () {
@@ -76,11 +76,11 @@ module('xs.transport.xhr.Request', function () {
         //url must be set when request is unsent
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP('', xs.uri.query.QueryString);
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
         request.send();
 
         throws(function () {
-            request.url = new xs.uri.HTTP('', xs.uri.query.QueryString);
+            request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
         });
 
         //must be xs.uri.HTTP instance
@@ -109,62 +109,6 @@ module('xs.transport.xhr.Request', function () {
         });
 
         return false;
-    });
-
-    test('user', function () {
-        var request;
-
-        //url must be set when request is unsent
-        request = new xs.transport.xhr.Request();
-        request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP('', xs.uri.query.QueryString);
-        request.user = 'max';
-        request.send();
-
-        throws(function () {
-            request.user = 'max';
-        });
-
-        //must be a string
-        request = new xs.transport.xhr.Request();
-        throws(function () {
-            request.user = null;
-        });
-
-        //is implemented correctly
-        request = new xs.transport.xhr.Request();
-        request.user = 'max';
-        strictEqual(request.user, 'max');
-        request.user = undefined;
-        strictEqual(request.user, undefined);
-    });
-
-    test('password', function () {
-        var request;
-
-        //url must be set when request is unsent
-        request = new xs.transport.xhr.Request();
-        request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP('', xs.uri.query.QueryString);
-        request.password = 'max';
-        request.send();
-
-        throws(function () {
-            request.password = 'max';
-        });
-
-        //must be a string
-        request = new xs.transport.xhr.Request();
-        throws(function () {
-            request.password = null;
-        });
-
-        //is implemented correctly
-        request = new xs.transport.xhr.Request();
-        request.password = 'max';
-        strictEqual(request.password, 'max');
-        request.password = undefined;
-        strictEqual(request.password, undefined);
     });
 
     test('data', function () {
@@ -332,7 +276,7 @@ module('xs.transport.xhr.Request', function () {
 
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP('', xs.uri.query.QueryString);
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
         request.timeout = 50;
 
         //timeout must be a positive number
@@ -411,7 +355,7 @@ module('xs.transport.xhr.Request', function () {
 
         //is implemented correctly
         strictEqual(request.credentials, true);
-        request.send().then(function (response) {
+        request.send().then(function () {
 
             request = new xs.transport.xhr.Request();
             request.method = xs.transport.xhr.Method.GET;
@@ -471,19 +415,19 @@ module('xs.transport.xhr.Request', function () {
             var xhr = new XMLHttpRequest();
 
             //add upload event listeners
-            xhr.upload.addEventListener('loadstart', console.log.bind(console, 'upload.loadstart'));
-            xhr.upload.addEventListener('progress', console.log.bind(console, 'upload.progress'));
-            xhr.upload.addEventListener('load', console.log.bind(console, 'upload.load'));
-            xhr.upload.addEventListener('error', console.log.bind(console, 'upload.error'));
-            xhr.upload.addEventListener('abort', console.log.bind(console, 'upload.abort'));
+            xhr.upload.onloadstart = console.log.bind(console, 'upload.loadstart');
+            xhr.upload.onprogress = console.log.bind(console, 'upload.progress');
+            xhr.upload.onload = console.log.bind(console, 'upload.load');
+            xhr.upload.onerror = console.log.bind(console, 'upload.error');
+            xhr.upload.onabort = console.log.bind(console, 'upload.abort');
 
             //add event listeners
-            xhr.addEventListener('progress', console.log.bind(console, 'progress'));
-            xhr.addEventListener('load', console.log.bind(console, 'load'));
-            xhr.addEventListener('error', console.log.bind(console, 'error'));
-            xhr.addEventListener('abort', console.log.bind(console, 'abort'));
+            xhr.onprogress = console.log.bind(console, 'progress');
+            xhr.onload = console.log.bind(console, 'load');
+            xhr.onerror = console.log.bind(console, 'error');
+            xhr.onabort = console.log.bind(console, 'abort');
 
-            xhr.open(method, url);
+            xhr.open(method, url, true);
 
             if (upload) {
 
