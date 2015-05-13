@@ -152,7 +152,7 @@ module('xs.transport.xhr.Request', function () {
         }
 
         promises.push(request.send().then(function (response) {
-            strictEqual(response.response, raw);
+            strictEqual(response.body, raw);
         }));
 
 
@@ -169,7 +169,7 @@ module('xs.transport.xhr.Request', function () {
         }
 
         promises.push(request.send().then(function (response) {
-            strictEqual(response.response, raw);
+            strictEqual(response.body, raw);
         }));
 
 
@@ -183,7 +183,7 @@ module('xs.transport.xhr.Request', function () {
         });
 
         promises.push(request.send().then(function (response) {
-            strictEqual(response.response, raw);
+            strictEqual(response.body, raw);
         }));
 
 
@@ -195,7 +195,7 @@ module('xs.transport.xhr.Request', function () {
         request.data = (new DOMParser()).parseFromString(raw, 'text/xml');
 
         promises.push(request.send().then(function (response) {
-            strictEqual(response.response, raw);
+            strictEqual(response.body, raw);
         }));
 
 
@@ -207,7 +207,7 @@ module('xs.transport.xhr.Request', function () {
         request.data = raw;
 
         promises.push(request.send().then(function (response) {
-            strictEqual(response.response, raw);
+            strictEqual(response.body, raw);
         }));
 
 
@@ -221,7 +221,7 @@ module('xs.transport.xhr.Request', function () {
 
 
         promises.push(request.send().then(function (response) {
-            strictEqual(response.response.indexOf(raw) > 0, true);
+            strictEqual(response.body.indexOf(raw) > 0, true);
         }));
 
 
@@ -233,10 +233,105 @@ module('xs.transport.xhr.Request', function () {
     });
 
     test('type', function () {
-        expect(0);
-        //must be set when request is unsent
-        //must be valid xs.transport.xhr.Type element
-        //every type is implemented correctly
+        var me = this;
+
+        var request;
+        var promises = [];
+
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+
+        //data must be of accepted type
+        throws(function () {
+            request.type = 10;
+        });
+
+        request.send();
+
+        //data must be set when request is unsent
+        throws(function () {
+            request.type = xs.transport.xhr.Type.ArrayBuffer;
+        });
+
+
+        var raw = JSON.stringify({
+            a: 1
+        });
+
+
+        //verify String receiving
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.data = raw;
+
+        request.type = xs.transport.xhr.Type.Text;
+
+        promises.push(request.send().then(function (response) {
+            strictEqual(response.body, raw);
+        }));
+
+
+        //verify ArrayBuffer receiving
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.data = raw;
+
+        request.type = xs.transport.xhr.Type.ArrayBuffer;
+
+        promises.push(request.send().then(function (response) {
+            var array = new Uint8Array(response.body);
+            var data = '';
+
+            for (var i = 0; i < array.length; i++) {
+                data += String.fromCharCode(array[ i ]);
+            }
+            strictEqual(data, raw);
+        }));
+
+
+        //verify Blob receiving
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.data = raw;
+
+        request.type = xs.transport.xhr.Type.Blob;
+
+        promises.push(request.send().then(function (response) {
+            var promise = new xs.core.Promise();
+
+            var reader = new FileReader();
+            reader.onload = function () {
+                strictEqual(reader.result, raw);
+                promise.resolve();
+            };
+            reader.readAsBinaryString(response.body);
+
+            return promise;
+        }));
+
+
+        //verify JSON receiving
+        request = new xs.transport.xhr.Request();
+        request.method = xs.transport.xhr.Method.POST;
+        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.data = raw;
+
+        request.type = xs.transport.xhr.Type.JSON;
+
+        promises.push(request.send().then(function (response) {
+            strictEqual(JSON.stringify(response.body), raw);
+        }));
+
+
+        xs.core.Promise.all(promises).then(function () {
+            me.done();
+        });
+
+        return false;
     });
 
     test('headers', function () {

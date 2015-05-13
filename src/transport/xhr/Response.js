@@ -28,7 +28,7 @@ xs.define(xs.Class, 'ns.Response', function (self) {
         me.private.request = request;
     };
 
-    Class.property.response = {
+    Class.property.body = {
         get: function () {
             return this.private.request.private.xhr.response;
         },
