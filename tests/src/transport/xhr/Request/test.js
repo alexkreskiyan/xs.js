@@ -308,7 +308,7 @@ module('xs.transport.xhr.Request', function () {
                 strictEqual(reader.result, raw);
                 promise.resolve();
             };
-            reader.readAsBinaryString(response.body);
+            reader.readAsText(response.body);
 
             return promise;
         }));
@@ -582,9 +582,7 @@ module('xs.transport.xhr.Request', function () {
             me.done();
         });
 
-        xs.nextTick(function () {
-            request.abort();
-        });
+        request.abort();
 
         return false;
     });
