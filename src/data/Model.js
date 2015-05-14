@@ -340,7 +340,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         //handle source/proxy
         handleSourceProxy(Class);
 
-    }, 'before', 'defineElements');
+    }, xs.core.Collection.Before, 'defineElements');
 
     function processAttribute(Class, name, config) {
 

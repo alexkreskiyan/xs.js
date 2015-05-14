@@ -52,23 +52,23 @@ module('xs.enum.Enum', function () {
         strictEqual(JSON.stringify(me.stack.get().keys()), '["one"]');
 
         //add processor to first
-        me.stack.add('two', me.verifier, me.handler, 'first');
+        me.stack.add('two', me.verifier, me.handler, xs.core.Collection.First);
         strictEqual(JSON.stringify(me.stack.get().keys()), '["two","one"]');
 
         //add processor before first
-        me.stack.add('three', me.verifier, me.handler, 'before', 'two');
+        me.stack.add('three', me.verifier, me.handler, xs.core.Collection.Before, 'two');
         strictEqual(JSON.stringify(me.stack.get().keys()), '["three","two","one"]');
 
         //add processor before in middle
-        me.stack.add('four', me.verifier, me.handler, 'before', 'one');
+        me.stack.add('four', me.verifier, me.handler, xs.core.Collection.Before, 'one');
         strictEqual(JSON.stringify(me.stack.get().keys()), '["three","two","four","one"]');
 
         //add processor after last
-        me.stack.add('five', me.verifier, me.handler, 'after', 'one');
+        me.stack.add('five', me.verifier, me.handler, xs.core.Collection.After, 'one');
         strictEqual(JSON.stringify(me.stack.get().keys()), '["three","two","four","one","five"]');
 
         //add processor after in middle
-        me.stack.add('six', me.verifier, me.handler, 'after', 'three');
+        me.stack.add('six', me.verifier, me.handler, xs.core.Collection.After, 'three');
         strictEqual(JSON.stringify(me.stack.get().keys()), '["three","six","two","four","one","five"]');
 
         //check verifiers and handlers
@@ -125,27 +125,27 @@ module('xs.enum.Enum', function () {
         strictEqual(JSON.stringify(me.stack.get().keys()), '["one","two","three","four"]');
 
         //reorder first
-        me.stack.reorder('three', 'first');
+        me.stack.reorder('three', xs.core.Collection.First);
         strictEqual(JSON.stringify(me.stack.get().keys()), '["three","one","two","four"]');
 
         //reorder last
-        me.stack.reorder('one', 'last');
+        me.stack.reorder('one', xs.core.Collection.Last);
         strictEqual(JSON.stringify(me.stack.get().keys()), '["three","two","four","one"]');
 
         //reorder before to first
-        me.stack.reorder('two', 'before', 'three');
+        me.stack.reorder('two', xs.core.Collection.Before, 'three');
         strictEqual(JSON.stringify(me.stack.get().keys()), '["two","three","four","one"]');
 
         //reorder before in middle
-        me.stack.reorder('four', 'before', 'three');
+        me.stack.reorder('four', xs.core.Collection.Before, 'three');
         strictEqual(JSON.stringify(me.stack.get().keys()), '["two","four","three","one"]');
 
         //reorder after to last
-        me.stack.reorder('four', 'after', 'one');
+        me.stack.reorder('four', xs.core.Collection.After, 'one');
         strictEqual(JSON.stringify(me.stack.get().keys()), '["two","three","one","four"]');
 
         //reorder after in middle
-        me.stack.reorder('three', 'after', 'one');
+        me.stack.reorder('three', xs.core.Collection.After, 'one');
         strictEqual(JSON.stringify(me.stack.get().keys()), '["two","one","three","four"]');
 
     }, function () {

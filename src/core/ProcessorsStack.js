@@ -63,7 +63,7 @@ var ProcessorsStack = function () {
     me.add = function (name, verifier, handler, position, relativeTo) {
         //position defaults to last
         if (!position) {
-            position = 'last';
+            position = xs.core.Collection.Last;
         }
 
         assert.not(items.hasKey(name), 'add - processor `$name` already in stack', {
@@ -75,7 +75,7 @@ var ProcessorsStack = function () {
             handler: handler
         });
 
-        apply(name, position, relativeTo);
+        items.reorder(name, position, relativeTo);
     };
 
     /**
@@ -98,7 +98,7 @@ var ProcessorsStack = function () {
      * @param {String} [relativeTo] name of processor, presented in stack, relative to which new item's position is evaluated
      */
     me.reorder = function (name, position, relativeTo) {
-        apply(name, position, relativeTo);
+        items.reorder(name, position, relativeTo);
     };
 
     /**
@@ -177,53 +177,6 @@ var ProcessorsStack = function () {
         }
 
         process(items, verifierArgs, handlerArgs, callback);
-    };
-
-
-    /**
-     * Applies item in stack relative to item with given name
-     *
-     * @ignore
-     *
-     * @param {String} name name of repositioned item
-     * @param {String} position new item position
-     * @param {*} relativeTo name of relativeTo positioned item
-     */
-    var apply = function (name, position, relativeTo) {
-        assert.ok([
-            'first',
-            'last',
-            'before',
-            'after'
-        ].indexOf(position) >= 0, 'apply - incorrect position `$position` given', {
-            $position: position
-        });
-
-        //get item from items
-        var item = items.at(name);
-
-        //remove item from items
-        items.removeAt(name);
-
-        //insert to specified position
-        if (position === 'first' || position === 'last') {
-            if (position === 'first') {
-                items.insert(0, name, item);
-            } else {
-                items.add(name, item);
-            }
-        } else {
-            var relativeKey = new xs.core.Collection(items.keys()).keyOf(relativeTo);
-
-            assert.defined(relativeKey, 'apply - relative key `$relativeTo` missing in stack', {
-                $name: name
-            });
-
-            if (position === 'after') {
-                relativeKey++;
-            }
-            items.insert(relativeKey, name, item);
-        }
     };
 };
 

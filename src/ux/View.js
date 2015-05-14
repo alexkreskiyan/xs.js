@@ -761,7 +761,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
         //process sequentially
         processTemplate(Class);
-    }, 'before', 'defineElements');
+    }, xs.core.Collection.Before, 'defineElements');
 
     function processPositions(Class, descriptor) {
 
