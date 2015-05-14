@@ -7,7 +7,7 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Response', function (self) {
+xs.define(xs.Class, 'ns.Response', function (self, imports) {
 
     'use strict';
 
@@ -16,6 +16,12 @@ xs.define(xs.Class, 'ns.Response', function (self) {
     Class.namespace = 'xs.transport.xhr';
 
     Class.imports = [
+        {
+            Type: 'ns.Type'
+        },
+        {
+            State: 'ns.State'
+        },
         {
             Status: 'ns.Status'
         }
@@ -30,7 +36,33 @@ xs.define(xs.Class, 'ns.Response', function (self) {
 
     Class.property.body = {
         get: function () {
-            return this.private.request.private.xhr.response;
+            var privates = this.private;
+
+            //return cached response
+            if (privates.response) {
+
+                return privates.response;
+            }
+
+            //get request
+            var request = privates.request;
+
+            //get xhr response
+            var response = request.private.xhr.response;
+
+            //if request finished - cache response. Else - return as is
+            if (request.state & (imports.State.Loaded | imports.State.Aborted | imports.State.Crashed | imports.State.TimedOut)) {
+
+                //convert to JSON, if not supported
+                if (request.type === imports.Type.JSON && xs.isString(response)) {
+                    response = JSON.parse(response);
+                }
+
+                //cache response
+                privates.response = response;
+            }
+
+            return response;
         },
         set: xs.noop
     };
