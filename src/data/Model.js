@@ -34,6 +34,9 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         },
         {
             Proxy: 'ns.Proxy'
+        },
+        {
+            Format: 'ns.attribute.Format'
         }
     ];
 
@@ -150,6 +153,121 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         }
 
         return key;
+    };
+
+    Class.method.get = function (format, attributes) {
+        var me = this;
+
+        var modelAttributes = me.self.descriptor.attributes;
+        var instanceAttributes = me.private.attributes;
+
+        if (!arguments.length) {
+
+            return modelAttributes.map(function (attribute, name) {
+
+                return instanceAttributes[ name ].get();
+            }).toSource();
+        }
+
+
+        //verify format (if given)
+        self.assert.ok(arguments.length > 1 || xs.isArray(arguments[ 0 ]) || imports.Format.has(format), 'get - given format `$format` is not defined in `$Format`', {
+            $format: format,
+            $Format: imports.Format
+        });
+
+        //use first argument as attributes, if needed
+        if (arguments.length === 1 && xs.isArray(arguments[ 0 ])) {
+            format = undefined;
+            attributes = arguments[ 0 ];
+        }
+
+        //verify attributes (if given)
+        self.assert.ok(arguments.length > 1 || !attributes || (function () {
+
+            self.assert.array(attributes, 'get - given attributes list `$attributes` is not an array', {
+                $attributes: attributes
+            });
+
+            self.assert.ok(attributes.length, 'get - given attributes list `$attributes` is empty', {
+                $attributes: attributes
+            });
+
+            for (var i = 0; i < attributes.length; i++) {
+                self.assert.ok(modelAttributes.hasKey(attributes[ i ]), 'get - given attribute `$attribute` is not defined in model `$Model`', {
+                    $attribute: attributes[ i ],
+                    $Model: me.self
+                });
+            }
+
+            return true;
+        })());
+
+
+        //define response variable
+        var data;
+
+        //process 3 left scenarios
+        if (format && attributes) {
+            data = {};
+            modelAttributes.each(function (attribute, name) {
+                if (attributes.indexOf(name) >= 0) {
+                    data[ name ] = instanceAttributes[ name ].get(format);
+                }
+            });
+        } else if (format) {
+            data = modelAttributes.map(function (attribute, name) {
+                return instanceAttributes[ name ].get(format);
+            }).toSource();
+        } else {
+            data = {};
+            modelAttributes.each(function (attribute, name) {
+                if (attributes.indexOf(name) >= 0) {
+                    data[ name ] = instanceAttributes[ name ].get();
+                }
+            });
+        }
+
+        return data;
+    };
+
+    Class.method.set = function (data, silent) {
+        var me = this;
+
+        //assert, that data is an object
+        self.assert.object(data, 'set - given data `$data` is not an object', {
+            $data: data
+        });
+
+        var modelAttributes = me.self.descriptor.attributes;
+        var instanceAttributes = me.private.attributes;
+
+        //verify data
+        self.assert.ok((function () {
+
+            self.assert.ok(Object.keys(data).length, 'set - given data is empty');
+
+            Object.keys(data).forEach(function (name) {
+                self.assert.ok(modelAttributes.hasKey(name), 'set - given attribute `$attribute` is not defined in model `$Model`', {
+                    $attribute: name,
+                    $Model: me.self
+                });
+            });
+
+            return true;
+        })());
+
+        //assert, that silent is a boolean (if given)
+        self.assert.ok(arguments.length === 1 || xs.isBoolean(silent), 'set - given silent flag `$silent` is not a boolean value', {
+            $silent: silent
+        });
+
+        //set values from data
+        Object.keys(data).forEach(function (name) {
+            instanceAttributes[ name ].set(data[ name ], silent);
+        });
+
+        return me;
     };
 
     /**

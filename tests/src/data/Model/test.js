@@ -391,6 +391,162 @@ module('xs.data.Model', function () {
 
     });
 
+    test('get', function () {
+        var me = this;
+
+        me.Class = xs.Class(function () {
+
+            var Class = this;
+
+            Class.extends = 'xs.data.Model';
+
+            Class.attributes = {
+                id: {
+                    class: 'xs.data.attribute.Number',
+                    primary: true
+                },
+                name: {
+                    class: 'xs.data.attribute.String',
+                    default: 'John'
+                },
+                age: {
+                    class: 'xs.data.attribute.Number',
+                    default: 0
+                }
+            };
+
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
+
+        var model, data;
+
+        //get simple model
+        model = new me.Class({
+            id: 5,
+            name: 'max',
+            age: '25'
+        });
+
+        //get all
+        data = model.get();
+        strictEqual(JSON.stringify(data), '{"id":5,"name":"max","age":25}');
+
+        //incorrect format/attributes list throws
+        throws(function () {
+            model.get(null);
+        });
+
+        //get with format - ok
+        data = model.get(xs.data.attribute.Format.Storage);
+        strictEqual(JSON.stringify(data), '{"id":5,"name":"max","age":25}');
+
+        //empty attributes list throws
+        throws(function () {
+            model.get([]);
+        });
+
+        //incorrect attribute throws
+        throws(function () {
+            model.get([
+                'id',
+                'surname'
+            ]);
+        });
+
+        //valid attributes list goes ok
+        data = model.get([
+            'id',
+            'name'
+        ]);
+        strictEqual(JSON.stringify(data), '{"id":5,"name":"max"}');
+
+        //format with attributes list goes ok
+        data = model.get(xs.data.attribute.Format.Storage, [
+            'id',
+            'name'
+        ]);
+        strictEqual(JSON.stringify(data), '{"id":5,"name":"max"}');
+
+        model.destroy();
+    });
+
+    test('set', function () {
+        var me = this;
+
+        me.Class = xs.Class(function () {
+
+            var Class = this;
+
+            Class.extends = 'xs.data.Model';
+
+            Class.attributes = {
+                id: {
+                    class: 'xs.data.attribute.Number',
+                    primary: true
+                },
+                name: {
+                    class: 'xs.data.attribute.String',
+                    default: 'John'
+                },
+                age: {
+                    class: 'xs.data.attribute.Number',
+                    default: 0
+                }
+            };
+
+        }, me.done);
+
+        return false;
+    }, function () {
+        var me = this;
+
+        var model;
+
+        //get simple model
+        model = new me.Class({
+            id: 5,
+            name: 'max',
+            age: '25'
+        });
+
+        //incorrect data throws
+        throws(function () {
+            model.set(null);
+        });
+
+        //empty data throws
+        throws(function () {
+            model.set({});
+        });
+
+        //data with unknown attributes throws
+        throws(function () {
+            model.set({
+                id: 7,
+                surname: 'unknown'
+            });
+        });
+
+        //incorrect silent flag throws
+        throws(function () {
+            model.set({
+                id: 7
+            }, null);
+        });
+
+        //correct set works
+        model.set({
+            id: 7,
+            age: 10
+        });
+        strictEqual(JSON.stringify(model.get()), '{"id":7,"name":"max","age":10}');
+
+        model.destroy();
+    });
+
     test('destroy', function () {
         var me = this;
 
