@@ -11,7 +11,7 @@
  */
 xs.define(xs.Enum, 'xs.transport.websocket.State', {
     Connecting: 0x1,
-    Open: 0x2,
+    Opened: 0x2,
     Closing: 0x4,
     Closed: 0x8
 });
