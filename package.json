@@ -18,7 +18,7 @@
         "jsdoc": "latest",
         "jshint": "latest",
         "qunitjs": "latest",
-        "socket.io": "latest"
+        "ws": "latest"
     },
     "jscsConfig": {
         "disallowDanglingUnderscores": true,

@@ -381,6 +381,11 @@
                     "Type": {
                         "contract": "enum"
                     }
+                },
+                "websocket": {
+                    "Connection": {
+                        "contract": "class"
+                    }
                 }
             },
             "uri": {
