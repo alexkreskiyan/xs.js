@@ -1,19 +1,19 @@
 /**
- * Event class for events, being thrown, when executed request is aborted
+ * Event class for events, being thrown, when socket achieved binary data
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.event.Abort
+ * @class xs.transport.websocket.event.Binary
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.event.Abort', function () {
+xs.define(xs.Class, 'ns.event.Binary', function (self) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.transport.xhr';
+    Class.namespace = 'xs.transport.websocket';
 
     Class.implements = [
         'xs.event.IEvent'
@@ -24,23 +24,28 @@ xs.define(xs.Class, 'ns.event.Abort', function () {
      *
      * @constructor
      *
-     * @param {*} [reason] event abort reason
+     * @param {ArrayBuffer|Blob} data event data
      */
-    Class.constructor = function (reason) {
+    Class.constructor = function (data) {
         var me = this;
 
-        //save abort reason
-        me.private.reason = reason;
+        //assert, that data is an ArrayBuffer or a Blob
+        self.assert.ok(data instanceof ArrayBuffer || data instanceof Blob, 'constructor - given `$data` is not an instance of ArrayBuffer or Blob', {
+            $data: data
+        });
+
+        //save event data
+        me.private.data = data;
     };
 
     /**
-     * Event `reason` property. Event reason is a reason, that describes, why was request aborted
+     * Event `data` property. Event data is binary data container, recieved from server
      *
-     * @property reason
+     * @property data
      *
      * @type {Object}
      */
-    Class.property.reason = {
+    Class.property.data = {
         set: xs.noop
     };
 

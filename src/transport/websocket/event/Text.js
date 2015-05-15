@@ -1,19 +1,19 @@
 /**
- * Event class for events, being thrown, when executed request is aborted
+ * Event class for events, being thrown, when socket achieved text data
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.event.Abort
+ * @class xs.transport.websocket.event.Text
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.event.Abort', function () {
+xs.define(xs.Class, 'ns.event.Text', function (self) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.transport.xhr';
+    Class.namespace = 'xs.transport.websocket';
 
     Class.implements = [
         'xs.event.IEvent'
@@ -24,23 +24,28 @@ xs.define(xs.Class, 'ns.event.Abort', function () {
      *
      * @constructor
      *
-     * @param {*} [reason] event abort reason
+     * @param {String} data event data
      */
-    Class.constructor = function (reason) {
+    Class.constructor = function (data) {
         var me = this;
 
-        //save abort reason
-        me.private.reason = reason;
+        //assert, that data is a string
+        self.assert.string(data, 'constructor - given `$data` is not a string', {
+            $data: data
+        });
+
+        //save event data
+        me.private.data = data;
     };
 
     /**
-     * Event `reason` property. Event reason is a reason, that describes, why was request aborted
+     * Event `data` property. Event data is string data, received from server
      *
-     * @property reason
+     * @property data
      *
      * @type {Object}
      */
-    Class.property.reason = {
+    Class.property.data = {
         set: xs.noop
     };
 
