@@ -171,7 +171,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
 
         //verify format (if given)
-        self.assert.ok(arguments.length > 1 || xs.isArray(arguments[ 0 ]) || imports.Format.has(format), 'get - given format `$format` is not defined in `$Format`', {
+        self.assert.ok((arguments.length === 1 && xs.isArray(arguments[ 0 ])) || imports.Format.has(format), 'get - given format `$format` is not defined in `$Format`', {
             $format: format,
             $Format: imports.Format
         });
@@ -183,7 +183,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         }
 
         //verify attributes (if given)
-        self.assert.ok(arguments.length > 1 || !attributes || (function () {
+        self.assert.ok((arguments.length === 1 && !attributes) || (function () {
 
             self.assert.array(attributes, 'get - given attributes list `$attributes` is not an array', {
                 $attributes: attributes
