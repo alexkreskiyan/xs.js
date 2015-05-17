@@ -43,7 +43,7 @@ xs.define(xs.Class, 'ns.event.Text', function (self) {
      *
      * @property data
      *
-     * @type {Object}
+     * @type {String}
      */
     Class.property.data = {
         set: xs.noop

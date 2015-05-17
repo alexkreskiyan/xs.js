@@ -383,8 +383,39 @@
                     }
                 },
                 "websocket": {
+                    "event": {
+                        "Binary": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Close": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Error": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Open": {
+                            "contract": "class",
+                            "test": false
+                        },
+                        "Text": {
+                            "contract": "class",
+                            "test": false
+                        }
+                    },
+                    "BinaryType": {
+                        "contract": "enum"
+                    },
+                    "CloseCode": {
+                        "contract": "enum"
+                    },
                     "Connection": {
                         "contract": "class"
+                    },
+                    "State": {
+                        "contract": "enum"
                     }
                 }
             },

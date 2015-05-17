@@ -43,7 +43,7 @@ xs.define(xs.Class, 'ns.event.Binary', function (self) {
      *
      * @property data
      *
-     * @type {Object}
+     * @type {ArrayBuffer|Blob}
      */
     Class.property.data = {
         set: xs.noop

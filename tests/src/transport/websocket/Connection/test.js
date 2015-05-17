@@ -14,11 +14,21 @@ module('xs.transport.websocket.Connection', function () {
 
     test('demo', function () {
         expect(0);
-        var socket = new WebSocket('ws://localhost:3001');
-        socket.onopen = console.log.bind(console, 'open');
-        socket.onerror = console.error.bind(console, 'error');
-        socket.onclose = console.log.bind(console, 'close');
-        socket.onmessage = console.info.bind(console, 'message');
+        //var socket = window.rawsocket = new WebSocket('ws://localhost:3001');
+        //socket.onopen = console.log.bind(console, 'open');
+        //socket.onerror = console.error.bind(console, 'error');
+        //socket.onclose = console.log.bind(console, 'close');
+        //socket.onmessage = console.info.bind(console, 'message');
+    });
+
+    test('demo', function () {
+        expect(0);
+        var socket = window.socket = new xs.transport.websocket.Connection();
+        socket.url = new xs.uri.WebSocket('ws://localhost:3001', xs.uri.query.QueryString);
+        socket.open();
+        socket.on(function (event) {
+            console.log(event.self, event);
+        });
     });
 
 });

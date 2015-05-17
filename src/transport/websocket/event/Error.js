@@ -1,13 +1,13 @@
 /**
- * Event class for events, being thrown, when executed request is aborted
+ * Event class for events, being thrown, when connection throws an exception
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.event.Abort
+ * @class xs.transport.xhr.event.Error
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.event.Open', function () {
+xs.define(xs.Class, 'ns.event.Error', function () {
 
     'use strict';
 
