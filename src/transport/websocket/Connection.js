@@ -54,13 +54,15 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
         self.mixins.observable.call(me, xs.noop);
 
         //set defaults
+        me.private.binaryType = imports.BinaryType.Blob;
         me.private.state = imports.State.Closed;
     };
 
     Class.property.url = {
         set: function (url) {
             var me = this;
-            //assert, that request is not sent yet
+
+            //assert, that connection is closed
             self.assert.equal(me.private.state, imports.State.Closed, 'url:set - connection must be closed to set url');
 
             //assert, that url is instance of imports.Url
@@ -105,6 +107,12 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
         set: function (protocol) {
             var me = this;
 
+            if (!xs.isDefined(protocol)) {
+                delete me.private.protocol;
+
+                return;
+            }
+
             self.assert.ok((function () {
                 if (xs.isString(protocol)) {
                     return true;
@@ -129,12 +137,6 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
     };
 
     Class.property.extensions = {
-        get: function () {
-            var me = this;
-
-            //return connection extensions, if connection is opened, else - undefined
-            return me.private.state & imports.State.Opened ? me.private.connection.extensions : undefined;
-        },
         set: xs.noop
     };
 
@@ -164,6 +166,8 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
         //create socket connection
         var connection = me.private.connection = me.private.protocol ? new WebSocket(me.private.url, me.private.protocol) : new WebSocket(me.private.url);
 
+        //set connection binaryType
+        connection.binaryType = me.private.binaryType;
 
         //create state object
         var state = {
@@ -171,11 +175,19 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
             private: me.private
         };
 
+        //define operation promises
+        state.promises = me.private.promises = {
+            open: new xs.core.Promise(),
+            close: new xs.core.Promise()
+        };
+
         //add connection listeners
         connection.onopen = xs.bind(handleOpen, state);
         connection.onclose = xs.bind(handleClose, state);
         connection.onmessage = xs.bind(handleMessage, state);
         connection.onerror = xs.bind(handleError, state);
+
+        return state.promises.open;
     };
 
     Class.method.send = function (data) {
@@ -195,8 +207,8 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
     Class.method.close = function (code, reason) {
         var me = this;
 
-        //assert, that request is connecting or opened
-        self.assert.ok(me.private.state & (imports.State.Connecting | imports.State.Opened), 'close - connection must be opened to close it');
+        //assert, that request is opened
+        self.assert.ok(me.private.state & imports.State.Opened, 'close - connection must be opened to close it');
 
         //if no arguments - close normally with empty reason
         if (!arguments.length) {
@@ -206,7 +218,7 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
             //close connection
             me.private.connection.close(imports.CloseCode.Normal, '');
 
-            return;
+            return me.private.promises.close;
         }
 
         //verify close code (if given)
@@ -233,9 +245,23 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
         me.private.state = imports.State.Closing;
 
         //close connection
-        me.private.connection.close(code, '');
+        me.private.connection.close(code, reason);
+
+        return me.private.promises.close;
     };
 
+    Class.method.destroy = function () {
+        var me = this;
+
+        //assert, that connection is closed
+        self.assert.ok(me.private.state & imports.State.Closed, 'destroy - connection must be closed to be destroyed');
+
+        //call Observable.destroy
+        self.mixins.observable.prototype.destroy.call(me);
+
+        //call parent destroy
+        self.parent.prototype.destroy.call(me);
+    };
 
     var handleOpen = function () {
         var me = this;
@@ -243,8 +269,20 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
         //set request state
         me.private.state = imports.State.Opened;
 
+        var extensions = me.private.connection.extensions.split(',').map(function (extension) {
+            return extension.trim();
+        }).filter(function (extension) {
+            return extension;
+        });
+
+        //set extensions
+        me.private.extensions = new xs.core.Collection(extensions);
+
         //send event
         me.send(new imports.event.Open());
+
+        //resolve open promise
+        me.private.promises.open.resolve();
     };
 
     var handleMessage = function (event) {
@@ -276,9 +314,15 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
         //set request state
         me.private.state = imports.State.Closed;
 
+        //unset extensions
+        delete me.private.extensions;
+
         //send event
         me.send(new imports.event.Close(event));
-        console.log.bind(console, 'close', event);
+
+
+        //resolve close promise
+        me.private.promises.close.resolve();
     };
 
     var validateData = function (data) {
