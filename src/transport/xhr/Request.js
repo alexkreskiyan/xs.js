@@ -128,20 +128,20 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
 
             //assert, that data is acceptable
             self.assert.ok([
-                data instanceof ArrayBuffer,
-                data instanceof Int8Array,
-                data instanceof Uint8Array,
-                data instanceof Int16Array,
-                data instanceof Uint16Array,
-                data instanceof Int32Array,
-                data instanceof Uint32Array,
-                data instanceof Float32Array,
-                data instanceof Float64Array,
-                data instanceof Blob,
-                data instanceof Document,
-                xs.isString(data),
-                data instanceof FormData
-            ].indexOf(true) >= 0, 'data:set - given data `$data` can not be sent with XMLHttpRequest. Use ArrayBuffer/ArrayBufferView/Blob/Document/DOMString/FormData');
+                    data instanceof ArrayBuffer,
+                    data instanceof Int8Array,
+                    data instanceof Uint8Array,
+                    data instanceof Int16Array,
+                    data instanceof Uint16Array,
+                    data instanceof Int32Array,
+                    data instanceof Uint32Array,
+                    data instanceof Float32Array,
+                    data instanceof Float64Array,
+                    data instanceof Blob,
+                    data instanceof Document,
+                    xs.isString(data),
+                    data instanceof FormData
+                ].indexOf(true) >= 0, 'data:set - given data `$data` can not be sent with XMLHttpRequest. Use ArrayBuffer/ArrayBufferView/Blob/Document/DOMString/FormData');
 
             //set data
             me.private.data = data;
@@ -293,6 +293,19 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
 
         //abort request
         me.private.xhr.abort();
+    };
+
+    Class.method.destroy = function () {
+        var me = this;
+
+        //assert, that request is unsent, or done
+        self.assert.ok(me.private.state & (imports.State.Unsent | imports.State.Loaded | imports.State.Aborted | imports.State.Crashed | imports.State.TimedOut), 'destroy - request must be either unsent or resolved to be destroyed');
+
+        //call Observable.destroy
+        self.mixins.observable.prototype.destroy.call(me);
+
+        //call parent destroy
+        self.parent.prototype.destroy.call(me);
     };
 
 
