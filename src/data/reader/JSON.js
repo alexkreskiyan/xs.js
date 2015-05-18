@@ -4,8 +4,6 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.data.reader.JSON
- *
- * @extends xs.data.reader.Reader
  */
 xs.define(xs.Class, 'ns.JSON', function (self) {
 
@@ -32,11 +30,11 @@ xs.define(xs.Class, 'ns.JSON', function (self) {
                 $select: config.select
             });
 
-            me.select = config.select;
+            me.private.select = config.select;
 
         } else {
 
-            me.select = selectAll;
+            me.private.select = selectAll;
         }
     };
 
@@ -45,7 +43,7 @@ xs.define(xs.Class, 'ns.JSON', function (self) {
             $raw: raw
         });
 
-        return JSON.parse(raw);
+        return this.private.select(JSON.parse(raw));
     };
 
     function selectAll(data) {
