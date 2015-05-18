@@ -318,7 +318,10 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
         delete me.private.extensions;
 
         //send event
-        me.send(new imports.event.Close(event));
+        me.send(new imports.event.Close({
+            code: event.code,
+            reason: event.reason
+        }));
 
 
         //resolve close promise
