@@ -160,35 +160,20 @@
                     "IOperation": { },
                     "ISourceOperation": { }
                 },
-                "proxy": {
-                    "storage": {
-                        "Local": {
-                            "test": false
-                        }
-                    }
-                },
                 "reader": {
-                    "IReader": {
-                    },
-                    "JSON": {
-                        "test": false
-                    }
+                    "IReader": { },
+                    "JSON": { }
                 },
                 "writer": {
-                    "IWriter": {
-                    },
-                    "JSON": {
-                        "test": false
-                    }
+                    "IWriter": { },
+                    "JSON": { }
                 },
                 "Collection": {
                     "test": false
                 },
                 "Enumerable": { },
                 "Model": { },
-                "Proxy": {
-                    "test": false
-                },
+                "Proxy": { },
                 "Query": { },
                 "Source": { }
             },
