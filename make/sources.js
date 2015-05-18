@@ -152,7 +152,20 @@ function assemblyCoreStreams(core) {
 }
 
 function isModule(description) {
-    return (Object.keys(description).length === 0) || (typeof description.contract === 'string') || (typeof description.test === 'boolean');
+    var keys = Object.keys(description);
+
+    if (!keys.length) {
+
+        return true;
+    }
+
+    for (var i = 0; i < keys.length; i++) {
+        if (typeof description[ keys[ i ] ] === 'object') {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function getModulesStream(src) {

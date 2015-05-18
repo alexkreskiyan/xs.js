@@ -102,223 +102,139 @@
                 "attribute": {
                     "event": {
                         "SetBefore": {
-                            "contract": "class",
                             "test": false
                         },
                         "Set": {
-                            "contract": "class",
                             "test": false
                         }
                     },
-                    "Boolean": {
-                        "contract": "class"
-                    },
-                    "Collection": {
-                        "contract": "class"
-                    },
-                    "Date": {
-                        "contract": "class"
-                    },
-                    "Format": {
-                        "contract": "enum"
-                    },
-                    "IAttribute": {
-                        "contract": "interface"
-                    },
-                    "Number": {
-                        "contract": "class"
-                    },
-                    "Raw": {
-                        "contract": "class"
-                    },
-                    "String": {
-                        "contract": "class"
-                    }
+                    "Boolean": { },
+                    "Collection": { },
+                    "Date": { },
+                    "Format": { },
+                    "IAttribute": { },
+                    "Number": { },
+                    "Raw": { },
+                    "String": { }
                 },
                 "enumerable": {
                     "event": {
                         "AddBefore": {
-                            "contract": "class",
                             "test": false
                         },
                         "Add": {
-                            "contract": "class",
                             "test": false
                         },
                         "SetBefore": {
-                            "contract": "class",
                             "test": false
                         },
                         "Set": {
-                            "contract": "class",
                             "test": false
                         },
                         "RemoveBefore": {
-                            "contract": "class",
                             "test": false
                         },
                         "Remove": {
-                            "contract": "class",
                             "test": false
                         },
                         "Clear": {
-                            "contract": "class",
                             "test": false
                         }
                     }
                 },
                 "operation": {
                     "model": {
-                        "IRead": {
-                            "contract": "interface"
-                        },
-                        "ISave": {
-                            "contract": "interface"
-                        }
+                        "IRead": { },
+                        "ISave": { }
                     },
                     "source": {
-                        "ICreate": {
-                            "contract": "interface"
-                        },
-                        "IDelete": {
-                            "contract": "interface"
-                        },
-                        "IRead": {
-                            "contract": "interface"
-                        },
-                        "IUpdate": {
-                            "contract": "interface"
-                        }
+                        "ICreate": { },
+                        "IDelete": { },
+                        "IRead": { },
+                        "IUpdate": { }
                     },
                     "Event": {
-                        "contract": "class",
                         "test": false
                     },
-                    "IModelOperation": {
-                        "contract": "interface"
-                    },
-                    "IOperation": {
-                        "contract": "interface"
-                    },
-                    "ISourceOperation": {
-                        "contract": "interface"
-                    }
+                    "IModelOperation": { },
+                    "IOperation": { },
+                    "ISourceOperation": { }
                 },
                 "proxy": {
                     "storage": {
                         "Local": {
-                            "contract": "class",
                             "test": false
                         }
                     }
                 },
                 "reader": {
                     "IReader": {
-                        "contract": "interface"
                     },
                     "JSON": {
-                        "contract": "class",
                         "test": false
                     }
                 },
                 "writer": {
                     "IWriter": {
-                        "contract": "interface"
                     },
                     "JSON": {
-                        "contract": "class",
                         "test": false
                     }
                 },
                 "Collection": {
-                    "contract": "class",
                     "test": false
                 },
-                "Enumerable": {
-                    "contract": "class"
-                },
-                "Model": {
-                    "contract": "class"
-                },
+                "Enumerable": { },
+                "Model": { },
                 "Proxy": {
-                    "contract": "class",
                     "test": false
                 },
-                "Query": {
-                    "contract": "class"
-                },
-                "Source": {
-                    "contract": "class"
-                }
+                "Query": { },
+                "Source": { }
             },
             "dom": {
-                "Element": {
-                    "contract": "class"
-                }
+                "Element": { }
             },
             "event": {
-                "IEvent": {
-                    "contract": "interface"
-                },
-                "Observable": {
-                    "contract": "class"
-                },
-                "StaticObservable": {
-                    "contract": "class"
-                }
+                "IEvent": { },
+                "Observable": { },
+                "StaticObservable": { }
             },
             "resource": {
-                "binary": {
-                },
                 "text": {
-                    "HTML": {
-                        "contract": "class"
-                    }
+                    "HTML": { }
                 },
-                "IResource": {
-                    "contract": "interface"
-                }
+                "IResource": { }
             },
             "storage": {
                 "event": {
                     "AddBefore": {
-                        "contract": "class",
                         "test": false
                     },
                     "Add": {
-                        "contract": "class",
                         "test": false
                     },
                     "SetBefore": {
-                        "contract": "class",
                         "test": false
                     },
                     "Set": {
-                        "contract": "class",
                         "test": false
                     },
                     "RemoveBefore": {
-                        "contract": "class",
                         "test": false
                     },
                     "Remove": {
-                        "contract": "class",
                         "test": false
                     },
                     "Clear": {
-                        "contract": "class",
                         "test": false
                     }
                 },
-                "WebStorage": {
-                    "contract": "class"
-                },
+                "WebStorage": { },
                 "Local": {
-                    "contract": "class",
                     "test": false
                 },
                 "Session": {
-                    "contract": "class",
                     "test": false
                 }
             },
@@ -326,126 +242,80 @@
                 "xhr": {
                     "event": {
                         "Abort": {
-                            "contract": "class",
                             "test": false
                         },
                         "Done": {
-                            "contract": "class",
                             "test": false
                         },
                         "Error": {
-                            "contract": "class",
                             "test": false
                         },
                         "Headers": {
-                            "contract": "class",
                             "test": false
                         },
                         "Load": {
-                            "contract": "class",
                             "test": false
                         },
                         "LoadProgress": {
-                            "contract": "class",
                             "test": false
                         },
                         "Timeout": {
-                            "contract": "class",
                             "test": false
                         },
                         "Upload": {
-                            "contract": "class",
                             "test": false
                         },
                         "UploadProgress": {
-                            "contract": "class",
                             "test": false
                         }
                     },
-                    "Method": {
-                        "contract": "enum"
-                    },
-                    "Request": {
-                        "contract": "class"
-                    },
+                    "Method": { },
+                    "Request": { },
                     "Response": {
-                        "contract": "class",
                         "test": false
                     },
-                    "State": {
-                        "contract": "enum"
-                    },
-                    "Status": {
-                        "contract": "enum"
-                    },
-                    "Type": {
-                        "contract": "enum"
-                    }
+                    "State": { },
+                    "Status": { },
+                    "Type": { }
                 },
                 "websocket": {
                     "event": {
                         "Binary": {
-                            "contract": "class",
                             "test": false
                         },
                         "Close": {
-                            "contract": "class",
                             "test": false
                         },
                         "Error": {
-                            "contract": "class",
                             "test": false
                         },
                         "Open": {
-                            "contract": "class",
                             "test": false
                         },
                         "Text": {
-                            "contract": "class",
                             "test": false
                         }
                     },
-                    "BinaryType": {
-                        "contract": "enum"
-                    },
-                    "CloseCode": {
-                        "contract": "enum"
-                    },
-                    "Connection": {
-                        "contract": "class"
-                    },
-                    "State": {
-                        "contract": "enum"
-                    }
+                    "BinaryType": { },
+                    "CloseCode": { },
+                    "Connection": { },
+                    "State": { }
                 }
             },
             "uri": {
                 "query": {
-                    "IQuery": {
-                        "contract": "interface"
-                    },
-                    "QueryString": {
-                        "contract": "class"
-                    }
+                    "IQuery": { },
+                    "QueryString": { }
                 },
-                "HTTP": {
-                    "contract": "class"
-                },
+                "HTTP": { },
                 "URI": {
-                    "contract": "class",
                     "test": false
                 },
-                "WebSocket": {
-                    "contract": "class"
-                }
+                "WebSocket": { }
             },
             "ux": {
-                "Promise": {
-                    "contract": "class"
-                },
-                "View": {
-                    "contract": "class"
-                }
+                "Promise": { },
+                "View": { }
             }
         }
     }
