@@ -310,7 +310,10 @@
                         "test": false
                     }
                 },
-                "WebStorage": {
+                "Cookie": {
+                    "contract": "class"
+                },
+                "CookieStorage": {
                     "contract": "class"
                 },
                 "Local": {
@@ -320,6 +323,9 @@
                 "Session": {
                     "contract": "class",
                     "test": false
+                },
+                "WebStorage": {
+                    "contract": "class"
                 }
             },
             "transport": {
