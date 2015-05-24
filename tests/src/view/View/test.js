@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.ux.View', function () {
+module('xs.view.View', function () {
 
     'use strict';
 
@@ -18,7 +18,7 @@ module('xs.ux.View', function () {
         me.Class = xs.Class(function () {
             var Class = this;
 
-            Class.extends = 'xs.ux.View';
+            Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
                 data: '<input type="text" placeholder="search">'
@@ -58,7 +58,7 @@ module('xs.ux.View', function () {
         me.Class = xs.Class(function () {
             var Class = this;
 
-            Class.extends = 'xs.ux.View';
+            Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
                 data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
@@ -90,7 +90,7 @@ module('xs.ux.View', function () {
         me.Class = xs.Class(function () {
             var Class = this;
 
-            Class.extends = 'xs.ux.View';
+            Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
                 data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
@@ -111,9 +111,9 @@ module('xs.ux.View', function () {
         var title = view.title;
         var body = view.body;
 
-        var label = new xs.ux.View(document.createElement('label'));
-        var input = new xs.ux.View(document.createElement('input'));
-        var button = new xs.ux.View(document.createElement('button'));
+        var label = new xs.view.View(document.createElement('label'));
+        var input = new xs.view.View(document.createElement('input'));
+        var button = new xs.view.View(document.createElement('button'));
 
         title.add(label);
         body.add(input).add(button);
@@ -134,11 +134,11 @@ module('xs.ux.View', function () {
         strictEqual(first.private.el, title.private.el);
 
         //reverse flag makes query work in reverse order
-        var second = view.query('div', xs.ux.View.Reverse);
+        var second = view.query('div', xs.view.View.Reverse);
         strictEqual(second.private.el, body.private.el);
 
         //all flag returns a collection
-        var selection = view.query('div', xs.ux.View.All);
+        var selection = view.query('div', xs.view.View.All);
         //repeated calls do not create new elements
         strictEqual(selection.at(0), first);
         strictEqual(selection.at(1), second);
@@ -156,7 +156,7 @@ module('xs.ux.View', function () {
         me.Class = xs.Class(function () {
             var Class = this;
 
-            Class.extends = 'xs.ux.View';
+            Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
                 data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
@@ -236,7 +236,7 @@ module('xs.ux.View', function () {
         me.Class = xs.Class(function () {
             var Class = this;
 
-            Class.extends = 'xs.ux.View';
+            Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
                 data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
@@ -327,7 +327,7 @@ module('xs.ux.View', function () {
         me.Class = xs.Class(function () {
             var Class = this;
 
-            Class.extends = 'xs.ux.View';
+            Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
                 data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
@@ -427,7 +427,7 @@ module('xs.ux.View', function () {
         me.Class = xs.Class(function () {
             var Class = this;
 
-            Class.extends = 'xs.ux.View';
+            Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
                 data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'

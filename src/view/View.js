@@ -14,7 +14,7 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.ux.View
+ * @class xs.view.View
  *
  * @extends xs.class.Base
  *
@@ -26,11 +26,11 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
     var Class = this;
 
-    Class.namespace = 'xs.ux';
+    Class.namespace = 'xs.view';
 
     Class.imports = [
         {
-            Element: 'xs.dom.Element'
+            Element: 'xs.view.Element'
         },
         {
             Collection: 'xs.data.Collection'
@@ -58,7 +58,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         }
     ];
 
-    Class.extends = 'xs.dom.Element';
+    Class.extends = 'xs.view.Element';
 
     /**
      * View query flag, meaning, that element lookup starts from the end
@@ -145,7 +145,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      * - Reverse - to find last matched element
      * - All - to fetch all matched elements
      *
-     * @return {xs.core.Collection|xs.dom.Element|undefined}
+     * @return {xs.core.Collection|xs.view.Element|undefined}
      */
     Class.method.query = function (selector, flags) {
         var me = this;
@@ -654,7 +654,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @param {Element} el
      *
-     * @return {xs.dom.Element}
+     * @return {xs.view.Element}
      */
     var getSelectionElement = function (el) {
         var me = this;
@@ -741,19 +741,19 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
 });
 
-//define xs.ux.View-specific preprocessor
+//define xs.view.View-specific preprocessor
 (function () {
 
     'use strict';
 
-    var log = new xs.log.Logger('xs.class.preprocessors.xs.ux.View');
+    var log = new xs.log.Logger('xs.class.preprocessors.xs.view.View');
 
-    var assert = new xs.core.Asserter(log, XsClassPreprocessorsXsUxViewError);
+    var assert = new xs.core.Asserter(log, XsClassPreprocessorsXsViewViewError);
 
-    xs.class.preprocessors.add('xs.ux.View', function (Class) {
+    xs.class.preprocessors.add('xs.view.View', function (Class) {
 
         //use preprocessor only for view classes
-        return Class.inherits(xs.ux.View);
+        return Class.inherits(xs.view.View);
     }, function (Class, descriptor) {
 
         //process positions
@@ -902,12 +902,12 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
      *
-     * @class XsClassPreprocessorsXsUxViewError
+     * @class XsClassPreprocessorsXsViewViewError
      */
-    function XsClassPreprocessorsXsUxViewError(message) {
-        this.message = 'xs.class.preprocessors.xs.ux.View::' + message;
+    function XsClassPreprocessorsXsViewViewError(message) {
+        this.message = 'xs.class.preprocessors.xs.view.View::' + message;
     }
 
-    XsClassPreprocessorsXsUxViewError.prototype = new Error();
+    XsClassPreprocessorsXsViewViewError.prototype = new Error();
 
 })();

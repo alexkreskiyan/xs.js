@@ -177,9 +177,6 @@
                 "Query": { },
                 "Source": { }
             },
-            "dom": {
-                "Element": { }
-            },
             "event": {
                 "IEvent": { },
                 "Observable": { },
@@ -299,7 +296,10 @@
                 "WebSocket": { }
             },
             "ux": {
-                "Promise": { },
+                "Promise": { }
+            },
+            "view": {
+                "Element": { },
                 "View": { }
             }
         }

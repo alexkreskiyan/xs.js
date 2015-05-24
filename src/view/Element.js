@@ -5,7 +5,7 @@
  *
  * @private
  *
- * @class xs.dom.Element
+ * @class xs.view.Element
  *
  * @extends xs.class.Base
  *
@@ -17,12 +17,12 @@ xs.define(xs.Class, 'ns.Element', function (self) {
 
     var Class = this;
 
-    Class.namespace = 'xs.dom';
+    Class.namespace = 'xs.view';
 
     Class.mixins.observable = 'xs.event.Observable';
 
     /**
-     * xs.dom.Element constructor
+     * xs.view.Element constructor
      *
      * @param {Element} element wrapped element
      * @param {Function} [generator] generator for underlying observable

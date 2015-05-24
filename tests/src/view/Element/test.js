@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.dom.Element', function () {
+module('xs.view.Element', function () {
 
     'use strict';
 
@@ -16,19 +16,19 @@ module('xs.dom.Element', function () {
 
         //Element instance is required as first argument
         throws(function () {
-            return new xs.dom.Element();
+            return new xs.view.Element();
         });
         throws(function () {
-            return new xs.dom.Element('div');
+            return new xs.view.Element('div');
         });
 
-        (new xs.dom.Element(document.createElement('div'))).destroy();
+        (new xs.view.Element(document.createElement('div'))).destroy();
     });
 
     test('on', function () {
         var me = this;
 
-        var el = new xs.dom.Element(document.createElement('div'));
+        var el = new xs.view.Element(document.createElement('div'));
 
         //observable is applied correctly
         el.on(xs.event.Destroy, me.done);
@@ -43,7 +43,7 @@ module('xs.dom.Element', function () {
     test('destroy', function () {
         var me = this;
 
-        var el = new xs.dom.Element(document.createElement('div'));
+        var el = new xs.view.Element(document.createElement('div'));
 
         el.on(xs.event.Destroy, me.done);
 
