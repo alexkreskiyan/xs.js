@@ -1,41 +1,52 @@
 (function () {
+    var context = this;
+    context.addEventListener('load', function () {
+        context.initTouchTest();
+        context.initScrollTest();
+        context.initInteractionTest();
+    });
+}).call(window);
+(function () {
 
     'use strict';
 
-    this.startup = function () {
-        var el = document.getElementsByTagName('canvas')[ 0 ];
+    this.initTouchTest = function () {
+        var el = document.getElementById('touch');
+        var box = el.getBoundingClientRect();
+        el.width = box.width;
+        el.height = box.height;
         el.addEventListener('touchstart', handleStart, false);
         el.addEventListener('touchend', handleEnd, false);
         el.addEventListener('touchcancel', handleCancel, false);
         el.addEventListener('touchleave', handleEnd, false);
         el.addEventListener('touchmove', handleMove, false);
-        log('initialized.');
+        console.log('touch test: canvas initialized.');
     };
 
     var ongoingTouches = [];
 
     function handleStart(evt) {
         evt.preventDefault();
-        log('touchstart.');
-        var el = document.getElementsByTagName('canvas')[ 0 ];
+        console.log('touch test: touchstart.');
+        var el = document.getElementById('touch');
         var ctx = el.getContext('2d');
         var touches = evt.changedTouches;
 
         for (var i = 0; i < touches.length; i++) {
-            log('touchstart:' + i + '...');
+            console.log('touch test: touchstart:' + i + '...');
             ongoingTouches.push(copyTouch(touches[ i ]));
             var color = colorForTouch(touches[ i ]);
             ctx.beginPath();
             ctx.arc(touches[ i ].pageX, touches[ i ].pageY, 4, 0, 2 * Math.PI, false);  //a circle at the start
             ctx.fillStyle = color;
             ctx.fill();
-            log('touchstart:' + i + '.');
+            console.log('touch test: touchstart:' + i + '.');
         }
     }
 
     function handleMove(evt) {
         evt.preventDefault();
-        var el = document.getElementsByTagName('canvas')[ 0 ];
+        var el = document.getElementById('touch');
         var ctx = el.getContext('2d');
         var touches = evt.changedTouches;
 
@@ -44,28 +55,28 @@
             var idx = ongoingTouchIndexById(touches[ i ].identifier);
 
             if (idx >= 0) {
-                log('continuing touch ' + idx);
+                console.log('touch test: continuing touch ' + idx);
                 ctx.beginPath();
-                log('ctx.moveTo(' + ongoingTouches[ idx ].pageX + ', ' + ongoingTouches[ idx ].pageY + ');');
+                console.log('touch test: ctx.moveTo(' + ongoingTouches[ idx ].pageX + ', ' + ongoingTouches[ idx ].pageY + ');');
                 ctx.moveTo(ongoingTouches[ idx ].pageX, ongoingTouches[ idx ].pageY);
-                log('ctx.lineTo(' + touches[ i ].pageX + ', ' + touches[ i ].pageY + ');');
+                console.log('touch test: ctx.lineTo(' + touches[ i ].pageX + ', ' + touches[ i ].pageY + ');');
                 ctx.lineTo(touches[ i ].pageX, touches[ i ].pageY);
                 ctx.lineWidth = 4;
                 ctx.strokeStyle = color;
                 ctx.stroke();
 
                 ongoingTouches.splice(idx, 1, copyTouch(touches[ i ]));  //swap in the new touch record
-                log('.');
+                console.log('touch test: .');
             } else {
-                log('can\'t figure out which touch to continue');
+                console.log('touch test: can\'t figure out which touch to continue');
             }
         }
     }
 
     function handleEnd(evt) {
         evt.preventDefault();
-        log('touchend/touchleave.');
-        var el = document.getElementsByTagName('canvas')[ 0 ];
+        console.log('touch test: touchend/touchleave.');
+        var el = document.getElementById('touch');
         var ctx = el.getContext('2d');
         var touches = evt.changedTouches;
 
@@ -82,14 +93,14 @@
                 ctx.fillRect(touches[ i ].pageX - 4, touches[ i ].pageY - 4, 8, 8);  //and a square at the end
                 ongoingTouches.splice(idx, 1);  //remove it; we're done
             } else {
-                log('can\'t figure out which touch to end');
+                console.log('touch test: can\'t figure out which touch to end');
             }
         }
     }
 
     function handleCancel(evt) {
         evt.preventDefault();
-        log('touchcancel.');
+        console.log('touch test: touchcancel.');
         var touches = evt.changedTouches;
 
         for (var i = 0; i < touches.length; i++) {
@@ -109,7 +120,7 @@
         //make it a hex digit
         b = b.toString(16);
         var color = '#' + r + g + b;
-        log('color for touch with identifier ' + touch.identifier + ' = ' + color);
+        console.log('touch test: color for touch with identifier ' + touch.identifier + ' = ' + color);
 
         return color;
     }
@@ -139,4 +150,51 @@
         var p = document.getElementById('log');
         p.innerHTML = msg + '\n' + p.innerHTML;
     }
+}).call(window);
+(function () {
+
+    'use strict';
+
+    this.initScrollTest = function () {
+        var el = document.getElementById('scroll');
+        var events = [
+            'scroll',
+            'wheel',
+            'mousewheel'
+        ];
+        for (var i = 0; i < events.length; i++) {
+            el.addEventListener(events[ i ], console.log.bind(console, 'scroll sample', events[ i ]));
+        }
+        console.log('scroll initialized.');
+    };
+}).call(window);
+(function () {
+
+    'use strict';
+
+    this.initInteractionTest = function () {
+        var el = document.getElementById('interaction');
+        var events = [
+            'click',
+            'dblclick',
+            'mousedown',
+            'mouseup',
+            'mouseenter',
+            'mouseleave',
+            'mousemove',
+            'mouseover',
+            'mouseout',
+            'contextmenu',
+            'touchstart',
+            'touchenter',
+            'touchmove',
+            'touchleave',
+            'touchend',
+            'touchcancel'
+        ];
+        for (var i = 0; i < events.length; i++) {
+            el.addEventListener(events[ i ], console.log.bind(console, 'interaction sample', events[ i ]));
+        }
+        console.log('scroll initialized.');
+    };
 }).call(window);

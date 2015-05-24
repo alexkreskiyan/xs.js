@@ -1,1 +1,31 @@
 `dom.event` milestone
+
+All view-related implementations are located in `xs.view` namespace
+
+Pointer events: xs.view.event.pointer.*
+
+Tap (single action of positioning device)
+DoubleTap (double action of positioning device)
+TapStart (start of positioning device action)
+TapEnd (start of positioning device action)
+Enter (A pointing device is moved onto the element that has the listener attached)
+Leave (A pointing device is moved off the element that has the listener attached)
+Over (A pointing device is moved onto the element that has the listener attached or onto one of its children)
+Out (A pointing device is moved off the element that has the listener attached or off one of its children)
+ContextMenu (The right button of the mouse is clicked (before the context menu is displayed))
+Scroll - wheel is not supported on touch devices
+
+pointer:
+xs.dom.event.pointer.Click              click               https://developer.mozilla.org/en-US/docs/Web/Events/click               A pointing device button has been pressed and released on an element.
+xs.dom.event.pointer.DoubleClick        dblclick            https://developer.mozilla.org/en-US/docs/Web/Events/dblclick            A pointing device button is clicked twice on an element.
+xs.dom.event.pointer.Down               mousedown           https://developer.mozilla.org/en-US/docs/Web/Events/mousedown           A pointing device button (usually a mouse) is pressed on an element.
+xs.dom.event.pointer.Enter              mouseenter          https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter          A pointing device is moved onto the element that has the listener attached.
+xs.dom.event.pointer.Leave              mouseleave          https://developer.mozilla.org/en-US/docs/Web/Events/mouseleave          A pointing device is moved off the element that has the listener attached.
+xs.dom.event.pointer.Move               mousemove           https://developer.mozilla.org/en-US/docs/Web/Events/mousemove           A pointing device is moved over an element.
+xs.dom.event.pointer.Out                mouseout            https://developer.mozilla.org/en-US/docs/Web/Events/mouseout            A pointing device is moved off the element that has the listener attached or off one of its children.
+xs.dom.event.pointer.Over               mouseover           https://developer.mozilla.org/en-US/docs/Web/Events/mouseover           A pointing device is moved onto the element that has the listener attached or onto one of its children.
+xs.dom.event.pointer.Up                 mouseup             https://developer.mozilla.org/en-US/docs/Web/Events/mouseup             A pointing device button is released over an element.
+xs.dom.event.pointer.RightClick         contextmenu         https://developer.mozilla.org/en-US/docs/Web/Events/contextmenu         The right button of the mouse is clicked (before the context menu is displayed).
+xs.dom.event.pointer.ContextMenu        show                https://developer.mozilla.org/en-US/docs/Web/Events/show                A contextmenu event was fired on/bubbled to an element that has a contextmenu attribute
+xs.dom.event.pointer.Scroll             scroll              https://developer.mozilla.org/en-US/docs/Web/Events/scroll              The document view or an element has been scrolled.
+xs.dom.event.pointer.Wheel              wheel               https://developer.mozilla.org/en-US/docs/Web/Events/wheel               A wheel button of a pointing device is rotated in any direction.
