@@ -13,7 +13,28 @@ module('xs.storage.Cookie', function () {
     'use strict';
 
     test('demo', function () {
-        expect(0);
+        var me = this;
+
+        me.Class = xs.Class(function () {
+            var Class = this;
+
+            Class.extends = 'xs.storage.Cookie';
+        },  me.done);
+
+        return false;
+
+    }, function () {
+        var cookies = this.Class;
+
+        var cookie = cookies.getCookie();
+        if (cookie) {
+            alert('Ваше имя : '+ cookie['userssname']);
+        } else {
+            var user = prompt('Введите ваше имя:','');
+            if (user != '' && user != null) {
+                cookies.setCookie('userssname', user, 30);
+            }
+        }
     });
 
 });
