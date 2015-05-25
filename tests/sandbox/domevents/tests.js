@@ -170,25 +170,26 @@
         var events = [
             'click',
             'dblclick',
-            'mousedown',
-            'mouseup',
-            'mouseenter',
-            'mouseleave',
-            'mousemove',
-            'mouseover',
-            'mouseout',
+            //'mousedown',
+            //'mouseup',
+            //'mouseenter',
+            //'mouseleave',
+            //'mousemove',
+            //'mouseover',
+            //'mouseout',
             'contextmenu',
             'touchstart',
-            'touchenter',
-            'touchmove',
-            'touchleave',
+            //'touchenter',
+            //'touchmove',
+            //'touchleave',
             'touchend',
+            'scroll',
             'touchcancel'
         ];
 
         for (var i = 0; i < events.length; i++) {
             el.addEventListener(events[ i ], console.log.bind(console, 'interaction sample', events[ i ]));
-            el.addEventListener(events[ i ], write.log.bind(write, 'interaction sample', events[ i ]));
+            //el.addEventListener(events[ i ], write.log.bind(write, 'interaction sample', events[ i ]));
         }
 
         console.log('interaction initialized.');

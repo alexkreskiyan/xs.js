@@ -302,6 +302,7 @@
                 "event": {
                     "IEvent": { },
                     "pointer": {
+                        "IEvent": { },
                         "Tap": {
                             "test": false
                         }

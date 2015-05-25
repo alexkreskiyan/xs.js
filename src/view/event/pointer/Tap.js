@@ -7,13 +7,13 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.pointer.Tap', function (self) {
+xs.define(xs.Class, 'ns.Tap', function (self) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.view.event';
+    Class.namespace = 'xs.view.event.pointer';
 
     Class.implements = [
         'ns.IEvent'

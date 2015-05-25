@@ -24,6 +24,11 @@ html, body {
 }
 
 #interaction > div {
+    width: 200%;
+    height: 200%;
+}
+
+#interaction > div > div {
     width: 50%;
     height: 50%;
     margin-left: 25%;

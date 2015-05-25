@@ -8,7 +8,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         logContainer = document.createElement('div');
         var root = document.querySelector('body');
-        root.insertBefore(logContainer, root.firstChild);
+        root.appendChild(logContainer);
         window.onerror = function () {
             me.write.error.call(undefined, JSON.stringify(arguments));
         };
