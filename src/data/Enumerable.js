@@ -349,10 +349,6 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
     Class.method.hasKey = function (key) {
         var me = this;
 
-        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'hasKey - key `$key`, given for collection, is neither number nor string', {
-            $key: key
-        });
-
         //if key is number - it's index
         if (xs.isNumber(key)) {
 
@@ -449,7 +445,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      * @param {Number} [flags] optional lookup flags:
      * - Reverse - to lookup for value from the end of the collection
      *
-     * @return {String|Number|undefined} found key, or undefined if nothing found
+     * @return {*} found key, or undefined if nothing found
      */
     Class.method.keyOf = function (value, flags) {
         var me = this;
@@ -510,7 +506,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *
      * @method at
      *
-     * @param {String|Number} key value to lookup for
+     * @param {*} key value to lookup for
      *
      * @return {*} value with specified key
      */
@@ -519,11 +515,6 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
 
         //assert that collection is not empty
         self.assert.ok(me.private.items.length, 'at - collection is empty');
-
-        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'at - key `$key`, given for collection, is neither number nor string', {
-            $key: key
-        });
-
 
         var index;
         //handle number - it's index
@@ -724,12 +715,8 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             //handle autoincrement index
             value = key;
             key = me.private.items.length;
-        } else {
 
-            //assert that key is string
-            self.assert.string(key, 'add - key `$key`, given for collection, is not a string', {
-                $key: key
-            });
+        } else {
 
             //assert that key is not taken
             self.assert.ok(me.keys().indexOf(key) < 0, 'add - collection already has key `$key`', {
@@ -846,11 +833,6 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             value = key;
             key = index;
         } else {
-            //assert that key is string
-            self.assert.string(key, 'insert - key `$key`, given for collection, is not a string', {
-                $key: key
-            });
-
             //assert that key is not taken
             self.assert.ok(me.keys().indexOf(key) < 0, 'insert - collection already has key `$key`', {
                 $key: key
@@ -941,10 +923,6 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         //assert that arguments enough
         self.assert.ok(arguments.length >= 2, 'set - no enough arguments');
 
-        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'set - key `$key`, given for collection, is neither number nor string', {
-            $key: key
-        });
-
 
         //handle number key - it's index
         var index;
@@ -971,7 +949,6 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
 
             //handle string key  - it's key
         } else {
-
             index = me.keys().indexOf(key);
 
             //assert that key exists
@@ -1165,10 +1142,6 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      */
     Class.method.removeAt = function (key) {
         var me = this;
-
-        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'removeAt - key `$key`, given for collection, is neither number nor string', {
-            $key: key
-        });
 
         var index;
 

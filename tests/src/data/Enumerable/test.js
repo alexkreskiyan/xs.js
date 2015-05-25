@@ -209,15 +209,6 @@ module('xs.data.Enumerable', function () {
         //init test variables
         var collection;
 
-        //check key processing
-        collection = new xs.data.Collection([
-            1,
-            3
-        ]);
-        throws(function () {
-            collection.hasKey([]);
-        });
-
         //check simple array list
         collection = new xs.data.Collection([
             1,
@@ -373,11 +364,6 @@ module('xs.data.Enumerable', function () {
             3
         ]);
 
-        //incorrect key
-        throws(function () {
-            collection.at([]);
-        });
-
         //index out of bounds
         throws(function () {
             collection.at(3);
@@ -528,10 +514,6 @@ module('xs.data.Enumerable', function () {
         throws(function () {
             collection.add();
         });
-        //throws if key is not a string
-        throws(function () {
-            collection.add(1, 1);
-        });
         //throws if adding with existent key
         throws(function () {
             collection.add('1', 1);
@@ -631,11 +613,6 @@ module('xs.data.Enumerable', function () {
             collection.insert(2, 1);
         });
 
-        //throws if adding with non-string key
-        throws(function () {
-            collection.insert(0, [], 1);
-        });
-
         //throws if adding with same key
         collection = new xs.data.Collection({
             a: 1
@@ -732,10 +709,6 @@ module('xs.data.Enumerable', function () {
         //throws if not enough arguments
         throws(function () {
             collection.set(1);
-        });
-        //throws if key is incorrect
-        throws(function () {
-            collection.set([], 1);
         });
 
         //throws if key (index) not in bounds
@@ -1102,10 +1075,6 @@ module('xs.data.Enumerable', function () {
 
         //check object collection error handling
         collection = new xs.data.Collection();
-        //throws if key is incorrect
-        throws(function () {
-            collection.removeAt([]);
-        });
 
         //throws if key (index) not in bounds
         collection = new xs.data.Collection([ 1 ]);

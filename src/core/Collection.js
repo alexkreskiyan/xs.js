@@ -323,16 +323,12 @@ Collection.prototype.clone = function () {
  *
  * @method hasKey
  *
- * @param {String|Number} key key to lookup for
+ * @param {*} key key to lookup for
  *
  * @return {Boolean} whether collection has key
  */
 Collection.prototype.hasKey = function (key) {
     var me = this;
-
-    assert.ok(xs.isNumber(key) || xs.isString(key), 'hasKey - key `$key`, given for collection, is neither number nor string', {
-        $key: key
-    });
 
     //if key is number - it's index
     if (xs.isNumber(key)) {
@@ -426,7 +422,7 @@ Collection.prototype.has = function (value) {
  * @param {Number} [flags] optional lookup flags:
  * - Reverse - to lookup for value from the end of the collection
  *
- * @return {String|Number|undefined} found key, or undefined if nothing found
+ * @return {*} found key, or undefined if nothing found
  */
 Collection.prototype.keyOf = function (value, flags) {
     var me = this;
@@ -484,7 +480,7 @@ Collection.prototype.keyOf = function (value, flags) {
  *
  * @method at
  *
- * @param {String|Number} key value to lookup for
+ * @param {*} key value to lookup for
  *
  * @return {*} value with specified key
  */
@@ -493,11 +489,6 @@ Collection.prototype.at = function (key) {
 
     //assert that collection is not empty
     assert.ok(me.private.items.length, 'at - collection is empty');
-
-    assert.ok(xs.isNumber(key) || xs.isString(key), 'at - key `$key`, given for collection, is neither number nor string', {
-        $key: key
-    });
-
 
     var index;
     //handle number - it's index
@@ -699,12 +690,6 @@ Collection.prototype.add = function (key, value) {
         value = key;
         key = me.private.items.length;
     } else {
-
-        //assert that key is string
-        assert.string(key, 'add - key `$key`, given for collection, is not a string', {
-            $key: key
-        });
-
         //assert that key is not taken
         assert.ok(me.keys().indexOf(key) < 0, 'add - collection already has key `$key`', {
             $key: key
@@ -802,11 +787,6 @@ Collection.prototype.insert = function (index, key, value) {
         value = key;
         key = index;
     } else {
-        //assert that key is string
-        assert.string(key, 'insert - key `$key`, given for collection, is not a string', {
-            $key: key
-        });
-
         //assert that key is not taken
         assert.ok(me.keys().indexOf(key) < 0, 'insert - collection already has key `$key`', {
             $key: key
@@ -879,10 +859,6 @@ Collection.prototype.set = function (key, value) {
     //assert that arguments enough
     assert.ok(arguments.length >= 2, 'set - no enough arguments');
 
-    assert.ok(xs.isNumber(key) || xs.isString(key), 'set - key `$key`, given for collection, is neither number nor string', {
-        $key: key
-    });
-
 
     //handle number key - it's index
     var index;
@@ -909,7 +885,6 @@ Collection.prototype.set = function (key, value) {
 
         //handle string key  - it's key
     } else {
-
         index = me.keys().indexOf(key);
 
         //assert that key exists
@@ -1084,10 +1059,6 @@ Collection.prototype.reorder = function (source, position, target) {
  */
 Collection.prototype.removeAt = function (key) {
     var me = this;
-
-    assert.ok(xs.isNumber(key) || xs.isString(key), 'removeAt - key `$key`, given for collection, is neither number nor string', {
-        $key: key
-    });
 
     var index;
 
