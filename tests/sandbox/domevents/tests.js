@@ -1,16 +1,15 @@
+'use strict';
+
 (function () {
-    var context = this;
-    context.addEventListener('load', function () {
-        context.initTouchTest();
-        context.initScrollTest();
-        context.initInteractionTest();
+    window.addEventListener('load', function () {
+        //window.initTouchTest();
+        //window.initScrollTest();
+        window.initInteractionTest();
     });
-}).call(window);
+})();
 (function () {
 
-    'use strict';
-
-    this.initTouchTest = function () {
+    window.initTouchTest = function () {
         var el = document.getElementById('touch');
         var box = el.getBoundingClientRect();
         el.width = box.width;
@@ -146,33 +145,27 @@
         return -1;
     }
 
-    function log(msg) {
-        var p = document.getElementById('log');
-        p.innerHTML = msg + '\n' + p.innerHTML;
-    }
-}).call(window);
+})();
 (function () {
 
-    'use strict';
-
-    this.initScrollTest = function () {
+    window.initScrollTest = function () {
         var el = document.getElementById('scroll');
         var events = [
             'scroll',
             'wheel',
             'mousewheel'
         ];
+
         for (var i = 0; i < events.length; i++) {
             el.addEventListener(events[ i ], console.log.bind(console, 'scroll sample', events[ i ]));
         }
         console.log('scroll initialized.');
     };
-}).call(window);
+
+})();
 (function () {
 
-    'use strict';
-
-    this.initInteractionTest = function () {
+    window.initInteractionTest = function () {
         var el = document.getElementById('interaction');
         var events = [
             'click',
@@ -192,9 +185,13 @@
             'touchend',
             'touchcancel'
         ];
+
         for (var i = 0; i < events.length; i++) {
             el.addEventListener(events[ i ], console.log.bind(console, 'interaction sample', events[ i ]));
+            el.addEventListener(events[ i ], write.log.bind(write, 'interaction sample', events[ i ]));
         }
-        console.log('scroll initialized.');
+
+        console.log('interaction initialized.');
     };
-}).call(window);
+
+})();
