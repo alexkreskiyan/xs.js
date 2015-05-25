@@ -96,6 +96,50 @@ xs.define(xs.Class, 'ns.Element', function (self) {
         set: xs.noop
     };
 
+    Class.method.on = function (event, handler, options) {
+        var me = this;
+
+        //create view event capture (if not created yet)
+
+        var stream = this.private.stream;
+        stream.on.apply(stream, arguments);
+
+        return me;
+    };
+
+    Class.method.off = function (event, selector, flags) {
+        var me = this;
+
+        //release view event capture (if needed)
+
+        var stream = this.private.stream;
+        stream.off.apply(stream, arguments);
+
+        return me;
+    };
+
+    Class.method.suspend = function (event, selector, flags) {
+        var me = this;
+
+        //suspend view event capture if needed
+
+        var stream = this.private.stream;
+        stream.suspend.apply(stream, arguments);
+
+        return me;
+    };
+
+    Class.method.resume = function (event, selector, flags) {
+        var me = this;
+
+        //resume view event capture
+
+        var stream = this.private.stream;
+        stream.resume.apply(stream, arguments);
+
+        return me;
+    };
+
     Class.method.destroy = function () {
         var me = this;
 
