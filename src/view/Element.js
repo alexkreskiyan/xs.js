@@ -53,6 +53,9 @@ xs.define(xs.Class, 'ns.Element', function (self) {
             self.mixins.observable.call(me, generator, sources);
         }
 
+        //define event captures collection
+        me.private.captures = new xs.core.Collection();
+
         //create access gate to element's attributes
         me.private.attributes = new Attributes(element);
 
