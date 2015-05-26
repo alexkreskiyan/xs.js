@@ -39,7 +39,7 @@ xs.supports.html = (function () {
      *
      * @type {Boolean}
      */
-    me.dataAttributes = Boolean(document.querySelector('body').dataset);
+    me.dataAttributes = Boolean(document.createElement('div').dataset);
 
     return me;
 })();
