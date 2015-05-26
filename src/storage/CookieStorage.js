@@ -207,8 +207,6 @@ xs.define(xs.Class, 'ns.CookieStorage', function (self, imports) {
         for (var i = 0; i < keys.length; i++) {
             document.cookie = keys[i] + '=; max-age=0';
         }
-        me.cookies = {
-            length:0
-        };
+        me.cookies = {};
     }
 });
