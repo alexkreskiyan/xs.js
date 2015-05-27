@@ -37,7 +37,7 @@ function handleRequest(request, response) {
 
 function logRequest(body) {
     var sqlite3 = require('sqlite3').verbose();
-    var db = new sqlite3.Database(path.join(__dirname, 'log.db'));
+    var db = new sqlite3.Database('tmp/log.db');
     db.serialize(function () {
         var fields = [
             'category TEXT',
