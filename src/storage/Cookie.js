@@ -22,11 +22,11 @@ xs.define(xs.Class, 'ns.Cookie', function (self, imports) {
     /**
      * Get value cookie
      *
-     * @method getCookie
+     * @method getValueCookie
      *
      * @param {String} [name] cookie
      */
-    Class.static.method.getCookie = function (name) {
+    Class.static.method.getValueCookie = function (name) {
         var all = document.cookie;
 
         if(all === '') {
@@ -61,6 +61,9 @@ xs.define(xs.Class, 'ns.Cookie', function (self, imports) {
      * @param {Boolean} [secure] optional. If true use https Protocol used to transfer the cookies
      */
     Class.static.method.setCookie = function (name, value) {
+        if (!navigator.cookieEnabled) {
+            return;
+        }
         var arg = arguments,
         daysToLive = arg.length > 2 ? arg[2] : null,
         path = arg.length > 3 ? arg[3] : '/',
@@ -84,14 +87,14 @@ xs.define(xs.Class, 'ns.Cookie', function (self, imports) {
         }
 
         if (typeof path === 'string') {
-            cookie += '; path' + path;
+            cookie += '; path=' + path;
         }
 
         if (typeof domain === 'string') {
-            cookie += '; domain' + domain;
+            cookie += '; domain=' + domain;
         }
 
-        if (typeof secure === 'boolean') {
+        if (typeof secure === 'boolean' && secure) {
             cookie += '; secure';
         }
         document.cookie = cookie;
@@ -106,7 +109,7 @@ xs.define(xs.Class, 'ns.Cookie', function (self, imports) {
      * @param {String} [path]
      */
     Class.static.method.clearCookie = function (name, path) {
-        if (this.getCookie(name)) {
+        if (this.getValueCookie(name)) {
             path = path || '/';
             document.cookie = name + '=' + '; max-age=0; path=' + path;
         }

@@ -26,13 +26,16 @@ module('xs.storage.Cookie', function () {
     }, function () {
         var cookies = this.Class;
 
-        var cookie = cookies.getCookie();
+        var user = prompt('Введите ваше имя:','');
+        if (user != '' && user != null) {
+            cookies.setCookie('username', user, 30);
+        }
+        var cookie = cookies.getValueCookie('username');
         if (cookie) {
-            alert('Ваше имя : '+ cookie['userssname']);
-        } else {
-            var user = prompt('Введите ваше имя:','');
-            if (user != '' && user != null) {
-                cookies.setCookie('userssname', user, 30);
+            alert('Значение cookie : '+ cookie);
+            cookies.clearCookie('username','/');
+            if (!cookies.getValueCookie('username')) {
+                alert('кука удалена');
             }
         }
     });
