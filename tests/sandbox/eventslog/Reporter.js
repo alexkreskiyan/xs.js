@@ -51,7 +51,7 @@ xs.define(xs.Class, 'log.Reporter', function (self, imports) {
         }
 
         var result = {};
-        var keys = Object.keys(item);
+        var keys = Object.keys(item).concat(Object.keys(item.constructor.prototype));
         var i, key;
 
         if (depth <= 1) {
