@@ -13,6 +13,7 @@ var db = new sqlite3.Database('tmp/log.db');
 var fields = {
     user: 'TEXT',
     device: 'TEXT',
+    time: 'TEXT',
     category: 'TEXT',
     name: 'TEXT',
     userAgent: 'TEXT',
@@ -29,10 +30,10 @@ var fields = {
     osVersion: 'INTEGER',
     event: 'TEXT'
 };
-
 db.run('CREATE TABLE if not exists log (' + Object.keys(fields).map(function (name) {
         return name + ' ' + fields[ name ];
     }) + ')');
+db.close();
 
 function handleRequest(request, response) {
 
@@ -58,47 +59,86 @@ function handleRequest(request, response) {
     request.on('end', function () {
         response.write(body);
         response.end();
-        logRequest(JSON.parse(body));
+        pool.add(JSON.parse(body));
     });
 }
 
-function logRequest(body) {
-    var db = new sqlite3.Database('tmp/log.db');
-    db.get('SELECT name FROM log WHERE user=$user AND device=$device AND category=$category AND name=$name AND userAgent=$userAgent', {
-        $user: body.user,
-        $device: body.device,
-        $category: body.category,
-        $name: body.name,
-        $userAgent: body.userAgent.userAgent
-    }, function (err, row) {
-        if (row) {
+var pool = (function (dbName) {
+    var me = {};
+    var db;
+    var isProcessing = false;
+    var stack = [];
 
-            return;
+    me.add = function (message) {
+        //console.log('stack contains', stack.length, 'items. adding');
+        stack.push(message);
+        if (!isProcessing) {
+            //console.log('start stack processing');
+            isProcessing = true;
+            db = new sqlite3.Database(dbName);
+            process();
+        } else {
+            //console.log('stack is already processing');
         }
+    };
 
-        var sql = 'INSERT INTO log VALUES (' + Object.keys(fields).map(function (name) {
-                return '$' + name;
-            }).join(', ') + ')';
-        db.run(sql, {
-            $user: body.user,
-            $device: body.device,
-            $category: body.category,
-            $name: body.name,
-            $userAgent: body.userAgent.userAgent,
-            $browserName: body.userAgent.browser.name,
-            $browserVersion: body.userAgent.browser.version,
-            $browserMajor: body.userAgent.browser.major,
-            $browserMinor: body.userAgent.browser.minor,
-            $cpu: body.userAgent.cpu.architecture,
-            $engineName: body.userAgent.engine.name,
-            $engineVersion: body.userAgent.engine.version,
-            $engineMajor: body.userAgent.engine.major,
-            $engineMinor: body.userAgent.engine.minor,
-            $osName: body.userAgent.os.name,
-            $osVersion: body.userAgent.os.version,
-            $event: JSON.stringify(body.event)
+    var process = function () {
+        if (stack.length) {
+            //console.log('stack is not empty, write next message');
+            write(stack.shift(), process);
+        } else {
+            //console.log('stack processing ended');
+            isProcessing = false;
+            db.close();
+        }
+    };
+
+    var write = function (data, callback) {
+        //console.log('check existing data');
+        db.get('SELECT COUNT(*) AS count FROM log WHERE user=$user AND device=$device AND category=$category AND name=$name AND userAgent=$userAgent', {
+            $user: data.user,
+            $device: data.device,
+            $category: data.category,
+            $name: data.name,
+            $userAgent: data.userAgent.userAgent
+        }, function (err, row) {
+            //console.log('fetched count:', row.count);
+            if (row && row.count >= 10) {
+
+                //console.log('too much data. end');
+                callback();
+                return;
+            }
+
+            //console.log('add new log entry');
+            var sql = 'INSERT INTO log VALUES (' + Object.keys(fields).map(function (name) {
+                    return '$' + name;
+                }).join(', ') + ')';
+            db.run(sql, {
+                $user: data.user,
+                $device: data.device,
+                $time: data.time,
+                $category: data.category,
+                $name: data.name,
+                $userAgent: data.userAgent.userAgent,
+                $browserName: data.userAgent.browser.name,
+                $browserVersion: data.userAgent.browser.version,
+                $browserMajor: data.userAgent.browser.major,
+                $browserMinor: data.userAgent.browser.minor,
+                $cpu: data.userAgent.cpu.architecture,
+                $engineName: data.userAgent.engine.name,
+                $engineVersion: data.userAgent.engine.version,
+                $engineMajor: data.userAgent.engine.major,
+                $engineMinor: data.userAgent.engine.minor,
+                $osName: data.userAgent.os.name,
+                $osVersion: data.userAgent.os.version,
+                $event: JSON.stringify(data.event)
+            }, function () {
+                //console.log('new log entry added. end');
+                callback();
+            });
         });
-    });
+    };
 
-    db.close();
-}
+    return me;
+})('tmp/log.db');

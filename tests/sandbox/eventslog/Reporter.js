@@ -36,6 +36,7 @@ xs.define(xs.Class, 'log.Reporter', function (self, imports) {
         request.data = JSON.stringify({
             user: user,
             device: device,
+            time: getTime(),
             userAgent: xs.env.Context,
             category: category,
             name: name,
@@ -71,6 +72,31 @@ xs.define(xs.Class, 'log.Reporter', function (self, imports) {
         }
 
         return result;
+    };
+
+    var getTime = function () {
+        var date = new Date();
+
+        return [
+                leadZero(date.getDate(), 2),
+                leadZero(date.getMonth() + 1, 2),
+                date.getFullYear()
+            ].join('.') + ' ' + [
+                leadZero(date.getHours(), 2),
+                leadZero(date.getMinutes(), 2),
+                leadZero(date.getSeconds(), 2)
+            ].join(':') + '.' + leadZero(date.getMilliseconds(), 3);
+    };
+
+    var leadZero = function (value, length) {
+        //convert value to string
+        value = value.toString();
+
+        while (value.length < length) {
+            value = '0' + value;
+        }
+
+        return value;
     };
 
 });

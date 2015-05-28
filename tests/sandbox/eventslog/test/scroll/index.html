@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>xs.js element test</title>
+    <title>xs.js eventlog/element test</title>
     <script type="text/javascript" src="/build/source/xs.js"></script>
     <script type="text/javascript" src="tests.js"></script>
     <link rel="stylesheet" type="text/css" href="../../style.css"/>
+    <style type="text/css">
+        #test {
+            overflow: scroll;
+        }
+
+        #test > div {
+            width: 200%;
+            height: 200%;
+        }
+
+    </style>
 </head>
 <body>
 <div id="test">
     <ol>
         <li>
-            focus into input field
-        </li>
-        <li>
-            make input lose focus
+            scroll body
         </li>
     </ol>
-    <input id="input" type="text" title="text here"/>
+    <div></div>
 </div>
 </body>
 </html>
