@@ -10,7 +10,7 @@ xs.define(xs.Class, 'tests.Demo', function (self, imports) {
         }
     ];
 
-    Class.method.run = function () {
+    Class.static.method.run = function () {
         var el = document.getElementById('input');
         el.addEventListener('focus', function (event) {
             imports.Reporter.report('element', 'focus', event);
@@ -23,7 +23,7 @@ xs.define(xs.Class, 'tests.Demo', function (self, imports) {
 }, function (App) {
     'use strict';
 
-    (new App()).run();
+    App.run();
 });
 xs.Loader.paths.add({
     xs: '/src',

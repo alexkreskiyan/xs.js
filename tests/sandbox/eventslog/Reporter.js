@@ -19,15 +19,23 @@ xs.define(xs.Class, 'log.Reporter', function (self, imports) {
         }
     ];
 
-    Class.constant.Url = xs.lazy(function () {
+    Class.constant.ServerUrl = xs.lazy(function () {
         return new imports.Url('http://' + window.location.host + ':3900', imports.QueryString);
     });
 
     Class.static.method.report = function (category, name, event) {
+        var user = localStorage.getItem('user');
+        var device = localStorage.getItem('device');
+
+        self.assert.ok(user, 'specify your username, please');
+        self.assert.ok(device, 'specify your device, please');
+
         var request = new imports.Request();
         request.method = imports.request.Method.POST;
-        request.url = self.Url;
+        request.url = self.ServerUrl;
         request.data = JSON.stringify({
+            user: user,
+            device: device,
             userAgent: xs.env.Context,
             category: category,
             name: name,

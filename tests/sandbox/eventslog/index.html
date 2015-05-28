@@ -2,8 +2,17 @@
 <html>
 <head>
     <title>xs.js view tests</title>
+    <script type="text/javascript">
+        if (!localStorage.getItem('user')) {
+            localStorage.setItem('user', prompt('What is your username?'));
+        }
+        if (!localStorage.getItem('device')) {
+            localStorage.setItem('device', prompt('What is your device?'));
+        }
+    </script>
 </head>
 <body>
+<div><a href="test/resource/" target="_blank">Resource test</a></div>
 <div><a href="test/element/" target="_blank">Element test</a></div>
 <div><a href="test/scroll/" target="_blank">Scroll test</a></div>
 <div><a href="test/pointer/" target="_blank">Pointer test</a></div>
