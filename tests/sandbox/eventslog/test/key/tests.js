@@ -11,7 +11,7 @@ xs.define(xs.Class, 'tests.Demo', function (self, imports) {
     ];
 
     Class.static.method.run = function () {
-        var el = document.body;
+        var el = document.querySelector('#test>textarea');
         el.addEventListener('keypress', function (event) {
             var name = 'keypress';
             if (event.ctrlKey) {
