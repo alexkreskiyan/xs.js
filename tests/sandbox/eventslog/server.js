@@ -43,7 +43,7 @@ function handleRequest(request, response) {
         'Access-Control-Allow-Headers': 'Content-Type'
     };
 
-    if (request.method === 'OPTIONS') {
+    if (request.method === 'OPTIONS' || request.method === 'GET') {
         response.writeHead(200, headers);
         response.end();
 
@@ -58,7 +58,6 @@ function handleRequest(request, response) {
     });
 
     request.on('end', function () {
-        response.write(body);
         response.end();
         pool.add(JSON.parse(body));
     });
