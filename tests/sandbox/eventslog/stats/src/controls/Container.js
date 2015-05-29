@@ -1,4 +1,5 @@
 xs.define(xs.Class, 'ns.Container', function () {
+
     'use strict';
 
     var Class = this;

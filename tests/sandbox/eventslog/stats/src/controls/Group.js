@@ -1,4 +1,5 @@
 xs.define(xs.Class, 'ns.Group', function (self) {
+
     'use strict';
 
     var Class = this;

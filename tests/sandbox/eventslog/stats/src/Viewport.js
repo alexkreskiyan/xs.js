@@ -1,4 +1,5 @@
 xs.define(xs.Class, 'ns.Viewport', function () {
+
     'use strict';
 
     var Class = this;

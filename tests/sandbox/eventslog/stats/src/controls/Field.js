@@ -1,11 +1,12 @@
 xs.define(xs.Class, 'ns.Field', function (self) {
+
     'use strict';
 
     var Class = this;
 
     Class.namespace = 'stats.controls';
 
-    Class.extends = 'xs.view.Element';
+    Class.extends = 'xs.view.View';
 
     Class.positions = [ 'items' ];
 
