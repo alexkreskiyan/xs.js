@@ -425,7 +425,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         });
 
         //assert, that view is not destroyed
-        self.assert.not(view.isDestroyed, 'position.add - `$view` is destroyed', {
+        self.assert.not(view.isDestroyed, 'position.add - view `$view` is destroyed', {
             $view: view
         });
 
@@ -509,7 +509,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         });
 
         //assert, that view is not destroyed
-        self.assert.not(view.isDestroyed, 'position.set - `$view` is destroyed', {
+        self.assert.not(view.isDestroyed, 'position.set - view `$view` is destroyed', {
             $view: view
         });
 
@@ -605,7 +605,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         });
 
         //assert, that view is not destroyed
-        self.assert.not(view.isDestroyed, 'position.set - `$view` is destroyed', {
+        self.assert.not(view.isDestroyed, 'position.set - view `$view` is destroyed', {
             $view: view
         });
     };
