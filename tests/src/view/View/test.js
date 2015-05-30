@@ -61,7 +61,7 @@ module('xs.view.View', function () {
             Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
-                data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
+                data: '<div><div xs-view-position="title"></div><div xs-view-position="body"></div></div>'
             });
 
             Class.positions = [
@@ -93,7 +93,7 @@ module('xs.view.View', function () {
             Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
-                data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
+                data: '<div><div xs-view-position="title"></div><div xs-view-position="body"></div></div>'
             });
 
             Class.positions = [
@@ -159,7 +159,7 @@ module('xs.view.View', function () {
             Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
-                data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
+                data: '<div><div xs-view-position="title"></div><div xs-view-position="body"></div></div>'
             });
 
             Class.positions = [
@@ -239,7 +239,7 @@ module('xs.view.View', function () {
             Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
-                data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
+                data: '<div><div xs-view-position="title"></div><div xs-view-position="body"></div></div>'
             });
 
             Class.positions = [
@@ -330,7 +330,7 @@ module('xs.view.View', function () {
             Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
-                data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
+                data: '<div><div xs-view-position="title"></div><div xs-view-position="body"></div></div>'
             });
 
             Class.positions = [
@@ -430,7 +430,7 @@ module('xs.view.View', function () {
             Class.extends = 'xs.view.View';
 
             Class.constant.template = new xs.resource.text.HTML({
-                data: '<div><div><xs-view-position name="title"></xs-view-position></div><div><xs-view-position name="body"></xs-view-position></div></div>'
+                data: '<div><div xs-view-position="title"></div><div xs-view-position="body"></div></div>'
             });
 
             Class.positions = [

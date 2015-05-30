@@ -4,7 +4,7 @@
  * Key concept of view is a concept of 3-way initialization:
  *
  * - via imported resource template. Imported resource must be named `Template` TODO upgrade with a link
- * This is a base scheme for complex scenarios, when there is a complex multiline template
+ * This is a base scheme for complex scenarios, when there is a complex template
  *
  * - via template instantiation (from Class.constant.template)
  * This is a base scheme for most simple scenarios, when there is no need in external template definition
@@ -295,7 +295,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         declaredPositions.each(function (position) {
 
             //assert, that position is presented
-            self.assert.ok(elementPositions.hasOwnProperty(position), 'verifyTtemplate - declared position `$position` is not presented');
+            self.assert.ok(elementPositions.hasOwnProperty(position), 'verifyTemplate - declared position `$position` is not presented');
         });
 
         return true;
@@ -326,19 +326,13 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
             //get position element
             var element = elementPositions[ name ];
 
-            //get element parent reference
-            var parent = element.parentElement;
-
-            //remove element from parent
-            element.parentElement.removeChild(element);
-
             positions[ name ] = xs.lazy(function () {
 
                 //position is a collection of views
                 var position = new imports.Collection(self);
 
                 //save reference to parent
-                position.private.el = parent;
+                position.private.el = element;
 
                 //add events handlers for position
                 var options = {
@@ -366,7 +360,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @type {String}
      */
-    var positionSelector = 'xs-view-position[name]';
+    var positionSelector = '[xs-view-position]';
 
     var getElementPositions = function (element) {
 
@@ -377,29 +371,43 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var length = elements.length;
         var positions = {};
 
-        for (i = 0; i < length; i++) {
-            //get element
-            item = elements.item(i);
+        //try element itself
+        name = element.getAttribute('xs-view-position');
 
-            //get name
-            name = item.getAttribute('name');
-
-            //assert, that element name is unique
-            self.assert.not(positions.hasOwnProperty(name), 'getElementPositions - given position name `$name` is already taken', {
-                $name: name
+        if (name) {
+            //element must not contain any children or contain single text node
+            self.assert.ok(!element.childNodes.length || (element.childNodes.length === 1 && element.firstChild instanceof Text), 'getElementPositions - position `$item` has some children, that is prohibited', {
+                $item: element
             });
 
-            //element.parentElement must be defined
-            self.assert.ok(item.parentElement, 'getElementPositions - position `$item` does not have a parent element', {
-                $item: item
-            });
+            //remove child, if any
+            if (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
 
-            //element.parentElement must contain only position
-            self.assert.equal(item.parentElement.childNodes.length, 1, 'getElementPositions - position `$item` does not have a parent element', {
-                $item: item
-            });
+            positions[ name ] = element;
+        } else {
 
-            positions[ name ] = item;
+            //iterate over elements
+            for (i = 0; i < length; i++) {
+                //get element
+                item = elements.item(i);
+
+                //get name
+                name = item.getAttribute('xs-view-position');
+
+                //element must not contain any children
+                self.assert.ok(!item.childNodes.length || (item.childNodes.length === 1 && item.firstChild instanceof Text), 'getElementPositions - position `$item` has some children, that is prohibited', {
+                    $item: item
+                });
+
+                //remove child, if any
+                if (item.firstChild) {
+                    item.removeChild(item.firstChild);
+                }
+
+                positions[ name ] = item;
+            }
         }
 
         return positions;
@@ -850,13 +858,13 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         declaredPositions.each(function (position) {
 
             //assert, that position is presented
-            assert.ok(elementPositions.hasOwnProperty(position), 'verifyTtemplate - declared position `$position` is not presented');
+            assert.ok(elementPositions.hasOwnProperty(position), 'verifyTemplate - declared position `$position` is not presented');
         });
 
         return true;
     };
 
-    var positionSelector = 'xs-view-position[name]';
+    var positionSelector = '[xs-view-position]';
 
     var getElementPositions = function (element) {
 
@@ -867,29 +875,43 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var length = elements.length;
         var positions = {};
 
-        for (i = 0; i < length; i++) {
-            //get element
-            item = elements.item(i);
+        //try element itself
+        name = element.getAttribute('xs-view-position');
 
-            //get name
-            name = item.getAttribute('name');
-
-            //assert, that element name is unique
-            assert.not(positions.hasOwnProperty(name), 'getElementPositions - given position name `$name` is already taken', {
-                $name: name
+        if (name) {
+            //element must not contain any children or contain single text node
+            assert.ok(!element.childNodes.length || (element.childNodes.length === 1 && element.firstChild instanceof Text), 'getElementPositions - position `$item` has some children, that is prohibited', {
+                $item: element
             });
 
-            //element.parentElement must be defined
-            assert.ok(item.parentElement, 'getElementPositions - position `$item` does not have a parent element', {
-                $item: item
-            });
+            //remove child, if any
+            if (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
 
-            //element.parentElement must contain only position
-            assert.equal(item.parentElement.childNodes.length, 1, 'getElementPositions - position `$item` does not have a parent element', {
-                $item: item
-            });
+            positions[ name ] = element;
+        } else {
 
-            positions[ name ] = item;
+            //iterate over elements
+            for (i = 0; i < length; i++) {
+                //get element
+                item = elements.item(i);
+
+                //get name
+                name = item.getAttribute('xs-view-position');
+
+                //element must not contain any children
+                assert.ok(!item.childNodes.length || (item.childNodes.length === 1 && item.firstChild instanceof Text), 'getElementPositions - position `$item` has some children, that is prohibited', {
+                    $item: item
+                });
+
+                //remove child, if any
+                if (item.firstChild) {
+                    item.removeChild(item.firstChild);
+                }
+
+                positions[ name ] = item;
+            }
         }
 
         return positions;
