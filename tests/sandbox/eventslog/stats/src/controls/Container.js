@@ -14,7 +14,7 @@ xs.define(xs.Class, 'ns.Container', function () {
 
     Class.constant.template = xs.lazy(function () {
         return new xs.resource.text.HTML({
-            data: '<div><xs-view-position name="items"/></div>'
+            data: '<div xs-view-position="items"></div>'
         });
     });
 

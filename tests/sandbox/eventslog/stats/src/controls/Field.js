@@ -12,7 +12,7 @@ xs.define(xs.Class, 'ns.Field', function (self) {
 
     Class.constant.template = xs.lazy(function () {
         return new xs.resource.text.HTML({
-            data: '<div><label></label><select><xs-view-position name="items"/></select></div>'
+            data: '<div><label></label><select xs-view-position="items"></select></div>'
         });
     });
 

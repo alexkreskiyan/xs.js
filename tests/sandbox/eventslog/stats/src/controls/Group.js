@@ -14,7 +14,7 @@ xs.define(xs.Class, 'ns.Group', function (self) {
 
     Class.constant.template = xs.lazy(function () {
         return new xs.resource.text.HTML({
-            data: '<div class="group"><h2></h2><div class="items"><xs-view-position name="items"/></div></div>'
+            data: '<div class="group"><h2></h2><div class="items" xs-view-position="items"></div></div>'
         });
     });
 
