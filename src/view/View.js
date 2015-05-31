@@ -425,6 +425,8 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      * @param {xs.data.enumerable.event.AddBefore} event
      */
     var handleAddBefore = function (event) {
+        var me = this;
+
         //get view reference;
         var view = event.value;
 
@@ -442,6 +444,11 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
             return;
         }
+
+        //assert, that no reorder is done
+        self.assert.not(view.private.container === me, 'position.add - view `$view` is being reordered. Use reorder instead', {
+            $view: view
+        });
 
         //view has old container - remove it from there
         //assign temporary `isUsed` flag
@@ -482,14 +489,14 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var parent = me.private.el;
 
         //if view is last item - simply append it
-        if (me.private.items.length - event.index === 1) {
+        if (event.index === me.private.items.length - 1) {
             parent.appendChild(view.private.el);
 
             return;
         }
 
-        //get next view relative to inserted
-        var next = me.private.items[ event.index + 1 ].value;
+        //get view, that will be next to inserted
+        var next = me.private.items[ event.index ].value;
 
         //insert view before next.element
         parent.insertBefore(view.private.el, next.private.el);
@@ -534,11 +541,16 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         //destroy old (it is safe now)
         old.destroy();
 
-        //if view has no parent collection finish
+        //if view has no parent - finish
         if (!view.private.container) {
 
             return;
         }
+
+        //assert, that no reorder is done
+        self.assert.not(view.private.container === me, 'position.add - view `$view` is being reordered. Use reorder instead', {
+            $view: view
+        });
 
         //view has old container - remove it from there
         //assign temporary `isUsed` flag
@@ -579,14 +591,14 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var parent = me.private.el;
 
         //if view is last item - simply append it
-        if (me.private.items.length - event.index === 1) {
+        if (event.index === me.private.items.length - 1) {
             parent.appendChild(view.private.el);
 
             return;
         }
 
-        //get next view relative to inserted
-        var next = me.private.items[ event.index + 1 ].value;
+        //get view, that will be next to inserted
+        var next = me.private.items[ event.index ].value;
 
         //insert view before next.element
         parent.insertBefore(view.private.el, next.private.el);
