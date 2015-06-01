@@ -25,8 +25,10 @@ module('xs.class.preprocessors.imports', function () {
                 demo: new xs.resource.text.HTML({
                     url: 'src/class/preprocessors/resources/resources/demo.html'
                 }),
-                demo2: new xs.resource.text.HTML({
-                    url: 'src/class/preprocessors/resources/resources/demo2.html'
+                demo2: xs.lazy(function () {
+                    return new xs.resource.text.HTML({
+                        url: 'src/class/preprocessors/resources/resources/demo2.html'
+                    });
                 })
             };
         }, me.done);
