@@ -1,8 +1,6 @@
 'use strict';
 
 var http = require('http');
-var fs = require('fs');
-var path = require('path');
 var sqlite3 = require('sqlite3').verbose();
 
 var server = http.createServer(function (request, response) {
@@ -87,6 +85,7 @@ pool = (function (dbName) {
     me.add = function (message) {
         console.log('stack contains', stack.length, 'items. adding');
         stack.push(message);
+
         if (!isProcessing) {
             console.log('start stack processing');
             isProcessing = true;
@@ -118,10 +117,12 @@ pool = (function (dbName) {
             $userAgent: data.userAgent.userAgent
         }, function (err, row) {
             console.log('fetched count:', row.count);
+
             if (row && row.count >= 10) {
 
                 console.log('too much data. end');
                 callback();
+
                 return;
             }
 
