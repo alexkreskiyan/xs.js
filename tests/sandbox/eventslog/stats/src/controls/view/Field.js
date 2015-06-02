@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.Group', function (self) {
+xs.define(xs.Class, 'ns.view.Field', function (self, imports) {
 
     'use strict';
 
@@ -6,15 +6,19 @@ xs.define(xs.Class, 'ns.Group', function (self) {
 
     Class.namespace = 'stats.controls';
 
-    Class.imports = [ 'xs.resource.text.HTML' ];
-
     Class.extends = 'xs.view.View';
+
+    Class.imports = [
+        {
+            Template: 'xs.resource.text.HTML'
+        }
+    ];
 
     Class.positions = [ 'items' ];
 
     Class.constant.template = xs.lazy(function () {
-        return new xs.resource.text.HTML({
-            data: '<div class="group"><h2></h2><div class="items" xs-view-position="items"></div></div>'
+        return new imports.Template({
+            data: '<div><label></label><select xs-view-position="items"></select></div>'
         });
     });
 
@@ -40,11 +44,11 @@ xs.define(xs.Class, 'ns.Group', function (self) {
         //call parent constructor
         self.parent.call(me);
 
-        //add class to group
-        me.classes.add(data.name);
+        //add name for select
+        me.query('select').classes.add(data.name);
 
         //set group label
-        me.query('h2').private.el.innerHTML = data.label;
+        me.query('label').private.el.innerHTML = data.label;
     };
 
 });

@@ -22,12 +22,8 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         var viewport = me.private.viewport = new imports.Viewport(document.body);
 
         //create controls module
-        var controls = new imports.Controls();
+        var controls = me.controls = new imports.Controls();
         viewport.items.add(controls.container);
-    };
-
-    Class.property.viewport = {
-        set: xs.noop
     };
 
 });

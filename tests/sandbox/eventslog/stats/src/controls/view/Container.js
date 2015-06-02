@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.Container', function () {
+xs.define(xs.Class, 'ns.view.Container', function (self, imports) {
 
     'use strict';
 
@@ -6,14 +6,18 @@ xs.define(xs.Class, 'ns.Container', function () {
 
     Class.namespace = 'stats.controls';
 
-    Class.imports = [ 'xs.resource.text.HTML' ];
+    Class.imports = [
+        {
+            Template: 'xs.resource.text.HTML'
+        }
+    ];
 
     Class.extends = 'xs.view.View';
 
     Class.positions = [ 'items' ];
 
     Class.constant.template = xs.lazy(function () {
-        return new xs.resource.text.HTML({
+        return new imports.Template({
             data: '<div xs-view-position="items"></div>'
         });
     });
