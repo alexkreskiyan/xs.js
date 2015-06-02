@@ -27,173 +27,166 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         },
         {
             'view.Field': 'ns.view.Field'
+        },
+        {
+            'view.Option': 'ns.view.Option'
+        },
+        {
+            Query: 'xs.data.Query'
         }
     ];
+
+    var controls = {
+        common: {
+            label: 'Общие настройки',
+            fields: {
+                user: {
+                    label: 'Пользователь',
+                    field: 'user'
+                },
+                device: {
+                    label: 'Устройство',
+                    field: 'device'
+                },
+                category: {
+                    label: 'Категория',
+                    field: 'category'
+                },
+                name: {
+                    label: 'Название',
+                    field: 'name'
+                }
+            }
+        },
+        browser: {
+            label: 'Браузер',
+            fields: {
+                name: {
+                    label: 'Название',
+                    field: 'browserName'
+                },
+                version: {
+                    label: 'Версия',
+                    field: 'browserVersion'
+                },
+                major: {
+                    label: 'Мажорная версия',
+                    field: 'browserMajor'
+                },
+                minor: {
+                    label: 'Минорная версия',
+                    field: 'browserMinor'
+                }
+            }
+        },
+        engine: {
+            label: 'Движок JS',
+            fields: {
+                name: {
+                    label: 'Название',
+                    field: 'engineName'
+                },
+                version: {
+                    label: 'Версия',
+                    field: 'engineVersion'
+                },
+                major: {
+                    label: 'Мажорная версия',
+                    field: 'engineMajor'
+                },
+                minor: {
+                    label: 'Минорная версия',
+                    field: 'engineMinor'
+                }
+            }
+        },
+        environment: {
+            label: 'Окружение',
+            fields: {
+                architecture: {
+                    label: 'Архитектура',
+                    field: 'cpu'
+                },
+                os: {
+                    label: 'Устройство',
+                    field: 'osName'
+                },
+                version: {
+                    label: 'Категория',
+                    field: 'osVersion'
+                }
+            }
+        }
+    };
 
     Class.constructor = function () {
         var me = this;
         me.container = new imports.view.Container();
         me.container.attributes.set('id', 'controls');
 
-        fillContainer(me.container);
+        createControls(me.container, controls);
 
         var source = me.source = new imports.data.store.Log();
         source.proxy = new imports.data.proxy.Xhr();
         source.proxy.reader = new imports.reader.JSON();
 
         source.readAll().then(function () {
-            console.log('source loaded', source.values());
+            fillControls.call(me, me.container, controls);
         }, function (error) {
-            console.error(error);
-        })
+            throw error;
+        });
     };
 
-    function fillContainer(container) {
-
-        //add common settings group
-        var common = new imports.view.Group({
-            name: 'common',
-            label: 'Общие настройки'
+    function createControls(container, controls) {
+        (new xs.core.Collection(controls)).each(function (config, name) {
+            var group = new imports.view.Group({
+                name: name,
+                label: config.label
+            });
+            container.items.add(name, group);
+            (new xs.core.Collection(config.fields)).each(function (config, name) {
+                var field = new imports.view.Field({
+                    name: name,
+                    label: config.label
+                });
+                group.items.add(name, field);
+            });
         });
-        container.items.add(common);
-        fillCommon(common);
-
-        //add browser group
-        var browser = new imports.view.Group({
-            name: 'browser',
-            label: 'Браузер'
-        });
-        container.items.add(browser);
-        fillBrowser(browser);
-
-        //add engine group
-        var engine = new imports.view.Group({
-            name: 'engine',
-            label: 'Движок'
-        });
-        container.items.add(engine);
-        fillEngine(engine);
-
-        //add environment group
-        var environment = new imports.view.Group({
-            name: 'environment',
-            label: 'Окружение'
-        });
-        container.items.add(environment);
-        fillEvironment(environment);
     }
 
-    function fillCommon(group) {
-        //user
-        var user = new imports.view.Field({
-            name: 'user',
-            label: 'Пользователь'
-        });
-        group.items.add(user);
+    function fillControls(container, controls) {
+        var me = this;
+        container.items.each(function (group, name) {
+            var groupConfig = controls[ name ];
 
-        //device
-        var device = new imports.view.Field({
-            name: 'device',
-            label: 'Устройство'
-        });
-        group.items.add(device);
+            group.items.each(function (field, name) {
+                var config = groupConfig.fields[ name ];
 
-        //category
-        var category = new imports.view.Field({
-            name: 'category',
-            label: 'Категория'
-        });
-        group.items.add(category);
+                var query = new imports.Query(me.source);
+                query
+                    .select(function (item) {
 
-        //name
-        var name = new imports.view.Field({
-            name: 'name',
-            label: 'Название'
-        });
-        group.items.add(name);
-    }
+                        return {
+                            value: item[ config.field ].get()
+                        };
+                    })
+                    .group(function (item) {
 
-    function fillBrowser(group) {
-        //name
-        var name = new imports.view.Field({
-            name: 'name',
-            label: 'Название'
-        });
-        group.items.add(name);
+                        return item.value;
+                    })
+                    .select(function (item) {
+                        return item.key;
+                    });
+                query.execute();
 
-        //version
-        var version = new imports.view.Field({
-            name: 'version',
-            label: 'Версия'
+                query.each(function (value) {
+                    field.items.add(new imports.view.Option({
+                        value: value,
+                        label: value
+                    }));
+                });
+            });
         });
-        group.items.add(version);
-
-        //major
-        var major = new imports.view.Field({
-            name: 'major',
-            label: 'Мажорная версия'
-        });
-        group.items.add(major);
-
-        //minor
-        var minor = new imports.view.Field({
-            name: 'minor',
-            label: 'Минорная версия'
-        });
-        group.items.add(minor);
-    }
-
-    function fillEngine(group) {
-        //name
-        var name = new imports.view.Field({
-            name: 'name',
-            label: 'Название'
-        });
-        group.items.add(name);
-
-        //version
-        var version = new imports.view.Field({
-            name: 'version',
-            label: 'Версия'
-        });
-        group.items.add(version);
-
-        //major
-        var major = new imports.view.Field({
-            name: 'major',
-            label: 'Мажорная версия'
-        });
-        group.items.add(major);
-
-        //minor
-        var minor = new imports.view.Field({
-            name: 'minor',
-            label: 'Минорная версия'
-        });
-        group.items.add(minor);
-    }
-
-    function fillEvironment(group) {
-        //os name
-        var name = new imports.view.Field({
-            name: 'name',
-            label: 'Название'
-        });
-        group.items.add(name);
-
-        //os version
-        var version = new imports.view.Field({
-            name: 'version',
-            label: 'Версия'
-        });
-        group.items.add(version);
-
-        //os architecture
-        var architecture = new imports.view.Field({
-            name: 'architecture',
-            label: 'Архитектура'
-        });
-        group.items.add(architecture);
     }
 
 });

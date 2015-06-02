@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.view.Field', function (self, imports) {
+xs.define(xs.Class, 'ns.view.Option', function (self, imports) {
 
     'use strict';
 
@@ -14,11 +14,9 @@ xs.define(xs.Class, 'ns.view.Field', function (self, imports) {
         }
     ];
 
-    Class.positions = [ 'items' ];
-
     Class.constant.template = xs.lazy(function () {
         return new imports.Template({
-            data: '<div><label></label><select xs-view-position="items" multiple="multiple"></select></div>'
+            data: '<option></option>'
         });
     });
 
@@ -31,12 +29,12 @@ xs.define(xs.Class, 'ns.view.Field', function (self, imports) {
         });
 
         //assert, that data.name given
-        self.assert.string(data.name, 'constructor - given data.name `$name` is not a string', {
-            $name: data.name
+        self.assert.ok(xs.isString(data.value) || xs.isNumber(data.value), 'constructor - given data.value `$value` is neither a string nor a number', {
+            $value: data.value
         });
 
         //assert, that data.label given
-        self.assert.string(data.label, 'constructor - given data.label `$label` is not a string', {
+        self.assert.ok(xs.isString(data.label) || xs.isNumber(data.label), 'constructor - given data.label `$label` is not a string', {
             $label: data.label
         });
 
@@ -44,16 +42,11 @@ xs.define(xs.Class, 'ns.view.Field', function (self, imports) {
         //call parent constructor
         self.parent.call(me);
 
-        //add name for select
-        me.query('select').classes.add(data.name);
+        //set value
+        me.attributes.set('value', data.value);
 
-        //set group label
-        me.query('label').private.el.innerHTML = data.label;
-
-        //add select handler
-        me.query('select').private.el.addEventListener('change', function (event) {
-            console.log(event);
-        });
+        //set label
+        me.private.el.innerHTML = data.label;
     };
 
 });
