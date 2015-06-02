@@ -12,6 +12,9 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         },
         {
             Controls: 'ns.controls.Module'
+        },
+        {
+            'event.Select': 'ns.controls.event.Select'
         }
     ];
 
@@ -24,6 +27,10 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         //create controls module
         var controls = me.controls = new imports.Controls();
         viewport.items.add(controls.container);
+
+        me.controls.on(imports.event.Select, function (event) {
+            console.log(event.field, event.value.toSource());
+        });
     };
 
 });

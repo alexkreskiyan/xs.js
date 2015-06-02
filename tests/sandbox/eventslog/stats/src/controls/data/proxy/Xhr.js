@@ -1,10 +1,10 @@
-xs.define(xs.Class, 'ns.proxy.Xhr', function (self, imports) {
+xs.define(xs.Class, 'ns.data.proxy.Xhr', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'stats.controls.data';
+    Class.namespace = 'stats.controls';
 
     Class.imports = [
         {

@@ -1,14 +1,14 @@
-xs.define(xs.Class, 'ns.store.Log', function (self, imports) {
+xs.define(xs.Class, 'ns.data.store.Log', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'stats.controls.data';
+    Class.namespace = 'stats.controls';
 
     Class.imports = [
         {
-            Model: 'ns.model.Entry'
+            Model: 'ns.data.model.Entry'
         }
     ];
 

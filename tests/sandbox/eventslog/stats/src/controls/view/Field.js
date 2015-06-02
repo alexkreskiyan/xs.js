@@ -11,6 +11,9 @@ xs.define(xs.Class, 'ns.view.Field', function (self, imports) {
     Class.imports = [
         {
             Template: 'xs.resource.text.HTML'
+        },
+        {
+            'event.Select': 'ns.view.event.Select'
         }
     ];
 
@@ -52,8 +55,20 @@ xs.define(xs.Class, 'ns.view.Field', function (self, imports) {
 
         //add select handler
         me.query('select').private.el.addEventListener('change', function (event) {
-            console.log(event);
+            me.events.send(new imports.event.Select(event));
         });
+
+        //set privates
+        me.private.name = data.name;
+        me.private.label = data.label;
+    };
+
+    Class.property.name = {
+        set: xs.noop
+    };
+
+    Class.property.label = {
+        set: xs.noop
     };
 
 });

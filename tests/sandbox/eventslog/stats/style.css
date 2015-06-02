@@ -32,7 +32,6 @@ html, body {
 #controls > .group label {
     display: inline-block;
     width: 40%;
-    line-height: 30px;
 }
 
 #controls > .group select {

@@ -1,10 +1,10 @@
-xs.define(xs.Class, 'ns.model.Entry', function () {
+xs.define(xs.Class, 'ns.data.model.Entry', function () {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'stats.controls.data';
+    Class.namespace = 'stats.controls';
 
     Class.imports = [
         'xs.data.attribute.String',
