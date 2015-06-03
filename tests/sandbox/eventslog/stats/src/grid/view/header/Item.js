@@ -46,7 +46,6 @@ xs.define(xs.Class, 'ns.view.header.Item', function (self, imports) {
 
         //add classes
         me.classes.add('field');
-        me.classes.add(data.field);
 
         //set label
         me.private.el.innerHTML = data.label + me.private.direction;

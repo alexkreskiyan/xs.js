@@ -6,47 +6,32 @@ xs.define(xs.Class, 'ns.view.Row', function (self, imports) {
 
     Class.namespace = 'stats.grid';
 
-    Class.extends = 'xs.view.View';
-
-    Class.imports = [
-        {
-            Template: 'xs.resource.text.HTML'
-        }
-    ];
-
-    Class.constant.template = xs.lazy(function () {
-        return new imports.Template({
-            data: '<option></option>'
-        });
-    });
+    Class.extends = 'xs.view.Element';
 
     Class.constructor = function (data) {
         var me = this;
 
-        //assert, that data given
+        //assert, that object given
         self.assert.object(data, 'constructor - given data `$data` is not an object', {
             $data: data
         });
 
-        //assert, that data.name is a string
-        self.assert.string(data.name, 'constructor - given data.name `$name` is not a string', {
-            $name: data.name
-        });
-
-        //assert, that data.name is a string
-        self.assert.string(data.name, 'constructor - given data.name `$name` is not a string', {
-            $name: data.name
-        });
-
+        var row = document.createElement('div');
 
         //call parent constructor
-        self.parent.call(me);
+        self.parent.call(me, row);
 
-        //set value
-        me.attributes.set('value', data.value);
+        //add class
+        me.classes.add('row');
 
-        //set label
-        me.private.el.innerHTML = data.label;
+
+        //add fields to row
+        (new xs.core.Collection(data)).each(function (value) {
+            var field = document.createElement('div');
+            field.classList.add('field');
+            field.innerHTML = value;
+            row.appendChild(field);
+        });
     };
 
 });

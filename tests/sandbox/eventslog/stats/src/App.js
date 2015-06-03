@@ -51,18 +51,21 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             console.log(event.field, event.value.toSource());
         });
 
-
-        //create grid module
-        me.grid = new imports.Grid(controls);
-        viewport.items.add(me.grid.grid);
-
-
+        //define source
         me.source = new imports.data.source.Log();
         me.source.proxy = new imports.data.proxy.Xhr();
         me.source.proxy.reader = new imports.reader.JSON();
 
+        //create grid module
+        me.grid = new imports.Grid(controls, me.source);
+        viewport.items.add(me.grid.grid);
+
+        //load data to source and update app state
         me.source.readAll().then(function () {
             me.controls.fillControls(me.source);
+            xs.nextTick(function () {
+                me.grid.load();
+            });
         }, function (error) {
             throw error;
         });

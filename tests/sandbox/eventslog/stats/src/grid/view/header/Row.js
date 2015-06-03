@@ -13,9 +13,13 @@ xs.define(xs.Class, 'ns.view.header.Row', function (self, imports) {
             Item: 'ns.view.header.Item'
         },
         {
+            'event.Sort': 'ns.view.event.Sort'
+        },
+        {
             Template: 'xs.resource.text.HTML'
         }
     ];
+
     Class.positions = [
         'fields'
     ];
@@ -42,7 +46,11 @@ xs.define(xs.Class, 'ns.view.header.Row', function (self, imports) {
 
         fields.each(function (config) {
             var field = new imports.Item(config);
+
             me.fields.add(field);
+
+            //send sort event up
+            field.on(imports.event.Sort, me.events.send);
         });
     };
 

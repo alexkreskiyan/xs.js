@@ -36,7 +36,7 @@ xs.define(xs.Class, 'ns.view.event.Sort', function (self) {
             $direction: data.direction
         });
 
-        me.private.value = data.field;
+        me.private.field = data.field;
         me.private.direction = data.direction;
     };
 
