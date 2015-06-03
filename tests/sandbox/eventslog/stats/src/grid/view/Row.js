@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.view.Row', function (self, imports) {
+xs.define(xs.Class, 'ns.view.Row', function (self) {
 
     'use strict';
 
@@ -8,7 +8,7 @@ xs.define(xs.Class, 'ns.view.Row', function (self, imports) {
 
     Class.extends = 'xs.view.Element';
 
-    Class.constructor = function (data) {
+    Class.constructor = function (data, fields) {
         var me = this;
 
         //assert, that object given
@@ -26,12 +26,12 @@ xs.define(xs.Class, 'ns.view.Row', function (self, imports) {
 
 
         //add fields to row
-        (new xs.core.Collection(data)).each(function (value) {
+        for (var i = 0; i < fields.length; i++) {
             var field = document.createElement('div');
             field.classList.add('field');
-            field.innerHTML = value;
+            field.innerHTML = data[ fields[ i ] ];
             row.appendChild(field);
-        });
+        }
     };
 
 });

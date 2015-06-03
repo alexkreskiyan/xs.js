@@ -42,7 +42,7 @@ xs.define(xs.Class, 'ns.view.header.Item', function (self, imports) {
         self.parent.call(me, document.createElement('div'));
 
         //by default - asc
-        me.private.direction = direction.asc;
+        me.private.direction = '';
 
         //add classes
         me.classes.add('field');
@@ -66,6 +66,20 @@ xs.define(xs.Class, 'ns.view.header.Item', function (self, imports) {
                     direction: 'ASC'
                 }));
             }
+
+            //update label
+            me.private.el.innerHTML = data.label + me.private.direction;
+        });
+
+        me.private.el.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+
+            me.private.direction = '';
+
+            me.events.send(new imports.event.Sort({
+                field: data.field,
+                direction: ''
+            }));
 
             //update label
             me.private.el.innerHTML = data.label + me.private.direction;

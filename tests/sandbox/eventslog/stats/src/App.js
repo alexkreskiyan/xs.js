@@ -48,7 +48,7 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         viewport.items.add(me.controls.container);
 
         me.controls.on(imports.controls.event.Select, function (event) {
-            console.log(event.field, event.value.toSource());
+            me.grid.filter(event.field, event.value);
         });
 
         //define source
