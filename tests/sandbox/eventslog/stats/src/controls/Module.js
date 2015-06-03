@@ -8,18 +8,6 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     Class.imports = [
         {
-            'data.model.Entry': 'ns.data.model.Entry'
-        },
-        {
-            'data.proxy.Xhr': 'ns.data.proxy.Xhr'
-        },
-        {
-            'data.store.Log': 'ns.data.store.Log'
-        },
-        {
-            'reader.JSON': 'xs.data.reader.JSON'
-        },
-        {
             'view.event.Select': 'ns.view.event.Select'
         },
         {
@@ -53,15 +41,43 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         me.container.attributes.set('id', 'controls');
 
         createControls.call(me, controls);
+    };
 
-        var source = me.source = new imports.data.store.Log();
-        source.proxy = new imports.data.proxy.Xhr();
-        source.proxy.reader = new imports.reader.JSON();
+    Class.method.fillControls = function (source) {
+        var me = this;
 
-        source.readAll().then(function () {
-            fillControls.call(me, controls);
-        }, function (error) {
-            throw error;
+        me.container.items.each(function (group, name) {
+            var groupConfig = controls[ name ];
+
+            group.items.each(function (field, name) {
+                var config = groupConfig.fields[ name ];
+
+                var query = new imports.Query(source);
+                query
+                    .select(function (item) {
+
+                        return {
+                            value: item[ config.field ].get()
+                        };
+                    })
+                    .group(function (item) {
+
+                        return item.value;
+                    })
+                    .select(function (item) {
+                        return item.key;
+                    });
+                query.execute();
+
+                field.items.remove();
+
+                query.each(function (value) {
+                    field.items.add(new imports.view.Option({
+                        value: value,
+                        label: value
+                    }));
+                });
+            });
         });
     };
 
@@ -88,42 +104,6 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
                     scope: field
                 });
                 group.items.add(name, field);
-            });
-        });
-    }
-
-    function fillControls(controls) {
-        var me = this;
-
-        me.container.items.each(function (group, name) {
-            var groupConfig = controls[ name ];
-
-            group.items.each(function (field, name) {
-                var config = groupConfig.fields[ name ];
-
-                var query = new imports.Query(me.source);
-                query
-                    .select(function (item) {
-
-                        return {
-                            value: item[ config.field ].get()
-                        };
-                    })
-                    .group(function (item) {
-
-                        return item.value;
-                    })
-                    .select(function (item) {
-                        return item.key;
-                    });
-                query.execute();
-
-                query.each(function (value) {
-                    field.items.add(new imports.view.Option({
-                        value: value,
-                        label: value
-                    }));
-                });
             });
         });
     }

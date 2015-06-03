@@ -4,7 +4,7 @@ xs.define(xs.Class, 'ns.data.store.Log', function (self, imports) {
 
     var Class = this;
 
-    Class.namespace = 'stats.controls';
+    Class.namespace = 'stats';
 
     Class.imports = [
         {

@@ -4,7 +4,7 @@ xs.define(xs.Class, 'ns.data.proxy.Xhr', function (self, imports) {
 
     var Class = this;
 
-    Class.namespace = 'stats.controls';
+    Class.namespace = 'stats';
 
     Class.imports = [
         {

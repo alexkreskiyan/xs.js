@@ -4,7 +4,7 @@ xs.define(xs.Class, 'ns.data.model.Entry', function () {
 
     var Class = this;
 
-    Class.namespace = 'stats.controls';
+    Class.namespace = 'stats';
 
     Class.imports = [
         'xs.data.attribute.String',
