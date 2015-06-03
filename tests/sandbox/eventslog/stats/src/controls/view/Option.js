@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.view.Option', function (self, imports) {
+xs.define(xs.Class, 'ns.view.Option', function (self) {
 
     'use strict';
 
@@ -6,19 +6,7 @@ xs.define(xs.Class, 'ns.view.Option', function (self, imports) {
 
     Class.namespace = 'stats.controls';
 
-    Class.extends = 'xs.view.View';
-
-    Class.imports = [
-        {
-            Template: 'xs.resource.text.HTML'
-        }
-    ];
-
-    Class.constant.template = xs.lazy(function () {
-        return new imports.Template({
-            data: '<option></option>'
-        });
-    });
+    Class.extends = 'xs.view.Element';
 
     Class.constructor = function (data) {
         var me = this;
@@ -40,7 +28,7 @@ xs.define(xs.Class, 'ns.view.Option', function (self, imports) {
 
 
         //call parent constructor
-        self.parent.call(me);
+        self.parent.call(me, document.createElement('option'));
 
         //set value
         me.attributes.set('value', data.value);

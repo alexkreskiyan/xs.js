@@ -17,7 +17,7 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             'data.proxy.Xhr': 'ns.data.proxy.Xhr'
         },
         {
-            'data.store.Log': 'ns.data.store.Log'
+            'data.source.Log': 'ns.data.source.Log'
         },
         {
             'reader.JSON': 'xs.data.reader.JSON'
@@ -26,7 +26,13 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             Controls: 'ns.controls.Module'
         },
         {
-            'event.Select': 'ns.controls.event.Select'
+            'controls.event.Select': 'ns.controls.event.Select'
+        },
+        {
+            Grid: 'ns.grid.Module'
+        },
+        {
+            'grid.event.Select': 'ns.grid.event.Select'
         }
     ];
 
@@ -38,23 +44,130 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
 
 
         //create controls module
-        var controls = me.controls = new imports.Controls();
-        viewport.items.add(controls.container);
+        me.controls = new imports.Controls(controls);
+        viewport.items.add(me.controls.container);
 
-        me.controls.on(imports.event.Select, function (event) {
+        me.controls.on(imports.controls.event.Select, function (event) {
             console.log(event.field, event.value.toSource());
         });
 
 
-        var source = me.source = new imports.data.store.Log();
-        source.proxy = new imports.data.proxy.Xhr();
-        source.proxy.reader = new imports.reader.JSON();
+        //create grid module
+        me.grid = new imports.Grid(controls);
+        viewport.items.add(me.grid.grid);
 
-        source.readAll().then(function () {
-            controls.fillControls(source);
+
+        me.source = new imports.data.source.Log();
+        me.source.proxy = new imports.data.proxy.Xhr();
+        me.source.proxy.reader = new imports.reader.JSON();
+
+        me.source.readAll().then(function () {
+            me.controls.fillControls(me.source);
         }, function (error) {
             throw error;
         });
     };
+
+    var controls = new xs.core.Collection({
+        common: {
+            label: 'Общие настройки',
+            fields: {
+                user: {
+                    label: 'Пользователь',
+                    field: 'user'
+                },
+                device: {
+                    label: 'Устройство',
+                    field: 'device'
+                },
+                category: {
+                    label: 'Категория',
+                    field: 'category'
+                },
+                name: {
+                    label: 'Название',
+                    field: 'name'
+                }
+            }
+        },
+        browser: {
+            label: 'Браузер',
+            fields: {
+                name: {
+                    label: 'Название',
+                    field: 'browserName'
+                },
+                version: {
+                    label: 'Версия',
+                    field: 'browserVersion'
+                },
+                major: {
+                    label: 'Мажорная версия',
+                    field: 'browserMajor'
+                },
+                minor: {
+                    label: 'Минорная версия',
+                    field: 'browserMinor'
+                }
+            }
+        },
+        engine: {
+            label: 'Движок JS',
+            fields: {
+                name: {
+                    label: 'Название',
+                    field: 'engineName'
+                },
+                version: {
+                    label: 'Версия',
+                    field: 'engineVersion'
+                },
+                major: {
+                    label: 'Мажорная версия',
+                    field: 'engineMajor'
+                },
+                minor: {
+                    label: 'Минорная версия',
+                    field: 'engineMinor'
+                }
+            }
+        },
+        environment: {
+            label: 'Окружение',
+            fields: {
+                architecture: {
+                    label: 'Архитектура',
+                    field: 'cpu'
+                },
+                os: {
+                    label: 'Устройство',
+                    field: 'osName'
+                },
+                version: {
+                    label: 'Категория',
+                    field: 'osVersion'
+                }
+            }
+        },
+        other: {
+            show: false,
+            fields: {
+                time: {
+                    label: 'Время',
+                    field: 'time'
+                },
+                userAgent: {
+                    label: 'userAgent',
+                    show: false,
+                    field: 'userAgent'
+                },
+                event: {
+                    label: 'Событие',
+                    show: false,
+                    field: 'event'
+                }
+            }
+        }
+    });
 
 });

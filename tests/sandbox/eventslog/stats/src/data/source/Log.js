@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.data.store.Log', function (self, imports) {
+xs.define(xs.Class, 'ns.data.source.Log', function (self, imports) {
 
     'use strict';
 

@@ -32,22 +32,28 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     Class.mixins.observable = 'xs.event.Observable';
 
-    Class.constructor = function () {
+    Class.constructor = function (controls) {
         var me = this;
+
+        self.assert.object(controls, 'constructor - given controls `$controls` are not an object', {
+            $controls: controls
+        });
 
         self.mixins.observable.call(me, xs.noop);
 
         me.container = new imports.view.Container();
         me.container.attributes.set('id', 'controls');
 
-        createControls.call(me, controls);
+        me.controls = controls;
+
+        createControls.call(me);
     };
 
     Class.method.fillControls = function (source) {
         var me = this;
 
         me.container.items.each(function (group, name) {
-            var groupConfig = controls[ name ];
+            var groupConfig = me.controls.at(name);
 
             group.items.each(function (field, name) {
                 var config = groupConfig.fields[ name ];
@@ -81,23 +87,34 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         });
     };
 
-    function createControls(controls) {
+    function createControls() {
         var me = this;
 
-        (new xs.core.Collection(controls)).each(function (config, name) {
+        me.controls.each(function (config, name) {
+            if (config.hasOwnProperty('show') && !config.show) {
+
+                return;
+            }
+
             var group = new imports.view.Group({
                 name: name,
                 label: config.label
             });
             me.container.items.add(name, group);
             (new xs.core.Collection(config.fields)).each(function (config, name) {
+                if (config.hasOwnProperty('show') && !config.show) {
+
+                    return;
+                }
+
                 var field = new imports.view.Field({
                     name: name,
+                    field: config.field,
                     label: config.label
                 });
                 field.on(imports.view.event.Select, function (event) {
                     me.events.send(new imports.event.Select({
-                        field: field.name,
+                        field: field.field,
                         value: event.value
                     }));
                 }, {
@@ -107,88 +124,5 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             });
         });
     }
-
-    var controls = {
-        common: {
-            label: 'Общие настройки',
-            fields: {
-                user: {
-                    label: 'Пользователь',
-                    field: 'user'
-                },
-                device: {
-                    label: 'Устройство',
-                    field: 'device'
-                },
-                category: {
-                    label: 'Категория',
-                    field: 'category'
-                },
-                name: {
-                    label: 'Название',
-                    field: 'name'
-                }
-            }
-        },
-        browser: {
-            label: 'Браузер',
-            fields: {
-                name: {
-                    label: 'Название',
-                    field: 'browserName'
-                },
-                version: {
-                    label: 'Версия',
-                    field: 'browserVersion'
-                },
-                major: {
-                    label: 'Мажорная версия',
-                    field: 'browserMajor'
-                },
-                minor: {
-                    label: 'Минорная версия',
-                    field: 'browserMinor'
-                }
-            }
-        },
-        engine: {
-            label: 'Движок JS',
-            fields: {
-                name: {
-                    label: 'Название',
-                    field: 'engineName'
-                },
-                version: {
-                    label: 'Версия',
-                    field: 'engineVersion'
-                },
-                major: {
-                    label: 'Мажорная версия',
-                    field: 'engineMajor'
-                },
-                minor: {
-                    label: 'Минорная версия',
-                    field: 'engineMinor'
-                }
-            }
-        },
-        environment: {
-            label: 'Окружение',
-            fields: {
-                architecture: {
-                    label: 'Архитектура',
-                    field: 'cpu'
-                },
-                os: {
-                    label: 'Устройство',
-                    field: 'osName'
-                },
-                version: {
-                    label: 'Категория',
-                    field: 'osVersion'
-                }
-            }
-        }
-    };
 
 });

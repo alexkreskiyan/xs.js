@@ -38,6 +38,11 @@ xs.define(xs.Class, 'ns.view.Field', function (self, imports) {
             $name: data.name
         });
 
+        //assert, that data.field given
+        self.assert.string(data.field, 'constructor - given data.field `$field` is not a string', {
+            $field: data.field
+        });
+
         //assert, that data.label given
         self.assert.string(data.label, 'constructor - given data.label `$label` is not a string', {
             $label: data.label
@@ -60,10 +65,15 @@ xs.define(xs.Class, 'ns.view.Field', function (self, imports) {
 
         //set privates
         me.private.name = data.name;
+        me.private.field = data.field;
         me.private.label = data.label;
     };
 
     Class.property.name = {
+        set: xs.noop
+    };
+
+    Class.property.field = {
         set: xs.noop
     };
 
