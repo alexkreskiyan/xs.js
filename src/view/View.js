@@ -328,8 +328,8 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
             positions[ name ] = xs.lazy(function () {
 
-                //position is a collection of views
-                var position = new imports.Collection(self);
+                //position is a collection of elements
+                var position = new imports.Collection(imports.Element);
 
                 //save reference to parent
                 position.private.el = element;
