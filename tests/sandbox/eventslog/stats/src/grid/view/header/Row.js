@@ -10,6 +10,9 @@ xs.define(xs.Class, 'ns.view.header.Row', function (self, imports) {
 
     Class.imports = [
         {
+            Element: 'xs.view.Element'
+        },
+        {
             Item: 'ns.view.header.Item'
         },
         {
@@ -43,6 +46,11 @@ xs.define(xs.Class, 'ns.view.header.Row', function (self, imports) {
 
         //add class
         me.classes.add('header');
+
+        //add state field
+        var stateField = new imports.Element(document.createElement('div'));
+        stateField.classes.add('state');
+        me.fields.add(stateField);
 
         fields.each(function (config) {
             var field = new imports.Item(config);

@@ -27,10 +27,11 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         },
         {
             'view.event.Click': 'ns.view.event.Click'
+        },
+        {
+            'view.event.Select': 'ns.view.event.Select'
         }
     ];
-
-    Class.mixins.observable = 'xs.event.Observable';
 
     Class.constructor = function (controls, source) {
         var me = this;
@@ -38,8 +39,6 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         self.assert.object(controls, 'constructor - given controls `$controls` are not an object', {
             $controls: controls
         });
-
-        self.mixins.observable.call(me, xs.noop);
 
         me.controls = controls;
         me.source = source;
@@ -93,6 +92,8 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
         //define processors collection
         me.processors = new xs.core.Collection();
+
+        me.selection = new xs.core.Collection();
     };
 
     Class.method.load = function () {
@@ -195,7 +196,19 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         me.grid.rows.remove();
 
         source.each(function (model) {
-            me.grid.rows.add(new imports.view.Row(model.get(me.attributes), me.attributes));
+            var row = new imports.view.Row(model, me.attributes);
+            me.grid.rows.add(row);
+
+            row.on(imports.view.event.Select, function (event) {
+                if (event.state) {
+                    me.selection.add(event.model);
+                } else {
+                    me.selection.remove(event.model);
+                }
+                me.selection.each(function (model) {
+                    console.log(model.get());
+                });
+            });
         });
 
     };

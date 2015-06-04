@@ -104,8 +104,14 @@ html, body {
     overflow-y: scroll;
 }
 
+#grid .state {
+    display: inline-block;
+    cursor: pointer;
+    width: 4%;
+}
+
 #grid .field {
     display: inline-block;
     cursor: pointer;
-    width: 6.25%;
+    width: 6%;
 }
