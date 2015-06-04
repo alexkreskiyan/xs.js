@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.view.event.Compare', function (self, imports) {
+xs.define(xs.Class, 'ns.event.Show', function (self, imports) {
 
     'use strict';
 
@@ -13,7 +13,7 @@ xs.define(xs.Class, 'ns.view.event.Compare', function (self, imports) {
     ];
 
     Class.implements = [
-        'xs.view.event.IEvent'
+        'xs.event.IEvent'
     ];
 
     /**

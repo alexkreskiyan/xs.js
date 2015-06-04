@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.view.event.Compare', function (self) {
+xs.define(xs.Class, 'ns.event.Compare', function (self) {
 
     'use strict';
 
@@ -7,7 +7,7 @@ xs.define(xs.Class, 'ns.view.event.Compare', function (self) {
     Class.namespace = 'stats.grid';
 
     Class.implements = [
-        'xs.view.event.IEvent'
+        'xs.event.IEvent'
     ];
 
     /**

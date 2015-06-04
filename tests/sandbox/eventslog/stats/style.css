@@ -71,7 +71,7 @@ html, body {
     height: 30px;
 }
 
-#grid > .controls div {
+.control {
     display: inline-block;
     height: 30px;
     line-height: 30px;
@@ -83,11 +83,11 @@ html, body {
     transition: background .2s;
 }
 
-#grid > .controls div:hover {
+.control:hover {
     background: #ccc;
 }
 
-#grid > .controls div:active {
+.control:active {
     background: #aaa;
 }
 
@@ -114,4 +114,60 @@ html, body {
     display: inline-block;
     cursor: pointer;
     width: 6%;
+}
+
+#comparison {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, .9);
+    transition: opacity .2s;
+}
+
+#comparison > .controls {
+    text-align: right;
+}
+
+#comparison > .labels {
+    display: inline-block;
+    width: 100px;
+    box-sizing: border-box;
+    padding: 0 5px;
+}
+
+#comparison > .items {
+    position: absolute;
+    left: 100px;
+    top: 30px;
+    right: 0;
+    bottom: 0;
+    overflow: scroll;
+}
+
+#comparison > .items > .entry {
+    width: 200px;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0 5px;
+    vertical-align: top;
+}
+
+#comparison > .items > .entry .field {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#comparison .field {
+    height: 30px;
+    line-height: 30px;
+}
+
+.invisible {
+    opacity: 0;
+}
+
+.hidden {
+    display: none;
 }

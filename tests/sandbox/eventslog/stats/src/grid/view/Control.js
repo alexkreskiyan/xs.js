@@ -37,7 +37,7 @@ xs.define(xs.Class, 'ns.view.Control', function (self, imports) {
         self.parent.call(me, document.createElement('div'));
 
         //add classes
-        me.classes.add(data.name);
+        me.classes.add('control');
 
         //set label
         me.private.el.innerHTML = data.label;

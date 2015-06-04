@@ -26,6 +26,12 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             'view.Control': 'ns.view.Control'
         },
         {
+            'event.Compare': 'ns.event.Compare'
+        },
+        {
+            'event.Show': 'ns.event.Show'
+        },
+        {
             'view.event.Click': 'ns.view.event.Click'
         },
         {
@@ -33,12 +39,16 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         }
     ];
 
+    Class.mixins.observable = 'xs.event.Observable';
+
     Class.constructor = function (controls, source) {
         var me = this;
 
         self.assert.object(controls, 'constructor - given controls `$controls` are not an object', {
             $controls: controls
         });
+
+        self.mixins.observable.call(me, xs.noop);
 
         me.controls = controls;
         me.source = source;
@@ -61,7 +71,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
         //create grid
         var grid = me.grid = new imports.view.Grid();
-        me.grid.attributes.set('id', 'grid');
+        grid.attributes.set('id', 'grid');
 
 
         //add controls to grid
@@ -69,17 +79,18 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             name: 'compare',
             label: 'Сравнить'
         });
-        me.grid.controls.add(compare);
+        grid.controls.add(compare);
         compare.on(imports.view.event.Click, function () {
-            console.log('compare');
+            me.events.send(new imports.event.Compare(me.selection));
         });
 
         var show = new imports.view.Control({
             name: 'show',
             label: 'Показать'
         });
-        me.grid.controls.add(show);
+        grid.controls.add(show);
         show.on(imports.view.event.Click, function () {
+            debugger;
             console.log('show');
         });
 

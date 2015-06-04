@@ -32,7 +32,10 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             Grid: 'ns.grid.Module'
         },
         {
-            'grid.event.Select': 'ns.grid.event.Select'
+            'grid.event.Compare': 'ns.grid.event.Compare'
+        },
+        {
+            Comparison: 'ns.comparison.Module'
         }
     ];
 
@@ -59,6 +62,14 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         //create grid module
         me.grid = new imports.Grid(controls, me.source);
         viewport.items.add(me.grid.grid);
+
+        me.grid.on(imports.grid.event.Compare, function (event) {
+            me.comparison.compare(event.models);
+        });
+
+        //create comparison module
+        me.comparison = new imports.Comparison(controls, me.source);
+        viewport.items.add(me.comparison.container);
 
         //load data to source and update app state
         me.source.readAll().then(function () {
