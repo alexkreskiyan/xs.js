@@ -11,20 +11,18 @@ xs.define(xs.Class, 'ns.view.Grid', function (self, imports) {
     Class.imports = [
         {
             Template: 'xs.resource.text.HTML'
-        },
-        {
-            'event.Select': 'ns.view.event.Select'
         }
     ];
 
     Class.positions = [
+        'controls',
         'header',
         'rows'
     ];
 
     Class.constant.template = xs.lazy(function () {
         return new imports.Template({
-            data: '<div><div xs-view-position="header"></div><div xs-view-position="rows"></div></div>'
+            data: '<div><div xs-view-position="controls" class="controls"></div><div xs-view-position="header" class="header"></div><div xs-view-position="rows" class="rows"></div></div>'
         });
     });
 

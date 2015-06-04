@@ -19,8 +19,4 @@ xs.define(xs.Interface, 'ns.IEvent', function () {
 
     Interface.extends = 'xs.event.IEvent';
 
-    Interface.constructor = function () {
-
-    };
-
 });

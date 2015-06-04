@@ -17,10 +17,16 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             'view.Row': 'ns.view.Row'
         },
         {
-            'event.view.Sort': 'ns.view.event.Sort'
+            'view.event.Sort': 'ns.view.event.Sort'
         },
         {
             Query: 'xs.data.Query'
+        },
+        {
+            'view.Control': 'ns.view.Control'
+        },
+        {
+            'view.event.Click': 'ns.view.event.Click'
         }
     ];
 
@@ -58,11 +64,32 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         var grid = me.grid = new imports.view.Grid();
         me.grid.attributes.set('id', 'grid');
 
+
+        //add controls to grid
+        var compare = new imports.view.Control({
+            name: 'compare',
+            label: 'Сравнить'
+        });
+        me.grid.controls.add(compare);
+        compare.on(imports.view.event.Click, function () {
+            console.log('compare');
+        });
+
+        var show = new imports.view.Control({
+            name: 'show',
+            label: 'Показать'
+        });
+        me.grid.controls.add(show);
+        show.on(imports.view.event.Click, function () {
+            console.log('show');
+        });
+
+
         //add header to grid
         var header = new imports.view.Header(me.fields);
         grid.header.add(header);
 
-        header.on(imports.event.view.Sort, xs.bind(sort, me));
+        header.on(imports.view.event.Sort, xs.bind(sort, me));
 
         //define processors collection
         me.processors = new xs.core.Collection();
@@ -119,7 +146,6 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     var update = function () {
         var me = this;
-        console.log('update grid');
 
         //separate filters and sorters
         var filters = me.processors.find(function (processor) {

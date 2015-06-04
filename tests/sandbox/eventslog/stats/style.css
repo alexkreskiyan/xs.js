@@ -62,17 +62,50 @@ html, body {
 #grid {
     width: 80%;
     height: 100%;
-    overflow-y: scroll;
     float: right;
+    overflow-y: hidden;
+    position: relative;
+}
+
+#grid > .controls {
+    height: 30px;
+}
+
+#grid > .controls div {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+    padding: 0 20px;
+    box-sizing: border-box;
+    border: 1px solid darkgrey;
+    transition: background .2s;
+}
+
+#grid > .controls div:hover {
+    background: #ccc;
+}
+
+#grid > .controls div:active {
+    background: #aaa;
+}
+
+#grid > .header {
+    height: 30px;
+}
+
+#grid > .rows {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    right: 0;
+    bottom: 0;
+    overflow-y: scroll;
 }
 
 #grid .field {
     display: inline-block;
     cursor: pointer;
     width: 6.25%;
-}
-
-#grid .header .field {
-    display: inline-block;
-    height: 30px;
 }

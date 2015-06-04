@@ -27,7 +27,7 @@ xs.define(xs.Class, 'ns.view.header.Item', function (self, imports) {
             $data: data
         });
 
-        //assert, that data.name given
+        //assert, that data.field given
         self.assert.string(data.field, 'constructor - given data.field `$field` is to a string', {
             $value: data.value
         });
