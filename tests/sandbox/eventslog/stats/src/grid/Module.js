@@ -133,20 +133,25 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         var query = new imports.Query(me.source);
         filters.each(function (filter) {
             query.where(function (model) {
+                var value = model[ filter.field ].get();
 
-                return filter.value.has(model[ filter.field ].get());
+                return filter.value.has(value);
             });
         });
         sorters.each(function (sorter) {
             if (sorter.direction === 'ASC') {
                 query.sort(function (a, b) {
+                    var valueA = a[ sorter.field ].get();
+                    var valueB = b[ sorter.field ].get();
 
-                    return a[ sorter.field ] < b[ sorter.field ];
+                    return valueA < valueB;
                 });
             } else {
                 query.sort(function (a, b) {
+                    var valueA = a[ sorter.field ].get();
+                    var valueB = b[ sorter.field ].get();
 
-                    return a[ sorter.field ] > b[ sorter.field ];
+                    return valueA > valueB;
                 });
             }
         });
