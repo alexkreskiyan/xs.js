@@ -212,7 +212,7 @@ Reactive.prototype.off = function (event, selector, flags) {
     } else if (arguments.length === 1) {
 
         //if given target
-        if (isTarget(arguments[ 0 ])) {
+        if (isEvent(arguments[ 0 ])) {
 
             //event scenario
             handleOff.call(me, arguments[ 0 ], false, xs.core.Collection.All);
@@ -267,7 +267,7 @@ Reactive.prototype.suspend = function (event, selector, flags) {
     } else if (arguments.length === 1) {
 
         //if given target
-        if (isTarget(arguments[ 0 ])) {
+        if (isEvent(arguments[ 0 ])) {
 
             //event scenario
             handleSuspend.call(me, arguments[ 0 ], false, xs.core.Collection.All);
@@ -321,7 +321,7 @@ Reactive.prototype.resume = function (selector, flags) {
     } else if (arguments.length === 1) {
 
         //if given target
-        if (isTarget(arguments[ 0 ])) {
+        if (isEvent(arguments[ 0 ])) {
 
             //event scenario
             handleResume.call(me, arguments[ 0 ], false, xs.core.Collection.All);
@@ -384,7 +384,7 @@ function handleOn(event, handler, options) {
     var me = this;
 
     //check, that event is false, undefined or a function
-    assert.ok(event === false || isTarget(event), 'event - given event `$event` is not a function', {
+    assert.ok(event === false || isEvent(event), 'event - given event `$event` is not a function', {
         $event: event
     });
 
@@ -589,7 +589,7 @@ function handleResume(event, selector, flags) {
 function getSelectionHandler(event, selector, flags) {
 
     //check, that event is false, undefined or a function
-    assert.ok(event === false || isTarget(event), 'handleOff - given event `$event` is not a function', {
+    assert.ok(event === false || isEvent(event), 'handleOff - given event `$event` is not a function', {
         $event: event
     });
 
@@ -627,7 +627,7 @@ function getSelectionHandler(event, selector, flags) {
     }
 }
 
-function isTarget(candidate) {
+function isEvent(candidate) {
     if (!xs.isDefined(candidate)) {
 
         return true;
