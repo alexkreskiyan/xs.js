@@ -35,6 +35,9 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             'grid.event.Compare': 'ns.grid.event.Compare'
         },
         {
+            'grid.event.Show': 'ns.grid.event.Show'
+        },
+        {
             Comparison: 'ns.comparison.Module'
         }
     ];
@@ -67,8 +70,23 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             me.comparison.compare(event.models);
         });
 
+        me.grid.on(imports.grid.event.Show, function (event) {
+            me.comparison.compare(
+                (new xs.data.Query(me.source))
+                    .where(function (model) {
+
+                        return model.user.get() === event.model.user.get() &&
+                            model.device.get() === event.model.device.get() &&
+                            model.category.get() === event.model.category.get() &&
+                            model.name.get() === event.model.name.get() &&
+                            model.userAgent.get() === event.model.userAgent.get();
+                    })
+                    .execute()
+            );
+        });
+
         //create comparison module
-        me.comparison = new imports.Comparison(controls, me.source);
+        me.comparison = new imports.Comparison(controls);
         viewport.items.add(me.comparison.container);
 
         //load data to source and update app state
@@ -102,9 +120,7 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             return item.group[ 0 ];
         });
 
-        query.execute();
-
-        return query;
+        return query.execute();
     };
 
     var controls = new xs.core.Collection({

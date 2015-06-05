@@ -18,14 +18,12 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         }
     ];
 
-    Class.constructor = function (controls, source) {
+    Class.constructor = function (controls) {
         var me = this;
 
         self.assert.object(controls, 'constructor - given controls `$controls` are not an object', {
             $controls: controls
         });
-
-        me.source = source;
 
         //collect fields
         me.fields = new xs.core.Collection();

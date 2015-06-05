@@ -89,6 +89,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         });
         grid.controls.add(show);
         show.on(imports.view.event.Click, function () {
+            me.events.send(new imports.event.Show(me.selection.last()));
         });
 
 
