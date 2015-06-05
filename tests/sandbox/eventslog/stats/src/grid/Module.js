@@ -41,7 +41,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     Class.mixins.observable = 'xs.event.Observable';
 
-    Class.constructor = function (controls, source) {
+    Class.constructor = function (controls) {
         var me = this;
 
         self.assert.object(controls, 'constructor - given controls `$controls` are not an object', {
@@ -51,7 +51,6 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         self.mixins.observable.call(me, xs.noop);
 
         me.controls = controls;
-        me.source = source;
 
 
         //collect fields
@@ -193,7 +192,9 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         });
 
         //execute query
-        query.execute();
+        query.execute({
+            update: false
+        });
 
         //refresh grid
         load.call(me, query);
@@ -216,7 +217,6 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
                 }
             });
         });
-
     };
 
 });

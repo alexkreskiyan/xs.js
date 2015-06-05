@@ -132,21 +132,22 @@ html, body {
 
 #comparison > .labels {
     display: inline-block;
-    width: 100px;
+    width: 110px;
     box-sizing: border-box;
     padding: 0 5px;
 }
 
-#comparison > .items {
+#comparison > .container {
     position: absolute;
-    left: 100px;
+    left: 110px;
     top: 30px;
     right: 0;
     bottom: 0;
     overflow: scroll;
+    white-space: nowrap;
 }
 
-#comparison > .items > .entry {
+#comparison > .container > .items > .entry {
     width: 200px;
     display: inline-block;
     box-sizing: border-box;
@@ -154,7 +155,7 @@ html, body {
     vertical-align: top;
 }
 
-#comparison > .items > .entry .field {
+#comparison > .container > .items > .entry .field {
     overflow: hidden;
     text-overflow: ellipsis;
 }

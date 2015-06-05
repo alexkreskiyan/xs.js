@@ -27,7 +27,7 @@ xs.define(xs.Class, 'ns.view.Container', function (self, imports) {
 
     Class.constant.template = xs.lazy(function () {
         return new imports.Template({
-            data: '<div class="hidden invisible"><div xs-view-position="controls" class="controls"></div><div class="labels"></div><div xs-view-position="items" class="items"></div></div>'
+            data: '<div class="hidden invisible"><div xs-view-position="controls" class="controls"></div><div class="labels"></div><div class="container"><div xs-view-position="items" class="items"></div></div></div>'
         });
     });
 

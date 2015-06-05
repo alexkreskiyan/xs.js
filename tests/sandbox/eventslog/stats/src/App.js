@@ -75,11 +75,36 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         me.source.readAll().then(function () {
             me.controls.fillControls(me.source);
             xs.nextTick(function () {
+                me.grid.source = getDistinctSource(me.source);
                 me.grid.load();
             });
         }, function (error) {
             throw error;
         });
+    };
+
+    var getDistinctSource = function (source) {
+        var query = new xs.data.Query(source);
+
+        query.group(function (model) {
+            return {
+                user: model.user.get(),
+                device: model.device.get(),
+                category: model.category.get(),
+                name: model.name.get(),
+                userAgent: model.userAgent.get()
+            };
+        }, {
+            asArray: true
+        });
+
+        query.select(function (item) {
+            return item.group[ 0 ];
+        });
+
+        query.execute();
+
+        return query;
     };
 
     var controls = new xs.core.Collection({
