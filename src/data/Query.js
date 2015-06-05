@@ -190,6 +190,8 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
 
         //set isExecuted flag
         me.private.isExecuted = true;
+
+        return me;
     };
 
     Class.method.destroy = function () {
