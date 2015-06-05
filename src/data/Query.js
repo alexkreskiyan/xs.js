@@ -54,7 +54,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         set: xs.noop
     };
 
-    Class.method.innerJoin = function (source, condition) {
+    Class.method.innerJoin = function (source, condition, options) {
         var Query = self;
         var me = this;
 
@@ -62,12 +62,16 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         var query = new Query([]);
 
         //save join condition to stack of new query
-        query.private.stack.add(new InnerJoinProcessor(me, source, condition));
+        if (arguments.length > 2) {
+            query.private.stack.add(new InnerJoinProcessor(me, source, condition, options));
+        } else {
+            query.private.stack.add(new InnerJoinProcessor(me, source, condition));
+        }
 
         return query;
     };
 
-    Class.method.outerJoin = function (source, condition, emptyValue) {
+    Class.method.outerJoin = function (source, condition, options) {
         var Query = self;
         var me = this;
 
@@ -75,7 +79,11 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         var query = new Query([]);
 
         //save join condition to stack of new query
-        query.private.stack.add(new OuterJoinProcessor(me, source, condition, emptyValue));
+        if (arguments.length > 2) {
+            query.private.stack.add(new OuterJoinProcessor(me, source, condition, options));
+        } else {
+            query.private.stack.add(new OuterJoinProcessor(me, source, condition));
+        }
 
         return query;
     };
@@ -137,8 +145,24 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         return me;
     };
 
-    Class.method.execute = function () {
+    Class.method.execute = function (options) {
         var me = this;
+
+        //assert, that options is an object
+        self.assert.ok(!arguments.length || xs.isObject(options), 'execute - given options `$options` are not an object', {
+            $options: options
+        });
+
+        if (!options) {
+            options = {
+                update: true
+            };
+        }
+
+        //assert, that update is a boolean
+        self.assert.ok(!options.hasOwnProperty('update') || xs.isBoolean(options.update), 'execute - given options.update `$update` is not a boolean', {
+            $update: options.update
+        });
 
         //lazy evaluate source
         if (me.private.source instanceof xs.core.Lazy) {
@@ -146,7 +170,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         }
 
         //if source is a query - execute it
-        if (me.private.source instanceof self) {
+        if (me.private.source instanceof self && options.update) {
             me.private.source.execute();
         }
 
@@ -198,67 +222,78 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     };
 
 
-    var findJoinItem = function (item) {
+    var InnerJoinProcessor = function (sourceLeft, sourceRight, condition, options) {
         var me = this;
 
-        self.assert.object(item, 'findJoinItem - can not join with non object item `$item`', {
-            $item: item
-        });
-
-        return me.condition(me.item, item);
-    };
-
-    var InnerJoinProcessor = function (origin, source, condition) {
-        var me = this;
-
-        //assert, that source is iterable
-        self.assert.iterable(source, 'innerJoin - given `$source` is not an iterable', {
-            $source: source
+        //assert, that sourceRight is iterable
+        self.assert.iterable(sourceRight, 'InnerJoinProcessor - given `$sourceRight` is not an iterable', {
+            $sourceRight: sourceRight
         });
 
         //assert, that condition is a function
-        self.assert.fn(condition, 'innerJoin - given join condition `$condition` is not a function', {
+        self.assert.fn(condition, 'InnerJoinProcessor - given join condition `$condition` is not a function', {
             $condition: condition
         });
 
-        me.origin = origin;
-        me.source = getSource(source);
+        me.sourceLeft = sourceLeft;
+        me.sourceRight = getSource(sourceRight);
         me.condition = condition;
+        me.updateLeft = true;
+        me.updateRight = true;
+
+        if (arguments.length < 4) {
+            return;
+        }
+
+        //assert, that options is an object
+        self.assert.object(options, 'InnerJoinProcessor - given options `$options` are not an object', {
+            $options: options
+        });
+
+        if (options.hasOwnProperty('updateLeft')) {
+
+            //assert, that options.updateLeft is a boolean
+            self.assert.boolean(options.updateLeft, 'InnerJoinProcessor - given options.updateLeft `$updateLeft` is not a boolean', {
+                $updateLeft: options.updateLeft
+            });
+
+            me.updateLeft = options.updateLeft;
+        }
+
+        if (options.hasOwnProperty('updateRight')) {
+
+            //assert, that options.updateRight is a boolean
+            self.assert.boolean(options.updateRight, 'InnerJoinProcessor - given options.updateRight `$updateRight` is not a boolean', {
+                $updateRight: options.updateRight
+            });
+
+            me.updateRight = options.updateRight;
+        }
     };
 
     InnerJoinProcessor.prototype.process = function () {
         var me = this;
 
-        //lazy evaluate source
-        if (me.source instanceof xs.core.Lazy) {
-            me.source = me.source.get();
-        }
+        //prepare join
+        prepareJoin.call(me);
 
-        //get origin
-        var origin = me.origin;
+        //get sourceLeft
+        var sourceLeft = me.sourceLeft;
 
-        //execute origin query
-        origin.execute();
-
-        //get joined source
-        var source = me.source;
-
-        //if source is a query - execute it
-        if (source instanceof self) {
-            source.execute();
-        }
+        //get sourceRight
+        var sourceRight = me.sourceRight;
 
         //use xs.core.Collection
         var result = new xs.core.Collection();
 
-        origin.each(function (originItem) {
+        sourceLeft.each(function (leftItem) {
 
-            self.assert.object(originItem, 'InnerJoinProcessor - can not join non object item `$item`', {
-                $originItem: originItem
+            self.assert.object(leftItem, 'InnerJoinProcessor - can not join non object item `$item`', {
+                $item: leftItem
             });
 
-            var joinedItem = source.find(findJoinItem, 0, {
-                item: originItem,
+            var joinedItem = sourceRight.find(findJoinItem, 0, {
+                item: leftItem,
                 condition: me.condition
             });
 
@@ -268,65 +303,88 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
                 return;
             }
 
-            result.add(xs.apply({}, originItem, joinedItem));
+            result.add(xs.apply({}, leftItem, joinedItem));
         });
 
         return result;
     };
 
 
-    var OuterJoinProcessor = function (origin, source, condition, emptyValue) {
+    var OuterJoinProcessor = function (sourceLeft, sourceRight, condition, options) {
         var me = this;
 
-        //assert, that source is iterable
-        self.assert.iterable(source, 'outerJoin - given `$source` is not an iterable', {
-            $source: source
+        //assert, that sourceRight is iterable
+        self.assert.iterable(sourceRight, 'OuterJoinProcessor - given `$sourceRight` is not an iterable', {
+            $sourceRight: sourceRight
         });
 
         //assert, that condition is a function
-        self.assert.fn(condition, 'outerJoin - given join condition `$condition` is not a function', {
+        self.assert.fn(condition, 'OuterJoinProcessor - given join condition `$condition` is not a function', {
             $condition: condition
         });
 
-        me.origin = origin;
-        me.source = source;
+        me.sourceLeft = sourceLeft;
+        me.sourceRight = sourceRight;
         me.condition = condition;
-        me.emptyValue = emptyValue;
+        me.emptyValue = undefined;
+        me.updateLeft = true;
+        me.updateRight = true;
+
+        if (arguments.length < 4) {
+            return;
+        }
+
+        //assert, that options is an object
+        self.assert.object(options, 'OuterJoinProcessor - given options `$options` are not an object', {
+            $options: options
+        });
+
+        me.emptyValue = options.emptyValue;
+
+        if (options.hasOwnProperty('updateLeft')) {
+
+            //assert, that options.updateLeft is a boolean
+            self.assert.boolean(options.updateLeft, 'InnerJoinProcessor - given options.updateLeft `$updateLeft` is not a boolean', {
+                $updateLeft: options.updateLeft
+            });
+
+            me.updateLeft = options.updateLeft;
+        }
+
+        if (options.hasOwnProperty('updateRight')) {
+
+            //assert, that options.updateRight is a boolean
+            self.assert.boolean(options.updateRight, 'InnerJoinProcessor - given options.updateRight `$updateRight` is not a boolean', {
+                $updateRight: options.updateRight
+            });
+
+            me.updateRight = options.updateRight;
+        }
     };
 
     OuterJoinProcessor.prototype.process = function () {
         var me = this;
 
-        //lazy evaluate source
-        if (me.source instanceof xs.core.Lazy) {
-            me.source = me.source.get();
-        }
+        //prepare join
+        prepareJoin.call(me);
 
-        //get origin
-        var origin = me.origin;
+        //get sourceLeft
+        var sourceLeft = me.sourceLeft;
 
-        //execute origin query
-        origin.execute();
-
-        //get joined source
-        var source = me.source;
-
-        //if source is a query - execute it
-        if (source instanceof self) {
-            source.execute();
-        }
+        //get sourceRight
+        var sourceRight = me.sourceRight;
 
         //use xs.core.Collection
         var result = new xs.core.Collection();
 
-        origin.each(function (originItem) {
+        sourceLeft.each(function (leftItem) {
 
-            self.assert.object(originItem, 'OuterJoinProcessor - can not join non object item `$item`', {
-                $originItem: originItem
+            self.assert.object(leftItem, 'OuterJoinProcessor - can not join non object item `$item`', {
+                $item: leftItem
             });
 
-            var joinedItem = source.find(findJoinItem, 0, {
-                item: originItem,
+            var joinedItem = sourceRight.find(findJoinItem, 0, {
+                item: leftItem,
                 condition: me.condition
             });
 
@@ -340,26 +398,19 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
                 });
             }
 
-            result.add(xs.apply({}, originItem, joinedItem));
+            result.add(xs.apply({}, leftItem, joinedItem));
         });
 
         return result;
     };
 
 
-    var findGroupJoinItem = function (item) {
-        var me = this;
-
-        return me.condition(me.item, item);
-    };
-
-
-    var GroupJoinProcessor = function (origin, source, condition, options) {
+    var GroupJoinProcessor = function (sourceLeft, sourceRight, condition, options) {
         var me = this;
 
         //assert, that source is iterable
-        self.assert.iterable(source, 'GroupJoinProcessor - given `$source` is not an iterable', {
-            $source: source
+        self.assert.iterable(sourceRight, 'GroupJoinProcessor - given `$sourceRight` is not an iterable', {
+            $sourceRight: sourceRight
         });
 
         //assert, that condition is a function
@@ -367,11 +418,13 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
             $condition: condition
         });
 
-        me.origin = origin;
-        me.source = source;
+        me.sourceLeft = sourceLeft;
+        me.sourceRight = sourceRight;
         me.condition = condition;
         me.alias = 'group';
         me.asArray = false;
+        me.updateLeft = true;
+        me.updateRight = true;
 
         if (arguments.length < 4) {
             return;
@@ -401,55 +454,65 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
 
             me.asArray = options.asArray;
         }
+
+        if (options.hasOwnProperty('updateLeft')) {
+
+            //assert, that options.updateLeft is a boolean
+            self.assert.boolean(options.updateLeft, 'InnerJoinProcessor - given options.updateLeft `$updateLeft` is not a boolean', {
+                $updateLeft: options.updateLeft
+            });
+
+            me.updateLeft = options.updateLeft;
+        }
+
+        if (options.hasOwnProperty('updateRight')) {
+
+            //assert, that options.updateRight is a boolean
+            self.assert.boolean(options.updateRight, 'InnerJoinProcessor - given options.updateRight `$updateRight` is not a boolean', {
+                $updateRight: options.updateRight
+            });
+
+            me.updateRight = options.updateRight;
+        }
     };
 
     GroupJoinProcessor.prototype.process = function () {
         var me = this;
 
-        //lazy evaluate source
-        if (me.source instanceof xs.core.Lazy) {
-            me.source = me.source.get();
-        }
+        //prepare join
+        prepareJoin.call(me);
 
-        //get origin
-        var origin = me.origin;
+        //get sourceLeft
+        var sourceLeft = me.sourceLeft;
 
-        //execute origin query
-        origin.execute();
-
-        //get joined source
-        var source = me.source;
-
-        //if source is a query - execute it
-        if (source instanceof self) {
-            source.execute();
-        }
+        //get sourceRight
+        var sourceRight = me.sourceRight;
 
         //use xs.core.Collection
         var result = new xs.core.Collection();
 
         if (me.asArray) {
-            origin.each(function (originItem) {
+            sourceLeft.each(function (leftItem) {
 
-                var joinedItems = source.find(findGroupJoinItem, source.constructor.All, {
-                    item: originItem,
+                var joinedItems = sourceRight.find(findGroupJoinItem, sourceRight.constructor.All, {
+                    item: leftItem,
                     condition: me.condition
                 });
 
-                var item = xs.apply({}, originItem);
+                var item = xs.apply({}, leftItem);
                 item[ me.alias ] = joinedItems.values();
 
                 result.add(item);
             });
         } else {
-            origin.each(function (originItem) {
+            sourceLeft.each(function (leftItem) {
 
-                var joinedItems = source.find(findGroupJoinItem, source.constructor.All, {
-                    item: originItem,
+                var joinedItems = sourceRight.find(findGroupJoinItem, sourceRight.constructor.All, {
+                    item: leftItem,
                     condition: me.condition
                 });
 
-                var item = xs.apply({}, originItem);
+                var item = xs.apply({}, leftItem);
                 item[ me.alias ] = new xs.core.Collection();
                 item[ me.alias ].private.items = joinedItems.private.items.slice();
 
@@ -458,6 +521,42 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
         }
 
         return result;
+    };
+
+
+    var prepareJoin = function () {
+        var me = this;
+
+        //execute sourceLeft query if needed
+        if (me.updateLeft) {
+            me.sourceLeft.execute();
+        }
+
+        //lazy evaluate sourceRight
+        if (me.sourceRight instanceof xs.core.Lazy) {
+            me.sourceRight = me.sourceRight.get();
+        }
+
+        //if sourceRight is a query and update needed - execute it if needed
+        if (me.sourceRight instanceof self && me.updateRight) {
+            me.sourceRight.execute();
+        }
+    };
+
+    var findJoinItem = function (item) {
+        var me = this;
+
+        self.assert.object(item, 'findJoinItem - can not join with non object item `$item`', {
+            $item: item
+        });
+
+        return me.condition(me.item, item);
+    };
+
+    var findGroupJoinItem = function (item) {
+        var me = this;
+
+        return me.condition(me.item, item);
     };
 
 
