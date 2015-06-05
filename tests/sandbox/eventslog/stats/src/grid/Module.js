@@ -90,8 +90,6 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         });
         grid.controls.add(show);
         show.on(imports.view.event.Click, function () {
-            debugger;
-            console.log('show');
         });
 
 
@@ -216,9 +214,6 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
                 } else {
                     me.selection.remove(event.model);
                 }
-                me.selection.each(function (model) {
-                    console.log(model.get());
-                });
             });
         });
 
