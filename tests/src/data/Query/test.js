@@ -96,7 +96,6 @@ module('xs.data.Query', function () {
         strictEqual(query.values().toString(), '2,3');
     });
 
-
     test('innerJoin', function () {
         var query;
 
