@@ -20,6 +20,18 @@
             "xs.reactive.event.Destroy": {
                 "test": false
             },
+            "xs.reactive.event.Resume": {
+                "test": false
+            },
+            "xs.reactive.event.ResumeAll": {
+                "test": false
+            },
+            "xs.reactive.event.Suspend": {
+                "test": false
+            },
+            "xs.reactive.event.SuspendAll": {
+                "test": false
+            },
             "xs.reactive.send": {
                 "test": false
             },

@@ -643,6 +643,9 @@ function isEvent(candidate) {
     return (prototype instanceof Event) || (prototype instanceof module.event.Event) || (xs.isClass(candidate) && candidate.implements(xs.event.IEvent));
 }
 
+//export isEvent method
+module.isEvent = isEvent;
+
 function syncActive(value) {
     var me = this;
 
