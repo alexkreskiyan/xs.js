@@ -581,7 +581,7 @@ module('xs.data.Model', function () {
 
         var value = 0;
 
-        model.on(xs.event.Destroy, function () {
+        model.on(xs.reactive.event.Destroy, function () {
             value = 1;
         });
 

@@ -22,7 +22,7 @@ xs.define(xs.Class, 'ns.StaticObservable', function () {
 
         //create event stream
         //save stream reference
-        var stream = new xs.event.Stream(function () {
+        var stream = new xs.reactive.Stream(function () {
 
             //save send reference
             send = this.send;

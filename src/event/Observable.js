@@ -24,7 +24,7 @@ xs.define(xs.Class, 'ns.Observable', function () {
         //create event stream
         if (arguments.length < 2) {
             //save stream reference
-            me.private.stream = new xs.event.Stream(function () {
+            me.private.stream = new xs.reactive.Stream(function () {
 
                 //save send reference
                 send = this.send;
@@ -34,7 +34,7 @@ xs.define(xs.Class, 'ns.Observable', function () {
             });
         } else {
             //save stream reference
-            me.private.stream = new xs.event.Stream(function () {
+            me.private.stream = new xs.reactive.Stream(function () {
 
                 //save send reference
                 send = this.send;

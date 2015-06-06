@@ -1,11 +1,11 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.event.emitter.Stream');
+var log = new xs.log.Logger('xs.reactive.emitter.Stream');
 
-var assert = new xs.core.Asserter(log, XsEventEmitterStreamError);
+var assert = new xs.core.Asserter(log, XsReactiveEmitterStreamError);
 
 //save reference to module
-module.EmitterStream = function Emitter(reactive) {
+module.emitter.Stream = function Emitter(reactive) {
     var me = this;
 
     //add send handler
@@ -15,8 +15,8 @@ module.EmitterStream = function Emitter(reactive) {
     me.destroy = xs.bind(reactive.destroy, reactive);
 };
 
-//extend EmitterProperty from Emitter
-xs.extend(module.EmitterStream, module.Emitter);
+//extend emitter.Stream from emitter.Emitter
+xs.extend(module.emitter.Stream, module.emitter.Emitter);
 
 function handleSend(data, silent) {
     var me = this;
@@ -33,7 +33,7 @@ function handleSend(data, silent) {
     }
 
     //return send status
-    return module.send(me.private.reactiveHandlers, data);
+    return module.send(me.private.handlers, data);
 }
 
 /**
@@ -43,10 +43,10 @@ function handleSend(data, silent) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class XsEventEmitterStreamError
+ * @class XsReactiveEmitterStreamError
  */
-function XsEventEmitterStreamError(message) {
-    this.message = 'xs.event.emitter.Stream::' + message;
+function XsReactiveEmitterStreamError(message) {
+    this.message = 'xs.reactive.emitter.Stream::' + message;
 }
 
-XsEventEmitterStreamError.prototype = new Error();
+XsReactiveEmitterStreamError.prototype = new Error();

@@ -53,7 +53,7 @@ module('xs.event.StaticObservable', function () {
 
                 //create event stream
                 //save stream reference
-                var stream = new xs.event.Stream(function () {
+                var stream = new xs.reactive.Stream(function () {
 
                     //save send reference
                     send = this.send;
@@ -162,7 +162,7 @@ module('xs.event.StaticObservable', function () {
             priority: 0
         });
 
-        me.Observable.on(xs.event.Destroy, function () {
+        me.Observable.on(xs.reactive.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '12346789'); //5 is missing - cancelled
             strictEqual(log.eventedOne, '2468');
@@ -217,7 +217,7 @@ module('xs.event.StaticObservable', function () {
 
                 //create event stream
                 //save stream reference
-                var stream = new xs.event.Stream(function () {
+                var stream = new xs.reactive.Stream(function () {
 
                     //save send reference
                     send = this.send;
@@ -348,7 +348,7 @@ module('xs.event.StaticObservable', function () {
 
                 //create event stream
                 //save stream reference
-                var stream = new xs.event.Stream(function () {
+                var stream = new xs.reactive.Stream(function () {
 
                     //save send reference
                     send = this.send;
@@ -479,7 +479,7 @@ module('xs.event.StaticObservable', function () {
 
                 //create event stream
                 //save stream reference
-                var stream = new xs.event.Stream(function () {
+                var stream = new xs.reactive.Stream(function () {
 
                     //save send reference
                     send = this.send;

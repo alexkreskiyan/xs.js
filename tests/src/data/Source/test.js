@@ -920,7 +920,7 @@ module('xs.data.Source', function () {
         //verify isDestroyed flag
         strictEqual(userSource.isDestroyed, true);
 
-        //postSource is not bound - xs.event.Destroy was caught
+        //postSource is not bound - xs.reactive.event.Destroy was caught
         strictEqual(postSource.isBound('user'), false);
 
         //destroy postSource

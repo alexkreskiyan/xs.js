@@ -1,8 +1,8 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.event.Reactive');
+var log = new xs.log.Logger('xs.reactive.Reactive');
 
-var assert = new xs.core.Asserter(log, XsEventReactiveError);
+var assert = new xs.core.Asserter(log, XsReactiveReactiveError);
 
 /**
  * Private reactive core. Represents some reactive object
@@ -22,7 +22,7 @@ var assert = new xs.core.Asserter(log, XsEventReactiveError);
  * Creates reactive instance
  *
  * @param {Function} generator reactive generator function
- * @param {xs.event.emitter.Emitter} emitter reactive emitter
+ * @param {xs.reactive.emitter.Emitter} emitter reactive emitter
  * @param {Array} sources additional sources, used by reactive object
  */
 var Reactive = function (generator, emitter, sources) {
@@ -39,12 +39,12 @@ var Reactive = function (generator, emitter, sources) {
     });
 
     //assert, that emitter is correct instance
-    assert.ok(emitter instanceof module.Emitter, 'constructor - given generator `$generator` is not a function', {
+    assert.ok(emitter instanceof module.emitter.Emitter, 'constructor - given generator `$generator` is not a function', {
         $emitter: generator
     });
 
     //verify sources
-    assert.ok(arguments.length === 2 || xs.isArray(sources), 'constructor - given dependent sources list `$sources` is not an array of reactive elements', {
+    assert.ok(arguments.length === 2 || xs.isArray(sources), 'constructor - given dependent sources list `$sources` is not an array', {
         $sources: sources
     });
 
@@ -54,8 +54,8 @@ var Reactive = function (generator, emitter, sources) {
     //initially reactive is inactive
     me.private.isActive = false;
 
-    //create reactiveHandlers collection
-    me.private.reactiveHandlers = new xs.core.Collection();
+    //create handlers collection
+    me.private.handlers = new xs.core.Collection();
 
     //add underConstruction flag
     me.underConstruction = true;
@@ -236,7 +236,7 @@ Reactive.prototype.off = function (event, selector, flags) {
 
         //event, selector, flags scenario
     } else {
-        handleOff.call(me, arguments[ 0 ], arguments[ 1 ], arguments[ 2 ]);
+        handleOn.apply(me, arguments);
     }
 
     return me;
@@ -291,7 +291,7 @@ Reactive.prototype.suspend = function (event, selector, flags) {
 
         //event, selector, flags scenario
     } else {
-        handleSuspend.call(me, arguments[ 0 ], arguments[ 1 ], arguments[ 2 ]);
+        handleOn.apply(me, arguments);
     }
 
     return me;
@@ -345,7 +345,7 @@ Reactive.prototype.resume = function (selector, flags) {
 
         //event, selector, flags scenario
     } else {
-        handleResume.call(me, arguments[ 0 ], arguments[ 1 ], arguments[ 2 ]);
+        handleOn.apply(me, arguments);
     }
 
     return me;
@@ -369,12 +369,12 @@ Reactive.prototype.destroy = function () {
         me.private.off();
     }
 
-    var handlers = me.private.reactiveHandlers;
+    var handlers = me.private.handlers;
 
     delete me.private;
 
     //send destroy notification
-    module.send(handlers, new xs.event.Destroy());
+    module.send(handlers, new xs.reactive.event.Destroy());
 
     //remove all handlers
     handlers.remove();
@@ -399,7 +399,7 @@ function handleOn(event, handler, options) {
     });
 
     //get handlers reference
-    var handlers = me.private.reactiveHandlers;
+    var handlers = me.private.handlers;
 
     //if no options given - simply add
     if (!options) {
@@ -481,7 +481,7 @@ function handleOff(event, selector, flags) {
     var me = this;
 
     //get handlers reference
-    var handlers = me.private.reactiveHandlers;
+    var handlers = me.private.handlers;
 
     var handler = getSelectionHandler(event, selector, flags);
 
@@ -512,7 +512,7 @@ function handleSuspend(event, selector, flags) {
     var me = this;
 
     //get handlers reference
-    var handlers = me.private.reactiveHandlers;
+    var handlers = me.private.handlers;
 
     var handler = getSelectionHandler(event, selector, flags);
 
@@ -551,7 +551,7 @@ function handleResume(event, selector, flags) {
     var me = this;
 
     //get handlers reference
-    var handlers = me.private.reactiveHandlers;
+    var handlers = me.private.handlers;
 
     var handler = getSelectionHandler(event, selector, flags);
 
@@ -640,7 +640,7 @@ function isEvent(candidate) {
 
     var prototype = candidate.prototype;
 
-    return (prototype instanceof Event) || (prototype instanceof module.Event) || (xs.isClass(candidate) && candidate.implements(xs.event.IEvent));
+    return (prototype instanceof Event) || (prototype instanceof module.event.Event) || (xs.isClass(candidate) && candidate.implements(xs.event.IEvent));
 }
 
 function syncActive(value) {
@@ -651,7 +651,7 @@ function syncActive(value) {
 
         log.trace('syncActive - no value given, evaluating');
 
-        value = me.private.reactiveHandlers.find(function (item) {
+        value = me.private.handlers.find(function (item) {
                 return !item.suspended;
             }) !== undefined;
 
@@ -687,10 +687,10 @@ function syncActive(value) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class XsEventReactiveError
+ * @class XsReactiveReactiveError
  */
-function XsEventReactiveError(message) {
-    this.message = 'xs.event.Reactive::' + message;
+function XsReactiveReactiveError(message) {
+    this.message = 'xs.reactive.Reactive::' + message;
 }
 
-XsEventReactiveError.prototype = new Error();
+XsReactiveReactiveError.prototype = new Error();

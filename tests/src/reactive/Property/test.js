@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.event.Stream', function () {
+module('xs.reactive.Property', function () {
 
     'use strict';
 
@@ -20,7 +20,7 @@ module('xs.event.Stream', function () {
 
             return {
                 on: function () {
-                    me.send(null);
+                    me.set(null);
                     me.destroy();
                 },
                 off: xs.noop
@@ -31,18 +31,18 @@ module('xs.event.Stream', function () {
 
         //generator must be given
         throws(function () {
-            return new xs.event.Stream();
+            return new xs.reactive.Property();
         });
 
         //sources must be an array
         throws(function () {
-            return new xs.event.Stream(me.generator, undefined);
+            return new xs.reactive.Property(me.generator, undefined, undefined);
         });
 
         //generator must return object or undefined
-        me.stream = new xs.event.Stream(xs.noop);
+        me.property = new xs.reactive.Property(xs.noop);
         throws(function () {
-            return new xs.event.Stream(function () {
+            return new xs.reactive.Property(function () {
                 return null;
             });
         });
@@ -50,7 +50,7 @@ module('xs.event.Stream', function () {
         //return.on must be a function
         throws(function () {
 
-            return new xs.event.Stream(function () {
+            return new xs.reactive.Property(function () {
 
                 return {};
             });
@@ -59,7 +59,7 @@ module('xs.event.Stream', function () {
         //return.off must be a function
         throws(function () {
 
-            return new xs.event.Stream(function () {
+            return new xs.reactive.Property(function () {
 
                 return {
                     on: xs.noop
@@ -68,14 +68,15 @@ module('xs.event.Stream', function () {
         });
 
         //correct generator given
-        me.stream = new xs.event.Stream(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
         //check basics
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
+        strictEqual(me.property.value, undefined);
 
     }, function () {
         var me = this;
-        me.stream.destroy();
+        me.property.destroy();
     });
 
     test('basics', function () {
@@ -86,7 +87,7 @@ module('xs.event.Stream', function () {
 
             return {
                 on: function () {
-                    me.send(null);
+                    me.set(null);
                     me.destroy();
                 },
                 off: xs.noop
@@ -95,42 +96,42 @@ module('xs.event.Stream', function () {
     }, function () {
         var me = this;
 
-        me.stream = new xs.event.Stream(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
         //stream is not active and not destroyed
-        strictEqual(me.stream.isActive, false);
-        strictEqual(me.stream.isDestroyed, false);
+        strictEqual(me.property.isActive, false);
+        strictEqual(me.property.isDestroyed, false);
 
         var log = '';
-        me.stream.on(xs.event.Destroy, function (data) {
+        me.property.on(function (data) {
             log += arguments.length + data;
         });
 
         //stream is not active and destroyed
-        strictEqual(me.stream.isDestroyed, true);
+        strictEqual(me.property.isDestroyed, true);
 
     });
 
-    test('send', function () {
+    test('set', function () {
         var me = this;
 
         me.generator = function () {
             var me = this;
 
             var emitter = function () {
-                //send initial value silently
-                me.send(null, true);
+                //set initial value silently
+                me.set(null, true);
 
                 var i = 0;
 
                 while (i < 10) {
-                    //if send ok, continue
-                    if (me.send(i)) {
+                    //if set ok, continue
+                    if (me.set(i)) {
                         i++;
 
-                        //if send cancelled, send null and end
+                        //if set cancelled, set null and end
                     } else {
-                        me.send(null);
+                        me.set(null);
                         me.destroy();
 
                         return;
@@ -149,30 +150,34 @@ module('xs.event.Stream', function () {
     }, function () {
         var me = this;
 
-        me.stream = new xs.event.Stream(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
         //stream is not active and not destroyed
-        strictEqual(me.stream.isActive, false);
-        strictEqual(me.stream.isDestroyed, false);
+        strictEqual(me.property.isActive, false);
+        strictEqual(me.property.isDestroyed, false);
 
         var log = '';
+        var value = '';
 
-        me.stream.on(function (data) {
+        me.property.on(function (data) {
             if (data === 5) {
                 return false;
             }
         });
 
-        me.stream.on(function (data) {
+        me.property.on(function (data) {
             log += data;
+            value += me.property.value;
+            value += data;
         });
 
-        me.stream.on(xs.event.Destroy, function () {
+        me.property.on(xs.reactive.event.Destroy, function () {
             //stream is not active and destroyed
-            strictEqual(me.stream.isDestroyed, true);
+            strictEqual(me.property.isDestroyed, true);
 
-            //check log
+            //check log and value
             strictEqual(log, '01234null');
+            strictEqual(value, 'null0011223344null');
 
             me.done();
         });
@@ -190,7 +195,7 @@ module('xs.event.Stream', function () {
             var interval = 0;
             var intervalId;
             var generator = function () {
-                me.send(i);
+                me.set(i);
                 i--;
 
                 if (i === 0) {
@@ -211,31 +216,31 @@ module('xs.event.Stream', function () {
         var me = this;
 
         //correct generator given
-        me.stream = new xs.event.Stream(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
         //no handler throws
         throws(function () {
-            me.stream.on();
+            me.property.on();
         });
 
         //not a function handler throws
         throws(function () {
-            me.stream.on(null);
+            me.property.on(null);
         });
 
         //incorrect event throws
         throws(function () {
-            me.stream.on(null, xs.noop);
+            me.property.on(null, xs.noop);
         });
 
         //incorrect options throws
         throws(function () {
-            me.stream.on(xs.noop, null);
+            me.property.on(xs.noop, null);
         });
 
         //incorrect options throws
         throws(function () {
-            me.stream.on(MouseEvent, xs.noop, null);
+            me.property.on(MouseEvent, xs.noop, null);
         });
 
 
@@ -247,42 +252,46 @@ module('xs.event.Stream', function () {
             positioned: ''
         };
 
+        var value = '';
+
         //method can be added with initially suspended state
-        me.stream.on(function (data) {
+        me.property.on(function (data) {
             log.suspended += data;
         }, {
             suspended: true
         });
 
         //this way stream is still inactive
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
 
         //simply method appends new handler, that has undefined scope, undefined event and is not suspended
-        me.stream.on(function (data) {
+        me.property.on(function (data) {
             log.simple += data;
+            value += me.property.value;
+            value += data;
         });
 
         //incorrect priority throws exception
         throws(function () {
-            me.stream.on(xs.noop, {
+            me.property.on(xs.noop, {
                 priority: null
             });
         });
 
         //method can be evented directly, specifying event constructor(s)
-        me.stream.on(xs.event.Destroy, function () {
+        me.property.on(xs.reactive.event.Destroy, function () {
             log.evented += 'destroyed';
         });
 
         //method can be called within given scope
-        me.stream.on(function (data) {
+        me.property.on(function (data) {
             log.scoped += data + this;
         }, {
             scope: '!'
         });
 
         //method can be positioned. returning false allows to stop event handling
-        me.stream.on(function (data) {
+        me.property.on(function (data) {
             log.positioned += data;
 
             if (data === 5) {
@@ -292,13 +301,15 @@ module('xs.event.Stream', function () {
             priority: 0
         });
 
-        me.stream.on(xs.event.Destroy, function () {
+        me.property.on(xs.reactive.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
             strictEqual(log.evented, 'destroyed');
             strictEqual(log.scoped, '10!9!8!7!6!4!3!2!1!'); //5 is missing - cancelled
             strictEqual(log.suspended, '');
             strictEqual(log.positioned, '10987654321'); //5 is presented
+            //check value
+            strictEqual(value.toString(), 'undefined1010998877664433221'); //5 is missing - cancelled
             me.done();
         });
 
@@ -315,7 +326,7 @@ module('xs.event.Stream', function () {
             var interval = 0;
             var intervalId;
             var generator = function () {
-                me.send(i);
+                me.set(i);
                 i--;
 
                 if (i === 0) {
@@ -336,67 +347,67 @@ module('xs.event.Stream', function () {
         var me = this;
 
         //correct generator given
-        me.stream = new xs.event.Stream(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
         //not a function handler throws
         throws(function () {
-            me.stream.off(null);
+            me.property.off(null);
         });
 
         //incorrect event throws
         throws(function () {
-            me.stream.off(null, xs.noop);
+            me.property.off(null, xs.noop);
         });
 
         //incorrect options throws
         throws(function () {
-            me.stream.off(xs.noop, null);
+            me.property.off(xs.noop, null);
         });
 
         //incorrect options throws
         throws(function () {
-            me.stream.off(MouseEvent, xs.noop, null);
+            me.property.off(MouseEvent, xs.noop, null);
         });
 
-        me.stream.on(xs.noop);
+        me.property.on(xs.noop);
 
         //stream is active
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
 
         //empty argument - removes all handlers
-        me.stream.off();
+        me.property.off();
 
         //stream is deactivated
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
 
 
         //with given arguments, handlers.removeBy is called
-        me.stream.on(xs.noop);
-        me.stream.on(xs.noop);
-        me.stream.on(function () {
+        me.property.on(xs.noop);
+        me.property.on(xs.noop);
+        me.property.on(function () {
 
         });
 
         //remove first handler
-        me.stream.off(function () {
+        me.property.off(function () {
 
             return true;
         });
 
         //stream is active
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
 
         //remove all left handlers
-        me.stream.off(function () {
+        me.property.off(function () {
 
             return true;
         }, xs.core.Collection.All);
 
         //stream is deactivated
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
     }, function () {
         var me = this;
-        me.stream.destroy();
+        me.property.destroy();
     });
 
     test('suspend', function () {
@@ -409,7 +420,7 @@ module('xs.event.Stream', function () {
             var interval = 0;
             var intervalId;
             var generator = function () {
-                me.send(i);
+                me.set(i);
                 i--;
 
                 if (i === 0) {
@@ -430,67 +441,67 @@ module('xs.event.Stream', function () {
         var me = this;
 
         //correct generator given
-        me.stream = new xs.event.Stream(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
         //not a function handler throws
         throws(function () {
-            me.stream.suspend(null);
+            me.property.suspend(null);
         });
 
         //incorrect event throws
         throws(function () {
-            me.stream.suspend(null, xs.noop);
+            me.property.suspend(null, xs.noop);
         });
 
         //incorrect options throws
         throws(function () {
-            me.stream.suspend(xs.noop, null);
+            me.property.suspend(xs.noop, null);
         });
 
         //incorrect options throws
         throws(function () {
-            me.stream.suspend(MouseEvent, xs.noop, null);
+            me.property.suspend(MouseEvent, xs.noop, null);
         });
 
-        me.stream.on(xs.noop);
+        me.property.on(xs.noop);
 
         //stream is active
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
 
         //empty argument - suspends all handlers
-        me.stream.suspend();
+        me.property.suspend();
 
         //stream is deactivated
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
 
 
         //with given arguments, handlers.find is called
-        me.stream.on(xs.noop);
-        me.stream.on(xs.noop);
-        me.stream.on(function () {
+        me.property.on(xs.noop);
+        me.property.on(xs.noop);
+        me.property.on(function () {
 
         });
 
         //suspend first handler
-        me.stream.suspend(function () {
+        me.property.suspend(function () {
 
             return true;
         });
 
         //stream is active
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
 
         //suspend all left handlers
-        me.stream.suspend(function () {
+        me.property.suspend(function () {
 
             return true;
         }, xs.core.Collection.All);
 
         //stream is deactivated
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
     }, function () {
         var me = this;
-        me.stream.destroy();
+        me.property.destroy();
     });
 
     test('resume', function () {
@@ -503,7 +514,7 @@ module('xs.event.Stream', function () {
             var interval = 0;
             var intervalId;
             var generator = function () {
-                me.send(i);
+                me.set(i);
                 i--;
 
                 if (i === 0) {
@@ -524,71 +535,71 @@ module('xs.event.Stream', function () {
         var me = this;
 
         //correct generator given
-        me.stream = new xs.event.Stream(me.generator);
+        me.property = new xs.reactive.Property(me.generator);
 
         //not a function handler throws
         throws(function () {
-            me.stream.resume(null);
+            me.property.resume(null);
         });
 
         //incorrect event throws
         throws(function () {
-            me.stream.resume(null, xs.noop);
+            me.property.resume(null, xs.noop);
         });
 
         //incorrect options throws
         throws(function () {
-            me.stream.resume(xs.noop, null);
+            me.property.resume(xs.noop, null);
         });
 
         //incorrect options throws
         throws(function () {
-            me.stream.resume(MouseEvent, xs.noop, null);
+            me.property.resume(MouseEvent, xs.noop, null);
         });
 
-        me.stream.on(xs.noop);
+        me.property.on(xs.noop);
 
-        me.stream.suspend();
+        me.property.suspend();
 
         //stream is inactive
-        strictEqual(me.stream.isActive, false);
+        strictEqual(me.property.isActive, false);
 
         //empty argument - resumes all handlers
-        me.stream.resume();
+        me.property.resume();
 
         //stream is activated
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
 
 
         //with given arguments, handlers.removeBy is called
-        me.stream.on(xs.noop);
-        me.stream.on(xs.noop);
-        me.stream.on(function () {
+        me.property.on(xs.noop);
+        me.property.on(xs.noop);
+        me.property.on(function () {
 
         });
 
-        me.stream.suspend();
+        me.property.suspend();
 
         //resume first handler
-        me.stream.resume(function () {
+        me.property.resume(function () {
 
             return true;
         });
 
         //stream is activated
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
 
         //resume all left handlers
-        me.stream.resume(function () {
+        me.property.resume(function () {
 
             return true;
         }, xs.core.Collection.All);
 
         //stream is active
-        strictEqual(me.stream.isActive, true);
+        strictEqual(me.property.isActive, true);
     }, function () {
         var me = this;
-        me.stream.destroy();
+        me.property.destroy();
     });
 
     test('fromPromise', function () {
@@ -598,13 +609,15 @@ module('xs.event.Stream', function () {
 
         //resolved promise
         promise = new xs.core.Promise();
-        var resolved = xs.event.Stream.fromPromise(promise);
+        var resolved = xs.reactive.Property.fromPromise(promise);
 
         var logResolved = [];
+        var valueResolved = [];
         resolved.on(function (data) {
             logResolved.push(data);
+            valueResolved.push(resolved.value);
         });
-        resolved.on(xs.event.Destroy, function () {
+        resolved.on(xs.reactive.event.Destroy, function () {
             strictEqual(JSON.stringify(logResolved), JSON.stringify([
                 {
                     state: xs.core.Promise.Pending,
@@ -619,7 +632,24 @@ module('xs.event.Stream', function () {
                     data: 100
                 }
             ]));
+            strictEqual(JSON.stringify(valueResolved), JSON.stringify([
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: undefined
+                },
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 35
+                },
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 70
+                }
+            ]));
         });
+
+        //check initial state
+        strictEqual(JSON.stringify(resolved.value), '{"state":' + xs.core.Promise.Pending + '}');
 
         //update one
         promise.update(35);
@@ -632,13 +662,15 @@ module('xs.event.Stream', function () {
 
         //rejected promise
         promise = new xs.core.Promise();
-        var rejected = xs.event.Stream.fromPromise(promise);
+        var rejected = xs.reactive.Property.fromPromise(promise);
 
         var logRejected = [];
+        var valueRejected = [];
         rejected.on(function (data) {
             logRejected.push(data);
+            valueRejected.push(rejected.value);
         });
-        rejected.on(xs.event.Destroy, function () {
+        rejected.on(xs.reactive.event.Destroy, function () {
             strictEqual(JSON.stringify(logRejected), JSON.stringify([
                 {
                     state: xs.core.Promise.Pending,
@@ -653,8 +685,25 @@ module('xs.event.Stream', function () {
                     error: 'fail'
                 }
             ]));
+            strictEqual(JSON.stringify(valueRejected), JSON.stringify([
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: undefined
+                },
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 35
+                },
+                {
+                    state: xs.core.Promise.Pending,
+                    progress: 70
+                }
+            ]));
             me.done();
         });
+
+        //check initial state
+        strictEqual(JSON.stringify(rejected.value), '{"state":' + xs.core.Promise.Pending + '}');
 
         //update one
         promise.update(35);
@@ -671,37 +720,37 @@ module('xs.event.Stream', function () {
     test('fromEvent', function () {
         var me = this;
 
-        var stream = xs.event.Stream.fromEvent(document.body, 'click');
+        var property = xs.reactive.Property.fromEvent(document.body, 'click');
 
         var log = [];
-        stream.on(function (data) {
+        property.on(function (data) {
             log.push(data);
         });
 
         document.body.click();
 
-        stream.on(xs.event.Destroy, function () {
+        property.on(xs.reactive.event.Destroy, function () {
             strictEqual(log.length, 1);
 
             me.done();
         });
 
-        stream.destroy();
+        property.destroy();
 
         return false;
     });
 
-    test('toProperty', function () {
+    test('toStream', function () {
         var me = this;
 
         var log = [];
-        (new xs.event.Stream(function () {
+        (new xs.reactive.Property(function () {
             var me = this;
 
             return {
                 on: function () {
                     xs.nextTick(function () {
-                        me.send(null);
+                        me.set(null);
                         xs.nextTick(function () {
                             me.destroy();
                         });
@@ -709,19 +758,20 @@ module('xs.event.Stream', function () {
                 },
                 off: xs.noop
             };
-        }))
-            .toProperty(5)
+        }, 5))
+            .toStream(true)
             .on(function (data) {
                 log.push({
-                    data: data,
-                    current: this.value
+                    data: data
                 });
             })
-            .on(xs.event.Destroy, function () {
+            .on(xs.reactive.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), JSON.stringify([
                     {
-                        data: null,
-                        current: 5
+                        data: 5
+                    },
+                    {
+                        data: null
                     }
                 ]));
                 me.done();
@@ -733,30 +783,29 @@ module('xs.event.Stream', function () {
     test('map', function () {
         var me = this;
 
-        var stream = new xs.event.Stream(function () {
+        var property = new xs.reactive.Property(function () {
             var me = this;
 
             xs.nextTick(function () {
-                me.send(5);
+                me.set(5);
                 me.destroy();
             });
         });
 
         var log = [];
-        stream
+        property
             .map(function (value) {
 
                 return value * 2;
             })
             .on(function (data) {
                 log.push(data);
+            })
+            .on(xs.reactive.event.Destroy, function () {
+                strictEqual(JSON.stringify(log), '[10]');
+
+                me.done();
             });
-
-        stream.on(xs.event.Destroy, function () {
-            strictEqual(JSON.stringify(log), '[10]');
-
-            me.done();
-        });
 
         return false;
     });
@@ -764,31 +813,30 @@ module('xs.event.Stream', function () {
     test('filter', function () {
         var me = this;
 
-        var stream = new xs.event.Stream(function () {
+        var property = new xs.reactive.Property(function () {
             var me = this;
 
             xs.nextTick(function () {
-                me.send(5);
-                me.send(10);
+                me.set(5);
+                me.set(10);
                 me.destroy();
             });
         });
 
         var log = [];
-        stream
+        property
             .filter(function (value) {
 
                 return value > 7;
             })
             .on(function (data) {
                 log.push(data);
+            })
+            .on(xs.reactive.event.Destroy, function () {
+                strictEqual(JSON.stringify(log), '[10]');
+
+                me.done();
             });
-
-        stream.on(xs.event.Destroy, function () {
-            strictEqual(JSON.stringify(log), '[10]');
-
-            me.done();
-        });
 
         return false;
     });
@@ -796,11 +844,11 @@ module('xs.event.Stream', function () {
     test('throttle', function () {
         var me = this;
 
-        var stream = new xs.event.Stream(function () {
+        var property = new xs.reactive.Property(function () {
             var me = this;
 
             var interval = setInterval(function () {
-                me.send((new Date()).valueOf());
+                me.set((new Date()).valueOf());
             }, 0);
             setTimeout(function () {
                 clearInterval(interval);
@@ -810,13 +858,13 @@ module('xs.event.Stream', function () {
 
         var log = [];
         var diff = -Infinity;
-        stream
+        property
             .throttle(15)
             .on(function (data) {
                 log.push(data - diff);
                 diff = data;
             })
-            .on(xs.event.Destroy, function () {
+            .on(xs.reactive.event.Destroy, function () {
                 strictEqual((new xs.core.Collection(log)).all(function (value) {
                     return value >= 10;
                 }), true);
@@ -830,12 +878,12 @@ module('xs.event.Stream', function () {
     test('debounce', function () {
         var me = this;
 
-        var stream = new xs.event.Stream(function () {
+        var property = new xs.reactive.Property(function () {
             var me = this;
 
             var i = 0;
             var interval = setInterval(function () {
-                me.send(++i);
+                me.set(++i);
 
                 if (i === 10) {
                     clearInterval(interval);
@@ -845,12 +893,12 @@ module('xs.event.Stream', function () {
         });
 
         var log = [];
-        stream
+        property
             .debounce(10)
             .on(function (data) {
                 log.push(data);
             })
-            .on(xs.event.Destroy, function () {
+            .on(xs.reactive.event.Destroy, function () {
                 strictEqual(JSON.stringify(log), '[10]');
 
                 me.done();

@@ -1,11 +1,11 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.event.emitter.Property');
+var log = new xs.log.Logger('xs.reactive.emitter.Property');
 
-var assert = new xs.core.Asserter(log, XsEventEmitterPropertyError);
+var assert = new xs.core.Asserter(log, XsReactiveEmitterPropertyError);
 
 //save reference to module
-module.EmitterProperty = function Emitter(reactive) {
+module.emitter.Property = function Emitter(reactive) {
     var me = this;
 
     //add set handler
@@ -15,8 +15,8 @@ module.EmitterProperty = function Emitter(reactive) {
     me.destroy = xs.bind(reactive.destroy, reactive);
 };
 
-//extend EmitterProperty from Emitter
-xs.extend(module.EmitterProperty, module.Emitter);
+//extend emitter.Property from emitter.Emitter
+xs.extend(module.emitter.Property, module.emitter.Emitter);
 
 function handleSet(data, silent) {
     var me = this;
@@ -28,7 +28,7 @@ function handleSet(data, silent) {
     assert.not(me.underConstruction, 'send - reactive is being constructed');
 
     //set data and return true in silent mode, or if send is successful
-    if (silent || module.send(me.private.reactiveHandlers, data)) {
+    if (silent || module.send(me.private.handlers, data)) {
 
         //set current value
         me.private.value = data;
@@ -46,10 +46,10 @@ function handleSet(data, silent) {
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class XsEventEmitterPropertyError
+ * @class XsReactiveEmitterPropertyError
  */
-function XsEventEmitterPropertyError(message) {
-    this.message = 'xs.event.emitter.Property::' + message;
+function XsReactiveEmitterPropertyError(message) {
+    this.message = 'xs.reactive.emitter.Property::' + message;
 }
 
-XsEventEmitterPropertyError.prototype = new Error();
+XsReactiveEmitterPropertyError.prototype = new Error();

@@ -32,7 +32,7 @@ module.send = function send(handlers, data) {
         } else {
 
             //ignore, if destroy event given
-            if (data instanceof xs.event.Destroy) {
+            if (data instanceof xs.reactive.event.Destroy) {
 
                 return;
             }

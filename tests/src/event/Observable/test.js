@@ -151,7 +151,7 @@ module('xs.event.Observable', function () {
             priority: 0
         });
 
-        me.observable.on(xs.event.Destroy, function () {
+        me.observable.on(xs.reactive.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '12346789'); //5 is missing - cancelled
             strictEqual(log.eventedOne, '2468');

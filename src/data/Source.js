@@ -178,7 +178,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         binding.source.on(imports.OperationEvent, binding.handlers.operation, {
             scope: me
         });
-        binding.source.on(xs.event.Destroy, binding.handlers.destroy, {
+        binding.source.on(xs.reactive.event.Destroy, binding.handlers.destroy, {
             scope: me
         });
     };
@@ -195,7 +195,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
                 binding.source.off(imports.OperationEvent, function (item) {
                     return item.handler === binding.handlers.operation;
                 });
-                binding.source.off(xs.event.Destroy, function (item) {
+                binding.source.off(xs.reactive.event.Destroy, function (item) {
                     return item.handler === binding.handlers.destroy;
                 });
             });
@@ -221,7 +221,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         binding.source.off(imports.OperationEvent, function (item) {
             return item.handler === binding.handlers.operation;
         });
-        binding.source.off(xs.event.Destroy, function (item) {
+        binding.source.off(xs.reactive.event.Destroy, function (item) {
             return item.handler === binding.handlers.destroy;
         });
     };

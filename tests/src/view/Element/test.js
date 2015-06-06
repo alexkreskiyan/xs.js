@@ -31,7 +31,7 @@ module('xs.view.Element', function () {
         var el = new xs.view.Element(document.createElement('div'));
 
         //observable is applied correctly
-        el.on(xs.event.Destroy, me.done);
+        el.on(xs.reactive.event.Destroy, me.done);
 
         strictEqual(el.events.isActive, true);
 
@@ -45,7 +45,7 @@ module('xs.view.Element', function () {
 
         var el = new xs.view.Element(document.createElement('div'));
 
-        el.on(xs.event.Destroy, me.done);
+        el.on(xs.reactive.event.Destroy, me.done);
 
         //element is destroyed
         strictEqual(el.hasOwnProperty('el'), false);
