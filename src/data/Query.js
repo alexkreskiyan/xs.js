@@ -410,7 +410,7 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
     var GroupJoinProcessor = function (sourceLeft, sourceRight, condition, options) {
         var me = this;
 
-        //assert, that source is iterable
+        //assert, that sourceRight is iterable
         self.assert.iterable(sourceRight, 'GroupJoinProcessor - given `$sourceRight` is not an iterable', {
             $sourceRight: sourceRight
         });
