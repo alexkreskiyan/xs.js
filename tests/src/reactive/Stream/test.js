@@ -87,7 +87,7 @@ module('xs.reactive.Stream', function () {
             return {
                 on: function () {
                     me.send(null);
-                    me.destroy();
+                    xs.nextTick(me.destroy);
                 },
                 off: xs.noop
             };
@@ -101,14 +101,14 @@ module('xs.reactive.Stream', function () {
         strictEqual(me.stream.isActive, false);
         strictEqual(me.stream.isDestroyed, false);
 
-        var log = '';
-        me.stream.on(xs.reactive.event.Destroy, function (data) {
-            log += arguments.length + data;
+        me.stream.on(xs.reactive.event.Destroy, function () {
+            //stream is not active and destroyed
+            strictEqual(me.stream.isDestroyed, true);
+
+            me.done();
         });
 
-        //stream is not active and destroyed
-        strictEqual(me.stream.isDestroyed, true);
-
+        return false;
     });
 
     test('send', function () {
@@ -247,17 +247,17 @@ module('xs.reactive.Stream', function () {
             positioned: ''
         };
 
-        //method can be added with initially suspended state
+        //method can be added with initially non-active state
         me.stream.on(function (data) {
             log.suspended += data;
         }, {
-            suspended: true
+            active: false
         });
 
         //this way stream is still inactive
         strictEqual(me.stream.isActive, false);
 
-        //simply method appends new handler, that has undefined scope, undefined event and is not suspended
+        //simply method appends new handler, that has undefined scope, undefined event and is active
         me.stream.on(function (data) {
             log.simple += data;
         });

@@ -7,8 +7,8 @@ module.send = function send(handlers, data) {
     //return whether handlers processing was cancelled
     return !handlers.find(function (item) {
 
-        //ignore, if item is suspended
-        if (item.suspended) {
+        //ignore, if item is not active
+        if (!item.active) {
 
             return;
 
@@ -31,8 +31,8 @@ module.send = function send(handlers, data) {
 
         } else {
 
-            //ignore, if destroy event given
-            if (data instanceof xs.reactive.event.Destroy) {
+            //ignore, if internal event given
+            if (data instanceof module.event.Event) {
 
                 return;
             }

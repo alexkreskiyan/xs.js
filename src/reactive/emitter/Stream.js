@@ -33,7 +33,7 @@ function handleSend(data, silent) {
     }
 
     //return send status
-    return module.send(me.private.handlers, data);
+    return module.send(me.private.externalHandlers, data);
 }
 
 /**

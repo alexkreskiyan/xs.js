@@ -28,7 +28,7 @@ function handleSet(data, silent) {
     assert.not(me.underConstruction, 'send - reactive is being constructed');
 
     //set data and return true in silent mode, or if send is successful
-    if (silent || module.send(me.private.handlers, data)) {
+    if (silent || module.send(me.private.externalHandlers, data)) {
 
         //set current value
         me.private.value = data;

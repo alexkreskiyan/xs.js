@@ -88,7 +88,7 @@ module('xs.reactive.Property', function () {
             return {
                 on: function () {
                     me.set(null);
-                    me.destroy();
+                    xs.nextTick(me.destroy);
                 },
                 off: xs.noop
             };
@@ -102,13 +102,14 @@ module('xs.reactive.Property', function () {
         strictEqual(me.property.isActive, false);
         strictEqual(me.property.isDestroyed, false);
 
-        var log = '';
-        me.property.on(function (data) {
-            log += arguments.length + data;
+        me.property.on(xs.reactive.event.Destroy, function () {
+            //property is not active and destroyed
+            strictEqual(me.property.isDestroyed, true);
+
+            me.done();
         });
 
-        //stream is not active and destroyed
-        strictEqual(me.property.isDestroyed, true);
+        return false;
 
     });
 
@@ -254,17 +255,17 @@ module('xs.reactive.Property', function () {
 
         var value = '';
 
-        //method can be added with initially suspended state
+        //method can be added with initially non-active state
         me.property.on(function (data) {
             log.suspended += data;
         }, {
-            suspended: true
+            active: false
         });
 
         //this way stream is still inactive
         strictEqual(me.property.isActive, false);
 
-        //simply method appends new handler, that has undefined scope, undefined event and is not suspended
+        //simply method appends new handler, that has undefined scope, undefined event and is active
         me.property.on(function (data) {
             log.simple += data;
             value += me.property.value;

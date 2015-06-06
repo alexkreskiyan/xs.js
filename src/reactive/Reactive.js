@@ -54,8 +54,14 @@ var Reactive = function (generator, emitter, sources) {
     //initially reactive is inactive
     me.private.isActive = false;
 
-    //create handlers collection
-    me.private.handlers = new xs.core.Collection();
+    //create collection for basic handlers
+    me.private.externalHandlers = new xs.core.Collection();
+
+    //create collection for internal handlers
+    me.private.internalHandlers = new xs.core.Collection();
+
+    //define cache for list of active events
+    me.private.activeEvents = new xs.core.Collection();
 
     //add underConstruction flag
     me.underConstruction = true;
@@ -369,7 +375,7 @@ Reactive.prototype.destroy = function () {
         me.private.off();
     }
 
-    var handlers = me.private.handlers;
+    var handlers = me.private.internalHandlers;
 
     delete me.private;
 
@@ -398,8 +404,14 @@ function handleOn(event, handler, options) {
         $options: options
     });
 
+    //evaluate isInternal flag
+    var isInternal = event && isInternalEvent(event);
+
     //get handlers reference
-    var handlers = me.private.handlers;
+    var handlers = isInternal ? me.private.internalHandlers : me.private.externalHandlers;
+
+    //get active events list
+    var activeEvents = me.private.activeEvents;
 
     //if no options given - simply add
     if (!options) {
@@ -412,14 +424,24 @@ function handleOn(event, handler, options) {
         handlers.add({
             event: event,
             handler: handler,
-            suspended: false,
+            active: true,
             scope: me
         });
 
-        //sync active state to true - new item not-suspended was added
+        //return if internal
+        if (isInternal) {
+            return;
+        }
+
+        //sync active state to true - new active item added (for externals)
         syncActive.call(me, true);
 
-        return me;
+        //send resume event if needed
+        if (event && !activeEvents.has(event)) {
+            resumeEvent.call(me, event);
+        }
+
+        return;
     }
 
     log.trace('on - adding handler `$handler` with event `$event` with options `$options`', {
@@ -428,14 +450,14 @@ function handleOn(event, handler, options) {
         $options: options
     });
 
-    //process suspended option
-    var suspended = options.hasOwnProperty('suspended') ? Boolean(options.suspended) : false;
+    //process active option
+    var active = options.hasOwnProperty('active') ? Boolean(options.active) : true;
 
     //define handler item
     var item = {
         event: event,
         handler: handler,
-        suspended: suspended,
+        active: active,
         scope: options.hasOwnProperty('scope') ? options.scope : me
     };
 
@@ -471,50 +493,113 @@ function handleOn(event, handler, options) {
         $item: item
     });
 
-    //sync active state to true - new item not-suspended was added
-    if (!suspended) {
-        syncActive.call(me, true);
+    //return if item was added in not-active state or internal handler added
+    if (!active || isInternal) {
+
+        return;
+    }
+
+    //sync active state to true - new active item added
+    syncActive.call(me, true);
+
+    //resume event if needed
+    if (event && !activeEvents.has(event)) {
+        resumeEvent.call(me, event);
     }
 }
 
 function handleOff(event, selector, flags) {
     var me = this;
 
-    //get handlers reference
-    var handlers = me.private.handlers;
-
+    //get selection handler
     var handler = getSelectionHandler(event, selector, flags);
 
-    if (handler) {
+    //evaluate isInternal flag
+    var isInternal = event && isInternalEvent(event);
 
+    //get handlers reference
+    var handlers = isInternal ? me.private.internalHandlers : me.private.externalHandlers;
+
+    //get active events list
+    var activeEvents = me.private.activeEvents;
+
+    if (handler) {
         if (flags === false) {
             handlers.removeBy(handler);
         } else {
             handlers.removeBy(handler, flags);
         }
-
-        //sync active state - perhaps, no handlers left and it is false
-        syncActive.call(me);
-
     } else {
-
         //remove all handlers
         handlers.remove();
+    }
 
-        //sync active state to false - all handlers were removed
+    //return if is internal
+    if (isInternal) {
+        return;
+    }
+
+    //sync active
+    if (handler) {
+        //sync active state - perhaps, no handlers left and it is false (only for externals)
+        syncActive.call(me);
+    } else {
+        //sync active state to false - all handlers were removed (only for externals)
         syncActive.call(me, false);
     }
 
-    return me;
+    //if event given
+    if (event) {
+
+        //return if event is already not active
+        if (!activeEvents.has(event)) {
+
+            return;
+        }
+
+        //suspend if no active handlers
+        if (!checkActiveHandlers(handlers, event)) {
+            suspendEvent.call(me, event);
+        }
+    } else if (handler) {
+
+        //verify each event
+        var i = 0;
+
+        while (i < activeEvents.size) {
+            event = activeEvents.at(i);
+
+            //suspend if no active handlers
+            if (!checkActiveHandlers(handlers, event)) {
+                suspendEvent.call(me, event);
+            } else {
+                i++;
+            }
+        }
+    } else {
+
+        //suspend all active events
+        while (activeEvents.size) {
+            event = activeEvents.at(0);
+            suspendEvent.call(me, event);
+        }
+    }
 }
 
 function handleSuspend(event, selector, flags) {
     var me = this;
 
-    //get handlers reference
-    var handlers = me.private.handlers;
-
+    //get selection handler
     var handler = getSelectionHandler(event, selector, flags);
+
+    //evaluate isInternal flag
+    var isInternal = event && isInternalEvent(event);
+
+    //get handlers reference
+    var handlers = isInternal ? me.private.internalHandlers : me.private.externalHandlers;
+
+    //get active events list
+    var activeEvents = me.private.activeEvents;
 
     var suspended;
 
@@ -531,29 +616,82 @@ function handleSuspend(event, selector, flags) {
     //if handlers collection found
     if (suspended instanceof xs.core.Collection) {
 
-        //mark each item as suspended
+        //mark each item as not active
         suspended.each(function (item) {
-            item.suspended = true;
+            item.active = false;
         });
 
         //else if single handler found
     } else if (xs.isObject(suspended)) {
-        suspended.suspended = true;
+        suspended.active = false;
     }
 
-    //sync active state - perhaps, no handlers left and it is false
-    syncActive.call(me);
+    //return if is internal
+    if (isInternal) {
+        return;
+    }
 
-    return me;
+    //sync active
+    if (handler) {
+        //sync active state - perhaps, no active handlers left and it is false (only for externals)
+        syncActive.call(me);
+    } else {
+        //sync active state to false - all handlers were suspended (only for externals)
+        syncActive.call(me, false);
+    }
+
+    //if event given
+    if (event) {
+
+        //return if event is already not active
+        if (!activeEvents.has(event)) {
+
+            return;
+        }
+
+        //suspend if no active handlers
+        if (!checkActiveHandlers(handlers, event)) {
+            suspendEvent.call(me, event);
+        }
+    } else if (handler) {
+
+        //verify each event
+        var i = 0;
+
+        while (i < activeEvents.size) {
+            event = activeEvents.at(i);
+
+            //suspend if no active handlers
+            if (!checkActiveHandlers(handlers, event)) {
+                suspendEvent.call(me, event);
+            } else {
+                i++;
+            }
+        }
+    } else {
+
+        //suspend all active events
+        while (activeEvents.size) {
+            event = activeEvents.at(0);
+            suspendEvent.call(me, event);
+        }
+    }
 }
 
 function handleResume(event, selector, flags) {
     var me = this;
 
-    //get handlers reference
-    var handlers = me.private.handlers;
-
+    //get selection handler
     var handler = getSelectionHandler(event, selector, flags);
+
+    //evaluate isInternal flag
+    var isInternal = event && isInternalEvent(event);
+
+    //get handlers reference
+    var handlers = isInternal ? me.private.internalHandlers : me.private.externalHandlers;
+
+    //get active events list
+    var activeEvents = me.private.activeEvents;
 
     var resumed;
 
@@ -570,20 +708,50 @@ function handleResume(event, selector, flags) {
     //if handlers collection found
     if (resumed instanceof xs.core.Collection) {
 
-        //mark each item as resumed
+        //mark each item as active
         resumed.each(function (item) {
-            item.suspended = false;
+            item.active = true;
         });
 
         //else if single handler found
-    } else if (xs.isObject(resumed)) {
-        resumed.suspended = false;
+    } else if (resumed) {
+        resumed.active = true;
     }
 
-    //sync active state - perhaps, no handlers left and it is false
-    syncActive.call(me);
+    //return if is internal
+    if (isInternal) {
+        return;
+    }
 
-    return me;
+    //sync active state to true if anything resumed
+    if (!(resumed instanceof xs.core.Collection) || resumed.size) {
+        syncActive.call(me, true);
+    }
+
+    //if event given
+    if (event) {
+
+        //return if event already resumed
+        if (activeEvents.has(event)) {
+
+            return;
+        }
+
+        //resume if any active handlers
+        if (checkActiveHandlers(handlers, event)) {
+            resumeEvent.call(me, event);
+        }
+    } else {
+
+        //verify each handler
+        handlers.each(function (item) {
+
+            //if handler has event and is active, but event not in cache - resume it
+            if (item.active && item.event && !activeEvents.has(item.event)) {
+                resumeEvent.call(me, item.event);
+            }
+        });
+    }
 }
 
 function getSelectionHandler(event, selector, flags) {
@@ -604,7 +772,7 @@ function getSelectionHandler(event, selector, flags) {
     });
 
     //remove by event and selector
-    if (event !== false && selector !== false) {
+    if (event && selector) {
 
         return function (item) {
 
@@ -613,7 +781,7 @@ function getSelectionHandler(event, selector, flags) {
     }
 
     //remove by event
-    if (event !== false) {
+    if (event) {
         return function (item) {
             return item.event === event;
         };
@@ -621,7 +789,7 @@ function getSelectionHandler(event, selector, flags) {
     }
 
     //remove by selector
-    if (selector !== false) {
+    if (selector) {
 
         return selector;
     }
@@ -654,9 +822,9 @@ function syncActive(value) {
 
         log.trace('syncActive - no value given, evaluating');
 
-        value = me.private.handlers.find(function (item) {
-                return !item.suspended;
-            }) !== undefined;
+        value = Boolean(me.private.externalHandlers.find(function (item) {
+            return item.active;
+        }));
 
         log.trace('syncActive - evaluated value is ' + (value ? 'true' : 'false'));
     }
@@ -673,6 +841,7 @@ function syncActive(value) {
 
     //toggle reactive state
     var handle = value ? me.private.on : me.private.off;
+
     log.trace('syncActive - ' + (value ? 'resuming' : 'suspending') + ' reactive with `$handle`', {
         $handle: handle
     });
@@ -681,6 +850,38 @@ function syncActive(value) {
     if (handle) {
         handle();
     }
+}
+
+function isInternalEvent(event) {
+    return event.prototype instanceof module.event.Event;
+}
+
+function checkActiveHandlers(handlers, event) {
+
+    return Boolean(handlers.find(function (item) {
+
+        return item.active && item.event === event;
+    }));
+}
+
+function resumeEvent(event) {
+    var me = this;
+
+    //add event to cache
+    me.private.activeEvents.add(event);
+
+    //send internal Resume event
+    module.send(me.private.internalHandlers, new xs.reactive.event.Resume(event));
+}
+
+function suspendEvent(event) {
+    var me = this;
+
+    //remove event to cache
+    me.private.activeEvents.remove(event);
+
+    //send internal Suspend event
+    module.send(me.private.internalHandlers, new xs.reactive.event.Suspend(event));
 }
 
 /**

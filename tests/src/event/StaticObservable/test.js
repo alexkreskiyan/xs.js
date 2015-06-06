@@ -114,17 +114,17 @@ module('xs.event.StaticObservable', function () {
             positioned: ''
         };
 
-        //method can be added with initially suspended state
+        //method can be added with initially non-active state
         me.Observable.on(function (event) {
             log.suspended += event.data;
         }, {
-            suspended: true
+            active: false
         });
 
         //this way stream is still inactive
         strictEqual(me.Observable.events.isActive, false);
 
-        //simply method appends new handler, that has undefined scope, undefined event and is not suspended
+        //simply method appends new handler, that has undefined scope, undefined event and is active
         me.Observable.on(function (event) {
             log.simple += event.data;
         });
