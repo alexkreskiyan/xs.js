@@ -33,7 +33,7 @@ module('xs.view.Element', function () {
         //observable is applied correctly
         el.on(xs.reactive.event.Destroy, me.done);
 
-        strictEqual(el.events.isActive, true);
+        strictEqual(el.events.isActive, false);
 
         el.destroy();
 

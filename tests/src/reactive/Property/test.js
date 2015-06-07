@@ -88,7 +88,6 @@ module('xs.reactive.Property', function () {
             return {
                 on: function () {
                     me.set(null);
-                    xs.nextTick(me.destroy);
                 },
                 off: xs.noop
             };
@@ -98,7 +97,7 @@ module('xs.reactive.Property', function () {
 
         me.property = new xs.reactive.Property(me.generator);
 
-        //stream is not active and not destroyed
+        //property is not active and not destroyed
         strictEqual(me.property.isActive, false);
         strictEqual(me.property.isDestroyed, false);
 
@@ -107,6 +106,10 @@ module('xs.reactive.Property', function () {
             strictEqual(me.property.isDestroyed, true);
 
             me.done();
+        });
+
+        xs.nextTick(function () {
+            me.property.destroy();
         });
 
         return false;
@@ -153,7 +156,7 @@ module('xs.reactive.Property', function () {
 
         me.property = new xs.reactive.Property(me.generator);
 
-        //stream is not active and not destroyed
+        //property is not active and not destroyed
         strictEqual(me.property.isActive, false);
         strictEqual(me.property.isDestroyed, false);
 
@@ -173,7 +176,7 @@ module('xs.reactive.Property', function () {
         });
 
         me.property.on(xs.reactive.event.Destroy, function () {
-            //stream is not active and destroyed
+            //property is not active and destroyed
             strictEqual(me.property.isDestroyed, true);
 
             //check log and value
@@ -189,6 +192,16 @@ module('xs.reactive.Property', function () {
     test('on', function () {
         var me = this;
 
+        var EventOne = me.EventOne = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventOne, Event);
+
+        var EventTwo = me.EventTwo = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventTwo, Event);
+
         me.generator = function () {
             var me = this;
 
@@ -196,7 +209,11 @@ module('xs.reactive.Property', function () {
             var interval = 0;
             var intervalId;
             var generator = function () {
-                me.set(i);
+                if (i % 2) {
+                    me.set(new EventOne(i));
+                } else {
+                    me.set(new EventTwo(i));
+                }
                 i--;
 
                 if (i === 0) {
@@ -250,27 +267,44 @@ module('xs.reactive.Property', function () {
             evented: '',
             suspended: '',
             scoped: '',
-            positioned: ''
+            positioned: '',
+            internal: []
         };
 
         var value = '';
 
+        //add listeners for internal events
+        var logInternals = xs.bind(log.internal.push, log.internal);
+        me.property.on(xs.reactive.event.Resume, logInternals);
+        me.property.on(xs.reactive.event.Suspend, logInternals);
+        me.property.on(xs.reactive.event.Destroy, logInternals);
+
+        //property is inactive, because only internal handlers added
+        strictEqual(me.property.isActive, false);
+
         //method can be added with initially non-active state
         me.property.on(function (data) {
-            log.suspended += data;
+            log.suspended += data.value;
         }, {
             active: false
         });
 
-        //this way stream is still inactive
+        //this way property is still inactive
         strictEqual(me.property.isActive, false);
 
         //simply method appends new handler, that has undefined scope, undefined event and is active
         me.property.on(function (data) {
-            log.simple += data;
-            value += me.property.value;
-            value += data;
+            log.simple += data.value;
+            value += xs.isObject(me.property.value) ? me.property.value.value : me.property.value;
+            value += data.value;
         });
+
+        //and property becomes active
+        strictEqual(me.property.isActive, true);
+
+        //but internal log is empty - property is not destroyed and not event-related handlers still added
+        strictEqual(log.internal.length, 0);
+
 
         //incorrect priority throws exception
         throws(function () {
@@ -280,22 +314,44 @@ module('xs.reactive.Property', function () {
         });
 
         //method can be evented directly, specifying event constructor(s)
+        me.property.on(me.EventOne, function (data) {
+            log.evented += 'one' + data.value;
+
+            xs.nextTick(function () {
+                me.property.off(me.EventOne);
+            });
+        });
+        me.property.on(me.EventTwo, function (data) {
+            log.evented += 'two' + data.value;
+
+            xs.nextTick(function () {
+                me.property.off(me.EventTwo);
+            });
+        });
+
+        //internal log contains 2 resume events for added event-related handlers
+        strictEqual(log.internal.length, 2);
+        strictEqual(log.internal[ 0 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 0 ].event, me.EventOne);
+        strictEqual(log.internal[ 1 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 1 ].event, me.EventTwo);
+
         me.property.on(xs.reactive.event.Destroy, function () {
             log.evented += 'destroyed';
         });
 
         //method can be called within given scope
         me.property.on(function (data) {
-            log.scoped += data + this;
+            log.scoped += data.value + this;
         }, {
             scope: '!'
         });
 
         //method can be positioned. returning false allows to stop event handling
         me.property.on(function (data) {
-            log.positioned += data;
+            log.positioned += data.value;
 
-            if (data === 5) {
+            if (data.value === 5) {
                 return false;
             }
         }, {
@@ -305,12 +361,22 @@ module('xs.reactive.Property', function () {
         me.property.on(xs.reactive.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
-            strictEqual(log.evented, 'destroyed');
+            strictEqual(log.evented, 'two10one9destroyed');
             strictEqual(log.scoped, '10!9!8!7!6!4!3!2!1!'); //5 is missing - cancelled
             strictEqual(log.suspended, '');
             strictEqual(log.positioned, '10987654321'); //5 is presented
+
             //check value
             strictEqual(value.toString(), 'undefined1010998877664433221'); //5 is missing - cancelled
+
+            //verify internal log
+            strictEqual(log.internal.length, 5);
+            strictEqual(log.internal[ 2 ].constructor, xs.reactive.event.Suspend);
+            strictEqual(log.internal[ 2 ].event, me.EventTwo);
+            strictEqual(log.internal[ 3 ].constructor, xs.reactive.event.Suspend);
+            strictEqual(log.internal[ 3 ].event, me.EventOne);
+            strictEqual(log.internal[ 4 ].constructor, xs.reactive.event.Destroy);
+
             me.done();
         });
 
@@ -320,6 +386,16 @@ module('xs.reactive.Property', function () {
     test('off', function () {
         var me = this;
 
+        var EventOne = me.EventOne = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventOne, Event);
+
+        var EventTwo = me.EventTwo = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventTwo, Event);
+
         me.generator = function () {
             var me = this;
 
@@ -327,6 +403,11 @@ module('xs.reactive.Property', function () {
             var interval = 0;
             var intervalId;
             var generator = function () {
+                if (i % 2) {
+                    me.set(new EventOne(i));
+                } else {
+                    me.set(new EventTwo(i));
+                }
                 me.set(i);
                 i--;
 
@@ -349,6 +430,15 @@ module('xs.reactive.Property', function () {
 
         //correct generator given
         me.property = new xs.reactive.Property(me.generator);
+
+        //add listeners for internal events
+        var log = {
+            internal: []
+        };
+        var logInternals = xs.bind(log.internal.push, log.internal);
+        me.property.on(xs.reactive.event.Resume, logInternals);
+        me.property.on(xs.reactive.event.Suspend, logInternals);
+        me.property.on(xs.reactive.event.Destroy, logInternals);
 
         //not a function handler throws
         throws(function () {
@@ -372,22 +462,55 @@ module('xs.reactive.Property', function () {
 
         me.property.on(xs.noop);
 
-        //stream is active
-        strictEqual(me.property.isActive, true);
+        me.property.on(me.EventOne, function (data) {
+            log.evented += 'one' + data.value;
 
-        //empty argument - removes all handlers
+            xs.nextTick(function () {
+                me.property.off(me.EventOne);
+            });
+        });
+        me.property.on(me.EventTwo, function (data) {
+            log.evented += 'two' + data.value;
+
+            xs.nextTick(function () {
+                me.property.off(me.EventTwo);
+            });
+        });
+
+        //internal log contains 2 resume events for added event-related handlers
+        strictEqual(log.internal.length, 2);
+        strictEqual(log.internal[ 0 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 0 ].event, me.EventOne);
+        strictEqual(log.internal[ 1 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 1 ].event, me.EventTwo);
+
+        //empty argument - removes all external handlers
         me.property.off();
 
-        //stream is deactivated
+        //internal log contains 2 new suspend events for removed event-related handlers
+        strictEqual(log.internal.length, 4);
+        strictEqual(log.internal[ 2 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 2 ].event, me.EventOne);
+        strictEqual(log.internal[ 3 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 3 ].event, me.EventTwo);
+
+        //property is deactivated
         strictEqual(me.property.isActive, false);
 
 
         //with given arguments, handlers.removeBy is called
-        me.property.on(xs.noop);
-        me.property.on(xs.noop);
-        me.property.on(function () {
+        me.property.on(me.EventOne, xs.noop);
+        me.property.on(me.EventOne, xs.noop);
+        me.property.on(me.EventTwo, function () {
 
         });
+
+        //verify internal log
+        strictEqual(log.internal.length, 6);
+        strictEqual(log.internal[ 4 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 4 ].event, me.EventOne);
+        strictEqual(log.internal[ 5 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 5 ].event, me.EventTwo);
 
         //remove first handler
         me.property.off(function () {
@@ -395,7 +518,10 @@ module('xs.reactive.Property', function () {
             return true;
         });
 
-        //stream is active
+        //verify internal log
+        strictEqual(log.internal.length, 6);
+
+        //property is active
         strictEqual(me.property.isActive, true);
 
         //remove all left handlers
@@ -404,15 +530,44 @@ module('xs.reactive.Property', function () {
             return true;
         }, xs.core.Collection.All);
 
-        //stream is deactivated
+        //verify internal log
+        strictEqual(log.internal.length, 8);
+        strictEqual(log.internal[ 6 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 6 ].event, me.EventOne);
+        strictEqual(log.internal[ 7 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 7 ].event, me.EventTwo);
+
+        //property is deactivated
         strictEqual(me.property.isActive, false);
-    }, function () {
-        var me = this;
-        me.property.destroy();
+
+        me.property.on(xs.reactive.event.Destroy, function () {
+
+            //verify internal log
+            strictEqual(log.internal.length, 9);
+            strictEqual(log.internal[ 8 ].constructor, xs.reactive.event.Destroy);
+
+            me.done();
+        });
+
+        xs.nextTick(function () {
+            me.property.destroy();
+        });
+
+        return false;
     });
 
     test('suspend', function () {
         var me = this;
+
+        var EventOne = me.EventOne = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventOne, Event);
+
+        var EventTwo = me.EventTwo = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventTwo, Event);
 
         me.generator = function () {
             var me = this;
@@ -421,7 +576,11 @@ module('xs.reactive.Property', function () {
             var interval = 0;
             var intervalId;
             var generator = function () {
-                me.set(i);
+                if (i % 2) {
+                    me.set(new EventOne(i));
+                } else {
+                    me.set(new EventTwo(i));
+                }
                 i--;
 
                 if (i === 0) {
@@ -443,6 +602,15 @@ module('xs.reactive.Property', function () {
 
         //correct generator given
         me.property = new xs.reactive.Property(me.generator);
+
+        //add listeners for internal events
+        var log = {
+            internal: []
+        };
+        var logInternals = xs.bind(log.internal.push, log.internal);
+        me.property.on(xs.reactive.event.Resume, logInternals);
+        me.property.on(xs.reactive.event.Suspend, logInternals);
+        me.property.on(xs.reactive.event.Destroy, logInternals);
 
         //not a function handler throws
         throws(function () {
@@ -466,22 +634,55 @@ module('xs.reactive.Property', function () {
 
         me.property.on(xs.noop);
 
-        //stream is active
-        strictEqual(me.property.isActive, true);
+        me.property.on(me.EventOne, function (data) {
+            log.evented += 'one' + data.value;
+
+            xs.nextTick(function () {
+                me.property.off(me.EventOne);
+            });
+        });
+        me.property.on(me.EventTwo, function (data) {
+            log.evented += 'two' + data.value;
+
+            xs.nextTick(function () {
+                me.property.off(me.EventTwo);
+            });
+        });
+
+        //internal log contains 2 resume events for added event-related handlers
+        strictEqual(log.internal.length, 2);
+        strictEqual(log.internal[ 0 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 0 ].event, me.EventOne);
+        strictEqual(log.internal[ 1 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 1 ].event, me.EventTwo);
 
         //empty argument - suspends all handlers
         me.property.suspend();
 
-        //stream is deactivated
+        //internal log contains 2 new suspend events for removed event-related handlers
+        strictEqual(log.internal.length, 4);
+        strictEqual(log.internal[ 2 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 2 ].event, me.EventOne);
+        strictEqual(log.internal[ 3 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 3 ].event, me.EventTwo);
+
+        //property is deactivated
         strictEqual(me.property.isActive, false);
 
 
         //with given arguments, handlers.find is called
-        me.property.on(xs.noop);
-        me.property.on(xs.noop);
-        me.property.on(function () {
+        me.property.on(me.EventOne, xs.noop);
+        me.property.on(me.EventOne, xs.noop);
+        me.property.on(me.EventTwo, function () {
 
         });
+
+        //verify internal log
+        strictEqual(log.internal.length, 6);
+        strictEqual(log.internal[ 4 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 4 ].event, me.EventOne);
+        strictEqual(log.internal[ 5 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 5 ].event, me.EventTwo);
 
         //suspend first handler
         me.property.suspend(function () {
@@ -489,7 +690,10 @@ module('xs.reactive.Property', function () {
             return true;
         });
 
-        //stream is active
+        //verify internal log
+        strictEqual(log.internal.length, 6);
+
+        //property is active
         strictEqual(me.property.isActive, true);
 
         //suspend all left handlers
@@ -498,15 +702,44 @@ module('xs.reactive.Property', function () {
             return true;
         }, xs.core.Collection.All);
 
-        //stream is deactivated
+        //verify internal log
+        strictEqual(log.internal.length, 8);
+        strictEqual(log.internal[ 6 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 6 ].event, me.EventOne);
+        strictEqual(log.internal[ 7 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 7 ].event, me.EventTwo);
+
+        //property is deactivated
         strictEqual(me.property.isActive, false);
-    }, function () {
-        var me = this;
-        me.property.destroy();
+
+        me.property.on(xs.reactive.event.Destroy, function () {
+
+            //verify internal log
+            strictEqual(log.internal.length, 9);
+            strictEqual(log.internal[ 8 ].constructor, xs.reactive.event.Destroy);
+
+            me.done();
+        });
+
+        xs.nextTick(function () {
+            me.property.destroy();
+        });
+
+        return false;
     });
 
     test('resume', function () {
         var me = this;
+
+        var EventOne = me.EventOne = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventOne, Event);
+
+        var EventTwo = me.EventTwo = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventTwo, Event);
 
         me.generator = function () {
             var me = this;
@@ -515,7 +748,11 @@ module('xs.reactive.Property', function () {
             var interval = 0;
             var intervalId;
             var generator = function () {
-                me.set(i);
+                if (i % 2) {
+                    me.set(new EventOne(i));
+                } else {
+                    me.set(new EventTwo(i));
+                }
                 i--;
 
                 if (i === 0) {
@@ -537,6 +774,15 @@ module('xs.reactive.Property', function () {
 
         //correct generator given
         me.property = new xs.reactive.Property(me.generator);
+        //add listeners for internal events
+        var log = {
+            internal: []
+        };
+        var logInternals = xs.bind(log.internal.push, log.internal);
+        me.property.on(xs.reactive.event.Resume, logInternals);
+        me.property.on(xs.reactive.event.Suspend, logInternals);
+        me.property.on(xs.reactive.event.Destroy, logInternals);
+
 
         //not a function handler throws
         throws(function () {
@@ -560,26 +806,72 @@ module('xs.reactive.Property', function () {
 
         me.property.on(xs.noop);
 
+        me.property.on(me.EventOne, function (data) {
+            log.evented += 'one' + data.value;
+
+            xs.nextTick(function () {
+                me.property.off(me.EventOne);
+            });
+        });
+        me.property.on(me.EventTwo, function (data) {
+            log.evented += 'two' + data.value;
+
+            xs.nextTick(function () {
+                me.property.off(me.EventTwo);
+            });
+        });
+
+        //internal log contains 2 resume events for added event-related handlers
+        strictEqual(log.internal.length, 2);
+        strictEqual(log.internal[ 0 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 0 ].event, me.EventOne);
+        strictEqual(log.internal[ 1 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 1 ].event, me.EventTwo);
+
         me.property.suspend();
 
-        //stream is inactive
+        //internal log contains 2 new suspend events for suspended event-related handlers
+        strictEqual(log.internal.length, 4);
+        strictEqual(log.internal[ 2 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 2 ].event, me.EventOne);
+        strictEqual(log.internal[ 3 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 3 ].event, me.EventTwo);
+
+        //property is inactive
         strictEqual(me.property.isActive, false);
 
         //empty argument - resumes all handlers
         me.property.resume();
 
-        //stream is activated
+        //internal log contains 2 new resume events for resumed event-related handlers
+        strictEqual(log.internal.length, 6);
+        strictEqual(log.internal[ 4 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 4 ].event, me.EventOne);
+        strictEqual(log.internal[ 5 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 5 ].event, me.EventTwo);
+
+        //property is activated
         strictEqual(me.property.isActive, true);
 
 
         //with given arguments, handlers.removeBy is called
-        me.property.on(xs.noop);
-        me.property.on(xs.noop);
-        me.property.on(function () {
+        me.property.on(me.EventOne, xs.noop);
+        me.property.on(me.EventOne, xs.noop);
+        me.property.on(me.EventTwo, function () {
 
         });
 
+        //verify internal log
+        strictEqual(log.internal.length, 6);
+
         me.property.suspend();
+
+        //verify internal log
+        strictEqual(log.internal.length, 8);
+        strictEqual(log.internal[ 6 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 6 ].event, me.EventOne);
+        strictEqual(log.internal[ 7 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 7 ].event, me.EventTwo);
 
         //resume first handler
         me.property.resume(function () {
@@ -587,7 +879,10 @@ module('xs.reactive.Property', function () {
             return true;
         });
 
-        //stream is activated
+        //verify internal log
+        strictEqual(log.internal.length, 8);
+
+        //property is activated
         strictEqual(me.property.isActive, true);
 
         //resume all left handlers
@@ -596,11 +891,27 @@ module('xs.reactive.Property', function () {
             return true;
         }, xs.core.Collection.All);
 
-        //stream is active
-        strictEqual(me.property.isActive, true);
-    }, function () {
-        var me = this;
-        me.property.destroy();
+        //internal log contains 2 new resume events for resumed event-related handlers
+        strictEqual(log.internal.length, 10);
+        strictEqual(log.internal[ 8 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 8 ].event, me.EventOne);
+        strictEqual(log.internal[ 9 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 9 ].event, me.EventTwo);
+
+        me.property.on(xs.reactive.event.Destroy, function () {
+
+            //verify internal log
+            strictEqual(log.internal.length, 13);
+            strictEqual(log.internal[ 10 ].constructor, xs.reactive.event.Suspend);
+            strictEqual(log.internal[ 10 ].event, me.EventTwo);
+            strictEqual(log.internal[ 11 ].constructor, xs.reactive.event.Suspend);
+            strictEqual(log.internal[ 11 ].event, me.EventOne);
+            strictEqual(log.internal[ 12 ].constructor, xs.reactive.event.Destroy);
+
+            me.done();
+        });
+
+        return false;
     });
 
     test('fromPromise', function () {

@@ -87,7 +87,6 @@ module('xs.reactive.Stream', function () {
             return {
                 on: function () {
                     me.send(null);
-                    xs.nextTick(me.destroy);
                 },
                 off: xs.noop
             };
@@ -106,6 +105,10 @@ module('xs.reactive.Stream', function () {
             strictEqual(me.stream.isDestroyed, true);
 
             me.done();
+        });
+
+        xs.nextTick(function () {
+            me.stream.destroy();
         });
 
         return false;
@@ -183,6 +186,16 @@ module('xs.reactive.Stream', function () {
     test('on', function () {
         var me = this;
 
+        var EventOne = me.EventOne = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventOne, Event);
+
+        var EventTwo = me.EventTwo = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventTwo, Event);
+
         me.generator = function () {
             var me = this;
 
@@ -190,7 +203,11 @@ module('xs.reactive.Stream', function () {
             var interval = 0;
             var intervalId;
             var generator = function () {
-                me.send(i);
+                if (i % 2) {
+                    me.send(new EventOne(i));
+                } else {
+                    me.send(new EventTwo(i));
+                }
                 i--;
 
                 if (i === 0) {
@@ -244,12 +261,22 @@ module('xs.reactive.Stream', function () {
             evented: '',
             suspended: '',
             scoped: '',
-            positioned: ''
+            positioned: '',
+            internal: []
         };
+
+        //add listeners for internal events
+        var logInternals = xs.bind(log.internal.push, log.internal);
+        me.stream.on(xs.reactive.event.Resume, logInternals);
+        me.stream.on(xs.reactive.event.Suspend, logInternals);
+        me.stream.on(xs.reactive.event.Destroy, logInternals);
+
+        //stream is inactive, because only internal handlers added
+        strictEqual(me.stream.isActive, false);
 
         //method can be added with initially non-active state
         me.stream.on(function (data) {
-            log.suspended += data;
+            log.suspended += data.value;
         }, {
             active: false
         });
@@ -259,8 +286,14 @@ module('xs.reactive.Stream', function () {
 
         //simply method appends new handler, that has undefined scope, undefined event and is active
         me.stream.on(function (data) {
-            log.simple += data;
+            log.simple += data.value;
         });
+
+        //and stream becomes active
+        strictEqual(me.stream.isActive, true);
+
+        //but internal log is empty - stream is not destroyed and not event-related handlers still added
+        strictEqual(log.internal.length, 0);
 
         //incorrect priority throws exception
         throws(function () {
@@ -270,22 +303,44 @@ module('xs.reactive.Stream', function () {
         });
 
         //method can be evented directly, specifying event constructor(s)
+        me.stream.on(me.EventOne, function (data) {
+            log.evented += 'one' + data.value;
+
+            xs.nextTick(function () {
+                me.stream.off(me.EventOne);
+            });
+        });
+        me.stream.on(me.EventTwo, function (data) {
+            log.evented += 'two' + data.value;
+
+            xs.nextTick(function () {
+                me.stream.off(me.EventTwo);
+            });
+        });
+
+        //internal log contains 2 resume events for added event-related handlers
+        strictEqual(log.internal.length, 2);
+        strictEqual(log.internal[ 0 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 0 ].event, me.EventOne);
+        strictEqual(log.internal[ 1 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 1 ].event, me.EventTwo);
+
         me.stream.on(xs.reactive.event.Destroy, function () {
             log.evented += 'destroyed';
         });
 
         //method can be called within given scope
         me.stream.on(function (data) {
-            log.scoped += data + this;
+            log.scoped += data.value + this;
         }, {
             scope: '!'
         });
 
         //method can be positioned. returning false allows to stop event handling
         me.stream.on(function (data) {
-            log.positioned += data;
+            log.positioned += data.value;
 
-            if (data === 5) {
+            if (data.value === 5) {
                 return false;
             }
         }, {
@@ -295,10 +350,19 @@ module('xs.reactive.Stream', function () {
         me.stream.on(xs.reactive.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '1098764321'); //5 is missing - cancelled
-            strictEqual(log.evented, 'destroyed');
+            strictEqual(log.evented, 'two10one9destroyed');
             strictEqual(log.scoped, '10!9!8!7!6!4!3!2!1!'); //5 is missing - cancelled
             strictEqual(log.suspended, '');
             strictEqual(log.positioned, '10987654321'); //5 is presented
+
+            //verify internal log
+            strictEqual(log.internal.length, 5);
+            strictEqual(log.internal[ 2 ].constructor, xs.reactive.event.Suspend);
+            strictEqual(log.internal[ 2 ].event, me.EventTwo);
+            strictEqual(log.internal[ 3 ].constructor, xs.reactive.event.Suspend);
+            strictEqual(log.internal[ 3 ].event, me.EventOne);
+            strictEqual(log.internal[ 4 ].constructor, xs.reactive.event.Destroy);
+
             me.done();
         });
 
@@ -308,6 +372,16 @@ module('xs.reactive.Stream', function () {
     test('off', function () {
         var me = this;
 
+        var EventOne = me.EventOne = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventOne, Event);
+
+        var EventTwo = me.EventTwo = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventTwo, Event);
+
         me.generator = function () {
             var me = this;
 
@@ -315,7 +389,11 @@ module('xs.reactive.Stream', function () {
             var interval = 0;
             var intervalId;
             var generator = function () {
-                me.send(i);
+                if (i % 2) {
+                    me.send(new EventOne(i));
+                } else {
+                    me.send(new EventTwo(i));
+                }
                 i--;
 
                 if (i === 0) {
@@ -337,6 +415,15 @@ module('xs.reactive.Stream', function () {
 
         //correct generator given
         me.stream = new xs.reactive.Stream(me.generator);
+
+        //add listeners for internal events
+        var log = {
+            internal: []
+        };
+        var logInternals = xs.bind(log.internal.push, log.internal);
+        me.stream.on(xs.reactive.event.Resume, logInternals);
+        me.stream.on(xs.reactive.event.Suspend, logInternals);
+        me.stream.on(xs.reactive.event.Destroy, logInternals);
 
         //not a function handler throws
         throws(function () {
@@ -360,28 +447,64 @@ module('xs.reactive.Stream', function () {
 
         me.stream.on(xs.noop);
 
-        //stream is active
-        strictEqual(me.stream.isActive, true);
+        me.stream.on(me.EventOne, function (data) {
+            log.evented += 'one' + data.value;
 
-        //empty argument - removes all handlers
+            xs.nextTick(function () {
+                me.stream.off(me.EventOne);
+            });
+        });
+        me.stream.on(me.EventTwo, function (data) {
+            log.evented += 'two' + data.value;
+
+            xs.nextTick(function () {
+                me.stream.off(me.EventTwo);
+            });
+        });
+
+        //internal log contains 2 resume events for added event-related handlers
+        strictEqual(log.internal.length, 2);
+        strictEqual(log.internal[ 0 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 0 ].event, me.EventOne);
+        strictEqual(log.internal[ 1 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 1 ].event, me.EventTwo);
+
+        //empty argument - removes all external handlers
         me.stream.off();
+
+        //internal log contains 2 new suspend events for removed event-related handlers
+        strictEqual(log.internal.length, 4);
+        strictEqual(log.internal[ 2 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 2 ].event, me.EventOne);
+        strictEqual(log.internal[ 3 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 3 ].event, me.EventTwo);
 
         //stream is deactivated
         strictEqual(me.stream.isActive, false);
 
 
         //with given arguments, handlers.removeBy is called
-        me.stream.on(xs.noop);
-        me.stream.on(xs.noop);
-        me.stream.on(function () {
+        me.stream.on(me.EventOne, xs.noop);
+        me.stream.on(me.EventOne, xs.noop);
+        me.stream.on(me.EventTwo, function () {
 
         });
+
+        //verify internal log
+        strictEqual(log.internal.length, 6);
+        strictEqual(log.internal[ 4 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 4 ].event, me.EventOne);
+        strictEqual(log.internal[ 5 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 5 ].event, me.EventTwo);
 
         //remove first handler
         me.stream.off(function () {
 
             return true;
         });
+
+        //verify internal log
+        strictEqual(log.internal.length, 6);
 
         //stream is active
         strictEqual(me.stream.isActive, true);
@@ -392,15 +515,44 @@ module('xs.reactive.Stream', function () {
             return true;
         }, xs.core.Collection.All);
 
+        //verify internal log
+        strictEqual(log.internal.length, 8);
+        strictEqual(log.internal[ 6 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 6 ].event, me.EventOne);
+        strictEqual(log.internal[ 7 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 7 ].event, me.EventTwo);
+
         //stream is deactivated
         strictEqual(me.stream.isActive, false);
-    }, function () {
-        var me = this;
-        me.stream.destroy();
+
+        me.stream.on(xs.reactive.event.Destroy, function () {
+
+            //verify internal log
+            strictEqual(log.internal.length, 9);
+            strictEqual(log.internal[ 8 ].constructor, xs.reactive.event.Destroy);
+
+            me.done();
+        });
+
+        xs.nextTick(function () {
+            me.stream.destroy();
+        });
+
+        return false;
     });
 
     test('suspend', function () {
         var me = this;
+
+        var EventOne = me.EventOne = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventOne, Event);
+
+        var EventTwo = me.EventTwo = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventTwo, Event);
 
         me.generator = function () {
             var me = this;
@@ -409,7 +561,11 @@ module('xs.reactive.Stream', function () {
             var interval = 0;
             var intervalId;
             var generator = function () {
-                me.send(i);
+                if (i % 2) {
+                    me.send(new EventOne(i));
+                } else {
+                    me.send(new EventTwo(i));
+                }
                 i--;
 
                 if (i === 0) {
@@ -431,6 +587,15 @@ module('xs.reactive.Stream', function () {
 
         //correct generator given
         me.stream = new xs.reactive.Stream(me.generator);
+
+        //add listeners for internal events
+        var log = {
+            internal: []
+        };
+        var logInternals = xs.bind(log.internal.push, log.internal);
+        me.stream.on(xs.reactive.event.Resume, logInternals);
+        me.stream.on(xs.reactive.event.Suspend, logInternals);
+        me.stream.on(xs.reactive.event.Destroy, logInternals);
 
         //not a function handler throws
         throws(function () {
@@ -454,28 +619,64 @@ module('xs.reactive.Stream', function () {
 
         me.stream.on(xs.noop);
 
-        //stream is active
-        strictEqual(me.stream.isActive, true);
+        me.stream.on(me.EventOne, function (data) {
+            log.evented += 'one' + data.value;
+
+            xs.nextTick(function () {
+                me.stream.off(me.EventOne);
+            });
+        });
+        me.stream.on(me.EventTwo, function (data) {
+            log.evented += 'two' + data.value;
+
+            xs.nextTick(function () {
+                me.stream.off(me.EventTwo);
+            });
+        });
+
+        //internal log contains 2 resume events for added event-related handlers
+        strictEqual(log.internal.length, 2);
+        strictEqual(log.internal[ 0 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 0 ].event, me.EventOne);
+        strictEqual(log.internal[ 1 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 1 ].event, me.EventTwo);
 
         //empty argument - suspends all handlers
         me.stream.suspend();
+
+        //internal log contains 2 new suspend events for removed event-related handlers
+        strictEqual(log.internal.length, 4);
+        strictEqual(log.internal[ 2 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 2 ].event, me.EventOne);
+        strictEqual(log.internal[ 3 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 3 ].event, me.EventTwo);
 
         //stream is deactivated
         strictEqual(me.stream.isActive, false);
 
 
         //with given arguments, handlers.find is called
-        me.stream.on(xs.noop);
-        me.stream.on(xs.noop);
-        me.stream.on(function () {
+        me.stream.on(me.EventOne, xs.noop);
+        me.stream.on(me.EventOne, xs.noop);
+        me.stream.on(me.EventTwo, function () {
 
         });
+
+        //verify internal log
+        strictEqual(log.internal.length, 6);
+        strictEqual(log.internal[ 4 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 4 ].event, me.EventOne);
+        strictEqual(log.internal[ 5 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 5 ].event, me.EventTwo);
 
         //suspend first handler
         me.stream.suspend(function () {
 
             return true;
         });
+
+        //verify internal log
+        strictEqual(log.internal.length, 6);
 
         //stream is active
         strictEqual(me.stream.isActive, true);
@@ -486,15 +687,44 @@ module('xs.reactive.Stream', function () {
             return true;
         }, xs.core.Collection.All);
 
+        //verify internal log
+        strictEqual(log.internal.length, 8);
+        strictEqual(log.internal[ 6 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 6 ].event, me.EventOne);
+        strictEqual(log.internal[ 7 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 7 ].event, me.EventTwo);
+
         //stream is deactivated
         strictEqual(me.stream.isActive, false);
-    }, function () {
-        var me = this;
-        me.stream.destroy();
+
+        me.stream.on(xs.reactive.event.Destroy, function () {
+
+            //verify internal log
+            strictEqual(log.internal.length, 9);
+            strictEqual(log.internal[ 8 ].constructor, xs.reactive.event.Destroy);
+
+            me.done();
+        });
+
+        xs.nextTick(function () {
+            me.stream.destroy();
+        });
+
+        return false;
     });
 
     test('resume', function () {
         var me = this;
+
+        var EventOne = me.EventOne = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventOne, Event);
+
+        var EventTwo = me.EventTwo = function (value) {
+            this.value = value;
+        };
+        xs.extend(EventTwo, Event);
 
         me.generator = function () {
             var me = this;
@@ -503,7 +733,11 @@ module('xs.reactive.Stream', function () {
             var interval = 0;
             var intervalId;
             var generator = function () {
-                me.send(i);
+                if (i % 2) {
+                    me.send(new EventOne(i));
+                } else {
+                    me.send(new EventTwo(i));
+                }
                 i--;
 
                 if (i === 0) {
@@ -525,6 +759,16 @@ module('xs.reactive.Stream', function () {
 
         //correct generator given
         me.stream = new xs.reactive.Stream(me.generator);
+
+        //add listeners for internal events
+        var log = {
+            internal: []
+        };
+        var logInternals = xs.bind(log.internal.push, log.internal);
+        me.stream.on(xs.reactive.event.Resume, logInternals);
+        me.stream.on(xs.reactive.event.Suspend, logInternals);
+        me.stream.on(xs.reactive.event.Destroy, logInternals);
+
 
         //not a function handler throws
         throws(function () {
@@ -548,7 +792,36 @@ module('xs.reactive.Stream', function () {
 
         me.stream.on(xs.noop);
 
+        me.stream.on(me.EventOne, function (data) {
+            log.evented += 'one' + data.value;
+
+            xs.nextTick(function () {
+                me.stream.off(me.EventOne);
+            });
+        });
+        me.stream.on(me.EventTwo, function (data) {
+            log.evented += 'two' + data.value;
+
+            xs.nextTick(function () {
+                me.stream.off(me.EventTwo);
+            });
+        });
+
+        //internal log contains 2 resume events for added event-related handlers
+        strictEqual(log.internal.length, 2);
+        strictEqual(log.internal[ 0 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 0 ].event, me.EventOne);
+        strictEqual(log.internal[ 1 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 1 ].event, me.EventTwo);
+
         me.stream.suspend();
+
+        //internal log contains 2 new suspend events for suspended event-related handlers
+        strictEqual(log.internal.length, 4);
+        strictEqual(log.internal[ 2 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 2 ].event, me.EventOne);
+        strictEqual(log.internal[ 3 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 3 ].event, me.EventTwo);
 
         //stream is inactive
         strictEqual(me.stream.isActive, false);
@@ -556,24 +829,44 @@ module('xs.reactive.Stream', function () {
         //empty argument - resumes all handlers
         me.stream.resume();
 
+        //internal log contains 2 new resume events for resumed event-related handlers
+        strictEqual(log.internal.length, 6);
+        strictEqual(log.internal[ 4 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 4 ].event, me.EventOne);
+        strictEqual(log.internal[ 5 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 5 ].event, me.EventTwo);
+
         //stream is activated
         strictEqual(me.stream.isActive, true);
 
 
         //with given arguments, handlers.removeBy is called
-        me.stream.on(xs.noop);
-        me.stream.on(xs.noop);
-        me.stream.on(function () {
+        me.stream.on(me.EventOne, xs.noop);
+        me.stream.on(me.EventOne, xs.noop);
+        me.stream.on(me.EventTwo, function () {
 
         });
 
+        //verify internal log
+        strictEqual(log.internal.length, 6);
+
         me.stream.suspend();
+
+        //verify internal log
+        strictEqual(log.internal.length, 8);
+        strictEqual(log.internal[ 6 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 6 ].event, me.EventOne);
+        strictEqual(log.internal[ 7 ].constructor, xs.reactive.event.Suspend);
+        strictEqual(log.internal[ 7 ].event, me.EventTwo);
 
         //resume first handler
         me.stream.resume(function () {
 
             return true;
         });
+
+        //verify internal log
+        strictEqual(log.internal.length, 8);
 
         //stream is activated
         strictEqual(me.stream.isActive, true);
@@ -584,11 +877,27 @@ module('xs.reactive.Stream', function () {
             return true;
         }, xs.core.Collection.All);
 
-        //stream is active
-        strictEqual(me.stream.isActive, true);
-    }, function () {
-        var me = this;
-        me.stream.destroy();
+        //internal log contains 2 new resume events for resumed event-related handlers
+        strictEqual(log.internal.length, 10);
+        strictEqual(log.internal[ 8 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 8 ].event, me.EventOne);
+        strictEqual(log.internal[ 9 ].constructor, xs.reactive.event.Resume);
+        strictEqual(log.internal[ 9 ].event, me.EventTwo);
+
+        me.stream.on(xs.reactive.event.Destroy, function () {
+
+            //verify internal log
+            strictEqual(log.internal.length, 13);
+            strictEqual(log.internal[ 10 ].constructor, xs.reactive.event.Suspend);
+            strictEqual(log.internal[ 10 ].event, me.EventTwo);
+            strictEqual(log.internal[ 11 ].constructor, xs.reactive.event.Suspend);
+            strictEqual(log.internal[ 11 ].event, me.EventOne);
+            strictEqual(log.internal[ 12 ].constructor, xs.reactive.event.Destroy);
+
+            me.done();
+        });
+
+        return false;
     });
 
     test('fromPromise', function () {
