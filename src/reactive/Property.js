@@ -183,11 +183,24 @@ Property.prototype.filter = function (fn) {
     var descendant = new me.constructor(xs.noop);
     var setValue = descendant.private.emitter.set;
 
-    module.defineInheritanceRelations(me, descendant, function (data) {
-        if (fn(data)) {
-            setValue(data);
-        }
-    }, xs.bind(descendant.destroy, descendant));
+    var dataHandler;
+
+    //filter by event if event given
+    if (module.isEvent(fn)) {
+        dataHandler = function (data) {
+            if (data !== undefined && data !== null && data.constructor === fn) {
+                setValue(data);
+            }
+        };
+    } else {
+        dataHandler = function (data) {
+            if (fn(data)) {
+                setValue(data);
+            }
+        };
+    }
+
+    module.defineInheritanceRelations(me, descendant, dataHandler, xs.bind(descendant.destroy, descendant));
 
     return descendant;
 };

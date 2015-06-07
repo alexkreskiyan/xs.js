@@ -1137,6 +1137,7 @@ module('xs.reactive.Property', function () {
 
         var log = [];
         property
+            .filter(Number)
             .filter(function (value) {
 
                 return value > 7;

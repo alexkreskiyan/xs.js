@@ -142,11 +142,24 @@ Stream.prototype.filter = function (fn) {
     var descendant = new me.constructor(xs.noop);
     var send = descendant.private.emitter.send;
 
-    module.defineInheritanceRelations(me, descendant, function (data) {
-        if (fn(data)) {
-            send(data);
-        }
-    }, xs.bind(descendant.destroy, descendant));
+    var dataHandler;
+
+    //filter by event if event given
+    if (module.isEvent(fn)) {
+        dataHandler = function (data) {
+            if (data !== undefined && data !== null && data.constructor === fn) {
+                send(data);
+            }
+        };
+    } else {
+        dataHandler = function (data) {
+            if (fn(data)) {
+                send(data);
+            }
+        };
+    }
+
+    module.defineInheritanceRelations(me, descendant, dataHandler, xs.bind(descendant.destroy, descendant));
 
     return descendant;
 };

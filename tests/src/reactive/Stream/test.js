@@ -1085,6 +1085,7 @@ module('xs.reactive.Stream', function () {
 
         var log = [];
         stream
+            .filter(Number)
             .filter(function (value) {
 
                 return value > 7;
