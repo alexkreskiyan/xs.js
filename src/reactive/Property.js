@@ -115,10 +115,19 @@ Property.prototype.toStream = function (sendCurrent) {
         $sendCurrent: sendCurrent
     });
 
-    return new xs.reactive.Stream(toStream, [
-        me,
-        sendCurrent
-    ]);
+    var descendant = new xs.reactive.Stream(xs.noop);
+    var send = descendant.private.emitter.send;
+
+    if (sendCurrent) {
+        var value = me.value;
+        xs.nextTick(function () {
+            send(value);
+        });
+    }
+
+    module.defineInheritanceRelations(me, descendant, send, xs.bind(descendant.destroy, descendant));
+
+    return descendant;
 };
 
 /**
@@ -141,12 +150,14 @@ Property.prototype.map = function (fn) {
         $fn: fn
     });
 
+    var descendant = new me.constructor(xs.noop);
+    var setValue = descendant.private.emitter.set;
 
-    //create property
-    return new me.constructor(map, fn(me.value), [
-        me,
-        fn
-    ]);
+    module.defineInheritanceRelations(me, descendant, function (data) {
+        setValue(fn(data));
+    }, xs.bind(descendant.destroy, descendant));
+
+    return descendant;
 };
 
 /**
@@ -169,12 +180,16 @@ Property.prototype.filter = function (fn) {
         $fn: fn
     });
 
+    var descendant = new me.constructor(xs.noop);
+    var setValue = descendant.private.emitter.set;
 
-    //create property
-    return new me.constructor(filter, fn(me.value) ? me.value : undefined, [
-        me,
-        fn
-    ]);
+    module.defineInheritanceRelations(me, descendant, function (data) {
+        if (fn(data)) {
+            setValue(data);
+        }
+    }, xs.bind(descendant.destroy, descendant));
+
+    return descendant;
 };
 
 /**
@@ -207,12 +222,27 @@ Property.prototype.throttle = function (interval) {
         $interval: interval
     });
 
+    var descendant = new me.constructor(xs.noop);
+    var setValue = descendant.private.emitter.set;
 
-    //create property
-    return new me.constructor(throttle, me.value, [
-        me,
-        interval
-    ]);
+    var lastTime = -Infinity;
+
+    module.defineInheritanceRelations(me, descendant, function (data) {
+        //get current time
+        var time = (new Date()).valueOf();
+
+        //if enough time passed - set value
+        if (time - lastTime >= interval) {
+
+            //update lastTime
+            lastTime = time;
+
+            //set property value
+            setValue(data);
+        }
+    }, xs.bind(descendant.destroy, descendant));
+
+    return descendant;
 };
 
 /**
@@ -235,12 +265,43 @@ Property.prototype.debounce = function (interval) {
         $interval: interval
     });
 
+    var descendant = new me.constructor(xs.noop);
+    var setValue = descendant.private.emitter.set;
 
-    //create property
-    return new me.constructor(debounce, me.value, [
-        me,
-        interval
-    ]);
+    var timeoutId;
+    var sourceDestroyed = false;
+
+    module.defineInheritanceRelations(me, descendant, function (data) {
+
+        //clear previous timeout
+        clearTimeout(timeoutId);
+
+        //set timeout for setting value
+        timeoutId = setTimeout(function () {
+
+            //set property value
+            setValue(data);
+
+            //if source is destroyed - destroy
+            if (sourceDestroyed) {
+                descendant.destroy();
+            }
+        }, interval);
+    }, function () {
+
+        //if timeout defined - awaiting initiated, needed delayed destroy
+        if (xs.isDefined(timeoutId)) {
+
+            //set flag, that source is destroyed
+            sourceDestroyed = true;
+
+            //else - can destroy stream immediately
+        } else {
+            descendant.destroy();
+        }
+    });
+
+    return descendant;
 };
 
 function fromPromise(promise) {
@@ -279,116 +340,6 @@ function fromEvent(element, eventName) {
             element.removeEventListener(eventName, handler);
         }
     };
-}
-
-function toStream(property, sendCurrent) {
-    var me = this;
-
-    if (sendCurrent) {
-        var value = property.value;
-        xs.nextTick(function () {
-            me.send(value);
-        });
-    }
-
-    //on value - send
-    property.on(me.send);
-
-    //on destroy - destroy
-    property.on(xs.reactive.event.Destroy, me.destroy);
-}
-
-function map(source, fn) {
-    var me = this;
-
-    //on value - set
-    source.on(function (data) {
-        me.set(fn(data));
-    });
-
-    //on destroy - destroy
-    source.on(xs.reactive.event.Destroy, me.destroy);
-}
-
-function filter(source, fn) {
-    var me = this;
-
-    //on value - set
-    source.on(function (data) {
-        if (fn(data)) {
-            me.set(data);
-        }
-    });
-
-    //on destroy - destroy
-    source.on(xs.reactive.event.Destroy, me.destroy);
-}
-
-function throttle(source, interval) {
-    var me = this;
-
-    var lastTime = -Infinity;
-
-    //on value - change current
-    source.on(function (data) {
-        //get current time
-        var time = (new Date()).valueOf();
-
-        //if enough time passed - set value
-        if (time - lastTime >= interval) {
-
-            //update lastTime
-            lastTime = time;
-
-            //set property value
-            me.set(data);
-        }
-    });
-
-    //on destroy - destroy
-    source.on(xs.reactive.event.Destroy, me.destroy);
-}
-
-function debounce(source, interval) {
-    var me = this;
-
-    var timeoutId;
-
-    //on value - change current
-    source.on(function (data) {
-
-        //clear previous timeout
-        clearTimeout(timeoutId);
-
-        //set timeout for setting value
-        timeoutId = setTimeout(function () {
-
-            //set property value
-            me.set(data);
-
-            //if source is destroyed - destroy
-            if (sourceDestroyed) {
-                me.destroy();
-            }
-        }, interval);
-    });
-
-    var sourceDestroyed = false;
-
-    //on destroy - destroy
-    source.on(xs.reactive.event.Destroy, function () {
-
-        //if timeout defined - awaiting initiated, needed delayed destroy
-        if (xs.isDefined(timeoutId)) {
-
-            //set flag, that source is destroyed
-            sourceDestroyed = true;
-
-            //else - can destroy property immediately
-        } else {
-            me.destroy();
-        }
-    });
 }
 
 /**

@@ -78,6 +78,9 @@ var Reactive = function (generator, emitter, sources) {
     //remove underConstruction flag
     delete me.underConstruction;
 
+    //save emitter
+    me.private.emitter = emitter;
+
     //if handlers are not defined - return
     if (!xs.isDefined(handlers)) {
 
@@ -110,6 +113,24 @@ var Reactive = function (generator, emitter, sources) {
 
 //save reference to module
 module.Reactive = Reactive;
+
+/**
+ * Reactive emitter instance
+ *
+ * @property emitter
+ *
+ * @readonly
+ *
+ * @type {Boolean}
+ */
+Object.defineProperty(Reactive.prototype, 'emitter', {
+    get: function () {
+        return this.private.emitter;
+    },
+    set: xs.noop,
+    configurable: false,
+    enumerable: true
+});
 
 /**
  * Reactive destroyed state
@@ -883,6 +904,31 @@ function suspendEvent(event) {
     //send internal Suspend event
     module.send(me.private.internalHandlers, new xs.reactive.event.Suspend(event));
 }
+
+module.defineInheritanceRelations = function (ancestor, descendant, dataHandler, destroyHandler) {
+
+    //define descending dependencies
+    ancestor.on(dataHandler);
+    ancestor.on(xs.reactive.event.Destroy, destroyHandler);
+
+
+    //define ascending dependencies
+    descendant.on(xs.reactive.event.Destroy, function () {
+
+        //nothing is done if ancestor is destroyed
+        if (ancestor.isDestroyed) {
+
+            return;
+        }
+
+        ancestor.off(function (item) {
+            return item.handler === dataHandler;
+        });
+        ancestor.off(xs.reactive.event.Destroy, function (item) {
+            return item.handler === destroyHandler;
+        });
+    });
+};
 
 /**
  * Internal error class

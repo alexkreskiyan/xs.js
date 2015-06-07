@@ -82,9 +82,11 @@ Stream.fromEvent = function (element, eventName) {
 Stream.prototype.toProperty = function (current) {
     var me = this;
 
-    return new xs.reactive.Property(toProperty, current, [
-        me
-    ]);
+    var descendant = new xs.reactive.Property(xs.noop, current);
+
+    module.defineInheritanceRelations(me, descendant, descendant.private.emitter.set, xs.bind(descendant.destroy, descendant));
+
+    return descendant;
 };
 
 /**
@@ -107,12 +109,14 @@ Stream.prototype.map = function (fn) {
         $fn: fn
     });
 
+    var descendant = new me.constructor(xs.noop);
+    var send = descendant.private.emitter.send;
 
-    //create stream
-    return new me.constructor(map, [
-        me,
-        fn
-    ]);
+    module.defineInheritanceRelations(me, descendant, function (data) {
+        send(fn(data));
+    }, xs.bind(descendant.destroy, descendant));
+
+    return descendant;
 };
 
 /**
@@ -135,12 +139,16 @@ Stream.prototype.filter = function (fn) {
         $fn: fn
     });
 
+    var descendant = new me.constructor(xs.noop);
+    var send = descendant.private.emitter.send;
 
-    //create stream
-    return new me.constructor(filter, [
-        me,
-        fn
-    ]);
+    module.defineInheritanceRelations(me, descendant, function (data) {
+        if (fn(data)) {
+            send(data);
+        }
+    }, xs.bind(descendant.destroy, descendant));
+
+    return descendant;
 };
 
 /**
@@ -173,12 +181,27 @@ Stream.prototype.throttle = function (interval) {
         $interval: interval
     });
 
+    var descendant = new me.constructor(xs.noop);
+    var send = descendant.private.emitter.send;
 
-    //create stream
-    return new me.constructor(throttle, [
-        me,
-        interval
-    ]);
+    var lastTime = -Infinity;
+
+    module.defineInheritanceRelations(me, descendant, function (data) {
+        //get current time
+        var time = (new Date()).valueOf();
+
+        //if enough time passed - set value
+        if (time - lastTime >= interval) {
+
+            //update lastTime
+            lastTime = time;
+
+            //set stream value
+            send(data);
+        }
+    }, xs.bind(descendant.destroy, descendant));
+
+    return descendant;
 };
 
 /**
@@ -201,12 +224,43 @@ Stream.prototype.debounce = function (interval) {
         $interval: interval
     });
 
+    var descendant = new me.constructor(xs.noop);
+    var send = descendant.private.emitter.send;
 
-    //create stream
-    return new me.constructor(debounce, [
-        me,
-        interval
-    ]);
+    var timeoutId;
+    var sourceDestroyed = false;
+
+    module.defineInheritanceRelations(me, descendant, function (data) {
+
+        //clear previous timeout
+        clearTimeout(timeoutId);
+
+        //set timeout for setting value
+        timeoutId = setTimeout(function () {
+
+            //set stream value
+            send(data);
+
+            //if source is destroyed - destroy
+            if (sourceDestroyed) {
+                descendant.destroy();
+            }
+        }, interval);
+    }, function () {
+
+        //if timeout defined - awaiting initiated, needed delayed destroy
+        if (xs.isDefined(timeoutId)) {
+
+            //set flag, that source is destroyed
+            sourceDestroyed = true;
+
+            //else - can destroy stream immediately
+        } else {
+            descendant.destroy();
+        }
+    });
+
+    return descendant;
 };
 
 function fromPromise(promise) {
@@ -245,111 +299,6 @@ function fromEvent(element, eventName) {
             element.removeEventListener(eventName, handler);
         }
     };
-}
-
-function toProperty(stream) {
-    var me = this;
-
-    //on value - set
-    stream.on(function (data) {
-        me.set(data);
-    });
-
-    //on destroy - destroy
-    stream.on(xs.reactive.event.Destroy, me.destroy);
-}
-
-function map(source, fn) {
-    var me = this;
-
-    //on value - send
-    source.on(function (data) {
-        me.send(fn(data));
-    });
-
-    //on destroy - destroy
-    source.on(xs.reactive.event.Destroy, me.destroy);
-}
-
-function filter(source, fn) {
-    var me = this;
-
-    //on value - set
-    source.on(function (data) {
-        if (fn(data)) {
-            me.send(data);
-        }
-    });
-
-    //on destroy - destroy
-    source.on(xs.reactive.event.Destroy, me.destroy);
-}
-
-function throttle(source, interval) {
-    var me = this;
-
-    var lastTime = -Infinity;
-
-    //on value - change current
-    source.on(function (data) {
-        //get current time
-        var time = (new Date()).valueOf();
-
-        //if enough time passed - set value
-        if (time - lastTime >= interval) {
-
-            //update lastTime
-            lastTime = time;
-
-            //set stream value
-            me.send(data);
-        }
-    });
-
-    //on destroy - destroy
-    source.on(xs.reactive.event.Destroy, me.destroy);
-}
-
-function debounce(source, interval) {
-    var me = this;
-
-    var timeoutId;
-
-    //on value - change current
-    source.on(function (data) {
-
-        //clear previous timeout
-        clearTimeout(timeoutId);
-
-        //set timeout for setting value
-        timeoutId = setTimeout(function () {
-
-            //set stream value
-            me.send(data);
-
-            //if source is destroyed - destroy
-            if (sourceDestroyed) {
-                me.destroy();
-            }
-        }, interval);
-    });
-
-    var sourceDestroyed = false;
-
-    //on destroy - destroy
-    source.on(xs.reactive.event.Destroy, function () {
-
-        //if timeout defined - awaiting initiated, needed delayed destroy
-        if (xs.isDefined(timeoutId)) {
-
-            //set flag, that source is destroyed
-            sourceDestroyed = true;
-
-            //else - can destroy stream immediately
-        } else {
-            me.destroy();
-        }
-    });
 }
 
 /**
