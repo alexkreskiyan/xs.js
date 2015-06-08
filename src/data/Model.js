@@ -19,26 +19,16 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
     Class.namespace = 'xs.data';
 
-    Class.imports = [
-        {
-            IAttribute: 'ns.attribute.IAttribute'
+    Class.imports = {
+        IAttribute: 'ns.attribute.IAttribute',
+        event: {
+            SetBefore: 'ns.attribute.event.SetBefore',
+            Set: 'ns.attribute.event.Set'
         },
-        {
-            'event.SetBefore': 'ns.attribute.event.SetBefore'
-        },
-        {
-            'event.Set': 'ns.attribute.event.Set'
-        },
-        {
-            IModelOperation: 'ns.operation.IModelOperation'
-        },
-        {
-            Proxy: 'ns.Proxy'
-        },
-        {
-            Format: 'ns.attribute.Format'
-        }
-    ];
+        IModelOperation: 'ns.operation.IModelOperation',
+        Proxy: 'ns.Proxy',
+        Format: 'ns.attribute.Format'
+    };
 
     Class.mixins.observable = 'xs.event.Observable';
 

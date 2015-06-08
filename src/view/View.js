@@ -28,35 +28,23 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
     Class.namespace = 'xs.view';
 
-    Class.imports = [
-        {
-            Element: 'xs.view.Element'
+    Class.imports = {
+        Element: 'xs.view.Element',
+        Collection: 'xs.data.Collection',
+        resource: {
+            text: {
+                HTML: 'xs.resource.text.HTML'
+            }
         },
-        {
-            Collection: 'xs.data.Collection'
-        },
-        {
-            'resource.text.HTML': 'xs.resource.text.HTML'
-        },
-        {
-            'event.AddBefore': 'xs.data.enumerable.event.AddBefore'
-        },
-        {
-            'event.Add': 'xs.data.enumerable.event.Add'
-        },
-        {
-            'event.SetBefore': 'xs.data.enumerable.event.SetBefore'
-        },
-        {
-            'event.Set': 'xs.data.enumerable.event.Set'
-        },
-        {
-            'event.RemoveBefore': 'xs.data.enumerable.event.RemoveBefore'
-        },
-        {
-            'event.Remove': 'xs.data.enumerable.event.Remove'
+        event: {
+            AddBefore: 'xs.data.enumerable.event.AddBefore',
+            Add: 'xs.data.enumerable.event.Add',
+            SetBefore: 'xs.data.enumerable.event.SetBefore',
+            Set: 'xs.data.enumerable.event.Set',
+            RemoveBefore: 'xs.data.enumerable.event.RemoveBefore',
+            Remove: 'xs.data.enumerable.event.Remove'
         }
-    ];
+    };
 
     Class.extends = 'xs.view.Element';
 

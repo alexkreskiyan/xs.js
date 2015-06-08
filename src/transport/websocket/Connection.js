@@ -15,35 +15,19 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
 
     Class.namespace = 'xs.transport.websocket';
 
-    Class.imports = [
-        {
-            BinaryType: 'ns.BinaryType'
-        },
-        {
-            CloseCode: 'ns.CloseCode'
-        },
-        {
-            State: 'ns.State'
-        },
-        {
-            Url: 'xs.uri.WebSocket'
-        },
-        {
-            'event.Binary': 'ns.event.Binary'
-        },
-        {
-            'event.Close': 'ns.event.Close'
-        },
-        {
-            'event.Error': 'ns.event.Error'
-        },
-        {
-            'event.Open': 'ns.event.Open'
-        },
-        {
-            'event.Text': 'ns.event.Text'
+    Class.imports = {
+        BinaryType: 'ns.BinaryType',
+        CloseCode: 'ns.CloseCode',
+        State: 'ns.State',
+        Url: 'xs.uri.WebSocket',
+        event: {
+            Binary: 'ns.event.Binary',
+            Close: 'ns.event.Close',
+            Error: 'ns.event.Error',
+            Open: 'ns.event.Open',
+            Text: 'ns.event.Text'
         }
-    ];
+    };
 
     Class.mixins.observable = 'xs.event.Observable';
 

@@ -188,17 +188,11 @@ module('xs.data.Source', function () {
 
             Class.extends = 'xs.data.Source';
 
-            Class.imports = [
-                {
-                    Model: 'ns.Model'
-                },
-                {
-                    RelevantProxy: 'ns.RelevantProxy'
-                },
-                {
-                    IrrelevantProxy: 'ns.IrrelevantProxy'
-                }
-            ];
+            Class.imports = {
+                Model: 'ns.Model',
+                RelevantProxy: 'ns.RelevantProxy',
+                IrrelevantProxy: 'ns.IrrelevantProxy'
+            };
 
             Class.implements = [
                 'xs.data.operation.source.IRead',
@@ -299,7 +293,7 @@ module('xs.data.Source', function () {
 
             Class.namespace = 'tests.data.Source.isBound';
 
-            Class.imports = [ 'ns.UserModel' ];
+            Class.requires = [ 'ns.UserModel' ];
 
             Class.extends = 'xs.data.Model';
 
@@ -344,11 +338,9 @@ module('xs.data.Source', function () {
 
             Class.extends = 'xs.data.Source';
 
-            Class.imports = [
-                {
-                    Model: 'ns.UserModel'
-                }
-            ];
+            Class.imports = {
+                Model: 'ns.UserModel'
+            };
 
             Class.constant.model = xs.lazy(function () {
                 return imports.Model;
@@ -364,11 +356,9 @@ module('xs.data.Source', function () {
 
             Class.extends = 'xs.data.Source';
 
-            Class.imports = [
-                {
-                    Model: 'ns.PostModel'
-                }
-            ];
+            Class.imports = {
+                Model: 'ns.PostModel'
+            };
 
             Class.constant.model = xs.lazy(function () {
                 return imports.Model;
@@ -451,7 +441,7 @@ module('xs.data.Source', function () {
 
             Class.namespace = 'tests.data.Source.bind';
 
-            Class.imports = [ 'ns.UserModel' ];
+            Class.requires = [ 'ns.UserModel' ];
 
             Class.extends = 'xs.data.Model';
 
@@ -496,11 +486,9 @@ module('xs.data.Source', function () {
 
             Class.extends = 'xs.data.Source';
 
-            Class.imports = [
-                {
-                    Model: 'ns.UserModel'
-                }
-            ];
+            Class.imports = {
+                Model: 'ns.UserModel'
+            };
 
             Class.constant.model = xs.lazy(function () {
                 return imports.Model;
@@ -516,11 +504,9 @@ module('xs.data.Source', function () {
 
             Class.extends = 'xs.data.Source';
 
-            Class.imports = [
-                {
-                    Model: 'ns.PostModel'
-                }
-            ];
+            Class.imports = {
+                Model: 'ns.PostModel'
+            };
 
             Class.constant.model = xs.lazy(function () {
                 return imports.Model;
@@ -635,7 +621,7 @@ module('xs.data.Source', function () {
 
             Class.namespace = 'tests.data.Source.unbind';
 
-            Class.imports = [ 'ns.UserModel' ];
+            Class.requires = [ 'ns.UserModel' ];
 
             Class.extends = 'xs.data.Model';
 
@@ -680,11 +666,9 @@ module('xs.data.Source', function () {
 
             Class.extends = 'xs.data.Source';
 
-            Class.imports = [
-                {
-                    Model: 'ns.UserModel'
-                }
-            ];
+            Class.imports = {
+                Model: 'ns.UserModel'
+            };
 
             Class.constant.model = xs.lazy(function () {
                 return imports.Model;
@@ -700,11 +684,9 @@ module('xs.data.Source', function () {
 
             Class.extends = 'xs.data.Source';
 
-            Class.imports = [
-                {
-                    Model: 'ns.PostModel'
-                }
-            ];
+            Class.imports = {
+                Model: 'ns.PostModel'
+            };
 
             Class.constant.model = xs.lazy(function () {
                 return imports.Model;
@@ -819,7 +801,7 @@ module('xs.data.Source', function () {
 
             Class.namespace = 'tests.data.Source.destroy';
 
-            Class.imports = [ 'ns.UserModel' ];
+            Class.requires = [ 'ns.UserModel' ];
 
             Class.extends = 'xs.data.Model';
 
@@ -864,11 +846,9 @@ module('xs.data.Source', function () {
 
             Class.extends = 'xs.data.Source';
 
-            Class.imports = [
-                {
-                    Model: 'ns.UserModel'
-                }
-            ];
+            Class.imports = {
+                Model: 'ns.UserModel'
+            };
 
             Class.constant.model = xs.lazy(function () {
                 return imports.Model;
@@ -884,11 +864,9 @@ module('xs.data.Source', function () {
 
             Class.extends = 'xs.data.Source';
 
-            Class.imports = [
-                {
-                    Model: 'ns.PostModel'
-                }
-            ];
+            Class.imports = {
+                Model: 'ns.PostModel'
+            };
 
             Class.constant.model = xs.lazy(function () {
                 return imports.Model;

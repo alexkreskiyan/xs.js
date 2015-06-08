@@ -19,11 +19,9 @@ module('xs.event.Observable', function () {
 
             Class.namespace = 'tests.event.Observable';
 
-            Class.imports = [
-                {
-                    Event: 'xs.event.Event'
-                }
-            ];
+            Class.imports = {
+                Event: 'xs.event.Event'
+            };
 
             Class.mixins.observable = 'xs.event.Observable';
 
@@ -163,11 +161,9 @@ module('xs.event.Observable', function () {
 
             Class.namespace = 'tests.event.Observable';
 
-            Class.imports = [
-                {
-                    Event: 'xs.event.Event'
-                }
-            ];
+            Class.imports = {
+                Event: 'xs.event.Event'
+            };
 
             Class.mixins.observable = 'xs.event.Observable';
 
@@ -399,11 +395,9 @@ module('xs.event.Observable', function () {
 
             Class.namespace = 'tests.event.Observable';
 
-            Class.imports = [
-                {
-                    Event: 'xs.event.Event'
-                }
-            ];
+            Class.imports = {
+                Event: 'xs.event.Event'
+            };
 
             Class.mixins.observable = 'xs.event.Observable';
 
@@ -504,11 +498,9 @@ module('xs.event.Observable', function () {
 
             Class.namespace = 'tests.event.Observable';
 
-            Class.imports = [
-                {
-                    Event: 'xs.event.Event'
-                }
-            ];
+            Class.imports = {
+                Event: 'xs.event.Event'
+            };
 
             Class.mixins.observable = 'xs.event.Observable';
 
@@ -619,11 +611,9 @@ module('xs.event.Observable', function () {
 
             Class.namespace = 'tests.event.Observable';
 
-            Class.imports = [
-                {
-                    Event: 'xs.event.Event'
-                }
-            ];
+            Class.imports = {
+                Event: 'xs.event.Event'
+            };
 
             Class.mixins.observable = 'xs.event.Observable';
 

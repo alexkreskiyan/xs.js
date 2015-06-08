@@ -17,14 +17,10 @@ xs.define(xs.Class, 'ns.Proxy', function (self, imports) {
 
     Class.namespace = 'xs.data';
 
-    Class.imports = [
-        {
-            IReader: 'ns.reader.IReader'
-        },
-        {
-            IWriter: 'ns.writer.IWriter'
-        }
-    ];
+    Class.imports = {
+        IReader: 'ns.reader.IReader',
+        IWriter: 'ns.writer.IWriter'
+    };
 
     Class.abstract = true;
 

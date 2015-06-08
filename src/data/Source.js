@@ -17,20 +17,12 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
     Class.namespace = 'xs.data';
 
-    Class.imports = [
-        {
-            ISourceOperation: 'ns.operation.ISourceOperation'
-        },
-        {
-            OperationEvent: 'ns.operation.Event'
-        },
-        {
-            Model: 'ns.Model'
-        },
-        {
-            Proxy: 'ns.Proxy'
-        }
-    ];
+    Class.imports = {
+        ISourceOperation: 'ns.operation.ISourceOperation',
+        OperationEvent: 'ns.operation.Event',
+        Model: 'ns.Model',
+        Proxy: 'ns.Proxy'
+    };
 
     Class.mixins.observable = 'xs.event.Observable';
 

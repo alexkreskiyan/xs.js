@@ -15,17 +15,11 @@ xs.define(xs.Class, 'ns.Response', function (self, imports) {
 
     Class.namespace = 'xs.transport.xhr';
 
-    Class.imports = [
-        {
-            Type: 'ns.Type'
-        },
-        {
-            State: 'ns.State'
-        },
-        {
-            Status: 'ns.Status'
-        }
-    ];
+    Class.imports = {
+        Type: 'ns.Type',
+        State: 'ns.State',
+        Status: 'ns.Status'
+    };
 
     Class.constructor = function (request) {
         var me = this;

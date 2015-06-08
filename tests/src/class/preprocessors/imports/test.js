@@ -15,7 +15,7 @@ module('xs.class.preprocessors.imports', function () {
     test('imports usage chain', function () {
         var me = this;
 
-        xs.define(xs.Class, 'ns.Child', function (Class, imports) {
+        xs.define(xs.Class, 'ns.Child', function (self, imports) {
 
             var Class = this;
 
@@ -23,18 +23,17 @@ module('xs.class.preprocessors.imports', function () {
 
             Class.extends = 'ns.resources.Base';
 
-            Class.imports = [
-                {
-                    'sample.One': 'ns.resources.One'
-                },
-                'ns.resources.Base',
-                {
-                    Two: 'ns.resources.Two'
-                },
-                {
-                    'sample.Three': 'ns.resources.Three'
-                }
+            Class.requires = [
+                'ns.resources.Base'
             ];
+
+            Class.imports = {
+                sample: {
+                    One: 'ns.resources.One',
+                    Three: 'ns.resources.Three'
+                },
+                Two: 'ns.resources.Two'
+            };
 
             //save imports reference
             me.imports = imports;

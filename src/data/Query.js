@@ -17,11 +17,9 @@ xs.define(xs.Class, 'ns.Query', function (self, imports) {
 
     Class.namespace = 'xs.data';
 
-    Class.imports = [
-        {
-            Enumerable: 'ns.Enumerable'
-        }
-    ];
+    Class.imports = {
+        Enumerable: 'ns.Enumerable'
+    };
 
     Class.mixins.observable = 'xs.event.Observable';
 

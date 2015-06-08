@@ -15,32 +15,18 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
 
     Class.namespace = 'xs.data';
 
-    Class.imports = [
-        {
-            'event.AddBefore': 'ns.enumerable.event.AddBefore'
+    Class.imports = {
+        event: {
+            AddBefore: 'ns.enumerable.event.AddBefore',
+            Add: 'ns.enumerable.event.Add',
+            SetBefore: 'ns.enumerable.event.SetBefore',
+            Set: 'ns.enumerable.event.Set',
+            RemoveBefore: 'ns.enumerable.event.RemoveBefore',
+            Remove: 'ns.enumerable.event.Remove',
+            Clear: 'ns.enumerable.event.Clear'
         },
-        {
-            'event.Add': 'ns.enumerable.event.Add'
-        },
-        {
-            'event.SetBefore': 'ns.enumerable.event.SetBefore'
-        },
-        {
-            'event.Set': 'ns.enumerable.event.Set'
-        },
-        {
-            'event.RemoveBefore': 'ns.enumerable.event.RemoveBefore'
-        },
-        {
-            'event.Remove': 'ns.enumerable.event.Remove'
-        },
-        {
-            'event.Clear': 'ns.enumerable.event.Clear'
-        },
-        {
-            Observable: 'xs.event.Observable'
-        }
-    ];
+        Observable: 'xs.event.Observable'
+    };
 
     Class.abstract = true;
 

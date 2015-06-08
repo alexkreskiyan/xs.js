@@ -15,11 +15,9 @@ xs.define(xs.Class, 'ns.Event', function (self, imports) {
 
     Class.namespace = 'xs.data.operation';
 
-    Class.imports = [
-        {
-            IOperation: 'ns.IOperation'
-        }
-    ];
+    Class.imports = {
+        IOperation: 'ns.IOperation'
+    };
 
     Class.implements = [
         'xs.event.IEvent'

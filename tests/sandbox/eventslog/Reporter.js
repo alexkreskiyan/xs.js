@@ -4,20 +4,14 @@ xs.define(xs.Class, 'log.Reporter', function (self, imports) {
 
     var Class = this;
 
-    Class.imports = [
-        {
-            Request: 'xs.transport.xhr.Request'
-        },
-        {
-            Url: 'xs.uri.HTTP'
-        },
-        {
-            QueryString: 'xs.uri.query.QueryString'
-        },
-        {
-            'request.Method': 'xs.transport.xhr.Method'
+    Class.imports = {
+        Request: 'xs.transport.xhr.Request',
+        Url: 'xs.uri.HTTP',
+        QueryString: 'xs.uri.query.QueryString',
+        request: {
+            Method: 'xs.transport.xhr.Method'
         }
-    ];
+    };
 
     Class.constant.ServerUrl = xs.lazy(function () {
         return new imports.Url('http://' + window.location.host + ':3900', imports.QueryString);

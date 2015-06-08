@@ -19,29 +19,17 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
 
     Class.namespace = 'xs.storage';
 
-    Class.imports = [
-        {
-            'event.AddBefore': 'ns.event.AddBefore'
-        },
-        {
-            'event.Add': 'ns.event.Add'
-        },
-        {
-            'event.SetBefore': 'ns.event.SetBefore'
-        },
-        {
-            'event.Set': 'ns.event.Set'
-        },
-        {
-            'event.RemoveBefore': 'ns.event.RemoveBefore'
-        },
-        {
-            'event.Remove': 'ns.event.Remove'
-        },
-        {
-            'event.Clear': 'ns.event.Clear'
+    Class.imports = {
+        event: {
+            AddBefore: 'ns.event.AddBefore',
+            Add: 'ns.event.Add',
+            SetBefore: 'ns.event.SetBefore',
+            Set: 'ns.event.Set',
+            RemoveBefore: 'ns.event.RemoveBefore',
+            Remove: 'ns.event.Remove',
+            Clear: 'ns.event.Clear'
         }
-    ];
+    };
 
     Class.mixins.observable = 'xs.event.StaticObservable';
 
