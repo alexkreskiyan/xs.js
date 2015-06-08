@@ -21,7 +21,7 @@ var assert = new xs.core.Asserter(log, XsClassClassError);
  *     var Class = xs.Class(function (Class) {
  *         //here Class descriptor is described:
  *         var me = this;
- *         me.imports = [];
+ *         me.imports = {};
  *         me.constant.a = 1;
  *     });
  *
@@ -311,8 +311,11 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
             //class namespace
             namespace: undefined,
 
+            //class requires list
+            requires: [],
+
             //class imports list
-            imports: [],
+            imports: {},
 
             //class parent
             extends: undefined,
