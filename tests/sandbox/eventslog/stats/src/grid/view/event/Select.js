@@ -11,7 +11,7 @@ xs.define(xs.Class, 'ns.view.event.Select', function (self, imports) {
     };
 
     Class.implements = [
-        'xs.view.event.IEvent'
+        'xs.event.IEvent'
     ];
 
     /**

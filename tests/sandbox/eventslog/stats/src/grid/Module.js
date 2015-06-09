@@ -98,6 +98,9 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     Class.method.filter = function (field, value) {
         var me = this;
+
+        me.selection.remove();
+
         var processor = me.processors.find(function (processor) {
 
             return processor.type === 'filter' && processor.field === field;

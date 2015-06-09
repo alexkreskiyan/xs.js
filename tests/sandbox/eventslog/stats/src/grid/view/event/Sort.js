@@ -7,7 +7,7 @@ xs.define(xs.Class, 'ns.view.event.Sort', function (self) {
     Class.namespace = 'stats.grid';
 
     Class.implements = [
-        'xs.view.event.IEvent'
+        'xs.event.IEvent'
     ];
 
     /**

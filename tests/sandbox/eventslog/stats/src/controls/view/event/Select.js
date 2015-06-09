@@ -7,7 +7,7 @@ xs.define(xs.Class, 'ns.view.event.Select', function (self) {
     Class.namespace = 'stats.controls';
 
     Class.implements = [
-        'xs.view.event.IEvent'
+        'xs.event.IEvent'
     ];
 
     /**
