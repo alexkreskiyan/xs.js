@@ -19,6 +19,14 @@ xs.define(xs.Class, 'ns.Tap', function (self) {
         'ns.IEvent'
     ];
 
+    Class.static.method.capture = function (element) {
+
+    };
+
+    Class.static.method.release = function (element) {
+
+    };
+
     /**
      * Event constructor
      *

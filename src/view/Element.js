@@ -11,13 +11,17 @@
  *
  * @mixins xs.event.Observable
  */
-xs.define(xs.Class, 'ns.Element', function (self) {
+xs.define(xs.Class, 'ns.Element', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
     Class.namespace = 'xs.view';
+
+    Class.imports = {
+        IEvent: 'ns.event.IEvent'
+    };
 
     Class.mixins.observable = 'xs.event.Observable';
 
@@ -55,6 +59,22 @@ xs.define(xs.Class, 'ns.Element', function (self) {
 
         //define event captures collection
         me.private.captures = new xs.core.Collection();
+
+        //handle stream Resume and Suspend events
+        me.private.stream.on(xs.reactive.event.Resume, function (event) {
+            event = event.event;
+
+            if (xs.isClass(event) && event.implements(imports.IEvent)) {
+                console.log('capture view event', event, 'for', me.private.el);
+            }
+        });
+        me.private.stream.on(xs.reactive.event.Suspend, function (event) {
+            event = event.event;
+
+            if (xs.isClass(event) && event.implements(imports.IEvent)) {
+                console.log('release view event', event, 'of', me.private.el);
+            }
+        });
 
         //create access gate to element's attributes
         me.private.attributes = new Attributes(element);
@@ -97,50 +117,6 @@ xs.define(xs.Class, 'ns.Element', function (self) {
             return this.private.el.style;
         },
         set: xs.noop
-    };
-
-    Class.method.on = function (event, handler, options) {
-        var me = this;
-
-        //create view event capture (if not created yet)
-
-        var stream = this.private.stream;
-        stream.on.apply(stream, arguments);
-
-        return me;
-    };
-
-    Class.method.off = function (event, selector, flags) {
-        var me = this;
-
-        //release view event capture (if needed)
-
-        var stream = this.private.stream;
-        stream.off.apply(stream, arguments);
-
-        return me;
-    };
-
-    Class.method.suspend = function (event, selector, flags) {
-        var me = this;
-
-        //suspend view event capture if needed
-
-        var stream = this.private.stream;
-        stream.suspend.apply(stream, arguments);
-
-        return me;
-    };
-
-    Class.method.resume = function (event, selector, flags) {
-        var me = this;
-
-        //resume view event capture
-
-        var stream = this.private.stream;
-        stream.resume.apply(stream, arguments);
-
-        return me;
     };
 
     Class.method.destroy = function () {
