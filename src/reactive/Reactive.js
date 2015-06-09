@@ -396,14 +396,17 @@ Reactive.prototype.destroy = function () {
         me.private.off();
     }
 
+    //remove all external handlers
+    me.off();
+
     var handlers = me.private.internalHandlers;
 
     delete me.private;
 
-    //send destroy notification
+    //send destroy notification to internal handlers
     module.send(handlers, new xs.reactive.event.Destroy());
 
-    //remove all handlers
+    //remove all internal handlers
     handlers.remove();
 };
 
