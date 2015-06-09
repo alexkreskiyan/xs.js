@@ -8,14 +8,12 @@ xs.define(xs.Class, 'ns.view.Field', function (self, imports) {
 
     Class.extends = 'xs.view.View';
 
-    Class.imports = [
-        {
-            Template: 'xs.resource.text.HTML'
+    Class.imports = {
+        event: {
+            Select: 'ns.view.event.Select'
         },
-        {
-            'event.Select': 'ns.view.event.Select'
-        }
-    ];
+        Template: 'xs.resource.text.HTML'
+    };
 
     Class.positions = [ 'items' ];
 

@@ -6,17 +6,11 @@ xs.define(xs.Class, 'ns.view.Container', function (self, imports) {
 
     Class.namespace = 'stats.comparison';
 
-    Class.imports = [
-        {
-            Element: 'xs.view.Element'
-        },
-        {
-            Entry: 'ns.view.Entry'
-        },
-        {
-            Template: 'xs.resource.text.HTML'
-        }
-    ];
+    Class.imports = {
+        Element: 'xs.view.Element',
+        Entry: 'ns.view.Entry',
+        Template: 'xs.resource.text.HTML'
+    };
 
     Class.extends = 'xs.view.View';
 

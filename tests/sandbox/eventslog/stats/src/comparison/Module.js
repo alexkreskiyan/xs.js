@@ -6,17 +6,13 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     Class.namespace = 'stats.comparison';
 
-    Class.imports = [
-        {
-            'view.Container': 'ns.view.Container'
+    Class.imports = {
+        view: {
+            Container: 'ns.view.Container',
+            Entry: 'ns.view.Entry'
         },
-        {
-            'view.Entry': 'ns.view.Entry'
-        },
-        {
-            Query: 'xs.data.Query'
-        }
-    ];
+        Query: 'xs.data.Query'
+    };
 
     Class.constructor = function (controls) {
         var me = this;

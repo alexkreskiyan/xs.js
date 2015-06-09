@@ -6,41 +6,37 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
 
     Class.namespace = 'stats';
 
-    Class.imports = [
-        {
-            Viewport: 'ns.Viewport'
+    Class.imports = {
+        Viewport: 'ns.Viewport',
+        data: {
+            model: {
+                Entry: 'ns.data.model.Entry'
+            },
+            proxy: {
+                Xhr: 'ns.data.proxy.Xhr'
+            },
+            source: {
+                Log: 'ns.data.source.Log'
+            }
         },
-        {
-            'data.model.Entry': 'ns.data.model.Entry'
+        reader: {
+            JSON: 'xs.data.reader.JSON'
         },
-        {
-            'data.proxy.Xhr': 'ns.data.proxy.Xhr'
+        Controls: 'ns.controls.Module',
+        controls: {
+            event: {
+                Select: 'ns.controls.event.Select'
+            }
         },
-        {
-            'data.source.Log': 'ns.data.source.Log'
+        Grid: 'ns.grid.Module',
+        grid: {
+            event: {
+                Compare: 'ns.grid.event.Compare',
+                Show: 'ns.grid.event.Show'
+            }
         },
-        {
-            'reader.JSON': 'xs.data.reader.JSON'
-        },
-        {
-            Controls: 'ns.controls.Module'
-        },
-        {
-            'controls.event.Select': 'ns.controls.event.Select'
-        },
-        {
-            Grid: 'ns.grid.Module'
-        },
-        {
-            'grid.event.Compare': 'ns.grid.event.Compare'
-        },
-        {
-            'grid.event.Show': 'ns.grid.event.Show'
-        },
-        {
-            Comparison: 'ns.comparison.Module'
-        }
-    ];
+        Comparison: 'ns.comparison.Module'
+    };
 
     Class.method.run = function () {
         var me = this;

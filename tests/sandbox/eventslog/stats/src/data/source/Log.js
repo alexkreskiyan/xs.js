@@ -6,11 +6,9 @@ xs.define(xs.Class, 'ns.data.source.Log', function (self, imports) {
 
     Class.namespace = 'stats';
 
-    Class.imports = [
-        {
-            Model: 'ns.data.model.Entry'
-        }
-    ];
+    Class.imports = {
+        Model: 'ns.data.model.Entry'
+    };
 
     Class.extends = 'xs.data.Source';
 

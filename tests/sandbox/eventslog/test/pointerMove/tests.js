@@ -4,11 +4,9 @@ xs.define(xs.Class, 'tests.Demo', function (self, imports) {
 
     var Class = this;
 
-    Class.imports = [
-        {
-            Reporter: 'log.Reporter'
-        }
-    ];
+    Class.imports = {
+        Reporter: 'log.Reporter'
+    };
 
     Class.static.method.run = function () {
         var el = document.querySelector('#test>div');

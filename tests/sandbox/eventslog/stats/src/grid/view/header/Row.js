@@ -8,20 +8,14 @@ xs.define(xs.Class, 'ns.view.header.Row', function (self, imports) {
 
     Class.extends = 'xs.view.View';
 
-    Class.imports = [
-        {
-            Element: 'xs.view.Element'
+    Class.imports = {
+        event: {
+            Sort: 'ns.view.event.Sort'
         },
-        {
-            Item: 'ns.view.header.Item'
-        },
-        {
-            'event.Sort': 'ns.view.event.Sort'
-        },
-        {
-            Template: 'xs.resource.text.HTML'
-        }
-    ];
+        Element: 'xs.view.Element',
+        Item: 'ns.view.header.Item',
+        Template: 'xs.resource.text.HTML'
+    };
 
     Class.positions = [
         'fields'

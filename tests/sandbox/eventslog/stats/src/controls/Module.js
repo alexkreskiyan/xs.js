@@ -6,29 +6,21 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     Class.namespace = 'stats.controls';
 
-    Class.imports = [
-        {
-            'view.event.Select': 'ns.view.event.Select'
+    Class.imports = {
+        event: {
+            Select: 'ns.event.Select'
         },
-        {
-            'view.Container': 'ns.view.Container'
+        view: {
+            event: {
+                Select: 'ns.view.event.Select'
+            },
+            Container: 'ns.view.Container',
+            Group: 'ns.view.Group',
+            Field: 'ns.view.Field',
+            Option: 'ns.view.Option'
         },
-        {
-            'view.Group': 'ns.view.Group'
-        },
-        {
-            'view.Field': 'ns.view.Field'
-        },
-        {
-            'view.Option': 'ns.view.Option'
-        },
-        {
-            Query: 'xs.data.Query'
-        },
-        {
-            'event.Select': 'ns.event.Select'
-        }
-    ];
+        Query: 'xs.data.Query'
+    };
 
     Class.mixins.observable = 'xs.event.Observable';
 

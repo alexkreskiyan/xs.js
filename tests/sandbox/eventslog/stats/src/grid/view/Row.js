@@ -6,14 +6,12 @@ xs.define(xs.Class, 'ns.view.Row', function (self, imports) {
 
     Class.namespace = 'stats.grid';
 
-    Class.imports = [
-        {
-            Model: 'xs.data.Model'
+    Class.imports = {
+        event: {
+            Select: 'ns.view.event.Select'
         },
-        {
-            'event.Select': 'ns.view.event.Select'
-        }
-    ];
+        Model: 'xs.data.Model'
+    };
 
     Class.extends = 'xs.view.Element';
 

@@ -6,11 +6,9 @@ xs.define(xs.Class, 'ns.event.Show', function (self, imports) {
 
     Class.namespace = 'stats.grid';
 
-    Class.imports = [
-        {
-            Model: 'xs.data.Model'
-        }
-    ];
+    Class.imports = {
+        Model: 'xs.data.Model'
+    };
 
     Class.implements = [
         'xs.event.IEvent'

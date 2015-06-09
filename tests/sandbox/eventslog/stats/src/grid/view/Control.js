@@ -6,11 +6,11 @@ xs.define(xs.Class, 'ns.view.Control', function (self, imports) {
 
     Class.namespace = 'stats.grid';
 
-    Class.imports = [
-        {
-            'event.Click': 'ns.view.event.Click'
+    Class.imports = {
+        event: {
+            Click: 'ns.view.event.Click'
         }
-    ];
+    };
 
     Class.extends = 'xs.view.Element';
 

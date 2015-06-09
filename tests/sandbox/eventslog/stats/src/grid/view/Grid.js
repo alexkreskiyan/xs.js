@@ -8,11 +8,9 @@ xs.define(xs.Class, 'ns.view.Grid', function (self, imports) {
 
     Class.extends = 'xs.view.View';
 
-    Class.imports = [
-        {
-            Template: 'xs.resource.text.HTML'
-        }
-    ];
+    Class.imports = {
+        Template: 'xs.resource.text.HTML'
+    };
 
     Class.positions = [
         'controls',

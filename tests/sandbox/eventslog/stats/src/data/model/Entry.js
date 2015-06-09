@@ -6,7 +6,7 @@ xs.define(xs.Class, 'ns.data.model.Entry', function () {
 
     Class.namespace = 'stats';
 
-    Class.imports = [
+    Class.requires = [
         'xs.data.attribute.String',
         'xs.data.attribute.Number',
         'xs.data.attribute.Raw'

@@ -6,11 +6,9 @@ xs.define(xs.Class, 'ns.Viewport', function (self, imports) {
 
     Class.namespace = 'stats';
 
-    Class.imports = [
-        {
-            Template: 'xs.resource.text.HTML'
-        }
-    ];
+    Class.imports = {
+        Template: 'xs.resource.text.HTML'
+    };
 
     Class.extends = 'xs.view.View';
 

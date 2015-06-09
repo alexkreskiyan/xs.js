@@ -6,20 +6,12 @@ xs.define(xs.Class, 'ns.data.proxy.Xhr', function (self, imports) {
 
     Class.namespace = 'stats';
 
-    Class.imports = [
-        {
-            Request: 'xs.transport.xhr.Request'
-        },
-        {
-            Method: 'xs.transport.xhr.Method'
-        },
-        {
-            Url: 'xs.uri.HTTP'
-        },
-        {
-            QueryString: 'xs.uri.query.QueryString'
-        }
-    ];
+    Class.imports = {
+        Request: 'xs.transport.xhr.Request',
+        Method: 'xs.transport.xhr.Method',
+        Url: 'xs.uri.HTTP',
+        QueryString: 'xs.uri.query.QueryString'
+    };
 
     Class.extends = 'xs.data.Proxy';
 

@@ -6,38 +6,24 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     Class.namespace = 'stats.grid';
 
-    Class.imports = [
-        {
-            'view.Grid': 'ns.view.Grid'
+    Class.imports = {
+        event: {
+            Compare: 'ns.event.Compare',
+            Show: 'ns.event.Show'
         },
-        {
-            'view.Header': 'ns.view.header.Row'
+        view: {
+            event: {
+                Click: 'ns.view.event.Click',
+                Select: 'ns.view.event.Select',
+                Sort: 'ns.view.event.Sort'
+            },
+            Grid: 'ns.view.Grid',
+            Control: 'ns.view.Control',
+            Header: 'ns.view.header.Row',
+            Row: 'ns.view.Row'
         },
-        {
-            'view.Row': 'ns.view.Row'
-        },
-        {
-            'view.event.Sort': 'ns.view.event.Sort'
-        },
-        {
-            Query: 'xs.data.Query'
-        },
-        {
-            'view.Control': 'ns.view.Control'
-        },
-        {
-            'event.Compare': 'ns.event.Compare'
-        },
-        {
-            'event.Show': 'ns.event.Show'
-        },
-        {
-            'view.event.Click': 'ns.view.event.Click'
-        },
-        {
-            'view.event.Select': 'ns.view.event.Select'
-        }
-    ];
+        Query: 'xs.data.Query'
+    };
 
     Class.mixins.observable = 'xs.event.Observable';
 

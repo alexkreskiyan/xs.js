@@ -6,11 +6,9 @@ xs.define(xs.Class, 'ns.view.Entry', function (self, imports) {
 
     Class.namespace = 'stats.comparison';
 
-    Class.imports = [
-        {
-            Model: 'xs.data.Model'
-        }
-    ];
+    Class.imports = {
+        Model: 'xs.data.Model'
+    };
 
     Class.extends = 'xs.view.Element';
 
