@@ -14,7 +14,7 @@ xs.define(xs.Class, 'log.Reporter', function (self, imports) {
     };
 
     Class.constant.ServerUrl = xs.lazy(function () {
-        return new imports.Url('http://' + window.location.host + ':3900', imports.QueryString);
+        return new imports.Url('http://' + window.location.host + ':3902', imports.QueryString);
     });
 
     Class.static.method.report = function (category, name, event) {

@@ -8,12 +8,9 @@ var server = http.createServer(function (request, response) {
         case '/log':
             handleLog(request, response);
             break;
-        case '/stats':
-            handleStats(request, response);
-            break;
     }
 });
-server.listen(3900);
+server.listen(3902);
 
 var db, pool, fields;
 var dbName = 'tmp/log.db';
@@ -43,36 +40,6 @@ function handleLog(request, response) {
     request.on('end', function () {
         response.end();
         pool.add(JSON.parse(body));
-    });
-}
-
-function handleStats(request, response) {
-
-    var headers = {
-        'Access-Control-Allow-Origin': request.headers.origin,
-        'Access-Control-Allow-Methods': 'OPTIONS,GET,HEAD,POST,PUT,DELETE',
-        'Access-Control-Allow-Headers': 'Content-Type'
-    };
-
-    if (request.method === 'OPTIONS') {
-        response.writeHead(200, headers);
-        response.end();
-
-        return;
-    }
-
-    headers[ 'Content-Type' ] = 'application/json';
-
-    response.writeHead(200, headers);
-
-    db = new sqlite3.Database(dbName);
-    db.all('SELECT * FROM log', function (err, data) {
-        for (var i = 0; i < data.length; i++) {
-            data[ i ].event = JSON.parse(data[ i ].event);
-        }
-        response.write(JSON.stringify(data));
-        response.end();
-        db.close();
     });
 }
 
