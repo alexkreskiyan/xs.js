@@ -66,7 +66,7 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
 
             if (xs.isClass(event) && event.implements(imports.IEvent)) {
                 //save capture
-                captures.add(event, event.capture(el));
+                captures.add(event, event.forward(el));
             }
         });
         me.private.stream.on(xs.reactive.event.Suspend, function (event) {

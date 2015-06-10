@@ -19,22 +19,62 @@ xs.define(xs.Class, 'ns.Tap', function (self) {
         'ns.IEvent'
     ];
 
-    Class.static.method.capture = function (element) {
-        //var capture = {
-        //    element: element
-        //};
-        //
-        ////handle mobile and desktop differently
-        //if (xs.isMobile) {
-        //
-        //} else {
-        //    capture.handler = function
-        //}
-        console.log('capture ' + self.label + ' for', element);
+    Class.static.method.forward = function (element) {
+        var Tap = self;
+
+        var capture = {};
+
+        //handle touch and pointer devices differently
+        if (xs.isTouch) {
+            //tap timeout
+            var timeout = 150;
+            var fire = false;
+
+            var timeoutId;
+
+            //define handler for `touchstart` event
+            capture.handleStart = function () {
+                //mark timeout start
+                fire = true;
+                timeoutId = setTimeout(reset, timeout);
+            };
+
+            //define handler for `touchend` event
+            capture.handleEnd = function () {
+                //reset previous timeout
+                clearTimeout(timeoutId);
+
+                //if not timed out - fire event
+                if (fire) {
+                    element.events.emitter.send(new Tap());
+                }
+            };
+            var reset = function () {
+                fire = false;
+            };
+
+            element.private.el.addEventListener('touchstart', capture.handleStart);
+            element.private.el.addEventListener('touchend', capture.handleEnd);
+
+        } else {
+            //define handle for `click` event
+            capture.handle = function () {
+                element.events.emitter.send(new Tap());
+            };
+
+            element.private.el.addEventListener('click', capture.handle);
+        }
+
+        return capture;
     };
 
-    Class.static.method.release = function (capture) {
-        console.log('release ' + self.label + ' capture', capture);
+    Class.static.method.release = function (element, capture) {
+        if (xs.isTouch) {
+            element.private.el.removeEventListener('touchstart', capture.handle);
+            element.private.el.removeEventListener('touchend', capture.handle);
+        } else {
+            element.private.el.removeEventListener('click', capture.handle);
+        }
     };
 
     /**
