@@ -29,7 +29,7 @@ xs.define(xs.Class, 'ns.data.proxy.Xhr', function (self, imports) {
         xhr.url = new imports.Url(imports.QueryString);
         xhr.url.scheme = 'http';
         xhr.url.host = location.host;
-        xhr.url.port = 3900;
+        xhr.url.port = 3901;
         xhr.url.path = '/stats';
 
         return xhr.send().then(function (response) {
