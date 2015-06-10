@@ -20,11 +20,21 @@ xs.define(xs.Class, 'ns.Tap', function (self) {
     ];
 
     Class.static.method.capture = function (element) {
-
+        //var capture = {
+        //    element: element
+        //};
+        //
+        ////handle mobile and desktop differently
+        //if (xs.isMobile) {
+        //
+        //} else {
+        //    capture.handler = function
+        //}
+        console.log('capture ' + self.label + ' for', element);
     };
 
-    Class.static.method.release = function (element) {
-
+    Class.static.method.release = function (capture) {
+        console.log('release ' + self.label + ' capture', capture);
     };
 
     /**
@@ -34,7 +44,7 @@ xs.define(xs.Class, 'ns.Tap', function (self) {
      *
      * @param {Object} event event data
      */
-    Class.constructor = function (event) {
+    Class.constructor = function () {
         var me = this;
 
         if (!arguments.length) {

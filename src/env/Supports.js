@@ -67,7 +67,7 @@ xs.supports.js = (function () {
      *
      * @type {Boolean}
      */
-    me.touchEvents = navigator.hasOwnProperty('maxTouchPoints') && navigator.maxTouchPoints > 0;
+    me.touchEvents = 'TouchEvent' in window;
 
     /**
      * Pointer events support flag
@@ -78,7 +78,7 @@ xs.supports.js = (function () {
      *
      * @type {Boolean}
      */
-    me.pointerEvents = navigator.hasOwnProperty('msMaxTouchPoints') && navigator.msMaxTouchPoints > 0;
+    me.pointerEvents = 'PointerEvent' in window || 'MSPointerEvent' in window;
 
     /**
      * WebGL support flag

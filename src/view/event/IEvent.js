@@ -18,13 +18,13 @@ xs.define(xs.Interface, 'ns.IEvent', function () {
     Interface.namespace = 'xs.view.event';
 
     Interface.extends = 'xs.event.IEvent';
-    //
-    //Interface.static.method.capture = function (element) {
-    //
-    //};
-    //
-    //Interface.static.method.release = function (element) {
-    //
-    //};
+
+    Interface.static.method.capture = function (element) {
+
+    };
+
+    Interface.static.method.release = function (capture) {
+
+    };
 
 });

@@ -40,7 +40,7 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
         });
 
         //save element reference
-        me.private.el = element;
+        var el = me.private.el = element;
 
         //call observable constructor
 
@@ -58,21 +58,29 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
         }
 
         //define event captures collection
-        me.private.captures = new xs.core.Collection();
+        var captures = me.private.captures = new xs.core.Collection();
 
         //handle stream Resume and Suspend events
         me.private.stream.on(xs.reactive.event.Resume, function (event) {
             event = event.event;
 
             if (xs.isClass(event) && event.implements(imports.IEvent)) {
-                console.log('capture view event', event, 'for', me.private.el);
+                //save capture
+                captures.add(event, event.capture(el));
             }
         });
         me.private.stream.on(xs.reactive.event.Suspend, function (event) {
             event = event.event;
 
             if (xs.isClass(event) && event.implements(imports.IEvent)) {
-                console.log('release view event', event, 'of', me.private.el);
+                //get saved capture
+                var capture = captures.at(event);
+
+                //remove from captures
+                captures.removeAt(event);
+
+                //release capture
+                event.release(capture);
             }
         });
 

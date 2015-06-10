@@ -95,10 +95,10 @@
         "xs.interface.Base": {
             "test": false
         },
-        "xs.env.Context": {
+        "xs.env.Supports": {
             "test": false
         },
-        "xs.env.Supports": {
+        "xs.env.Context": {
             "test": false
         }
     },

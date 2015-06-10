@@ -18,103 +18,6 @@ xs.env.Context = xs.context = (function () {
     var me = {};
 
     /**
-     * Parses user agent, according to given rules to get verification result
-     *
-     * @method parse
-     *
-     * @param {String} userAgent information about the web-browser
-     * @param {Array} rules rules for check browser
-     * @param {Array} params ['name', 'major', 'minor', 'version']
-     *
-     * @return {Object} parsing result
-     */
-    var parse = function (userAgent, rules, params) {
-
-        //accumulate result of the regular expression
-        var result = {};
-
-        //wrap params as collection
-        params = new xs.core.Collection(params);
-
-        (new xs.core.Collection(rules)).find(function (rule) {
-            var defaults = xs.clone(rule[ 0 ]);
-            var data = [];
-            var match;
-            var negatives = new xs.core.Collection(rule[ 1 ]);
-            var positives = new xs.core.Collection(rule[ 2 ]);
-
-            //try userAgent to match any one of negatives given in rule
-            match = negatives.size ? negatives.some(function (regExp) {
-
-                //check if userAgent matches given regExp
-                return regExp.test(userAgent);
-            }) : false;
-
-            //return false if at least one of negatives matched
-            if (match) {
-
-                return false;
-            }
-
-            //to match all regular expressions in rule need to be satisfied
-            match = positives.all(function (regExp) {
-                //check if userAgent matches given regExp
-                var result = regExp.exec(userAgent);
-
-                //if no match - return false, that will cause loop break
-                if (!result) {
-
-                    return false;
-                }
-
-                //shift first element - that means whole match data to gain only selected ones
-                result.shift();
-
-                //if data not empty - concat data with result, saving order
-                if (result.length) {
-                    data = data.concat(result);
-                }
-
-                //sign, that userAgent matched this regExp
-                return true;
-            });
-
-            //return false if no match established and search will continue
-            if (!match) {
-
-                return false;
-            }
-
-            //iterate over params to fill result
-            params.each(function (param) {
-
-                //if default item is array - it contains parser rules for parsing obtained result
-                if (xs.isArray(defaults[ 0 ])) {
-                    var raw = data.shift();
-                    var parser = defaults.shift();
-                    //parse raw data and assign
-                    result[ param ] = raw.replace(parser[ 0 ], parser[ 1 ]);
-
-                    //else if default item given - use it
-                } else if (xs.isDefined(defaults[ 0 ])) {
-                    result[ param ] = defaults.shift();
-
-                    //else - use data, shift empty default place
-                } else {
-                    result[ param ] = data.shift();
-                    defaults.shift();
-                }
-            });
-
-            //return true to stop search
-            return true;
-        });
-
-        //return search result
-        return result;
-    };
-
-    /**
      * Consumes userAgent from navigator and updates stored values.
      * Is called automatically once on start
      *
@@ -218,9 +121,9 @@ xs.env.Context = xs.context = (function () {
          * @type {Object}
          */
         me.isChrome = [
-            browser.chrome,
-            browser.chromium
-        ].indexOf(me.browser.name) >= 0;
+                browser.chrome,
+                browser.chromium
+            ].indexOf(me.browser.name) >= 0;
 
         /**
          * Whether browser is Firefox
@@ -455,7 +358,8 @@ xs.env.Context = xs.context = (function () {
         me.is64 = me.cpu.architecture === arch.x64;
 
 
-        //Others
+        //Touch related
+
         /**
          * Whether device is touch-capable
          *
@@ -463,7 +367,48 @@ xs.env.Context = xs.context = (function () {
          *
          * @type {Boolean}
          */
-        me.isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+        me.isTouch = navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+
+        /**
+         * Device touch points count
+         *
+         * @property maxTouchPoints
+         *
+         * @type {Boolean}
+         */
+        me.maxTouchPoints = navigator.maxTouchPoints || navigator.msMaxTouchPoints;
+
+
+        //Pointer events map
+
+        me.pointerEvents = (function () {
+            var pointerEvents = {};
+            var events = [
+                'pointerdown',
+                'pointerup',
+                'pointerover',
+                'pointerout',
+                'pointerenter',
+                'pointerleave',
+                'pointermove'
+            ];
+            var isMSPointerEvent = 'MSPointerEvent' in window;
+            var isPointerEvent = 'PointerEvent' in window;
+
+            for (var i = 0; i < events.length; i++) {
+                var event = events[ i ];
+
+                if (isPointerEvent) {
+                    pointerEvents[ event ] = event;
+                } else if (isMSPointerEvent) {
+                    pointerEvents[ event ] = 'ms' + event;
+                } else {
+                    pointerEvents[ event ] = 'mouse' + event.slice(7);
+                }
+            }
+
+            return pointerEvents;
+        })();
     };
 
     /*
@@ -806,6 +751,103 @@ xs.env.Context = xs.context = (function () {
                 [ /windows/ ]
             ]
         ]
+    };
+
+    /**
+     * Parses user agent, according to given rules to get verification result
+     *
+     * @method parse
+     *
+     * @param {String} userAgent information about the web-browser
+     * @param {Array} rules rules for check browser
+     * @param {Array} params ['name', 'major', 'minor', 'version']
+     *
+     * @return {Object} parsing result
+     */
+    var parse = function (userAgent, rules, params) {
+
+        //accumulate result of the regular expression
+        var result = {};
+
+        //wrap params as collection
+        params = new xs.core.Collection(params);
+
+        (new xs.core.Collection(rules)).find(function (rule) {
+            var defaults = xs.clone(rule[ 0 ]);
+            var data = [];
+            var match;
+            var negatives = new xs.core.Collection(rule[ 1 ]);
+            var positives = new xs.core.Collection(rule[ 2 ]);
+
+            //try userAgent to match any one of negatives given in rule
+            match = negatives.size ? negatives.some(function (regExp) {
+
+                //check if userAgent matches given regExp
+                return regExp.test(userAgent);
+            }) : false;
+
+            //return false if at least one of negatives matched
+            if (match) {
+
+                return false;
+            }
+
+            //to match all regular expressions in rule need to be satisfied
+            match = positives.all(function (regExp) {
+                //check if userAgent matches given regExp
+                var result = regExp.exec(userAgent);
+
+                //if no match - return false, that will cause loop break
+                if (!result) {
+
+                    return false;
+                }
+
+                //shift first element - that means whole match data to gain only selected ones
+                result.shift();
+
+                //if data not empty - concat data with result, saving order
+                if (result.length) {
+                    data = data.concat(result);
+                }
+
+                //sign, that userAgent matched this regExp
+                return true;
+            });
+
+            //return false if no match established and search will continue
+            if (!match) {
+
+                return false;
+            }
+
+            //iterate over params to fill result
+            params.each(function (param) {
+
+                //if default item is array - it contains parser rules for parsing obtained result
+                if (xs.isArray(defaults[ 0 ])) {
+                    var raw = data.shift();
+                    var parser = defaults.shift();
+                    //parse raw data and assign
+                    result[ param ] = raw.replace(parser[ 0 ], parser[ 1 ]);
+
+                    //else if default item given - use it
+                } else if (xs.isDefined(defaults[ 0 ])) {
+                    result[ param ] = defaults.shift();
+
+                    //else - use data, shift empty default place
+                } else {
+                    result[ param ] = data.shift();
+                    defaults.shift();
+                }
+            });
+
+            //return true to stop search
+            return true;
+        });
+
+        //return search result
+        return result;
     };
 
     //detect environment context
