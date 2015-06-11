@@ -13,7 +13,7 @@ var server = http.createServer(function (request, response) {
 server.listen(3903);
 
 var db, pool, fields;
-var dbName = 'tmp/log.db';
+var dbName = 'tmp/tests.db';
 
 function handleLog(request, response) {
 

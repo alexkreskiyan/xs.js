@@ -8,24 +8,13 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
 
     Class.imports = {
         view: {
-            Viewport: 'ns.view.Viewport'
-        },
-        data: {
-            model: {
-                Entry: 'ns.data.model.Entry'
-            },
-            proxy: {
-                Xhr: 'ns.data.proxy.Xhr'
-            },
-            source: {
-                Log: 'ns.data.source.Log'
-            }
+            Container: 'ns.view.Container'
         },
         reader: {
             JSON: 'xs.data.reader.JSON'
         },
         suite: {
-            Module: 'ns.suite.Module'
+            Module: 'ns.module.suite.Module'
         }
     };
 
@@ -33,7 +22,7 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         var me = this;
 
         //make body a viewport
-        var viewport = me.private.viewport = new imports.view.Viewport(document.body);
+        var viewport = me.private.viewport = new imports.view.Container(document.body);
 
 
         //create suite module
