@@ -440,6 +440,9 @@
                 }
             },
             "ux": {
+                "Fullscreen": {
+                    "contract": "class"
+                },
                 "Promise": {
                     "contract": "class"
                 },
