@@ -8,8 +8,8 @@ xs.define(xs.Class, 'ns.tests.Tap', function (self, imports) {
 
     Class.extends = 'ns.module.test.Module';
 
-    Class.constant.name = 'tap';
+    Class.constant.testName = 'tap';
 
-    Class.constant.label = 'Tap';
+    Class.constant.testLabel = 'Tap';
 
 });

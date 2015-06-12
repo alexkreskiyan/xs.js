@@ -7,14 +7,17 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
     Class.namespace = 'tests';
 
     Class.imports = {
-        view: {
-            Container: 'ns.view.Container'
-        },
         reader: {
             JSON: 'xs.data.reader.JSON'
         },
         suite: {
+            event: {
+                NewTest: 'ns.module.suite.event.NewTest'
+            },
             Module: 'ns.module.suite.Module'
+        },
+        view: {
+            Container: 'ns.view.Container'
         }
     };
 
@@ -28,6 +31,10 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         //create suite module
         var suite = new imports.suite.Module();
         viewport.items.add(suite.container);
+
+        suite.on(imports.suite.event.NewTest, function (event) {
+            viewport.items.add(event.test.container);
+        });
     };
 
 });
