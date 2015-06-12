@@ -9,19 +9,24 @@ html, body {
     background: #F0F0F0;
 }
 
+#suite {
+    width: 100%;
+    height: 100%;
+}
+
 .test-launcher {
     width: 100%;
-    height: 50px;
+    height: 40px;
     box-sizing: border-box;
     border: 2px solid #888888;
-    line-height: 44px;
+    line-height: 33px;
     text-align: center;
     cursor: pointer;
     transition: background .2s, color .2s;
     background: #FFFFFF;
     color: #555555;
     font-family: Calibri;
-    font-size: 35px;
+    font-size: 28px;
 }
 
 .test-launcher:hover {
@@ -53,26 +58,24 @@ html, body {
     position: absolute;
     left: 0;
     top: 0;
-    right: 100px;
-    height: 60px;
+    right: 120px;
+    height: 80px;
 }
 
 .test-container .controls {
     position: absolute;
     top: 0;
     right: 0;
-    width: 100px;
-    height: 60px;
+    width: 120px;
+    height: 80px;
 }
 
 .test-container .sandbox {
     position: absolute;
     left: 0;
-    top: 60px;
+    top: 80px;
     right: 0;
     bottom: 0;
-    width: 100px;
-    height: 60px;
 }
 
 .hidden {
@@ -85,16 +88,16 @@ html, body {
 
 .control {
     display: inline-block;
-    width: 100px;
-    height: 30px;
-    line-height: 25px;
+    width: 120px;
+    height: 40px;
+    line-height: 33px;
     text-align: center;
     cursor: pointer;
     box-sizing: border-box;
     border: 1px solid darkgrey;
     transition: background .2s;
     font-family: Calibri;
-    font-size: 20px;
+    font-size: 28px;
 }
 
 .control:hover {
