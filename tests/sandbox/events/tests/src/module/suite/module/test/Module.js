@@ -18,7 +18,8 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         view: {
             Container: 'ns.view.Container',
             Control: 'ns.view.Control'
-        }
+        },
+        StageState: 'ns.StageState'
     };
 
     Class.mixins.observable = 'xs.event.Observable';
@@ -34,6 +35,9 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
         self.mixins.observable.call(me, xs.noop);
 
+        //save model to private
+        var model = me.private.model = test;
+
         //add container
         var container = me.private.container = new imports.view.Container();
 
@@ -47,16 +51,35 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             me.hide();
         });
 
-        me.private.model = test;
+        //add stages to test
+        var stages = me.private.stages = new xs.core.Collection();
+        var savedStates = model.stages.get();
+        me.self.stages.each(function (Stage, name) {
+            var stageState;
+            if (savedStates.hasKey(name)) {
+                stageState = savedStates.at(name);
+            } else {
+                stageState = imports.StageState.Undone;
+                savedStates.add(name, stageState);
+            }
+
+            //create new stage with evaluated state
+            var stage = new Stage(stageState);
+
+            //add stage to test
+            stages.add(name, stage);
+        });
+
+        //FIXME save model
     };
 
-    Class.property.container = {
-        set: xs.noop
-    };
+    //Class.property.model = {
+    //    set: xs.noop
+    //};
 
-    Class.property.model = {
-        set: xs.noop
-    };
+    //Class.property.container = {
+    //    set: xs.noop
+    //};
 
     Class.method.show = function () {
         var me = this;

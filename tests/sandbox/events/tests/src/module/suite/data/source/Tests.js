@@ -34,7 +34,7 @@ xs.define(xs.Class, 'ns.data.source.Tests', function (self, imports) {
         self.assert.ok(me.proxy, 'create - source has no proxy');
 
         return me.proxy.create(model).then(function () {
-            me.add(JSON.stringify(model.primary()), model);
+            me.add(model.primary(), model);
         });
     };
 
@@ -45,7 +45,7 @@ xs.define(xs.Class, 'ns.data.source.Tests', function (self, imports) {
 
         return me.proxy.read(key).then(function (data) {
             var model = new me.self.model(data);
-            me.add(JSON.stringify(model.primary()), model);
+            me.add(model.primary(), model);
         });
     };
 
@@ -62,7 +62,7 @@ xs.define(xs.Class, 'ns.data.source.Tests', function (self, imports) {
             //add item
             data.each(function () {
                 var model = new me.self.model(data);
-                me.add(JSON.stringify(model.primary()), model);
+                me.add(model.primary(), model);
             });
         });
     };

@@ -28,9 +28,9 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             Click: 'ns.event.Click',
             NewTest: 'ns.event.NewTest'
         },
-        //tests: {
-        //    Tap: 'ns.tests.Tap'
-        //},
+        tests: {
+            Tap: 'ns.tests.tap.Test'
+        },
         test: {
             event: {
                 Progress: 'ns.module.test.event.Progress',
@@ -64,7 +64,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
         source.readAll().then(function () {
             console.log('all tests restored to source');
-            createTests.call(me);
+            (new xs.core.Collection(imports.tests)).map(createTest, me);
         });
     };
 
@@ -72,30 +72,49 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         set: xs.noop
     };
 
-    var createTests = function () {
+    var createTest = function (Test, name) {
         var me = this;
 
         var source = me.private.source;
+        var test;
 
-        var tests = (new xs.core.Collection(imports.tests)).map(function (Test, name) {
-            var model;
+        getTestModel(source, name).then(function (model) {
 
-            //if model exists - use it
-            if (source.hasKey(name)) {
-                model = source.at(name);
-            } else {
-                model = new imports.data.model.Test(); //TODO
-            }
+            //create test
+            test = new Test(model);
 
-            var test = new Test({});
+            //update model within store (to save stages)
+            return source.update(model);
+        }).then(function () {
 
+            //notify about new test
             me.events.emitter.send(new imports.event.NewTest(test));
 
-            return test;
+            prepareTest.call(me, test, name);
         });
+    };
 
-        //prepare tests
-        tests.each(prepareTest, 0, me);
+    var getTestModel = function (source, name) {
+        var promise = new xs.core.Promise();
+
+        //if model exists - use it
+        if (source.hasKey(name)) {
+            xs.nextTick(function () {
+                promise.resolve(source.at(name));
+            });
+
+            //else - create and add to source
+        } else {
+            var model = new imports.data.model.Test({
+                name: name,
+                stages: {}
+            });
+
+            //add and save model
+            return source.create(model);
+        }
+
+        return promise;
     };
 
     var prepareTest = function (test, name) {

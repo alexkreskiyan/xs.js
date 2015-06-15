@@ -18,4 +18,10 @@ xs.define(xs.Class, 'ns.tests.tap.Test', function (self, imports) {
 
     Class.constant.testLabel = 'Tap';
 
+    Class.constant.stages = xs.lazy(function () {
+        return new xs.core.Collection({
+            SingleTap: imports.stage.SingleTap
+        });
+    });
+
 });

@@ -4,6 +4,8 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
 
     var Class = this;
 
+    Class.namespace = 'tests.module.suite.module.test';
+
     Class.imports = {
         view: {
             Container: 'ns.view.Container',
