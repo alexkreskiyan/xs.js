@@ -56,7 +56,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
         var source = me.private.source = new imports.data.source.Tests({
             proxy: new imports.data.proxy.LocalStorage({
-                commonKey: 'tests.module.suite.',
+                commonKey: 'tests.module.suite',
                 reader: new imports.data.reader.JSON(),
                 writer: new imports.data.writer.JSON()
             })
@@ -111,7 +111,9 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             });
 
             //add and save model
-            return source.create(model);
+            source.create(model).then(function () {
+                promise.resolve(model);
+            });
         }
 
         return promise;

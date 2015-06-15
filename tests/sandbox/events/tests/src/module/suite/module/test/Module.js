@@ -28,9 +28,9 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         var me = this;
 
         //assert, that test is a imports.model.Test instance
-        self.assert.ok(test instanceof imports.model.Test, 'constructor - given test `$test` is not a valid `$Test` instance', {
+        self.assert.ok(test instanceof imports.data.model.Test, 'constructor - given test `$test` is not a valid `$Test` instance', {
             $test: test,
-            $Test: imports.model.Test
+            $Test: imports.data.model.Test
         });
 
         self.mixins.observable.call(me, xs.noop);
@@ -64,7 +64,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             }
 
             //create new stage with evaluated state
-            var stage = new Stage(stageState);
+            var stage = new Stage(container, stageState);
 
             //add stage to test
             stages.add(name, stage);
@@ -77,9 +77,9 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
     //    set: xs.noop
     //};
 
-    //Class.property.container = {
-    //    set: xs.noop
-    //};
+    Class.property.container = {
+        set: xs.noop
+    };
 
     Class.method.show = function () {
         var me = this;

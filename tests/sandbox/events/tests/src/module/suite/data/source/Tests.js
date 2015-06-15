@@ -60,8 +60,8 @@ xs.define(xs.Class, 'ns.data.source.Tests', function (self, imports) {
             me.remove();
 
             //add item
-            data.each(function () {
-                var model = new me.self.model(data);
+            data.each(function (item) {
+                var model = new me.self.model(item);
                 me.add(model.primary(), model);
             });
         });
