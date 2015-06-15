@@ -591,7 +591,7 @@ function handleOff(event, selector, flags) {
         var i = 0;
 
         while (i < activeEvents.size) {
-            event = activeEvents.at(i);
+            event = activeEvents.at(i, xs.core.Collection.Index);
 
             //suspend if no active handlers
             if (!checkActiveHandlers(handlers, event)) {
@@ -604,7 +604,7 @@ function handleOff(event, selector, flags) {
 
         //suspend all active events
         while (activeEvents.size) {
-            event = activeEvents.at(0);
+            event = activeEvents.at(0, xs.core.Collection.Index);
             suspendEvent.call(me, event);
         }
     }
@@ -683,7 +683,7 @@ function handleSuspend(event, selector, flags) {
         var i = 0;
 
         while (i < activeEvents.size) {
-            event = activeEvents.at(i);
+            event = activeEvents.at(i, xs.core.Collection.Index);
 
             //suspend if no active handlers
             if (!checkActiveHandlers(handlers, event)) {
@@ -696,7 +696,7 @@ function handleSuspend(event, selector, flags) {
 
         //suspend all active events
         while (activeEvents.size) {
-            event = activeEvents.at(0);
+            event = activeEvents.at(0, xs.core.Collection.Index);
             suspendEvent.call(me, event);
         }
     }

@@ -414,6 +414,7 @@ Collection.prototype.has = function (value) {
  *     console.log(collection.keyOf({})); //undefined - another object in array
  *     console.log(collection.keyOf(1)); //0
  *     console.log(collection.keyOf(value, xs.core.Collection.Reverse)); //5
+ *     console.log(collection.keyOf(value, xs.core.Collection.Index)); //3
  *
  *     //for Object
  *     var collection = new xs.core.Collection({
@@ -428,12 +429,14 @@ Collection.prototype.has = function (value) {
  *     console.log(collection.keyOf({})); //undefined - another object in array
  *     console.log(collection.keyOf(1)); //'a'
  *     console.log(collection.keyOf(value, xs.core.Collection.Reverse)); //'e'
+ *     console.log(collection.keyOf(value, xs.core.Collection.Index)); //3
  *
  * @method keyOf
  *
  * @param {*} value value to lookup for
  * @param {Number} [flags] optional lookup flags:
  * - Reverse - to lookup for value from the end of the collection
+ * - Index - to return value index instead of it's key
  *
  * @return {*} found key, or undefined if nothing found
  */
@@ -489,6 +492,7 @@ Collection.prototype.keyOf = function (value, flags) {
  *     ]);
  *     console.log(collection.at(0)); //1
  *     console.log(collection.at(3)); //value
+ *     console.log(collection.at(3, xs.core.Collection.Index)); //value
  *
  *     //for Object
  *     var collection = new xs.core.Collection({
@@ -501,22 +505,48 @@ Collection.prototype.keyOf = function (value, flags) {
  *     });
  *     console.log(collection.at('a')); //1 - no value
  *     console.log(collection.at('f')); //value
+ *     console.log(collection.at(3, xs.core.Collection.Index)); //value
  *
  * @method at
  *
  * @param {*} key value to lookup for
+ * @param {Number} [flags] optional lookup flags:
+ * - Index - to consider, that given key is an index
  *
  * @return {*} value with specified key
  */
-Collection.prototype.at = function (key) {
+Collection.prototype.at = function (key, flags) {
     var me = this;
 
     //assert that collection is not empty
     assert.ok(me.private.items.length, 'at - collection is empty');
 
+    var isKey = true;
+
+    if (arguments.length > 1) {
+        //assert that flags is number
+        assert.number(flags, 'at - given flags `$flags` list is not number', {
+            $flags: flags
+        });
+
+        //lookup by index, if needed
+        if (flags & xs.core.Collection.Index) {
+            isKey = false;
+        }
+    }
+
     var index;
-    //handle number - it's index
-    if (xs.isNumber(key)) {
+
+    //handle key
+    if (isKey) {
+        index = me.keys().indexOf(key);
+
+        //check, that key exists
+        assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
+            $key: key
+        });
+    } else {
+        //handle index
         index = key;
 
         //check that index is in bounds
@@ -534,16 +564,6 @@ Collection.prototype.at = function (key) {
         if (index < 0) {
             index += max + 1;
         }
-
-        //handle string - it's key
-    } else {
-
-        index = me.keys().indexOf(key);
-
-        //check, that key exists
-        assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
-            $key: key
-        });
     }
 
     return me.private.items[ index ].value;

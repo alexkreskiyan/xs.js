@@ -365,7 +365,7 @@ module('xs.data.Enumerable', function () {
             3
         ]);
 
-        //index out of bounds
+        //key is missing
         throws(function () {
             collection.at(3);
         });
@@ -376,7 +376,9 @@ module('xs.data.Enumerable', function () {
             3
         ]);
         strictEqual(collection.at(0), 1);
+        strictEqual(collection.at(0, xs.data.Collection.Index), 1);
         strictEqual(collection.at(1), 3);
+        strictEqual(collection.at(1, xs.data.Collection.Index), 3);
 
         //check simple object list
         collection = new xs.data.Collection({
@@ -390,7 +392,9 @@ module('xs.data.Enumerable', function () {
         });
 
         strictEqual(collection.at('x'), 1);
+        strictEqual(collection.at(0, xs.data.Collection.Index), 1);
         strictEqual(collection.at('b'), 2);
+        strictEqual(collection.at(1, xs.data.Collection.Index), 2);
     });
 
     test('first', function () {
@@ -647,7 +651,7 @@ module('xs.data.Enumerable', function () {
         strictEqual(collection.at(0), 2);
         collection.insert(-1, 1);
         strictEqual(collection.values().toString(), '2,1,3');
-        strictEqual(collection.at(-1), 3);
+        strictEqual(collection.at(-1, xs.data.Collection.Index), 3);
 
 
         //test events
@@ -729,8 +733,8 @@ module('xs.data.Enumerable', function () {
         //complex test
         collection = new xs.data.Collection();
         collection.add('a', x);
-        strictEqual(collection.at(0), x);
-        collection.set(0, 2);
+        strictEqual(collection.at('a'), x);
+        collection.set('a', 2);
         strictEqual(collection.first(), 2);
         strictEqual(collection.keyOf(2), 'a');
         collection.set('a', 5);
@@ -742,8 +746,8 @@ module('xs.data.Enumerable', function () {
         throws(function () {
             collection.set(0, 'b');
         });
-        strictEqual(collection.at(0), 5);
-        collection.set(0, 2);
+        strictEqual(collection.at('a'), 5);
+        collection.set('a', 2);
         strictEqual(collection.first(), 2);
         strictEqual(collection.keyOf(2), 'a');
         collection.set('a', 4);

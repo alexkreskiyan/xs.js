@@ -162,7 +162,7 @@ var ProcessorsStack = function () {
             return;
         }
 
-        var item = items.at(index);
+        var item = items.at(index, xs.core.Collection.Index);
 
         //if item.verifier allows handler execution, process next
         if (item.verifier.apply(me, verifierArgs)) {
