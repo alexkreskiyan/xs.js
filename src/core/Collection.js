@@ -859,7 +859,7 @@ Collection.prototype.insert = function (index, key, value) {
  *     //for Array
  *     var collection = new xs.core.Collection([1,2]);
  *     collection.set(1, {x: 2});
- *     collection.set(0, {x: 1});
+ *     collection.set(0, {x: 1}, xs.core.Collection.Index);
  *     console.log(collection.keys());
  *     //outputs:
  *     //[
@@ -876,7 +876,7 @@ Collection.prototype.insert = function (index, key, value) {
  *     //for Object
  *     var collection = new xs.core.Collection({a: 2, b: 1});
  *     collection.set('b', {x: 2});
- *     collection.set('a', {x: 1});
+ *     collection.set(0, {x: 1}, xs.core.Collection.Index);
  *     console.log(collection.keys());
  *     //outputs:
  *     //[
@@ -894,20 +894,43 @@ Collection.prototype.insert = function (index, key, value) {
  *
  * @param {*} key key of changed value
  * @param {*} value value new value for item with given key
+ * @param {Number} [flags] optional lookup flags:
+ * - Index - to consider, that given key is an index
  *
  * @chainable
  */
-Collection.prototype.set = function (key, value) {
+Collection.prototype.set = function (key, value, flags) {
     var me = this;
 
     //assert that arguments enough
     assert.ok(arguments.length >= 2, 'set - no enough arguments');
 
+    var isKey = true;
 
-    //handle number key - it's index
+    if (arguments.length > 2) {
+        //assert that flags is number
+        assert.number(flags, 'at - given flags `$flags` list is not number', {
+            $flags: flags
+        });
+
+        //lookup by index, if needed
+        if (flags & xs.core.Collection.Index) {
+            isKey = false;
+        }
+    }
+
     var index;
 
-    if (xs.isNumber(key)) {
+    //handle key
+    if (isKey) {
+        index = me.keys().indexOf(key);
+
+        //check, that key exists
+        assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
+            $key: key
+        });
+    } else {
+        //handle index
         index = key;
 
         //check that index is in bounds
@@ -915,8 +938,7 @@ Collection.prototype.set = function (key, value) {
         //if max is 0, then min is 0
         var min = max > 0 ? -max : 0;
 
-        //assert that index is in bounds
-        assert.ok(min <= index && index <= max, 'set - index `$index` is out of bounds [$min, $max]', {
+        assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
             $index: index,
             $min: min,
             $max: max
@@ -926,17 +948,7 @@ Collection.prototype.set = function (key, value) {
         if (index < 0) {
             index += max + 1;
         }
-
-        //handle string key  - it's key
-    } else {
-        index = me.keys().indexOf(key);
-
-        //assert that key exists
-        assert.ok(index >= 0, 'set - given key `$key` doesn\'t exist', {
-            $key: key
-        });
     }
-
 
     me.private.items[ index ].value = value;
 

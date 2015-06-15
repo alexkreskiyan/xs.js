@@ -716,10 +716,10 @@ module('xs.data.Enumerable', function () {
             collection.set(1);
         });
 
-        //throws if key (index) not in bounds
+        //throws if index is out of bounds
         collection = new xs.data.Collection([ 1 ]);
         throws(function () {
-            collection.set(1, 1);
+            collection.set(1, 1, xs.core.Collection.Index);
         });
 
         //throws if key (key) is missing
@@ -734,7 +734,7 @@ module('xs.data.Enumerable', function () {
         collection = new xs.data.Collection();
         collection.add('a', x);
         strictEqual(collection.at('a'), x);
-        collection.set('a', 2);
+        collection.set(0, 2, xs.data.Collection.Index);
         strictEqual(collection.first(), 2);
         strictEqual(collection.keyOf(2), 'a');
         collection.set('a', 5);
@@ -747,7 +747,7 @@ module('xs.data.Enumerable', function () {
             collection.set(0, 'b');
         });
         strictEqual(collection.at('a'), 5);
-        collection.set('a', 2);
+        collection.set(0, 2, xs.data.Collection.Index);
         strictEqual(collection.first(), 2);
         strictEqual(collection.keyOf(2), 'a');
         collection.set('a', 4);

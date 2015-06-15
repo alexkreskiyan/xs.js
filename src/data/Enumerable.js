@@ -909,7 +909,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *     //for Array
      *     var collection = new xs.data.Collection([1,2]);
      *     collection.set(1, {x: 2});
-     *     collection.set(0, {x: 1});
+     *     collection.set(0, {x: 1}, xs.core.Collection.Index);
      *     console.log(collection.keys());
      *     //outputs:
      *     //[
@@ -926,7 +926,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *     //for Object
      *     var collection = new xs.data.Collection({a: 2, b: 1});
      *     collection.set('b', {x: 2});
-     *     collection.set('a', {x: 1});
+     *     collection.set(0, {x: 1}, xs.core.Collection.Index);
      *     console.log(collection.keys());
      *     //outputs:
      *     //[
@@ -944,20 +944,43 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *
      * @param {String|Number} key key of changed value
      * @param {*} value value new value for item with given key
+     * @param {Number} [flags] optional lookup flags:
+     * - Index - to consider, that given key is an index
      *
      * @chainable
      */
-    Class.method.set = function (key, value) {
+    Class.method.set = function (key, value, flags) {
         var me = this;
 
         //assert that arguments enough
         self.assert.ok(arguments.length >= 2, 'set - no enough arguments');
 
+        var isKey = true;
 
-        //handle number key - it's index
+        if (arguments.length > 2) {
+            //assert that flags is number
+            self.assert.number(flags, 'at - given flags `$flags` list is not number', {
+                $flags: flags
+            });
+
+            //lookup by index, if needed
+            if (flags & xs.core.Collection.Index) {
+                isKey = false;
+            }
+        }
+
         var index;
 
-        if (xs.isNumber(key)) {
+        //handle key
+        if (isKey) {
+            index = me.keys().indexOf(key);
+
+            //check, that key exists
+            self.assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
+                $key: key
+            });
+        } else {
+            //handle index
             index = key;
 
             //check that index is in bounds
@@ -965,8 +988,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             //if max is 0, then min is 0
             var min = max > 0 ? -max : 0;
 
-            //assert that index is in bounds
-            self.assert.ok(min <= index && index <= max, 'set - index `$index` is out of bounds [$min, $max]', {
+            self.assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
                 $index: index,
                 $min: min,
                 $max: max
@@ -976,15 +998,6 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             if (index < 0) {
                 index += max + 1;
             }
-
-            //handle string key  - it's key
-        } else {
-            index = me.keys().indexOf(key);
-
-            //assert that key exists
-            self.assert.ok(index >= 0, 'set - given key `$key` doesn\'t exist', {
-                $key: key
-            });
         }
 
         //assert, that value is valid
