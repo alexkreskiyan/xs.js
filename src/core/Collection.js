@@ -1109,27 +1109,49 @@ Collection.prototype.reorder = function (source, position, target) {
  *
  * @method removeAt
  *
- * @param {Number|String} key key of removed value
+ * @param {*} key key/index of removed value
+ * @param {Number} [flags] optional lookup flags:
+ * - Index - to consider, that given key is an index
  *
  * @chainable
  */
-Collection.prototype.removeAt = function (key) {
+Collection.prototype.removeAt = function (key, flags) {
     var me = this;
+
+    var isKey = true;
+
+    if (arguments.length > 1) {
+        //assert that flags is number
+        assert.number(flags, 'at - given flags `$flags` list is not number', {
+            $flags: flags
+        });
+
+        //lookup by index, if needed
+        if (flags & xs.core.Collection.Index) {
+            isKey = false;
+        }
+    }
 
     var index;
 
-    //handle number key - index given
-    if (xs.isNumber(key)) {
+    //handle key
+    if (isKey) {
+        index = me.keys().indexOf(key);
+
+        //check, that key exists
+        assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
+            $key: key
+        });
+    } else {
+        //handle index
         index = key;
 
         //check that index is in bounds
         var max = me.private.items.length - 1;
-
         //if max is 0, then min is 0
         var min = max > 0 ? -max : 0;
 
-        //assert that index is in bounds
-        assert.ok(min <= index && index <= max, 'removeAt - index `$index` is out of bounds [$min, $max]', {
+        assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
             $index: index,
             $min: min,
             $max: max
@@ -1139,17 +1161,6 @@ Collection.prototype.removeAt = function (key) {
         if (index < 0) {
             index += max + 1;
         }
-
-        //handle string key - key given
-    } else {
-
-        //get index
-        index = me.keys().indexOf(key);
-
-        //assert that key exists
-        assert.ok(index >= 0, 'removeAt - given key `$key` doesn\'t exist in collection', {
-            $key: key
-        });
     }
 
     //remove item from items

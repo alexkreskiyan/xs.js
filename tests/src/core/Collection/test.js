@@ -824,7 +824,7 @@ module('xs.core.Collection', function () {
         //throws if key (index) not in bounds
         collection = new xs.core.Collection([ 1 ]);
         throws(function () {
-            collection.removeAt(1);
+            collection.removeAt(1, xs.core.Collection.Index);
         });
 
         //throws if key (key) is missing
@@ -855,7 +855,7 @@ module('xs.core.Collection', function () {
         collection.removeAt('b');
         strictEqual(collection.keys().toString(), 'a,c');
         strictEqual(collection.values().toString(), '1,3');
-        collection.removeAt(-1);
+        collection.removeAt(-1, xs.core.Collection.Index);
         strictEqual(collection.keys().toString(), 'a');
         strictEqual(collection.values().toString(), '1');
     });

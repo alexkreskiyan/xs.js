@@ -1084,7 +1084,7 @@ module('xs.data.Enumerable', function () {
         //throws if key (index) not in bounds
         collection = new xs.data.Collection([ 1 ]);
         throws(function () {
-            collection.removeAt(1);
+            collection.removeAt(1, xs.core.Collection.Index);
         });
 
         //throws if key (key) is missing
@@ -1115,7 +1115,7 @@ module('xs.data.Enumerable', function () {
         collection.removeAt('b');
         strictEqual(collection.keys().toString(), 'a,c');
         strictEqual(collection.values().toString(), '1,3');
-        collection.removeAt(-1);
+        collection.removeAt(-1, xs.core.Collection.Index);
         strictEqual(collection.keys().toString(), 'a');
         strictEqual(collection.values().toString(), '1');
 
@@ -1157,13 +1157,13 @@ module('xs.data.Enumerable', function () {
             str += '!!!';
         });
 
-        collection.removeAt(5);
-        collection.removeAt(1);
-        collection.removeAt(4);
-        collection.removeAt(0);
-        collection.removeAt(2);
-        collection.removeAt(0);
-        collection.removeAt(0);
+        collection.removeAt(5, xs.core.Collection.Index);
+        collection.removeAt(1, xs.core.Collection.Index);
+        collection.removeAt(4, xs.core.Collection.Index);
+        collection.removeAt(0, xs.core.Collection.Index);
+        collection.removeAt(2, xs.core.Collection.Index);
+        collection.removeAt(0, xs.core.Collection.Index);
+        collection.removeAt(0, xs.core.Collection.Index);
         strictEqual(JSON.stringify(collection.toSource()), '{"a":4,"c":6,"e":8,"g":10}');
 
         strictEqual(str, '8f5:6b1:8d2:');
