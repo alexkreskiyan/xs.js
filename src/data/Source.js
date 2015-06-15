@@ -118,7 +118,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
     Class.method.hasKey = function (key) {
         var me = this;
 
-        return self.mixins.enumerable.hasKey.call(me, serializePrimary(key));
+        return self.mixins.enumerable.prototype.hasKey.call(me, serializePrimary(key));
     };
 
     Class.method.at = function (key, flags) {
@@ -126,23 +126,23 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
         if (arguments.length > 1) {
 
-            return self.mixins.enumerable.at.call(me, serializePrimary(key), flags);
+            return self.mixins.enumerable.prototype.at.call(me, serializePrimary(key), flags);
         } else {
 
-            return self.mixins.enumerable.at.call(me, serializePrimary(key));
+            return self.mixins.enumerable.prototype.at.call(me, serializePrimary(key));
         }
     };
 
     Class.method.add = function (key, value) {
         var me = this;
 
-        return self.mixins.enumerable.add.call(me, serializePrimary(key), value);
+        return self.mixins.enumerable.prototype.add.call(me, serializePrimary(key), value);
     };
 
     Class.method.insert = function (index, key, value) {
         var me = this;
 
-        return self.mixins.enumerable.insert.call(me, index, serializePrimary(key), value);
+        return self.mixins.enumerable.prototype.insert.call(me, index, serializePrimary(key), value);
     };
 
     Class.method.set = function (key, value, flags) {
@@ -150,10 +150,10 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
         if (arguments.length > 2) {
 
-            return self.mixins.enumerable.set.call(me, serializePrimary(key), value, flags);
+            return self.mixins.enumerable.prototype.set.call(me, serializePrimary(key), value, flags);
         } else {
 
-            return self.mixins.enumerable.set.call(me, serializePrimary(key), value);
+            return self.mixins.enumerable.prototype.set.call(me, serializePrimary(key), value);
         }
     };
 
@@ -162,10 +162,10 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
         if (arguments.length > 1) {
 
-            return self.mixins.enumerable.removeAt.call(me, serializePrimary(key), flags);
+            return self.mixins.enumerable.prototype.removeAt.call(me, serializePrimary(key), flags);
         } else {
 
-            return self.mixins.enumerable.removeAt.call(me, serializePrimary(key));
+            return self.mixins.enumerable.prototype.removeAt.call(me, serializePrimary(key));
         }
     };
 
@@ -183,7 +183,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
             usedKeys[ i ] = serializePrimary(keys[ i ]);
         }
 
-        return self.mixins.enumerable.pick.call(me, usedKeys);
+        return self.mixins.enumerable.prototype.pick.call(me, usedKeys);
     };
 
     Class.method.omit = function (keys) {
@@ -200,7 +200,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
             usedKeys[ i ] = serializePrimary(keys[ i ]);
         }
 
-        return self.mixins.enumerable.omit.call(me, usedKeys);
+        return self.mixins.enumerable.prototype.omit.call(me, usedKeys);
     };
 
     Class.method.isBound = function (relation) {
