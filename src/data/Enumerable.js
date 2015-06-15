@@ -533,49 +533,12 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         //assert that collection is not empty
         self.assert.ok(me.private.items.length, 'at - collection is empty');
 
-        var isKey = true;
-
-        if (arguments.length > 1) {
-            //assert that flags is number
-            self.assert.number(flags, 'at - given flags `$flags` list is not number', {
-                $flags: flags
-            });
-
-            //lookup by index, if needed
-            if (flags & xs.core.Collection.Index) {
-                isKey = false;
-            }
-        }
-
         var index;
 
-        //handle key
-        if (isKey) {
-            index = me.keys().indexOf(key);
-
-            //check, that key exists
-            self.assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
-                $key: key
-            });
+        if (arguments.length > 1) {
+            index = getItemIndex.call(me, key, flags);
         } else {
-            //handle index
-            index = key;
-
-            //check that index is in bounds
-            var max = me.private.items.length - 1;
-            //if max is 0, then min is 0
-            var min = max > 0 ? -max : 0;
-
-            self.assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
-                $index: index,
-                $min: min,
-                $max: max
-            });
-
-            //convert negative index
-            if (index < 0) {
-                index += max + 1;
-            }
+            index = getItemIndex.call(me, key);
         }
 
         return me.private.items[ index ].value;
@@ -955,49 +918,12 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         //assert that arguments enough
         self.assert.ok(arguments.length >= 2, 'set - no enough arguments');
 
-        var isKey = true;
-
-        if (arguments.length > 2) {
-            //assert that flags is number
-            self.assert.number(flags, 'at - given flags `$flags` list is not number', {
-                $flags: flags
-            });
-
-            //lookup by index, if needed
-            if (flags & xs.core.Collection.Index) {
-                isKey = false;
-            }
-        }
-
         var index;
 
-        //handle key
-        if (isKey) {
-            index = me.keys().indexOf(key);
-
-            //check, that key exists
-            self.assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
-                $key: key
-            });
+        if (arguments.length > 2) {
+            index = getItemIndex.call(me, key, flags);
         } else {
-            //handle index
-            index = key;
-
-            //check that index is in bounds
-            var max = me.private.items.length - 1;
-            //if max is 0, then min is 0
-            var min = max > 0 ? -max : 0;
-
-            self.assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
-                $index: index,
-                $min: min,
-                $max: max
-            });
-
-            //convert negative index
-            if (index < 0) {
-                index += max + 1;
-            }
+            index = getItemIndex.call(me, key);
         }
 
         //assert, that value is valid
@@ -1188,51 +1114,13 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
     Class.method.removeAt = function (key, flags) {
         var me = this;
 
-        var isKey = true;
-
-        if (arguments.length > 1) {
-            //assert that flags is number
-            self.assert.number(flags, 'at - given flags `$flags` list is not number', {
-                $flags: flags
-            });
-
-            //lookup by index, if needed
-            if (flags & xs.core.Collection.Index) {
-                isKey = false;
-            }
-        }
-
         var index;
 
-        //handle key
-        if (isKey) {
-            index = me.keys().indexOf(key);
-
-            //check, that key exists
-            self.assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
-                $key: key
-            });
+        if (arguments.length > 1) {
+            index = getItemIndex.call(me, key, flags);
         } else {
-            //handle index
-            index = key;
-
-            //check that index is in bounds
-            var max = me.private.items.length - 1;
-            //if max is 0, then min is 0
-            var min = max > 0 ? -max : 0;
-
-            self.assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
-                $index: index,
-                $min: min,
-                $max: max
-            });
-
-            //convert negative index
-            if (index < 0) {
-                index += max + 1;
-            }
+            index = getItemIndex.call(me, key);
         }
-
 
         var item = me.private.items[ index ];
 
@@ -3039,6 +2927,57 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
     var isType = function (value) {
         return value.constructor === this.private.itemType;
     };
+
+    function getItemIndex(key, flags) {
+        var me = this;
+
+        var isKey = true;
+
+        if (arguments.length > 1) {
+            //assert that flags is number
+            self.assert.number(flags, 'getItemIndex - given flags `$flags` list is not number', {
+                $flags: flags
+            });
+
+            //lookup by index, if needed
+            if (flags & xs.core.Collection.Index) {
+                isKey = false;
+            }
+        }
+
+        var index;
+
+        //handle key
+        if (isKey) {
+            index = me.keys().indexOf(key);
+
+            //check, that key exists
+            self.assert.ok(index >= 0, 'getItemIndex - given key `$key` doesn\'t exist', {
+                $key: key
+            });
+        } else {
+            //handle index
+            index = key;
+
+            //check that index is in bounds
+            var max = me.private.items.length - 1;
+            //if max is 0, then min is 0
+            var min = max > 0 ? -max : 0;
+
+            self.assert.ok(min <= index && index <= max, 'getItemIndex - index `$index` is out of bounds [$min,$max]', {
+                $index: index,
+                $min: min,
+                $max: max
+            });
+
+            //convert negative index
+            if (index < 0) {
+                index += max + 1;
+            }
+        }
+
+        return index;
+    }
 
     /**
      * Updates indexes starting from item with given index

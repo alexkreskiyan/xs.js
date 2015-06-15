@@ -521,49 +521,12 @@ Collection.prototype.at = function (key, flags) {
     //assert that collection is not empty
     assert.ok(me.private.items.length, 'at - collection is empty');
 
-    var isKey = true;
-
-    if (arguments.length > 1) {
-        //assert that flags is number
-        assert.number(flags, 'at - given flags `$flags` list is not number', {
-            $flags: flags
-        });
-
-        //lookup by index, if needed
-        if (flags & xs.core.Collection.Index) {
-            isKey = false;
-        }
-    }
-
     var index;
 
-    //handle key
-    if (isKey) {
-        index = me.keys().indexOf(key);
-
-        //check, that key exists
-        assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
-            $key: key
-        });
+    if (arguments.length > 1) {
+        index = getItemIndex.call(me, key, flags);
     } else {
-        //handle index
-        index = key;
-
-        //check that index is in bounds
-        var max = me.private.items.length - 1;
-        //if max is 0, then min is 0
-        var min = max > 0 ? -max : 0;
-
-        assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
-            $index: index,
-            $min: min,
-            $max: max
-        });
-
-        //convert negative index
-        if (index < 0) {
-            index += max + 1;
-        }
+        index = getItemIndex.call(me, key);
     }
 
     return me.private.items[ index ].value;
@@ -905,49 +868,12 @@ Collection.prototype.set = function (key, value, flags) {
     //assert that arguments enough
     assert.ok(arguments.length >= 2, 'set - no enough arguments');
 
-    var isKey = true;
-
-    if (arguments.length > 2) {
-        //assert that flags is number
-        assert.number(flags, 'at - given flags `$flags` list is not number', {
-            $flags: flags
-        });
-
-        //lookup by index, if needed
-        if (flags & xs.core.Collection.Index) {
-            isKey = false;
-        }
-    }
-
     var index;
 
-    //handle key
-    if (isKey) {
-        index = me.keys().indexOf(key);
-
-        //check, that key exists
-        assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
-            $key: key
-        });
+    if (arguments.length > 2) {
+        index = getItemIndex.call(me, key, flags);
     } else {
-        //handle index
-        index = key;
-
-        //check that index is in bounds
-        var max = me.private.items.length - 1;
-        //if max is 0, then min is 0
-        var min = max > 0 ? -max : 0;
-
-        assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
-            $index: index,
-            $min: min,
-            $max: max
-        });
-
-        //convert negative index
-        if (index < 0) {
-            index += max + 1;
-        }
+        index = getItemIndex.call(me, key);
     }
 
     me.private.items[ index ].value = value;
@@ -1118,49 +1044,12 @@ Collection.prototype.reorder = function (source, position, target) {
 Collection.prototype.removeAt = function (key, flags) {
     var me = this;
 
-    var isKey = true;
-
-    if (arguments.length > 1) {
-        //assert that flags is number
-        assert.number(flags, 'at - given flags `$flags` list is not number', {
-            $flags: flags
-        });
-
-        //lookup by index, if needed
-        if (flags & xs.core.Collection.Index) {
-            isKey = false;
-        }
-    }
-
     var index;
 
-    //handle key
-    if (isKey) {
-        index = me.keys().indexOf(key);
-
-        //check, that key exists
-        assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
-            $key: key
-        });
+    if (arguments.length > 1) {
+        index = getItemIndex.call(me, key, flags);
     } else {
-        //handle index
-        index = key;
-
-        //check that index is in bounds
-        var max = me.private.items.length - 1;
-        //if max is 0, then min is 0
-        var min = max > 0 ? -max : 0;
-
-        assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
-            $index: index,
-            $min: min,
-            $max: max
-        });
-
-        //convert negative index
-        if (index < 0) {
-            index += max + 1;
-        }
+        index = getItemIndex.call(me, key);
     }
 
     //remove item from items
@@ -2951,6 +2840,57 @@ Collection.prototype.toSource = function () {
 
     return source;
 };
+
+function getItemIndex(key, flags) {
+    var me = this;
+
+    var isKey = true;
+
+    if (arguments.length > 1) {
+        //assert that flags is number
+        assert.number(flags, 'getItemIndex - given flags `$flags` list is not number', {
+            $flags: flags
+        });
+
+        //lookup by index, if needed
+        if (flags & xs.core.Collection.Index) {
+            isKey = false;
+        }
+    }
+
+    var index;
+
+    //handle key
+    if (isKey) {
+        index = me.keys().indexOf(key);
+
+        //check, that key exists
+        assert.ok(index >= 0, 'getItemIndex - given key `$key` doesn\'t exist', {
+            $key: key
+        });
+    } else {
+        //handle index
+        index = key;
+
+        //check that index is in bounds
+        var max = me.private.items.length - 1;
+        //if max is 0, then min is 0
+        var min = max > 0 ? -max : 0;
+
+        assert.ok(min <= index && index <= max, 'getItemIndex - index `$index` is out of bounds [$min,$max]', {
+            $index: index,
+            $min: min,
+            $max: max
+        });
+
+        //convert negative index
+        if (index < 0) {
+            index += max + 1;
+        }
+    }
+
+    return index;
+}
 
 /**
  * Updates indexes starting from item with given index
