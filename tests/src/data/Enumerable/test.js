@@ -330,6 +330,7 @@ module('xs.data.Enumerable', function () {
         strictEqual(collection.keyOf(1), 'x');
         strictEqual(collection.keyOf(item), 'a');
         strictEqual(collection.keyOf(item, xs.data.Collection.Reverse), 'b');
+        strictEqual(collection.keyOf(item, xs.data.Collection.Index), 4);
         strictEqual(collection.keyOf('1'), undefined);
 
         //test empty object list

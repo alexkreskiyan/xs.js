@@ -57,6 +57,19 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
     Class.constant.All = 0x2;
 
     /**
+     * Collection flag, meaning, that operation is made using indexes, not keys
+     *
+     * @static
+     *
+     * @property Index
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Index = 0x4;
+
+    /**
      * Collection flag, meaning, that item is reordered to be the first one
      *
      * @static
@@ -456,7 +469,18 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             }
         }
 
-        return index >= 0 ? me.private.items[ index ].key : undefined;
+        if (index >= 0) {
+            if (flags & self.Index) {
+
+                return index;
+            } else {
+
+                return me.private.items[ index ].key;
+            }
+        } else {
+
+            return undefined;
+        }
     };
 
     /**

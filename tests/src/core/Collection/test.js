@@ -272,6 +272,7 @@ module('xs.core.Collection', function () {
         strictEqual(collection.keyOf(1), 'x');
         strictEqual(collection.keyOf(item), 'a');
         strictEqual(collection.keyOf(item, xs.core.Collection.Reverse), 'b');
+        strictEqual(collection.keyOf(item, xs.core.Collection.Index), 4);
         strictEqual(collection.keyOf('1'), undefined);
 
         //test empty object list

@@ -104,6 +104,19 @@ Collection.Reverse = 0x1;
 Collection.All = 0x2;
 
 /**
+ * Collection flag, meaning, that operation is made using indexes, not keys
+ *
+ * @static
+ *
+ * @property Index
+ *
+ * @readonly
+ *
+ * @type {Number}
+ */
+Collection.Index = 0x4;
+
+/**
  * Collection flag, meaning, that item is reordered to be the first one
  *
  * @static
@@ -444,7 +457,18 @@ Collection.prototype.keyOf = function (value, flags) {
         }
     }
 
-    return index >= 0 ? me.private.items[ index ].key : undefined;
+    if (index >= 0) {
+        if (flags & xs.core.Collection.Index) {
+
+            return index;
+        } else {
+
+            return me.private.items[ index ].key;
+        }
+    } else {
+
+        return undefined;
+    }
 };
 
 /**
@@ -848,7 +872,7 @@ Collection.prototype.insert = function (index, key, value) {
  *
  * @method set
  *
- * @param {String|Number} key key of changed value
+ * @param {*} key key of changed value
  * @param {*} value value new value for item with given key
  *
  * @chainable
