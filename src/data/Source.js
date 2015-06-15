@@ -115,6 +115,94 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         }
     };
 
+    Class.method.hasKey = function (key) {
+        var me = this;
+
+        return self.mixins.enumerable.hasKey.call(me, serializePrimary(key));
+    };
+
+    Class.method.at = function (key, flags) {
+        var me = this;
+
+        if (arguments.length > 1) {
+
+            return self.mixins.enumerable.at.call(me, serializePrimary(key), flags);
+        } else {
+
+            return self.mixins.enumerable.at.call(me, serializePrimary(key));
+        }
+    };
+
+    Class.method.add = function (key, value) {
+        var me = this;
+
+        return self.mixins.enumerable.add.call(me, serializePrimary(key), value);
+    };
+
+    Class.method.insert = function (index, key, value) {
+        var me = this;
+
+        return self.mixins.enumerable.insert.call(me, index, serializePrimary(key), value);
+    };
+
+    Class.method.set = function (key, value, flags) {
+        var me = this;
+
+        if (arguments.length > 2) {
+
+            return self.mixins.enumerable.set.call(me, serializePrimary(key), value, flags);
+        } else {
+
+            return self.mixins.enumerable.set.call(me, serializePrimary(key), value);
+        }
+    };
+
+    Class.method.removeAt = function (key, flags) {
+        var me = this;
+
+        if (arguments.length > 1) {
+
+            return self.mixins.enumerable.removeAt.call(me, serializePrimary(key), flags);
+        } else {
+
+            return self.mixins.enumerable.removeAt.call(me, serializePrimary(key));
+        }
+    };
+
+    Class.method.pick = function (keys) {
+        var me = this;
+
+        //assert that keys is array
+        self.assert.array(keys, 'pick - given keys list `$keys` is not array', {
+            $keys: keys
+        });
+
+        var usedKeys = [];
+
+        for (var i = 0; i < keys.length; i++) {
+            usedKeys[ i ] = serializePrimary(keys[ i ]);
+        }
+
+        return self.mixins.enumerable.pick.call(me, usedKeys);
+    };
+
+    Class.method.omit = function (keys) {
+        var me = this;
+
+        //assert that keys is array
+        self.assert.array(keys, 'omit - given keys list `$keys` is not array', {
+            $keys: keys
+        });
+
+        var usedKeys = [];
+
+        for (var i = 0; i < keys.length; i++) {
+            usedKeys[ i ] = serializePrimary(keys[ i ]);
+        }
+
+        return self.mixins.enumerable.omit.call(me, usedKeys);
+    };
+
     Class.method.isBound = function (relation) {
         var me = this;
 
@@ -130,7 +218,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         var me = this;
 
         //assert, that relation is not bound
-        self.assert.not(me.isBound(relation), 'bind - relation `$relation` is already binded', {
+        self.assert.not(me.isBound(relation), 'bind - relation `$relation` is already bound', {
             $relation: relation
         });
 
@@ -199,7 +287,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
 
         //assert, that relation is bound
-        self.assert.ok(me.isBound(relation), 'bind - relation `$relation` is already binded', {
+        self.assert.ok(me.isBound(relation), 'bind - relation `$relation` is already bound', {
             $relation: relation
         });
 
@@ -232,6 +320,14 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
         //call parent destroy
         self.parent.prototype.destroy.call(me);
+    };
+
+    var serializePrimary = function (primary) {
+        if (xs.isPrimitive(primary)) {
+            return primary;
+        }
+
+        return JSON.stringify(primary);
     };
 
     var validateRelation = function (relations, relation) {
