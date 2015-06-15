@@ -7,6 +7,11 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
     Class.namespace = 'tests.module.suite.module.test';
 
     Class.imports = {
+        data: {
+            model: {
+                Test: 'tests.module.suite.data.model.Test'
+            }
+        },
         event: {
             Click: 'tests.module.suite.event.Click'
         },
@@ -18,12 +23,13 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     Class.mixins.observable = 'xs.event.Observable';
 
-    Class.constructor = function (state) {
+    Class.constructor = function (test) {
         var me = this;
 
-        //assert, that state is an object
-        self.assert.object(state, 'constructor - given state `$state` is not an object', {
-            $state: state
+        //assert, that test is a imports.model.Test instance
+        self.assert.ok(test instanceof imports.model.Test, 'constructor - given test `$test` is not a valid `$Test` instance', {
+            $test: test,
+            $Test: imports.model.Test
         });
 
         self.mixins.observable.call(me, xs.noop);
@@ -40,9 +46,15 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         close.on(imports.event.Click, function () {
             me.hide();
         });
+
+        me.private.model = test;
     };
 
     Class.property.container = {
+        set: xs.noop
+    };
+
+    Class.property.model = {
         set: xs.noop
     };
 

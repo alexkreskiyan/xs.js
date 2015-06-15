@@ -7,13 +7,30 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
     Class.namespace = 'tests.module.suite';
 
     Class.imports = {
+        data: {
+            model: {
+                Test: 'ns.data.model.Test'
+            },
+            proxy: {
+                LocalStorage: 'ns.data.proxy.LocalStorage'
+            },
+            reader: {
+                JSON: 'xs.data.reader.JSON'
+            },
+            source: {
+                Tests: 'ns.data.source.Tests'
+            },
+            writer: {
+                JSON: 'xs.data.writer.JSON'
+            }
+        },
         event: {
             Click: 'ns.event.Click',
             NewTest: 'ns.event.NewTest'
         },
-        tests: {
-            Tap: 'ns.tests.Tap'
-        },
+        //tests: {
+        //    Tap: 'ns.tests.Tap'
+        //},
         test: {
             event: {
                 Progress: 'ns.module.test.event.Progress',
@@ -37,8 +54,18 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         var container = me.private.container = new imports.view.Container();
         container.attributes.set('id', 'suite');
 
-        //create tests
-        xs.nextTick(createTests, me);
+        var source = me.private.source = new imports.data.source.Tests({
+            proxy: new imports.data.proxy.LocalStorage({
+                commonKey: 'tests.module.suite.',
+                reader: new imports.data.reader.JSON(),
+                writer: new imports.data.writer.JSON()
+            })
+        });
+
+        source.readAll().then(function () {
+            console.log('all tests restored to source');
+            createTests.call(me);
+        });
     };
 
     Class.property.container = {
@@ -48,7 +75,18 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
     var createTests = function () {
         var me = this;
 
-        var tests = (new xs.core.Collection(imports.tests)).map(function (Test) {
+        var source = me.private.source;
+
+        var tests = (new xs.core.Collection(imports.tests)).map(function (Test, name) {
+            var model;
+
+            //if model exists - use it
+            if (source.hasKey(name)) {
+                model = source.at(name);
+            } else {
+                model = new imports.data.model.Test(); //TODO
+            }
+
             var test = new Test({});
 
             me.events.emitter.send(new imports.event.NewTest(test));

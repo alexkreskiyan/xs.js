@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.tests.Tap', function (self, imports) {
+xs.define(xs.Class, 'ns.tests.tap.Test', function (self, imports) {
 
     'use strict';
 
@@ -6,7 +6,7 @@ xs.define(xs.Class, 'ns.tests.Tap', function (self, imports) {
 
     Class.namespace = 'tests.module.suite';
 
-    Class.extends = 'ns.module.test.Module';
+    Class.extends = 'ns.module.test.Stage';
 
     Class.constant.testName = 'tap';
 
