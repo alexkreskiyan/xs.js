@@ -1,10 +1,14 @@
-xs.define(xs.Class, 'ns.event.Progress', function (self) {
+xs.define(xs.Class, 'ns.event.StageChange', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
     Class.namespace = 'tests.module.suite.module.test';
+
+    Class.imports = {
+        Stage: 'ns.Stage'
+    };
 
     Class.implements = [
         'xs.event.IEvent'
@@ -18,9 +22,15 @@ xs.define(xs.Class, 'ns.event.Progress', function (self) {
             $data: data
         });
 
-        //assert, that data.done is a non-negative integer
-        self.assert.ok(data.done >= 0 && Math.round(data.done) === data.done, 'constructor - given data.done `$done` is not a positive integer', {
-            $done: data.done
+        //assert, that data.stage is an instance of imports.Stage
+        self.assert.ok(data.stage instanceof imports.Stage, 'constructor - given data.stage `$stage` is not an instance of `$Stage`', {
+            $stage: data.stage,
+            $Stage: imports.Stage
+        });
+
+        //assert, that data.index is a non-negative integer
+        self.assert.ok(data.index >= 0 && Math.round(data.index) === data.index, 'constructor - given data.index `$index` is not a positive integer', {
+            $index: data.index
         });
 
         //assert, that data.total is a non-negative integer
@@ -29,11 +39,16 @@ xs.define(xs.Class, 'ns.event.Progress', function (self) {
         });
 
         //save data to private
-        me.private.done = data.done;
+        me.private.stage = data.stage;
+        me.private.index = data.index;
         me.private.total = data.total;
     };
 
-    Class.property.done = {
+    Class.property.stage = {
+        set: xs.noop
+    };
+
+    Class.property.index = {
         set: xs.noop
     };
 

@@ -21,6 +21,10 @@ xs.define(xs.Class, 'ns.view.Instruction', function (self) {
         //add instruction class
         me.classes.add('instruction');
 
+        //instruction is hidden and invisible by default
+        me.classes.add('hidden');
+        me.classes.add('invisible');
+
         //set text as innerHTML
         me.private.el.innerHTML = text;
     };

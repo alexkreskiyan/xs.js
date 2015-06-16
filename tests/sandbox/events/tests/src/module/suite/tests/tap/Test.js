@@ -8,7 +8,8 @@ xs.define(xs.Class, 'ns.tests.tap.Test', function (self, imports) {
 
     Class.imports = {
         stage: {
-            SingleTap: 'ns.tests.tap.stage.SingleTap'
+            SingleTap: 'ns.tests.tap.stage.SingleTap',
+            DoubleTap: 'ns.tests.tap.stage.DoubleTap'
         }
     };
 
@@ -20,7 +21,8 @@ xs.define(xs.Class, 'ns.tests.tap.Test', function (self, imports) {
 
     Class.constant.stages = xs.lazy(function () {
         return new xs.core.Collection({
-            SingleTap: imports.stage.SingleTap
+            SingleTap: imports.stage.SingleTap,
+            DoubleTap: imports.stage.DoubleTap
         });
     });
 

@@ -7,12 +7,15 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
     Class.namespace = 'tests.module.suite.module.test';
 
     Class.imports = {
+        event: {
+            Done: 'ns.event.Done'
+        },
+        StageState: 'ns.StageState',
         view: {
             Container: 'ns.view.Container',
             Element: 'xs.view.Element',
             Instruction: 'ns.view.Instruction'
-        },
-        StageState: 'ns.StageState'
+        }
     };
 
     Class.mixins.observable = 'xs.event.Observable';
@@ -40,12 +43,18 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
         me.private.state = state;
     };
 
+    Class.property.state = {
+        set: xs.noop
+    };
+
     Class.method.start = function () {
         var me = this;
 
+        console.log('start stage' + me.self.label);
+
         //add and show instruction
-        var instruction = me.private.instruction = new imports.view.Instruction(self.instruction);
-        me.private.container.instructions.add(instruction);
+        var instruction = me.private.instruction = new imports.view.Instruction(me.self.instruction);
+        me.private.container.instructions.insert(0, instruction);
         instruction.show();
 
         //if state is done - add done element
@@ -53,19 +62,46 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
             var element = new imports.view.Element(document.createElement('div'));
             element.classes.add('done');
             me.private.container.sandbox.add(element);
+
+            //return true to mark that stage is done
+            return true;
         }
+
+        //stage is not done
+        return false;
     };
 
     Class.method.stop = function () {
         var me = this;
 
-        //destroy instruction after hide
-        me.private.instruction.hide().then(function () {
-            me.private.instruction.destroy();
-        });
+        console.log('stop stage' + me.self.label);
+
+        //destroy instruction
+        me.private.instruction.destroy();
 
         //clean up sandbox
         me.private.container.sandbox.remove();
+    };
+
+    Class.method.done = function () {
+        var me = this;
+
+        //assert, that stage is not done yet
+        self.assert.ok(me.private.state !== imports.StageState.Done, 'done - stage is already done');
+
+        //change state
+        me.private.state = imports.StageState.Done;
+
+        //clean up sandbox
+        me.private.container.sandbox.remove();
+
+        //add done element
+        var element = new imports.view.Element(document.createElement('div'));
+        element.classes.add('done');
+        me.private.container.sandbox.add(element);
+
+        //fire done event
+        me.events.emitter.send(new imports.event.Done());
     };
 
 });

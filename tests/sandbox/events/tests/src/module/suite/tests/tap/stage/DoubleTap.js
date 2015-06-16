@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.tests.tap.stage.SingleTap', function (self, imports) {
+xs.define(xs.Class, 'ns.tests.tap.stage.DoubleTap', function (self) {
 
     'use strict';
 
@@ -8,7 +8,7 @@ xs.define(xs.Class, 'ns.tests.tap.stage.SingleTap', function (self, imports) {
 
     Class.extends = 'ns.module.test.Stage';
 
-    Class.constant.instruction = 'tap anywhere in sandbox';
+    Class.constant.instruction = 'tap anywhere in sandbox twice';
 
     Class.method.start = function () {
         var me = this;

@@ -246,13 +246,6 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
             return;
         }
 
-        //remove element from parent container
-        var el = me.private.el;
-
-        if (el.parentElement) {
-            el.parentElement.removeChild(el);
-        }
-
         //clean up positions
         if (me.private.positions) {
             Object.keys(me.private.positions).forEach(function (name) {
@@ -484,7 +477,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         }
 
         //get view, that will be next to inserted
-        var next = me.private.items[ event.index ].value;
+        var next = me.private.items[ event.index + 1 ].value;
 
         //insert view before next.element
         parent.insertBefore(view.private.el, next.private.el);

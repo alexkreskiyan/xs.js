@@ -47,4 +47,37 @@ xs.define(xs.Class, 'ns.view.Control', function (self, imports) {
         });
     };
 
+    Class.property.isDisabled = {
+        get: function () {
+            var me = this;
+
+            return me.classes.has('disabled');
+        },
+        set: xs.noop
+    };
+
+    Class.method.enable = function () {
+        var me = this;
+
+        self.assert.ok(me.isDisabled, 'enable - control is already enabled');
+
+        //remove disabled class
+        me.classes.remove('disabled');
+
+        //resume events stream
+        me.events.resume();
+    };
+
+    Class.method.disable = function () {
+        var me = this;
+
+        self.assert.not(me.isDisabled, 'enable - control is already disabled');
+
+        //add disabled class
+        me.classes.add('disabled');
+
+        //suspend events stream
+        me.events.suspend();
+    };
+
 });

@@ -130,6 +130,20 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
     Class.method.destroy = function () {
         var me = this;
 
+        //if view has container - use container.remove instead of direct destroying
+        if (me.private.hasOwnProperty('container')) {
+            me.private.container.remove(me);
+
+            return;
+        }
+
+        //remove element from parent container
+        var el = me.private.el;
+
+        if (el.parentElement) {
+            el.parentElement.removeChild(el);
+        }
+
         //call Observable.destroy
         self.mixins.observable.prototype.destroy.call(me);
 

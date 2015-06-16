@@ -83,14 +83,15 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             //create test
             test = new Test(model);
 
+            //prepare test
+            prepareTest.call(me, test, name);
+
             //update model within store (to save stages)
             return source.update(model);
         }).then(function () {
 
             //notify about new test
             me.events.emitter.send(new imports.event.NewTest(test));
-
-            prepareTest.call(me, test, name);
         });
     };
 
@@ -121,6 +122,8 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     var prepareTest = function (test, name) {
         var me = this;
+
+        var source = me.private.source;
         var container = me.container;
 
         //create launcher
@@ -136,16 +139,15 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
         //bind test events
         //progress
-        test.on(imports.test.event.Progress, function (event) {
+        test.on(imports.test.event.Progress, function () {
             if (!launcher.classes.has('progress')) {
                 launcher.classes.add('progress');
             }
-
-            console.log('progress of test', name, ':', event.data);
+            source.update(test.model);
         });
         test.on(imports.test.event.Done, function () {
+            launcher.classes.remove('progress');
             launcher.classes.add('complete');
-            console.log('test', name, 'complete');
         });
 
         //add launcher to container items
