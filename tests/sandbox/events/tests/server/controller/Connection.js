@@ -6,11 +6,13 @@ var Message = {
 };
 
 var TestsController = require('./Tests');
+var LogController = require('./Log');
 
 var Controller = function (connection) {
     var me = this;
 
     me.tests = new TestsController();
+    me.log = new LogController();
     me.connection = connection;
 
     console.log('connection controller created', me.tests);
@@ -30,6 +32,9 @@ Controller.prototype.handle = function (message) {
     switch (message.controller) {
         case 'tests':
             handler = me.tests;
+            break;
+        case 'log':
+            handler = me.log;
             break;
         default:
             console.log('no handler for incoming message', message.toString(), '. message is ignored');
