@@ -50,8 +50,6 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
     Class.method.start = function () {
         var me = this;
 
-        console.log('start stage' + me.self.label);
-
         //add and show instruction
         var instruction = me.private.instruction = new imports.view.Instruction(me.self.instruction);
         me.private.container.instructions.insert(0, instruction);
@@ -73,8 +71,6 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
 
     Class.method.stop = function () {
         var me = this;
-
-        console.log('stop stage' + me.self.label);
 
         //destroy instruction
         me.private.instruction.destroy();

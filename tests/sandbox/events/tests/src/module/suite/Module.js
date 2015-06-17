@@ -12,7 +12,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
                 Test: 'ns.data.model.Test'
             },
             proxy: {
-                LocalStorage: 'ns.data.proxy.LocalStorage'
+                WebSocket: 'ns.data.proxy.WebSocket'
             },
             reader: {
                 JSON: 'xs.data.reader.JSON'
@@ -45,7 +45,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     Class.mixins.observable = 'xs.event.Observable';
 
-    Class.constructor = function () {
+    Class.constructor = function (connection) {
         var me = this;
 
         self.mixins.observable.call(me, xs.noop);
@@ -55,15 +55,14 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         container.attributes.set('id', 'suite');
 
         var source = me.private.source = new imports.data.source.Tests({
-            proxy: new imports.data.proxy.LocalStorage({
-                commonKey: 'tests.module.suite',
+            proxy: new imports.data.proxy.WebSocket({
+                connection: connection,
                 reader: new imports.data.reader.JSON(),
                 writer: new imports.data.writer.JSON()
             })
         });
 
         source.readAll().then(function () {
-            console.log('all tests restored to source');
             (new xs.core.Collection(imports.tests)).map(createTest, me);
         });
     };
@@ -86,8 +85,8 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             //prepare test
             prepareTest.call(me, test, name);
 
-            //update model within store (to save stages)
-            return source.update(model);
+            //return create or update
+            return source.hasKey(name) ? source.update(model) : source.create(model);
         }).then(function () {
 
             //notify about new test
@@ -100,9 +99,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
         //if model exists - use it
         if (source.hasKey(name)) {
-            xs.nextTick(function () {
-                promise.resolve(source.at(name));
-            });
+            promise.resolve(source.at(name));
 
             //else - create and add to source
         } else {
@@ -111,10 +108,8 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
                 stages: {}
             });
 
-            //add and save model
-            source.create(model).then(function () {
-                promise.resolve(model);
-            });
+            //resolve with promise
+            promise.resolve(model);
         }
 
         return promise;
