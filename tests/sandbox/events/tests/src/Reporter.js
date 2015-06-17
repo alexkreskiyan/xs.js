@@ -1,50 +1,57 @@
-xs.define(xs.Class, 'Reporter', function (self, imports) {
+xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'tests.test';
+    Class.namespace = 'tests';
 
     Class.imports = {
-        Request: 'xs.transport.xhr.Request',
-        Url: 'xs.uri.HTTP',
-        QueryString: 'xs.uri.query.QueryString',
-        request: {
-            Method: 'xs.transport.xhr.Method'
-        }
+        message: {
+            Outgoing: 'tests.data.proxy.message.Outgoing'
+        },
+        websocket: {
+            Connection: 'xs.transport.websocket.Connection'
+        },
+        UserInfo: 'ns.UserInfo'
     };
 
-    Class.constant.ServerUrl = xs.lazy(function () {
-        return new imports.Url('http://' + window.location.host + ':3902', imports.QueryString);
-    });
+    Class.constructor = function (connection) {
+        var me = this;
 
-    Class.static.method.report = function (category, name, event) {
-        var user = localStorage.getItem('user');
-        var device = localStorage.getItem('device');
+        //verify connection
+        self.assert.ok(connection instanceof imports.websocket.Connection, 'constructor - given connection `$connection` is not an instanceof `$Connection`', {
+            $connection: connection,
+            $Connection: imports.Connection
+        });
 
-        self.assert.ok(user, 'specify your username, please');
-        self.assert.ok(device, 'specify your device, please');
+        me.private.connection = connection;
+    };
 
-        var request = new imports.Request();
-        request.method = imports.request.Method.POST;
-        request.url = self.ServerUrl;
-        request.data = JSON.stringify({
-            user: user,
-            device: device,
+    Class.method.report = function (category, name, event) {
+        var me = this;
+
+        var connection = me.private.connection;
+
+        var data = {
+            user: imports.UserInfo.user,
+            device: imports.UserInfo.device,
             time: getTime(),
             userAgent: xs.env.Context,
             category: category,
             name: name,
-            event: serialize(event, 2)
-        });
-        request.send();
+            event: serialize(event, 3)
+        };
+
+        var message = new imports.message.Outgoing('log', 'add', data);
+
+        connection.send(JSON.stringify(message.get()));
     };
 
     var serialize = function (item, depth) {
         if (typeof item !== 'object' || item === null) {
 
-            return String(item);
+            return serializeNonObject(item);
         }
 
         var result = {};
@@ -55,7 +62,7 @@ xs.define(xs.Class, 'Reporter', function (self, imports) {
 
             for (i = 0; i < keys.length; i++) {
                 key = keys[ i ];
-                result[ key ] = String(item[ key ]);
+                result[ key ] = serializeNonObject(item[ key ]);
             }
 
         } else {
@@ -93,6 +100,15 @@ xs.define(xs.Class, 'Reporter', function (self, imports) {
         }
 
         return value;
+    };
+
+    var serializeNonObject = function (item) {
+        if (typeof item === 'function') {
+
+            return 'fn ' + (item.name ? item.name : 'anonymous');
+        }
+
+        return String(item);
     };
 
 });

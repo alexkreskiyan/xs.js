@@ -45,10 +45,12 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     Class.mixins.observable = 'xs.event.Observable';
 
-    Class.constructor = function (connection) {
+    Class.constructor = function (connection, reporter) {
         var me = this;
 
         self.mixins.observable.call(me, xs.noop);
+
+        me.private.reporter = reporter;
 
         //create container
         var container = me.private.container = new imports.view.Container();
@@ -75,12 +77,13 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         var me = this;
 
         var source = me.private.source;
+        var reporter = me.private.reporter;
         var test;
 
         getTestModel(source, name).then(function (model) {
 
             //create test
-            test = new Test(model);
+            test = new Test(model, reporter);
 
             //prepare test
             prepareTest.call(me, test, name);

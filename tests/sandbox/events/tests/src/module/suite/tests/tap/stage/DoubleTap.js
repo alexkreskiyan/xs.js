@@ -1,10 +1,16 @@
-xs.define(xs.Class, 'ns.tests.tap.stage.DoubleTap', function (self) {
+xs.define(xs.Class, 'ns.tests.tap.stage.DoubleTap', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
     Class.namespace = 'tests.module.suite';
+
+    Class.imports = {
+        event: {
+            Tap: 'xs.view.event.pointer.Tap'
+        }
+    };
 
     Class.extends = 'ns.module.test.Stage';
 
@@ -18,9 +24,14 @@ xs.define(xs.Class, 'ns.tests.tap.stage.DoubleTap', function (self) {
             return;
         }
 
-        setTimeout(function () {
+        me.private.container.query('.sandbox').on(imports.event.Tap, function (event) {
+            me.report(event);
             me.done();
-        }, 1000);
+
+            xs.nextTick(function () {
+                me.private.container.query('.sandbox').off(imports.event.Tap);
+            });
+        });
     };
 
     Class.method.stop = function () {

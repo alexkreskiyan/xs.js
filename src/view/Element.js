@@ -40,7 +40,7 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
         });
 
         //save element reference
-        var el = me.private.el = element;
+        me.private.el = element;
 
         //call observable constructor
 
@@ -66,7 +66,7 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
 
             if (xs.isClass(event) && event.implements(imports.IEvent)) {
                 //save capture
-                captures.add(event, event.forward(el));
+                captures.add(event, event.forward(me));
             }
         });
         me.private.stream.on(xs.reactive.event.Suspend, function (event) {
@@ -80,7 +80,7 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
                 captures.removeAt(event);
 
                 //release capture
-                event.release(capture);
+                event.release(me, capture);
             }
         });
 

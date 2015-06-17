@@ -15,6 +15,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         event: {
             Click: 'tests.module.suite.event.Click',
             Done: 'ns.event.Done',
+            Log: 'ns.event.Log',
             Progress: 'ns.event.Progress',
             StageChange: 'ns.event.StageChange'
         },
@@ -29,7 +30,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
     Class.mixins.observable = 'xs.event.Observable';
 
-    Class.constructor = function (test) {
+    Class.constructor = function (test, reporter) {
         var me = this;
 
         //assert, that test is a imports.model.Test instance
@@ -72,7 +73,9 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
                 stage.on(imports.event.Done, function () {
 
                     //off stage with event.Done
-                    stage.off(imports.event.Done);
+                    xs.nextTick(function () {
+                        stage.off(imports.event.Done);
+                    });
 
                     //send progress
                     sendProgress.call(me, name);
@@ -80,6 +83,11 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
                     scope: me
                 });
             }
+
+            //bind reporter
+            stage.on(imports.event.Log, function (event) {
+                reporter.report(me.self.testName, name, event);
+            });
 
             //add stage to test
             stages.add(name, stage);

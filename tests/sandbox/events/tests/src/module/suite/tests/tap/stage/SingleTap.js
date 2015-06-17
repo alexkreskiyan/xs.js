@@ -6,6 +6,12 @@ xs.define(xs.Class, 'ns.tests.tap.stage.SingleTap', function (self, imports) {
 
     Class.namespace = 'tests.module.suite';
 
+    Class.imports = {
+        event: {
+            Tap: 'xs.view.event.pointer.Tap'
+        }
+    };
+
     Class.extends = 'ns.module.test.Stage';
 
     Class.constant.instruction = 'tap anywhere in sandbox';
@@ -18,9 +24,14 @@ xs.define(xs.Class, 'ns.tests.tap.stage.SingleTap', function (self, imports) {
             return;
         }
 
-        setTimeout(function () {
+        me.private.container.query('.sandbox').on(imports.event.Tap, function (event) {
+            me.report(event);
             me.done();
-        }, 1000);
+
+            xs.nextTick(function () {
+                me.private.container.query('.sandbox').off(imports.event.Tap);
+            });
+        });
     };
 
     Class.method.stop = function () {

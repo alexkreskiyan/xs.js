@@ -32,6 +32,8 @@ Controller.prototype.handle = function (message) {
             handler = me.tests;
             break;
         default:
+            console.log('no handler for incoming message', message.toString(), '. message is ignored');
+
             return;
     }
 

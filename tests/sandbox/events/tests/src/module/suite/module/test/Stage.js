@@ -8,7 +8,8 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
 
     Class.imports = {
         event: {
-            Done: 'ns.event.Done'
+            Done: 'ns.event.Done',
+            Log: 'ns.event.Log'
         },
         StageState: 'ns.StageState',
         view: {
@@ -77,6 +78,12 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
 
         //clean up sandbox
         me.private.container.sandbox.remove();
+    };
+
+    Class.method.report = function (event) {
+        var me = this;
+
+        me.events.emitter.send(new imports.event.Log(event));
     };
 
     Class.method.done = function () {

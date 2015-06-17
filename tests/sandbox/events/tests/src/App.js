@@ -28,6 +28,7 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             Url: 'xs.uri.WebSocket'
         },
         QueryString: 'xs.uri.query.QueryString',
+        Reporter: 'ns.Reporter',
         UserInfo: 'ns.UserInfo'
     };
 
@@ -40,7 +41,7 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         //make body a viewport
         var viewport = me.private.viewport = new imports.view.Container(document.body);
 
-        //create and open websocket connection
+        //create websocket connection
         var connection = new imports.websocket.Connection();
         var url = new imports.websocket.Url(imports.QueryString);
         url.scheme = 'ws';
@@ -48,10 +49,13 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         url.port = 3903;
         connection.url = url;
 
+        //create reporter
+        var reporter = new imports.Reporter(connection);
+
         //open connection
         connection.open().then(function () {
             //create suite module
-            var suite = new imports.suite.Module(connection);
+            var suite = new imports.suite.Module(connection, reporter);
             viewport.items.add(suite.container);
 
             suite.on(imports.suite.event.NewTest, function (event) {
