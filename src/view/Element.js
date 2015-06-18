@@ -26,6 +26,32 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
     Class.mixins.observable = 'xs.event.Observable';
 
     /**
+     * Element query flag, meaning, that element lookup starts from the end
+     *
+     * @static
+     *
+     * @property Reverse
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Reverse = 0x1;
+
+    /**
+     * Element query flag, meaning, that operation selects all matching elements
+     *
+     * @static
+     *
+     * @property All
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.All = 0x2;
+
+    /**
      * xs.view.Element constructor
      *
      * @param {Element} element wrapped element
@@ -89,6 +115,9 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
 
         //create access gate to element's classList
         me.private.classes = new Classes(element);
+
+        //define selected elements collection
+        me.private.selection = new xs.core.Collection();
     };
 
     /**
@@ -127,6 +156,104 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
         set: xs.noop
     };
 
+    /**
+     * Queries elements by selector from view. Optionally, query flags may be specified
+     *
+     * @method query
+     *
+     * @param {String} selector query selector string
+     * @param {Number} [flags] optional query flags. Allowed flags are:
+     *
+     * - Reverse - to find last matched element
+     * - All - to fetch all matched elements
+     *
+     * @return {xs.core.Collection|xs.view.Element|undefined}
+     */
+    Class.method.query = function (selector, flags) {
+        var me = this;
+
+        //assert, that selector is a string
+        self.assert.string(selector, 'query - given selector `$selector` is not a string', {
+            $selector: selector
+        });
+
+        var all, reverse;
+
+        //if no flags - single element is selected
+        if (arguments.length === 1) {
+            all = false;
+            reverse = false;
+
+            //handle flags
+        } else {
+
+            //assert that flags is number
+            self.assert.number(flags, 'query - given flags `$flags` list is not number', {
+                $flags: flags
+            });
+
+            //if All flag given
+            if (flags & self.All) {
+                all = true;
+                reverse = false;
+
+                //if Reverse flag given
+            } else if (flags & self.Reverse) {
+                all = false;
+                reverse = true;
+
+                //else - no changes compared with no flags scenario
+            } else {
+                all = false;
+                reverse = false;
+            }
+        }
+
+        //get nodes list
+        var nodes = me.private.el.querySelectorAll(selector);
+
+        var i;
+        var length = nodes.length;
+
+        if (!all) {
+
+            //return undefined - nothing found
+            if (!length) {
+                return;
+            }
+
+            //handle reverse flag
+            if (reverse) {
+
+                //return element
+                return getSelectionElement.call(me, nodes.item(length - 1));
+            } else {
+
+                //return element
+                return getSelectionElement.call(me, nodes.item(0));
+            }
+        }
+
+        //create selection collection
+        var selection = new xs.core.Collection();
+
+        for (i = 0; i < length; i++) {
+
+            //add element to selection
+            selection.add(getSelectionElement.call(me, nodes.item(i)));
+        }
+
+        //return selection
+        return selection;
+    };
+
+    /**
+     * Destroys element
+     *
+     * If element is added to some container, it is removed from that container
+     *
+     * @method destroy
+     */
     Class.method.destroy = function () {
         var me = this;
 
@@ -144,6 +271,11 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
             el.parentElement.removeChild(el);
         }
 
+        //clean up selection
+        me.private.selection.each(function (element) {
+            element.destroy();
+        });
+
         //call Observable.destroy
         self.mixins.observable.prototype.destroy.call(me);
 
@@ -155,6 +287,45 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
 
         //call parent destroy
         self.parent.prototype.destroy.call(me);
+    };
+
+    /**
+     * Returns selection element (or caches one)
+     *
+     * @ignore
+     *
+     * @private
+     *
+     * @method getSelectionElement
+     *
+     * @param {Element} el
+     *
+     * @return {xs.view.Element}
+     */
+    var getSelectionElement = function (el) {
+        var me = this;
+        var Element = self;
+
+        var selection = me.private.selection;
+
+        var element = selection.find(function (element) {
+            return element.private.el === el;
+        });
+
+        //if element already selected - return it
+        if (element) {
+
+            return element;
+        }
+
+        //create element
+        element = new Element(el);
+
+        //add element to elements collection
+        selection.add(element);
+
+        //return element
+        return element;
     };
 
 

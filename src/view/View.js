@@ -48,32 +48,6 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
     Class.extends = 'xs.view.Element';
 
-    /**
-     * View query flag, meaning, that element lookup starts from the end
-     *
-     * @static
-     *
-     * @property Reverse
-     *
-     * @readonly
-     *
-     * @type {Number}
-     */
-    Class.constant.Reverse = 0x1;
-
-    /**
-     * View query flag, meaning, that operation selects all matching elements
-     *
-     * @static
-     *
-     * @property All
-     *
-     * @readonly
-     *
-     * @type {Number}
-     */
-    Class.constant.All = 0x2;
-
     Class.constant.template = undefined;
 
     /**
@@ -117,9 +91,6 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
             me.private.positions = getPositions(me.self.descriptor.positions, getElementPositions(el));
         }
-
-        //define selected elements collection
-        me.private.selection = new xs.core.Collection();
     };
 
     /**
@@ -254,11 +225,6 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
                 delete me.private.positions[ name ];
             });
         }
-
-        //clean up elements
-        me.private.selection.each(function (element) {
-            element.destroy();
-        });
 
         //call parent destroy
         self.parent.prototype.destroy.call(me);
