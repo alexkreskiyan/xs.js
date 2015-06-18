@@ -15,8 +15,6 @@ var Controller = function (connection) {
     me.log = new LogController();
     me.connection = connection;
 
-    console.log('connection controller created', me.tests);
-
     connection.on('message', function (message) {
         me.handle(new Message.Incoming(message));
     });
@@ -25,7 +23,6 @@ module.exports = Controller;
 
 Controller.prototype.handle = function (message) {
     var me = this;
-    console.log('handle incoming message', message.toString());
 
     var handler;
 
@@ -37,13 +34,10 @@ Controller.prototype.handle = function (message) {
             handler = me.log;
             break;
         default:
-            console.log('no handler for incoming message', message.toString(), '. message is ignored');
-
             return;
     }
 
     handler.handle(message).then(function (response) {
-        console.log('send outgoing message', response.toString());
         me.connection.send(response.toString());
     });
 };

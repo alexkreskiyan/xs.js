@@ -27,16 +27,20 @@ xs.define(xs.Class, 'ns.UserInfo', function (self, imports) {
         if (storage.hasKey('user')) {
             user = storage.at('user');
         } else {
-            user = prompt('Who are you, %username%?');
+            while (!xs.isString(user) || user.length < 3) {
+                user = prompt('Who are you, %username%?');
+            }
             storage.add('user', user);
         }
 
         if (storage.hasKey('device')) {
             device = storage.at('device');
         } else {
-            device = prompt(xs.translate('What is your device, $user?', {
-                $user: user
-            }));
+            while (!xs.isString(device) || device.length < 3) {
+                device = prompt(xs.translate('What is your device, $user?', {
+                    $user: user
+                }));
+            }
             storage.add('device', device);
         }
 

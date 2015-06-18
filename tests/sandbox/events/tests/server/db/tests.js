@@ -53,7 +53,6 @@ var read = function (data) {
 
             if (row) {
                 row.stages = JSON.parse(row.stages);
-                console.log('resolve read with data', row);
                 resolve(row);
             } else {
                 reject('not found');
@@ -80,8 +79,6 @@ var readAll = function (data) {
             for (var i = 0; i < data.length; i++) {
                 data[ i ].stages = JSON.parse(data[ i ].stages);
             }
-
-            console.log('resolve readAll with data', data);
 
             resolve(data);
         });

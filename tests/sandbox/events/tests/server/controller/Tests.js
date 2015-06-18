@@ -48,7 +48,6 @@ Controller.prototype.handle = function (message) {
 };
 
 function create(data) {
-    console.log('create test', data);
 
     return tests.create({
         user: data.user,
@@ -59,7 +58,6 @@ function create(data) {
 }
 
 function read(data) {
-    console.log('read test', data);
 
     return tests.read({
         user: data.user,
@@ -69,7 +67,6 @@ function read(data) {
 }
 
 function readAll(data) {
-    console.log('read all tests', data);
 
     return tests.readAll({
         user: data.user,
@@ -78,7 +75,6 @@ function readAll(data) {
 }
 
 function update(data) {
-    console.log('update test', data);
 
     return tests.update({
         user: data.user,
