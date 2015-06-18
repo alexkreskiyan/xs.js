@@ -7,7 +7,15 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
     Class.namespace = 'stats';
 
     Class.imports = {
-        Viewport: 'ns.Viewport',
+        comparison: {
+            Module: 'ns.comparison.Module'
+        },
+        controls: {
+            event: {
+                Select: 'ns.controls.event.Select'
+            },
+            Module: 'ns.controls.Module'
+        },
         data: {
             model: {
                 Entry: 'ns.data.model.Entry'
@@ -15,51 +23,55 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             proxy: {
                 Xhr: 'ns.data.proxy.Xhr'
             },
+            reader: {
+                JSON: 'xs.data.reader.JSON'
+            },
             source: {
                 Log: 'ns.data.source.Log'
             }
         },
-        reader: {
-            JSON: 'xs.data.reader.JSON'
-        },
-        Controls: 'ns.controls.Module',
-        controls: {
-            event: {
-                Select: 'ns.controls.event.Select'
-            }
-        },
-        Grid: 'ns.grid.Module',
         grid: {
             event: {
                 Compare: 'ns.grid.event.Compare',
                 Show: 'ns.grid.event.Show'
-            }
+            },
+            Module: 'ns.grid.Module'
         },
-        Comparison: 'ns.comparison.Module'
+        view: {
+            Viewport: 'ns.Viewport'
+        },
+        uri: {
+            HTTP: 'xs.uri.HTTP',
+            QueryString: 'xs.uri.query.QueryString'
+        }
     };
 
     Class.method.run = function () {
         var me = this;
 
         //make body a viewport
-        var viewport = me.private.viewport = new imports.Viewport(document.body);
+        var viewport = me.private.viewport = new imports.view.Viewport(document.body);
 
 
         //create controls module
-        me.controls = new imports.Controls(controls);
+        me.controls = new imports.controls.Module(controls);
         viewport.items.add(me.controls.container);
 
         me.controls.on(imports.controls.event.Select, function (event) {
             me.grid.filter(event.field, event.value);
         });
 
+        //get location url to evaluate used database
+        var url = new imports.uri.HTTP(location.href, imports.uri.QueryString);
+        var dbName = url.query.params.db ? url.query.params.db : 'log';
+
         //define source
         me.source = new imports.data.source.Log();
-        me.source.proxy = new imports.data.proxy.Xhr();
-        me.source.proxy.reader = new imports.reader.JSON();
+        me.source.proxy = new imports.data.proxy.Xhr(dbName);
+        me.source.proxy.reader = new imports.data.reader.JSON();
 
         //create grid module
-        me.grid = new imports.Grid(controls, me.source);
+        me.grid = new imports.grid.Module(controls, me.source);
         viewport.items.add(me.grid.grid);
 
         me.grid.on(imports.grid.event.Compare, function (event) {
@@ -82,7 +94,7 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         });
 
         //create comparison module
-        me.comparison = new imports.Comparison(controls);
+        me.comparison = new imports.comparison.Module(controls);
         viewport.items.add(me.comparison.container);
 
         //load data to source and update app state

@@ -19,6 +19,16 @@ xs.define(xs.Class, 'ns.data.proxy.Xhr', function (self, imports) {
         'xs.data.operation.source.IReadAll'
     ];
 
+    Class.constructor = function (dbName) {
+        var me = this;
+
+        self.assert.string(dbName, 'constructor - given `$dbName` is not a string', {
+            $dbName: dbName
+        });
+
+        me.private.dbName = dbName;
+    };
+
     Class.method.readAll = function () {
         var me = this;
 
@@ -26,11 +36,12 @@ xs.define(xs.Class, 'ns.data.proxy.Xhr', function (self, imports) {
 
         var xhr = new imports.Request();
         xhr.method = imports.Method.GET;
-        xhr.url = new imports.Url(imports.QueryString);
-        xhr.url.scheme = 'http';
-        xhr.url.host = location.host;
-        xhr.url.port = 3901;
-        xhr.url.path = '/stats';
+        var url = xhr.url = new imports.Url(imports.QueryString);
+        url.scheme = 'http';
+        url.host = location.host;
+        url.port = 3901;
+        url.path = '/stats';
+        url.query.params.db = me.private.dbName;
 
         return xhr.send().then(function (response) {
             return me.reader.read(response.body);
