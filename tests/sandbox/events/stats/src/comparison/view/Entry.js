@@ -38,17 +38,24 @@ xs.define(xs.Class, 'ns.view.Entry', function (self, imports) {
         }
     };
 
-    var renderField = function (data, level) {
+    var renderField = function (data, level, label) {
         var element = document.createElement('div');
 
         if (xs.isObject(data)) {
+            if (label) {
+                var labelElement = document.createElement('div');
+                labelElement.classList.add('field');
+                labelElement.setAttribute('title', label);
+                labelElement.innerHTML = '-'.repeat(level) + ' ' + label;
+                element.appendChild(labelElement);
+            }
             Object.keys(data).forEach(function (key) {
-                element.appendChild(renderField(key + ': ' + data[ key ], level + 1));
+                element.appendChild(renderField(data[ key ], level + 1, key));
             });
         } else {
             element.classList.add('field');
             element.setAttribute('title', data);
-            element.innerHTML = '-'.repeat(level) + ' ' + data;
+            element.innerHTML = '-'.repeat(level) + ' ' + (label ? label + ': ' + data : data);
         }
 
         return element;

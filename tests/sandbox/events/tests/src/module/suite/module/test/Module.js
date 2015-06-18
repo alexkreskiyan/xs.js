@@ -86,7 +86,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
 
             //bind reporter
             stage.on(imports.event.Log, function (event) {
-                reporter.report(me.self.testName, name, event);
+                reporter.report(me.self.testName, name, event.event);
             });
 
             //add stage to test

@@ -38,6 +38,8 @@ xs.define(xs.Class, 'ns.tests.tap.stage.DoubleTap', function (self, imports) {
         var me = this;
 
         self.parent.prototype.stop.call(me);
+
+        me.private.container.query('.sandbox').off(imports.event.Tap);
     };
 
 });

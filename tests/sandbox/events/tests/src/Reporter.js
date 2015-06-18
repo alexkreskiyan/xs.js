@@ -40,7 +40,7 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
             userAgent: xs.env.Context,
             category: category,
             name: name,
-            event: serialize(event, 3)
+            event: serialize(event, 4)
         };
 
         var message = new imports.message.Outgoing('log', 'add', data);
@@ -54,22 +54,38 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
             return serializeNonObject(item);
         }
 
-        var result = {};
-        var keys = Object.keys(item).concat(Object.keys(item.constructor.prototype));
+        var result = {
+            prototype: {}
+        };
+        var ownKeys = Object.keys(item);
+
+        var prototype = result.prototype;
+        var prototypeKeys = Object.keys(item.constructor.prototype);
+
         var i, key;
 
         if (depth <= 1) {
 
-            for (i = 0; i < keys.length; i++) {
-                key = keys[ i ];
+            for (i = 0; i < ownKeys.length; i++) {
+                key = ownKeys[ i ];
                 result[ key ] = serializeNonObject(item[ key ]);
+            }
+
+            for (i = 0; i < prototypeKeys.length; i++) {
+                key = prototypeKeys[ i ];
+                prototype[ key ] = serializeNonObject(item[ key ]);
             }
 
         } else {
 
-            for (i = 0; i < keys.length; i++) {
-                key = keys[ i ];
+            for (i = 0; i < ownKeys.length; i++) {
+                key = ownKeys[ i ];
                 result[ key ] = serialize(item[ key ], depth - 1);
+            }
+
+            for (i = 0; i < prototypeKeys.length; i++) {
+                key = prototypeKeys[ i ];
+                prototype[ key ] = serialize(item[ key ], depth - 1);
             }
 
         }
