@@ -152,13 +152,25 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
     Class.method.add = function (key, value) {
         var me = this;
 
-        return self.mixins.enumerable.prototype.add.call(me, serializePrimary(key), value);
+        if (arguments.length > 1) {
+
+            return self.mixins.enumerable.prototype.add.call(me, serializePrimary(key), value);
+        } else {
+
+            return self.mixins.enumerable.prototype.add.call(me, key);
+        }
     };
 
     Class.method.insert = function (index, key, value) {
         var me = this;
 
-        return self.mixins.enumerable.prototype.insert.call(me, index, serializePrimary(key), value);
+        if (arguments.length > 2) {
+
+            return self.mixins.enumerable.prototype.insert.call(me, index, serializePrimary(key), value);
+        } else {
+
+            return self.mixins.enumerable.prototype.insert.call(me, index, key);
+        }
     };
 
     Class.method.set = function (key, value, flags) {
