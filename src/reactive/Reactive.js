@@ -263,7 +263,7 @@ Reactive.prototype.off = function (event, selector, flags) {
 
         //event, selector, flags scenario
     } else {
-        handleOn.apply(me, arguments);
+        handleOff.apply(me, arguments);
     }
 
     return me;
@@ -318,7 +318,7 @@ Reactive.prototype.suspend = function (event, selector, flags) {
 
         //event, selector, flags scenario
     } else {
-        handleOn.apply(me, arguments);
+        handleSuspend.apply(me, arguments);
     }
 
     return me;
@@ -372,7 +372,7 @@ Reactive.prototype.resume = function (selector, flags) {
 
         //event, selector, flags scenario
     } else {
-        handleOn.apply(me, arguments);
+        handleResume.apply(me, arguments);
     }
 
     return me;
