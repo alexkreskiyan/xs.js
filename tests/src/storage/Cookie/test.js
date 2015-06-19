@@ -28,13 +28,15 @@ module('xs.storage.Cookie', function () {
 
         var user = prompt('Введите ваше имя:','');
         if (user != '' && user != null) {
-            cookies.setCookie('username', user, 30);
+            cookies.add('username', user, {
+                maxAge: 30
+            });
         }
-        var cookie = cookies.getValueCookie('username');
+        var cookie = cookies.get('username');
         if (cookie) {
             alert('Значение cookie : '+ cookie);
-            cookies.clearCookie('username','/');
-            if (!cookies.getValueCookie('username')) {
+            cookies.remove();
+            if (!cookies.get('username')) {
                 alert('кука удалена');
             }
         }
