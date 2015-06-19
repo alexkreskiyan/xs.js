@@ -17,6 +17,8 @@
         "jscs": "latest",
         "jsdoc": "latest",
         "jshint": "latest",
+        "sqlite3": "latest",
+        "promise": "latest",
         "qunitjs": "latest",
         "ws": "latest"
     },

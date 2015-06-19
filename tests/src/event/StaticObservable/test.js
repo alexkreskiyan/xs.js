@@ -49,23 +49,8 @@ module('xs.event.StaticObservable', function () {
             Class.mixins.observable = 'xs.event.StaticObservable';
 
             Class.constant.events = xs.generator(function () {
-                var send = null;
-
-                //create event stream
-                //save stream reference
-                var stream = new xs.event.Stream(function () {
-
-                    //save send reference
-                    send = this.send;
-
-                    //call generator
-                    return generator.call(this);
-                });
-
-                //save send to stream
-                stream.send = send;
-
-                return stream;
+                //return event stream
+                return new xs.reactive.Stream(generator);
             });
 
             var generator = function () {
@@ -114,17 +99,17 @@ module('xs.event.StaticObservable', function () {
             positioned: ''
         };
 
-        //method can be added with initially suspended state
+        //method can be added with initially non-active state
         me.Observable.on(function (event) {
             log.suspended += event.data;
         }, {
-            suspended: true
+            active: false
         });
 
         //this way stream is still inactive
         strictEqual(me.Observable.events.isActive, false);
 
-        //simply method appends new handler, that has undefined scope, undefined event and is not suspended
+        //simply method appends new handler, that has undefined scope, undefined event and is active
         me.Observable.on(function (event) {
             log.simple += event.data;
         });
@@ -162,7 +147,7 @@ module('xs.event.StaticObservable', function () {
             priority: 0
         });
 
-        me.Observable.on(xs.event.Destroy, function () {
+        me.Observable.on(xs.reactive.event.Destroy, function () {
             //check logs
             strictEqual(log.simple, '12346789'); //5 is missing - cancelled
             strictEqual(log.eventedOne, '2468');
@@ -213,23 +198,8 @@ module('xs.event.StaticObservable', function () {
             Class.mixins.observable = 'xs.event.StaticObservable';
 
             Class.constant.events = xs.generator(function () {
-                var send = null;
-
-                //create event stream
-                //save stream reference
-                var stream = new xs.event.Stream(function () {
-
-                    //save send reference
-                    send = this.send;
-
-                    //call generator
-                    return generator.call(this);
-                });
-
-                //save send to stream
-                stream.send = send;
-
-                return stream;
+                //return event stream
+                return new xs.reactive.Stream(generator);
             });
 
             var generator = function () {
@@ -344,23 +314,8 @@ module('xs.event.StaticObservable', function () {
             Class.mixins.observable = 'xs.event.StaticObservable';
 
             Class.constant.events = xs.generator(function () {
-                var send = null;
-
-                //create event stream
-                //save stream reference
-                var stream = new xs.event.Stream(function () {
-
-                    //save send reference
-                    send = this.send;
-
-                    //call generator
-                    return generator.call(this);
-                });
-
-                //save send to stream
-                stream.send = send;
-
-                return stream;
+                //return event stream
+                return new xs.reactive.Stream(generator);
             });
 
             var generator = function () {
@@ -475,23 +430,8 @@ module('xs.event.StaticObservable', function () {
             Class.mixins.observable = 'xs.event.StaticObservable';
 
             Class.constant.events = xs.generator(function () {
-                var send = null;
-
-                //create event stream
-                //save stream reference
-                var stream = new xs.event.Stream(function () {
-
-                    //save send reference
-                    send = this.send;
-
-                    //call generator
-                    return generator.call(this);
-                });
-
-                //save send to stream
-                stream.send = send;
-
-                return stream;
+                //return event stream
+                return new xs.reactive.Stream(generator);
             });
 
             var generator = function () {

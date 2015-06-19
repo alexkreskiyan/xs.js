@@ -160,15 +160,6 @@ module('xs.core.Collection', function () {
         //init test variables
         var collection;
 
-        //check key processing
-        collection = new xs.core.Collection([
-            1,
-            3
-        ]);
-        throws(function () {
-            collection.hasKey([]);
-        });
-
         //check simple array list
         collection = new xs.core.Collection([
             1,
@@ -281,6 +272,7 @@ module('xs.core.Collection', function () {
         strictEqual(collection.keyOf(1), 'x');
         strictEqual(collection.keyOf(item), 'a');
         strictEqual(collection.keyOf(item, xs.core.Collection.Reverse), 'b');
+        strictEqual(collection.keyOf(item, xs.core.Collection.Index), 4);
         strictEqual(collection.keyOf('1'), undefined);
 
         //test empty object list
@@ -305,12 +297,7 @@ module('xs.core.Collection', function () {
             3
         ]);
 
-        //incorrect key
-        throws(function () {
-            collection.at([]);
-        });
-
-        //index out of bounds
+        //key is missing
         throws(function () {
             collection.at(3);
         });
@@ -321,7 +308,9 @@ module('xs.core.Collection', function () {
             3
         ]);
         strictEqual(collection.at(0), 1);
+        strictEqual(collection.at(0, xs.core.Collection.Index), 1);
         strictEqual(collection.at(1), 3);
+        strictEqual(collection.at(1, xs.core.Collection.Index), 3);
 
         //check simple object list
         collection = new xs.core.Collection({
@@ -335,7 +324,9 @@ module('xs.core.Collection', function () {
         });
 
         strictEqual(collection.at('x'), 1);
+        strictEqual(collection.at(0, xs.core.Collection.Index), 1);
         strictEqual(collection.at('b'), 2);
+        strictEqual(collection.at(1, xs.core.Collection.Index), 2);
     });
 
     test('first', function () {
@@ -460,10 +451,6 @@ module('xs.core.Collection', function () {
         throws(function () {
             collection.add();
         });
-        //throws if key is not atring
-        throws(function () {
-            collection.add(1, 1);
-        });
         //throws if adding with existent key
         throws(function () {
             collection.add('1', 1);
@@ -502,11 +489,6 @@ module('xs.core.Collection', function () {
             collection.insert(2, 1);
         });
 
-        //throws if adding with non-string key
-        throws(function () {
-            collection.insert(0, [], 1);
-        });
-
         //throws if adding with same key
         collection = new xs.core.Collection({
             a: 1
@@ -541,15 +523,11 @@ module('xs.core.Collection', function () {
         throws(function () {
             collection.set(1);
         });
-        //throws if key is incorrect
-        throws(function () {
-            collection.set([], 1);
-        });
 
-        //throws if key (index) not in bounds
+        //throws if index is out of bounds
         collection = new xs.core.Collection([ 1 ]);
         throws(function () {
-            collection.set(1, 1);
+            collection.set(1, 1, xs.core.Collection.Index);
         });
 
         //throws if key (key) is missing
@@ -563,8 +541,8 @@ module('xs.core.Collection', function () {
         //complex test
         collection = new xs.core.Collection();
         collection.add('a', x);
-        strictEqual(collection.at(0), x);
-        collection.set(0, 2);
+        strictEqual(collection.at('a'), x);
+        collection.set(0, 2, xs.core.Collection.Index);
         strictEqual(collection.first(), 2);
         strictEqual(collection.keyOf(2), 'a');
         collection.set('a', 5);
@@ -842,15 +820,11 @@ module('xs.core.Collection', function () {
 
         //check object collection error handling
         collection = new xs.core.Collection();
-        //throws if key is incorrect
-        throws(function () {
-            collection.removeAt([]);
-        });
 
         //throws if key (index) not in bounds
         collection = new xs.core.Collection([ 1 ]);
         throws(function () {
-            collection.removeAt(1);
+            collection.removeAt(1, xs.core.Collection.Index);
         });
 
         //throws if key (key) is missing
@@ -881,7 +855,7 @@ module('xs.core.Collection', function () {
         collection.removeAt('b');
         strictEqual(collection.keys().toString(), 'a,c');
         strictEqual(collection.values().toString(), '1,3');
-        collection.removeAt(-1);
+        collection.removeAt(-1, xs.core.Collection.Index);
         strictEqual(collection.keys().toString(), 'a');
         strictEqual(collection.values().toString(), '1');
     });

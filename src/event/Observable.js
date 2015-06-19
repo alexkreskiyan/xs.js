@@ -20,32 +20,12 @@ xs.define(xs.Class, 'ns.Observable', function () {
     Class.constructor = function (generator, sources) {
         var me = this;
 
-        var send = null;
-        //create event stream
-        if (arguments.length < 2) {
-            //save stream reference
-            me.private.stream = new xs.event.Stream(function () {
-
-                //save send reference
-                send = this.send;
-
-                //call generator
-                return generator.call(this);
-            });
+        //save stream reference
+        if (arguments.length > 1) {
+            me.private.stream = new xs.reactive.Stream(generator, sources);
         } else {
-            //save stream reference
-            me.private.stream = new xs.event.Stream(function () {
-
-                //save send reference
-                send = this.send;
-
-                //call generator
-                return generator.apply(this, arguments);
-            }, sources);
+            me.private.stream = new xs.reactive.Stream(generator);
         }
-
-        //save send reference to stream
-        me.private.stream.send = send;
     };
 
     Class.property.events = {

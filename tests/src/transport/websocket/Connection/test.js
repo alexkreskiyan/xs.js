@@ -210,7 +210,10 @@ module('xs.transport.websocket.Connection', function () {
         });
 
         connection.url = new xs.uri.WebSocket(server, xs.uri.query.QueryString);
-        connection.open().then(me.done);
+        connection.open().then(function () {
+            connection.close();
+            me.done();
+        });
 
         //after open state is changed to `connecting`
         strictEqual(connection.state, xs.transport.websocket.State.Connecting);

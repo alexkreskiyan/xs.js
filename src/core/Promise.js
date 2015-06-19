@@ -457,18 +457,11 @@ function handleItem(item, action, data) {
     //get item.promise ref
     var promise = item.promise;
 
-    try {
-        //get handler result
-        var result = handler(data);
+    //get handler result
+    var result = handler(data);
 
-        //resolve item.promise with fetched result
-        resolveValue(promise, action, result);
-
-
-        //reject if error happened
-    } catch (exception) {
-        promise.reject(exception);
-    }
+    //resolve item.promise with fetched result
+    resolveValue(promise, action, result);
 }
 
 /**

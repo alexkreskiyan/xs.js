@@ -209,15 +209,6 @@ module('xs.data.Enumerable', function () {
         //init test variables
         var collection;
 
-        //check key processing
-        collection = new xs.data.Collection([
-            1,
-            3
-        ]);
-        throws(function () {
-            collection.hasKey([]);
-        });
-
         //check simple array list
         collection = new xs.data.Collection([
             1,
@@ -339,6 +330,7 @@ module('xs.data.Enumerable', function () {
         strictEqual(collection.keyOf(1), 'x');
         strictEqual(collection.keyOf(item), 'a');
         strictEqual(collection.keyOf(item, xs.data.Collection.Reverse), 'b');
+        strictEqual(collection.keyOf(item, xs.data.Collection.Index), 4);
         strictEqual(collection.keyOf('1'), undefined);
 
         //test empty object list
@@ -373,12 +365,7 @@ module('xs.data.Enumerable', function () {
             3
         ]);
 
-        //incorrect key
-        throws(function () {
-            collection.at([]);
-        });
-
-        //index out of bounds
+        //key is missing
         throws(function () {
             collection.at(3);
         });
@@ -389,7 +376,9 @@ module('xs.data.Enumerable', function () {
             3
         ]);
         strictEqual(collection.at(0), 1);
+        strictEqual(collection.at(0, xs.data.Collection.Index), 1);
         strictEqual(collection.at(1), 3);
+        strictEqual(collection.at(1, xs.data.Collection.Index), 3);
 
         //check simple object list
         collection = new xs.data.Collection({
@@ -403,7 +392,9 @@ module('xs.data.Enumerable', function () {
         });
 
         strictEqual(collection.at('x'), 1);
+        strictEqual(collection.at(0, xs.data.Collection.Index), 1);
         strictEqual(collection.at('b'), 2);
+        strictEqual(collection.at(1, xs.data.Collection.Index), 2);
     });
 
     test('first', function () {
@@ -528,10 +519,6 @@ module('xs.data.Enumerable', function () {
         throws(function () {
             collection.add();
         });
-        //throws if key is not a string
-        throws(function () {
-            collection.add(1, 1);
-        });
         //throws if adding with existent key
         throws(function () {
             collection.add('1', 1);
@@ -631,11 +618,6 @@ module('xs.data.Enumerable', function () {
             collection.insert(2, 1);
         });
 
-        //throws if adding with non-string key
-        throws(function () {
-            collection.insert(0, [], 1);
-        });
-
         //throws if adding with same key
         collection = new xs.data.Collection({
             a: 1
@@ -669,7 +651,7 @@ module('xs.data.Enumerable', function () {
         strictEqual(collection.at(0), 2);
         collection.insert(-1, 1);
         strictEqual(collection.values().toString(), '2,1,3');
-        strictEqual(collection.at(-1), 3);
+        strictEqual(collection.at(-1, xs.data.Collection.Index), 3);
 
 
         //test events
@@ -733,15 +715,11 @@ module('xs.data.Enumerable', function () {
         throws(function () {
             collection.set(1);
         });
-        //throws if key is incorrect
-        throws(function () {
-            collection.set([], 1);
-        });
 
-        //throws if key (index) not in bounds
+        //throws if index is out of bounds
         collection = new xs.data.Collection([ 1 ]);
         throws(function () {
-            collection.set(1, 1);
+            collection.set(1, 1, xs.core.Collection.Index);
         });
 
         //throws if key (key) is missing
@@ -755,8 +733,8 @@ module('xs.data.Enumerable', function () {
         //complex test
         collection = new xs.data.Collection();
         collection.add('a', x);
-        strictEqual(collection.at(0), x);
-        collection.set(0, 2);
+        strictEqual(collection.at('a'), x);
+        collection.set(0, 2, xs.data.Collection.Index);
         strictEqual(collection.first(), 2);
         strictEqual(collection.keyOf(2), 'a');
         collection.set('a', 5);
@@ -768,8 +746,8 @@ module('xs.data.Enumerable', function () {
         throws(function () {
             collection.set(0, 'b');
         });
-        strictEqual(collection.at(0), 5);
-        collection.set(0, 2);
+        strictEqual(collection.at('a'), 5);
+        collection.set(0, 2, xs.data.Collection.Index);
         strictEqual(collection.first(), 2);
         strictEqual(collection.keyOf(2), 'a');
         collection.set('a', 4);
@@ -1102,15 +1080,11 @@ module('xs.data.Enumerable', function () {
 
         //check object collection error handling
         collection = new xs.data.Collection();
-        //throws if key is incorrect
-        throws(function () {
-            collection.removeAt([]);
-        });
 
         //throws if key (index) not in bounds
         collection = new xs.data.Collection([ 1 ]);
         throws(function () {
-            collection.removeAt(1);
+            collection.removeAt(1, xs.core.Collection.Index);
         });
 
         //throws if key (key) is missing
@@ -1141,7 +1115,7 @@ module('xs.data.Enumerable', function () {
         collection.removeAt('b');
         strictEqual(collection.keys().toString(), 'a,c');
         strictEqual(collection.values().toString(), '1,3');
-        collection.removeAt(-1);
+        collection.removeAt(-1, xs.core.Collection.Index);
         strictEqual(collection.keys().toString(), 'a');
         strictEqual(collection.values().toString(), '1');
 
@@ -1183,13 +1157,13 @@ module('xs.data.Enumerable', function () {
             str += '!!!';
         });
 
-        collection.removeAt(5);
-        collection.removeAt(1);
-        collection.removeAt(4);
-        collection.removeAt(0);
-        collection.removeAt(2);
-        collection.removeAt(0);
-        collection.removeAt(0);
+        collection.removeAt(5, xs.core.Collection.Index);
+        collection.removeAt(1, xs.core.Collection.Index);
+        collection.removeAt(4, xs.core.Collection.Index);
+        collection.removeAt(0, xs.core.Collection.Index);
+        collection.removeAt(2, xs.core.Collection.Index);
+        collection.removeAt(0, xs.core.Collection.Index);
+        collection.removeAt(0, xs.core.Collection.Index);
         strictEqual(JSON.stringify(collection.toSource()), '{"a":4,"c":6,"e":8,"g":10}');
 
         strictEqual(str, '8f5:6b1:8d2:');

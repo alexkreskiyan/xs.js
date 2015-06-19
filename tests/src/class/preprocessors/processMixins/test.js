@@ -30,7 +30,7 @@ module('xs.class.preprocessors.processMixins', function () {
 
         //verify descriptor
         strictEqual(Child.descriptor.mixins.size, 1);
-        strictEqual(Child.descriptor.mixins.at(0), ns.resources.Mix2);
+        strictEqual(Child.descriptor.mixins.at('mix2'), ns.resources.Mix2);
         strictEqual(Child.descriptor.allMixins.size, 2);
         strictEqual(Child.descriptor.allMixins.at(0), ns.resources.Mix1);
         strictEqual(Child.descriptor.allMixins.at(1), ns.resources.Mix2);

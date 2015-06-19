@@ -73,6 +73,10 @@ module('xs.data.Query', function () {
         strictEqual(query.isExecuted, false);
         strictEqual(query.size, 0);
 
+        throws(function () {
+            query.execute(null);
+        });
+
         //execute
         query.execute();
         strictEqual(query.private.source, source);
@@ -80,6 +84,16 @@ module('xs.data.Query', function () {
         strictEqual(source.values().toString(), '1,2,3');
         strictEqual(query.isExecuted, true);
         strictEqual(query.values().toString(), '1,2,3');
+
+        source.removeAt(0);
+        query.execute({
+            update: false
+        });
+        strictEqual(query.private.source, source);
+        strictEqual(source.isExecuted, true);
+        strictEqual(source.values().toString(), '2,3');
+        strictEqual(query.isExecuted, true);
+        strictEqual(query.values().toString(), '2,3');
     });
 
     test('innerJoin', function () {
@@ -97,6 +111,11 @@ module('xs.data.Query', function () {
         //condition must be a function
         throws(function () {
             query.innerJoin([]);
+        });
+
+        //options, if given, must be an object
+        throws(function () {
+            query.innerJoin([], xs.noop, null);
         });
 
         //all items must be objects to perform joins
@@ -190,6 +209,21 @@ module('xs.data.Query', function () {
         strictEqual(JSON.stringify(query.at(0)), '{"x":1,"y":1,"a":1,"b":2}');
         strictEqual(JSON.stringify(query.at(1)), '{"x":2,"y":3,"a":2,"b":5}');
         strictEqual(JSON.stringify(query.at(2)), '{"x":3,"y":5,"a":3,"b":4}');
+
+        //execute without update
+        queryLeft.removeAt(0);
+        query = queryLeft
+            .innerJoin(queryRight, function (left, right) {
+                return left.x === right.a;
+            }, {
+                updateLeft: false
+            });
+
+        query.execute();
+
+        strictEqual(query.size, 2);
+        strictEqual(JSON.stringify(query.at(0)), '{"x":2,"y":3,"a":2,"b":5}');
+        strictEqual(JSON.stringify(query.at(1)), '{"x":3,"y":5,"a":3,"b":4}');
     });
 
     test('outerJoin', function () {
@@ -209,6 +243,11 @@ module('xs.data.Query', function () {
             query.outerJoin([]);
         });
 
+        //options, if given, must be an object
+        throws(function () {
+            query.outerJoin([], xs.noop, null);
+        });
+
         //all items must be objects to perform joins
         //source
         query = (new xs.data.Query([
@@ -218,7 +257,7 @@ module('xs.data.Query', function () {
                 {
                     x: 1
                 }
-            ]), xs.noop);
+            ]), xs.noop, {});
         throws(function () {
             query.execute();
         });
@@ -292,9 +331,11 @@ module('xs.data.Query', function () {
         query = queryLeft
             .outerJoin(queryRight, function (left, right) {
                 return left.x === right.a;
-            }, xs.generator(function () {
-                return {};
-            }));
+            }, {
+                emptyValue: xs.generator(function () {
+                    return {};
+                })
+            });
 
         query.execute();
 
@@ -304,6 +345,26 @@ module('xs.data.Query', function () {
         strictEqual(JSON.stringify(query.at(2)), '{"x":3,"y":5,"a":3,"b":4}');
         strictEqual(JSON.stringify(query.at(3)), '{"x":4,"y":7}');
         strictEqual(JSON.stringify(query.at(4)), '{"x":5,"y":9}');
+
+        //execute without update
+        queryLeft.removeAt(0);
+        query = queryLeft
+            .outerJoin(queryRight, function (left, right) {
+                return left.x === right.a;
+            }, {
+                emptyValue: xs.generator(function () {
+                    return {};
+                }),
+                updateLeft: false
+            });
+
+        query.execute();
+
+        strictEqual(query.size, 4);
+        strictEqual(JSON.stringify(query.at(0)), '{"x":2,"y":3,"a":2,"b":5}');
+        strictEqual(JSON.stringify(query.at(1)), '{"x":3,"y":5,"a":3,"b":4}');
+        strictEqual(JSON.stringify(query.at(2)), '{"x":4,"y":7}');
+        strictEqual(JSON.stringify(query.at(3)), '{"x":5,"y":9}');
     });
 
     test('groupJoin', function () {
@@ -411,6 +472,25 @@ module('xs.data.Query', function () {
         strictEqual(JSON.stringify(query.at(2)), '{"x":3,"y":5,"items":[{"a":3,"b":4}]}');
         strictEqual(JSON.stringify(query.at(3)), '{"x":4,"y":7,"items":[]}');
         strictEqual(JSON.stringify(query.at(4)), '{"x":5,"y":9,"items":[]}');
+
+        //execute without update
+        queryLeft.removeAt(0);
+        query = queryLeft
+            .groupJoin(queryRight, function (left, right) {
+                return left.x === right.a;
+            }, {
+                alias: 'items',
+                asArray: true,
+                updateLeft: false
+            });
+
+        query.execute();
+
+        strictEqual(query.size, 4);
+        strictEqual(JSON.stringify(query.at(0)), '{"x":2,"y":3,"items":[{"a":2,"b":5},{"a":2,"b":3}]}');
+        strictEqual(JSON.stringify(query.at(1)), '{"x":3,"y":5,"items":[{"a":3,"b":4}]}');
+        strictEqual(JSON.stringify(query.at(2)), '{"x":4,"y":7,"items":[]}');
+        strictEqual(JSON.stringify(query.at(3)), '{"x":5,"y":9,"items":[]}');
     });
 
     test('select', function () {

@@ -1,0 +1,174 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: Consolas, Menlo, Courier, monospace;
+}
+
+@media (max-width: 1024px) {
+    html, body {
+        font-size: 6pt;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1600px) {
+    html, body {
+        font-size: 8pt;
+    }
+}
+
+@media (min-width: 1600px) {
+    html, body {
+        font-size: 9pt;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#controls {
+    width: 20%;
+    height: 100%;
+    border-right: 2px solid rgb(211, 211, 211);
+    box-sizing: border-box;
+    overflow-y: scroll;
+    float: left;
+}
+
+#controls > .group {
+    width: 100%;
+    border: none;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#controls > .group > h2 {
+    font-size: 1.2em;
+    line-height: 30px;
+}
+
+#controls > .group label {
+    display: inline-block;
+    width: 40%;
+}
+
+#controls > .group select {
+    width: 60%;
+    height: 100px;
+    line-height: 100px;
+}
+
+#grid {
+    width: 80%;
+    height: 100%;
+    float: right;
+    overflow-y: hidden;
+    position: relative;
+}
+
+#grid > .controls {
+    height: 30px;
+}
+
+.control {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+    padding: 0 20px;
+    box-sizing: border-box;
+    border: 1px solid darkgrey;
+    transition: background .2s;
+}
+
+.control:hover {
+    background: #ccc;
+}
+
+.control:active {
+    background: #aaa;
+}
+
+#grid > .header {
+    height: 30px;
+}
+
+#grid > .rows {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    right: 0;
+    bottom: 0;
+    overflow-y: scroll;
+}
+
+#grid .state {
+    display: inline-block;
+    cursor: pointer;
+    width: 4%;
+}
+
+#grid .field {
+    display: inline-block;
+    cursor: pointer;
+    width: 6%;
+}
+
+#comparison {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, .9);
+    transition: opacity .2s;
+}
+
+#comparison > .controls {
+    text-align: right;
+}
+
+#comparison > .labels {
+    display: inline-block;
+    width: 110px;
+    box-sizing: border-box;
+    padding: 0 5px;
+}
+
+#comparison > .container {
+    position: absolute;
+    left: 110px;
+    top: 30px;
+    right: 0;
+    bottom: 0;
+    overflow: scroll;
+    white-space: nowrap;
+}
+
+#comparison > .container > .items > .entry {
+    width: 200px;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0 5px;
+    vertical-align: top;
+}
+
+#comparison > .container > .items > .entry .field {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#comparison .field {
+    height: 30px;
+    line-height: 30px;
+}
+
+.invisible {
+    opacity: 0;
+}
+
+.hidden {
+    display: none;
+}

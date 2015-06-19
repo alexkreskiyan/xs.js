@@ -17,20 +17,19 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
     Class.namespace = 'xs.data';
 
-    Class.imports = [
-        {
-            ISourceOperation: 'ns.operation.ISourceOperation'
+    Class.imports = {
+        event: {
+            Add: 'ns.enumerable.event.Add',
+            Remove: 'ns.enumerable.event.Remove',
+            Set: 'ns.enumerable.event.Set'
         },
-        {
-            OperationEvent: 'ns.operation.Event'
+        operation: {
+            ISourceOperation: 'ns.operation.ISourceOperation',
+            Event: 'ns.operation.Event'
         },
-        {
-            Model: 'ns.Model'
-        },
-        {
-            Proxy: 'ns.Proxy'
-        }
-    ];
+        Model: 'ns.Model',
+        Proxy: 'ns.Proxy'
+    };
 
     Class.mixins.observable = 'xs.event.Observable';
 
@@ -94,6 +93,15 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
                 me.bind(relation, source);
             });
         }
+
+        //bind events to sync model source reference
+        var options = {
+            scope: me
+        };
+
+        me.on(imports.event.Add, handleAdd, options);
+        me.on(imports.event.Set, handleSet, options);
+        me.on(imports.event.Remove, handleRemove, options);
     };
 
     Class.property.proxy = {
@@ -107,20 +115,120 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
             //verify, that proxy implements all operations, implemented by model
             self.assert.ok(this.self.descriptor.implements.all(function (Interface) {
 
-                //return true if Interface is not a ISourceOperation child, or it is and proxy implements it too
-                return !Interface.inherits(imports.ISourceOperation) || proxy.self.implements(Interface);
+                //return true if Interface is not a operation.ISourceOperation child, or it is and proxy implements it too
+                return !Interface.inherits(imports.operation.ISourceOperation) || proxy.self.implements(Interface);
             }), 'proxy:set - given proxy class `$Proxy` implements model operations `$OperationsProxy`, that does not cover required model operations `$OperationsModel`', {
                 $Proxy: proxy.self,
                 $OperationsProxy: proxy.self.descriptor.implements.find(function (Interface) {
-                    return Interface.inherits(imports.ISourceOperation);
+                    return Interface.inherits(imports.operation.ISourceOperation);
                 }, xs.core.Collection.All).values(),
                 $OperationsModel: this.self.descriptor.implements.find(function (Interface) {
-                    return Interface.inherits(imports.ISourceOperation);
+                    return Interface.inherits(imports.operation.ISourceOperation);
                 }, xs.core.Collection.All).values()
             });
 
             this.private.proxy = proxy;
         }
+    };
+
+    Class.method.hasKey = function (key) {
+        var me = this;
+
+        return self.mixins.enumerable.prototype.hasKey.call(me, serializePrimary(key));
+    };
+
+    Class.method.at = function (key, flags) {
+        var me = this;
+
+        if (arguments.length > 1) {
+
+            return self.mixins.enumerable.prototype.at.call(me, serializePrimary(key), flags);
+        } else {
+
+            return self.mixins.enumerable.prototype.at.call(me, serializePrimary(key));
+        }
+    };
+
+    Class.method.add = function (key, value) {
+        var me = this;
+
+        if (arguments.length > 1) {
+
+            return self.mixins.enumerable.prototype.add.call(me, serializePrimary(key), value);
+        } else {
+
+            return self.mixins.enumerable.prototype.add.call(me, key);
+        }
+    };
+
+    Class.method.insert = function (index, key, value) {
+        var me = this;
+
+        if (arguments.length > 2) {
+
+            return self.mixins.enumerable.prototype.insert.call(me, index, serializePrimary(key), value);
+        } else {
+
+            return self.mixins.enumerable.prototype.insert.call(me, index, key);
+        }
+    };
+
+    Class.method.set = function (key, value, flags) {
+        var me = this;
+
+        if (arguments.length > 2) {
+
+            return self.mixins.enumerable.prototype.set.call(me, serializePrimary(key), value, flags);
+        } else {
+
+            return self.mixins.enumerable.prototype.set.call(me, serializePrimary(key), value);
+        }
+    };
+
+    Class.method.removeAt = function (key, flags) {
+        var me = this;
+
+        if (arguments.length > 1) {
+
+            return self.mixins.enumerable.prototype.removeAt.call(me, serializePrimary(key), flags);
+        } else {
+
+            return self.mixins.enumerable.prototype.removeAt.call(me, serializePrimary(key));
+        }
+    };
+
+    Class.method.pick = function (keys) {
+        var me = this;
+
+        //assert that keys is array
+        self.assert.array(keys, 'pick - given keys list `$keys` is not array', {
+            $keys: keys
+        });
+
+        var usedKeys = [];
+
+        for (var i = 0; i < keys.length; i++) {
+            usedKeys[ i ] = serializePrimary(keys[ i ]);
+        }
+
+        return self.mixins.enumerable.prototype.pick.call(me, usedKeys);
+    };
+
+    Class.method.omit = function (keys) {
+        var me = this;
+
+        //assert that keys is array
+        self.assert.array(keys, 'omit - given keys list `$keys` is not array', {
+            $keys: keys
+        });
+
+        var usedKeys = [];
+
+        for (var i = 0; i < keys.length; i++) {
+            usedKeys[ i ] = serializePrimary(keys[ i ]);
+        }
+
+        return self.mixins.enumerable.prototype.omit.call(me, usedKeys);
     };
 
     Class.method.isBound = function (relation) {
@@ -138,7 +246,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         var me = this;
 
         //assert, that relation is not bound
-        self.assert.not(me.isBound(relation), 'bind - relation `$relation` is already binded', {
+        self.assert.not(me.isBound(relation), 'bind - relation `$relation` is already bound', {
             $relation: relation
         });
 
@@ -165,7 +273,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
                 operation: function (event) {
                     var me = this;
                     event.relation = relation;
-                    me.private.stream.send(event);
+                    me.events.emitter.send(event);
                 },
                 destroy: function () {
                     var me = this;
@@ -175,10 +283,10 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
         };
 
         //add binding handlers
-        binding.source.on(imports.OperationEvent, binding.handlers.operation, {
+        binding.source.on(imports.operation.Event, binding.handlers.operation, {
             scope: me
         });
-        binding.source.on(xs.event.Destroy, binding.handlers.destroy, {
+        binding.source.on(xs.reactive.event.Destroy, binding.handlers.destroy, {
             scope: me
         });
     };
@@ -192,10 +300,10 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
             (new xs.core.Collection(me.private.bindings)).each(function (binding) {
 
                 //remove relation handlers
-                binding.source.off(imports.OperationEvent, function (item) {
+                binding.source.off(imports.operation.Event, function (item) {
                     return item.handler === binding.handlers.operation;
                 });
-                binding.source.off(xs.event.Destroy, function (item) {
+                binding.source.off(xs.reactive.event.Destroy, function (item) {
                     return item.handler === binding.handlers.destroy;
                 });
             });
@@ -207,7 +315,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
 
         //assert, that relation is bound
-        self.assert.ok(me.isBound(relation), 'bind - relation `$relation` is already binded', {
+        self.assert.ok(me.isBound(relation), 'bind - relation `$relation` is already bound', {
             $relation: relation
         });
 
@@ -218,10 +326,10 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
 
         //remove relation binding handler
-        binding.source.off(imports.OperationEvent, function (item) {
+        binding.source.off(imports.operation.Event, function (item) {
             return item.handler === binding.handlers.operation;
         });
-        binding.source.off(xs.event.Destroy, function (item) {
+        binding.source.off(xs.reactive.event.Destroy, function (item) {
             return item.handler === binding.handlers.destroy;
         });
     };
@@ -240,6 +348,49 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
 
         //call parent destroy
         self.parent.prototype.destroy.call(me);
+    };
+
+    var handleAdd = function (event) {
+        var model = event.value;
+
+        //assert, that model has no source
+        self.assert.not(model.private.source, 'handleAdd - model `$model` is already attached to source `$source`', {
+            $model: model,
+            $source: model.private.source
+        });
+
+        //set model source to me
+        model.private.source = this;
+    };
+
+    var handleSet = function (event) {
+        var oldModel = event.old;
+        var newModel = event.new;
+
+        //assert, that newModel has no source
+        self.assert.not(newModel.private.source, 'handleAdd - model `$model` is already attached to source `$source`', {
+            $model: newModel,
+            $source: newModel.private.source
+        });
+
+        //delete source from old model
+        delete oldModel.private.source;
+
+        //set source for new model to me
+        newModel.private.source = this;
+    };
+
+    var handleRemove = function (event) {
+        //delete model source
+        delete event.value.private.source;
+    };
+
+    var serializePrimary = function (primary) {
+        if (xs.isPrimitive(primary)) {
+            return primary;
+        }
+
+        return JSON.stringify(primary);
     };
 
     var validateRelation = function (relations, relation) {

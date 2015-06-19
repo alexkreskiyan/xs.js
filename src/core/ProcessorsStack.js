@@ -137,7 +137,7 @@ var ProcessorsStack = function () {
      * @param {Function} [callback] optional executed callback
      */
     me.process = function (verifierArgs, handlerArgs, callback) {
-        process(items.clone(), verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.noop);
+        process(0, verifierArgs, handlerArgs, xs.isFunction(callback) ? callback : xs.noop);
     };
 
     /**
@@ -147,26 +147,28 @@ var ProcessorsStack = function () {
      *
      * @method process
      *
-     * @param {xs.core.Collection} items items stack
+     * @param {Number} index processor index
      * @param {Array} verifierArgs arguments for items' verifiers
      * @param {Array} handlerArgs arguments for items' handlers
      * @param {Function} callback stack ready callback
      */
-    var process = function (items, verifierArgs, handlerArgs, callback) {
+    var process = function (index, verifierArgs, handlerArgs, callback) {
         var me = this;
 
-        if (!items.size) {
+        //finish if index is out of bounds
+        if (index >= items.size) {
             callback();
 
             return;
         }
-        var item = items.shift();
+
+        var item = items.at(index, xs.core.Collection.Index);
 
         //if item.verifier allows handler execution, process next
         if (item.verifier.apply(me, verifierArgs)) {
 
             var ready = function () {
-                process(items, verifierArgs, handlerArgs, callback);
+                process(index + 1, verifierArgs, handlerArgs, callback);
             };
 
             //if item.handler returns false, processing is async, stop processing, awaiting ready call
@@ -176,7 +178,7 @@ var ProcessorsStack = function () {
             }
         }
 
-        process(items, verifierArgs, handlerArgs, callback);
+        process(index + 1, verifierArgs, handlerArgs, callback);
     };
 };
 

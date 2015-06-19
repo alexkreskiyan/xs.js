@@ -15,50 +15,24 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
 
     Class.namespace = 'xs.transport.xhr';
 
-    Class.imports = [
-        {
-            Method: 'ns.Method'
-        },
-        {
-            Response: 'ns.Response'
-        },
-        {
-            State: 'ns.State'
-        },
-        {
-            Type: 'ns.Type'
-        },
-        {
-            Url: 'xs.uri.HTTP'
-        },
-        {
-            'event.Abort': 'ns.event.Abort'
-        },
-        {
-            'event.Done': 'ns.event.Done'
-        },
-        {
-            'event.Error': 'ns.event.Error'
-        },
-        {
-            'event.Headers': 'ns.event.Headers'
-        },
-        {
-            'event.Load': 'ns.event.Load'
-        },
-        {
-            'event.LoadProgress': 'ns.event.LoadProgress'
-        },
-        {
-            'event.Timeout': 'ns.event.Timeout'
-        },
-        {
-            'event.Upload': 'ns.event.Upload'
-        },
-        {
-            'event.UploadProgress': 'ns.event.UploadProgress'
+    Class.imports = {
+        Method: 'ns.Method',
+        Response: 'ns.Response',
+        State: 'ns.State',
+        Type: 'ns.Type',
+        Url: 'xs.uri.HTTP',
+        event: {
+            Abort: 'ns.event.Abort',
+            Done: 'ns.event.Done',
+            Error: 'ns.event.Error',
+            Headers: 'ns.event.Headers',
+            Load: 'ns.event.Load',
+            LoadProgress: 'ns.event.LoadProgress',
+            Timeout: 'ns.event.Timeout',
+            Upload: 'ns.event.Upload',
+            UploadProgress: 'ns.event.UploadProgress'
         }
-    ];
+    };
 
     Class.mixins.observable = 'xs.event.Observable';
 
@@ -237,7 +211,7 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
         var state = {
             response: new imports.Response(me),
             promise: new xs.core.Promise(),
-            send: me.private.stream.send,
+            send: me.events.emitter.send,
             private: me.private
         };
 

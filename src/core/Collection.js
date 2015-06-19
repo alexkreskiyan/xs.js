@@ -104,6 +104,19 @@ Collection.Reverse = 0x1;
 Collection.All = 0x2;
 
 /**
+ * Collection flag, meaning, that operation is made using indexes, not keys
+ *
+ * @static
+ *
+ * @property Index
+ *
+ * @readonly
+ *
+ * @type {Number}
+ */
+Collection.Index = 0x4;
+
+/**
  * Collection flag, meaning, that item is reordered to be the first one
  *
  * @static
@@ -323,16 +336,12 @@ Collection.prototype.clone = function () {
  *
  * @method hasKey
  *
- * @param {String|Number} key key to lookup for
+ * @param {*} key key to lookup for
  *
  * @return {Boolean} whether collection has key
  */
 Collection.prototype.hasKey = function (key) {
     var me = this;
-
-    assert.ok(xs.isNumber(key) || xs.isString(key), 'hasKey - key `$key`, given for collection, is neither number nor string', {
-        $key: key
-    });
 
     //if key is number - it's index
     if (xs.isNumber(key)) {
@@ -405,6 +414,7 @@ Collection.prototype.has = function (value) {
  *     console.log(collection.keyOf({})); //undefined - another object in array
  *     console.log(collection.keyOf(1)); //0
  *     console.log(collection.keyOf(value, xs.core.Collection.Reverse)); //5
+ *     console.log(collection.keyOf(value, xs.core.Collection.Index)); //3
  *
  *     //for Object
  *     var collection = new xs.core.Collection({
@@ -419,14 +429,16 @@ Collection.prototype.has = function (value) {
  *     console.log(collection.keyOf({})); //undefined - another object in array
  *     console.log(collection.keyOf(1)); //'a'
  *     console.log(collection.keyOf(value, xs.core.Collection.Reverse)); //'e'
+ *     console.log(collection.keyOf(value, xs.core.Collection.Index)); //3
  *
  * @method keyOf
  *
  * @param {*} value value to lookup for
  * @param {Number} [flags] optional lookup flags:
  * - Reverse - to lookup for value from the end of the collection
+ * - Index - to return value index instead of it's key
  *
- * @return {String|Number|undefined} found key, or undefined if nothing found
+ * @return {*} found key, or undefined if nothing found
  */
 Collection.prototype.keyOf = function (value, flags) {
     var me = this;
@@ -448,7 +460,18 @@ Collection.prototype.keyOf = function (value, flags) {
         }
     }
 
-    return index >= 0 ? me.private.items[ index ].key : undefined;
+    if (index >= 0) {
+        if (flags & xs.core.Collection.Index) {
+
+            return index;
+        } else {
+
+            return me.private.items[ index ].key;
+        }
+    } else {
+
+        return undefined;
+    }
 };
 
 /**
@@ -469,6 +492,7 @@ Collection.prototype.keyOf = function (value, flags) {
  *     ]);
  *     console.log(collection.at(0)); //1
  *     console.log(collection.at(3)); //value
+ *     console.log(collection.at(3, xs.core.Collection.Index)); //value
  *
  *     //for Object
  *     var collection = new xs.core.Collection({
@@ -481,54 +505,28 @@ Collection.prototype.keyOf = function (value, flags) {
  *     });
  *     console.log(collection.at('a')); //1 - no value
  *     console.log(collection.at('f')); //value
+ *     console.log(collection.at(3, xs.core.Collection.Index)); //value
  *
  * @method at
  *
- * @param {String|Number} key value to lookup for
+ * @param {*} key value to lookup for
+ * @param {Number} [flags] optional lookup flags:
+ * - Index - to consider, that given key is an index
  *
  * @return {*} value with specified key
  */
-Collection.prototype.at = function (key) {
+Collection.prototype.at = function (key, flags) {
     var me = this;
 
     //assert that collection is not empty
     assert.ok(me.private.items.length, 'at - collection is empty');
 
-    assert.ok(xs.isNumber(key) || xs.isString(key), 'at - key `$key`, given for collection, is neither number nor string', {
-        $key: key
-    });
-
-
     var index;
-    //handle number - it's index
-    if (xs.isNumber(key)) {
-        index = key;
 
-        //check that index is in bounds
-        var max = me.private.items.length - 1;
-        //if max is 0, then min is 0
-        var min = max > 0 ? -max : 0;
-
-        assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
-            $index: index,
-            $min: min,
-            $max: max
-        });
-
-        //convert negative index
-        if (index < 0) {
-            index += max + 1;
-        }
-
-        //handle string - it's key
+    if (arguments.length > 1) {
+        index = getItemIndex.call(me, key, flags);
     } else {
-
-        index = me.keys().indexOf(key);
-
-        //check, that key exists
-        assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
-            $key: key
-        });
+        index = getItemIndex.call(me, key);
     }
 
     return me.private.items[ index ].value;
@@ -699,12 +697,6 @@ Collection.prototype.add = function (key, value) {
         value = key;
         key = me.private.items.length;
     } else {
-
-        //assert that key is string
-        assert.string(key, 'add - key `$key`, given for collection, is not a string', {
-            $key: key
-        });
-
         //assert that key is not taken
         assert.ok(me.keys().indexOf(key) < 0, 'add - collection already has key `$key`', {
             $key: key
@@ -802,11 +794,6 @@ Collection.prototype.insert = function (index, key, value) {
         value = key;
         key = index;
     } else {
-        //assert that key is string
-        assert.string(key, 'insert - key `$key`, given for collection, is not a string', {
-            $key: key
-        });
-
         //assert that key is not taken
         assert.ok(me.keys().indexOf(key) < 0, 'insert - collection already has key `$key`', {
             $key: key
@@ -835,7 +822,7 @@ Collection.prototype.insert = function (index, key, value) {
  *     //for Array
  *     var collection = new xs.core.Collection([1,2]);
  *     collection.set(1, {x: 2});
- *     collection.set(0, {x: 1});
+ *     collection.set(0, {x: 1}, xs.core.Collection.Index);
  *     console.log(collection.keys());
  *     //outputs:
  *     //[
@@ -852,7 +839,7 @@ Collection.prototype.insert = function (index, key, value) {
  *     //for Object
  *     var collection = new xs.core.Collection({a: 2, b: 1});
  *     collection.set('b', {x: 2});
- *     collection.set('a', {x: 1});
+ *     collection.set(0, {x: 1}, xs.core.Collection.Index);
  *     console.log(collection.keys());
  *     //outputs:
  *     //[
@@ -868,56 +855,26 @@ Collection.prototype.insert = function (index, key, value) {
  *
  * @method set
  *
- * @param {String|Number} key key of changed value
+ * @param {*} key key of changed value
  * @param {*} value value new value for item with given key
+ * @param {Number} [flags] optional lookup flags:
+ * - Index - to consider, that given key is an index
  *
  * @chainable
  */
-Collection.prototype.set = function (key, value) {
+Collection.prototype.set = function (key, value, flags) {
     var me = this;
 
     //assert that arguments enough
     assert.ok(arguments.length >= 2, 'set - no enough arguments');
 
-    assert.ok(xs.isNumber(key) || xs.isString(key), 'set - key `$key`, given for collection, is neither number nor string', {
-        $key: key
-    });
-
-
-    //handle number key - it's index
     var index;
 
-    if (xs.isNumber(key)) {
-        index = key;
-
-        //check that index is in bounds
-        var max = me.private.items.length - 1;
-        //if max is 0, then min is 0
-        var min = max > 0 ? -max : 0;
-
-        //assert that index is in bounds
-        assert.ok(min <= index && index <= max, 'set - index `$index` is out of bounds [$min, $max]', {
-            $index: index,
-            $min: min,
-            $max: max
-        });
-
-        //convert negative index
-        if (index < 0) {
-            index += max + 1;
-        }
-
-        //handle string key  - it's key
+    if (arguments.length > 2) {
+        index = getItemIndex.call(me, key, flags);
     } else {
-
-        index = me.keys().indexOf(key);
-
-        //assert that key exists
-        assert.ok(index >= 0, 'set - given key `$key` doesn\'t exist', {
-            $key: key
-        });
+        index = getItemIndex.call(me, key);
     }
-
 
     me.private.items[ index ].value = value;
 
@@ -1078,51 +1035,21 @@ Collection.prototype.reorder = function (source, position, target) {
  *
  * @method removeAt
  *
- * @param {Number|String} key key of removed value
+ * @param {*} key key/index of removed value
+ * @param {Number} [flags] optional lookup flags:
+ * - Index - to consider, that given key is an index
  *
  * @chainable
  */
-Collection.prototype.removeAt = function (key) {
+Collection.prototype.removeAt = function (key, flags) {
     var me = this;
-
-    assert.ok(xs.isNumber(key) || xs.isString(key), 'removeAt - key `$key`, given for collection, is neither number nor string', {
-        $key: key
-    });
 
     var index;
 
-    //handle number key - index given
-    if (xs.isNumber(key)) {
-        index = key;
-
-        //check that index is in bounds
-        var max = me.private.items.length - 1;
-
-        //if max is 0, then min is 0
-        var min = max > 0 ? -max : 0;
-
-        //assert that index is in bounds
-        assert.ok(min <= index && index <= max, 'removeAt - index `$index` is out of bounds [$min, $max]', {
-            $index: index,
-            $min: min,
-            $max: max
-        });
-
-        //convert negative index
-        if (index < 0) {
-            index += max + 1;
-        }
-
-        //handle string key - key given
+    if (arguments.length > 1) {
+        index = getItemIndex.call(me, key, flags);
     } else {
-
-        //get index
-        index = me.keys().indexOf(key);
-
-        //assert that key exists
-        assert.ok(index >= 0, 'removeAt - given key `$key` doesn\'t exist in collection', {
-            $key: key
-        });
+        index = getItemIndex.call(me, key);
     }
 
     //remove item from items
@@ -2913,6 +2840,57 @@ Collection.prototype.toSource = function () {
 
     return source;
 };
+
+function getItemIndex(key, flags) {
+    var me = this;
+
+    var isKey = true;
+
+    if (arguments.length > 1) {
+        //assert that flags is number
+        assert.number(flags, 'getItemIndex - given flags `$flags` list is not number', {
+            $flags: flags
+        });
+
+        //lookup by index, if needed
+        if (flags & xs.core.Collection.Index) {
+            isKey = false;
+        }
+    }
+
+    var index;
+
+    //handle key
+    if (isKey) {
+        index = me.keys().indexOf(key);
+
+        //check, that key exists
+        assert.ok(index >= 0, 'getItemIndex - given key `$key` doesn\'t exist', {
+            $key: key
+        });
+    } else {
+        //handle index
+        index = key;
+
+        //check that index is in bounds
+        var max = me.private.items.length - 1;
+        //if max is 0, then min is 0
+        var min = max > 0 ? -max : 0;
+
+        assert.ok(min <= index && index <= max, 'getItemIndex - index `$index` is out of bounds [$min,$max]', {
+            $index: index,
+            $min: min,
+            $max: max
+        });
+
+        //convert negative index
+        if (index < 0) {
+            index += max + 1;
+        }
+    }
+
+    return index;
+}
 
 /**
  * Updates indexes starting from item with given index

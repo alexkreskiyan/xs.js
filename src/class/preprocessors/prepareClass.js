@@ -17,6 +17,9 @@ xs.class.preprocessors.add('prepareClass', function () {
     return true;
 }, function (Class, descriptor) {
 
+    //prepare requires
+    processRequires(Class, descriptor);
+
     //prepare imports
     processImports(Class, descriptor);
 
@@ -30,52 +33,75 @@ xs.class.preprocessors.add('prepareClass', function () {
     processImplements(Class, descriptor);
 });
 
+function processRequires(Class, descriptor) {
+
+    //assert that requires are an array
+    assert.array(descriptor.requires, '$Class: given requires list `$requires` is not an array', {
+        $Class: Class,
+        $requires: descriptor.requires
+    });
+
+    //convert to xs.core.Collection and save reference
+    descriptor.requires = new xs.core.Collection(descriptor.requires);
+
+    //verify requires (fn is useless here - collection is temporary)
+    assert.not(descriptor.requires.find(function (required) {
+
+        //assert that required is a string
+        assert.string(required, '$Class: required value `$required` is not a string', {
+            $Class: Class,
+            $required: required
+        });
+
+        //verify required name
+        assert.fullName(required, '$Class: given required name `$name` is not correct', {
+            $Class: Class,
+            $name: required
+        });
+    }), 'Requires verification failed');
+}
+
 function processImports(Class, descriptor) {
 
-    //assert that imports are an array
-    assert.array(descriptor.imports, '$Class: given imports list `$imports` is not an array', {
+    //assert that imports are an object
+    assert.object(descriptor.imports, '$Class: given imports list `$imports` is not an object', {
         $Class: Class,
         $imports: descriptor.imports
     });
 
-    //convert to xs.core.Collection and save reference
-    descriptor.imports = new xs.core.Collection(descriptor.imports);
-
     //verify imports (fn is useless here - collection is temporary)
-    assert.not(descriptor.imports.find(function (imported) {
+    assert.ok(verifyImportsBranch(Class, '', descriptor.imports), 'Imports verification failed');
+}
 
-        //assert that imported is either string or key=>value single pair
-        assert.ok(xs.isString(imported) || (xs.isObject(imported) && Object.keys(imported).length === 1), '$Class: imported value $imported is incorrect', {
-            $Class: Class,
-            $imported: imported
-        });
+function verifyImportsBranch(Class, namespace, branch) {
+    var aliases = Object.keys(branch);
 
-        if (xs.isString(imported)) {
-            //verify imported name
-            assert.fullName(imported, '$Class: given imported name `$name` is not correct', {
-                $Class: Class,
-                $name: imported
-            });
+    for (var i = 0; i < aliases.length; i++) {
+        var alias = aliases[ i ];
+        var name = branch[ alias ];
 
-            return;
-        }
-
-        //get name and alias
-        var alias = Object.keys(imported)[ 0 ];
-        var name = imported[ alias ];
-
-        //verify imported name
-        assert.fullName(name, '$Class: given imported name `$name` is not correct', {
-            $Class: Class,
-            $name: name
-        });
-
-        //verify imported alias
-        assert.fullName(alias, '$Class: given imported alias `$alias` is not correct', {
+        //verify alias is a short name
+        assert.shortName(alias, '$Class: given imports alias `$alias` is not a valid short name', {
             $Class: Class,
             $alias: alias
         });
-    }), 'Imports verification failed');
+
+        if (xs.isString(name)) {
+            //verify imported name
+            assert.fullName(name, '$Class: given imported name `$name` is not correct', {
+                $Class: Class,
+                $name: name
+            });
+        } else {
+            //verify imports branch
+            assert.ok(verifyImportsBranch(Class, [
+                namespace,
+                alias
+            ].join(''), name), 'Imports verification failed');
+        }
+    }
+
+    return true;
 }
 
 function processExtends(Class, descriptor) {
@@ -94,8 +120,8 @@ function processExtends(Class, descriptor) {
         $extended: extended
     });
 
-    //if extended is given - add it to imports
-    descriptor.imports.add(extended);
+    //if extended is given - add it to requires
+    descriptor.requires.add(extended);
 }
 
 function processMixins(Class, descriptor) {
@@ -109,8 +135,8 @@ function processMixins(Class, descriptor) {
     //init mixins list with own values, converted to xs.core.Collection
     var mixins = descriptor.mixins = new xs.core.Collection(descriptor.mixins);
 
-    //get imports reference
-    var imports = descriptor.imports;
+    //get requires reference
+    var requires = descriptor.requires;
 
     //process mixins list
     log.trace(Class + '. Preparing to process mixins', {
@@ -129,7 +155,7 @@ function processMixins(Class, descriptor) {
             $alias: alias
         });
 
-        imports.add(name);
+        requires.add(name);
     });
 }
 
@@ -144,8 +170,8 @@ function processImplements(Class, descriptor) {
     //init interfaces list with own values, converted to xs.core.Collection
     var interfaces = descriptor.implements = new xs.core.Collection(descriptor.implements);
 
-    //get imports reference
-    var imports = descriptor.imports;
+    //get requires reference
+    var requires = descriptor.requires;
 
     //process interfaces list
     log.trace(Class + '. Preparing to process interfaces', {
@@ -158,7 +184,7 @@ function processImplements(Class, descriptor) {
             $name: name
         });
 
-        imports.add(name);
+        requires.add(name);
     });
 }
 

@@ -4,8 +4,10 @@ touch events will be although used in dd implementation
 
 dom events:
 touchstart          https://developer.mozilla.org/en-US/docs/Web/Events/touchstart          A touch point is placed on the touch surface.
-touchend            https://developer.mozilla.org/en-US/docs/Web/Events/touchend            A touch point is removed from the touch surface.
+touchenter          https://developer.mozilla.org/en-US/docs/Web/Events/touchenter          A touch point is moved onto the interactive area of an element.
 touchmove           https://developer.mozilla.org/en-US/docs/Web/Events/touchmove           A touch point is moved along the touch surface.
+touchleave          https://developer.mozilla.org/en-US/docs/Web/Events/touchleave          A touch point is moved off the interactive area of an element.
+touchend            https://developer.mozilla.org/en-US/docs/Web/Events/touchend            A touch point is removed from the touch surface.
 touchcancel         https://developer.mozilla.org/en-US/docs/Web/Events/touchcancel         A touch point has been disrupted in an implementation-specific manners (too many touch points for example).
 
 https://developer.mozilla.org/en-US/docs/Web/API/Touch_events

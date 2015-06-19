@@ -15,35 +15,19 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
 
     Class.namespace = 'xs.transport.websocket';
 
-    Class.imports = [
-        {
-            BinaryType: 'ns.BinaryType'
-        },
-        {
-            CloseCode: 'ns.CloseCode'
-        },
-        {
-            State: 'ns.State'
-        },
-        {
-            Url: 'xs.uri.WebSocket'
-        },
-        {
-            'event.Binary': 'ns.event.Binary'
-        },
-        {
-            'event.Close': 'ns.event.Close'
-        },
-        {
-            'event.Error': 'ns.event.Error'
-        },
-        {
-            'event.Open': 'ns.event.Open'
-        },
-        {
-            'event.Text': 'ns.event.Text'
+    Class.imports = {
+        BinaryType: 'ns.BinaryType',
+        CloseCode: 'ns.CloseCode',
+        State: 'ns.State',
+        Url: 'xs.uri.WebSocket',
+        event: {
+            Binary: 'ns.event.Binary',
+            Close: 'ns.event.Close',
+            Error: 'ns.event.Error',
+            Open: 'ns.event.Open',
+            Text: 'ns.event.Text'
         }
-    ];
+    };
 
     Class.mixins.observable = 'xs.event.Observable';
 
@@ -55,7 +39,6 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
 
         //set defaults
         me.private.binaryType = imports.BinaryType.Blob;
-        me.private.state = imports.State.Closed;
     };
 
     Class.property.url = {
@@ -63,7 +46,7 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
             var me = this;
 
             //assert, that connection is closed
-            self.assert.equal(me.private.state, imports.State.Closed, 'url:set - connection must be closed to set url');
+            self.assert.equal(me.state, imports.State.Closed, 'url:set - connection must be closed to set url');
 
             //assert, that url is instance of imports.Url
             self.assert.ok(url instanceof imports.Url, 'url:set - given url `$url` is not an instance of `$Url`', {
@@ -87,13 +70,33 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
             me.private.type = type;
 
             //set binary type for connection, if it is connecting or opened
-            if (me.private.state & (imports.State.Connecting | imports.State.Opened)) {
+            if (me.state & (imports.State.Connecting | imports.State.Opened)) {
                 me.private.connection.binaryType = type;
             }
         }
     };
 
     Class.property.state = {
+        get: function () {
+            var me = this;
+            var connection = me.private.connection;
+
+            if (!connection) {
+
+                return imports.State.Closed;
+            }
+
+            switch (connection.readyState) {
+                case WebSocket.CONNECTING:
+                    return imports.State.Connecting;
+                case WebSocket.OPEN:
+                    return imports.State.Opened;
+                case WebSocket.CLOSING:
+                    return imports.State.Closing;
+                case WebSocket.CLOSED:
+                    return imports.State.Closed;
+            }
+        },
         set: xs.noop
     };
 
@@ -102,7 +105,7 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
             var me = this;
 
             //return connection protocol, if connection is opened, else - undefined
-            return me.private.state & imports.State.Opened ? me.private.connection.protocol : undefined;
+            return me.state & imports.State.Opened ? me.private.connection.protocol : undefined;
         },
         set: function (protocol) {
             var me = this;
@@ -145,7 +148,7 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
             var me = this;
 
             //return connection buffered amount, if connection is opened, else - undefined
-            return me.private.state & imports.State.Opened ? me.private.connection.bufferedAmount : undefined;
+            return me.state & imports.State.Opened ? me.private.connection.bufferedAmount : undefined;
         },
         set: xs.noop
     };
@@ -154,13 +157,10 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
         var me = this;
 
         //assert, that request is close
-        self.assert.ok(me.private.state & imports.State.Closed, 'open - connection must be closed to open it');
+        self.assert.ok(me.state & imports.State.Closed, 'open - connection must be closed to open it');
 
         //assert, that url is specified
         self.assert.defined(me.private.url, 'open - connection url is not specified');
-
-        //set request state
-        me.private.state = imports.State.Connecting;
 
 
         //create socket connection
@@ -171,7 +171,7 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
 
         //create state object
         var state = {
-            send: me.private.stream.send,
+            send: me.events.emitter.send,
             private: me.private
         };
 
@@ -194,7 +194,7 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
         var me = this;
 
         //assert, that request is opened
-        self.assert.ok(me.private.state & imports.State.Opened, 'send - connection must be closed to open it');
+        self.assert.ok(me.state & imports.State.Opened, 'send - connection must be closed to open it');
 
         //assert, that data is a string, array buffer or blob
         self.assert.ok(validateData(data), 'send - given data `$data` is not a string, ArrayBuffer or Blob', {
@@ -208,12 +208,10 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
         var me = this;
 
         //assert, that request is opened
-        self.assert.ok(me.private.state & imports.State.Opened, 'close - connection must be opened to close it');
+        self.assert.ok(me.state & imports.State.Opened, 'close - connection must be opened to close it');
 
         //if no arguments - close normally with empty reason
         if (!arguments.length) {
-            //set closing state
-            me.private.state = imports.State.Closing;
 
             //close connection
             me.private.connection.close(imports.CloseCode.Normal, '');
@@ -241,9 +239,6 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
             $reason: reason
         });
 
-        //set closing state
-        me.private.state = imports.State.Closing;
-
         //close connection
         me.private.connection.close(code, reason);
 
@@ -254,7 +249,7 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
         var me = this;
 
         //assert, that connection is closed
-        self.assert.ok(me.private.state & imports.State.Closed, 'destroy - connection must be closed to be destroyed');
+        self.assert.ok(me.state & imports.State.Closed, 'destroy - connection must be closed to be destroyed');
 
         //call Observable.destroy
         self.mixins.observable.prototype.destroy.call(me);
@@ -265,9 +260,6 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
 
     var handleOpen = function () {
         var me = this;
-
-        //set request state
-        me.private.state = imports.State.Opened;
 
         var extensions = me.private.connection.extensions.split(',').map(function (extension) {
             return extension.trim();
@@ -310,9 +302,6 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
 
     var handleClose = function (event) {
         var me = this;
-
-        //set request state
-        me.private.state = imports.State.Closed;
 
         //unset extensions
         delete me.private.extensions;

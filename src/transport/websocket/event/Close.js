@@ -15,11 +15,9 @@ xs.define(xs.Class, 'ns.event.Close', function (self, imports) {
 
     Class.namespace = 'xs.transport.websocket';
 
-    Class.imports = [
-        {
-            CloseCode: 'ns.CloseCode'
-        }
-    ];
+    Class.imports = {
+        CloseCode: 'ns.CloseCode'
+    };
 
     Class.implements = [
         'xs.event.IEvent'

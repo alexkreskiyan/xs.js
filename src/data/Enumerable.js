@@ -15,32 +15,18 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
 
     Class.namespace = 'xs.data';
 
-    Class.imports = [
-        {
-            'event.AddBefore': 'ns.enumerable.event.AddBefore'
+    Class.imports = {
+        event: {
+            AddBefore: 'ns.enumerable.event.AddBefore',
+            Add: 'ns.enumerable.event.Add',
+            SetBefore: 'ns.enumerable.event.SetBefore',
+            Set: 'ns.enumerable.event.Set',
+            RemoveBefore: 'ns.enumerable.event.RemoveBefore',
+            Remove: 'ns.enumerable.event.Remove',
+            Clear: 'ns.enumerable.event.Clear'
         },
-        {
-            'event.Add': 'ns.enumerable.event.Add'
-        },
-        {
-            'event.SetBefore': 'ns.enumerable.event.SetBefore'
-        },
-        {
-            'event.Set': 'ns.enumerable.event.Set'
-        },
-        {
-            'event.RemoveBefore': 'ns.enumerable.event.RemoveBefore'
-        },
-        {
-            'event.Remove': 'ns.enumerable.event.Remove'
-        },
-        {
-            'event.Clear': 'ns.enumerable.event.Clear'
-        },
-        {
-            Observable: 'xs.event.Observable'
-        }
-    ];
+        Observable: 'xs.event.Observable'
+    };
 
     Class.abstract = true;
 
@@ -69,6 +55,19 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      * @type {Number}
      */
     Class.constant.All = 0x2;
+
+    /**
+     * Collection flag, meaning, that operation is made using indexes, not keys
+     *
+     * @static
+     *
+     * @property Index
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Index = 0x4;
 
     /**
      * Collection flag, meaning, that item is reordered to be the first one
@@ -349,10 +348,6 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
     Class.method.hasKey = function (key) {
         var me = this;
 
-        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'hasKey - key `$key`, given for collection, is neither number nor string', {
-            $key: key
-        });
-
         //if key is number - it's index
         if (xs.isNumber(key)) {
 
@@ -428,6 +423,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *     console.log(collection.keyOf({})); //undefined - another object in array
      *     console.log(collection.keyOf(1)); //0
      *     console.log(collection.keyOf(value, xs.data.Collection.Reverse)); //5
+     *     console.log(collection.keyOf(value, xs.core.Collection.Index)); //3
      *
      *     //for Object
      *     var collection = new xs.data.Collection({
@@ -442,14 +438,16 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *     console.log(collection.keyOf({})); //undefined - another object in array
      *     console.log(collection.keyOf(1)); //'a'
      *     console.log(collection.keyOf(value, xs.data.Collection.Reverse)); //'e'
+     *     console.log(collection.keyOf(value, xs.core.Collection.Index)); //3
      *
      * @method keyOf
      *
      * @param {*} value value to lookup for
      * @param {Number} [flags] optional lookup flags:
      * - Reverse - to lookup for value from the end of the collection
+     * - Index - to return value index instead of it's key
      *
-     * @return {String|Number|undefined} found key, or undefined if nothing found
+     * @return {*} found key, or undefined if nothing found
      */
     Class.method.keyOf = function (value, flags) {
         var me = this;
@@ -474,7 +472,18 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             }
         }
 
-        return index >= 0 ? me.private.items[ index ].key : undefined;
+        if (index >= 0) {
+            if (flags & self.Index) {
+
+                return index;
+            } else {
+
+                return me.private.items[ index ].key;
+            }
+        } else {
+
+            return undefined;
+        }
     };
 
     /**
@@ -495,6 +504,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *     ]);
      *     console.log(collection.at(0)); //1
      *     console.log(collection.at(3)); //value
+     *     console.log(collection.at(3, xs.core.Collection.Index)); //value
      *
      *     //for Object
      *     var collection = new xs.data.Collection({
@@ -507,54 +517,28 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *     });
      *     console.log(collection.at('a')); //1 - no value
      *     console.log(collection.at('f')); //value
+     *     console.log(collection.at(3, xs.core.Collection.Index)); //value
      *
      * @method at
      *
-     * @param {String|Number} key value to lookup for
+     * @param {*} key value to lookup for
+     * @param {Number} [flags] optional lookup flags:
+     * - Index - to consider, that given key is an index
      *
      * @return {*} value with specified key
      */
-    Class.method.at = function (key) {
+    Class.method.at = function (key, flags) {
         var me = this;
 
         //assert that collection is not empty
         self.assert.ok(me.private.items.length, 'at - collection is empty');
 
-        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'at - key `$key`, given for collection, is neither number nor string', {
-            $key: key
-        });
-
-
         var index;
-        //handle number - it's index
-        if (xs.isNumber(key)) {
-            index = key;
 
-            //check that index is in bounds
-            var max = me.private.items.length - 1;
-            //if max is 0, then min is 0
-            var min = max > 0 ? -max : 0;
-
-            self.assert.ok(min <= index && index <= max, 'at - index `$index` is out of bounds [$min,$max]', {
-                $index: index,
-                $min: min,
-                $max: max
-            });
-
-            //convert negative index
-            if (index < 0) {
-                index += max + 1;
-            }
-
-            //handle string - it's key
+        if (arguments.length > 1) {
+            index = getItemIndex.call(me, key, flags);
         } else {
-
-            index = me.keys().indexOf(key);
-
-            //check, that key exists
-            self.assert.ok(index >= 0, 'at - given key `$key` doesn\'t exist', {
-                $key: key
-            });
+            index = getItemIndex.call(me, key);
         }
 
         return me.private.items[ index ].value;
@@ -724,12 +708,8 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             //handle autoincrement index
             value = key;
             key = me.private.items.length;
-        } else {
 
-            //assert that key is string
-            self.assert.string(key, 'add - key `$key`, given for collection, is not a string', {
-                $key: key
-            });
+        } else {
 
             //assert that key is not taken
             self.assert.ok(me.keys().indexOf(key) < 0, 'add - collection already has key `$key`', {
@@ -748,7 +728,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         };
 
         //send preventable event.AddBefore, that can prevent adding value to collection
-        if (!me.events.send(new imports.event.AddBefore(data))) {
+        if (!me.events.emitter.send(new imports.event.AddBefore(data))) {
 
             return me;
         }
@@ -760,7 +740,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         });
 
         //send closing event.Add
-        me.events.send(new imports.event.Add(data));
+        me.events.emitter.send(new imports.event.Add(data));
 
         return me;
     };
@@ -846,11 +826,6 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             value = key;
             key = index;
         } else {
-            //assert that key is string
-            self.assert.string(key, 'insert - key `$key`, given for collection, is not a string', {
-                $key: key
-            });
-
             //assert that key is not taken
             self.assert.ok(me.keys().indexOf(key) < 0, 'insert - collection already has key `$key`', {
                 $key: key
@@ -868,7 +843,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         };
 
         //send preventable event.AddBefore, that can prevent inserting value to collection
-        if (!me.events.send(new imports.event.AddBefore(data))) {
+        if (!me.events.emitter.send(new imports.event.AddBefore(data))) {
 
             return me;
         }
@@ -884,7 +859,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         updateIndexes.call(me, index + 1);
 
         //send closing event.Add
-        me.events.send(new imports.event.Add(data));
+        me.events.emitter.send(new imports.event.Add(data));
 
         return me;
     };
@@ -897,7 +872,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *     //for Array
      *     var collection = new xs.data.Collection([1,2]);
      *     collection.set(1, {x: 2});
-     *     collection.set(0, {x: 1});
+     *     collection.set(0, {x: 1}, xs.core.Collection.Index);
      *     console.log(collection.keys());
      *     //outputs:
      *     //[
@@ -914,7 +889,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *     //for Object
      *     var collection = new xs.data.Collection({a: 2, b: 1});
      *     collection.set('b', {x: 2});
-     *     collection.set('a', {x: 1});
+     *     collection.set(0, {x: 1}, xs.core.Collection.Index);
      *     console.log(collection.keys());
      *     //outputs:
      *     //[
@@ -932,52 +907,23 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *
      * @param {String|Number} key key of changed value
      * @param {*} value value new value for item with given key
+     * @param {Number} [flags] optional lookup flags:
+     * - Index - to consider, that given key is an index
      *
      * @chainable
      */
-    Class.method.set = function (key, value) {
+    Class.method.set = function (key, value, flags) {
         var me = this;
 
         //assert that arguments enough
         self.assert.ok(arguments.length >= 2, 'set - no enough arguments');
 
-        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'set - key `$key`, given for collection, is neither number nor string', {
-            $key: key
-        });
-
-
-        //handle number key - it's index
         var index;
 
-        if (xs.isNumber(key)) {
-            index = key;
-
-            //check that index is in bounds
-            var max = me.private.items.length - 1;
-            //if max is 0, then min is 0
-            var min = max > 0 ? -max : 0;
-
-            //assert that index is in bounds
-            self.assert.ok(min <= index && index <= max, 'set - index `$index` is out of bounds [$min, $max]', {
-                $index: index,
-                $min: min,
-                $max: max
-            });
-
-            //convert negative index
-            if (index < 0) {
-                index += max + 1;
-            }
-
-            //handle string key  - it's key
+        if (arguments.length > 2) {
+            index = getItemIndex.call(me, key, flags);
         } else {
-
-            index = me.keys().indexOf(key);
-
-            //assert that key exists
-            self.assert.ok(index >= 0, 'set - given key `$key` doesn\'t exist', {
-                $key: key
-            });
+            index = getItemIndex.call(me, key);
         }
 
         //assert, that value is valid
@@ -992,7 +938,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         };
 
         //send preventable event.SetBefore, that can prevent changing value for collection item
-        if (!me.events.send(new imports.event.SetBefore(data))) {
+        if (!me.events.emitter.send(new imports.event.SetBefore(data))) {
 
             return me;
         }
@@ -1000,7 +946,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         me.private.items[ index ].value = value;
 
         //send closing event.Set
-        me.events.send(new imports.event.Set(data));
+        me.events.emitter.send(new imports.event.Set(data));
 
         return me;
     };
@@ -1159,53 +1105,22 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *
      * @method removeAt
      *
-     * @param {Number|String} key key of removed value
+     * @param {*} key key/index of removed value
+     * @param {Number} [flags] optional lookup flags:
+     * - Index - to consider, that given key is an index
      *
      * @chainable
      */
-    Class.method.removeAt = function (key) {
+    Class.method.removeAt = function (key, flags) {
         var me = this;
-
-        self.assert.ok(xs.isNumber(key) || xs.isString(key), 'removeAt - key `$key`, given for collection, is neither number nor string', {
-            $key: key
-        });
 
         var index;
 
-        //handle number key - index given
-        if (xs.isNumber(key)) {
-            index = key;
-
-            //check that index is in bounds
-            var max = me.private.items.length - 1;
-
-            //if max is 0, then min is 0
-            var min = max > 0 ? -max : 0;
-
-            //assert that index is in bounds
-            self.assert.ok(min <= index && index <= max, 'removeAt - index `$index` is out of bounds [$min, $max]', {
-                $index: index,
-                $min: min,
-                $max: max
-            });
-
-            //convert negative index
-            if (index < 0) {
-                index += max + 1;
-            }
-
-            //handle string key - key given
+        if (arguments.length > 1) {
+            index = getItemIndex.call(me, key, flags);
         } else {
-
-            //get index
-            index = me.keys().indexOf(key);
-
-            //assert that key exists
-            self.assert.ok(index >= 0, 'removeAt - given key `$key` doesn\'t exist in collection', {
-                $key: key
-            });
+            index = getItemIndex.call(me, key);
         }
-
 
         var item = me.private.items[ index ];
 
@@ -1216,7 +1131,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         };
 
         //send preventable event.RemoveBefore, that can prevent removing value from collection
-        if (!me.events.send(new imports.event.RemoveBefore(data))) {
+        if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
 
             return me;
         }
@@ -1228,11 +1143,11 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         updateIndexes.call(me, index);
 
         //send closing event.Remove
-        me.events.send(new imports.event.Remove(data));
+        me.events.emitter.send(new imports.event.Remove(data));
 
         //if no items left - send event.Clear
         if (!me.private.items.length) {
-            me.events.send(new imports.event.Clear());
+            me.events.emitter.send(new imports.event.Clear());
         }
 
         return me;
@@ -1363,7 +1278,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.events.send(new imports.event.RemoveBefore(data))) {
+                if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i++;
                     continue;
                 }
@@ -1372,7 +1287,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing event.Remove
-                me.events.send(new imports.event.Remove(data));
+                me.events.emitter.send(new imports.event.Remove(data));
             }
 
             //update indexes if anything removed
@@ -1381,7 +1296,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             } else {
 
                 //if no items left - send event.Clear
-                me.events.send(new imports.event.Clear());
+                me.events.emitter.send(new imports.event.Clear());
             }
 
             return me;
@@ -1440,7 +1355,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.events.send(new imports.event.RemoveBefore(data))) {
+                if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i++;
                     continue;
                 }
@@ -1449,7 +1364,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing event.Remove
-                me.events.send(new imports.event.Remove(data));
+                me.events.emitter.send(new imports.event.Remove(data));
             }
 
             //update indexes if anything removed
@@ -1467,7 +1382,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             };
 
             //send preventable event.RemoveBefore, that can prevent removing value for collection
-            if (!me.events.send(new imports.event.RemoveBefore(data))) {
+            if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
 
                 return me;
             }
@@ -1476,7 +1391,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             items.splice(index, 1);
 
             //send closing event.Remove
-            me.events.send(new imports.event.Remove(data));
+            me.events.emitter.send(new imports.event.Remove(data));
 
             //update indexes
             updateIndexes.call(me, index);
@@ -1485,7 +1400,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
 
         //if no items left - send event.Clear
         if (!items.length) {
-            me.events.send(new imports.event.Clear());
+            me.events.emitter.send(new imports.event.Clear());
         }
 
         return me;
@@ -1660,7 +1575,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.events.send(new imports.event.RemoveBefore(data))) {
+                if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i++;
 
                     continue;
@@ -1670,7 +1585,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing event.Remove
-                me.events.send(new imports.event.Remove(data));
+                me.events.emitter.send(new imports.event.Remove(data));
             }
         } else if (reverse) {
             i = items.length - 1;
@@ -1693,7 +1608,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.events.send(new imports.event.RemoveBefore(data))) {
+                if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i--;
 
                     continue;
@@ -1703,7 +1618,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing event.Remove
-                me.events.send(new imports.event.Remove(data));
+                me.events.emitter.send(new imports.event.Remove(data));
 
                 break;
             }
@@ -1728,7 +1643,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.events.send(new imports.event.RemoveBefore(data))) {
+                if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i++;
 
                     continue;
@@ -1738,7 +1653,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing event.Remove
-                me.events.send(new imports.event.Remove(data));
+                me.events.emitter.send(new imports.event.Remove(data));
 
                 break;
             }
@@ -1751,7 +1666,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
 
         //send event.Clear if no items left
         if (!items.length) {
-            me.events.send(new imports.event.Clear());
+            me.events.emitter.send(new imports.event.Clear());
         }
 
         return me;
@@ -3012,6 +2927,57 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
     var isType = function (value) {
         return value.constructor === this.private.itemType;
     };
+
+    function getItemIndex(key, flags) {
+        var me = this;
+
+        var isKey = true;
+
+        if (arguments.length > 1) {
+            //assert that flags is number
+            self.assert.number(flags, 'getItemIndex - given flags `$flags` list is not number', {
+                $flags: flags
+            });
+
+            //lookup by index, if needed
+            if (flags & xs.core.Collection.Index) {
+                isKey = false;
+            }
+        }
+
+        var index;
+
+        //handle key
+        if (isKey) {
+            index = me.keys().indexOf(key);
+
+            //check, that key exists
+            self.assert.ok(index >= 0, 'getItemIndex - given key `$key` doesn\'t exist', {
+                $key: key
+            });
+        } else {
+            //handle index
+            index = key;
+
+            //check that index is in bounds
+            var max = me.private.items.length - 1;
+            //if max is 0, then min is 0
+            var min = max > 0 ? -max : 0;
+
+            self.assert.ok(min <= index && index <= max, 'getItemIndex - index `$index` is out of bounds [$min,$max]', {
+                $index: index,
+                $min: min,
+                $max: max
+            });
+
+            //convert negative index
+            if (index < 0) {
+                index += max + 1;
+            }
+        }
+
+        return index;
+    }
 
     /**
      * Updates indexes starting from item with given index
