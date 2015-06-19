@@ -8,7 +8,7 @@
             border: thin black solid;
         }
 
-        #divInfo {
+        #log {
             margin: 18px;
             padding: 8px;
             background-color: white;
@@ -25,79 +25,87 @@
     <li>Change Capturing mode</li>
     <li>Repeat the experience</li>
 </ul>
-<input type="checkbox" id="chCapture"/> Use Capturing
-<div id="d1">d1
-    <div id="d2">d2
-        <div id="d3">d3
-            <div id="d4">d4</div>
+<input title="" type="checkbox" id="useCapture"/> Use Capturing
+<div id="d1" class="box">d1
+    <div id="d2" class="box">d2
+        <div id="d3" class="box">d3
+            <div id="d4" class="box">d4</div>
         </div>
     </div>
 </div>
-<div id="divInfo"></div>
+<div id="log"></div>
 <script>
-    var
-            clear = false,
-            divInfo = null,
-            divs = null,
-            useCapture = false;
+    var log, boxes, isClear, capture, useCapture, events;
+    events = [];
+    reset();
+
     window.onload = function () {
-        divInfo = document.getElementById("divInfo");
-        divs = document.getElementsByTagName('div');
-        chCapture = document.getElementById("chCapture");
-        chCapture.onclick = function () {
-            RemoveListeners();
-            AddListeners();
+        log = document.getElementById('log');
+        boxes = document.querySelectorAll('div.box');
+        capture = document.getElementById('useCapture');
+        capture.onclick = function () {
+            removeListeners();
+            addListeners();
+        };
+        paint();
+        addListeners();
+    };
+    function removeListeners() {
+        for (var i = 0; i < boxes.length; i++) {
+            var box = boxes[ i ];
+            box.removeEventListener('click', handleBoxClick, true);
+            box.removeEventListener('click', handleBoxClick, false);
         }
-        Clear();
-        AddListeners();
     }
-    function RemoveListeners() {
-        for (var i = 0; i < divs.length; i++) {
-            var d = divs[ i ];
-            if (d.id != "divInfo") {
-                d.removeEventListener("click", OnDivClick, true);
-                d.removeEventListener("click", OnDivClick, false);
+    function addListeners() {
+        for (var i = 0; i < boxes.length; i++) {
+            var box = boxes[ i ];
+            box.addEventListener('click', handleBoxClick, false);
+            if (capture.checked) {
+                box.addEventListener('click', handleBoxClick, true);
             }
         }
     }
-    function AddListeners() {
-        for (var i = 0; i < divs.length; i++) {
-            var d = divs[ i ];
-            if (d.id != "divInfo") {
-                d.addEventListener("click", OnDivClick, false);
-                if (chCapture.checked) {
-                    d.addEventListener("click", OnDivClick, true);
-                }
-                d.onmousemove = function () {
-                    clear = true;
-                };
-            }
-        }
-    }
-    function OnDivClick(e) {
-        if (clear) {
-            Clear();
-            clear = false;
+    function handleBoxClick(event) {
+        if (isClear) {
+            isClear = false;
+            paint();
+            events.slice(0, events.length);
+            setTimeout(reset, 10);
         }
 
-        if (e.eventPhase == 2) {
-            e.currentTarget.style.backgroundColor = 'red';
+        events.push(event);
+
+        var level;
+
+        switch (event.eventPhase) {
+            case 0:
+                level = 'none';
+                break;
+            case 1:
+                level = 'capturing';
+                break;
+            case 2:
+                event.currentTarget.style.backgroundColor = 'red';
+                level = 'target';
+                break;
+            case 3:
+                level = 'bubbling';
+                break;
+            default :
+                level = 'error';
         }
 
-        var level =
-                e.eventPhase == 0 ? "none" :
-                        e.eventPhase == 1 ? "capturing" :
-                                e.eventPhase == 2 ? "target" :
-                                        e.eventPhase == 3 ? "bubbling" : "error";
-        divInfo.innerHTML += e.currentTarget.id + "; eventPhase: " + level + "<br/>";
+        log.innerHTML += event.currentTarget.id + '; eventPhase: ' + level + '<br/>';
     }
-    function Clear() {
-        for (var i = 0; i < divs.length; i++) {
-            if (divs[ i ].id != "divInfo") {
-                divs[ i ].style.backgroundColor = (i & 1) ? "#f6eedb" : "#cceeff";
-            }
+    function paint() {
+        for (var i = 0; i < boxes.length; i++) {
+            boxes[ i ].style.backgroundColor = (i & 1) ? '#f6eedb' : '#cceeff';
         }
-        divInfo.innerHTML = '';
+        log.innerHTML = '';
+    }
+    function reset() {
+        isClear = true;
     }
 </script>
 </body>

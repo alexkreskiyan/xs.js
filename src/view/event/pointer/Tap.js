@@ -7,16 +7,22 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.Tap', function (self) {
+xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.view.event.pointer';
+    Class.namespace = 'xs.view.event';
+
+    Class.extends = 'ns.Event';
+
+    Class.imports = {
+        Button: 'ns.pointer.Button'
+    };
 
     Class.implements = [
-        'ns.IEvent'
+        'ns.pointer.IEvent'
     ];
 
     Class.static.method.forward = function (element) {
@@ -40,13 +46,21 @@ xs.define(xs.Class, 'ns.Tap', function (self) {
             };
 
             //define handler for `touchend` event
-            capture.handleEnd = function () {
+            capture.handleEnd = function (event) {
                 //reset previous timeout
                 clearTimeout(timeoutId);
 
                 //if not timed out - fire event
                 if (fire) {
-                    element.events.emitter.send(new Tap());
+                    var xEvent = event[ self.label ];
+
+                    if (xEvent instanceof Tap) {
+                        xs.apply(xEvent.private, getUpdateFromTouchEvent(element.private.el, event));
+                    } else {
+                        xEvent = new Tap(getDataFromTouchEvent(element.private.el, event));
+                    }
+
+                    element.events.emitter.send(xEvent);
                 }
             };
             var reset = function () {
@@ -58,8 +72,16 @@ xs.define(xs.Class, 'ns.Tap', function (self) {
 
         } else {
             //define handle for `click` event
-            capture.handle = function () {
-                element.events.emitter.send(new Tap());
+            capture.handle = function (event) {
+                var xEvent = event[ self.label ];
+
+                if (xEvent instanceof Tap) {
+                    xs.apply(xEvent.private, getUpdateFromPointerEvent(element.private.el, event));
+                } else {
+                    xEvent = new Tap(event, getDataFromPointerEvent(element.private.el, event));
+                }
+
+                element.events.emitter.send(xEvent);
             };
 
             element.private.el.addEventListener('click', capture.handle);
@@ -82,59 +104,157 @@ xs.define(xs.Class, 'ns.Tap', function (self) {
      *
      * @constructor
      *
-     * @param {Object} event event data
+     * @param {Object} event owned event
+     * @param {Object} data evaluated data
      */
-    Class.constructor = function () {
+    Class.constructor = function (event, data) {
         var me = this;
 
-        if (!arguments.length) {
+        //call parent constructor
+        self.parent.call(me, event, data);
 
-            return;
+
+        //validate and save event fields
+
+        //screenX
+        self.assert.number(data.screenX, 'constructor - given data.screenX `$screenX` is not a number', {
+            $screenX: data.screenX
+        });
+        me.private.screenX = data.screenX;
+
+        //screenY
+        self.assert.number(data.screenY, 'constructor - given data.screenY `$screenY` is not a number', {
+            $screenY: data.screenY
+        });
+        me.private.screenY = data.screenY;
+
+        //clientX
+        self.assert.number(data.clientX, 'constructor - given data.clientX `$clientX` is not a number', {
+            $clientX: data.clientX
+        });
+        me.private.clientX = data.clientX;
+
+        //clientY
+        self.assert.number(data.clientY, 'constructor - given data.clientY `$clientY` is not a number', {
+            $clientY: data.clientY
+        });
+        me.private.clientY = data.clientY;
+
+        //button
+        self.assert.ok(imports.Button.has(data.button), 'constructor - given data.button `$button` is not button identifier', {
+            $button: data.button
+        });
+        me.private.button = data.button;
+
+        //ctrlKey
+        self.assert.boolean(data.ctrlKey, 'constructor - given data.ctrlKey `$ctrlKey` is not a boolean', {
+            $ctrlKey: data.ctrlKey
+        });
+        me.private.ctrlKey = data.ctrlKey;
+
+        //altKey
+        self.assert.boolean(data.altKey, 'constructor - given data.altKey `$altKey` is not a boolean', {
+            $altKey: data.altKey
+        });
+        me.private.altKey = data.altKey;
+
+        //shiftKey
+        self.assert.boolean(data.shiftKey, 'constructor - given data.shiftKey `$shiftKey` is not a boolean', {
+            $shiftKey: data.shiftKey
+        });
+        me.private.shiftKey = data.shiftKey;
+
+        //metaKey
+        self.assert.boolean(data.metaKey, 'constructor - given data.metaKey `$metaKey` is not a boolean', {
+            $metaKey: data.metaKey
+        });
+        me.private.metaKey = data.metaKey;
+    };
+
+    Class.property.screenX = {
+        set: xs.noop
+    };
+
+    Class.property.screenY = {
+        set: xs.noop
+    };
+
+    Class.property.clientX = {
+        set: xs.noop
+    };
+
+    Class.property.clientY = {
+        set: xs.noop
+    };
+
+    Class.property.button = {
+        set: xs.noop
+    };
+
+    Class.property.ctrlKey = {
+        set: xs.noop
+    };
+
+    Class.property.altKey = {
+        set: xs.noop
+    };
+
+    Class.property.shiftKey = {
+        set: xs.noop
+    };
+
+    Class.property.metaKey = {
+        set: xs.noop
+    };
+
+    var getDataFromTouchEvent = function (element, event) {
+    };
+
+    var getUpdateFromTouchEvent = function (element, event) {
+    };
+
+    var getDataFromPointerEvent = function (element, event) {
+        var data = {};
+
+        //common
+        data.bubbles = event.bubbles;
+        data.cancelable = event.cancelable;
+        data.currentTarget = event.currentTarget;
+        data.phase = event.eventPhase;
+        data.target = event.target;
+        data.time = event.timestamp ? new Date(event.timestamp) : new Date();
+
+        if (data.cancelable) {
+            data.preventDefault = function () {
+                event.preventDefault();
+            };
         }
 
-        //check data
-        //assert that data is object
-        self.assert.ok(xs.isObject(data), 'constructor - given data `$data` is not an object', {
-            $data: data
-        });
+        data.stopPropagation = function () {
+            event.stopPropagation();
+        };
 
-        //assign attributes
-        me.private.attribute = data.attribute;
-        me.private.old = data.old;
-        me.private.new = data.new;
+        //event-special
+        data.screenX = event.screenX;
+        data.screenY = event.screenY;
+        data.clientX = event.clientX;
+        data.clientY = event.clientY;
+        data.button = event.button;
+        data.ctrlKey = event.ctrlKey;
+        data.altKey = event.altKey;
+        data.shiftKey = event.shiftKey;
+        data.metaKey = event.metaKey;
+
+        return data;
     };
 
-    /**
-     * Event `attribute` property. Event attribute is name of changed attribute
-     *
-     * @property attribute
-     *
-     * @type {Object}
-     */
-    Class.property.attribute = {
-        set: xs.noop
-    };
+    var getUpdateFromPointerEvent = function (element, event) {
+        var data = {};
 
-    /**
-     * Event `old` property. Event old is old value at given position
-     *
-     * @property old
-     *
-     * @type {Object}
-     */
-    Class.property.old = {
-        set: xs.noop
-    };
+        data.currentTarget = event.currentTarget;
+        data.phase = event.eventPhase;
 
-    /**
-     * Event `new` property. Event new is a value, that replaces current one
-     *
-     * @property new
-     *
-     * @type {Object}
-     */
-    Class.property.new = {
-        set: xs.noop
+        return data;
     };
 
 });

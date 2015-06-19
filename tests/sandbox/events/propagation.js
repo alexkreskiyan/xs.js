@@ -5,7 +5,8 @@ xs.Loader.paths.add({
     stats: 'src'
 });
 
-var body, log, boxes, clearer, capturer, useCapture;
+var body, log, boxes, isClear, capture, events;
+events = [];
 
 window.onload = function () {
     xs.require([
@@ -15,65 +16,75 @@ window.onload = function () {
     xs.onReady([
         'xs.view.Element',
         'xs.view.event.pointer.Tap'
-    ], function () {
-        body = new xs.view.Element(document.body);
-        log = body.query('#divInfo');
-        boxes = body.query('div.box', xs.view.Element.All);
-        //var chCapture = document.getElementById('chCapture');
-        //chCapture.onclick = function () {
-        //    removeListeners();
-        //    addListeners();
-        //};
-        //clear();
-        //addListeners();
-    });
+    ], run);
 };
+function run() {
+    var Tap = xs.view.event.pointer.Tap;
 
-function removeListeners() {
-    for (var i = 0; i < divs.length; i++) {
-        var d = divs[ i ];
-        if (d.id != 'divInfo') {
-            d.removeEventListener('click', OnDivClick, true);
-            d.removeEventListener('click', OnDivClick, false);
-        }
-    }
-}
-function addListeners() {
-    for (var i = 0; i < divs.length; i++) {
-        var d = divs[ i ];
-        if (d.id != 'divInfo') {
-            d.addEventListener('click', OnDivClick, false);
-            if (chCapture.checked) {
-                d.addEventListener('click', OnDivClick, true);
-            }
-            d.onmousemove = function () {
-                clear = true;
-            };
-        }
-    }
-}
-function OnDivClick(e) {
-    if (clear) {
-        clear();
-        clear = false;
+    body = new xs.view.Element(document.body);
+    log = body.query('#log');
+    boxes = body.query('div.box', xs.view.Element.All);
+    capture = body.query('#useCapture');
+    capture.on(Tap, function () {
+        removeListeners();
+        addListeners();
+    });
+    paint();
+    addListeners();
+
+    function removeListeners() {
+        boxes.each(function (box) {
+            box.off(Tap, function (item) {
+                return item.handler === handleBoxClick;
+            }, xs.core.Collection.All);
+        });
     }
 
-    if (e.eventPhase == 2) {
-        e.currentTarget.style.backgroundColor = 'red';
+    function addListeners() {
+        boxes.each(function (box) {
+            box.on(Tap, handleBoxClick);
+        });
     }
 
-    var level =
-        e.eventPhase == 0 ? 'none' :
-            e.eventPhase == 1 ? 'capturing' :
-                e.eventPhase == 2 ? 'target' :
-                    e.eventPhase == 3 ? 'bubbling' : 'error';
-    divInfo.innerHTML += e.currentTarget.id + '; eventPhase: ' + level + '<br/>';
-}
-function clear() {
-    for (var i = 0; i < divs.length; i++) {
-        if (divs[ i ].id != 'divInfo') {
-            divs[ i ].style.backgroundColor = (i & 1) ? '#f6eedb' : '#cceeff';
+    function handleBoxClick(event) {
+        if (isClear) {
+            isClear = false;
+            paint();
+            events.slice(0, events.length);
+            setTimeout(reset, 10);
         }
+
+        events.push(event);
+
+        var level;
+
+        switch (event.phase) {
+            case xs.view.event.Phase.Capture:
+                level = 'capturing';
+                break;
+            case xs.view.event.Phase.Target:
+                event.currentTarget.private.el.style.backgroundColor = 'red';
+                level = 'target';
+                break;
+            case xs.view.event.Phase.Bubble:
+                level = 'bubbling';
+                break;
+            default :
+                level = 'error';
+        }
+
+        log.private.el.innerHTML += event.currentTarget.attributes.get('id') + '; eventPhase: ' + level + '<br/>';
     }
-    divInfo.innerHTML = '';
+
+    function paint() {
+        boxes.each(function (box, key) {
+            box.private.el.style.backgroundColor = (key & 1) ? '#f6eedb' : '#cceeff';
+        });
+
+        log.private.el.innerHTML = '';
+    }
+
+    function reset() {
+        isClear = true;
+    }
 }

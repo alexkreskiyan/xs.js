@@ -48,6 +48,7 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
         connection.send(JSON.stringify(message.get()));
     };
 
+    //TODO - maximum depth, but prevent circularity
     var serialize = function (item, depth) {
         if (typeof item !== 'object' || item === null) {
 

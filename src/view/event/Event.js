@@ -1,42 +1,116 @@
-xs.define(xs.Class, 'ns.Event', function (self) {
+xs.define(xs.Class, 'ns.Event', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.view.event.pointer';
+    Class.namespace = 'xs.view.event';
 
-    Class.implements = 'ns.IEvent';
+    Class.imports = {
+        Element: 'xs.view.Element',
+        Phase: 'ns.Phase'
+    };
 
-    Class.constructor = function (event) {
+    Class.implements = [
+        'ns.IEvent'
+    ];
+
+    Class.abstract = true;
+
+    Class.static.method.forward = function (element) {
+
+    };
+
+    Class.static.method.release = function (element, capture) {
+
+    };
+
+    Class.constructor = function (event, data) {
         var me = this;
 
-        //assert, that event is an Event instance
-        self.assert.ok(event instanceof Event, 'constructor - given not `$event` is not an Event', {
+        //assert, that given event is a Event instance
+        self.assert.ok(event instanceof Event, 'constructor - given data.currentTarget `$currentTarget` is not a Event instance', {
             $event: event
         });
 
-        me.private.event = event;
+        //inject to dom event
+        event[ me.self.label ] = me;
+
+        //assert, that given data is an object
+        self.assert.object(data, 'constructor - given data `$data` is not an object', {
+            $data: data
+        });
+
+
+        //validate and save event fields
+
+        //bubbles
+        self.assert.boolean(data.bubbles, 'constructor - given data.bubbles `$bubbles` is not a boolean', {
+            $bubbles: data.bubbles
+        });
+        me.private.bubbles = data.bubbles;
+
+        //cancelable
+        self.assert.boolean(data.cancelable, 'constructor - given data.cancelable `$cancelable` is not a boolean', {
+            $cancelable: data.cancelable
+        });
+        me.private.cancelable = data.cancelable;
+
+        //currentTarget
+        self.assert.ok(data.currentTarget instanceof Element, 'constructor - given data.currentTarget `$currentTarget` is not a `$Element` instance', {
+            $currentTarget: data.currentTarget,
+            $Element: Element
+        });
+        me.private.currentTarget = data.currentTarget;
+
+        //defaultPrevented
+        me.private.defaultPrevented = false;
+
+        //phase
+        self.assert.ok(imports.Phase.has(data.phase), 'constructor - given data.phase `$phase` is not a valid phase identifier', {
+            $phase: data.phase
+        });
+        me.private.phase = data.phase;
+
+        //target
+        self.assert.ok(data.target instanceof Element, 'constructor - given data.target `$target` is not a `$Element` instance', {
+            $target: data.target,
+            $Element: Element
+        });
+        me.private.target = data.target;
+
+        //time
+        self.assert.ok(data.time instanceof Date, 'constructor - given data.time `$time` is not a Date instance', {
+            $time: data.time
+        });
+        me.private.time = data.time;
+
+
+        //validate and save event methods
+
+        //preventDefault
+        self.assert.ok(!me.cancelable || xs.isFunction(data.preventDefault), 'constructor - given data.preventDefault `$preventDefault` is not a function', {
+            $preventDefault: data.preventDefault
+        });
+
+        //stopPropagation
+        self.assert.fn(data.stopPropagation, 'constructor - given data.stopPropagation `$stopPropagation` is not a function', {
+            $preventDefault: data.stopPropagation
+        });
     };
 
     /**
-     * TODO is defined by descendant
      * A boolean indicating whether the event bubbles up through the DOM or not
      */
     Class.property.bubbles = {
-        get: function () {
-            return this.private.event.bubbles;
-        }
+        set: xs.noop
     };
 
     /**
-     * TODO is defined by descendant
      * A boolean indicating whether the event is cancelable
      */
     Class.property.cancelable = {
-        get: function () {
-            return this.private.event.cancelable;
-        }
+        set: xs.noop
     };
 
     /**
@@ -45,17 +119,22 @@ xs.define(xs.Class, 'ns.Event', function (self) {
      */
     Class.property.currentTarget = {
         get: function () {
-            return this.private.event.currentTarget;
-        }
+            var me = this;
+
+            if (me.private.currentTarget instanceof Element) {
+                me.private.currentTarget = new imports.Element(me.private.currentTarget);
+            }
+
+            return me.private.currentTarget;
+        },
+        set: xs.noop
     };
 
     /**
      * Indicates whether or not event.preventDefault() has been called on the event
      */
     Class.property.defaultPrevented = {
-        get: function () {
-            return this.private.event.defaultPrevented;
-        }
+        set: xs.noop
     };
 
     /**
@@ -63,8 +142,9 @@ xs.define(xs.Class, 'ns.Event', function (self) {
      */
     Class.property.phase = {
         get: function () {
-            return this.private.event.eventPhase;
-        }
+            return getPhase(this.private.phase);
+        },
+        set: xs.noop
     };
 
     /**
@@ -72,59 +152,63 @@ xs.define(xs.Class, 'ns.Event', function (self) {
      */
     Class.property.target = {
         get: function () {
-            return this.private.event.target;
-        }
+            var me = this;
+
+            if (me.private.target instanceof Element) {
+                me.private.target = new imports.Element(me.private.target);
+            }
+
+            return me.private.target;
+        },
+        set: xs.noop
     };
 
     /**
      * The time that the event was created
      */
     Class.property.time = {
-        get: function () {
-            return this.private.event.timestamp;
-        }
-    };
-
-    /**
-     * Indicates whether or not the event was initiated
-     * by the browser (after a user click for instance) or
-     * by a script (using an event creation method, like event.initEvent)
-     */
-    Class.property.isTrusted = {
-        get: function () {
-            return this.private.event.isTrusted;
-        }
+        set: xs.noop
     };
 
     /**
      * Cancels the event (if it is cancelable)
      */
     Class.method.preventDefault = function () {
-        //TODO validate cancelable
-        return this.private.event.preventDefault();
-    };
+        var me = this;
 
-    /**
-     * Cancels the event (if it is cancelable)
-     */
-    Class.method.preventDefault = function () {
-        return this.private.event.preventDefault();
-    };
+        //assert, that event is cancelable
+        self.assert.ok(me.cancelable, 'preventDefault - event `$event` is not cancelable', {
+            $event: me
+        });
 
-    /**
-     * For this particular event, no other listener will be called.
-     * Neither those attached on the same element, nor those attached on elements,
-     * which will be traversed later (in capture phase, for instance)
-     */
-    Class.method.stopImmediatePropagation = function () {
-        return this.private.event.stopImmediatePropagation();
+        //assert, that event is not prevented yet
+        self.assert.not(me.defaultPrevented, 'preventDefault - event `$event` is already prevented', {
+            $event: me
+        });
+
+        me.private.defaultPrevented = true;
+
+        me.private.preventDefault();
     };
 
     /**
      * Prevents further propagation of the current event along in the DOM
+     *
+     * To release stopImmediatePropagation, return false in event handler
      */
     Class.method.stopPropagation = function () {
-        return this.private.event.stopPropagation();
+        return this.private.stopPropagation();
+    };
+
+    var getPhase = function (phase) {
+        switch (phase) {
+            case 1:
+                return imports.Phase.Capture;
+            case 2:
+                return imports.Phase.Target;
+            default:
+                return imports.Phase.Bubble;
+        }
     };
 
 });
