@@ -6,7 +6,7 @@ xs.define(xs.Class, 'ns.Base', function () {
 
     Class.namespace = 'tests.class.preprocessors.processMixins.resources';
 
-    Class.imports = [ 'ns.Mix1' ];
+    Class.requires = [ 'ns.Mix1' ];
 
     Class.mixins.mix1 = 'ns.Mix1';
 

@@ -19,11 +19,9 @@ module('xs.event.StaticObservable', function () {
 
             Class.namespace = 'tests.event.StaticObservable';
 
-            Class.imports = [
-                {
-                    Event: 'xs.event.Event'
-                }
-            ];
+            Class.imports = {
+                Event: 'xs.event.Event'
+            };
 
             Class.mixins.observable = 'xs.event.StaticObservable';
 
@@ -167,11 +165,9 @@ module('xs.event.StaticObservable', function () {
 
             Class.namespace = 'tests.event.StaticObservable';
 
-            Class.imports = [
-                {
-                    Event: 'xs.event.Event'
-                }
-            ];
+            Class.imports = {
+                Event: 'xs.event.Event'
+            };
 
             Class.mixins.observable = 'xs.event.StaticObservable';
 
@@ -403,11 +399,9 @@ module('xs.event.StaticObservable', function () {
 
             Class.namespace = 'tests.event.StaticObservable';
 
-            Class.imports = [
-                {
-                    Event: 'xs.event.Event'
-                }
-            ];
+            Class.imports = {
+                Event: 'xs.event.Event'
+            };
 
             Class.mixins.observable = 'xs.event.StaticObservable';
 
@@ -512,11 +506,9 @@ module('xs.event.StaticObservable', function () {
 
             Class.namespace = 'tests.event.StaticObservable';
 
-            Class.imports = [
-                {
-                    Event: 'xs.event.Event'
-                }
-            ];
+            Class.imports = {
+                Event: 'xs.event.Event'
+            };
 
             Class.mixins.observable = 'xs.event.StaticObservable';
 
@@ -631,11 +623,9 @@ module('xs.event.StaticObservable', function () {
 
             Class.namespace = 'tests.event.StaticObservable';
 
-            Class.imports = [
-                {
-                    Event: 'xs.event.Event'
-                }
-            ];
+            Class.imports = {
+                Event: 'xs.event.Event'
+            };
 
             Class.mixins.observable = 'xs.event.StaticObservable';
 

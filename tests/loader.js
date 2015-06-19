@@ -100,7 +100,7 @@
         tested.modules = Object.keys(modules).filter(function (name) {
             var config = modules[ name ];
 
-            return config.contract === 'class' && config.test !== false;
+            return xs.isClass(xs.ContractsManager.get(name)) && config.test !== false;
         });
 
         //get tests list
@@ -142,7 +142,7 @@
 
     function assemblyModules(list, modules, name) {
         //modules is node, if given string contract
-        if (typeof modules.contract === 'string') {
+        if (isModule(modules)) {
             list[ name ] = modules;
 
             return;
@@ -155,7 +155,20 @@
     }
 
     function isModule(description) {
-        return (Object.keys(description).length === 0) || (typeof description.contract === 'string') || (typeof description.test === 'boolean');
+        var keys = Object.keys(description);
+
+        if (!keys.length) {
+
+            return true;
+        }
+
+        for (var i = 0; i < keys.length; i++) {
+            if (typeof description[ keys[ i ] ] === 'object') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 

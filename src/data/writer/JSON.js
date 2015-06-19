@@ -4,8 +4,6 @@
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @class xs.data.writer.JSON
- *
- * @extends xs.data.writer.Writer
  */
 xs.define(xs.Class, 'ns.JSON', function (self) {
 
@@ -32,17 +30,17 @@ xs.define(xs.Class, 'ns.JSON', function (self) {
                 $select: config.select
             });
 
-            me.select = config.select;
+            me.private.select = config.select;
 
         } else {
 
-            me.select = selectAll;
+            me.private.select = selectAll;
         }
     };
 
     Class.method.write = function (data) {
 
-        return JSON.stringify(data);
+        return JSON.stringify(this.private.select(data));
     };
 
     function selectAll(data) {

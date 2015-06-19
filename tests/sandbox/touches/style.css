@@ -1,0 +1,37 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+.sample {
+    width: 100%;
+    height: 500px;
+}
+
+#scroll {
+    overflow: scroll;
+}
+
+#scroll > div {
+    width: 200%;
+    height: 200%;
+    background-image: url('data:image/gif;base64,R0lGODlhIAAgAPAAAP///5nJ5yH5BAAAAAAALAAAAAAgACAAAAJYjB+Ap5v+VpNwImtwrpw6HXlXJ44lQ5rqin7ue24QzMoxiKd2HdY53eL9brpd8Ig0KofCGVDZSzKT0ap1ei1WsdlYl/j8UrkgLTl89qab6LabrX7Dx2ZIAQA7');
+}
+
+#interaction > div {
+    width: 200%;
+    height: 200%;
+}
+
+#interaction > div > div {
+    width: 50%;
+    height: 50%;
+    margin-left: 25%;
+    margin-top: 25%;
+    background: lightcyan;
+}

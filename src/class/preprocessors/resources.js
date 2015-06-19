@@ -24,13 +24,15 @@ xs.class.preprocessors.add('resources', function (Class, descriptor) {
     return descriptor.hasOwnProperty('resources');
 }, function (Class, descriptor, dependencies, ready) {
 
-    //init
-    //init resources list
-    var resources = new xs.core.Collection(descriptor.resources);
-
     //assert, that xs.resource.IResource base resource interface is loaded
     assert.ok(xs.ContractsManager.has('xs.resource.IResource'), '$Class: base resource interface xs.resource.IResource is not loaded', {
         $Class: Class
+    });
+
+    //init
+    //init resources list
+    var resources = (new xs.core.Collection(descriptor.resources)).map(function (resource) {
+        return resource instanceof xs.core.Lazy ? resource.get() : resource;
     });
 
     //assert, that all resources are identified with a valid short name and are resources

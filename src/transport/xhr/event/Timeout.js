@@ -15,11 +15,9 @@ xs.define(xs.Class, 'ns.event.Timeout', function (self, imports) {
 
     Class.namespace = 'xs.transport.xhr';
 
-    Class.imports = [
-        {
-            Response: 'ns.Response'
-        }
-    ];
+    Class.imports = {
+        Response: 'ns.Response'
+    };
 
     Class.implements = [
         'xs.event.IEvent'

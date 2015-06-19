@@ -19,26 +19,16 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
 
     Class.namespace = 'xs.data';
 
-    Class.imports = [
-        {
-            IAttribute: 'ns.attribute.IAttribute'
+    Class.imports = {
+        IAttribute: 'ns.attribute.IAttribute',
+        event: {
+            SetBefore: 'ns.attribute.event.SetBefore',
+            Set: 'ns.attribute.event.Set'
         },
-        {
-            'event.SetBefore': 'ns.attribute.event.SetBefore'
-        },
-        {
-            'event.Set': 'ns.attribute.event.Set'
-        },
-        {
-            IModelOperation: 'ns.operation.IModelOperation'
-        },
-        {
-            Proxy: 'ns.Proxy'
-        },
-        {
-            Format: 'ns.attribute.Format'
-        }
-    ];
+        IModelOperation: 'ns.operation.IModelOperation',
+        Proxy: 'ns.Proxy',
+        Format: 'ns.attribute.Format'
+    };
 
     Class.mixins.observable = 'xs.event.Observable';
 
@@ -382,7 +372,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         var model = me.private.model;
 
         //send preventable event.SetBefore event, that can prevent changing attribute value
-        if (!model.events.send(new imports.event.SetBefore(data))) {
+        if (!model.events.emitter.send(new imports.event.SetBefore(data))) {
 
             return;
         }
@@ -391,7 +381,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         me.private.value = me.private.attribute.set(value);
 
         //send closing event.Set event
-        model.events.send(new imports.event.Set(data));
+        model.events.emitter.send(new imports.event.Set(data));
     };
 
     /**

@@ -17,10 +17,6 @@ xs.define(xs.Interface, 'ns.IWriter', function () {
 
     Interface.namespace = 'xs.data.writer';
 
-    Interface.constructor = function (config) {
-
-    };
-
     Interface.method.write = function (data) {
 
     };

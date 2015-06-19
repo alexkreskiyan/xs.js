@@ -14,15 +14,13 @@ var log = new xs.log.Logger('xs.class.preprocessors.imports');
  *
  * Syntax rules:
  *
- * - imports list is an Array
- * - anonymously imported contract is declared with absolute/relative string name
- * - alias-basing used imported contract is declared with object of single property,
- * which names means alias and value - name of imported contract
+ * - requires list is an array
+ * - imports list is an object
  *
  * Actually, extended, mixed and implemented contracts (classes & interfaces) are automatically added to imports list, so
  * developer has no reason to duplicate them explicitly.
  *
- * Imported classes are saved into second param of descriptor constructor.
+ * Imported contracts are saved into second param of descriptor constructor.
  *
  * For example:
  *
@@ -32,12 +30,19 @@ var log = new xs.log.Logger('xs.class.preprocessors.imports');
  *
  *         this.namespace = 'app.start.login';
  *
- *         this.imports = [
- *             {'store.Users': 'ns.store.Users'}, //Some used store. Resolved for usage as imports.store.Users
- *             {'store.Groups': 'ns.store.Groups'}, //Some used store. Resolved for usage as imports.store.Groups
- *             {'view.Users': 'ns.view.Users'},  //Some used view. Resolved for usage as imports.view.Users
- *             {'Auth': 'ns.model.Auth'}, //Used Auth model. Is resolved as imports.Auth
+ *         this.requires = [
  *             'SomeClass' //Is not resolved into any reference in imports object. Is required and imported anonymously
+ *         ];
+ *
+ *         this.imports = {
+ *             store: {
+ *                 Users: 'ns.store.Users', //Some used store. Resolved for usage as imports.store.Users
+ *                 Groups: 'ns.store.Groups' //Some used store. Resolved for usage as imports.store.Groups
+ *             },
+ *             view: {
+ *                 Users: 'ns.view.Users'  //Some used view. Resolved for usage as imports.view.Users
+ *             },
+ *             Auth: 'ns.model.Auth' //Used Auth model. Is resolved as imports.Auth
  *         ];
  *
  *
@@ -69,39 +74,55 @@ xs.class.preprocessors.add('imports', function () {
     //init imports list
     var imports = new xs.core.Collection();
 
-
     //process imports list
     //namespace shortcut
     var resolveName = Class.descriptor.resolveName;
+
+    //process requires list - add unique entries, resolving names on fly
+    descriptor.requires.each(function (name) {
+
+        //resolve name
+        name = resolveName(name);
+
+        if (!requires.has(name)) {
+            requires.add(name);
+        }
+    });
+
     //fill imports
-    descriptor.imports.each(function (imported) {
-        var name;
+    var collectImports = function (branch, namespace) {
+        var aliases = Object.keys(branch);
 
-        //handle imported string - it's simply className without alias, added only to loads list
+        for (var i = 0; i < aliases.length; i++) {
+            var alias = aliases[ i ];
 
-        if (xs.isString(imported)) {
-            name = resolveName(imported);
+            var fullName = namespace ? [
+                namespace,
+                alias
+            ].join('.') : alias;
+
+            var name = branch[ alias ];
+
+            if (xs.isObject(name)) {
+
+                //handle branch
+                collectImports(name, fullName);
+
+                continue;
+            }
+
+            //resolve name
+            name = resolveName(name);
 
             if (!requires.has(name)) {
                 requires.add(name);
             }
 
-            return;
+            imports.add(name, fullName);
         }
+    };
 
-
-        //handle imported key=>value pair
-
-        //get name and alias
-        var alias = Object.keys(imported)[ 0 ];
-        name = resolveName(imported[ alias ]);
-
-        if (!requires.has(name)) {
-            requires.add(name);
-        }
-
-        imports.add(name, alias);
-    });
+    collectImports(descriptor.imports, '');
 
     //filter loads to find out already loaded ones
     var loads = requires.find(function (name) {

@@ -70,31 +70,6 @@ module('xs.ux.Promise', function () {
         return false;
     });
 
-    test('resolve simple plain case exception', function () {
-        //simple case - three L1 handlers. Second L1 handler throws exception
-        var me = this;
-        me.promise = new xs.ux.Promise();
-        me.source = 5;
-        me.promise.then(function (data) {
-            me.source *= data;
-        });
-        me.promise.then(function () {
-            throw new Error('error');
-        });
-        me.promise.then(function (reason) {
-            me.source += reason;
-        });
-    }, function () {
-        var me = this;
-        me.promise.resolve(5);
-        me.promise.then(function () {
-            strictEqual(me.source, 30);
-            me.done();
-        });
-
-        return false;
-    });
-
     test('resolve simple chain case normal', function () {
         //simple case - promises chain with three steps. All resolved
         var me = this;
@@ -112,33 +87,6 @@ module('xs.ux.Promise', function () {
         me.promise.resolve(5);
         me.chain.then(function (data) {
             strictEqual(data, 4);
-            me.done();
-        });
-
-        return false;
-    });
-
-    test('resolve simple chain case exception', function () {
-        //simple case - promises chain with three steps. Step two throws exception
-        var me = this;
-        me.promise = new xs.ux.Promise();
-        var value = 5;
-        me.chain = me.promise.then(function (data) {
-            return data * value;
-        }).then(function () {
-            throw new Error('error');
-        }).then(function (data) {
-            return data / value;
-        }, function (e) {
-            return value + e.message;
-        });
-    }, function () {
-        var me = this;
-        me.promise.resolve(5);
-        me.chain.then(function () {
-            throw new Error('failed');
-        }, function (reason) {
-            strictEqual(reason, '5error');
             me.done();
         });
 
@@ -177,48 +125,6 @@ module('xs.ux.Promise', function () {
         //handle last chain
         me.last.then(function () {
             strictEqual(me.total, 12);
-            me.done();
-        });
-
-        return false;
-    });
-
-    test('resolve complex case exception', function () {
-        //complex case - promises tree 2 levels with 3 handlers each - 12 total. Second L1 handler throws exception
-        var me = this;
-        me.promise = new xs.ux.Promise();
-        me.total = 0;
-        me.promise.then(function (data) {
-            return data + 2; //7
-        }).then(function (data) {
-            return data * 2; //14
-        }).then(function (data) {
-            me.total += data; //0 + 14 = 14
-        });
-        me.promise.then(function () {
-            throw new Error('reason');
-        }).then(function (data) {
-            return data / 4; //not going come here
-        }, function (e) {
-            return e.message;
-        }).then(function (data) {
-            me.total *= data; //not going to come here
-        }, function (reason) {
-            me.total += reason; //14 + reason = 14reason
-        });
-        me.last = me.promise.then(function (data) {
-            return data - 1; //4
-        }).then(function (data) {
-            return data * 4; //16
-        }).then(function (data) {
-            me.total += data; //14reason + 16 = 14reason16
-        });
-    }, function () {
-        var me = this;
-        me.promise.resolve(5);
-        //handle last chain
-        me.last.then(function () {
-            strictEqual(me.total, '14reason16');
             me.done();
         });
 
@@ -268,31 +174,6 @@ module('xs.ux.Promise', function () {
         return false;
     });
 
-    test('reject simple plain case exception', function () {
-        //simple case - three L1 handlers. Second L1 handler throws exception
-        var me = this;
-        me.promise = new xs.ux.Promise();
-        me.source = 5;
-        me.promise.otherwise(function (data) {
-            me.source *= data;
-        });
-        me.promise.otherwise(function () {
-            throw new Error('error');
-        });
-        me.promise.otherwise(function (reason) {
-            me.source += reason;
-        });
-    }, function () {
-        var me = this;
-        me.promise.reject(5);
-        me.promise.otherwise(function () {
-            strictEqual(me.source, 30);
-            me.done();
-        });
-
-        return false;
-    });
-
     test('reject simple chain case normal', function () {
         //simple case - promises chain with three steps. All resolved
         var me = this;
@@ -310,33 +191,6 @@ module('xs.ux.Promise', function () {
         me.promise.reject(5);
         me.chain.otherwise(function (data) {
             strictEqual(data, 4);
-            me.done();
-        });
-
-        return false;
-    });
-
-    test('reject simple chain case exception', function () {
-        //simple case - promises chain with three steps. Step two throws exception
-        var me = this;
-        me.promise = new xs.ux.Promise();
-        var value = 5;
-        me.chain = me.promise.otherwise(function (data) {
-            return data * value;
-        }).otherwise(function () {
-            throw new Error('error');
-        }).then(function (data) {
-            return data / value;
-        }, function (e) {
-            return value + e.message;
-        });
-    }, function () {
-        var me = this;
-        me.promise.reject(5);
-        me.chain.then(function () {
-            throw new Error('failed');
-        }, function (reason) {
-            strictEqual(reason, '5error');
             me.done();
         });
 
@@ -375,48 +229,6 @@ module('xs.ux.Promise', function () {
         //handle last chain
         me.last.otherwise(function () {
             strictEqual(me.total, 12);
-            me.done();
-        });
-
-        return false;
-    });
-
-    test('reject complex case exception', function () {
-        //complex case - promises tree 2 levels with 3 handlers each - 12 total. Second L1 handler throws exception
-        var me = this;
-        me.promise = new xs.ux.Promise();
-        me.total = 0;
-        me.promise.otherwise(function (data) {
-            return data + 2; //7
-        }).otherwise(function (data) {
-            return data * 2; //14
-        }).otherwise(function (data) {
-            me.total += data; //0 + 14 = 14
-        });
-        me.promise.otherwise(function () {
-            throw new Error('reason');
-        }).then(function (data) {
-            return data / 4; //not going come here
-        }, function (e) {
-            return e.message;
-        }).then(function (data) {
-            me.total *= data; //not going to come here
-        }, function (reason) {
-            me.total += reason; //14 + reason = 14reason
-        });
-        me.last = me.promise.otherwise(function (data) {
-            return data - 1; //4
-        }).otherwise(function (data) {
-            return data * 4; //16
-        }).otherwise(function (data) {
-            me.total += data; //14reason + 16 = 14reason16
-        });
-    }, function () {
-        var me = this;
-        me.promise.reject(5);
-        //handle last chain
-        me.last.otherwise(function () {
-            strictEqual(me.total, '14reason16');
             me.done();
         });
 

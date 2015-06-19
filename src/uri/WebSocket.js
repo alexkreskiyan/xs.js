@@ -15,11 +15,9 @@ xs.define(xs.Class, 'ns.WebSocket', function (self, imports) {
 
     Class.namespace = 'xs.uri';
 
-    Class.imports = [
-        {
-            IQuery: 'ns.query.IQuery'
-        }
-    ];
+    Class.imports = {
+        IQuery: 'ns.query.IQuery'
+    };
 
     Class.extends = 'ns.URI';
 

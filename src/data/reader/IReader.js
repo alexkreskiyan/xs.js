@@ -17,10 +17,6 @@ xs.define(xs.Interface, 'ns.IReader', function () {
 
     Interface.namespace = 'xs.data.reader';
 
-    Interface.constructor = function (config) {
-
-    };
-
     Interface.method.read = function (raw) {
 
     };

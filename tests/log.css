@@ -11,12 +11,12 @@ html {
 body {
     width: 100%;
     height: 100%;
-    font-size: 16px !important;
+    font-size: 12px !important;
 }
 
 .messageLine {
     font-family: monospace;
-    font-size: 16px;
+    font-size: 12px;
 }
 
 .messageLine.log {

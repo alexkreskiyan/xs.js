@@ -17,11 +17,9 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
 
     Class.namespace = 'xs.data.attribute';
 
-    Class.imports = [
-        {
-            Format: 'ns.Format'
-        }
-    ];
+    Class.imports = {
+        Format: 'ns.Format'
+    };
 
     Class.implements = [ 'ns.IAttribute' ];
 
