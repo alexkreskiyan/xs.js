@@ -67,7 +67,7 @@ xs.define(xs.Class, 'ns.view.Row', function (self, imports) {
 
             state.innerHTML = me.private.state;
 
-            me.events.send(new imports.event.Select({
+            me.events.emitter.send(new imports.event.Select({
                 model: model,
                 state: selected
             }));

@@ -87,7 +87,7 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
         var captures = me.private.captures = new xs.core.Collection();
 
         //handle stream Resume and Suspend events
-        me.private.stream.on(xs.reactive.event.Resume, function (event) {
+        me.events.on(xs.reactive.event.Resume, function (event) {
             event = event.event;
 
             if (xs.isClass(event) && event.implements(imports.IEvent)) {
@@ -95,7 +95,7 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
                 captures.add(event, event.forward(me));
             }
         });
-        me.private.stream.on(xs.reactive.event.Suspend, function (event) {
+        me.events.on(xs.reactive.event.Suspend, function (event) {
             event = event.event;
 
             if (xs.isClass(event) && event.implements(imports.IEvent)) {

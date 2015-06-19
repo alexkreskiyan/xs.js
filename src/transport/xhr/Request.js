@@ -211,7 +211,7 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
         var state = {
             response: new imports.Response(me),
             promise: new xs.core.Promise(),
-            send: me.private.stream.send,
+            send: me.events.emitter.send,
             private: me.private
         };
 

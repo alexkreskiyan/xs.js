@@ -105,7 +105,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
                     label: config.label
                 });
                 field.on(imports.view.event.Select, function (event) {
-                    me.events.send(new imports.event.Select({
+                    me.events.emitter.send(new imports.event.Select({
                         field: field.field,
                         value: event.value
                     }));

@@ -573,11 +573,11 @@ module('xs.data.Source', function () {
             data += event.operation += event.data;
         });
 
-        userSource.private.stream.send(new xs.data.operation.Event({
+        userSource.events.emitter.send(new xs.data.operation.Event({
             operation: xs.data.operation.source.IRead,
             data: 1
         }));
-        userSource.private.stream.send(5);
+        userSource.events.emitter.send(5);
 
         strictEqual(data, '[xs.Interface xs.data.operation.source.IRead]1');
 
@@ -742,22 +742,22 @@ module('xs.data.Source', function () {
         //bind first
         postSource.bind('user', userSource);
 
-        userSource.private.stream.send(new xs.data.operation.Event({
+        userSource.events.emitter.send(new xs.data.operation.Event({
             operation: xs.data.operation.source.IRead,
             data: 1
         }));
-        userSource.private.stream.send(5);
+        userSource.events.emitter.send(5);
 
         strictEqual(data, '[xs.Interface xs.data.operation.source.IRead]1');
 
         //unbind
         postSource.unbind('user');
 
-        userSource.private.stream.send(new xs.data.operation.Event({
+        userSource.events.emitter.send(new xs.data.operation.Event({
             operation: xs.data.operation.source.IRead,
             data: 1
         }));
-        userSource.private.stream.send(5);
+        userSource.events.emitter.send(5);
 
         strictEqual(data, '[xs.Interface xs.data.operation.source.IRead]1');
 

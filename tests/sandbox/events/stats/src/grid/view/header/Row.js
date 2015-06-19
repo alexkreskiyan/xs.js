@@ -52,7 +52,7 @@ xs.define(xs.Class, 'ns.view.header.Row', function (self, imports) {
             me.fields.add(field);
 
             //send sort event up
-            field.on(imports.event.Sort, me.events.send);
+            field.on(imports.event.Sort, me.events.emitter.send);
         });
     };
 

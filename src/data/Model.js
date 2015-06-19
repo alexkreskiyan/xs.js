@@ -372,7 +372,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         var model = me.private.model;
 
         //send preventable event.SetBefore event, that can prevent changing attribute value
-        if (!model.events.send(new imports.event.SetBefore(data))) {
+        if (!model.events.emitter.send(new imports.event.SetBefore(data))) {
 
             return;
         }
@@ -381,7 +381,7 @@ xs.define(xs.Class, 'ns.Model', function (self, imports) {
         me.private.value = me.private.attribute.set(value);
 
         //send closing event.Set event
-        model.events.send(new imports.event.Set(data));
+        model.events.emitter.send(new imports.event.Set(data));
     };
 
     /**

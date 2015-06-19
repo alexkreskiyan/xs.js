@@ -66,7 +66,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         });
         grid.controls.add(compare);
         compare.on(imports.view.event.Click, function () {
-            me.events.send(new imports.event.Compare(me.selection));
+            me.events.emitter.send(new imports.event.Compare(me.selection));
         });
 
         var show = new imports.view.Control({
@@ -75,7 +75,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         });
         grid.controls.add(show);
         show.on(imports.view.event.Click, function () {
-            me.events.send(new imports.event.Show(me.selection.last()));
+            me.events.emitter.send(new imports.event.Show(me.selection.last()));
         });
 
 

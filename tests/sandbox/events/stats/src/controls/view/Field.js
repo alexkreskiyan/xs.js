@@ -58,7 +58,7 @@ xs.define(xs.Class, 'ns.view.Field', function (self, imports) {
 
         //add select handler
         me.query('select').private.el.addEventListener('change', function (event) {
-            me.events.send(new imports.event.Select(event));
+            me.events.emitter.send(new imports.event.Select(event));
         });
 
         //set privates

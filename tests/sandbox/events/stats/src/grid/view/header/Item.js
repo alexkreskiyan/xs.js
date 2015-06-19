@@ -54,14 +54,14 @@ xs.define(xs.Class, 'ns.view.header.Item', function (self, imports) {
             if (me.private.direction === direction.asc) {
                 me.private.direction = direction.desc;
 
-                me.events.send(new imports.event.Sort({
+                me.events.emitter.send(new imports.event.Sort({
                     field: data.field,
                     direction: 'DESC'
                 }));
             } else {
                 me.private.direction = direction.asc;
 
-                me.events.send(new imports.event.Sort({
+                me.events.emitter.send(new imports.event.Sort({
                     field: data.field,
                     direction: 'ASC'
                 }));
@@ -76,7 +76,7 @@ xs.define(xs.Class, 'ns.view.header.Item', function (self, imports) {
 
             me.private.direction = '';
 
-            me.events.send(new imports.event.Sort({
+            me.events.emitter.send(new imports.event.Sort({
                 field: data.field,
                 direction: ''
             }));

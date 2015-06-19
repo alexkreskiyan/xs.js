@@ -171,7 +171,7 @@ xs.define(xs.Class, 'ns.Connection', function (self, imports) {
 
         //create state object
         var state = {
-            send: me.private.stream.send,
+            send: me.events.emitter.send,
             private: me.private
         };
 

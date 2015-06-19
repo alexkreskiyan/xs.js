@@ -728,7 +728,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         };
 
         //send preventable event.AddBefore, that can prevent adding value to collection
-        if (!me.events.send(new imports.event.AddBefore(data))) {
+        if (!me.events.emitter.send(new imports.event.AddBefore(data))) {
 
             return me;
         }
@@ -740,7 +740,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         });
 
         //send closing event.Add
-        me.events.send(new imports.event.Add(data));
+        me.events.emitter.send(new imports.event.Add(data));
 
         return me;
     };
@@ -843,7 +843,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         };
 
         //send preventable event.AddBefore, that can prevent inserting value to collection
-        if (!me.events.send(new imports.event.AddBefore(data))) {
+        if (!me.events.emitter.send(new imports.event.AddBefore(data))) {
 
             return me;
         }
@@ -859,7 +859,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         updateIndexes.call(me, index + 1);
 
         //send closing event.Add
-        me.events.send(new imports.event.Add(data));
+        me.events.emitter.send(new imports.event.Add(data));
 
         return me;
     };
@@ -938,7 +938,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         };
 
         //send preventable event.SetBefore, that can prevent changing value for collection item
-        if (!me.events.send(new imports.event.SetBefore(data))) {
+        if (!me.events.emitter.send(new imports.event.SetBefore(data))) {
 
             return me;
         }
@@ -946,7 +946,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         me.private.items[ index ].value = value;
 
         //send closing event.Set
-        me.events.send(new imports.event.Set(data));
+        me.events.emitter.send(new imports.event.Set(data));
 
         return me;
     };
@@ -1131,7 +1131,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         };
 
         //send preventable event.RemoveBefore, that can prevent removing value from collection
-        if (!me.events.send(new imports.event.RemoveBefore(data))) {
+        if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
 
             return me;
         }
@@ -1143,11 +1143,11 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
         updateIndexes.call(me, index);
 
         //send closing event.Remove
-        me.events.send(new imports.event.Remove(data));
+        me.events.emitter.send(new imports.event.Remove(data));
 
         //if no items left - send event.Clear
         if (!me.private.items.length) {
-            me.events.send(new imports.event.Clear());
+            me.events.emitter.send(new imports.event.Clear());
         }
 
         return me;
@@ -1278,7 +1278,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.events.send(new imports.event.RemoveBefore(data))) {
+                if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i++;
                     continue;
                 }
@@ -1287,7 +1287,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing event.Remove
-                me.events.send(new imports.event.Remove(data));
+                me.events.emitter.send(new imports.event.Remove(data));
             }
 
             //update indexes if anything removed
@@ -1296,7 +1296,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             } else {
 
                 //if no items left - send event.Clear
-                me.events.send(new imports.event.Clear());
+                me.events.emitter.send(new imports.event.Clear());
             }
 
             return me;
@@ -1355,7 +1355,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.events.send(new imports.event.RemoveBefore(data))) {
+                if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i++;
                     continue;
                 }
@@ -1364,7 +1364,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing event.Remove
-                me.events.send(new imports.event.Remove(data));
+                me.events.emitter.send(new imports.event.Remove(data));
             }
 
             //update indexes if anything removed
@@ -1382,7 +1382,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             };
 
             //send preventable event.RemoveBefore, that can prevent removing value for collection
-            if (!me.events.send(new imports.event.RemoveBefore(data))) {
+            if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
 
                 return me;
             }
@@ -1391,7 +1391,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             items.splice(index, 1);
 
             //send closing event.Remove
-            me.events.send(new imports.event.Remove(data));
+            me.events.emitter.send(new imports.event.Remove(data));
 
             //update indexes
             updateIndexes.call(me, index);
@@ -1400,7 +1400,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
 
         //if no items left - send event.Clear
         if (!items.length) {
-            me.events.send(new imports.event.Clear());
+            me.events.emitter.send(new imports.event.Clear());
         }
 
         return me;
@@ -1575,7 +1575,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.events.send(new imports.event.RemoveBefore(data))) {
+                if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i++;
 
                     continue;
@@ -1585,7 +1585,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing event.Remove
-                me.events.send(new imports.event.Remove(data));
+                me.events.emitter.send(new imports.event.Remove(data));
             }
         } else if (reverse) {
             i = items.length - 1;
@@ -1608,7 +1608,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.events.send(new imports.event.RemoveBefore(data))) {
+                if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i--;
 
                     continue;
@@ -1618,7 +1618,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing event.Remove
-                me.events.send(new imports.event.Remove(data));
+                me.events.emitter.send(new imports.event.Remove(data));
 
                 break;
             }
@@ -1643,7 +1643,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value for collection. if happens - continue with next item
-                if (!me.events.send(new imports.event.RemoveBefore(data))) {
+                if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i++;
 
                     continue;
@@ -1653,7 +1653,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
                 items.splice(i, 1);
 
                 //send closing event.Remove
-                me.events.send(new imports.event.Remove(data));
+                me.events.emitter.send(new imports.event.Remove(data));
 
                 break;
             }
@@ -1666,7 +1666,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
 
         //send event.Clear if no items left
         if (!items.length) {
-            me.events.send(new imports.event.Clear());
+            me.events.emitter.send(new imports.event.Clear());
         }
 
         return me;

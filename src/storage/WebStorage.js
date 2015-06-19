@@ -265,7 +265,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
         };
 
         //send preventable event.AddBefore, that can prevent adding value to storage
-        if (!me.events.send(new imports.event.AddBefore(data))) {
+        if (!me.events.emitter.send(new imports.event.AddBefore(data))) {
 
             return me;
         }
@@ -274,10 +274,10 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
         me.storage.setItem(key, value);
 
         //send closing event.Add
-        me.events.send(new imports.event.Add(data));
+        me.events.emitter.send(new imports.event.Add(data));
 
         //send change
-        me.events.send({
+        me.events.emitter.send({
             type: self.Add,
             key: key,
             value: value
@@ -326,7 +326,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
         };
 
         //send preventable event.SetBefore, that can prevent changing value for storage item
-        if (!me.events.send(new imports.event.SetBefore(data))) {
+        if (!me.events.emitter.send(new imports.event.SetBefore(data))) {
 
             return me;
         }
@@ -334,7 +334,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
         me.storage.setItem(key, value);
 
         //send closing event.Set
-        me.events.send(new imports.event.Set(data));
+        me.events.emitter.send(new imports.event.Set(data));
 
         return me;
     };
@@ -370,7 +370,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
         };
 
         //send preventable event.RemoveBefore, that can prevent removing value from storage
-        if (!me.events.send(new imports.event.RemoveBefore(data))) {
+        if (!me.events.emitter.send(new imports.event.RemoveBefore(data))) {
 
             return me;
         }
@@ -379,11 +379,11 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
         me.storage.removeItem(key);
 
         //send closing event.Remove
-        me.events.send(new imports.event.Remove(data));
+        me.events.emitter.send(new imports.event.Remove(data));
 
         //send clear
         if (!me.storage.length) {
-            me.events.send(new imports.event.Clear());
+            me.events.emitter.send(new imports.event.Clear());
         }
 
         return me;
@@ -426,7 +426,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value from storage. if happens - continue with next item
-                if (!events.send(new imports.event.RemoveBefore(data))) {
+                if (!events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i++;
                     continue;
                 }
@@ -435,12 +435,12 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
                 storage.removeItem(key);
 
                 //send closing event.Remove
-                events.send(new imports.event.Remove(data));
+                events.emitter.send(new imports.event.Remove(data));
             }
 
             //send clear
             if (!me.storage.length) {
-                me.events.send(new imports.event.Clear());
+                me.events.emitter.send(new imports.event.Clear());
             }
 
             return me;
@@ -500,7 +500,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value from storage. if happens - continue with next item
-                if (!events.send(new imports.event.RemoveBefore(data))) {
+                if (!events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i++;
                     continue;
                 }
@@ -509,7 +509,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
                 storage.removeItem(key);
 
                 //send closing event.Remove
-                events.send(new imports.event.Remove(data));
+                events.emitter.send(new imports.event.Remove(data));
             }
 
         } else {
@@ -522,7 +522,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
             };
 
             //send preventable event.RemoveBefore, that can prevent removing value from storage. if happens - continue with next item
-            if (!events.send(new imports.event.RemoveBefore(data))) {
+            if (!events.emitter.send(new imports.event.RemoveBefore(data))) {
 
                 return me;
             }
@@ -531,12 +531,12 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
             storage.removeItem(key);
 
             //send closing event.Remove
-            events.send(new imports.event.Remove(data));
+            events.emitter.send(new imports.event.Remove(data));
         }
 
         //send clear
         if (!me.storage.length) {
-            me.events.send(new imports.event.Clear());
+            me.events.emitter.send(new imports.event.Clear());
         }
 
         return me;
@@ -608,7 +608,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value from storage. if happens - continue with next value
-                if (!events.send(new imports.event.RemoveBefore(data))) {
+                if (!events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i++;
 
                     continue;
@@ -618,7 +618,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
                 storage.removeItem(key);
 
                 //send closing event.Remove
-                events.send(new imports.event.Remove(data));
+                events.emitter.send(new imports.event.Remove(data));
             }
         } else if (reverse) {
             i = storage.length - 1;
@@ -641,7 +641,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value from storage. if happens - continue with next value
-                if (!events.send(new imports.event.RemoveBefore(data))) {
+                if (!events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i--;
 
                     continue;
@@ -651,7 +651,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
                 storage.removeItem(key);
 
                 //send closing event.Remove
-                events.send(new imports.event.Remove(data));
+                events.emitter.send(new imports.event.Remove(data));
 
                 break;
             }
@@ -676,7 +676,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
                 };
 
                 //send preventable event.RemoveBefore, that can prevent removing value from storage. if happens - continue with next value
-                if (!events.send(new imports.event.RemoveBefore(data))) {
+                if (!events.emitter.send(new imports.event.RemoveBefore(data))) {
                     i++;
 
                     continue;
@@ -686,7 +686,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
                 storage.removeItem(key);
 
                 //send closing event.Remove
-                events.send(new imports.event.Remove(data));
+                events.emitter.send(new imports.event.Remove(data));
 
                 break;
             }
@@ -694,7 +694,7 @@ xs.define(xs.Class, 'ns.WebStorage', function (self, imports) {
 
         //send clear
         if (!me.storage.length) {
-            me.events.send(new imports.event.Clear());
+            me.events.emitter.send(new imports.event.Clear());
         }
 
         return me;

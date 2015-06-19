@@ -273,7 +273,7 @@ xs.define(xs.Class, 'ns.Source', function (self, imports) {
                 operation: function (event) {
                     var me = this;
                     event.relation = relation;
-                    me.private.stream.send(event);
+                    me.events.emitter.send(event);
                 },
                 destroy: function () {
                     var me = this;

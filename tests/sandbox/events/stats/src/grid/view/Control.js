@@ -43,7 +43,7 @@ xs.define(xs.Class, 'ns.view.Control', function (self, imports) {
         me.private.el.innerHTML = data.label;
 
         me.private.el.addEventListener('click', function () {
-            me.events.send(new imports.event.Click());
+            me.events.emitter.send(new imports.event.Click());
         });
     };
 

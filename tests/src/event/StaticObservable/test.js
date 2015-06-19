@@ -49,23 +49,8 @@ module('xs.event.StaticObservable', function () {
             Class.mixins.observable = 'xs.event.StaticObservable';
 
             Class.constant.events = xs.generator(function () {
-                var send = null;
-
-                //create event stream
-                //save stream reference
-                var stream = new xs.reactive.Stream(function () {
-
-                    //save send reference
-                    send = this.send;
-
-                    //call generator
-                    return generator.call(this);
-                });
-
-                //save send to stream
-                stream.send = send;
-
-                return stream;
+                //return event stream
+                return new xs.reactive.Stream(generator);
             });
 
             var generator = function () {
@@ -213,23 +198,8 @@ module('xs.event.StaticObservable', function () {
             Class.mixins.observable = 'xs.event.StaticObservable';
 
             Class.constant.events = xs.generator(function () {
-                var send = null;
-
-                //create event stream
-                //save stream reference
-                var stream = new xs.reactive.Stream(function () {
-
-                    //save send reference
-                    send = this.send;
-
-                    //call generator
-                    return generator.call(this);
-                });
-
-                //save send to stream
-                stream.send = send;
-
-                return stream;
+                //return event stream
+                return new xs.reactive.Stream(generator);
             });
 
             var generator = function () {
@@ -344,23 +314,8 @@ module('xs.event.StaticObservable', function () {
             Class.mixins.observable = 'xs.event.StaticObservable';
 
             Class.constant.events = xs.generator(function () {
-                var send = null;
-
-                //create event stream
-                //save stream reference
-                var stream = new xs.reactive.Stream(function () {
-
-                    //save send reference
-                    send = this.send;
-
-                    //call generator
-                    return generator.call(this);
-                });
-
-                //save send to stream
-                stream.send = send;
-
-                return stream;
+                //return event stream
+                return new xs.reactive.Stream(generator);
             });
 
             var generator = function () {
@@ -475,23 +430,8 @@ module('xs.event.StaticObservable', function () {
             Class.mixins.observable = 'xs.event.StaticObservable';
 
             Class.constant.events = xs.generator(function () {
-                var send = null;
-
-                //create event stream
-                //save stream reference
-                var stream = new xs.reactive.Stream(function () {
-
-                    //save send reference
-                    send = this.send;
-
-                    //call generator
-                    return generator.call(this);
-                });
-
-                //save send to stream
-                stream.send = send;
-
-                return stream;
+                //return event stream
+                return new xs.reactive.Stream(generator);
             });
 
             var generator = function () {
