@@ -2,9 +2,9 @@
 
 (function () {
     window.addEventListener('load', function () {
-        //window.initTouchTest();
+        window.initTouchTest();
         //window.initScrollTest();
-        window.initInteractionTest();
+        //window.initInteractionTest();
     });
 })();
 (function () {
