@@ -4,10 +4,8 @@
  * @author
  *
  * @class
- *
- * @extends
  */
-xs.define(xs.Class, 'ns.changeFullScreen', function () {
+xs.define(xs.Class, 'ns.Change', function () {
 
     'use strict';
 

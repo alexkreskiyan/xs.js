@@ -11,17 +11,30 @@
  *
  * @mixins xs.event.StaticObservable
  */
-xs.define(xs.Class, 'ns.Fullscreen', function (self) {
+xs.define(xs.Class, 'ns.Manager', function (self) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.ux';
+    Class.namespace = 'xs.fullscreen';
 
     Class.mixins.observable = 'xs.event.StaticObservable';
 
     Class.abstract = true;
+
+    Class.static.property.stack = {
+        get: function () {
+            var me = this;
+
+            if (!me.private.stack) {
+                me.private.stack = new xs.core.Collection();
+            }
+
+            return me.private.stack;
+        },
+        set: xs.noop
+    };
 
     //get state of fullscreen
     Class.static.property.isActive = {
@@ -35,7 +48,8 @@ xs.define(xs.Class, 'ns.Fullscreen', function (self) {
             } else if (document.webkitIsFullScreen != undefined) {
                 return document.webkitIsFullScreen;
             }
-        }
+        },
+        set: xs.noop
     };
 
     Class.static.property.isAvailable = {
@@ -64,36 +78,35 @@ xs.define(xs.Class, 'ns.Fullscreen', function (self) {
             } else if (document.webkitFullscreenElement) {
                 return document.webkitFullscreenElement;
             } else {
-                console.log("Fullscreen API is not supported");
+                console.log('Fullscreen API is not supported');
             }
         }
     };
 
     //request full screen
     Class.static.method.show = function (el) {
-        if (xs.ux.Fullscreen.isActive)
+        if (xs.ux.Fullscreen.isActive) {
             console.log('fullscreen is on');
-        else {
+        } else {
             if (el.requestFullscreen) {
                 el.requestFullscreen();
             } else if (el.mozRequestFullScreen) {
                 el.mozRequestFullScreen();
             } else if (el.webkitRequestFullscreen) {
                 el.webkitRequestFullscreen();
-            }
-            else if (el.msRequestFullscreen) {
+            } else if (el.msRequestFullscreen) {
                 el.msRequestFullscreen();
             } else {
-                console.log("Fullscreen API is not supported");
+                console.log('Fullscreen API is not supported');
             }
         }
     };
 
     //reset full screen
     Class.static.method.cancel = function () {
-        if (xs.ux.Fullscreen.isActive)
+        if (xs.ux.Fullscreen.isActive) {
             console.log('fullscreen is on');
-        else {
+        } else {
             if (document.cancelFullScreen) {
                 document.cancelFullScreen();
             } else if (document.mozCancelFullScreen) {
@@ -104,6 +117,37 @@ xs.define(xs.Class, 'ns.Fullscreen', function (self) {
                 document.exitFullscreen();
             }
         }
+    };
+
+    var getUnifiedName = function (el, name) {
+        var upperName = upperCaseFirst(name);
+        var variants = [
+            name,
+            'ms' + upperName,
+            'moz' + upperName,
+            'webkit' + upperName
+        ];
+
+        var variant;
+
+        for (var i = 0; i < variants.length; i++) {
+            variant = variants[ i ];
+
+            if (variant in el) {
+                break;
+            }
+            variant = undefined;
+        }
+
+        self.assert.ok(variant, 'getUnifiedName - no support for `$name` in context', {
+            $name: name
+        });
+
+        return variant;
+    };
+
+    var upperCaseFirst = function (name) {
+        return name[ 0 ].toUpperCase() + name.slice(1);
     };
 
 });
