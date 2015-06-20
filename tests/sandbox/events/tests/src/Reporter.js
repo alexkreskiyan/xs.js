@@ -40,7 +40,7 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
             userAgent: xs.env.Context,
             category: category,
             name: name,
-            event: serialize(event, 4)
+            event: serialize(event, new xs.core.Collection())
         };
 
         var message = new imports.message.Outgoing('log', 'add', data);
@@ -48,51 +48,60 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
         connection.send(JSON.stringify(message.get()));
     };
 
-    //TODO - maximum depth, but prevent circularity
-    var serialize = function (item, depth) {
-        if (typeof item !== 'object' || item === null) {
+    var stringified = [
+        Window,
+        HTMLDocument,
+        Element,
+        Date,
+        CSSStyleDeclaration
+    ];
 
-            return serializeNonObject(item);
+    var serialize = function (item, parents) {
+        if (xs.isNull(item) || !xs.isDefined(item)) {
+            return item;
+        } else if (stringified.filter(function (Ancestor) {
+                return item instanceof Ancestor;
+            }).length) {
+            return item.toString();
+        } else if (!xs.isObject(item) && !xs.isArray(item)) {
+            return xs.isFunction(item) ? 'fn ' + (item.name ? item.name : 'anonymous') : item;
         }
 
-        var result = {
-            prototype: {}
-        };
-        var ownKeys = Object.keys(item);
+        var result = {};
 
-        var prototype = result.prototype;
-        var prototypeKeys = Object.keys(item.constructor.prototype);
+        //add root if needed
+        if (!parents.size) {
+            parents.add('root', item);
+        }
 
-        var i, key;
+        for (var key in item) {
+            var value;
 
-        if (depth <= 1) {
-
-            for (i = 0; i < ownKeys.length; i++) {
-                key = ownKeys[ i ];
-                result[ key ] = serializeNonObject(item[ key ]);
+            try {
+                value = item[ key ];
+            } catch (e) {
+                value = e.toString();
             }
 
-            for (i = 0; i < prototypeKeys.length; i++) {
-                key = prototypeKeys[ i ];
-                prototype[ key ] = serializeNonObject(item[ key ]);
+            //if circular reference detected - mark it specially
+            if (parents.has(value)) {
+                result[ key ] = parents.keyOf(value);
+
+                //else if value is picked - go deeper
+            } else if (doPick(key, value)) {
+                result[ key ] = serialize(value, parents.clone().add(parents.reduce(getName, 0, null, 'ref ' + key), value));
             }
-
-        } else {
-
-            for (i = 0; i < ownKeys.length; i++) {
-                key = ownKeys[ i ];
-                result[ key ] = serialize(item[ key ], depth - 1);
-            }
-
-            for (i = 0; i < prototypeKeys.length; i++) {
-                key = prototypeKeys[ i ];
-                prototype[ key ] = serialize(item[ key ], depth - 1);
-            }
-
         }
 
         return result;
     };
+
+    function getName(memo, value, key) {
+        return memo + '.' + key;
+    }
+    function doPick(key, value) {
+        return key !== 'private';
+    }
 
     var getTime = function () {
         var date = new Date();
@@ -117,15 +126,6 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
         }
 
         return value;
-    };
-
-    var serializeNonObject = function (item) {
-        if (typeof item === 'function') {
-
-            return 'fn ' + (item.name ? item.name : 'anonymous');
-        }
-
-        return String(item);
     };
 
 });

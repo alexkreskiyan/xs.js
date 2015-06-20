@@ -5,7 +5,7 @@ xs.Loader.paths.add({
     stats: 'src'
 });
 
-var body, log, boxes, isClear, capture, events;
+var body, log, boxes, isClear, capture, events, xevent;
 events = [];
 
 window.onload = function () {
@@ -47,6 +47,8 @@ function run() {
     }
 
     function handleBoxClick(event) {
+        xevent = event;
+
         if (isClear) {
             isClear = false;
             paint();
