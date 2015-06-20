@@ -63,7 +63,15 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
 
         //get location url to evaluate used database
         var url = new imports.uri.HTTP(location.href, imports.uri.QueryString);
-        var dbName = url.query.params.db ? url.query.params.db : 'log';
+        var dbName = url.query.params.db;
+
+        //validate database name
+        self.assert.ok([
+                'domEventsTests',
+                'xsEventsTests'
+            ].indexOf(dbName) >= 0, 'unknown database name `$name`', {
+            $name: dbName
+        });
 
         //define source
         me.source = new imports.data.source.Log();

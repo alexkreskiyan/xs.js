@@ -15,8 +15,8 @@ var server = http.createServer(function (request, response) {
 server.listen(3901);
 
 var dbNames = [
-    'log',
-    'tests'
+    'domEventsTests',
+    'xsEventsTests'
 ];
 
 function handleStats(request, url, response) {

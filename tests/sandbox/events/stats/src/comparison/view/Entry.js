@@ -32,33 +32,50 @@ xs.define(xs.Class, 'ns.view.Entry', function (self, imports) {
 
         for (var i = 0; i < fields.length; i++) {
             var field = fields[ i ];
-            var element = renderField(data[ field ], 1);
+            var element = renderField(data[ field ]);
             root.appendChild(element);
 
         }
     };
 
-    var renderField = function (data, level, label) {
-        var element = document.createElement('div');
+    var renderField = function (data) {
+        var element;
 
         if (xs.isObject(data)) {
-            if (label) {
-                var labelElement = document.createElement('div');
-                labelElement.classList.add('field');
-                labelElement.setAttribute('title', label);
-                labelElement.innerHTML = '-'.repeat(level) + ' ' + label;
-                element.appendChild(labelElement);
-            }
-            Object.keys(data).forEach(function (key) {
-                element.appendChild(renderField(data[ key ], level + 1, key));
-            });
+            element = document.createElement('pre');
+            //element.classList.add('field');
+            element.setAttribute('title', data);
+            element.innerHTML = syntaxHighlight(JSON.stringify(data, undefined, 2));
         } else {
+            element = document.createElement('div');
             element.classList.add('field');
             element.setAttribute('title', data);
-            element.innerHTML = '-'.repeat(level) + ' ' + (label ? label + ': ' + data : data);
+            element.innerHTML = data;
         }
 
         return element;
     };
+
+    function syntaxHighlight(json) {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
 
 });

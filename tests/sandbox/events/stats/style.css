@@ -148,7 +148,7 @@ html, body {
 }
 
 #comparison > .container > .items > .entry {
-    width: 200px;
+    width: 400px;
     display: inline-block;
     box-sizing: border-box;
     padding: 0 5px;
@@ -171,4 +171,30 @@ html, body {
 
 .hidden {
     display: none;
+}
+
+pre {
+    outline: 1px solid #ccc;
+    padding: 5px;
+    margin: 5px;
+}
+
+.string {
+    color: green;
+}
+
+.number {
+    color: darkorange;
+}
+
+.boolean {
+    color: blue;
+}
+
+.null {
+    color: magenta;
+}
+
+.key {
+    color: red;
 }
