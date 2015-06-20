@@ -29,7 +29,9 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             NewTest: 'ns.event.NewTest'
         },
         tests: {
-            Tap: 'ns.tests.tap.Test'
+            xs: {
+                Tap: 'ns.tests.xs.tap.Test'
+            }
         },
         test: {
             event: {

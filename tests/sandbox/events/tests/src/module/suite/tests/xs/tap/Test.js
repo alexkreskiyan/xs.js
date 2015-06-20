@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.tests.tap.Test', function (self, imports) {
+xs.define(xs.Class, 'ns.tests.xs.tap.Test', function (self, imports) {
 
     'use strict';
 
@@ -8,8 +8,8 @@ xs.define(xs.Class, 'ns.tests.tap.Test', function (self, imports) {
 
     Class.imports = {
         stage: {
-            SingleTap: 'ns.tests.tap.stage.SingleTap',
-            DoubleTap: 'ns.tests.tap.stage.DoubleTap'
+            SingleTap: 'ns.tests.xs.tap.stage.SingleTap',
+            DoubleTap: 'ns.tests.xs.tap.stage.DoubleTap'
         }
     };
 
