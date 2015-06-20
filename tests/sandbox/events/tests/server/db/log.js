@@ -25,11 +25,15 @@ pool = (function (database) {
     var stack = [];
 
     me.add = function (message) {
+        if (database.names.indexOf(message.dbName) < 0) {
+            throw new Error('unknown database');
+        }
+
         stack.push(message);
 
         if (!isProcessing) {
             isProcessing = true;
-            db = new sqlite3.Database(database.name);
+            db = new sqlite3.Database(database.getDbPath(message.dbName));
             process();
         }
     };
@@ -44,15 +48,15 @@ pool = (function (database) {
     };
 
     var write = function (data, callback) {
-        db.get('SELECT COUNT(*) AS count FROM log WHERE user=$user AND device=$device AND category=$category AND name=$name AND userAgent=$userAgent', {
+        db.get('SELECT COUNT(*) AS count FROM log WHERE user=$user AND device=$device AND test=$test AND stage=$stage AND userAgent=$userAgent', {
             $user: data.user,
             $device: data.device,
-            $category: data.category,
-            $name: data.name,
+            $test: data.test,
+            $stage: data.stage,
             $userAgent: data.userAgent.userAgent
         }, function (err, row) {
 
-            if (row && row.count >= 10) {
+            if (row && row.count >= 100) {
 
                 callback();
 
@@ -66,7 +70,8 @@ pool = (function (database) {
                 $user: data.user,
                 $device: data.device,
                 $time: data.time,
-                $category: data.category,
+                $test: data.test,
+                $stage: data.stage,
                 $name: data.name,
                 $userAgent: data.userAgent.userAgent,
                 $browserName: data.userAgent.browser.name,

@@ -6,7 +6,11 @@ var sqlite3 = require('sqlite3').verbose();
 
 var create = function (data) {
     return new Promise(function (resolve, reject) {
-        var db = new sqlite3.Database(database.name);
+        if (database.names.indexOf(data.dbName) < 0) {
+            throw new Error('unknown database');
+        }
+
+        var db = new sqlite3.Database(database.getDbPath(data.dbName));
 
         //verify, that test does not exist yet
         db.get('SELECT COUNT(*) AS count FROM tests WHERE user=$user AND device=$device AND name=$name', {
@@ -41,7 +45,11 @@ var create = function (data) {
 
 var read = function (data) {
     return new Promise(function (resolve, reject) {
-        var db = new sqlite3.Database(database.name);
+        if (database.names.indexOf(data.dbName) < 0) {
+            throw new Error('unknown database');
+        }
+
+        var db = new sqlite3.Database(database.getDbPath(data.dbName));
 
         //verify, that test does not exist yet
         db.get('SELECT * FROM tests WHERE user=$user AND device=$device AND name=$name', {
@@ -63,7 +71,11 @@ var read = function (data) {
 
 var readAll = function (data) {
     return new Promise(function (resolve, reject) {
-        var db = new sqlite3.Database(database.name);
+        if (database.names.indexOf(data.dbName) < 0) {
+            throw new Error('unknown database');
+        }
+
+        var db = new sqlite3.Database(database.getDbPath(data.dbName));
 
         db.all('SELECT * FROM tests WHERE user=$user AND device=$device', {
             $user: data.user,
@@ -87,7 +99,11 @@ var readAll = function (data) {
 
 var update = function (data) {
     return new Promise(function (resolve, reject) {
-        var db = new sqlite3.Database(database.name);
+        if (database.names.indexOf(data.dbName) < 0) {
+            throw new Error('unknown database');
+        }
+
+        var db = new sqlite3.Database(database.getDbPath(data.dbName));
 
         //verify, that test exists
         db.get('SELECT COUNT(*) AS count FROM tests WHERE user=$user AND device=$device AND name=$name', {

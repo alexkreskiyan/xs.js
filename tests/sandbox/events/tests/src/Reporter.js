@@ -16,7 +16,7 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
         UserInfo: 'ns.UserInfo'
     };
 
-    Class.constructor = function (connection) {
+    Class.constructor = function (connection, dbName) {
         var me = this;
 
         //verify connection
@@ -26,19 +26,22 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
         });
 
         me.private.connection = connection;
+        me.private.dbName = dbName;
     };
 
-    Class.method.report = function (category, name, event) {
+    Class.method.report = function (test, stage, name, event) {
         var me = this;
 
         var connection = me.private.connection;
 
         var data = {
+            dbName: me.private.dbName,
             user: imports.UserInfo.user,
             device: imports.UserInfo.device,
             time: getTime(),
             userAgent: xs.env.Context,
-            category: category,
+            test: test,
+            stage: stage,
             name: name,
             event: serialize(event, new xs.core.Collection())
         };
@@ -99,6 +102,7 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
     function getName(memo, value, key) {
         return memo + '.' + key;
     }
+
     function doPick(key, value) {
         return key !== 'private';
     }

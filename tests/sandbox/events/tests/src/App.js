@@ -27,9 +27,12 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             Connection: 'xs.transport.websocket.Connection',
             Url: 'xs.uri.WebSocket'
         },
-        QueryString: 'xs.uri.query.QueryString',
         Reporter: 'ns.Reporter',
-        UserInfo: 'ns.UserInfo'
+        UserInfo: 'ns.UserInfo',
+        uri: {
+            HTTP: 'xs.uri.HTTP',
+            QueryString: 'xs.uri.query.QueryString'
+        }
     };
 
     Class.method.run = function () {
@@ -43,14 +46,27 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
 
         //create websocket connection
         var connection = new imports.websocket.Connection();
-        var url = new imports.websocket.Url(imports.QueryString);
+        var url = new imports.websocket.Url(imports.uri.QueryString);
         url.scheme = 'ws';
         url.host = location.host;
         url.port = 3903;
         connection.url = url;
 
+        //get location url to evaluate used test suite
+        var suite = (new imports.uri.HTTP(location.href, imports.uri.QueryString)).query.params.suite;
+
+        var databases = {
+            dom: 'domEventsTests',
+            xs: 'xsEventsTests'
+        };
+
+        //validate suite name
+        self.assert.ok(databases.hasOwnProperty(suite), 'unknown suite name `$suite`', {
+            $suite: suite
+        });
+
         //create reporter
-        var reporter = new imports.Reporter(connection);
+        var reporter = new imports.Reporter(connection, databases[ suite ]);
 
         //open connection
         connection.open().then(function () {

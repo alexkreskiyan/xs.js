@@ -61,21 +61,22 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             me.grid.filter(event.field, event.value);
         });
 
-        //get location url to evaluate used database
-        var url = new imports.uri.HTTP(location.href, imports.uri.QueryString);
-        var dbName = url.query.params.db;
+        //get location url to evaluate used test suite
+        var suite = (new imports.uri.HTTP(location.href, imports.uri.QueryString)).query.params.suite;
 
-        //validate database name
-        self.assert.ok([
-                'domEventsTests',
-                'xsEventsTests'
-            ].indexOf(dbName) >= 0, 'unknown database name `$name`', {
-            $name: dbName
+        var databases = {
+            dom: 'domEventsTests',
+            xs: 'xsEventsTests'
+        };
+
+        //validate suite name
+        self.assert.ok(databases.hasOwnProperty(suite), 'unknown suite name `$suite`', {
+            $suite: suite
         });
 
         //define source
         me.source = new imports.data.source.Log();
-        me.source.proxy = new imports.data.proxy.Xhr(dbName);
+        me.source.proxy = new imports.data.proxy.Xhr(databases[ suite ]);
         me.source.proxy.reader = new imports.data.reader.JSON();
 
         //create grid module
@@ -93,7 +94,8 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
 
                         return model.user.get() === event.model.user.get() &&
                             model.device.get() === event.model.device.get() &&
-                            model.category.get() === event.model.category.get() &&
+                            model.test.get() === event.model.test.get() &&
+                            model.stage.get() === event.model.stage.get() &&
                             model.name.get() === event.model.name.get() &&
                             model.userAgent.get() === event.model.userAgent.get();
                     })
@@ -124,7 +126,8 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             return {
                 user: model.user.get(),
                 device: model.device.get(),
-                category: model.category.get(),
+                test: model.test.get(),
+                stage: model.stage.get(),
                 name: model.name.get(),
                 userAgent: model.userAgent.get()
             };
@@ -151,9 +154,13 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
                     label: 'Устройство',
                     field: 'device'
                 },
-                category: {
-                    label: 'Категория',
-                    field: 'category'
+                test: {
+                    label: 'Тест',
+                    field: 'test'
+                },
+                stage: {
+                    label: 'Этап',
+                    field: 'stage'
                 },
                 name: {
                     label: 'Название',

@@ -52,6 +52,12 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
         //save connection
         me.private.connection = config.connection;
 
+        self.assert.string(config.dbName, 'constructor - given config.dbName `$dbName` is not a string', {
+            $dbName: config.dbName
+        });
+
+        me.private.dbName = config.dbName;
+
         var events = me.private.connection.events
             .filter(imports.websocket.event.Text)
             .map(function (event) {
@@ -96,9 +102,14 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
         var connection = me.private.connection;
         var events = me.private.streams.create;
         var promise = new xs.core.Promise();
+        var id = randomId();
 
         //add single handler
         var handler = function (message) {
+            if (message.id !== id) {
+                return;
+            }
+
             //off handler
             xs.nextTick(function () {
                 events.off(function (item) {
@@ -116,11 +127,12 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
 
         var data = model.get(imports.attribute.Format.Storage);
         xs.apply(data, {
+            dbName: me.private.dbName,
             user: imports.UserInfo.user,
             device: imports.UserInfo.device
         });
 
-        var message = new imports.message.Outgoing('tests', 'create', data);
+        var message = new imports.message.Outgoing(id, 'tests', 'create', data);
 
         connection.send(me.writer.write(message.get()));
 
@@ -141,9 +153,14 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
         var connection = me.private.connection;
         var events = me.private.streams.read;
         var promise = new xs.core.Promise();
+        var id = randomId();
 
         //add single handler
         var handler = function (message) {
+            if (message.id !== id) {
+                return;
+            }
+
             //off handler
             xs.nextTick(function () {
                 events.off(function (item) {
@@ -161,11 +178,12 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
 
         var data = {
             name: key,
+            dbName: me.private.dbName,
             user: imports.UserInfo.user,
             device: imports.UserInfo.device
         };
 
-        var message = new imports.message.Outgoing('tests', 'read', data);
+        var message = new imports.message.Outgoing(id, 'tests', 'read', data);
 
         connection.send(me.writer.write(message.get()));
 
@@ -180,9 +198,14 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
         var connection = me.private.connection;
         var events = me.private.streams.readAll;
         var promise = new xs.core.Promise();
+        var id = randomId();
 
         //add single handler
         var handler = function (message) {
+            if (message.id !== id) {
+                return;
+            }
+
             //off handler
             xs.nextTick(function () {
                 events.off(function (item) {
@@ -199,11 +222,12 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
         events.on(handler);
 
         var data = {
+            dbName: me.private.dbName,
             user: imports.UserInfo.user,
             device: imports.UserInfo.device
         };
 
-        var message = new imports.message.Outgoing('tests', 'readAll', data);
+        var message = new imports.message.Outgoing(id, 'tests', 'readAll', data);
 
         connection.send(me.writer.write(message.get()));
 
@@ -223,9 +247,14 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
         var connection = me.private.connection;
         var events = me.private.streams.update;
         var promise = new xs.core.Promise();
+        var id = randomId();
 
         //add single handler
         var handler = function (message) {
+            if (message.id !== id) {
+                return;
+            }
+
             //off handler
             xs.nextTick(function () {
                 events.off(function (item) {
@@ -243,15 +272,20 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
 
         var data = model.get(imports.attribute.Format.Storage);
         xs.apply(data, {
+            dbName: me.private.dbName,
             user: imports.UserInfo.user,
             device: imports.UserInfo.device
         });
 
-        var message = new imports.message.Outgoing('tests', 'update', data);
+        var message = new imports.message.Outgoing(id, 'tests', 'update', data);
 
         connection.send(me.writer.write(message.get()));
 
         return promise;
     };
+
+    function randomId() {
+        return Math.floor(Math.random() * 1000000);
+    }
 
 });

@@ -48,6 +48,13 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
         set: xs.noop
     };
 
+    Class.property.isDone = {
+        get: function () {
+            return this.private.state === imports.StageState.Done;
+        },
+        set: xs.noop
+    };
+
     Class.method.start = function () {
         var me = this;
 
@@ -80,10 +87,10 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
         me.private.container.sandbox.remove();
     };
 
-    Class.method.report = function (event) {
+    Class.method.report = function (name, event) {
         var me = this;
 
-        me.events.emitter.send(new imports.event.Log(event));
+        me.events.emitter.send(new imports.event.Log(name, event));
     };
 
     Class.method.done = function () {
@@ -100,6 +107,7 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
 
         //add done element
         var element = new imports.view.Element(document.createElement('div'));
+        element.classes.add('single');
         element.classes.add('done');
         me.private.container.sandbox.add(element);
 

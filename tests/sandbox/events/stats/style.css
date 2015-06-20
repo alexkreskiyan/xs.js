@@ -107,13 +107,13 @@ html, body {
 #grid .state {
     display: inline-block;
     cursor: pointer;
-    width: 4%;
+    width: 4.8%;
 }
 
 #grid .field {
     display: inline-block;
     cursor: pointer;
-    width: 6%;
+    width: 5.6%;
 }
 
 #comparison {

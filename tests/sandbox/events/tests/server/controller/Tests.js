@@ -16,70 +16,34 @@ Controller.prototype.handle = function (message) {
     return new Promise(function (resolve, reject) {
         switch (message.action) {
             case 'create':
-                create(message.data).then(function () {
-                    resolve(new Message.Outgoing('tests', 'create', true, [], null));
+                tests.create(message.data).then(function () {
+                    resolve(new Message.Outgoing(message.id, 'tests', 'create', true, [], null));
                 }, function (reason) {
-                    reject(new Message.Outgoing('tests', 'create', false, [ reason ], null));
+                    reject(new Message.Outgoing(message.id, 'tests', 'create', false, [ reason ], null));
                 });
                 break;
             case 'read':
-                read(message.data).then(function (data) {
-                    resolve(new Message.Outgoing('tests', 'read', true, [], data));
+                tests.read(message.data).then(function (data) {
+                    resolve(new Message.Outgoing(message.id, 'tests', 'read', true, [], data));
                 }, function (reason) {
-                    reject(new Message.Outgoing('tests', 'read', false, [ reason ], null));
+                    reject(new Message.Outgoing(message.id, 'tests', 'read', false, [ reason ], null));
                 });
                 break;
             case 'readAll':
-                readAll(message.data).then(function (data) {
-                    resolve(new Message.Outgoing('tests', 'readAll', true, [], data));
+                console.log(message);
+                tests.readAll(message.data).then(function (data) {
+                    resolve(new Message.Outgoing(message.id, 'tests', 'readAll', true, [], data));
                 }, function (reason) {
-                    reject(new Message.Outgoing('tests', 'readAll', false, [ reason ], null));
+                    reject(new Message.Outgoing(message.id, 'tests', 'readAll', false, [ reason ], null));
                 });
                 break;
             case 'update':
-                update(message.data).then(function () {
-                    resolve(new Message.Outgoing('tests', 'update', true, [], null));
+                tests.update(message.data).then(function () {
+                    resolve(new Message.Outgoing(message.id, 'tests', 'update', true, [], null));
                 }, function (reason) {
-                    reject(new Message.Outgoing('tests', 'update', false, [ reason ], null));
+                    reject(new Message.Outgoing(message.id, 'tests', 'update', false, [ reason ], null));
                 });
                 break;
         }
     });
 };
-
-function create(data) {
-
-    return tests.create({
-        user: data.user,
-        device: data.device,
-        name: data.name,
-        stages: data.stages
-    });
-}
-
-function read(data) {
-
-    return tests.read({
-        user: data.user,
-        device: data.device,
-        name: data.name
-    });
-}
-
-function readAll(data) {
-
-    return tests.readAll({
-        user: data.user,
-        device: data.device
-    });
-}
-
-function update(data) {
-
-    return tests.update({
-        user: data.user,
-        device: data.device,
-        name: data.name,
-        stages: data.stages
-    });
-}

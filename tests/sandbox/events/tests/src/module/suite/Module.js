@@ -29,6 +29,9 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             NewTest: 'ns.event.NewTest'
         },
         tests: {
+            dom: {
+                Tap: 'ns.tests.dom.tap.Test'
+            },
             xs: {
                 Tap: 'ns.tests.xs.tap.Test'
             }
@@ -42,6 +45,10 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         view: {
             Container: 'tests.view.Container',
             Launcher: 'ns.view.Launcher'
+        },
+        uri: {
+            HTTP: 'xs.uri.HTTP',
+            QueryString: 'xs.uri.query.QueryString'
         }
     };
 
@@ -58,16 +65,31 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         var container = me.private.container = new imports.view.Container();
         container.attributes.set('id', 'suite');
 
+        //get location url to evaluate used test suite
+        var url = new imports.uri.HTTP(location.href, imports.uri.QueryString);
+        var suite = url.query.params.suite;
+
+        var suites = {
+            dom: 'domEventsTests',
+            xs: 'xsEventsTests'
+        };
+
+        //validate suite name
+        self.assert.ok(suites.hasOwnProperty(suite), 'unknown suite name `$suite`', {
+            $suite: suite
+        });
+
         var source = me.private.source = new imports.data.source.Tests({
             proxy: new imports.data.proxy.WebSocket({
                 connection: connection,
+                dbName: suites[ suite ],
                 reader: new imports.data.reader.JSON(),
                 writer: new imports.data.writer.JSON()
             })
         });
 
         source.readAll().then(function () {
-            (new xs.core.Collection(imports.tests)).map(createTest, me);
+            (new xs.core.Collection(imports.tests[ suite ])).map(createTest, me);
         });
     };
 

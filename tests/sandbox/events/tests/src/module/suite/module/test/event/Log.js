@@ -6,23 +6,23 @@ xs.define(xs.Class, 'ns.event.Log', function (self, imports) {
 
     Class.namespace = 'tests.module.suite.module.test';
 
-    Class.imports = {
-        IEvent: 'xs.event.IEvent'
-    };
-
     Class.implements = [
         'xs.event.IEvent'
     ];
 
-    Class.constructor = function (event) {
+    Class.constructor = function (name, event) {
         var me = this;
 
-        self.assert.implements(event, imports.IEvent, 'constructor - given event `$event` does not implement `$IEvent` common interface', {
-            $event: event,
-            $IEvent: imports.IEvent
+        self.assert.string(name, 'constructor - given name `$name` is not a string', {
+            $name: name
         });
 
+        me.private.name = name;
         me.private.event = event;
+    };
+
+    Class.property.name = {
+        set: xs.noop
     };
 
     Class.property.event = {

@@ -6,6 +6,7 @@ var url = require('url');
 
 var server = http.createServer(function (request, response) {
     var location = url.parse(request.url, true);
+
     switch (location.pathname) {
         case '/stats':
             handleStats(request, location, response);
@@ -65,7 +66,8 @@ dbNames.forEach(function (name) {
         user: 'TEXT',
         device: 'TEXT',
         time: 'TEXT',
-        category: 'TEXT',
+        test: 'TEXT',
+        stage: 'TEXT',
         name: 'TEXT',
         userAgent: 'TEXT',
         browserName: 'TEXT',
