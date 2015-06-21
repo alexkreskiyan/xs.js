@@ -17,30 +17,30 @@ Controller.prototype.handle = function (message) {
         switch (message.action) {
             case 'create':
                 tests.create(message.data).then(function () {
-                    resolve(new Message.Outgoing(message.id, 'tests', 'create', true, [], null));
+                    resolve(new Message.Outgoing(message.id, message.controller, message.action, true, [], null));
                 }, function (reason) {
-                    reject(new Message.Outgoing(message.id, 'tests', 'create', false, [ reason ], null));
+                    reject(new Message.Outgoing(message.id, message.controller, message.action, false, [ reason ], null));
                 });
                 break;
             case 'read':
                 tests.read(message.data).then(function (data) {
-                    resolve(new Message.Outgoing(message.id, 'tests', 'read', true, [], data));
+                    resolve(new Message.Outgoing(message.id, message.controller, message.action, true, [], data));
                 }, function (reason) {
-                    reject(new Message.Outgoing(message.id, 'tests', 'read', false, [ reason ], null));
+                    reject(new Message.Outgoing(message.id, message.controller, message.action, false, [ reason ], null));
                 });
                 break;
             case 'readAll':
                 tests.readAll(message.data).then(function (data) {
-                    resolve(new Message.Outgoing(message.id, 'tests', 'readAll', true, [], data));
+                    resolve(new Message.Outgoing(message.id, message.controller, message.action, true, [], data));
                 }, function (reason) {
-                    reject(new Message.Outgoing(message.id, 'tests', 'readAll', false, [ reason ], null));
+                    reject(new Message.Outgoing(message.id, message.controller, message.action, false, [ reason ], null));
                 });
                 break;
             case 'update':
                 tests.update(message.data).then(function () {
-                    resolve(new Message.Outgoing(message.id, 'tests', 'update', true, [], null));
+                    resolve(new Message.Outgoing(message.id, message.controller, message.action, true, [], null));
                 }, function (reason) {
-                    reject(new Message.Outgoing(message.id, 'tests', 'update', false, [ reason ], null));
+                    reject(new Message.Outgoing(message.id, message.controller, message.action, false, [ reason ], null));
                 });
                 break;
         }

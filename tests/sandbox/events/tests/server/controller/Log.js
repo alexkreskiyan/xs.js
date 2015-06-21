@@ -17,9 +17,9 @@ Controller.prototype.handle = function (message) {
         switch (message.action) {
             case 'add':
                 log.add(message.data).then(function () {
-                    resolve(new Message.Outgoing(message.id, 'tests', 'create', true, [], null));
+                    resolve(new Message.Outgoing(message.id, message.controller, message.action, true, [], null));
                 }, function (reason) {
-                    reject(new Message.Outgoing(message.id, 'tests', 'create', false, [ reason ], null));
+                    reject(new Message.Outgoing(message.id, message.controller, message.action, false, [ reason ], null));
                 });
                 break;
         }

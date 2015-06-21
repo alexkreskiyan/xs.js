@@ -46,7 +46,7 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
             event: serialize(event, new xs.core.Collection())
         };
 
-        var message = new imports.message.Outgoing(0, 'log', 'add', data);
+        var message = new imports.message.Outgoing(randomId(), 'log', 'add', data);
 
         connection.send(JSON.stringify(message.get()));
     };
@@ -131,5 +131,9 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
 
         return value;
     };
+
+    function randomId() {
+        return Math.floor(Math.random() * 1000000);
+    }
 
 });
