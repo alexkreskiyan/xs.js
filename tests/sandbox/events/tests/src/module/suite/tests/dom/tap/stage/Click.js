@@ -8,7 +8,7 @@ xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self) {
 
     Class.extends = 'ns.module.test.Stage';
 
-    Class.constant.instruction = 'tap on button and somewhere out for 5 times';
+    Class.constant.instruction = 'Tap on button and somewhere out for 10 times.';
 
     Class.method.start = function () {
         var me = this;
@@ -38,6 +38,8 @@ xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self) {
 
             //decrease count on click
             count--;
+
+            me.upgradeInstruction(self.instruction + ' ' + count + ' left.');
 
             //report event
             me.report(event.type, event);

@@ -94,6 +94,16 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
         me.events.emitter.send(new imports.event.Log(name, event));
     };
 
+    Class.method.upgradeInstruction = function (text) {
+        var me = this;
+
+        self.assert.string(text, 'upgradeInstruction - given insruction text `$text` is not a string', {
+            $text: text
+        });
+
+        me.private.instruction.private.el.innerHTML = text;
+    };
+
     Class.method.done = function () {
         var me = this;
 
