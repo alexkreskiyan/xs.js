@@ -50,10 +50,9 @@ var read = function (data) {
 var readAll = function (data) {
     return new Promise(function (resolve, reject) {
         //verify, that test exists
-        pool.run(data.dbName, 'all', 'SELECT * FROM tests WHERE user=$user AND device=$device AND name=$name', {
+        pool.run(data.dbName, 'all', 'SELECT * FROM tests WHERE user=$user AND device=$device', {
             $user: data.user,
-            $device: data.device,
-            $name: data.name
+            $device: data.device
         }).then(function (data) {
             for (var i = 0; i < data.length; i++) {
                 data[ i ].stages = JSON.parse(data[ i ].stages);
