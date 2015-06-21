@@ -73,19 +73,19 @@ xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self, imports) {
         button.private.el.addEventListener('touchcancel', simpleHandler);
 
         me.private.cleanUp = function () {
-            sandbox.private.el.removeEventHandler('click', countdownHandler);
-            sandbox.private.el.removeEventHandler('mousedown', simpleHandler);
-            sandbox.private.el.removeEventHandler('mouseup', simpleHandler);
-            sandbox.private.el.removeEventHandler('touchstart', simpleHandler);
-            sandbox.private.el.removeEventHandler('touchend', simpleHandler);
-            sandbox.private.el.removeEventHandler('touchcancel', simpleHandler);
+            sandbox.private.el.removeEventListener('click', countdownHandler);
+            sandbox.private.el.removeEventListener('mousedown', simpleHandler);
+            sandbox.private.el.removeEventListener('mouseup', simpleHandler);
+            sandbox.private.el.removeEventListener('touchstart', simpleHandler);
+            sandbox.private.el.removeEventListener('touchend', simpleHandler);
+            sandbox.private.el.removeEventListener('touchcancel', simpleHandler);
 
-            button.private.el.removeEventHandler('click', countdownHandler);
-            button.private.el.removeEventHandler('mousedown', simpleHandler);
-            button.private.el.removeEventHandler('mouseup', simpleHandler);
-            button.private.el.removeEventHandler('touchstart', simpleHandler);
-            button.private.el.removeEventHandler('touchend', simpleHandler);
-            button.private.el.removeEventHandler('touchcancel', simpleHandler);
+            button.private.el.removeEventListener('click', countdownHandler);
+            button.private.el.removeEventListener('mousedown', simpleHandler);
+            button.private.el.removeEventListener('mouseup', simpleHandler);
+            button.private.el.removeEventListener('touchstart', simpleHandler);
+            button.private.el.removeEventListener('touchend', simpleHandler);
+            button.private.el.removeEventListener('touchcancel', simpleHandler);
         };
     };
 
@@ -97,8 +97,6 @@ xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self, imports) {
         if (me.private.cleanUp) {
             me.private.cleanUp();
         }
-
-        me.private.container.query('.sandbox').off(imports.event.Tap);
     };
 
 });

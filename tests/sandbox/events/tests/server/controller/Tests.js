@@ -30,7 +30,6 @@ Controller.prototype.handle = function (message) {
                 });
                 break;
             case 'readAll':
-                console.log(message);
                 tests.readAll(message.data).then(function (data) {
                     resolve(new Message.Outgoing(message.id, 'tests', 'readAll', true, [], data));
                 }, function (reason) {
