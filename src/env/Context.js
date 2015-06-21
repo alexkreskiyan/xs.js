@@ -57,8 +57,8 @@ xs.env.Context = xs.context = (function () {
             'minor',
             'version'
         ]);
-        me.browser.major = xs.isNumber(me.browser.major) ? me.browser.major : 0;
-        me.browser.minor = xs.isNumber(me.browser.minor) ? me.browser.minor : 0;
+        me.browser.major = xs.isNumeric(me.browser.major) ? Number(me.browser.major) : 0;
+        me.browser.minor = xs.isNumeric(me.browser.minor) ? Number(me.browser.minor) : 0;
 
         /**
          * Browser engine information:
@@ -78,8 +78,8 @@ xs.env.Context = xs.context = (function () {
             'minor',
             'version'
         ]);
-        me.engine.major = xs.isNumber(me.browser.major) ? me.browser.major : 0;
-        me.engine.minor = xs.isNumber(me.browser.minor) ? me.browser.minor : 0;
+        me.engine.major = xs.isNumeric(me.engine.major) ? Number(me.engine.major) : 0;
+        me.engine.minor = xs.isNumeric(me.engine.minor) ? Number(me.engine.minor) : 0;
 
         /**
          * Device OS information:
@@ -106,7 +106,7 @@ xs.env.Context = xs.context = (function () {
          * @type {Object}
          */
         me.cpu = parse(userAgent, rules.cpu, [ 'architecture' ]);
-        me.cpu.architecture = xs.isNumber(me.cpu.architecture) ? me.cpu.architecture : 0;
+        me.cpu.architecture = xs.isNumeric(me.cpu.architecture) ? Number(me.cpu.architecture) : 0;
 
 
         //set shortcuts
@@ -133,7 +133,10 @@ xs.env.Context = xs.context = (function () {
          *
          * @type {Boolean}
          */
-        me.isFirefox = me.browser.name === browser.firefox;
+        me.isFirefox = [
+                browser.firefox,
+                browser.waterfox
+            ].indexOf(me.browser.name) >= 0;
 
         /**
          * Whether browser is Opera
@@ -431,14 +434,16 @@ xs.env.Context = xs.context = (function () {
         chromium: 'chromium',
         firefox: 'firefox',
         firefoxMobile: 'firefox mobile',
-        waterfox: 'waterfox',
-        safari: 'safari',
-        safariMobile: 'safari mobile',
+        ie: 'ie',
+        ieMobile: 'ie mobile',
         opera: 'opera',
         operaMobile: 'opera mobile',
         operaMini: 'opera mini',
-        ie: 'ie',
-        ieMobile: 'ie mobile',
+        safari: 'safari',
+        safariMobile: 'safari mobile',
+        ucbrowser: 'ucbrowser',
+        waterfox: 'waterfox',
+        yabrowserMobile: 'yabrowser mobile',
         yabrowser: 'yabrowser'
     };
     var engine = {
@@ -498,57 +503,22 @@ xs.env.Context = xs.context = (function () {
             ],
             [
                 [ browser.firefox ],
-                [ /waterfox/ ],
-                [
-                    /firefox\/([\d]+)\.([\d]+)/,
-                    /firefox\/([\d\.]+)/
-                ]
-            ],
-            [
-                [ browser.waterfox ],
-                [],
                 [
                     /waterfox/,
-                    /firefox\/([\d]+)\.([\d]+)/,
-                    /firefox\/([\d\.]+)/
-                ]
-            ],
-            [
-                [ browser.safari ],
-                [
-                    /chrome/,
                     /mobile/
                 ],
                 [
-                    /safari/,
-                    /version\/([\d]+)\.([\d]+)/,
-                    /version\/([\d\.]+)/
+                    /firefox\/([\d]+)\.([\d]+)/,
+                    /firefox\/([\d\.]+)/
                 ]
             ],
             [
-                [ browser.safariMobile ],
-                [ /chrome/ ],
+                [ browser.firefoxMobile ],
+                [ /waterfox/ ],
                 [
                     /mobile/,
-                    /version\/([\d]+)\.([\d]+)/,
-                    /version\/([\d\.]+)/
-                ]
-            ],
-            [
-                [ browser.opera ],
-                [],
-                [
-                    /opera/,
-                    /version\/([\d]+)\.([\d]+)/,
-                    /version\/([\d\.]+)/
-                ]
-            ],
-            [
-                [ browser.opera ],
-                [],
-                [
-                    /opr\/([\d]+)\.([\d]+)/,
-                    /opr\/([\d\.]+)/
+                    /firefox\/([\d]+)\.([\d]+)/,
+                    /firefox\/([\d\.]+)/
                 ]
             ],
             [
@@ -578,9 +548,127 @@ xs.env.Context = xs.context = (function () {
                 ]
             ],
             [
-                [ browser.yabrowser ],
+                [ browser.opera ],
+                [
+                    /opera\smobi/,
+                    /opera\smini/
+                ],
+                [
+                    /opera/,
+                    /version\/([\d]+)\.([\d]+)/,
+                    /version\/([\d\.]+)/
+                ]
+            ],
+            [
+                [ browser.opera ],
+                [
+                    /opera\smobi/,
+                    /opera\smini/
+                ],
+                [
+                    /opr\/([\d]+)\.([\d]+)/,
+                    /opr\/([\d\.]+)/
+                ]
+            ],
+            [
+                [ browser.operaMobile ],
+                [ /opera\smini/ ],
+                [
+                    /opera\smobi/,
+                    /version\/([\d]+)\.([\d]+)/,
+                    /version\/([\d\.]+)/
+                ]
+            ],
+            [
+                [ browser.operaMini ],
+                [ /opera\smobi/ ],
+                [
+                    /opera\smini\/([\d]+)\.([\d]+)/,
+                    /opera\smini\/([\d\.]+)/
+                ]
+            ],
+            [
+                [
+                    browser.operaMini,
+                    undefined,
+                    0
+                ],
                 [],
                 [
+                    /opera\smini\/([\d]+)/,
+                    /opera\smini\/([\d\.]+)/
+                ]
+            ],
+            [
+                [ browser.safari ],
+                [
+                    /chrome/,
+                    /mobile/
+                ],
+                [
+                    /safari/,
+                    /version\/([\d]+)\.([\d]+)/,
+                    /version\/([\d\.]+)/
+                ]
+            ],
+            [
+                [ browser.safariMobile ],
+                [
+                    /chrome/,
+                    /ucbrowser/
+                ],
+                [
+                    /safari/,
+                    /mobile/,
+                    /version\/([\d]+)\.([\d]+)/,
+                    /version\/([\d\.]+)/
+                ]
+            ],
+            [
+                [ browser.safariMobile ],
+                [
+                    /chrome/,
+                    /ucbrowser/
+                ],
+                [
+                    /safari/,
+                    /mobile/,
+                    /coast\/([\d]+)\.([\d]+)/,
+                    /coast\/([\d\.]+)/
+                ]
+            ],
+            [
+                [ browser.waterfox ],
+                [],
+                [
+                    /waterfox/,
+                    /firefox\/([\d]+)\.([\d]+)/,
+                    /firefox\/([\d\.]+)/
+                ]
+            ],
+            [
+                [ browser.ucbrowser ],
+                [],
+                [
+                    /safari/,
+                    /ucbrowser/,
+                    /ucbrowser\/([\d]+)\.([\d]+)/,
+                    /ucbrowser\/([\d\.]+)/
+                ]
+            ],
+            [
+                [ browser.yabrowser ],
+                [ /android/ ],
+                [
+                    /yabrowser\/([\d]+)\.([\d]+)/,
+                    /yabrowser\/([\d\.]+)/
+                ]
+            ],
+            [
+                [ browser.yabrowserMobile ],
+                [],
+                [
+                    /android/,
                     /yabrowser\/([\d]+)\.([\d]+)/,
                     /yabrowser\/([\d\.]+)/
                 ]
@@ -708,11 +796,16 @@ xs.env.Context = xs.context = (function () {
                 [ /android\s([\d\.]+)/ ]
             ],
             [
+                [ os.android ],
+                [],
+                [ /android/ ]
+            ],
+            [
                 [
                     os.osx,
                     [
-                        /([\d]+)(?:_|\.)([\d]+)(?:_|\.)([\d]+)/,
-                        '$1.$2.$3'
+                        /([\d]+)(?:_|\.)([\d]+)/,
+                        '$1.$2'
                     ]
                 ],
                 [],
@@ -722,8 +815,8 @@ xs.env.Context = xs.context = (function () {
                 [
                     os.ios,
                     [
-                        /([\d]+)(?:_|\.)([\d]+)(?:_|\.)([\d]+)/,
-                        '$1.$2.$3'
+                        /([\d]+)(?:_|\.)([\d]+)/,
+                        '$1.$2'
                     ]
                 ],
                 [],
