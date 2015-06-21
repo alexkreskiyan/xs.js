@@ -53,7 +53,7 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
 
     var stringified = [
         Window,
-        HTMLDocument,
+        Document,
         Element,
         Date,
         CSSStyleDeclaration
