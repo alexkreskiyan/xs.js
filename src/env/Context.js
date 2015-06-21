@@ -57,8 +57,8 @@ xs.env.Context = xs.context = (function () {
             'minor',
             'version'
         ]);
-        me.browser.major = Number(me.browser.major);
-        me.browser.minor = Number(me.browser.minor);
+        me.browser.major = xs.isNumber(me.browser.major) ? me.browser.major : 0;
+        me.browser.minor = xs.isNumber(me.browser.minor) ? me.browser.minor : 0;
 
         /**
          * Browser engine information:
@@ -78,8 +78,8 @@ xs.env.Context = xs.context = (function () {
             'minor',
             'version'
         ]);
-        me.engine.major = Number(me.engine.major);
-        me.engine.minor = Number(me.engine.minor);
+        me.engine.major = xs.isNumber(me.browser.major) ? me.browser.major : 0;
+        me.engine.minor = xs.isNumber(me.browser.minor) ? me.browser.minor : 0;
 
         /**
          * Device OS information:
@@ -106,6 +106,7 @@ xs.env.Context = xs.context = (function () {
          * @type {Object}
          */
         me.cpu = parse(userAgent, rules.cpu, [ 'architecture' ]);
+        me.cpu.architecture = xs.isNumber(me.cpu.architecture) ? me.cpu.architecture : 0;
 
 
         //set shortcuts
@@ -456,8 +457,8 @@ xs.env.Context = xs.context = (function () {
         ios: 'ios'
     };
     var arch = {
-        x32: '32',
-        x64: '64'
+        x32: 32,
+        x64: 64
     };
 
     //set of rules
@@ -748,7 +749,7 @@ xs.env.Context = xs.context = (function () {
                     /(?:x|wow)64/,
                     /phone/
                 ],
-                [ /windows/ ]
+                [ /(?:windows|linux)/ ]
             ]
         ]
     };
