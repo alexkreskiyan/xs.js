@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self, imports) {
+xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self) {
 
     'use strict';
 
@@ -21,11 +21,13 @@ xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self, imports) {
         var count = 10;
 
         var sandbox = me.private.container.query('.sandbox');
+        var sandboxEl = sandbox.private.el;
 
         var button = new xs.view.Element(document.createElement('button'));
         button.private.el.innerHTML = 'click me!';
         button.classes.add('single');
         me.private.container.sandbox.add(button);
+        var buttonEl = button.private.el;
 
         var countdownHandler = function (event) {
             //return if stage is done
@@ -58,34 +60,34 @@ xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self, imports) {
             me.report(event.type, event);
         };
 
-        sandbox.private.el.addEventListener('click', countdownHandler);
-        sandbox.private.el.addEventListener('mousedown', simpleHandler);
-        sandbox.private.el.addEventListener('mouseup', simpleHandler);
-        sandbox.private.el.addEventListener('touchstart', simpleHandler);
-        sandbox.private.el.addEventListener('touchend', simpleHandler);
-        sandbox.private.el.addEventListener('touchcancel', simpleHandler);
+        sandboxEl.addEventListener('click', countdownHandler);
+        sandboxEl.addEventListener('mousedown', simpleHandler);
+        sandboxEl.addEventListener('mouseup', simpleHandler);
+        sandboxEl.addEventListener('touchstart', simpleHandler);
+        sandboxEl.addEventListener('touchend', simpleHandler);
+        sandboxEl.addEventListener('touchcancel', simpleHandler);
 
-        button.private.el.addEventListener('click', countdownHandler);
-        button.private.el.addEventListener('mousedown', simpleHandler);
-        button.private.el.addEventListener('mouseup', simpleHandler);
-        button.private.el.addEventListener('touchstart', simpleHandler);
-        button.private.el.addEventListener('touchend', simpleHandler);
-        button.private.el.addEventListener('touchcancel', simpleHandler);
+        buttonEl.addEventListener('click', countdownHandler);
+        buttonEl.addEventListener('mousedown', simpleHandler);
+        buttonEl.addEventListener('mouseup', simpleHandler);
+        buttonEl.addEventListener('touchstart', simpleHandler);
+        buttonEl.addEventListener('touchend', simpleHandler);
+        buttonEl.addEventListener('touchcancel', simpleHandler);
 
         me.private.cleanUp = function () {
-            sandbox.private.el.removeEventListener('click', countdownHandler);
-            sandbox.private.el.removeEventListener('mousedown', simpleHandler);
-            sandbox.private.el.removeEventListener('mouseup', simpleHandler);
-            sandbox.private.el.removeEventListener('touchstart', simpleHandler);
-            sandbox.private.el.removeEventListener('touchend', simpleHandler);
-            sandbox.private.el.removeEventListener('touchcancel', simpleHandler);
+            sandboxEl.removeEventListener('click', countdownHandler);
+            sandboxEl.removeEventListener('mousedown', simpleHandler);
+            sandboxEl.removeEventListener('mouseup', simpleHandler);
+            sandboxEl.removeEventListener('touchstart', simpleHandler);
+            sandboxEl.removeEventListener('touchend', simpleHandler);
+            sandboxEl.removeEventListener('touchcancel', simpleHandler);
 
-            button.private.el.removeEventListener('click', countdownHandler);
-            button.private.el.removeEventListener('mousedown', simpleHandler);
-            button.private.el.removeEventListener('mouseup', simpleHandler);
-            button.private.el.removeEventListener('touchstart', simpleHandler);
-            button.private.el.removeEventListener('touchend', simpleHandler);
-            button.private.el.removeEventListener('touchcancel', simpleHandler);
+            buttonEl.removeEventListener('click', countdownHandler);
+            buttonEl.removeEventListener('mousedown', simpleHandler);
+            buttonEl.removeEventListener('mouseup', simpleHandler);
+            buttonEl.removeEventListener('touchstart', simpleHandler);
+            buttonEl.removeEventListener('touchend', simpleHandler);
+            buttonEl.removeEventListener('touchcancel', simpleHandler);
         };
     };
 
