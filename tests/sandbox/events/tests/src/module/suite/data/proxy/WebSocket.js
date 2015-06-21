@@ -129,7 +129,8 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
         xs.apply(data, {
             dbName: me.private.dbName,
             user: imports.UserInfo.user,
-            device: imports.UserInfo.device
+            device: imports.UserInfo.device,
+            userAgent: xs.context.userAgent
         });
 
         var message = new imports.message.Outgoing(id, 'tests', 'create', data);
@@ -177,10 +178,11 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
         events.on(handler);
 
         var data = {
-            name: key,
+            test: key,
             dbName: me.private.dbName,
             user: imports.UserInfo.user,
-            device: imports.UserInfo.device
+            device: imports.UserInfo.device,
+            userAgent: xs.context.userAgent
         };
 
         var message = new imports.message.Outgoing(id, 'tests', 'read', data);
@@ -224,7 +226,8 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
         var data = {
             dbName: me.private.dbName,
             user: imports.UserInfo.user,
-            device: imports.UserInfo.device
+            device: imports.UserInfo.device,
+            userAgent: xs.context.userAgent
         };
 
         var message = new imports.message.Outgoing(id, 'tests', 'readAll', data);
@@ -274,7 +277,8 @@ xs.define(xs.Class, 'ns.data.proxy.WebSocket', function (self, imports) {
         xs.apply(data, {
             dbName: me.private.dbName,
             user: imports.UserInfo.user,
-            device: imports.UserInfo.device
+            device: imports.UserInfo.device,
+            userAgent: xs.context.userAgent
         });
 
         var message = new imports.message.Outgoing(id, 'tests', 'update', data);

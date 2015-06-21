@@ -20,7 +20,8 @@ module.exports.names.forEach(function (name) {
         var fields = {
             user: 'TEXT',
             device: 'TEXT',
-            name: 'TEXT',
+            userAgent: 'TEXT',
+            test: 'TEXT',
             stages: 'TEXT'
         };
         exports.tests = {

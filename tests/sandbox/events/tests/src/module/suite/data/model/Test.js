@@ -14,7 +14,7 @@ xs.define(xs.Class, 'ns.data.model.Test', function () {
     Class.extends = 'xs.data.Model';
 
     Class.attributes = {
-        name: {
+        test: {
             class: 'xs.data.attribute.String',
             primary: true
         },

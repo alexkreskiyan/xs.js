@@ -7,10 +7,11 @@ var pool = require('./pool');
 var create = function (data) {
     return new Promise(function (resolve, reject) {
         //verify, that test does not exist yet
-        pool.run(data.dbName, 'get', 'SELECT COUNT(*) AS count FROM tests WHERE user=$user AND device=$device AND name=$name', {
+        pool.run(data.dbName, 'get', 'SELECT COUNT(*) AS count FROM tests WHERE user=$user AND device=$device AND userAgent=$userAgent AND test=$test', {
             $user: data.user,
             $device: data.device,
-            $name: data.name
+            $userAgent: data.userAgent,
+            $test: data.test
         }).then(function (row) {
             if (row.count) {
                 return reject('test already exists');
@@ -22,7 +23,8 @@ var create = function (data) {
             pool.run(data.dbName, 'run', sql, {
                 $user: data.user,
                 $device: data.device,
-                $name: data.name,
+                $userAgent: data.userAgent,
+                $test: data.test,
                 $stages: JSON.stringify(data.stages)
             }).then(resolve, reject);
         }, reject);
@@ -32,10 +34,11 @@ var create = function (data) {
 var read = function (data) {
     return new Promise(function (resolve, reject) {
         //verify, that test exists
-        pool.run(data.dbName, 'get', 'SELECT * FROM tests WHERE user=$user AND device=$device AND name=$name', {
+        pool.run(data.dbName, 'get', 'SELECT * FROM tests WHERE user=$user AND device=$device AND userAgent=$userAgent AND test=$test', {
             $user: data.user,
             $device: data.device,
-            $name: data.name
+            $userAgent: data.userAgent,
+            $test: data.test
         }).then(function (row) {
             if (row) {
                 row.stages = JSON.parse(row.stages);
@@ -50,9 +53,10 @@ var read = function (data) {
 var readAll = function (data) {
     return new Promise(function (resolve, reject) {
         //verify, that test exists
-        pool.run(data.dbName, 'all', 'SELECT * FROM tests WHERE user=$user AND device=$device', {
+        pool.run(data.dbName, 'all', 'SELECT * FROM tests WHERE user=$user AND device=$device AND userAgent=$userAgent', {
             $user: data.user,
-            $device: data.device
+            $device: data.device,
+            $userAgent: data.userAgent
         }).then(function (data) {
             for (var i = 0; i < data.length; i++) {
                 data[ i ].stages = JSON.parse(data[ i ].stages);
@@ -66,20 +70,22 @@ var readAll = function (data) {
 var update = function (data) {
     return new Promise(function (resolve, reject) {
         //verify, that test does not exist yet
-        pool.run(data.dbName, 'get', 'SELECT COUNT(*) AS count FROM tests WHERE user=$user AND device=$device AND name=$name', {
+        pool.run(data.dbName, 'get', 'SELECT COUNT(*) AS count FROM tests WHERE user=$user AND device=$device AND userAgent=$userAgent AND test=$test', {
             $user: data.user,
             $device: data.device,
-            $name: data.name
+            $userAgent: data.userAgent,
+            $test: data.test
         }).then(function (row) {
             if (!row.count) {
                 return reject('test missing');
             }
 
-            var sql = 'UPDATE tests SET stages=$stages WHERE user=$user AND device=$device AND name=$name';
+            var sql = 'UPDATE tests SET stages=$stages WHERE user=$user AND device=$device AND userAgent=$userAgent AND test=$test';
             pool.run(data.dbName, 'run', sql, {
                 $user: data.user,
                 $device: data.device,
-                $name: data.name,
+                $userAgent: data.userAgent,
+                $test: data.test,
                 $stages: JSON.stringify(data.stages)
             }).then(resolve, reject);
         }, reject);

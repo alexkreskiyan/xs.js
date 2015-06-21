@@ -131,7 +131,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             //else - create and add to source
         } else {
             var model = new imports.data.model.Test({
-                name: name,
+                test: name,
                 stages: {}
             });
 
