@@ -477,6 +477,7 @@ xs.env.Context = xs.context = (function () {
                     /chromium/,
                     /mobile/,
                     /yabrowser/,
+                    /ucbrowser/,
                     /opr\//
                 ],
                 [
@@ -486,7 +487,11 @@ xs.env.Context = xs.context = (function () {
             ],
             [
                 [ browser.chromeMobile ],
-                [ /yabrowser/ ],
+                [
+                    /ucbrowser/,
+                    /yabrowser/,
+                    /opr\//
+                ],
                 [
                     /mobile/,
                     /(?:chrome|crios)\/([\d]+)\.([\d]+)/,
@@ -563,9 +568,22 @@ xs.env.Context = xs.context = (function () {
                 [ browser.opera ],
                 [
                     /opera\smobi/,
+                    /opera\smini/,
+                    /mobile/
+                ],
+                [
+                    /opr\/([\d]+)\.([\d]+)/,
+                    /opr\/([\d\.]+)/
+                ]
+            ],
+            [
+                [ browser.operaMobile ],
+                [
+                    /opera\smobi/,
                     /opera\smini/
                 ],
                 [
+                    /mobile/,
                     /opr\/([\d]+)\.([\d]+)/,
                     /opr\/([\d\.]+)/
                 ]
