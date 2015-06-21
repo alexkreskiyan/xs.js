@@ -39,5 +39,8 @@ Controller.prototype.handle = function (message) {
 
     handler.handle(message).then(function (response) {
         me.connection.send(response.toString());
+    }, function (response) {
+        console.log('out', response);
+        me.connection.send(response.toString());
     });
 };

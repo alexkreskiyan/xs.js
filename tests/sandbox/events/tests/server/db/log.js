@@ -2,71 +2,27 @@
 
 var database = require('./db');
 var Promise = require('promise');
-var sqlite3 = require('sqlite3').verbose();
-
-var pool;
+var pool = require('./pool');
 
 var add = function (data) {
-    return new Promise(function (resolve) {
-        pool.add(data);
-        setTimeout(function () {
-            resolve();
-        }, 0);
-    });
-};
-module.exports = {
-    add: add
-};
-
-pool = (function (database) {
-    var me = {};
-    var db;
-    var isProcessing = false;
-    var stack = [];
-
-    me.add = function (message) {
-        if (database.names.indexOf(message.dbName) < 0) {
-            throw new Error('unknown database');
-        }
-
-        stack.push(message);
-
-        if (!isProcessing) {
-            isProcessing = true;
-            db = new sqlite3.Database(database.getDbPath(message.dbName));
-            process();
-        }
-    };
-
-    var process = function () {
-        if (stack.length) {
-            write(stack.shift(), process);
-        } else {
-            isProcessing = false;
-            db.close();
-        }
-    };
-
-    var write = function (data, callback) {
-        db.get('SELECT COUNT(*) AS count FROM log WHERE user=$user AND device=$device AND test=$test AND stage=$stage AND userAgent=$userAgent', {
+    return new Promise(function (resolve, reject) {
+        pool.run(data.dbName, 'get', 'SELECT COUNT(*) AS count FROM log WHERE user=$user AND device=$device AND test=$test AND stage=$stage AND userAgent=$userAgent', {
             $user: data.user,
             $device: data.device,
             $test: data.test,
             $stage: data.stage,
             $userAgent: data.userAgent.userAgent
-        }, function (err, row) {
+        }).then(function (row) {
 
-            if (row && row.count >= 100) {
+            if (row.count >= 100) {
 
-                callback();
-
-                return;
+                return resolve();
             }
 
             var sql = 'INSERT INTO log VALUES (' + Object.keys(database.log.fields).map(function (name) {
                     return '$' + name;
                 }).join(', ') + ')';
-            db.run(sql, {
+            pool.run(data.dbName, 'run', sql, {
                 $user: data.user,
                 $device: data.device,
                 $time: data.time,
@@ -86,11 +42,12 @@ pool = (function (database) {
                 $osName: data.userAgent.os.name,
                 $osVersion: data.userAgent.os.version,
                 $event: JSON.stringify(data.event)
-            }, function () {
-                callback();
-            });
-        });
-    };
+            }).then(resolve, reject);
+        }, reject);
+    });
 
-    return me;
-})(database);
+};
+
+module.exports = {
+    add: add
+};
