@@ -66,6 +66,7 @@ xs.define(xs.Class, 'ns.Stage', function (self, imports) {
         //if state is done - add done element
         if (me.private.state === imports.StageState.Done) {
             var element = new imports.view.Element(document.createElement('div'));
+            element.classes.add('single');
             element.classes.add('done');
             me.private.container.sandbox.add(element);
 
