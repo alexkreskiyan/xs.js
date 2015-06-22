@@ -90,6 +90,8 @@ html, body {
 .test-container .sandbox {
     flex-grow: 1;
     overflow: scroll;
+    min-height: 500px;
+    border: 1px solid black;
 }
 
 .control {

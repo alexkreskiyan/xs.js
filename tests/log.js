@@ -3,12 +3,8 @@
     'use strict';
 
     var me = this;
-    var logContainer;
 
     document.addEventListener('DOMContentLoaded', function () {
-        logContainer = document.createElement('div');
-        var root = document.querySelector('body');
-        root.appendChild(logContainer);
         window.onerror = function () {
             me.write.error.call(undefined, JSON.stringify(arguments));
         };
@@ -18,45 +14,94 @@
         var fragments = [];
 
         for (var i = 0; i < args.length; i++) {
-            fragments.push(serialize(args[ i ], 1));
+            fragments.push(serialize(args[ i ]));
         }
 
-        var node = document.createElement('div');
-        node.classList.add('messageLine');
-        node.innerHTML = getTime() + '&nbsp;&nbsp;&nbsp;&nbsp;' + fragments.join(' ');
-        logContainer.appendChild(node);
-
-        return node;
+        return getTime() + '&nbsp;&nbsp;&nbsp;&nbsp;' + fragments.join(' ');
     };
 
-    var serialize = function (item, depth) {
-        if (typeof item !== 'object' || item === null) {
+    var stringified = [
+        Window,
+        Document,
+        Date,
+        CSSStyleDeclaration
+    ];
 
-            return String(item);
+    var serialize = function (item, parents) {
+        if (xs.isNull(item) || !xs.isDefined(item)) {
+            return item;
+        } else if (item instanceof Element) {
+            return getDomPath(item);
+        } else if (stringified.filter(function (Ancestor) {
+                return item instanceof Ancestor;
+            }).length) {
+            return item.toString();
+        } else if (!xs.isObject(item) && !xs.isArray(item)) {
+            return xs.isFunction(item) ? 'fn ' + (item.name ? item.name : 'anonymous') : item;
         }
 
         var result = {};
-        var keys = Object.keys(item);
-        var i, key;
 
-        if (depth <= 1) {
-
-            for (i = 0; i < keys.length; i++) {
-                key = keys[ i ];
-                result[ key ] = String(item[ key ]);
-            }
-
-        } else {
-
-            for (i = 0; i < keys.length; i++) {
-                key = keys[ i ];
-                result[ key ] = serialize(item[ key ], depth - 1);
-            }
-
+        //add root if needed
+        if (!parents.size) {
+            parents.add('root', item);
         }
 
-        return JSON.stringify(result);
+        for (var key in item) {
+            var value;
+
+            try {
+                value = item[ key ];
+            } catch (e) {
+                value = e.toString();
+            }
+
+            //if circular reference detected - mark it specially
+            if (parents.has(value)) {
+                result[ key ] = parents.keyOf(value);
+
+                //else if value is picked - go deeper
+            } else if (doPick(key, value)) {
+                result[ key ] = serialize(value, parents.clone().add(parents.reduce(getName, 0, null, 'ref ' + key), value));
+            }
+        }
+
+        return result;
     };
+
+    function getDomPath(element) {
+        var parent = element;
+        var path = [];
+
+        while (parent) {
+            path.splice(0, 0, getNodeInfo(parent));
+            parent = parent.parentElement;
+        }
+
+        return path;
+    }
+
+    function getNodeInfo(element) {
+        var info = element.tagName.toLowerCase();
+
+        if (element.id) {
+            info += '#' + element.id;
+        }
+
+        if (element.classList.length) {
+            info += '.' + element.className.split(' ').join('.');
+        }
+
+        return info;
+    }
+
+    function getName(memo, value, key) {
+        return memo + '.' + key;
+    }
+
+    function doPick(key, value) {
+        return key !== 'private';
+    }
 
     var getTime = function () {
         var date = new Date();
@@ -75,20 +120,20 @@
 
     me.write = {
         log: function () {
-            var entry = createLogEntry(arguments);
-            entry.classList.add('log');
+            alert('log:' + createLogEntry(arguments));
+            console.log(createLogEntry(arguments));
         },
         info: function () {
-            var entry = createLogEntry(arguments);
-            entry.classList.add('info');
+            alert('info:' + createLogEntry(arguments));
+            console.info(createLogEntry(arguments));
         },
         warn: function () {
-            var entry = createLogEntry(arguments);
-            entry.classList.add('warn');
+            alert('warn:' + createLogEntry(arguments));
+            console.warn(createLogEntry(arguments));
         },
         error: function () {
-            var entry = createLogEntry(arguments);
-            entry.classList.add('error');
+            alert('error:' + createLogEntry(arguments));
+            console.error(createLogEntry(arguments));
         }
     };
 
