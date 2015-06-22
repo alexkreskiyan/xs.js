@@ -8,8 +8,10 @@ xs.define(xs.Class, 'ns.tests.dom.pointer.Test', function (self, imports) {
 
     Class.imports = {
         stage: {
-            Tap: 'ns.tests.dom.pointer.stage.Tap',
-            DoubleTap: 'ns.tests.dom.pointer.stage.DoubleTap'
+            ContextMenu: 'ns.tests.dom.pointer.stage.ContextMenu',
+            DoubleTap: 'ns.tests.dom.pointer.stage.DoubleTap',
+            Move: 'ns.tests.dom.pointer.stage.Move',
+            Tap: 'ns.tests.dom.pointer.stage.Tap'
         }
     };
 
@@ -21,8 +23,10 @@ xs.define(xs.Class, 'ns.tests.dom.pointer.Test', function (self, imports) {
 
     Class.constant.stages = xs.lazy(function () {
         return new xs.core.Collection({
-            tap: imports.stage.Tap,
-            doubleTap: imports.stage.DoubleTap
+            contextMenu: imports.stage.ContextMenu,
+            doubleTap: imports.stage.DoubleTap,
+            move: imports.stage.Move,
+            tap: imports.stage.Tap
         });
     });
 
