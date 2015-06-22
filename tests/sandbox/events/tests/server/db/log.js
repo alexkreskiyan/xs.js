@@ -6,11 +6,12 @@ var pool = require('./pool');
 
 var add = function (data) {
     return new Promise(function (resolve, reject) {
-        pool.run(data.dbName, 'get', 'SELECT COUNT(*) AS count FROM log WHERE user=$user AND device=$device AND test=$test AND stage=$stage AND userAgent=$userAgent', {
+        pool.run(data.dbName, 'get', 'SELECT COUNT(*) AS count FROM log WHERE user=$user AND device=$device AND test=$test AND stage=$stage AND name=$name AND userAgent=$userAgent', {
             $user: data.user,
             $device: data.device,
             $test: data.test,
             $stage: data.stage,
+            $name: data.name,
             $userAgent: data.userAgent.userAgent
         }).then(function (row) {
 
