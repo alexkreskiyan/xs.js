@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.tests.dom.interaction.stage.Element', function (self) {
+xs.define(xs.Class, 'ns.tests.dom.keyboard.stage.Key', function (self) {
 
     'use strict';
 
@@ -8,7 +8,7 @@ xs.define(xs.Class, 'ns.tests.dom.interaction.stage.Element', function (self) {
 
     Class.extends = 'ns.module.test.Stage';
 
-    Class.constant.instruction = 'Toggle focus in input (4 times)';
+    Class.constant.instruction = 'Press different keys with alt, ctrl, shift, meta (5 times).';
 
     Class.method.start = function () {
         var me = this;
@@ -18,14 +18,13 @@ xs.define(xs.Class, 'ns.tests.dom.interaction.stage.Element', function (self) {
             return;
         }
 
-        var count = 4;
+        var count = 5;
 
-        var input = new xs.view.Element(document.createElement('input'));
-        input.private.el.type = 'text';
-        input.private.el.value = 'edit here';
-        input.classes.add('single');
-        me.private.container.sandbox.add(input);
-        var inputEl = input.private.el;
+        var textarea = new xs.view.Element(document.createElement('textarea'));
+        textarea.private.el.innerHTML = 'Edit text here';
+        textarea.classes.add('single');
+        me.private.container.sandbox.add(textarea);
+        var textareaEl = textarea.private.el;
 
         var countdownHandler = function (event) {
             //return if stage is done
@@ -60,12 +59,14 @@ xs.define(xs.Class, 'ns.tests.dom.interaction.stage.Element', function (self) {
             me.report(event.type, event);
         };
 
-        inputEl.addEventListener('focus', countdownHandler);
-        inputEl.addEventListener('blur', countdownHandler);
+        textareaEl.addEventListener('keypress', countdownHandler);
+        textareaEl.addEventListener('keyup', simpleHandler);
+        textareaEl.addEventListener('keydown', simpleHandler);
 
         me.private.cleanUp = function () {
-            inputEl.removeEventListener('focus', countdownHandler);
-            inputEl.removeEventListener('blur', countdownHandler);
+            textareaEl.removeEventListener('keypress', countdownHandler);
+            textareaEl.removeEventListener('keyup', simpleHandler);
+            textareaEl.removeEventListener('keydown', simpleHandler);
         };
     };
 

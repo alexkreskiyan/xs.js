@@ -32,6 +32,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             dom: {
                 context: 'ns.tests.dom.context.Test',
                 interaction: 'ns.tests.dom.interaction.Test',
+                keyboard: 'ns.tests.dom.keyboard.Test',
                 pointer: 'ns.tests.dom.pointer.Test'
             },
             xs: {
