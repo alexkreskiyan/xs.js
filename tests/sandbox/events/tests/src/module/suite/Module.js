@@ -30,7 +30,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         },
         tests: {
             dom: {
-                Tap: 'ns.tests.dom.tap.Test'
+                pointer: 'ns.tests.dom.pointer.Test'
             },
             xs: {
                 Tap: 'ns.tests.xs.tap.Test'
