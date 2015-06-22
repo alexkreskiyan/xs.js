@@ -54,7 +54,6 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
     var stringified = [
         Window,
         Document,
-        Element,
         Date,
         CSSStyleDeclaration
     ];
@@ -62,6 +61,8 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
     var serialize = function (item, parents) {
         if (xs.isNull(item) || !xs.isDefined(item)) {
             return item;
+        } else if (item instanceof Element) {
+            return getDomPath(item);
         } else if (stringified.filter(function (Ancestor) {
                 return item instanceof Ancestor;
             }).length) {
@@ -98,6 +99,32 @@ xs.define(xs.Class, 'ns.Reporter', function (self, imports) {
 
         return result;
     };
+
+    function getDomPath(element) {
+        var parent = element;
+        var path = [];
+
+        while (parent) {
+            path.splice(0, 0, getNodeInfo(parent));
+            parent = parent.parentElement;
+        }
+
+        return path;
+    }
+
+    function getNodeInfo(element) {
+        var info = element.tagName.toLowerCase();
+
+        if (element.id) {
+            info += '#' + element.id;
+        }
+
+        if (element.classList.length) {
+            info += '.' + element.className.split(' ').join('.');
+        }
+
+        return info;
+    }
 
     function getName(memo, value, key) {
         return memo + '.' + key;
