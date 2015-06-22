@@ -15,9 +15,9 @@ var add = function (data) {
             $userAgent: data.userAgent.userAgent
         }).then(function (row) {
 
-            if (row.count >= 100) {
+            if (row.count >= 3) {
 
-                return resolve();
+                return reject('too many data');
             }
 
             var sql = 'INSERT INTO log VALUES (' + Object.keys(database.log.fields).map(function (name) {

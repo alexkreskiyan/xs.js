@@ -8,7 +8,7 @@ xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self) {
 
     Class.extends = 'ns.module.test.Stage';
 
-    Class.constant.instruction = 'Tap on button and out for 10 times.';
+    Class.constant.instruction = 'Tap on button and out for 3 times.';
 
     Class.method.start = function () {
         var me = this;
@@ -18,7 +18,7 @@ xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self) {
             return;
         }
 
-        var count = 10;
+        var count = 3;
 
         var sandbox = me.private.container.query('.sandbox');
         var sandboxEl = sandbox.private.el;

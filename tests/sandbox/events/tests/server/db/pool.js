@@ -38,7 +38,9 @@ pool = (function (database) {
         if (!isProcessing) {
             isProcessing = true;
             db = new sqlite3.Database(database.getDbPath(dbName));
-            process();
+            db.serialize(function () {
+                process();
+            });
         }
     };
 
