@@ -8,7 +8,7 @@ xs.define(xs.Class, 'ns.tests.dom.pointer.stage.DoubleTap', function (self) {
 
     Class.extends = 'ns.module.test.Stage';
 
-    Class.constant.instruction = 'Double tap on button and out for 3 times.';
+    Class.constant.instruction = 'Double tap for 3 times.';
 
     Class.method.start = function () {
         var me = this;
@@ -22,12 +22,6 @@ xs.define(xs.Class, 'ns.tests.dom.pointer.stage.DoubleTap', function (self) {
 
         var sandbox = me.private.container.query('.sandbox');
         var sandboxEl = sandbox.private.el;
-
-        var button = new xs.view.Element(document.createElement('button'));
-        button.private.el.innerHTML = 'click me!';
-        button.classes.add('single');
-        me.private.container.sandbox.add(button);
-        var buttonEl = button.private.el;
 
         var countdownHandler = function (event) {
             //return if stage is done
@@ -70,14 +64,6 @@ xs.define(xs.Class, 'ns.tests.dom.pointer.stage.DoubleTap', function (self) {
         sandboxEl.addEventListener('touchend', simpleHandler);
         sandboxEl.addEventListener('touchcancel', simpleHandler);
 
-        buttonEl.addEventListener('dblclick', countdownHandler);
-        buttonEl.addEventListener('click', simpleHandler);
-        buttonEl.addEventListener('mousedown', simpleHandler);
-        buttonEl.addEventListener('mouseup', simpleHandler);
-        buttonEl.addEventListener('touchstart', simpleHandler);
-        buttonEl.addEventListener('touchend', simpleHandler);
-        buttonEl.addEventListener('touchcancel', simpleHandler);
-
         me.private.cleanUp = function () {
             sandboxEl.removeEventListener('dblclick', countdownHandler);
             sandboxEl.removeEventListener('click', simpleHandler);
@@ -86,14 +72,6 @@ xs.define(xs.Class, 'ns.tests.dom.pointer.stage.DoubleTap', function (self) {
             sandboxEl.removeEventListener('touchstart', simpleHandler);
             sandboxEl.removeEventListener('touchend', simpleHandler);
             sandboxEl.removeEventListener('touchcancel', simpleHandler);
-
-            buttonEl.removeEventListener('dblclick', countdownHandler);
-            buttonEl.removeEventListener('click', simpleHandler);
-            buttonEl.removeEventListener('mousedown', simpleHandler);
-            buttonEl.removeEventListener('mouseup', simpleHandler);
-            buttonEl.removeEventListener('touchstart', simpleHandler);
-            buttonEl.removeEventListener('touchend', simpleHandler);
-            buttonEl.removeEventListener('touchcancel', simpleHandler);
         };
     };
 
