@@ -9,7 +9,7 @@ xs.define(xs.Class, 'ns.tests.dom.tap.Test', function (self, imports) {
     Class.imports = {
         stage: {
             Click: 'ns.tests.dom.tap.stage.Click',
-            DoubleClick: 'ns.tests.dom.tap.stage.Click'
+            DoubleClick: 'ns.tests.dom.tap.stage.DoubleClick'
         }
     };
 
