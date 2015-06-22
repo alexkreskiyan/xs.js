@@ -89,6 +89,7 @@ html, body {
 
 .test-container .sandbox {
     flex-grow: 1;
+    overflow: scroll;
 }
 
 .control {
