@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self) {
+xs.define(xs.Class, 'ns.tests.dom.tap.stage.DoubleClick', function (self) {
 
     'use strict';
 
@@ -8,7 +8,7 @@ xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self) {
 
     Class.extends = 'ns.module.test.Stage';
 
-    Class.constant.instruction = 'Tap on button and out for 10 times.';
+    Class.constant.instruction = 'Double tap on button and out for 3 times.';
 
     Class.method.start = function () {
         var me = this;
@@ -18,7 +18,7 @@ xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self) {
             return;
         }
 
-        var count = 10;
+        var count = 3;
 
         var sandbox = me.private.container.query('.sandbox');
         var sandboxEl = sandbox.private.el;
@@ -62,14 +62,16 @@ xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self) {
             me.report(event.type, event);
         };
 
-        sandboxEl.addEventListener('click', countdownHandler);
+        sandboxEl.addEventListener('dblclick', countdownHandler);
+        sandboxEl.addEventListener('click', simpleHandler);
         sandboxEl.addEventListener('mousedown', simpleHandler);
         sandboxEl.addEventListener('mouseup', simpleHandler);
         sandboxEl.addEventListener('touchstart', simpleHandler);
         sandboxEl.addEventListener('touchend', simpleHandler);
         sandboxEl.addEventListener('touchcancel', simpleHandler);
 
-        buttonEl.addEventListener('click', countdownHandler);
+        buttonEl.addEventListener('dblclick', countdownHandler);
+        buttonEl.addEventListener('click', simpleHandler);
         buttonEl.addEventListener('mousedown', simpleHandler);
         buttonEl.addEventListener('mouseup', simpleHandler);
         buttonEl.addEventListener('touchstart', simpleHandler);
@@ -77,14 +79,16 @@ xs.define(xs.Class, 'ns.tests.dom.tap.stage.Click', function (self) {
         buttonEl.addEventListener('touchcancel', simpleHandler);
 
         me.private.cleanUp = function () {
-            sandboxEl.removeEventListener('click', countdownHandler);
+            sandboxEl.removeEventListener('dblclick', countdownHandler);
+            sandboxEl.removeEventListener('click', simpleHandler);
             sandboxEl.removeEventListener('mousedown', simpleHandler);
             sandboxEl.removeEventListener('mouseup', simpleHandler);
             sandboxEl.removeEventListener('touchstart', simpleHandler);
             sandboxEl.removeEventListener('touchend', simpleHandler);
             sandboxEl.removeEventListener('touchcancel', simpleHandler);
 
-            buttonEl.removeEventListener('click', countdownHandler);
+            buttonEl.removeEventListener('dblclick', countdownHandler);
+            buttonEl.removeEventListener('click', simpleHandler);
             buttonEl.removeEventListener('mousedown', simpleHandler);
             buttonEl.removeEventListener('mouseup', simpleHandler);
             buttonEl.removeEventListener('touchstart', simpleHandler);
