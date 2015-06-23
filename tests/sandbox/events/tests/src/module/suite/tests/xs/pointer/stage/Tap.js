@@ -41,7 +41,7 @@ xs.define(xs.Class, 'ns.tests.xs.pointer.stage.Tap', function (self, imports) {
             me.upgradeInstruction(self.instruction + ' ' + count + ' left.');
 
             //report event
-            me.report(event.type, event);
+            me.report(event.self.label, event);
 
             //if count is zero - mark stage as done
             if (!count) {
