@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.tests.xs.tap.Test', function (self, imports) {
+xs.define(xs.Class, 'ns.tests.xs.pointer.Test', function (self, imports) {
 
     'use strict';
 
@@ -8,8 +8,7 @@ xs.define(xs.Class, 'ns.tests.xs.tap.Test', function (self, imports) {
 
     Class.imports = {
         stage: {
-            SingleTap: 'ns.tests.xs.tap.stage.SingleTap',
-            DoubleTap: 'ns.tests.xs.tap.stage.DoubleTap'
+            Tap: 'ns.tests.xs.pointer.stage.Tap'
         }
     };
 
@@ -21,8 +20,7 @@ xs.define(xs.Class, 'ns.tests.xs.tap.Test', function (self, imports) {
 
     Class.constant.stages = xs.lazy(function () {
         return new xs.core.Collection({
-            SingleTap: imports.stage.SingleTap,
-            DoubleTap: imports.stage.DoubleTap
+            tap: imports.stage.Tap
         });
     });
 

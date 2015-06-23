@@ -36,7 +36,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
                 pointer: 'ns.tests.dom.pointer.Test'
             },
             xs: {
-                Tap: 'ns.tests.xs.tap.Test'
+                pointer: 'ns.tests.xs.pointer.Test'
             }
         },
         test: {

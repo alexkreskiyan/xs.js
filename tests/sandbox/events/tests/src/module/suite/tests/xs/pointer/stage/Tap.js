@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.tests.xs.tap.stage.SingleTap', function (self, imports) {
+xs.define(xs.Class, 'ns.tests.xs.pointer.stage.Tap', function (self, imports) {
 
     'use strict';
 
@@ -24,27 +24,37 @@ xs.define(xs.Class, 'ns.tests.xs.tap.stage.SingleTap', function (self, imports) 
             return;
         }
 
-        var count = 5;
+        var count = 3;
 
-        me.private.container.query('.sandbox').on(imports.event.Tap, function (event) {
-            //decrease count on click
-            count--;
+        var sandbox = me.private.container.query('.sandbox');
 
-            //report event
-            me.report(event);
-
-            //if count is positive - return
-            if (count) {
+        var countdownHandler = function (event) {
+            //return if stage is done
+            if (me.isDone) {
 
                 return;
             }
 
-            me.done();
+            //decrease count on click
+            count--;
 
-            xs.nextTick(function () {
-                me.private.container.query('.sandbox').off(imports.event.Tap);
-            });
-        });
+            me.upgradeInstruction(self.instruction + ' ' + count + ' left.');
+
+            //report event
+            me.report(event.type, event);
+
+            //if count is zero - mark stage as done
+            if (!count) {
+
+                me.done();
+            }
+        };
+
+        sandbox.on(imports.event.Tap, countdownHandler);
+
+        me.private.cleanUp = function () {
+            sandbox.off(imports.event.Tap);
+        };
     };
 
     Class.method.stop = function () {
