@@ -3,11 +3,11 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.view.event.pointer.Tap
+ * @class xs.view.event.pointer.DoubleTap
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
+xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self, imports) {
 
     'use strict';
 

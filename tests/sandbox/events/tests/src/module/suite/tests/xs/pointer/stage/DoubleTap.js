@@ -1,4 +1,4 @@
-xs.define(xs.Class, 'ns.tests.xs.tap.stage.DoubleTap', function (self, imports) {
+xs.define(xs.Class, 'ns.tests.xs.pointer.stage.DoubleTap', function (self, imports) {
 
     'use strict';
 
@@ -8,13 +8,13 @@ xs.define(xs.Class, 'ns.tests.xs.tap.stage.DoubleTap', function (self, imports) 
 
     Class.imports = {
         event: {
-            Tap: 'xs.view.event.pointer.Tap'
+            DoubleTap: 'xs.view.event.pointer.DoubleTap'
         }
     };
 
     Class.extends = 'ns.module.test.Stage';
 
-    Class.constant.instruction = 'tap anywhere in sandbox twice';
+    Class.constant.instruction = 'double tap anywhere in sandbox 10 times in different places';
 
     Class.method.start = function () {
         var me = this;
@@ -24,14 +24,37 @@ xs.define(xs.Class, 'ns.tests.xs.tap.stage.DoubleTap', function (self, imports) 
             return;
         }
 
-        me.private.container.query('.sandbox').on(imports.event.Tap, function (event) {
-            me.report(event);
-            me.done();
+        var count = 10;
 
-            xs.nextTick(function () {
-                me.private.container.query('.sandbox').off(imports.event.Tap);
-            });
-        });
+        var sandbox = me.private.container.query('.sandbox');
+
+        var countdownHandler = function (event) {
+            //return if stage is done
+            if (me.isDone) {
+
+                return;
+            }
+
+            //decrease count on click
+            count--;
+
+            me.upgradeInstruction(self.instruction + ' ' + count + ' left.');
+
+            //report event
+            me.report(event.self.label, event);
+
+            //if count is zero - mark stage as done
+            if (!count) {
+
+                me.done();
+            }
+        };
+
+        sandbox.on(imports.event.DoubleTap, countdownHandler);
+
+        me.private.cleanUp = function () {
+            sandbox.off(imports.event.DoubleTap);
+        };
     };
 
     Class.method.stop = function () {
@@ -39,7 +62,7 @@ xs.define(xs.Class, 'ns.tests.xs.tap.stage.DoubleTap', function (self, imports) 
 
         self.parent.prototype.stop.call(me);
 
-        me.private.container.query('.sandbox').off(imports.event.Tap);
+        me.private.container.query('.sandbox').off(imports.event.DoubleTap);
     };
 
 });

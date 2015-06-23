@@ -14,7 +14,7 @@ xs.define(xs.Class, 'ns.tests.xs.pointer.stage.Tap', function (self, imports) {
 
     Class.extends = 'ns.module.test.Stage';
 
-    Class.constant.instruction = 'tap anywhere in sandbox 5 times in different places';
+    Class.constant.instruction = 'tap anywhere in sandbox 10 times in different places';
 
     Class.method.start = function () {
         var me = this;
@@ -24,7 +24,7 @@ xs.define(xs.Class, 'ns.tests.xs.pointer.stage.Tap', function (self, imports) {
             return;
         }
 
-        var count = 3;
+        var count = 10;
 
         var sandbox = me.private.container.query('.sandbox');
 
