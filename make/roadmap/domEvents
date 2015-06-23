@@ -1,67 +1,130 @@
-For dom events - all event classes must provide uniformal wrapper for qualified event handling
-classes:
-xs.dom.event.*
-static methods:
-Event.on(xs.dom.Element)
-Event.off(xs.dom.Element)
+`dom.event` milestone
 
-event handlers are stored automatically inside xs.domElement, off handlers are called automatically when element is destroyed
+All view-related implementations are located in `xs.view` namespace
 
-dom events:
 
 window:
-xs.dom.event.window.Resize              resize              https://developer.mozilla.org/en-US/docs/Web/Events/resize              The document view has been resized.
-xs.dom.event.window.DisplayChange       visibilitychange    https://developer.mozilla.org/en-US/docs/Web/Events/visibilitychange    The content of a tab has become visible or has been hidden.
+
+xs.view.event.window.Resize
+Window is resized
+https://developer.mozilla.org/en-US/docs/Web/Events/resize
+
+xs.view.event.window.DisplayChange
+Active tab changed
+https://developer.mozilla.org/en-US/docs/Web/Events/visibilitychange
+
 
 document:
-xs.dom.event.document.DomLoad           DOMContentLoaded    https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded    The document has finished loading (but not its dependent resources).
+
+xs.view.event.document.DomLoad
+The document has finished loading (but not its dependent resources)
+https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded
+
 
 resource:
-xs.dom.event.resource.UnloadBefore      beforeunload        https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload        The beforeunload event is fired when the window, the document and its resources are about to be unloaded.
-xs.dom.event.resource.Unload            unload              https://developer.mozilla.org/en-US/docs/Web/Events/unload              The document or a dependent resource is being unloaded.
-xs.dom.event.resource.Load              load                https://developer.mozilla.org/en-US/docs/Web/Events/load                A resource and its dependent resources have finished loading.
+
+xs.view.event.resource.Load
+A resource and its dependent resources have finished loading
+https://developer.mozilla.org/en-US/docs/Web/Events/load
+
+xs.view.event.resource.Error
+Resource load failed
+https://developer.mozilla.org/en-US/docs/Web/Events/error
+
 
 element:
-xs.dom.event.element.Focus              focus               https://developer.mozilla.org/en-US/docs/Web/Events/focus               An element has received focus (does not bubble).
-xs.dom.event.element.Blur               blur                https://developer.mozilla.org/en-US/docs/Web/Events/blur                An element has lost focus (does not bubble).
+
+xs.view.event.element.Scroll
+Element is scrolled (wheel is not supported on touch devices)
+https://developer.mozilla.org/en-US/docs/Web/Events/scroll
+
+xs.view.event.element.Focus
+An element has received focus (does not bubble)
+https://developer.mozilla.org/en-US/docs/Web/Events/focus
+
+xs.view.event.element.Blur
+An element has lost focus (does not bubble).
+https://developer.mozilla.org/en-US/docs/Web/Events/blur
+
 
 pointer:
-xs.dom.event.pointer.Click              click               https://developer.mozilla.org/en-US/docs/Web/Events/click               A pointing device button has been pressed and released on an element.
-xs.dom.event.pointer.DoubleClick        dblclick            https://developer.mozilla.org/en-US/docs/Web/Events/dblclick            A pointing device button is clicked twice on an element.
-xs.dom.event.pointer.Down               mousedown           https://developer.mozilla.org/en-US/docs/Web/Events/mousedown           A pointing device button (usually a mouse) is pressed on an element.
-xs.dom.event.pointer.Enter              mouseenter          https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter          A pointing device is moved onto the element that has the listener attached.
-xs.dom.event.pointer.Leave              mouseleave          https://developer.mozilla.org/en-US/docs/Web/Events/mousemove           A pointing device is moved off the element that has the listener attached.
-xs.dom.event.pointer.Move               mousemove           https://developer.mozilla.org/en-US/docs/Web/Events/mousemove           A pointing device is moved over an element.
-xs.dom.event.pointer.Out                mouseout            https://developer.mozilla.org/en-US/docs/Web/Events/mouseout            A pointing device is moved off the element that has the listener attached or off one of its children.
-xs.dom.event.pointer.Over               mouseover           https://developer.mozilla.org/en-US/docs/Web/Events/mouseover           A pointing device is moved onto the element that has the listener attached or onto one of its children.
-xs.dom.event.pointer.Up                 mouseup             https://developer.mozilla.org/en-US/docs/Web/Events/mouseup             A pointing device button is released over an element.
-xs.dom.event.pointer.RightClick         contextmenu         https://developer.mozilla.org/en-US/docs/Web/Events/contextmenu         The right button of the mouse is clicked (before the context menu is displayed).
-xs.dom.event.pointer.ContextMenu        show                https://developer.mozilla.org/en-US/docs/Web/Events/show                A contextmenu event was fired on/bubbled to an element that has a contextmenu attribute
-xs.dom.event.pointer.Scroll             scroll              https://developer.mozilla.org/en-US/docs/Web/Events/scroll              The document view or an element has been scrolled.
-xs.dom.event.pointer.Wheel              wheel               https://developer.mozilla.org/en-US/docs/Web/Events/wheel               A wheel button of a pointing device is rotated in any direction.
 
-touch:
-xs.dom.event.touch.Start                touchstart          https://developer.mozilla.org/en-US/docs/Web/Events/touchstart          A touch point is placed on the touch surface.
-xs.dom.event.touch.End                  touchend            https://developer.mozilla.org/en-US/docs/Web/Events/touchend            A touch point is removed from the touch surface.
-xs.dom.event.touch.Move                 touchmove           https://developer.mozilla.org/en-US/docs/Web/Events/touchmove           A touch point is moved along the touch surface.
-xs.dom.event.touch.Cancel               touchcancel         https://developer.mozilla.org/en-US/docs/Web/Events/touchcancel         A touch point has been disrupted in an implementation-specific manners (too many touch points for example).
+xs.view.event.pointer.Tap
+single action of positioning device
+https://developer.mozilla.org/en-US/docs/Web/Events/click
+
+xs.view.event.pointer.DoubleTap
+double action of positioning device
+https://developer.mozilla.org/en-US/docs/Web/Events/dblclick
+
+xs.view.event.pointer.TapStart
+start of positioning device action
+https://developer.mozilla.org/en-US/docs/Web/Events/mousedown
+https://developer.mozilla.org/en-US/docs/Web/Events/touchstart
+
+xs.view.event.pointer.TapEnd
+start of positioning device action
+https://developer.mozilla.org/en-US/docs/Web/Events/mouseup
+https://developer.mozilla.org/en-US/docs/Web/Events/touchend
+https://developer.mozilla.org/en-US/docs/Web/Events/touchcancel
+
+xs.view.event.pointer.Enter
+A pointing device is moved onto the element that has the listener attached
+https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
+
+xs.view.event.pointer.Leave
+A pointing device is moved off the element that has the listener attached
+https://developer.mozilla.org/en-US/docs/Web/Events/mouseleave
+
+xs.view.event.pointer.Over
+A pointing device is moved onto the element that has the listener attached or onto one of its children
+https://developer.mozilla.org/en-US/docs/Web/Events/mouseover
+
+xs.view.event.pointer.Out
+A pointing device is moved off the element that has the listener attached or off one of its children
+https://developer.mozilla.org/en-US/docs/Web/Events/mouseout
+
+xs.view.event.pointer.ContextMenu
+The right button of the mouse is clicked (before the context menu is displayed)
+https://developer.mozilla.org/en-US/docs/Web/Events/contextmenu
+
 
 content:
-xs.dom.event.content.Input              input               https://developer.mozilla.org/en-US/docs/Web/Events/input               The value of an element changes or the content of an element with the attribute contenteditable is modified.
-xs.dom.event.content.Change             change              https://developer.mozilla.org/en-US/docs/Web/Events/change              An element loses focus and its value changed since gaining focus.
-xs.dom.event.content.Select             select              https://developer.mozilla.org/en-US/docs/Web/Events/select              Some text is being selected.
+
+xs.view.event.content.Input
+The value of an element changes or the content of an element with the attribute contenteditable is modified
+https://developer.mozilla.org/en-US/docs/Web/Events/input
+
+xs.view.event.content.Change
+An element loses focus and its value changed since gaining focus
+https://developer.mozilla.org/en-US/docs/Web/Events/change
+
+xs.view.event.content.Select
+Some text is being selected
+https://developer.mozilla.org/en-US/docs/Web/Events/select
+
 
 composition:
-xs.dom.event.composition.Start          compositionstart    https://developer.mozilla.org/en-US/docs/Web/Events/compositionstart    The composition of a passage of text is prepared (similar to keydown for a keyboard input, but works with other inputs such as speech recognition).
-xs.dom.event.composition.Update         compositionupdate   https://developer.mozilla.org/en-US/docs/Web/Events/compositionupdate   A character is added to a passage of text being composed.
-xs.dom.event.composition.End            compositionend      https://developer.mozilla.org/en-US/docs/Web/Events/compositionend      The composition of a passage of text has been completed or canceled.
+
+xs.view.event.composition.Start
+The composition of a passage of text is prepared (similar to keydown for a keyboard input, but works with other inputs such as speech recognition)
+https://developer.mozilla.org/en-US/docs/Web/Events/compositionstart
+
+xs.view.event.composition.Update
+A character is added to a passage of text being composed
+https://developer.mozilla.org/en-US/docs/Web/Events/compositionupdate
+
+xs.view.event.composition.End
+The composition of a passage of text has been completed or canceled
+https://developer.mozilla.org/en-US/docs/Web/Events/compositionend
+
 
 key:
-xs.dom.event.key.Down                   keydown             https://developer.mozilla.org/en-US/docs/Web/Events/keydown             A key is pressed down.
-xs.dom.event.key.Press                  keypress            https://developer.mozilla.org/en-US/docs/Web/Events/keypress            A key is pressed down and that key normally produces a character value (use input instead).
-xs.dom.event.key.Up                     keyup               https://developer.mozilla.org/en-US/docs/Web/Events/keyup               A key is released.
 
-form:
-xs.dom.event.form.Submit                submit              https://developer.mozilla.org/en-US/docs/Web/Events/submit              A form is submitted.
-xs.dom.event.form.Reset                 reset               https://developer.mozilla.org/en-US/docs/Web/Events/reset               A form is reset.
-xs.dom.event.form.Invalid               invalid             https://developer.mozilla.org/en-US/docs/Web/Events/invalid             A submittable element has been checked and doesn't satisfy its constraints.
+xs.view.event.key.Down
+A key is pressed down
+https://developer.mozilla.org/en-US/docs/Web/Events/keydown
+
+xs.view.event.key.Up
+A key is released
+https://developer.mozilla.org/en-US/docs/Web/Events/keyup
