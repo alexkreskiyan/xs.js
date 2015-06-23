@@ -44,7 +44,7 @@ xs.define(xs.Class, 'ns.view.Entry', function (self, imports) {
         if (xs.isObject(data)) {
             element = document.createElement('pre');
             //element.classList.add('field');
-            element.setAttribute('title', data);
+            element.setAttribute('title', 'Object');
             element.innerHTML = syntaxHighlight(JSON.stringify(data, undefined, 2));
         } else {
             element = document.createElement('div');
