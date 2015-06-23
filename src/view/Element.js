@@ -92,7 +92,7 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
 
             if (xs.isClass(event) && event.implements(imports.IEvent)) {
                 //save capture
-                captures.add(event, event.forward(me));
+                captures.add(event, event.capture(me));
             }
         });
         me.events.on(xs.reactive.event.Suspend, function (event) {

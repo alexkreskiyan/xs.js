@@ -25,7 +25,7 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
         'ns.pointer.IEvent'
     ];
 
-    Class.static.method.forward = function (element) {
+    Class.static.method.capture = function (element) {
         var Tap = self;
 
         var capture = {};

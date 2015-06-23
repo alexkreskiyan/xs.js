@@ -17,7 +17,7 @@ xs.define(xs.Class, 'ns.Event', function (self, imports) {
 
     Class.abstract = true;
 
-    Class.static.method.forward = function (element) {
+    Class.static.method.capture = function (element) {
 
     };
 
