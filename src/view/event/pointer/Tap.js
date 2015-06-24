@@ -84,6 +84,7 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
 
         //write start position
         me.posStart = getPosition(event);
+        //console.log('touchStart registered. Time:', Date(me.timeStart), ', pos:', me.posStart);
     };
 
     //define handler for touch end event
@@ -93,8 +94,11 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
         //write end timestamp
         me.timeEnd = Date.now();
 
+        //console.log('touchEnd registered. Time:', Date(me.timeEnd));
+
         //check tap time
         if (me.timeEnd - me.timeStart > tapTime) {
+            //console.log('touchEnd timed out:', me.timeEnd - me.timeStart, '>', tapTime);
 
             //cancel event
             return cancelEvent(event);
@@ -104,8 +108,11 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
         var posStart = me.posStart;
         var posEnd = me.posEnd = getPosition(event);
 
+        //console.log('touchEnd pos:', posEnd);
+
         //check movement
         if (Math.abs(posEnd.x - posStart.x) > tapMoveLimit || Math.abs(posEnd.y - posStart.y) > tapMoveLimit) {
+            //console.log('touch moved. x:', posEnd.x - posStart.x, 'y:', posEnd.y - posStart.y);
 
             //cancel event
             return cancelEvent(event);
@@ -116,13 +123,16 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
 
         //upgrade bubbled event
         if (xEvent instanceof me.Event) {
+            //console.log('update bubbling event from touch. Target:', event.target, 'current:', event.currentTarget);
             xs.apply(xEvent.private, getUpdateFromTouchEvent(event));
 
             //or create new
         } else {
+            //console.log('create new event from touch. Target:', event.target, 'current:', event.currentTarget);
             xEvent = new me.Event(event, getDataFromTouchEvent(event));
         }
 
+        //console.log('fire tap event from touch...');
         me.element.events.emitter.send(xEvent);
     };
 
@@ -130,8 +140,10 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
     var handleTouchClick = function (event) {
         var me = this;
 
+        //console.log('touch click happened');
         //check timeout
         if (Date.now() - me.timeEnd < clickTimeout) {
+            //console.log('touch click is duplicate. Time diff:', Date.now() - me.timeEnd, '<', clickTimeout);
 
             //cancel event
             return cancelEvent(event);
@@ -142,13 +154,16 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
 
         //upgrade bubbled event
         if (xEvent instanceof me.Event) {
+            //console.log('update bubbling event from pointer. Target:', event.target, 'current:', event.currentTarget);
             xs.apply(xEvent.private, getUpdateFromPointerEvent(event));
 
             //or create new
         } else {
+            //console.log('create new event from pointer. Target:', event.target, 'current:', event.currentTarget);
             xEvent = new me.Event(event, getDataFromPointerEvent(event));
         }
 
+        //console.log('fire tap event from pointer...');
         me.element.events.emitter.send(xEvent);
     };
 
@@ -196,19 +211,23 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
     //define handle for `click` event
     var handlePointerClick = function (event) {
         var me = this;
+        //console.log('pointer doubleClick happened');
 
         //try to get bubbled event
         var xEvent = event[ self.label ];
 
         //upgrade bubbled event
         if (xEvent instanceof me.Event) {
+            //console.log('update bubbling event from pointer. Target:', event.target, 'current:', event.currentTarget);
             xs.apply(xEvent.private, getUpdateFromPointerEvent(event));
 
             //or create new
         } else {
+            //console.log('create new event from pointer. Target:', event.target, 'current:', event.currentTarget);
             xEvent = new me.Event(event, getDataFromPointerEvent(event));
         }
 
+        //console.log('fire tap event from pointer...');
         me.element.events.emitter.send(xEvent);
     };
 

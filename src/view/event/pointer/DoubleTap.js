@@ -37,6 +37,9 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self, imports) {
         }
     };
 
+    //time between touch start and touch end, that is considered as a click
+    var tapTime = 150;
+
     //minimal time between taps to be considered a doubleTap
     var doubleTapMinTime = 150;
 
@@ -49,30 +52,14 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self, imports) {
     //tap move limit to separate tap from swipe|scroll
     var tapMoveLimit = 20;
 
-    //TASKS
-    //1. One touch after other touchstart->touchend->touchstart->touchend
-    //2. Second touch becomes first if time test fails
-    //3. Touch is not mentioned if move test fails
-    //4. Each touch is verified for time via start/end
-    //5. Gesture itself is verified with gestureStart/gestureEnd
-    //4. Successful doubleTap cancels doubleClick for doubleClickTimeout
-
     var captureAllEvents = function (element) {
         var capture = {
             element: element,
             Event: self,
-            //handleDoubleClick flag
-            handleDoubleClick: true,
-            //tap start and end time for single tap
-            tapStart: 0,
-            tapEnd: 0,
-            //tap start and end time for gesture
-            gestureStart: 0,
-            gestureEnd: 0,
-            //current taps count
-            count: 0,
-            //tap move
-            move: {}
+            //taps stack
+            taps: [],
+            //last touch-based doubleTap time
+            lastTime: 0
         };
 
         var el = element.private.el;
@@ -87,7 +74,7 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self, imports) {
 
         //capture click
         capture.handleTouchDoubleClick = xs.bind(handleTouchDoubleClick, capture);
-        el.addEventListener('click', capture.handleTouchDoubleClick);
+        el.addEventListener('dblclick', capture.handleTouchDoubleClick);
 
         return capture;
     };
@@ -96,64 +83,145 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self, imports) {
     var handleTouchStart = function (event) {
         var me = this;
 
-        //write start timestamp
-        me.tapStart = Date.now();
+        var taps = me.taps;
 
-        //write start position
-        me.move.start = getPosition(event);
+        //console.log('touchStart registered. Clean up taps', taps, ' from unfinished ones');
 
-        //if not first touch in gesture - return
+        //remove all taps in stack, that have not been completed
+        var i = 0;
+
+        while (i < me.taps.length) {
+            var tap = taps[ i ];
+
+            //if timeEnd defined - go to next
+            if (tap.timeEnd) {
+                //console.log('tap', tap, 'is finished, go to next');
+                i++;
+                //else - splice
+            } else {
+                //console.log('tap', tap, 'is unfinished, splice it from taps');
+                taps.splice(i, 1);
+            }
+        }
+
+        //console.log('taps after cleanup:', taps);
+        //console.log('touchStart registered. Id:', event.changedTouches[ 0 ].identifier, 'time:', Date(Date.now()), ', pos:', getPosition(event));
+
+        //push new tap to taps
+        taps.push({
+            id: event.changedTouches[ 0 ].identifier,
+            timeStart: Date.now(),
+            posStart: getPosition(event)
+        });
     };
 
     //define handler for touch end event
     var handleTouchEnd = function (event) {
         var me = this;
 
-        //increase count
-        me.count++;
+        var taps = me.taps;
 
-        //if count is less, than needed - return
-        if (me.count < 2) {
-            return me.count++;
+        //find relative tap
+        var id = event.changedTouches[ 0 ].identifier;
+
+        //console.log('touchEnd registered. Id:', id, 'time:', Date(Date.now()), ', pos:', getPosition(event));
+        //console.log('try to find relative tap in taps', taps);
+
+        var tap = taps.filter(function (tap) {
+            return !tap.timeEnd && tap.id === id;
+        })[ 0 ];
+
+        //if no relative tap - return
+        if (!tap) {
+            //console.log('no relative tap found with id', id, '. return');
+
+            return;
         }
 
-        //write tapEnd timestamp
-        me.tapEnd = Date.now();
+        //upgrade tap time and position
+        tap.timeEnd = Date.now();
+        tap.posEnd = getPosition(event);
 
-        //check duration to match min and max doubleTap time
-        var duration = me.tapEnd - me.tapStart;
+        //if tap moved or timed out - remove it
+        if (tap.timeEnd - tap.timeStart > tapTime || hasMoved(tap.posStart, tap.posEnd, tapMoveLimit)) {
+            //if (tap.timeEnd - tap.timeStart > tapTime) {
+            //console.log('touchEnd timed out:', tap.timeEnd - tap.timeStart, '>', tapTime);
+            //} else {
+            //console.log('touchEnd moved. x:', tap.posEnd.x - tap.posStart.x, 'y:', tap.posEnd.y - tap.posStart.y);
+            //}
+            //console.log('remove tap', tap, 'from taps', taps);
+            taps.splice(taps.indexOf(tap), 1);
+            //console.log('taps:', taps, '. return');
 
-        if (duration < doubleTapMinTime || duration > doubleTapMaxTime) {
-
-            return cancelEvent(event);
+            return;
         }
 
-        //write end position
-        var move = me.move;
-        move.end = getPosition(event);
+        //console.log('tap is ok, check taps count');
 
-        //check movement
-        if (Math.abs(move.start.x - move.end.x) > tapMoveLimit || Math.abs(move.start.y - move.end.y) > tapMoveLimit) {
+        //if taps count is less, than needed - return
+        if (taps.length < 2) {
+            //console.log('taps count is not enough:', taps.length, '. return');
 
-            //cancel event
-            return cancelEvent(event);
+            return;
         }
 
-        //click would not be handled within clickTimeout
-        me.handleDoubleClick = false;
+        //console.log('taps count is ok. check gesture');
+
+        //enough taps to emit doubleTap. needed movement and timeout validation
+
+        //shift first tap from taps
+        var firstTap = taps.shift();
+
+        //evaluate duration and positions
+        var duration = tap.timeEnd - firstTap.timeStart;
+        var posStart = {
+            x: (firstTap.posStart.x + firstTap.posEnd.x) / 2,
+            y: (firstTap.posStart.y + firstTap.posEnd.y) / 2
+        };
+        var posEnd = {
+            x: (tap.posStart.x + tap.posEnd.x) / 2,
+            y: (tap.posStart.y + tap.posEnd.y) / 2
+        };
+
+        //if taps duration is not in time limits or move exceeded - return.
+        //First tap is already shifted from taps and it contains only last tap
+        if (duration < doubleTapMinTime || duration > doubleTapMaxTime || hasMoved(posStart, posEnd, tapMoveLimit)) {
+            //if (duration < doubleTapMinTime) {
+            //console.log('Gesture is too fast:', duration, '<', doubleTapMinTime);
+            //} else if (duration > doubleTapMaxTime) {
+            //console.log('Gesture is too slow:', duration, '>', doubleTapMaxTime);
+            //} else {
+            //console.log('Gesture moved. x:', posEnd.x - posStart.x, 'y:', posEnd.y - posStart.y);
+            //}
+
+            return;
+        }
+
+
+        //all is ok, doubleTap will be emitted
+
+        //reset taps array
+        taps.splice(0);
+
+        //set lastTime
+        me.lastTime = tap.timeEnd;
+        //console.log('Last time set to', Date(me.lastTime));
 
         //try to get bubbled event
         var xEvent = event[ self.label ];
 
         //upgrade bubbled event
         if (xEvent instanceof me.Event) {
+            //console.log('update bubbling event from touch. Target:', event.target, 'current:', event.currentTarget);
             xs.apply(xEvent.private, getUpdateFromTouchEvent(event));
 
             //or create new
         } else {
+            //console.log('create new event from touch. Target:', event.target, 'current:', event.currentTarget);
             xEvent = new me.Event(event, getDataFromTouchEvent(event));
         }
 
+        //console.log('fire tap event from touch...');
         me.element.events.emitter.send(xEvent);
     };
 
@@ -161,8 +229,10 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self, imports) {
     var handleTouchDoubleClick = function (event) {
         var me = this;
 
+        //console.log('touch doubleClick happened');
         //check timeout
-        if (Date.now() - me.gestureEnd < doubleClickTimeout) {
+        if (Date.now() - me.lastTime < doubleClickTimeout) {
+            //console.log('touch click is duplicate. Time diff:', Date.now() - me.lastTime, '<', doubleClickTimeout);
 
             //cancel event
             return cancelEvent(event);
@@ -173,13 +243,16 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self, imports) {
 
         //upgrade bubbled event
         if (xEvent instanceof me.Event) {
+            //console.log('update bubbling event from pointer. Target:', event.target, 'current:', event.currentTarget);
             xs.apply(xEvent.private, getUpdateFromPointerEvent(event));
 
             //or create new
         } else {
+            //console.log('create new event from pointer. Target:', event.target, 'current:', event.currentTarget);
             xEvent = new me.Event(event, getDataFromPointerEvent(event));
         }
 
+        //console.log('fire tap event from pointer...');
         me.element.events.emitter.send(xEvent);
     };
 
@@ -201,6 +274,10 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self, imports) {
         }
     };
 
+    var hasMoved = function (start, end, moveLimit) {
+        return Math.abs(start.x - end.x) > moveLimit || Math.abs(start.y - end.y) > moveLimit;
+    };
+
     var cancelEvent = function (event) {
         if (event.cancelable) {
             event.preventDefault();
@@ -219,7 +296,7 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self, imports) {
 
         //capture touch start
         capture.handlePointerDoubleClick = xs.bind(handlePointerDoubleClick, capture);
-        element.private.el.addEventListener('click', capture.handlePointerDoubleClick);
+        element.private.el.addEventListener('dblclick', capture.handlePointerDoubleClick);
 
         return capture;
     };
@@ -227,30 +304,34 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self, imports) {
     //define handle for `click` event
     var handlePointerDoubleClick = function (event) {
         var me = this;
+        //console.log('pointer click happened');
 
         //try to get bubbled event
         var xEvent = event[ self.label ];
 
         //upgrade bubbled event
         if (xEvent instanceof me.Event) {
+            //console.log('update bubbling event from pointer. Target:', event.target, 'current:', event.currentTarget);
             xs.apply(xEvent.private, getUpdateFromPointerEvent(event));
 
             //or create new
         } else {
+            //console.log('create new event from pointer. Target:', event.target, 'current:', event.currentTarget);
             xEvent = new me.Event(event, getDataFromPointerEvent(event));
         }
 
+        //console.log('fire tap event from pointer...');
         me.element.events.emitter.send(xEvent);
     };
 
     var releaseAllEvents = function (element, capture) {
         element.private.el.removeEventListener('touchstart', capture.handleTouchStart);
         element.private.el.removeEventListener('touchend', capture.handleTouchEnd);
-        element.private.el.removeEventListener('click', capture.handleTouchDoubleClick);
+        element.private.el.removeEventListener('dblclick', capture.handleTouchDoubleClick);
     };
 
     var releasePointerEvents = function (element, capture) {
-        element.private.el.removeEventListener('click', capture.handlePointerDoubleClick);
+        element.private.el.removeEventListener('dblclick', capture.handlePointerDoubleClick);
     };
 
     var getDataFromTouchEvent = function (event) {
