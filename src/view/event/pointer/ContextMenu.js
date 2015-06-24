@@ -38,10 +38,10 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self, imports) {
     };
 
     //time between touch start and touch end, that needs to be gone to define a context menu
-    var contextMenuTime = 400;
+    var contextMenuTime = 320;
 
-    //timeout after last touch end, while next click will be silenced (for touch devices' 300 ms delay)
-    var clickTimeout = 400;
+    //timeout after last touch end, while next contextMenu will be silenced (for touch devices' 300 ms delay)
+    var contextMenuTimeout = 400;
 
     //tap move limit to separate tap from swipe|scroll
     var tapMoveLimit = 20;
@@ -68,7 +68,7 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self, imports) {
         capture.handleTouchEnd = xs.bind(handleTouchEnd, capture);
         el.addEventListener('touchend', capture.handleTouchEnd);
 
-        //capture click
+        //capture contextMenu
         capture.handleTouchContextMenu = xs.bind(handleTouchContextMenu, capture);
         el.addEventListener('contextmenu', capture.handleTouchContextMenu);
 
@@ -136,14 +136,18 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self, imports) {
         me.element.events.emitter.send(xEvent);
     };
 
-    //define handler for click event
+    //define handler for contextMenu event
     var handleTouchContextMenu = function (event) {
         var me = this;
 
-        //console.log('touch click happened');
-        //check timeout
-        if (Date.now() - me.timeEnd < clickTimeout) {
-            //console.log('touch click is duplicate. Time diff:', Date.now() - me.timeEnd, '<', clickTimeout);
+        //console.log('touch contextMenu happened');
+        //check timeout and if touch not ended
+        if (me.timeStart > me.timeEnd || Date.now() - me.timeEnd < contextMenuTimeout) {
+            //if (me.timeStart > me.timeEnd) {
+            //console.log('touch contextMenu happened before touch was released');
+            //} else {
+            //console.log('touch contextMenu is duplicate. Time diff:', Date.now() - me.timeEnd, '<', contextMenuTimeout);
+            //}
 
             //cancel event
             return cancelEvent(event);
@@ -208,10 +212,10 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self, imports) {
         return capture;
     };
 
-    //define handle for `click` event
+    //define handle for `contextmenu` event
     var handlePointerContextMenu = function (event) {
         var me = this;
-        //console.log('pointer doubleClick happened');
+        //console.log('pointer contextMenu happened');
 
         //try to get bubbled event
         var xEvent = event[ self.label ];
