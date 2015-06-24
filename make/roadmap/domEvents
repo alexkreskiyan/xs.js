@@ -76,6 +76,11 @@ xs.view.event.pointer.Leave
 A pointing device is moved off the element that has the listener attached
 https://developer.mozilla.org/en-US/docs/Web/Events/mouseleave
 
+xs.view.event.pointer.Move
+A pointing device is moved
+https://developer.mozilla.org/en-US/docs/Web/Events/mousemove
+https://developer.mozilla.org/en-US/docs/Web/Events/touchmove
+
 xs.view.event.pointer.Over
 A pointing device is moved onto the element that has the listener attached or onto one of its children
 https://developer.mozilla.org/en-US/docs/Web/Events/mouseover
