@@ -50,13 +50,12 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
         var capture = {
             element: element,
             Event: self,
-            //handleClick flag
-            handleClick: true,
             //tap start and end time
-            start: 0,
-            end: 0,
+            timeStart: 0,
+            timeEnd: 0,
             //tap move
-            move: {}
+            posStart: {},
+            posEnd: {}
         };
 
         var el = element.private.el;
@@ -81,10 +80,10 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
         var me = this;
 
         //write start timestamp
-        me.start = Date.now();
+        me.timeStart = Date.now();
 
         //write start position
-        me.move.start = getPosition(event);
+        me.posStart = getPosition(event);
     };
 
     //define handler for touch end event
@@ -92,28 +91,25 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
         var me = this;
 
         //write end timestamp
-        me.end = Date.now();
+        me.timeEnd = Date.now();
 
         //check tap time
-        if (me.end - me.start > tapTime) {
+        if (me.timeEnd - me.timeStart > tapTime) {
 
             //cancel event
             return cancelEvent(event);
         }
 
         //write end position
-        var move = me.move;
-        move.end = getPosition(event);
+        var posStart = me.posStart;
+        var posEnd = me.posEnd = getPosition(event);
 
         //check movement
-        if (Math.abs(move.start.x - move.end.x) > tapMoveLimit || Math.abs(move.start.y - move.end.y) > tapMoveLimit) {
+        if (Math.abs(posEnd.x - posStart.x) > tapMoveLimit || Math.abs(posEnd.y - posStart.y) > tapMoveLimit) {
 
             //cancel event
             return cancelEvent(event);
         }
-
-        //click would not be handled within clickTimeout
-        me.handleClick = false;
 
         //try to get bubbled event
         var xEvent = event[ self.label ];
@@ -135,7 +131,7 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
         var me = this;
 
         //check timeout
-        if (Date.now() - me.end < clickTimeout) {
+        if (Date.now() - me.timeEnd < clickTimeout) {
 
             //cancel event
             return cancelEvent(event);
