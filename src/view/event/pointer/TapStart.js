@@ -60,7 +60,7 @@ xs.define(xs.Class, 'ns.pointer.TapStart', function (self, imports) {
         el.addEventListener('touchend', capture.handleTouchEnd);
         el.addEventListener('touchcancel', capture.handleTouchEnd);
 
-        //capture mouseDown
+        //capture pointerDown
         capture.handleTouchPointerDown = xs.bind(handleTouchPointerDown, capture);
         el.addEventListener(self.parent.pointerEvents.pointerDown, capture.handleTouchPointerDown);
 
