@@ -25,6 +25,35 @@ xs.define(xs.Class, 'ns.pointer.Pointer', function (self, imports) {
         'ns.pointer.IEvent'
     ];
 
+    Class.constant.pointerEvents = (function () {
+        var pointerEvents = {};
+        var events = [
+            'pointerDown',
+            'pointerUp',
+            'pointerOver',
+            'pointerOut',
+            'pointerEnter',
+            'pointerLeave',
+            'pointerMove'
+        ];
+        var isMSPointerEvent = 'MSPointerEvent' in window;
+        var isPointerEvent = 'PointerEvent' in window;
+
+        for (var i = 0; i < events.length; i++) {
+            var event = events[ i ];
+
+            if (isPointerEvent) {
+                pointerEvents[ event ] = event.toLowerCase();
+            } else if (isMSPointerEvent) {
+                pointerEvents[ event ] = 'ms' + event.toLowerCase();
+            } else {
+                pointerEvents[ event ] = 'mouse' + event.slice(7).toLowerCase();
+            }
+        }
+
+        return pointerEvents;
+    })();
+
     /**
      * Event constructor
      *

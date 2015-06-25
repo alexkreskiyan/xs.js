@@ -382,37 +382,6 @@ xs.env.Context = xs.context = (function () {
          */
         me.maxTouchPoints = navigator.maxTouchPoints || navigator.msMaxTouchPoints;
 
-
-        //Pointer events map
-
-        me.pointerEvents = (function () {
-            var pointerEvents = {};
-            var events = [
-                'pointerdown',
-                'pointerup',
-                'pointerover',
-                'pointerout',
-                'pointerenter',
-                'pointerleave',
-                'pointermove'
-            ];
-            var isMSPointerEvent = 'MSPointerEvent' in window;
-            var isPointerEvent = 'PointerEvent' in window;
-
-            for (var i = 0; i < events.length; i++) {
-                var event = events[ i ];
-
-                if (isPointerEvent) {
-                    pointerEvents[ event ] = event;
-                } else if (isMSPointerEvent) {
-                    pointerEvents[ event ] = 'ms' + event;
-                } else {
-                    pointerEvents[ event ] = 'mouse' + event.slice(7);
-                }
-            }
-
-            return pointerEvents;
-        })();
     };
 
     /*
