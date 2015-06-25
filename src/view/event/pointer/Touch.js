@@ -23,9 +23,8 @@ xs.define(xs.Class, 'ns.pointer.Touch', function (self, imports) {
         var me = this;
 
         //assert, that touch is a Touch interface instance
-        self.assert.ok(touch instanceof window.Touch, 'constructor - given `$touch` is not an instance of `$Touch`', {
-            $touch: touch,
-            $Touch: window.Touch
+        self.assert.object(touch, 'constructor - given `$touch` is not an object', {
+            $touch: touch
         });
 
 
