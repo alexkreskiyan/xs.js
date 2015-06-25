@@ -24,7 +24,7 @@ xs.define(xs.Class, 'ns.tests.xs.pointer.stage.TapStart', function (self, import
             return;
         }
 
-        var count = 100;
+        var count = 10;
 
         var sandbox = me.private.container.query('.sandbox');
 
