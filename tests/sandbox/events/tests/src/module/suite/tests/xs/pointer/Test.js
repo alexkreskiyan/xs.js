@@ -10,7 +10,8 @@ xs.define(xs.Class, 'ns.tests.xs.pointer.Test', function (self, imports) {
         stage: {
             ContextMenu: 'ns.tests.xs.pointer.stage.ContextMenu',
             DoubleTap: 'ns.tests.xs.pointer.stage.DoubleTap',
-            Tap: 'ns.tests.xs.pointer.stage.Tap'
+            Tap: 'ns.tests.xs.pointer.stage.Tap',
+            TapStart: 'ns.tests.xs.pointer.stage.TapStart'
         }
     };
 
@@ -24,7 +25,8 @@ xs.define(xs.Class, 'ns.tests.xs.pointer.Test', function (self, imports) {
         return new xs.core.Collection({
             contextMenu: imports.stage.ContextMenu,
             doubleTap: imports.stage.DoubleTap,
-            tap: imports.stage.Tap
+            tap: imports.stage.Tap,
+            tapStart: imports.stage.TapStart
         });
     });
 
