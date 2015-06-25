@@ -209,7 +209,7 @@ xs.define(xs.Class, 'ns.pointer.TapStart', function (self, imports) {
         //call parent constructor
         self.parent.call(me, event, data);
 
-        me.private.isTouch = event instanceof window.TouchEvent;
+        me.private.isTouch = 'touches' in event;
 
         //all other properties are relative for touch events
         if (!me.private.isTouch) {
@@ -223,23 +223,20 @@ xs.define(xs.Class, 'ns.pointer.TapStart', function (self, imports) {
         //validate and save event fields
 
         //touches
-        self.assert.ok(event.touches instanceof window.TouchList, 'constructor - given event.touches `$touches` is not a `$TouchList` instance', {
-            $touches: event.touches,
-            $TouchList: window.TouchList
+        self.assert.fn(event.touches.item, 'constructor - given event.touches `$touches` is not valid', {
+            $touches: event.touches
         });
         me.private.touches = event.touches;
 
         //targetTouches
-        self.assert.ok(event.targetTouches instanceof window.TouchList, 'constructor - given event.targetTouches `$touches` is not a `$TouchList` instance', {
-            $touches: event.targetTouches,
-            $TouchList: window.TouchList
+        self.assert.fn(event.targetTouches.item, 'constructor - given event.targetTouches `$touches` is not valid', {
+            $touches: event.touches
         });
         me.private.targetTouches = event.targetTouches;
 
         //changedTouches
-        self.assert.ok(event.changedTouches instanceof window.TouchList, 'constructor - given event.changedTouches `$touches` is not a `$TouchList` instance', {
-            $touches: event.changedTouches,
-            $TouchList: window.TouchList
+        self.assert.fn(event.changedTouches.item, 'constructor - given event.changedTouches `$touches` is not valid', {
+            $touches: event.touches
         });
         me.private.changedTouches = event.changedTouches;
 
@@ -254,7 +251,7 @@ xs.define(xs.Class, 'ns.pointer.TapStart', function (self, imports) {
             var me = this;
             var touches = me.private.touches;
 
-            if (touches instanceof window.TouchList) {
+            if (!(touches instanceof xs.core.Collection)) {
                 var collection = new xs.core.Collection();
 
                 for (var i = 0; i < touches.length; i++) {
@@ -272,19 +269,19 @@ xs.define(xs.Class, 'ns.pointer.TapStart', function (self, imports) {
     Class.property.targetTouches = {
         get: function () {
             var me = this;
-            var targetTouches = me.private.targetTouches;
+            var touches = me.private.targetTouches;
 
-            if (targetTouches instanceof window.TouchList) {
+            if (!(touches instanceof xs.core.Collection)) {
                 var collection = new xs.core.Collection();
 
-                for (var i = 0; i < targetTouches.length; i++) {
-                    collection.add(new imports.Touch(targetTouches.item(i)));
+                for (var i = 0; i < touches.length; i++) {
+                    collection.add(new imports.Touch(touches.item(i)));
                 }
 
-                targetTouches = me.private.targetTouches = collection;
+                touches = me.private.targetTouches = collection;
             }
 
-            return targetTouches;
+            return touches;
         },
         set: xs.noop
     };
@@ -292,19 +289,19 @@ xs.define(xs.Class, 'ns.pointer.TapStart', function (self, imports) {
     Class.property.changedTouches = {
         get: function () {
             var me = this;
-            var changedTouches = me.private.changedTouches;
+            var touches = me.private.changedTouches;
 
-            if (changedTouches instanceof window.TouchList) {
+            if (!(touches instanceof xs.core.Collection)) {
                 var collection = new xs.core.Collection();
 
-                for (var i = 0; i < changedTouches.length; i++) {
-                    collection.add(new imports.Touch(changedTouches.item(i)));
+                for (var i = 0; i < touches.length; i++) {
+                    collection.add(new imports.Touch(touches.item(i)));
                 }
 
-                changedTouches = me.private.changedTouches = collection;
+                touches = me.private.changedTouches = collection;
             }
 
-            return changedTouches;
+            return touches;
         },
         set: xs.noop
     };
