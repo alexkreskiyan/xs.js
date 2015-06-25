@@ -371,7 +371,7 @@ xs.env.Context = xs.context = (function () {
          *
          * @type {Boolean}
          */
-        me.isTouch = navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+        me.isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 
         /**
          * Device touch points count

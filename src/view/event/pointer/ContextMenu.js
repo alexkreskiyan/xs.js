@@ -67,6 +67,7 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self, imports) {
         //capture touch end
         capture.handleTouchEnd = xs.bind(handleTouchEnd, capture);
         el.addEventListener('touchend', capture.handleTouchEnd);
+        el.addEventListener('touchcancel', capture.handleTouchEnd);
 
         //capture contextMenu
         capture.handleTouchContextMenu = xs.bind(handleTouchContextMenu, capture);
@@ -238,6 +239,7 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self, imports) {
     var releaseAllEvents = function (element, capture) {
         element.private.el.removeEventListener('touchstart', capture.handleTouchStart);
         element.private.el.removeEventListener('touchend', capture.handleTouchEnd);
+        element.private.el.removeEventListener('touchcancel', capture.handleTouchEnd);
         element.private.el.removeEventListener('contextmenu', capture.handleTouchContextMenu);
     };
 

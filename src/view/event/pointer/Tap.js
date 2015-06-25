@@ -67,6 +67,7 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
         //capture touch end
         capture.handleTouchEnd = xs.bind(handleTouchEnd, capture);
         el.addEventListener('touchend', capture.handleTouchEnd);
+        el.addEventListener('touchcancel', capture.handleTouchEnd);
 
         //capture click
         capture.handleTouchClick = xs.bind(handleTouchClick, capture);
@@ -211,7 +212,7 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
     //define handle for `click` event
     var handlePointerClick = function (event) {
         var me = this;
-        //console.log('pointer doubleClick happened');
+        //console.log('pointer click happened');
 
         //try to get bubbled event
         var xEvent = event[ self.label ];
@@ -234,6 +235,7 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
     var releaseAllEvents = function (element, capture) {
         element.private.el.removeEventListener('touchstart', capture.handleTouchStart);
         element.private.el.removeEventListener('touchend', capture.handleTouchEnd);
+        element.private.el.removeEventListener('touchcancel', capture.handleTouchEnd);
         element.private.el.removeEventListener('click', capture.handleTouchClick);
     };
 
