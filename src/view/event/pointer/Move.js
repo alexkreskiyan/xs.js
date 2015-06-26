@@ -33,6 +33,9 @@ xs.define(xs.Class, 'ns.pointer.Move', function (self) {
         }
     };
 
+    //interval to throttle move events
+    var throttleInterval = 50;
+
     var captureAllEvents = function (element) {
         var capture = {
             element: element
@@ -41,11 +44,11 @@ xs.define(xs.Class, 'ns.pointer.Move', function (self) {
         var el = element.private.el;
 
         //capture touch move
-        capture.handleTouchMove = xs.bind(handleTouchMove, capture);
+        capture.handleTouchMove = xs.Function.throttle(handleTouchMove, throttleInterval, capture);
         el.addEventListener('touchmove', capture.handleTouchMove);
 
         //capture mouseDown
-        capture.handleTouchPointerMove = xs.bind(handleTouchPointerMove, capture);
+        capture.handleTouchPointerMove = xs.Function.throttle(handleTouchPointerMove, throttleInterval, capture);
         el.addEventListener(self.pointerEvents.pointerMove, capture.handleTouchPointerMove);
 
         return capture;
@@ -62,7 +65,7 @@ xs.define(xs.Class, 'ns.pointer.Move', function (self) {
         };
 
         //capture touch start
-        capture.handlePointerPointerMove = xs.bind(handlePointerPointerMove, capture);
+        capture.handlePointerPointerMove = xs.Function.throttle(handlePointerPointerMove, throttleInterval, capture);
         element.private.el.addEventListener(self.pointerEvents.pointerMove, capture.handlePointerPointerMove);
 
         return capture;
