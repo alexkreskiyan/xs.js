@@ -306,13 +306,57 @@
             },
             "view": {
                 "event": {
-                    "IEvent": { },
                     "pointer": {
+                        "Button": { },
+                        "ContextMenu": {
+                            "test": false
+                        },
+                        "DoubleTap": {
+                            "test": false
+                        },
+                        "Enter": {
+                            "test": false
+                        },
                         "IEvent": { },
+                        "Leave": {
+                            "test": false
+                        },
+                        "Move": {
+                            "test": false
+                        },
+                        "Out": {
+                            "test": false
+                        },
+                        "Over": {
+                            "test": false
+                        },
+                        "Pointer": {
+                            "test": false
+                        },
                         "Tap": {
                             "test": false
+                        },
+                        "TapEnd": {
+                            "test": false
+                        },
+                        "TapStart": {
+                            "test": false
+                        },
+                        "TargetChange": {
+                            "test": false
+                        },
+                        "Touch": {
+                            "test": false
+                        },
+                        "TouchChange": {
+                            "test": false
                         }
-                    }
+                    },
+                    "Event": {
+                        "test": false
+                    },
+                    "IEvent": { },
+                    "Phase": { }
                 },
                 "Element": { },
                 "View": { }
