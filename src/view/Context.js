@@ -65,10 +65,6 @@ xs.define(xs.Class, 'ns.Context', function (self, imports) {
         return stream;
     });
 
-    //set private.el to window, like in xs.view.Element
-    self.private.el = window;
-    self.private.body = document.querySelector('body');
-
     Class.static.property.isVisible = {
         get: function () {
             return document.visibilityState === 'visible';
@@ -120,33 +116,55 @@ xs.define(xs.Class, 'ns.Context', function (self, imports) {
 
     Class.static.property.scrollX = {
         get: function () {
-            return this.private.body.scrollLeft;
+            var me = this;
+
+            if (!me.private.body) {
+                me.private.body = document.querySelector('body');
+            }
+
+            return me.private.body.scrollLeft;
         },
         set: function (position) {
+            var me = this;
 
             //assert, that position is a number
             self.assert.number(position, 'scrollX:set - given position `$position` is not a number', {
                 $position: position
             });
 
+            if (!me.private.body) {
+                me.private.body = document.querySelector('body');
+            }
+
             //set scrollLeft
-            this.private.body.scrollLeft = position;
+            me.private.body.scrollLeft = position;
         }
     };
 
     Class.static.property.scrollY = {
         get: function () {
-            return this.private.body.scrollTop;
+            var me = this;
+
+            if (!me.private.body) {
+                me.private.body = document.querySelector('body');
+            }
+
+            return me.private.body.scrollTop;
         },
         set: function (position) {
+            var me = this;
 
             //assert, that position is a number
             self.assert.number(position, 'scrollY:set - given position `$position` is not a number', {
                 $position: position
             });
 
-            //set scrollLeft
-            this.private.body.scrollTop = position;
+            if (!me.private.body) {
+                me.private.body = document.querySelector('body');
+            }
+
+            //set scrollTop
+            me.private.body.scrollTop = position;
         }
     };
 

@@ -9,7 +9,7 @@ xs.view.event.context.Resize
 Context is resized
 https://developer.mozilla.org/en-US/docs/Web/Events/resize
 
-xs.view.event.context.DisplayChange
+xs.view.event.context.VisibilityChange
 Context visibility changed
 https://developer.mozilla.org/en-US/docs/Web/Events/visibilitychange
 

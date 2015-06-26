@@ -306,6 +306,15 @@
             },
             "view": {
                 "event": {
+                    "context": {
+                        "IEvent": { },
+                        "Resize": {
+                            "test": false
+                        },
+                        "VisibilityChange": {
+                            "test": false
+                        }
+                    },
                     "pointer": {
                         "Button": { },
                         "ContextMenu": {

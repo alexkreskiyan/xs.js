@@ -1,13 +1,13 @@
 /**
- * Event class for events, being thrown when page context size changed
+ * Event class for events, being thrown when page context's visibility is being changed
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.view.event.context.Resize
+ * @class xs.view.event.context.VisibilityChange
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.context.Resize', function (self) {
+xs.define(xs.Class, 'ns.context.VisibilityChange', function (self) {
 
     'use strict';
 
@@ -26,19 +26,19 @@ xs.define(xs.Class, 'ns.context.Resize', function (self) {
             element: element
         };
 
-        //capture resize event
-        capture.handleResize = xs.bind(handleResize, capture);
-        window.addEventListener('resize', capture.handleResize);
+        //capture visibilityChange event
+        capture.handleVisibilityChange = xs.bind(handleVisibilityChange, capture);
+        document.addEventListener('visibilitychange', capture.handleVisibilityChange);
 
         return capture;
     };
 
     Class.static.method.release = function (element, capture) {
-        window.removeEventListener('resize', capture.handleResize);
+        document.removeEventListener('visibilitychange', capture.handleVisibilityChange);
     };
 
     //define handle for `click` event
-    var handleResize = function (event) {
+    var handleVisibilityChange = function (event) {
         var me = this;
 
         //emit event
