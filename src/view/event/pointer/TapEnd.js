@@ -1,5 +1,5 @@
 /**
- * Event class for events, being thrown when pointer tap starts
+ * Event class for events, being thrown when pointer tap ends
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
@@ -136,7 +136,7 @@ xs.define(xs.Class, 'ns.pointer.TapEnd', function (self, imports) {
             Event: self
         };
 
-        //capture touch start
+        //capture pointer up event
         capture.handlePointerPointerUp = xs.bind(handlePointerPointerUp, capture);
         element.private.el.addEventListener(self.parent.pointerEvents.pointerUp, capture.handlePointerPointerUp);
 
