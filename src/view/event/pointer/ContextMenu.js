@@ -96,7 +96,7 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
         element.private.el.removeEventListener('contextmenu', capture.handlePointerContextMenu);
     };
 
-    //define handler for touch start event
+    //define handler for touchStart event
     var handleTouchStart = function (event) {
         var me = this;
 
@@ -108,7 +108,7 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
         //console.log('touchStart registered. Time:', Date(me.timeStart), ', pos:', me.posStart);
     };
 
-    //define handler for touch end event
+    //define handler for touchEnd event
     var handleTouchEnd = function (event) {
         var me = this;
 
@@ -140,7 +140,7 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
         }
 
         //emit event
-        self.emitEvent(me.element, event);
+        return self.emitEvent(me.element, event);
     };
 
     //define handler for contextMenu event on touch device
@@ -161,16 +161,16 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
         }
 
         //emit event
-        self.emitEvent(me.element, event);
+        return self.emitEvent(me.element, event);
     };
 
-    //define handle for contextMenu event on non-touch device
+    //define handler for contextMenu event on non-touch device
     var handlePointerContextMenu = function (event) {
         var me = this;
         //console.log('pointer contextMenu happened');
 
         //emit event
-        self.emitEvent(me.element, event);
+        return self.emitEvent(me.element, event);
     };
 
 });

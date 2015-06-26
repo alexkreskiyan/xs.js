@@ -41,11 +41,11 @@ xs.define(xs.Class, 'ns.pointer.TargetChange', function (self, imports) {
         //validate and save event fields
 
         //relatedTarget
-        self.assert.ok(data.relatedTarget instanceof Element, 'constructor - given data.relatedTarget `$relatedTarget` is not a `$Element` instance', {
-            $relatedTarget: data.relatedTarget,
+        self.assert.ok(event.relatedTarget instanceof Element, 'constructor - given event.relatedTarget `$relatedTarget` is not a `$Element` instance', {
+            $relatedTarget: event.relatedTarget,
             $Element: Element
         });
-        me.private.relatedTarget = data.relatedTarget;
+        me.private.relatedTarget = event.relatedTarget;
     };
 
     /**

@@ -93,7 +93,7 @@ xs.define(xs.Class, 'ns.Event', function (self, imports) {
             xEvent = new XEvent(event, me.getEventData(event));
         }
 
-        element.events.emitter.send(xEvent);
+        return element.events.emitter.send(xEvent);
     };
 
     Class.constructor = function (event, data) {

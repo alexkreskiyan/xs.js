@@ -100,7 +100,7 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self) {
         element.private.el.removeEventListener('dblclick', capture.handlePointerDoubleClick);
     };
 
-    //define handler for touch start event
+    //define handler for touchStart event
     var handleTouchStart = function (event) {
         var me = this;
 
@@ -136,7 +136,7 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self) {
         });
     };
 
-    //define handler for touch end event
+    //define handler for touchEnd event
     var handleTouchEnd = function (event) {
         var me = this;
 
@@ -229,7 +229,7 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self) {
         //console.log('Last time set to', Date(me.lastTime));
 
         //emit event
-        self.emitEvent(me.element, event);
+        return self.emitEvent(me.element, event);
     };
 
     //define handler for doubleClick event on touch device
@@ -239,23 +239,23 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self) {
         //console.log('touch doubleClick happened');
         //check timeout
         if (Date.now() - me.lastTime < doubleClickTimeout) {
-            //console.log('touch click is duplicate. Time diff:', Date.now() - me.lastTime, '<', doubleClickTimeout);
+            //console.log('touch doubleClick is duplicate. Time diff:', Date.now() - me.lastTime, '<', doubleClickTimeout);
 
             //cancel event
             return self.cancelEvent(event);
         }
 
         //emit event
-        self.emitEvent(me.element, event);
+        return self.emitEvent(me.element, event);
     };
 
-    //define handle for doubleClick event on non-touch device
+    //define handler for doubleClick event on non-touch device
     var handlePointerDoubleClick = function (event) {
         var me = this;
         //console.log('pointer doubleClick happened');
 
         //emit event
-        self.emitEvent(me.element, event);
+        return self.emitEvent(me.element, event);
     };
 
     var hasMoved = function (start, end, moveLimit) {

@@ -96,7 +96,7 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self) {
         element.private.el.removeEventListener('click', capture.handlePointerClick);
     };
 
-    //define handler for touch start event
+    //define handler for touchStart event
     var handleTouchStart = function (event) {
         var me = this;
 
@@ -108,7 +108,7 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self) {
         //console.log('touchStart registered. Time:', Date(me.timeStart), ', pos:', me.posStart);
     };
 
-    //define handler for touch end event
+    //define handler for touchEnd event
     var handleTouchEnd = function (event) {
         var me = this;
 
@@ -140,7 +140,7 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self) {
         }
 
         //emit event
-        self.emitEvent(me.element, event);
+        return self.emitEvent(me.element, event);
     };
 
     //define handler for click event on touch device
@@ -157,16 +157,16 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self) {
         }
 
         //emit event
-        self.emitEvent(me.element, event);
+        return self.emitEvent(me.element, event);
     };
 
-    //define handle for click event on non-touch device
+    //define handler for click event on non-touch device
     var handlePointerClick = function (event) {
         var me = this;
         //console.log('pointer click happened');
 
         //emit event
-        self.emitEvent(me.element, event);
+        return self.emitEvent(me.element, event);
     };
 
 });
