@@ -269,6 +269,9 @@ xs.Class = xs.class.Class = (function (ProcessorsStack, processing, dependencies
             }
         };
 
+        //create privates storage in class
+        Class.private = {};
+
         return Class;
     };
 

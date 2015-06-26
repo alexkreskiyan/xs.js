@@ -43,9 +43,6 @@ function processStaticProperties(Class) {
     //get xs.core.Generator reference
     var Generator = xs.core.Generator;
 
-    //create privates storage in class
-    Class.private = {};
-
     //apply
     Class.descriptor.static.property.each(function (descriptor, name) {
 
@@ -86,9 +83,11 @@ function processProperties(Class) {
 }
 
 function processMethods(Class) {
+    var prototype = Class.prototype;
+
     Class.descriptor.method.each(function (value, name) {
 
         //save method to prototype
-        xs.method.define(Class.prototype, name, value);
+        xs.method.define(prototype, name, value);
     });
 }
