@@ -21,7 +21,7 @@ xs.Function = (function () {
     var slice = Function.prototype.apply.bind(Array.prototype.slice);
 
     /**
-     * Creates binded function, that will be called with given scope and optional args, prepended to call arguments
+     * Creates bound function, that will be called with given scope and optional args, prepended to call arguments
      *
      * For example:
      *
@@ -296,6 +296,86 @@ xs.Function = (function () {
      * @method noop
      */
     me.noop = function () {
+    };
+
+    /**
+     * Returns new function, that throttles calls to given function inside specified interval
+     *
+     * @method throttle
+     *
+     * @param {Function} fn
+     * @param {Number} interval
+     * @param {*} scope
+     *
+     * @returns {Function}
+     */
+    me.throttle = function (fn, interval, scope) {
+
+        assert.fn(fn, 'throttle - given `$fn` is not a function', {
+            $fn: fn
+        });
+
+        assert.number(interval, 'throttle - given `$interval` is not a number', {
+            $interval: interval
+        });
+
+        var lastTime = -Infinity;
+
+        return function () {
+
+            //get current time
+            var time = Date.now();
+
+            //if enough time passed - call fn
+            if (time - lastTime >= interval) {
+
+                //update lastTime
+                lastTime = time;
+
+                //call fn with given scope
+                fn.call(scope);
+            }
+        };
+    };
+
+    /**
+     * Returns new function, that debounces calls to given function with given wait time
+     *
+     * @method debounce
+     *
+     * @param {Function} fn
+     * @param {Number} interval
+     * @param {*} scope
+     *
+     * @returns {Function}
+     */
+    me.debounce = function (fn, interval, scope) {
+
+        assert.fn(fn, 'debounce - given `$fn` is not a function', {
+            $fn: fn
+        });
+
+        assert.number(interval, 'debounce - given `$interval` is not a number', {
+            $interval: interval
+        });
+
+        var lastTime = -Infinity;
+
+        return function () {
+
+            //get current time
+            var time = Date.now();
+
+            //if enough time passed - call fn
+            if (time - lastTime >= interval) {
+
+                //call fn with given scope
+                fn.call(scope);
+            }
+
+            //update lastTime
+            lastTime = time;
+        };
     };
 
     return me;
