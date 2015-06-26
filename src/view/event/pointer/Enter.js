@@ -105,6 +105,7 @@ xs.define(xs.Class, 'ns.pointer.Enter', function (self, imports) {
     };
 
     //TODO move to self.private move private from defineElements
+    //TODO add common class for Enter, Leave, Over, Out, extending from pointer
     var getDataFromPointerEvent = function (event) {
         var data = {};
 

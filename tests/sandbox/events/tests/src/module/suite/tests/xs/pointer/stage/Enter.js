@@ -66,9 +66,9 @@ xs.define(xs.Class, 'ns.tests.xs.pointer.stage.Enter', function (self, imports) 
     Class.method.stop = function () {
         var me = this;
 
-        self.parent.prototype.stop.call(me);
-
         me.private.container.sandbox.at(0).off(imports.event.Enter);
+
+        self.parent.prototype.stop.call(me);
     };
 
 });
