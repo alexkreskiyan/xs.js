@@ -128,7 +128,7 @@ xs.define(xs.Class, 'ns.Event', function (self, imports) {
         me.private.cancelable = data.cancelable;
 
         //currentTarget
-        self.assert.ok(data.currentTarget instanceof Element, 'constructor - given data.currentTarget `$currentTarget` is not a `$Element` instance', {
+        self.assert.ok(data.currentTarget instanceof window.EventTarget, 'constructor - given data.currentTarget `$currentTarget` is not a `$Element` instance', {
             $currentTarget: data.currentTarget,
             $Element: Element
         });
@@ -141,7 +141,7 @@ xs.define(xs.Class, 'ns.Event', function (self, imports) {
         me.private.phase = data.phase;
 
         //target
-        self.assert.ok(data.target instanceof Element, 'constructor - given data.target `$target` is not a `$Element` instance', {
+        self.assert.ok(data.target instanceof window.EventTarget, 'constructor - given data.target `$target` is not a `$Element` instance', {
             $target: data.target,
             $Element: Element
         });
@@ -189,7 +189,7 @@ xs.define(xs.Class, 'ns.Event', function (self, imports) {
         get: function () {
             var me = this;
 
-            if (me.private.currentTarget instanceof Element) {
+            if (me.private.currentTarget instanceof window.EventTarget) {
                 me.private.currentTarget = new imports.Element(me.private.currentTarget);
             }
 
@@ -222,7 +222,7 @@ xs.define(xs.Class, 'ns.Event', function (self, imports) {
         get: function () {
             var me = this;
 
-            if (me.private.target instanceof Element) {
+            if (me.private.target instanceof window.EventTarget) {
                 me.private.target = new imports.Element(me.private.target);
             }
 

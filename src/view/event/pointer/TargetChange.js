@@ -41,7 +41,7 @@ xs.define(xs.Class, 'ns.pointer.TargetChange', function (self, imports) {
         //validate and save event fields
 
         //relatedTarget
-        self.assert.ok(event.relatedTarget instanceof Element, 'constructor - given event.relatedTarget `$relatedTarget` is not a `$Element` instance', {
+        self.assert.ok(event.relatedTarget instanceof window.EventTarget, 'constructor - given event.relatedTarget `$relatedTarget` is not a `$Element` instance', {
             $relatedTarget: event.relatedTarget,
             $Element: Element
         });
@@ -56,7 +56,7 @@ xs.define(xs.Class, 'ns.pointer.TargetChange', function (self, imports) {
         get: function () {
             var me = this;
 
-            if (me.private.relatedTarget instanceof Element) {
+            if (me.private.relatedTarget instanceof window.EventTarget) {
                 me.private.relatedTarget = new imports.Element(me.private.relatedTarget);
             }
 

@@ -61,7 +61,7 @@ xs.define(xs.Class, 'ns.pointer.Touch', function (self, imports) {
         me.private.clientY = touch.clientY;
 
         //assert, that touch.target is an Element instance
-        self.assert.ok(touch.target instanceof Element, 'constructor - given touch.target `$target` is not a `$Element` instance', {
+        self.assert.ok(touch.target instanceof window.EventTarget, 'constructor - given touch.target `$target` is not a `$Element` instance', {
             $target: touch.target,
             $Element: Element
         });
@@ -127,7 +127,7 @@ xs.define(xs.Class, 'ns.pointer.Touch', function (self, imports) {
         get: function () {
             var me = this;
 
-            if (me.private.target instanceof Element) {
+            if (me.private.target instanceof window.EventTarget) {
                 me.private.target = new imports.Element(me.private.target);
             }
 
