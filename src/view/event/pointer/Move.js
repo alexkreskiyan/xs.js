@@ -18,8 +18,7 @@ xs.define(xs.Class, 'ns.pointer.Move', function (self, imports) {
     Class.extends = 'ns.pointer.Pointer';
 
     Class.imports = {
-        Button: 'ns.pointer.Button',
-        Touch: 'ns.pointer.Touch'
+        Button: 'ns.pointer.Button'
     };
 
     Class.static.method.capture = function (element) {
@@ -148,117 +147,6 @@ xs.define(xs.Class, 'ns.pointer.Move', function (self, imports) {
 
     var releasePointerEvents = function (element, capture) {
         element.private.el.removeEventListener(self.parent.pointerEvents.pointerMove, capture.handlePointerPointerMove);
-    };
-
-    /**
-     * Event constructor
-     *
-     * @constructor
-     *
-     * @param {Object} event owned event
-     * @param {Object} data evaluated data
-     */
-    Class.constructor = function (event, data) {
-        var me = this;
-
-        //call parent constructor
-        self.parent.call(me, event, data);
-
-        me.private.isTouch = 'touches' in event;
-
-        //all other properties are relative for touch events
-        if (!me.private.isTouch) {
-            me.private.touches = new xs.core.Collection();
-            me.private.targetTouches = new xs.core.Collection();
-            me.private.changedTouches = new xs.core.Collection();
-
-            return;
-        }
-
-        //validate and save event fields
-
-        //touches
-        self.assert.fn(event.touches.item, 'constructor - given event.touches `$touches` is not valid', {
-            $touches: event.touches
-        });
-        me.private.touches = event.touches;
-
-        //targetTouches
-        self.assert.fn(event.targetTouches.item, 'constructor - given event.targetTouches `$touches` is not valid', {
-            $touches: event.touches
-        });
-        me.private.targetTouches = event.targetTouches;
-
-        //changedTouches
-        self.assert.fn(event.changedTouches.item, 'constructor - given event.changedTouches `$touches` is not valid', {
-            $touches: event.touches
-        });
-        me.private.changedTouches = event.changedTouches;
-
-    };
-
-    Class.property.isTouch = {
-        set: xs.noop
-    };
-
-    Class.property.touches = {
-        get: function () {
-            var me = this;
-            var touches = me.private.touches;
-
-            if (!(touches instanceof xs.core.Collection)) {
-                var collection = new xs.core.Collection();
-
-                for (var i = 0; i < touches.length; i++) {
-                    collection.add(new imports.Touch(touches.item(i)));
-                }
-
-                touches = me.private.touches = collection;
-            }
-
-            return touches;
-        },
-        set: xs.noop
-    };
-
-    Class.property.targetTouches = {
-        get: function () {
-            var me = this;
-            var touches = me.private.targetTouches;
-
-            if (!(touches instanceof xs.core.Collection)) {
-                var collection = new xs.core.Collection();
-
-                for (var i = 0; i < touches.length; i++) {
-                    collection.add(new imports.Touch(touches.item(i)));
-                }
-
-                touches = me.private.targetTouches = collection;
-            }
-
-            return touches;
-        },
-        set: xs.noop
-    };
-
-    Class.property.changedTouches = {
-        get: function () {
-            var me = this;
-            var touches = me.private.changedTouches;
-
-            if (!(touches instanceof xs.core.Collection)) {
-                var collection = new xs.core.Collection();
-
-                for (var i = 0; i < touches.length; i++) {
-                    collection.add(new imports.Touch(touches.item(i)));
-                }
-
-                touches = me.private.changedTouches = collection;
-            }
-
-            return touches;
-        },
-        set: xs.noop
     };
 
     var getDataFromTouchEvent = function (event) {
