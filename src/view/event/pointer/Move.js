@@ -60,23 +60,23 @@ xs.define(xs.Class, 'ns.pointer.Move', function (self, imports) {
     //define handler for touch move event
     var handleTouchMove = function (event) {
         var me = this;
-        console.log('touchEnd registered. Time:', Date(me.timeEnd));
+        //console.log('touchEnd registered. Time:', Date(me.timeEnd));
 
         //try to get bubbled event
         var xEvent = event[ self.label ];
 
         //upgrade bubbled event
         if (xEvent instanceof me.Event) {
-            console.log('update bubbling event from touch. Target:', event.target, 'current:', event.currentTarget);
+            //console.log('update bubbling event from touch. Target:', event.target, 'current:', event.currentTarget);
             xs.apply(xEvent.private, getUpdateFromTouchEvent(event));
 
             //or create new
         } else {
-            console.log('create new event from touch. Target:', event.target, 'current:', event.currentTarget);
+            //console.log('create new event from touch. Target:', event.target, 'current:', event.currentTarget);
             xEvent = new me.Event(event, getDataFromTouchEvent(event));
         }
 
-        console.log('fire move event from touch...');
+        //console.log('fire move event from touch...');
         me.element.events.emitter.send(xEvent);
     };
 
@@ -84,23 +84,23 @@ xs.define(xs.Class, 'ns.pointer.Move', function (self, imports) {
     var handleTouchPointerMove = function (event) {
         var me = this;
 
-        console.log('touch pointerMove happened');
+        //console.log('touch pointerMove happened');
 
         //try to get bubbled event
         var xEvent = event[ self.label ];
 
         //upgrade bubbled event
         if (xEvent instanceof me.Event) {
-            console.log('update bubbling event from pointer. Target:', event.target, 'current:', event.currentTarget);
+            //console.log('update bubbling event from pointer. Target:', event.target, 'current:', event.currentTarget);
             xs.apply(xEvent.private, getUpdateFromPointerEvent(event));
 
             //or create new
         } else {
-            console.log('create new event from pointer. Target:', event.target, 'current:', event.currentTarget);
+            //console.log('create new event from pointer. Target:', event.target, 'current:', event.currentTarget);
             xEvent = new me.Event(event, getDataFromPointerEvent(event));
         }
 
-        console.log('fire move event from pointer...');
+        //console.log('fire move event from pointer...');
         me.element.events.emitter.send(xEvent);
     };
 
@@ -120,23 +120,23 @@ xs.define(xs.Class, 'ns.pointer.Move', function (self, imports) {
     //define handle for `click` event
     var handlePointerPointerMove = function (event) {
         var me = this;
-        console.log('pointer click happened');
+        //console.log('pointer click happened');
 
         //try to get bubbled event
         var xEvent = event[ self.label ];
 
         //upgrade bubbled event
         if (xEvent instanceof me.Event) {
-            console.log('update bubbling event from pointer. Target:', event.target, 'current:', event.currentTarget);
+            //console.log('update bubbling event from pointer. Target:', event.target, 'current:', event.currentTarget);
             xs.apply(xEvent.private, getUpdateFromPointerEvent(event));
 
             //or create new
         } else {
-            console.log('create new event from pointer. Target:', event.target, 'current:', event.currentTarget);
+            //console.log('create new event from pointer. Target:', event.target, 'current:', event.currentTarget);
             xEvent = new me.Event(event, getDataFromPointerEvent(event));
         }
 
-        console.log('fire move event from pointer...');
+        //console.log('fire move event from pointer...');
         me.element.events.emitter.send(xEvent);
     };
 
