@@ -238,22 +238,7 @@ Property.prototype.throttle = function (interval) {
     var descendant = new me.constructor(xs.noop);
     var setValue = descendant.private.emitter.set;
 
-    var lastTime = -Infinity;
-
-    module.defineInheritanceRelations(me, descendant, function (data) {
-        //get current time
-        var time = (new Date()).valueOf();
-
-        //if enough time passed - set value
-        if (time - lastTime >= interval) {
-
-            //update lastTime
-            lastTime = time;
-
-            //set property value
-            setValue(data);
-        }
-    }, xs.bind(descendant.destroy, descendant));
+    module.defineInheritanceRelations(me, descendant, xs.Function.throttle(setValue, interval), xs.bind(descendant.destroy, descendant));
 
     return descendant;
 };
@@ -281,38 +266,7 @@ Property.prototype.debounce = function (interval) {
     var descendant = new me.constructor(xs.noop);
     var setValue = descendant.private.emitter.set;
 
-    var timeoutId;
-    var sourceDestroyed = false;
-
-    module.defineInheritanceRelations(me, descendant, function (data) {
-
-        //clear previous timeout
-        clearTimeout(timeoutId);
-
-        //set timeout for setting value
-        timeoutId = setTimeout(function () {
-
-            //set property value
-            setValue(data);
-
-            //if source is destroyed - destroy
-            if (sourceDestroyed) {
-                descendant.destroy();
-            }
-        }, interval);
-    }, function () {
-
-        //if timeout defined - awaiting initiated, needed delayed destroy
-        if (xs.isDefined(timeoutId)) {
-
-            //set flag, that source is destroyed
-            sourceDestroyed = true;
-
-            //else - can destroy stream immediately
-        } else {
-            descendant.destroy();
-        }
-    });
+    module.defineInheritanceRelations(me, descendant, xs.Function.debounce(setValue, interval), xs.bind(descendant.destroy, descendant));
 
     return descendant;
 };

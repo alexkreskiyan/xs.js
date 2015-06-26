@@ -1207,12 +1207,12 @@ module('xs.reactive.Property', function () {
 
         var log = [];
         property
-            .debounce(10)
+            .debounce(100)
             .on(function (data) {
                 log.push(data);
             })
             .on(xs.reactive.event.Destroy, function () {
-                strictEqual(JSON.stringify(log), '[10]');
+                strictEqual(JSON.stringify(log), '[1]');
 
                 me.done();
             });

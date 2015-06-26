@@ -332,8 +332,8 @@ xs.Function = (function () {
                 //update lastTime
                 lastTime = time;
 
-                //call fn with given scope
-                fn.call(scope);
+                //apply fn with given scope
+                fn.apply(scope, arguments);
             }
         };
     };
@@ -369,8 +369,8 @@ xs.Function = (function () {
             //if enough time passed - call fn
             if (time - lastTime >= interval) {
 
-                //call fn with given scope
-                fn.call(scope);
+                //apply fn with given scope
+                fn.apply(scope, arguments);
             }
 
             //update lastTime
