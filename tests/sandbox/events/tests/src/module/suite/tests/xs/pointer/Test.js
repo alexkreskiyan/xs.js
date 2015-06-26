@@ -13,6 +13,8 @@ xs.define(xs.Class, 'ns.tests.xs.pointer.Test', function (self, imports) {
             Enter: 'ns.tests.xs.pointer.stage.Enter',
             Leave: 'ns.tests.xs.pointer.stage.Leave',
             Move: 'ns.tests.xs.pointer.stage.Move',
+            Over: 'ns.tests.xs.pointer.stage.Over',
+            Out: 'ns.tests.xs.pointer.stage.Out',
             Tap: 'ns.tests.xs.pointer.stage.Tap',
             TapEnd: 'ns.tests.xs.pointer.stage.TapEnd',
             TapStart: 'ns.tests.xs.pointer.stage.TapStart'
@@ -34,7 +36,9 @@ xs.define(xs.Class, 'ns.tests.xs.pointer.Test', function (self, imports) {
             contextMenu: imports.stage.ContextMenu,
             move: imports.stage.Move,
             enter: imports.stage.Enter,
-            leave: imports.stage.Leave
+            leave: imports.stage.Leave,
+            Over: imports.stage.Over,
+            Out: imports.stage.Out
         });
     });
 
