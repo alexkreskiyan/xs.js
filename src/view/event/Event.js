@@ -67,9 +67,6 @@ xs.define(xs.Class, 'ns.Event', function (self, imports) {
         me.private.defaultPrevented = false;
 
         //phase
-        self.assert.ok(imports.Phase.has(data.phase), 'constructor - given data.phase `$phase` is not a valid phase identifier', {
-            $phase: data.phase
-        });
         me.private.phase = data.phase;
 
         //target
