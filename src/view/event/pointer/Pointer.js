@@ -25,6 +25,8 @@ xs.define(xs.Class, 'ns.pointer.Pointer', function (self, imports) {
         'ns.pointer.IEvent'
     ];
 
+    Class.abstract = true;
+
     Class.constant.pointerEvents = (function () {
         var pointerEvents = {};
         var events = [
