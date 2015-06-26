@@ -25,6 +25,77 @@ xs.define(xs.Class, 'ns.Event', function (self, imports) {
 
     };
 
+    Class.static.method.getEventData = function (event) {
+        var data = {};
+
+        //assert, that given event is a Event instance
+        self.assert.ok(event instanceof Event, 'constructor - given data.currentTarget `$currentTarget` is not a Event instance', {
+            $event: event
+        });
+
+        data.bubbles = event.bubbles;
+        data.cancelable = event.cancelable;
+        data.currentTarget = event.currentTarget;
+        data.phase = event.eventPhase;
+        data.target = event.target;
+        data.time = event.timestamp ? new Date(event.timestamp) : new Date();
+
+        if (data.cancelable) {
+            data.preventDefault = function () {
+                event.preventDefault();
+            };
+        }
+
+        data.stopPropagation = function () {
+            event.stopPropagation();
+        };
+
+        return data;
+    };
+
+    Class.static.method.getEventUpdate = function (event) {
+        var data = {};
+
+        //assert, that given event is a Event instance
+        self.assert.ok(event instanceof Event, 'constructor - given data.currentTarget `$currentTarget` is not a Event instance', {
+            $event: event
+        });
+
+        data.currentTarget = event.currentTarget;
+        data.phase = event.eventPhase;
+
+        return data;
+    };
+
+    Class.static.method.cancelEvent = function (event) {
+        if (event.cancelable) {
+            event.preventDefault();
+        }
+
+        event.stopPropagation();
+
+        return false;
+    };
+
+    Class.static.method.emitEvent = function (element, event) {
+        var me = this;
+        var XEvent = me;
+
+        //try to get bubbled event
+        var xEvent = event[ me.label ];
+
+        //upgrade bubbled event
+        if (xEvent instanceof XEvent) {
+            xs.apply(xEvent.private, me.getEventUpdate(event));
+
+            //or create new
+        } else {
+            xEvent = new XEvent(event, me.getEventData(event));
+        }
+
+        element.events.emitter.send(xEvent);
+    };
+
     Class.constructor = function (event, data) {
         var me = this;
 

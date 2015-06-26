@@ -7,7 +7,7 @@
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
+xs.define(xs.Class, 'ns.pointer.Tap', function (self) {
 
     'use strict';
 
@@ -16,10 +16,6 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
     Class.namespace = 'xs.view.event';
 
     Class.extends = 'ns.pointer.Pointer';
-
-    Class.imports = {
-        Button: 'ns.pointer.Button'
-    };
 
     Class.static.method.capture = function (element) {
         if (xs.isTouch) {
@@ -76,6 +72,30 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
         return capture;
     };
 
+    var releaseAllEvents = function (element, capture) {
+        element.private.el.removeEventListener('touchstart', capture.handleTouchStart);
+        element.private.el.removeEventListener('touchend', capture.handleTouchEnd);
+        element.private.el.removeEventListener('touchcancel', capture.handleTouchEnd);
+        element.private.el.removeEventListener('click', capture.handleTouchClick);
+    };
+
+    var capturePointerEvents = function (element) {
+        var capture = {
+            element: element,
+            Event: self
+        };
+
+        //capture touch start
+        capture.handlePointerClick = xs.bind(handlePointerClick, capture);
+        element.private.el.addEventListener('click', capture.handlePointerClick);
+
+        return capture;
+    };
+
+    var releasePointerEvents = function (element, capture) {
+        element.private.el.removeEventListener('click', capture.handlePointerClick);
+    };
+
     //define handler for touch start event
     var handleTouchStart = function (event) {
         var me = this;
@@ -84,7 +104,7 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
         me.timeStart = Date.now();
 
         //write start position
-        me.posStart = getPosition(event);
+        me.posStart = self.getEventPosition(event);
         //console.log('touchStart registered. Time:', Date(me.timeStart), ', pos:', me.posStart);
     };
 
@@ -102,12 +122,12 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
             //console.log('touchEnd timed out:', me.timeEnd - me.timeStart, '>', tapTime);
 
             //cancel event
-            return cancelEvent(event);
+            return self.cancelEvent(event);
         }
 
         //write end position
         var posStart = me.posStart;
-        var posEnd = me.posEnd = getPosition(event);
+        var posEnd = me.posEnd = self.getEventPosition(event);
 
         //console.log('touchEnd pos:', posEnd);
 
@@ -116,28 +136,14 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
             //console.log('touch moved. x:', posEnd.x - posStart.x, 'y:', posEnd.y - posStart.y);
 
             //cancel event
-            return cancelEvent(event);
+            return self.cancelEvent(event);
         }
 
-        //try to get bubbled event
-        var xEvent = event[ self.label ];
-
-        //upgrade bubbled event
-        if (xEvent instanceof me.Event) {
-            //console.log('update bubbling event from touch. Target:', event.target, 'current:', event.currentTarget);
-            xs.apply(xEvent.private, getUpdateFromTouchEvent(event));
-
-            //or create new
-        } else {
-            //console.log('create new event from touch. Target:', event.target, 'current:', event.currentTarget);
-            xEvent = new me.Event(event, getDataFromTouchEvent(event));
-        }
-
-        //console.log('fire tap event from touch...');
-        me.element.events.emitter.send(xEvent);
+        //emit event
+        self.emitEvent(me.element, event);
     };
 
-    //define handler for click event
+    //define handler for click event on touch device
     var handleTouchClick = function (event) {
         var me = this;
 
@@ -147,189 +153,20 @@ xs.define(xs.Class, 'ns.pointer.Tap', function (self, imports) {
             //console.log('touch click is duplicate. Time diff:', Date.now() - me.timeEnd, '<', clickTimeout);
 
             //cancel event
-            return cancelEvent(event);
+            return self.cancelEvent(event);
         }
 
-        //try to get bubbled event
-        var xEvent = event[ self.label ];
-
-        //upgrade bubbled event
-        if (xEvent instanceof me.Event) {
-            //console.log('update bubbling event from pointer. Target:', event.target, 'current:', event.currentTarget);
-            xs.apply(xEvent.private, getUpdateFromPointerEvent(event));
-
-            //or create new
-        } else {
-            //console.log('create new event from pointer. Target:', event.target, 'current:', event.currentTarget);
-            xEvent = new me.Event(event, getDataFromPointerEvent(event));
-        }
-
-        //console.log('fire tap event from pointer...');
-        me.element.events.emitter.send(xEvent);
+        //emit event
+        self.emitEvent(me.element, event);
     };
 
-    var getPosition = function (event) {
-        //if MouseEvent
-        if (event instanceof MouseEvent) {
-
-            return {
-                x: event.clientX,
-                y: event.clientY
-            };
-
-            //if PointerEvent/TouchEvent
-        } else {
-            return {
-                x: event.changedTouches[ 0 ].clientX,
-                y: event.changedTouches[ 0 ].clientY
-            };
-        }
-    };
-
-    var cancelEvent = function (event) {
-        if (event.cancelable) {
-            event.preventDefault();
-        }
-
-        event.stopPropagation();
-
-        return false;
-    };
-
-    var capturePointerEvents = function (element) {
-        var capture = {
-            element: element,
-            Event: self
-        };
-
-        //capture touch start
-        capture.handlePointerClick = xs.bind(handlePointerClick, capture);
-        element.private.el.addEventListener('click', capture.handlePointerClick);
-
-        return capture;
-    };
-
-    //define handle for `click` event
+    //define handle for click event on non-touch device
     var handlePointerClick = function (event) {
         var me = this;
         //console.log('pointer click happened');
 
-        //try to get bubbled event
-        var xEvent = event[ self.label ];
-
-        //upgrade bubbled event
-        if (xEvent instanceof me.Event) {
-            //console.log('update bubbling event from pointer. Target:', event.target, 'current:', event.currentTarget);
-            xs.apply(xEvent.private, getUpdateFromPointerEvent(event));
-
-            //or create new
-        } else {
-            //console.log('create new event from pointer. Target:', event.target, 'current:', event.currentTarget);
-            xEvent = new me.Event(event, getDataFromPointerEvent(event));
-        }
-
-        //console.log('fire tap event from pointer...');
-        me.element.events.emitter.send(xEvent);
-    };
-
-    var releaseAllEvents = function (element, capture) {
-        element.private.el.removeEventListener('touchstart', capture.handleTouchStart);
-        element.private.el.removeEventListener('touchend', capture.handleTouchEnd);
-        element.private.el.removeEventListener('touchcancel', capture.handleTouchEnd);
-        element.private.el.removeEventListener('click', capture.handleTouchClick);
-    };
-
-    var releasePointerEvents = function (element, capture) {
-        element.private.el.removeEventListener('click', capture.handlePointerClick);
-    };
-
-    var getDataFromTouchEvent = function (event) {
-        var data = {};
-
-        //common
-        data.bubbles = event.bubbles;
-        data.cancelable = event.cancelable;
-        data.currentTarget = event.currentTarget;
-        data.phase = event.eventPhase;
-        data.target = event.target;
-        data.time = event.timestamp ? new Date(event.timestamp) : new Date();
-
-        if (data.cancelable) {
-            data.preventDefault = function () {
-                event.preventDefault();
-            };
-        }
-
-        data.stopPropagation = function () {
-            event.stopPropagation();
-        };
-
-        //event-special
-        var touch = event.changedTouches[ 0 ];
-        data.screenX = touch.screenX;
-        data.screenY = touch.screenY;
-        data.clientX = touch.clientX;
-        data.clientY = touch.clientY;
-        data.button = imports.Button.Main;
-        data.ctrlKey = event.ctrlKey;
-        data.altKey = event.altKey;
-        data.shiftKey = event.shiftKey;
-        data.metaKey = event.metaKey;
-
-        return data;
-    };
-
-    var getUpdateFromTouchEvent = function (event) {
-        var data = {};
-
-        data.currentTarget = event.currentTarget;
-        data.phase = event.eventPhase;
-
-        return data;
-    };
-
-    var getDataFromPointerEvent = function (event) {
-        var data = {};
-
-        //common
-        data.bubbles = event.bubbles;
-        data.cancelable = event.cancelable;
-        data.currentTarget = event.currentTarget;
-        data.phase = event.eventPhase;
-        data.target = event.target;
-        data.time = event.timestamp ? new Date(event.timestamp) : new Date();
-
-        if (data.cancelable) {
-            data.preventDefault = function () {
-                event.preventDefault();
-            };
-        }
-
-        data.stopPropagation = function () {
-            event.stopPropagation();
-        };
-
-        //event-special
-        data.screenX = event.screenX;
-        data.screenY = event.screenY;
-        data.clientX = event.clientX;
-        data.clientY = event.clientY;
-        data.button = event.button;
-        data.ctrlKey = event.ctrlKey;
-        data.altKey = event.altKey;
-        data.shiftKey = event.shiftKey;
-        data.metaKey = event.metaKey;
-
-        return data;
-    };
-
-    var getUpdateFromPointerEvent = function (event) {
-        var data = {};
-
-        data.currentTarget = event.currentTarget;
-        data.phase = event.eventPhase;
-
-        return data;
+        //emit event
+        self.emitEvent(me.element, event);
     };
 
 });

@@ -56,6 +56,50 @@ xs.define(xs.Class, 'ns.pointer.Pointer', function (self, imports) {
         return pointerEvents;
     })();
 
+    Class.static.method.getEventData = function (event) {
+        var data = self.parent.getEventData(event);
+
+        //handle touch/pointer event
+        if (event.touches) {
+            var touch = event.changedTouches[ 0 ];
+            data.screenX = touch.screenX;
+            data.screenY = touch.screenY;
+            data.clientX = touch.clientX;
+            data.clientY = touch.clientY;
+            data.button = imports.Button.Main;
+        } else {
+            data.screenX = event.screenX;
+            data.screenY = event.screenY;
+            data.clientX = event.clientX;
+            data.clientY = event.clientY;
+            data.button = event.button;
+        }
+
+        data.ctrlKey = event.ctrlKey;
+        data.altKey = event.altKey;
+        data.shiftKey = event.shiftKey;
+        data.metaKey = event.metaKey;
+
+        return data;
+    };
+
+    Class.static.method.getEventPosition = function (event) {
+        //if touch event
+        if (event.touches) {
+
+            return {
+                x: event.changedTouches[ 0 ].clientX,
+                y: event.changedTouches[ 0 ].clientY
+            };
+        }
+
+        //if pointer event
+        return {
+            x: event.clientX,
+            y: event.clientY
+        };
+    };
+
     /**
      * Event constructor
      *
