@@ -51,7 +51,6 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self) {
     var captureAllEvents = function (element) {
         var capture = {
             element: element,
-            Event: self,
             //taps stack
             taps: [],
             //last touch-based doubleTap time
@@ -85,8 +84,7 @@ xs.define(xs.Class, 'ns.pointer.DoubleTap', function (self) {
 
     var capturePointerEvents = function (element) {
         var capture = {
-            element: element,
-            Event: self
+            element: element
         };
 
         //capture touch start

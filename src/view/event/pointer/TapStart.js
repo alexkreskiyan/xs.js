@@ -39,7 +39,6 @@ xs.define(xs.Class, 'ns.pointer.TapStart', function (self) {
     var captureAllEvents = function (element) {
         var capture = {
             element: element,
-            Event: self,
             //write last tapStart time
             lastTime: 0
         };
@@ -71,8 +70,7 @@ xs.define(xs.Class, 'ns.pointer.TapStart', function (self) {
 
     var capturePointerEvents = function (element) {
         var capture = {
-            element: element,
-            Event: self
+            element: element
         };
 
         //capture touch start

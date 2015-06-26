@@ -35,8 +35,7 @@ xs.define(xs.Class, 'ns.pointer.Move', function (self) {
 
     var captureAllEvents = function (element) {
         var capture = {
-            element: element,
-            Event: self
+            element: element
         };
 
         var el = element.private.el;
@@ -59,8 +58,7 @@ xs.define(xs.Class, 'ns.pointer.Move', function (self) {
 
     var capturePointerEvents = function (element) {
         var capture = {
-            element: element,
-            Event: self
+            element: element
         };
 
         //capture touch start

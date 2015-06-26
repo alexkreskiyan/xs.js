@@ -45,7 +45,6 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
     var captureAllEvents = function (element) {
         var capture = {
             element: element,
-            Event: self,
             //tap start and end time
             timeStart: 0,
             timeEnd: 0,
@@ -81,8 +80,7 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
 
     var capturePointerEvents = function (element) {
         var capture = {
-            element: element,
-            Event: self
+            element: element
         };
 
         //capture touch start

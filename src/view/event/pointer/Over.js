@@ -19,8 +19,7 @@ xs.define(xs.Class, 'ns.pointer.Over', function (self) {
 
     Class.static.method.capture = function (element) {
         var capture = {
-            element: element,
-            Event: self
+            element: element
         };
 
         //capture pointerOver event
