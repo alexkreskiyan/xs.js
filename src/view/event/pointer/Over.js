@@ -17,20 +17,26 @@ xs.define(xs.Class, 'ns.pointer.Over', function (self) {
 
     Class.extends = 'ns.pointer.TargetChange';
 
-    Class.static.method.capture = function (element) {
+    Class.static.method.capture = function (target) {
+        //call parent
+        self.parent.capture(target);
+
         var capture = {
-            element: element
+            target: target
         };
 
         //capture pointerOver event
         capture.handlePointerOver = xs.bind(handlePointerOver, capture);
-        element.private.el.addEventListener(self.pointerEvents.pointerOver, capture.handlePointerOver);
+        target.private.el.addEventListener(self.pointerEvents.pointerOver, capture.handlePointerOver);
 
         return capture;
     };
 
-    Class.static.method.release = function (element, capture) {
-        element.private.el.removeEventListener(self.pointerEvents.pointerOver, capture.handlePointerOver);
+    Class.static.method.release = function (target, capture) {
+        //call parent
+        self.parent.release(target, capture);
+
+        target.private.el.removeEventListener(self.pointerEvents.pointerOver, capture.handlePointerOver);
     };
 
     //define handle for `click` event
@@ -39,7 +45,7 @@ xs.define(xs.Class, 'ns.pointer.Over', function (self) {
         //console.log('pointer over happened');
 
         //emit event
-        return self.emitEvent(me.element, event);
+        return self.emitEvent(me.target, event);
     };
 
 });

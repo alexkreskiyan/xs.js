@@ -18,7 +18,8 @@ xs.define(xs.Class, 'ns.pointer.Pointer', function (self, imports) {
     Class.extends = 'ns.Event';
 
     Class.imports = {
-        Button: 'ns.pointer.Button'
+        Button: 'ns.pointer.Button',
+        Element: 'xs.view.Element'
     };
 
     Class.implements = [
@@ -55,6 +56,24 @@ xs.define(xs.Class, 'ns.pointer.Pointer', function (self, imports) {
 
         return pointerEvents;
     })();
+
+    Class.static.method.capture = function (target) {
+        self.assert.ok(target instanceof imports.Element, 'capture - given `$target` is not an instance of `$Element`', {
+            $target: target,
+            $Element: imports.Element
+        });
+    };
+
+    Class.static.method.release = function (target, capture) {
+        self.assert.ok(target instanceof imports.Element, 'release - given `$target` is not an instance of `$Element`', {
+            $target: target,
+            $Element: imports.Element
+        });
+
+        self.assert.object(capture, 'release - given `$capture` is not an object', {
+            $capture: capture
+        });
+    };
 
     Class.static.method.getEventData = function (event) {
         var data = self.parent.getEventData(event);

@@ -17,20 +17,26 @@ xs.define(xs.Class, 'ns.pointer.Enter', function (self) {
 
     Class.extends = 'ns.pointer.TargetChange';
 
-    Class.static.method.capture = function (element) {
+    Class.static.method.capture = function (target) {
+        //call parent
+        self.parent.capture(target);
+
         var capture = {
-            element: element
+            target: target
         };
 
         //capture pointerEnter event
         capture.handlePointerEnter = xs.bind(handlePointerEnter, capture);
-        element.private.el.addEventListener(self.pointerEvents.pointerEnter, capture.handlePointerEnter);
+        target.private.el.addEventListener(self.pointerEvents.pointerEnter, capture.handlePointerEnter);
 
         return capture;
     };
 
-    Class.static.method.release = function (element, capture) {
-        element.private.el.removeEventListener(self.pointerEvents.pointerEnter, capture.handlePointerEnter);
+    Class.static.method.release = function (target, capture) {
+        //call parent
+        self.parent.release(target, capture);
+
+        target.private.el.removeEventListener(self.pointerEvents.pointerEnter, capture.handlePointerEnter);
     };
 
     //define handle for `click` event
@@ -39,7 +45,7 @@ xs.define(xs.Class, 'ns.pointer.Enter', function (self) {
         //console.log('pointer enter happened');
 
         //emit event
-        return self.emitEvent(me.element, event);
+        return self.emitEvent(me.target, event);
     };
 
 });

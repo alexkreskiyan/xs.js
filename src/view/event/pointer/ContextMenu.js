@@ -17,19 +17,25 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
 
     Class.extends = 'ns.pointer.Pointer';
 
-    Class.static.method.capture = function (element) {
+    Class.static.method.capture = function (target) {
+        //call parent
+        self.parent.capture(target);
+
         if (xs.isTouch) {
-            return captureAllEvents(element);
+            return captureAllEvents(target);
         } else {
-            return capturePointerEvents(element);
+            return capturePointerEvents(target);
         }
     };
 
-    Class.static.method.release = function (element, capture) {
+    Class.static.method.release = function (target, capture) {
+        //call parent
+        self.parent.release(target, capture);
+
         if (xs.isTouch) {
-            return releaseAllEvents(element, capture);
+            return releaseAllEvents(target, capture);
         } else {
-            return releasePointerEvents(element, capture);
+            return releasePointerEvents(target, capture);
         }
     };
 
@@ -42,9 +48,9 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
     //tap move limit to separate tap from swipe|scroll
     var tapMoveLimit = 20;
 
-    var captureAllEvents = function (element) {
+    var captureAllEvents = function (target) {
         var capture = {
-            element: element,
+            target: target,
             //tap start and end time
             timeStart: 0,
             timeEnd: 0,
@@ -53,7 +59,7 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
             posEnd: {}
         };
 
-        var el = element.private.el;
+        var el = target.private.el;
 
         //capture touch start
         capture.handleTouchStart = xs.bind(handleTouchStart, capture);
@@ -71,27 +77,27 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
         return capture;
     };
 
-    var releaseAllEvents = function (element, capture) {
-        element.private.el.removeEventListener('touchstart', capture.handleTouchStart);
-        element.private.el.removeEventListener('touchend', capture.handleTouchEnd);
-        element.private.el.removeEventListener('touchcancel', capture.handleTouchEnd);
-        element.private.el.removeEventListener('contextmenu', capture.handleTouchContextMenu);
+    var releaseAllEvents = function (target, capture) {
+        target.private.el.removeEventListener('touchstart', capture.handleTouchStart);
+        target.private.el.removeEventListener('touchend', capture.handleTouchEnd);
+        target.private.el.removeEventListener('touchcancel', capture.handleTouchEnd);
+        target.private.el.removeEventListener('contextmenu', capture.handleTouchContextMenu);
     };
 
-    var capturePointerEvents = function (element) {
+    var capturePointerEvents = function (target) {
         var capture = {
-            element: element
+            target: target
         };
 
         //capture touch start
         capture.handlePointerContextMenu = xs.bind(handlePointerContextMenu, capture);
-        element.private.el.addEventListener('contextmenu', capture.handlePointerContextMenu);
+        target.private.el.addEventListener('contextmenu', capture.handlePointerContextMenu);
 
         return capture;
     };
 
-    var releasePointerEvents = function (element, capture) {
-        element.private.el.removeEventListener('contextmenu', capture.handlePointerContextMenu);
+    var releasePointerEvents = function (target, capture) {
+        target.private.el.removeEventListener('contextmenu', capture.handlePointerContextMenu);
     };
 
     //define handler for touchStart event
@@ -138,7 +144,7 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
         }
 
         //emit event
-        return self.emitEvent(me.element, event);
+        return self.emitEvent(me.target, event);
     };
 
     //define handler for contextMenu event on touch device
@@ -159,7 +165,7 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
         }
 
         //emit event
-        return self.emitEvent(me.element, event);
+        return self.emitEvent(me.target, event);
     };
 
     //define handler for contextMenu event on non-touch device
@@ -168,7 +174,7 @@ xs.define(xs.Class, 'ns.pointer.ContextMenu', function (self) {
         //console.log('pointer contextMenu happened');
 
         //emit event
-        return self.emitEvent(me.element, event);
+        return self.emitEvent(me.target, event);
     };
 
 });

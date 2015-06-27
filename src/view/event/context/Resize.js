@@ -21,9 +21,12 @@ xs.define(xs.Class, 'ns.context.Resize', function (self) {
         'ns.pointer.IEvent'
     ];
 
-    Class.static.method.capture = function (element) {
+    Class.static.method.capture = function (target) {
+        //call parent
+        self.parent.capture(target);
+
         var capture = {
-            element: element
+            target: target
         };
 
         //capture resize event
@@ -33,7 +36,10 @@ xs.define(xs.Class, 'ns.context.Resize', function (self) {
         return capture;
     };
 
-    Class.static.method.release = function (element, capture) {
+    Class.static.method.release = function (target, capture) {
+        //call parent
+        self.parent.release(target, capture);
+
         window.removeEventListener('resize', capture.handleResize);
     };
 
@@ -42,7 +48,7 @@ xs.define(xs.Class, 'ns.context.Resize', function (self) {
         var me = this;
 
         //emit event
-        return self.emitEvent(me.element, event);
+        return self.emitEvent(me.target, event);
     };
 
 });

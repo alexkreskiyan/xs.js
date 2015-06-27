@@ -19,11 +19,11 @@ xs.define(xs.Interface, 'ns.IEvent', function () {
 
     Interface.extends = 'xs.event.IEvent';
 
-    Interface.static.method.capture = function (element) {
+    Interface.static.method.capture = function (target) {
 
     };
 
-    Interface.static.method.release = function (element, capture) {
+    Interface.static.method.release = function (target, capture) {
 
     };
 

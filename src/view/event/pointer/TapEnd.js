@@ -17,33 +17,39 @@ xs.define(xs.Class, 'ns.pointer.TapEnd', function (self) {
 
     Class.extends = 'ns.pointer.TouchChange';
 
-    Class.static.method.capture = function (element) {
+    Class.static.method.capture = function (target) {
+        //call parent
+        self.parent.capture(target);
+
         if (xs.isTouch) {
-            return captureAllEvents(element);
+            return captureAllEvents(target);
         } else {
-            return capturePointerEvents(element);
+            return capturePointerEvents(target);
         }
     };
 
-    Class.static.method.release = function (element, capture) {
+    Class.static.method.release = function (target, capture) {
+        //call parent
+        self.parent.release(target, capture);
+
         if (xs.isTouch) {
-            return releaseAllEvents(element, capture);
+            return releaseAllEvents(target, capture);
         } else {
-            return releasePointerEvents(element, capture);
+            return releasePointerEvents(target, capture);
         }
     };
 
     //timeout after touchEnd/touchCancel, while pointerUp events will be ignored
     var pointerUpTimeout = 400;
 
-    var captureAllEvents = function (element) {
+    var captureAllEvents = function (target) {
         var capture = {
-            element: element,
+            target: target,
             //write last tapEnd time
             lastTime: 0
         };
 
-        var el = element.private.el;
+        var el = target.private.el;
 
         //capture touch end
         capture.handleTouchEnd = xs.bind(handleTouchEnd, capture);
@@ -57,26 +63,26 @@ xs.define(xs.Class, 'ns.pointer.TapEnd', function (self) {
         return capture;
     };
 
-    var releaseAllEvents = function (element, capture) {
-        element.private.el.removeEventListener('touchend', capture.handleTouchEnd);
-        element.private.el.removeEventListener('touchcancel', capture.handleTouchEnd);
-        element.private.el.removeEventListener(self.pointerEvents.pointerUp, capture.handleTouchPointerUp);
+    var releaseAllEvents = function (target, capture) {
+        target.private.el.removeEventListener('touchend', capture.handleTouchEnd);
+        target.private.el.removeEventListener('touchcancel', capture.handleTouchEnd);
+        target.private.el.removeEventListener(self.pointerEvents.pointerUp, capture.handleTouchPointerUp);
     };
 
-    var capturePointerEvents = function (element) {
+    var capturePointerEvents = function (target) {
         var capture = {
-            element: element
+            target: target
         };
 
         //capture pointer up event
         capture.handlePointerPointerUp = xs.bind(handlePointerPointerUp, capture);
-        element.private.el.addEventListener(self.pointerEvents.pointerUp, capture.handlePointerPointerUp);
+        target.private.el.addEventListener(self.pointerEvents.pointerUp, capture.handlePointerPointerUp);
 
         return capture;
     };
 
-    var releasePointerEvents = function (element, capture) {
-        element.private.el.removeEventListener(self.pointerEvents.pointerUp, capture.handlePointerPointerUp);
+    var releasePointerEvents = function (target, capture) {
+        target.private.el.removeEventListener(self.pointerEvents.pointerUp, capture.handlePointerPointerUp);
     };
 
     //define handler for touchEnd event
@@ -88,7 +94,7 @@ xs.define(xs.Class, 'ns.pointer.TapEnd', function (self) {
         me.timeEnd = Date.now();
 
         //emit event
-        return self.emitEvent(me.element, event);
+        return self.emitEvent(me.target, event);
     };
 
     //define handler for pointerUp event on touch device
@@ -105,7 +111,7 @@ xs.define(xs.Class, 'ns.pointer.TapEnd', function (self) {
         }
 
         //emit event
-        return self.emitEvent(me.element, event);
+        return self.emitEvent(me.target, event);
     };
 
     //define handler for pointerUp event on non-touch device
@@ -114,7 +120,7 @@ xs.define(xs.Class, 'ns.pointer.TapEnd', function (self) {
         //console.log('pointer click happened');
 
         //emit event
-        return self.emitEvent(me.element, event);
+        return self.emitEvent(me.target, event);
     };
 
 });

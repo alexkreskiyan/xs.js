@@ -17,11 +17,11 @@ xs.define(xs.Class, 'ns.Event', function (self, imports) {
 
     Class.abstract = true;
 
-    Class.static.method.capture = function (element) {
+    Class.static.method.capture = function (target) {
 
     };
 
-    Class.static.method.release = function (element, capture) {
+    Class.static.method.release = function (target, capture) {
 
     };
 
@@ -77,7 +77,7 @@ xs.define(xs.Class, 'ns.Event', function (self, imports) {
         return false;
     };
 
-    Class.static.method.emitEvent = function (element, event) {
+    Class.static.method.emitEvent = function (target, event) {
         var me = this;
         var XEvent = me;
 
@@ -93,7 +93,7 @@ xs.define(xs.Class, 'ns.Event', function (self, imports) {
             xEvent = new XEvent(event, me.getEventData(event));
         }
 
-        return element.events.emitter.send(xEvent);
+        return target.events.emitter.send(xEvent);
     };
 
     Class.constructor = function (event, data) {
