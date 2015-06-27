@@ -306,6 +306,18 @@
             },
             "view": {
                 "event": {
+                    "content":{
+                        "IEvent": { },
+                        "Change": {
+                            "test": false
+                        },
+                        "Input": {
+                            "test": false
+                        },
+                        "Select": {
+                            "test": false
+                        }
+                    },
                     "context": {
                         "IEvent": { },
                         "Resize": {
@@ -315,6 +327,18 @@
                             "test": false
                         }
                     },
+                    "element":{
+                        "IEvent": { },
+                        "Blur": {
+                            "test": false
+                        },
+                        "Focus": {
+                            "test": false
+                        },
+                        "Scroll": {
+                            "test": false
+                        }
+                    }
                     "pointer": {
                         "Button": { },
                         "ContextMenu": {
