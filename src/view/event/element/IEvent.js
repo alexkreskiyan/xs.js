@@ -5,11 +5,11 @@
  *
  * @abstract
  *
- * @class xs.view.event.context.IEvent
+ * @class xs.view.event.element.IEvent
  *
  * @extends xs.view.event.IEvent
  */
-xs.define(xs.Interface, 'ns.context.IEvent', function () {
+xs.define(xs.Interface, 'ns.element.IEvent', function () {
 
     'use strict';
 

@@ -338,7 +338,7 @@
                         "Scroll": {
                             "test": false
                         }
-                    }
+                    },
                     "pointer": {
                         "Button": { },
                         "ContextMenu": {
