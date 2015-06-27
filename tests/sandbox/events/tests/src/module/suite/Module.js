@@ -36,6 +36,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
                 pointer: 'ns.tests.dom.pointer.Test'
             },
             xs: {
+                context: 'ns.tests.xs.context.Test',
                 pointer: 'ns.tests.xs.pointer.Test'
             }
         },

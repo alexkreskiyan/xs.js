@@ -37,8 +37,8 @@ xs.define(xs.Class, 'ns.tests.xs.pointer.Test', function (self, imports) {
             move: imports.stage.Move,
             enter: imports.stage.Enter,
             leave: imports.stage.Leave,
-            Over: imports.stage.Over,
-            Out: imports.stage.Out
+            over: imports.stage.Over,
+            out: imports.stage.Out
         });
     });
 
