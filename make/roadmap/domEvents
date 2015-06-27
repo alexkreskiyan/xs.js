@@ -14,17 +14,6 @@ Context visibility changed
 https://developer.mozilla.org/en-US/docs/Web/Events/visibilitychange
 
 
-resource:
-
-xs.view.event.resource.Load
-A resource and its dependent resources have finished loading
-https://developer.mozilla.org/en-US/docs/Web/Events/load
-
-xs.view.event.resource.Error
-Resource load failed
-https://developer.mozilla.org/en-US/docs/Web/Events/error
-
-
 element:
 
 xs.view.event.element.Scroll
