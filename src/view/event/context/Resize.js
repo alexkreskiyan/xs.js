@@ -22,9 +22,6 @@ xs.define(xs.Class, 'ns.context.Resize', function (self) {
     ];
 
     Class.static.method.capture = function (target) {
-        //call parent
-        self.parent.capture(target);
-
         var capture = {
             target: target
         };
@@ -37,8 +34,9 @@ xs.define(xs.Class, 'ns.context.Resize', function (self) {
     };
 
     Class.static.method.release = function (target, capture) {
-        //call parent
-        self.parent.release(target, capture);
+        self.assert.object(capture, 'release - given `$capture` is not an object', {
+            $capture: capture
+        });
 
         window.removeEventListener('resize', capture.handleResize);
     };
