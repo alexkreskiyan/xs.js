@@ -1,10 +1,16 @@
-xs.define(xs.Class, 'ns.tests.dom.interaction.stage.Scroll', function (self) {
+xs.define(xs.Class, 'ns.tests.xs.element.stage.Scroll', function (self, imports) {
 
     'use strict';
 
     var Class = this;
 
     Class.namespace = 'tests.module.suite';
+
+    Class.imports = {
+        event: {
+            Scroll: 'xs.view.event.element.Scroll'
+        }
+    };
 
     Class.extends = 'ns.module.test.Stage';
 
@@ -21,7 +27,6 @@ xs.define(xs.Class, 'ns.tests.dom.interaction.stage.Scroll', function (self) {
         var count = 10;
 
         var sandbox = me.private.container.query('.sandbox');
-        var sandboxEl = sandbox.private.el;
 
         var block = new xs.view.Element(document.createElement('div'));
         block.private.el.innerHTML = 'scroll me!';
@@ -42,7 +47,7 @@ xs.define(xs.Class, 'ns.tests.dom.interaction.stage.Scroll', function (self) {
             me.upgradeInstruction(self.instruction + ' ' + count + ' left.');
 
             //report event
-            me.report(event.type, event);
+            me.report(event.self.label, event);
 
             //if count is zero - mark stage as done
             if (!count) {
@@ -51,21 +56,15 @@ xs.define(xs.Class, 'ns.tests.dom.interaction.stage.Scroll', function (self) {
             }
         };
 
-        sandboxEl.addEventListener('scroll', countdownHandler);
-
-        me.private.cleanUp = function () {
-            sandboxEl.removeEventListener('scroll', countdownHandler);
-        };
+        sandbox.on(imports.event.Scroll, countdownHandler);
     };
 
     Class.method.stop = function () {
         var me = this;
 
-        self.parent.prototype.stop.call(me);
+        me.private.container.query('.sandbox').off(imports.event.Scroll);
 
-        if (me.private.cleanUp) {
-            me.private.cleanUp();
-        }
+        self.parent.prototype.stop.call(me);
     };
 
 });
