@@ -78,6 +78,11 @@ https://developer.mozilla.org/en-US/docs/Web/Events/contextmenu
 
 content:
 
+Content events are to be upgraded and filtered.
+Particularly:
+- custom selection is caught with Selection API and pointer events
+- input events should be split in 2 ones: Input and BeforeInput
+
 xs.view.event.content.Input
 The value of an element changes or the content of an element with the attribute contenteditable is modified
 https://developer.mozilla.org/en-US/docs/Web/Events/input
