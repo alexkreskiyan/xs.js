@@ -90,20 +90,7 @@ xs.view.event.content.Select
 Some text is being selected
 https://developer.mozilla.org/en-US/docs/Web/Events/select
 
-
-composition:
-
-xs.view.event.composition.Start
-The composition of a passage of text is prepared (similar to keydown for a keyboard input, but works with other inputs such as speech recognition)
-https://developer.mozilla.org/en-US/docs/Web/Events/compositionstart
-
-xs.view.event.composition.Update
-A character is added to a passage of text being composed
-https://developer.mozilla.org/en-US/docs/Web/Events/compositionupdate
-
-xs.view.event.composition.End
-The composition of a passage of text has been completed or canceled
-https://developer.mozilla.org/en-US/docs/Web/Events/compositionend
+TODO upgrade, when will be needed
 
 
 key:
