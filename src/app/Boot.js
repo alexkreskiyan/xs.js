@@ -46,8 +46,10 @@ xs.boot = function (configuration) {
         configuration.App
     ];
 
-    //require contracts
-    xs.require(loadList, xs.noop, xs.noop);
+    //require contracts on next tick
+    xs.nextTick(function () {
+        xs.require(loadList, xs.noop, xs.noop);
+    });
 
     xs.onReady(loadList, function () {
         var App = xs.ContractsManager.get(configuration.App);
