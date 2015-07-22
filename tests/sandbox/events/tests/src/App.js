@@ -35,6 +35,10 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         }
     };
 
+    Class.extends = 'xs.app.Module';
+
+    Class.implements = [ 'xs.app.IApp' ];
+
     Class.method.run = function () {
         var me = this;
 
