@@ -4,6 +4,7 @@
         "xs.log.Logger": { },
         "xs.core.Asserter": { },
         "xs.core.Collection": { },
+        "xs.app.Boot": { },
         "reactive": {
             "xs.reactive.emitter.Emitter": {
                 "test": false
@@ -306,7 +307,7 @@
             },
             "view": {
                 "event": {
-                    "content":{
+                    "content": {
                         "IEvent": { },
                         "Change": {
                             "test": false
@@ -327,7 +328,7 @@
                             "test": false
                         }
                     },
-                    "element":{
+                    "element": {
                         "IEvent": { },
                         "Blur": {
                             "test": false
