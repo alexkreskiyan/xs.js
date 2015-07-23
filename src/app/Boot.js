@@ -48,7 +48,19 @@ xs.boot = function (configuration) {
 
     //require contracts on next tick
     xs.nextTick(function () {
-        xs.require(loadList, xs.noop, xs.noop);
+        var requiredList = [ configuration.App ];
+
+        //add app.Module to requiredList if needed
+        if (!xs.ContractsManager.has('xs.app.Module')) {
+            requiredList.push('xs.app.Module');
+        }
+
+        //add app.IApp to requiredList if needed
+        if (!xs.ContractsManager.has('xs.app.IApp')) {
+            requiredList.push('xs.app.IApp');
+        }
+
+        xs.require(requiredList, xs.noop, xs.noop);
     });
 
     xs.onReady(loadList, function () {

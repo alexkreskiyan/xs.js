@@ -105,6 +105,14 @@
     },
     "modules": {
         "xs": {
+            "app": {
+                "IApp": {
+                    "test": false
+                },
+                "Module": {
+                    "test": false
+                }
+            },
             "data": {
                 "attribute": {
                     "event": {
