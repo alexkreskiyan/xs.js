@@ -18,7 +18,8 @@ xs.define(xs.Class, 'ns.Response', function (self, imports) {
     Class.imports = {
         Type: 'ns.Type',
         State: 'ns.State',
-        Status: 'ns.Status'
+        Status: 'ns.Status',
+        StatusGroup: 'ns.StatusGroup'
     };
 
     Class.constructor = function (request) {
@@ -63,14 +64,43 @@ xs.define(xs.Class, 'ns.Response', function (self, imports) {
 
     Class.property.status = {
         get: function () {
-            return this.private.request.private.xhr.status;
+            var me = this;
+
+            if (!me.private.status) {
+                me.private.status = me.private.request.private.xhr.status;
+            }
+
+            return me.private.status;
+        },
+        set: xs.noop
+    };
+
+    Class.property.statusGroup = {
+        get: function () {
+            var me = this;
+
+            if (!me.private.statusGroup) {
+                var status = this.private.request.private.xhr.status;
+
+                me.private.statusGroup = imports.StatusGroup.values.find(function (group) {
+                    return status - group < 100;
+                });
+            }
+
+            return me.private.statusGroup;
         },
         set: xs.noop
     };
 
     Class.property.statusText = {
         get: function () {
-            return this.private.request.private.xhr.statusText;
+            var me = this;
+
+            if (!me.private.statusText) {
+                me.private.statusText = me.private.request.private.xhr.statusText;
+            }
+
+            return me.private.statusText;
         },
         set: xs.noop
     };
