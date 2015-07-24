@@ -46,7 +46,7 @@ xs.enum.preprocessors.add('values', function () {
     });
 
     //define values as constant
-    xs.constant(Enum, 'values', values.toSource());
+    xs.constant(Enum, 'values', values);
 });
 
 /**
