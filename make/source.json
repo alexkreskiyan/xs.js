@@ -4,7 +4,9 @@
         "xs.log.Logger": { },
         "xs.core.Asserter": { },
         "xs.core.Collection": { },
-        "xs.app.Boot": { },
+        "xs.app.Boot": {
+            "test": false
+        },
         "reactive": {
             "xs.reactive.emitter.Emitter": {
                 "test": false
@@ -112,6 +114,9 @@
                 "Module": {
                     "test": false
                 }
+            },
+            "async": {
+                "Promise": { }
             },
             "data": {
                 "attribute": {
@@ -309,9 +314,6 @@
                     "test": false
                 },
                 "WebSocket": { }
-            },
-            "ux": {
-                "Promise": { }
             },
             "view": {
                 "event": {

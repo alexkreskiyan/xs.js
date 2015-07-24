@@ -4,7 +4,7 @@
  * Usage example:
  *
  *     var getData = function() {
- *         var promise = new xs.ux.Promise();
+ *         var promise = new xs.async.Promise();
  *         setTimeout(function() {
  *             promise.resolve({x: 1});
  *         }, 500);
@@ -36,7 +36,7 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.ux.Promise
+ * @class xs.async.Promise
  *
  * @extends xs.class.Base
  */
@@ -46,7 +46,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
 
     var Class = this;
 
-    Class.namespace = 'xs.ux';
+    Class.namespace = 'xs.async';
 
     /**
      * Promise `pending` state constant
@@ -104,9 +104,9 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @method all
      *
-     * @param {xs.ux.Promise[]} promises array of promises
+     * @param {xs.async.Promise[]} promises array of promises
      *
-     * @return {xs.ux.Promise} aggregate promise
+     * @return {xs.async.Promise} aggregate promise
      */
     Class.static.method.all = xs.core.Promise.all;
 
@@ -116,10 +116,10 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @method some
      *
-     * @param {xs.ux.Promise[]} promises array of promises
+     * @param {xs.async.Promise[]} promises array of promises
      * @param {Number} count count of promises, needed for aggregate promise to resolve
      *
-     * @return {xs.ux.Promise} aggregate promise
+     * @return {xs.async.Promise} aggregate promise
      */
     Class.static.method.some = xs.core.Promise.some;
 
@@ -192,7 +192,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @chainable
      *
-     * @return {xs.ux.Promise}
+     * @return {xs.async.Promise}
      */
     Class.method.then = xs.core.Promise.prototype.then;
 
@@ -207,7 +207,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @chainable
      *
-     * @return {xs.ux.Promise}
+     * @return {xs.async.Promise}
      */
     Class.method.always = xs.core.Promise.prototype.always;
 
@@ -222,7 +222,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @chainable
      *
-     * @return {xs.ux.Promise}
+     * @return {xs.async.Promise}
      */
     Class.method.otherwise = xs.core.Promise.prototype.otherwise;
 
@@ -237,7 +237,7 @@ xs.define(xs.Class, 'ns.Promise', function (self) {
      *
      * @chainable
      *
-     * @return {xs.ux.Promise}
+     * @return {xs.async.Promise}
      */
     Class.method.progress = xs.core.Promise.prototype.progress;
 
