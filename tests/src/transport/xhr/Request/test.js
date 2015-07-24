@@ -33,7 +33,7 @@ module('xs.transport.xhr.Request', function () {
         //method must be set when request is unsent
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         request.send();
 
         throws(function () {
@@ -49,7 +49,7 @@ module('xs.transport.xhr.Request', function () {
         //is implemented correctly
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.PUT;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         strictEqual(request.method, xs.transport.xhr.Method.PUT);
         request.send().then(function (response) {
 
@@ -76,14 +76,14 @@ module('xs.transport.xhr.Request', function () {
         //url must be set when request is unsent
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         request.send();
 
         throws(function () {
-            request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+            request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         });
 
-        //must be xs.uri.HTTP instance
+        //must be xs.uri.Http instance
         request = new xs.transport.xhr.Request();
         throws(function () {
             request.url = 'localhost';
@@ -92,7 +92,7 @@ module('xs.transport.xhr.Request', function () {
         //is implemented correctly
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         strictEqual(request.url.toString(), server + '/echo');
         request.send().then(function (response) {
 
@@ -119,7 +119,7 @@ module('xs.transport.xhr.Request', function () {
 
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
 
         //data must be of accepted type
         throws(function () {
@@ -142,7 +142,7 @@ module('xs.transport.xhr.Request', function () {
         //verify ArrayBuffer sending
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
 
         request.data = data = new ArrayBuffer(length);
         view = new Uint8Array(data);
@@ -159,7 +159,7 @@ module('xs.transport.xhr.Request', function () {
         //verify ArrayBufferView sending
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
 
         data = new ArrayBuffer(length);
         request.data = view = new Uint8Array(data);
@@ -176,7 +176,7 @@ module('xs.transport.xhr.Request', function () {
         //verify Blob sending
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
 
         request.data = new Blob([ data ], {
             type: 'text/plain'
@@ -190,7 +190,7 @@ module('xs.transport.xhr.Request', function () {
         //verify Document sending
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
 
         request.data = (new DOMParser()).parseFromString(raw, 'text/xml');
 
@@ -202,7 +202,7 @@ module('xs.transport.xhr.Request', function () {
         //verify String sending
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
 
         request.data = raw;
 
@@ -214,7 +214,7 @@ module('xs.transport.xhr.Request', function () {
         //verify FormData sending
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
 
         request.data = new FormData();
         request.data.append('raw', raw);
@@ -240,7 +240,7 @@ module('xs.transport.xhr.Request', function () {
 
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
 
         //data must be of accepted type
         throws(function () {
@@ -263,7 +263,7 @@ module('xs.transport.xhr.Request', function () {
         //verify String receiving
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         request.data = raw;
 
         request.type = xs.transport.xhr.Type.Text;
@@ -276,7 +276,7 @@ module('xs.transport.xhr.Request', function () {
         //verify ArrayBuffer receiving
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         request.data = raw;
 
         request.type = xs.transport.xhr.Type.ArrayBuffer;
@@ -295,7 +295,7 @@ module('xs.transport.xhr.Request', function () {
         //verify Blob receiving
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         request.data = raw;
 
         request.type = xs.transport.xhr.Type.Blob;
@@ -317,7 +317,7 @@ module('xs.transport.xhr.Request', function () {
         //verify JSON receiving
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         request.data = raw;
 
         request.type = xs.transport.xhr.Type.JSON;
@@ -342,7 +342,7 @@ module('xs.transport.xhr.Request', function () {
         //headers must be set when request is unsent
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         request.headers.add('x-custom-header', 'custom header value');
 
         //is implemented correctly
@@ -371,7 +371,7 @@ module('xs.transport.xhr.Request', function () {
 
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         request.timeout = 50;
 
         //timeout must be a positive number
@@ -391,7 +391,7 @@ module('xs.transport.xhr.Request', function () {
 
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP(server + '/long', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/long', xs.uri.query.QueryString);
         request.timeout = 10;
 
 
@@ -420,7 +420,7 @@ module('xs.transport.xhr.Request', function () {
         //credentials flag must be set when request is unsent
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         request.credentials = true;
 
         //credentials must be a boolean
@@ -437,7 +437,7 @@ module('xs.transport.xhr.Request', function () {
 
         request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.GET;
-        request.url = new xs.uri.HTTP(server + '/credentials', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/credentials', xs.uri.query.QueryString);
         var cookie = 'custom=demo';
         request.headers.add('cookies', cookie);
         request.credentials = true;
@@ -449,7 +449,7 @@ module('xs.transport.xhr.Request', function () {
 
             request = new xs.transport.xhr.Request();
             request.method = xs.transport.xhr.Method.GET;
-            request.url = new xs.uri.HTTP(server + '/credentials', xs.uri.query.QueryString);
+            request.url = new xs.uri.Http(server + '/credentials', xs.uri.query.QueryString);
             request.credentials = true;
 
 
@@ -485,7 +485,7 @@ module('xs.transport.xhr.Request', function () {
 
         var request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/revert', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/revert', xs.uri.query.QueryString);
         request.data = bigData;
 
         //push current state
@@ -542,7 +542,7 @@ module('xs.transport.xhr.Request', function () {
             request.send();
         });
 
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
 
         //invalid method for data request
         throws(function () {
@@ -567,7 +567,7 @@ module('xs.transport.xhr.Request', function () {
 
         var request = new xs.transport.xhr.Request();
         request.method = xs.transport.xhr.Method.POST;
-        request.url = new xs.uri.HTTP(server + '/echo', xs.uri.query.QueryString);
+        request.url = new xs.uri.Http(server + '/echo', xs.uri.query.QueryString);
         request.data = 'data';
 
         var aborted = false;

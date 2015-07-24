@@ -3,11 +3,11 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.uri.HTTP
+ * @class xs.uri.Http
  *
- * @extends xs.uri.URI
+ * @extends xs.uri.Uri
  */
-xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
+xs.define(xs.Class, 'ns.Http', function (self, imports) {
 
     'use strict';
 
@@ -19,17 +19,17 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
         IQuery: 'ns.query.IQuery'
     };
 
-    Class.extends = 'ns.URI';
+    Class.extends = 'ns.Uri';
 
     /**
      * URL object constructor
      *
      * @constructor
      *
-     * @param {String} [URI] URI, object is created from, or undefined, if starting from the beginning
-     * @param {xs.uri.query.IQuery} Query Query constructor, URI query is parsed with
+     * @param {String} [uri] Uri, object is created from, or undefined, if starting from the beginning
+     * @param {xs.uri.query.IQuery} Query Query constructor, Uri query is parsed with
      */
-    Class.constructor = function (URI, Query) {
+    Class.constructor = function (uri, Query) {
         var me = this;
 
         //assert, that at least Query is given
@@ -40,9 +40,9 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
             self.parent.call(me);
 
             //reassign Query
-            Query = URI;
+            Query = uri;
         } else {
-            self.parent.call(me, URI);
+            self.parent.call(me, uri);
         }
 
         //assert, that Query is a class
@@ -61,7 +61,7 @@ xs.define(xs.Class, 'ns.HTTP', function (self, imports) {
             $IQuery: imports.IQuery
         });
 
-        //set defaults from raw URI data
+        //set defaults from raw Uri data
         //get raw reference
         var raw = me.private.raw;
 

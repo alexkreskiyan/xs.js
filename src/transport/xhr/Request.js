@@ -20,7 +20,7 @@ xs.define(xs.Class, 'ns.Request', function (self, imports) {
         Response: 'ns.Response',
         State: 'ns.State',
         Type: 'ns.Type',
-        Url: 'xs.uri.HTTP',
+        Url: 'xs.uri.Http',
         event: {
             Abort: 'ns.event.Abort',
             Done: 'ns.event.Done',

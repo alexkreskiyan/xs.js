@@ -21,7 +21,7 @@ module('xs.transport.websocket.Connection', function () {
 
         //url must be instance of xs.uri.WebSocket
         throws(function () {
-            connection.url = new xs.uri.HTTP(xs.uri.query.QueryString);
+            connection.url = new xs.uri.Http(xs.uri.query.QueryString);
         });
 
         //correctly - goes ok

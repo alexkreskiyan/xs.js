@@ -41,7 +41,7 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
             Viewport: 'ns.Viewport'
         },
         uri: {
-            HTTP: 'xs.uri.HTTP',
+            Http: 'xs.uri.Http',
             QueryString: 'xs.uri.query.QueryString'
         }
     };
@@ -66,7 +66,7 @@ xs.define(xs.Class, 'ns.App', function (self, imports) {
         });
 
         //get location url to evaluate used test suite
-        var suite = (new imports.uri.HTTP(location.href, imports.uri.QueryString)).query.params.suite;
+        var suite = (new imports.uri.Http(location.href, imports.uri.QueryString)).query.params.suite;
 
         var databases = {
             dom: 'domEventsTests',

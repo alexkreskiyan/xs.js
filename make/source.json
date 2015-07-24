@@ -309,8 +309,8 @@
                     "IQuery": { },
                     "QueryString": { }
                 },
-                "HTTP": { },
-                "URI": {
+                "Http": { },
+                "Uri": {
                     "test": false
                 },
                 "WebSocket": { }
