@@ -47,6 +47,9 @@
         "xs.log.Router": {
             "test": false
         },
+        "xs.struct.Guid": {
+            "test": false
+        },
         "xs.core.Loader": { },
         "xs.core.ContractsManager": { },
         "contracts": {
