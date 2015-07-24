@@ -19,13 +19,7 @@ xs.enum.preprocessors.add('methods', function () {
 
     //keyOf method
     xs.method.define(Enum, 'keyOf', xs.method.prepare('keyOf', function (value) {
-        var values = this.values;
-        var keys = Object.keys(values);
-
-        var key = keys.filter(function (name) {
-
-            return values[ name ] === value;
-        }).shift();
+        var key = this.values.keyOf(value);
 
         assert.defined(key, 'keyOf - given value `$value` is not a part of enum', {
             $value: value
@@ -36,13 +30,7 @@ xs.enum.preprocessors.add('methods', function () {
 
     //has method
     xs.method.define(Enum, 'has', xs.method.prepare('has', function (value) {
-        var values = this.values;
-        var keys = Object.keys(values);
-
-        return keys.some(function (name) {
-
-            return values[ name ] === value;
-        });
+        return this.values.has(value);
     }));
 });
 
