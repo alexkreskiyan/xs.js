@@ -67,9 +67,9 @@ module('xs.view.Element', function () {
         var title = view.title;
         var body = view.body;
 
-        var label = new xs.view.View(document.createElement('label'));
-        var input = new xs.view.View(document.createElement('input'));
-        var button = new xs.view.View(document.createElement('button'));
+        var label = new xs.view.Element(document.createElement('label'));
+        var input = new xs.view.Element(document.createElement('input'));
+        var button = new xs.view.Element(document.createElement('button'));
 
         title.add(label);
         body.add(input).add(button);

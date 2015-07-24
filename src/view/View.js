@@ -46,6 +46,8 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         }
     };
 
+    Class.abstract = true;
+
     Class.extends = 'xs.view.Element';
 
     Class.constant.template = undefined;
