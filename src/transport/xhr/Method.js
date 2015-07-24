@@ -1,5 +1,5 @@
 /**
- * Enum, that specifies request HTTP methods
+ * Enum, that specifies request Http methods
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *

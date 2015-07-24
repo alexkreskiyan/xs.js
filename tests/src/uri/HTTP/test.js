@@ -8,7 +8,7 @@
  License: http://annium.com/contact
 
  */
-module('xs.uri.HTTP', function () {
+module('xs.uri.Http', function () {
 
     'use strict';
 
@@ -16,7 +16,7 @@ module('xs.uri.HTTP', function () {
         var url;
 
         //empty one
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         strictEqual(url.scheme, undefined);
         strictEqual(url.host, undefined);
         strictEqual(url.port, undefined);
@@ -25,7 +25,7 @@ module('xs.uri.HTTP', function () {
         strictEqual(url.hash, undefined);
 
         //via url
-        url = new xs.uri.HTTP('https://сайт.рф/тест?ф=б&x=y#фыв;;$$asd', xs.uri.query.QueryString);
+        url = new xs.uri.Http('https://сайт.рф/тест?ф=б&x=y#фыв;;$$asd', xs.uri.query.QueryString);
         strictEqual(url.scheme, 'https');
         strictEqual(url.host, 'сайт.рф');
         strictEqual(url.port, undefined);
@@ -35,7 +35,7 @@ module('xs.uri.HTTP', function () {
     });
 
     test('scheme', function () {
-        var url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        var url = new xs.uri.Http(xs.uri.query.QueryString);
         strictEqual(url.scheme, undefined);
 
         //test non-string
@@ -54,7 +54,7 @@ module('xs.uri.HTTP', function () {
     });
 
     test('user', function () {
-        var url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        var url = new xs.uri.Http(xs.uri.query.QueryString);
 
         //test non-string
         throws(function () {
@@ -75,7 +75,7 @@ module('xs.uri.HTTP', function () {
     });
 
     test('host', function () {
-        var url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        var url = new xs.uri.Http(xs.uri.query.QueryString);
 
         //test non-string
         throws(function () {
@@ -96,7 +96,7 @@ module('xs.uri.HTTP', function () {
     });
 
     test('port', function () {
-        var url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        var url = new xs.uri.Http(xs.uri.query.QueryString);
 
         //test non-number
         throws(function () {
@@ -112,7 +112,7 @@ module('xs.uri.HTTP', function () {
     });
 
     test('path', function () {
-        var url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        var url = new xs.uri.Http(xs.uri.query.QueryString);
 
         //test non-string
         throws(function () {
@@ -133,7 +133,7 @@ module('xs.uri.HTTP', function () {
     });
 
     test('query', function () {
-        var url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        var url = new xs.uri.Http(xs.uri.query.QueryString);
 
         //test incorrect
         throws(function () {
@@ -149,7 +149,7 @@ module('xs.uri.HTTP', function () {
     });
 
     test('hash', function () {
-        var url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        var url = new xs.uri.Http(xs.uri.query.QueryString);
 
         //test non-string
         throws(function () {
@@ -168,95 +168,95 @@ module('xs.uri.HTTP', function () {
         var url;
 
         //
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         strictEqual(url.toString(), '');
 
         //port
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.port = 80;
         strictEqual(url.toString(), '');
 
         //host
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.host = 'xs.js';
         strictEqual(url.toString(), url.host);
 
         //host,port
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.host = 'xs.js';
         url.port = 80;
         strictEqual(url.toString(), url.host + ':' + url.port);
 
         //user
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.user = 'name';
         strictEqual(url.toString(), '');
 
         //user,port
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.user = 'name';
         url.port = 80;
         strictEqual(url.toString(), '');
 
         //user,host
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.user = 'name';
         url.host = 'xs.js';
         strictEqual(url.toString(), url.user + '@' + url.host);
 
         //user,host,port
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.user = 'name';
         url.host = 'xs.js';
         url.port = 80;
         strictEqual(url.toString(), url.user + '@' + url.host + ':' + url.port);
 
         //scheme
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.scheme = 'http';
         strictEqual(url.toString(), '');
 
         //scheme,port
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.scheme = 'http';
         url.port = 80;
         strictEqual(url.toString(), '');
 
         //scheme,host
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.scheme = 'http';
         url.host = 'xs.js';
         strictEqual(url.toString(), url.scheme + '://' + url.host);
 
         //scheme,host,port
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.scheme = 'http';
         url.host = 'xs.js';
         url.port = 80;
         strictEqual(url.toString(), url.scheme + '://' + url.host + ':' + url.port);
 
         //scheme,user
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.scheme = 'http';
         url.user = 'name';
         strictEqual(url.toString(), '');
 
         //scheme,user,port
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.scheme = 'http';
         url.user = 'name';
         url.port = 80;
         strictEqual(url.toString(), '');
 
         //scheme,user,host
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.scheme = 'http';
         url.user = 'name';
         url.host = 'xs.js';
         strictEqual(url.toString(), url.scheme + '://' + url.user + '@' + url.host);
 
         //scheme,user,host,port
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.scheme = 'http';
         url.user = 'name';
         url.host = 'xs.js';
@@ -264,23 +264,23 @@ module('xs.uri.HTTP', function () {
         strictEqual(url.toString(), url.scheme + '://' + url.user + '@' + url.host + ':' + url.port);
 
         //
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         strictEqual(url.toString(), '');
 
         //hash
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.hash = 'anchor';
         strictEqual(url.toString(), '');
 
         //query
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.query.params = {
             a: 1
         };
         strictEqual(url.toString(), '');
 
         //query,hash
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.query.params = {
             a: 1
         };
@@ -288,18 +288,18 @@ module('xs.uri.HTTP', function () {
         strictEqual(url.toString(), '');
 
         //path,
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.path = '/go';
         strictEqual(url.toString(), url.path);
 
         //path,hash
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.path = '/go';
         url.hash = 'anchor';
         strictEqual(url.toString(), url.path + '#' + url.hash);
 
         //path,query
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.path = '/go';
         url.query.params = {
             a: 1
@@ -307,7 +307,7 @@ module('xs.uri.HTTP', function () {
         strictEqual(url.toString(), url.path + '?' + url.query.toString());
 
         //path,query,hash
-        url = new xs.uri.HTTP(xs.uri.query.QueryString);
+        url = new xs.uri.Http(xs.uri.query.QueryString);
         url.path = '/go';
         url.query.params = {
             a: 1

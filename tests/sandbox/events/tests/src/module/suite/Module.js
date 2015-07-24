@@ -53,7 +53,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
             Launcher: 'ns.view.Launcher'
         },
         uri: {
-            HTTP: 'xs.uri.HTTP',
+            Http: 'xs.uri.Http',
             QueryString: 'xs.uri.query.QueryString'
         }
     };
@@ -72,7 +72,7 @@ xs.define(xs.Class, 'ns.Module', function (self, imports) {
         container.attributes.set('id', 'suite');
 
         //get location url to evaluate used test suite
-        var url = new imports.uri.HTTP(location.href, imports.uri.QueryString);
+        var url = new imports.uri.Http(location.href, imports.uri.QueryString);
         var suite = url.query.params.suite;
 
         var suites = {

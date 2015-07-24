@@ -1,15 +1,15 @@
 /**
- * URI Object notation abstract class. Provides basics for all URI scheme-specific implementations
+ * Uri Object notation abstract class. Provides basics for all Uri scheme-specific implementations
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
  * @abstract
  *
- * @class xs.uri.URI
+ * @class xs.uri.Uri
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.URI', function (self) {
+xs.define(xs.Class, 'ns.Uri', function (self) {
 
     'use strict';
 
@@ -20,7 +20,7 @@ xs.define(xs.Class, 'ns.URI', function (self) {
     Class.abstract = true;
 
     /**
-     * Regular expression for basic URI parsing
+     * Regular expression for basic Uri parsing
      *
      * @ignore
      *
@@ -29,30 +29,30 @@ xs.define(xs.Class, 'ns.URI', function (self) {
     var parseRe = /^(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?/;
 
     /**
-     * URI object constructor
+     * Uri object constructor
      *
      * @constructor
      *
-     * @param {String} [URI] URI, object is created from, or undefined, if starting from the beginning
+     * @param {String} [uri] Uri, object is created from, or undefined, if starting from the beginning
      */
-    Class.constructor = function (URI) {
+    Class.constructor = function (uri) {
         var me = this;
 
         //assert, that uri is either undefined or string
-        self.assert.ok(!arguments.length || xs.isString(URI), 'constructor - given URI `$URI` is not a string', {
-            $URI: URI
+        self.assert.ok(!arguments.length || xs.isString(uri), 'constructor - given URI `$uri` is not a string', {
+            $uri: uri
         });
 
         //convert undefined to empty string
-        if (!URI) {
-            URI = '';
+        if (!uri) {
+            uri = '';
         }
 
         //save raw parsing info
-        var data = parseRe.exec(decodeURI(URI));
+        var data = parseRe.exec(decodeURI(uri));
 
-        self.assert.array(data, 'constructor - given string `$URI` is correct URI', {
-            $URI: URI
+        self.assert.array(data, 'constructor - given string `$uri` is correct URI', {
+            $uri: uri
         });
 
         me.private.raw = {

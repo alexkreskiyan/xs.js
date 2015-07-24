@@ -6,7 +6,7 @@ xs.define(xs.Class, 'log.Reporter', function (self, imports) {
 
     Class.imports = {
         Request: 'xs.transport.xhr.Request',
-        Url: 'xs.uri.HTTP',
+        Url: 'xs.uri.Http',
         QueryString: 'xs.uri.query.QueryString',
         request: {
             Method: 'xs.transport.xhr.Method'
