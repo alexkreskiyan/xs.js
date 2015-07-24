@@ -988,6 +988,7 @@ function raise(message, vars) {
 
     throw error;
 }
+Asserter.prototype.raise = raise;
 
 /**
  * Internal error class
