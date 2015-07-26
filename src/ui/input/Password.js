@@ -63,6 +63,21 @@ xs.define(xs.Class, 'ns.input.Password', function (self) {
         }
     };
 
+    Class.property.value = {
+        set: function (value) {
+            //assert, that value is a string
+            self.assert.string(value, 'value:set - given value `$value` is not a string', {
+                $value: value
+            });
+
+            //set name
+            this.private.el.value = value;
+        },
+        get: function () {
+            return this.private.el.value;
+        }
+    };
+
     var createElement = function () {
         var el = document.createElement('input');
         el.type = 'password';
