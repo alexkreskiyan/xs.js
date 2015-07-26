@@ -26,6 +26,11 @@ xs.define(xs.Class, 'ns.input.Password', function (self) {
 
         //set name
         me.name = options.name;
+
+        //set placeholder, if given
+        if (options.placeholder) {
+            me.placeholder = options.placeholder;
+        }
     };
 
     Class.property.name = {
@@ -40,6 +45,21 @@ xs.define(xs.Class, 'ns.input.Password', function (self) {
         },
         get: function () {
             return this.private.el.name;
+        }
+    };
+
+    Class.property.placeholder = {
+        set: function (value) {
+            //assert, that value is a string
+            self.assert.string(value, 'placeholder:set - given value `$value` is not a string', {
+                $value: value
+            });
+
+            //set name
+            this.private.el.placeholder = value;
+        },
+        get: function () {
+            return this.private.el.placeholder;
         }
     };
 

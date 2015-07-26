@@ -54,10 +54,10 @@ xs.define(xs.Class, 'ns.button.Button', function (self) {
             });
 
             //set name
-            this.private.el.text = value;
+            this.private.el.innerHTML = value;
         },
         get: function () {
-            return this.private.el.text;
+            return this.private.el.innerHTML;
         }
     };
 
