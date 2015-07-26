@@ -7,9 +7,9 @@
  *
  * @private
  *
- * @class xs.transport.xhr.Status
+ * @class xs.transport.http.Status
  */
-xs.define(xs.Enum, 'xs.transport.xhr.Status', {
+xs.define(xs.Enum, 'xs.transport.http.Status', {
     Ok: 200,
     Created: 201,
     Accepted: 202,

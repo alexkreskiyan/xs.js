@@ -3,7 +3,7 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.Response
+ * @class xs.transport.http.Response
  *
  * @extends xs.class.Base
  */
@@ -13,7 +13,7 @@ xs.define(xs.Class, 'ns.Response', function (self, imports) {
 
     var Class = this;
 
-    Class.namespace = 'xs.transport.xhr';
+    Class.namespace = 'xs.transport.http';
 
     Class.imports = {
         Type: 'ns.Type',

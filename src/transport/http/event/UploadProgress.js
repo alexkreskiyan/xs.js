@@ -1,19 +1,19 @@
 /**
- * Event class for events, being thrown, while response body is downloaded to mark process progress
+ * Event class for events, being thrown, while request body is uploaded to mark process progress
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.event.LoadProgress
+ * @class xs.transport.http.event.UploadProgress
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.event.LoadProgress', function (self) {
+xs.define(xs.Class, 'ns.event.UploadProgress', function (self) {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.transport.xhr';
+    Class.namespace = 'xs.transport.http';
 
     Class.implements = [
         'xs.event.IEvent'

@@ -7,9 +7,9 @@
  *
  * @private
  *
- * @class xs.transport.xhr.Method
+ * @class xs.transport.http.Method
  */
-xs.define(xs.Enum, 'xs.transport.xhr.Method', {
+xs.define(xs.Enum, 'xs.transport.http.Method', {
     OPTIONS: 'OPTIONS',
     GET: 'GET',
     HEAD: 'HEAD',

@@ -3,7 +3,7 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.event.Load
+ * @class xs.transport.http.event.Load
  *
  * @extends xs.class.Base
  */
@@ -13,7 +13,7 @@ xs.define(xs.Class, 'ns.event.Load', function (self, imports) {
 
     var Class = this;
 
-    Class.namespace = 'xs.transport.xhr';
+    Class.namespace = 'xs.transport.http';
 
     Class.imports = {
         Response: 'ns.Response'
@@ -28,7 +28,7 @@ xs.define(xs.Class, 'ns.event.Load', function (self, imports) {
      *
      * @constructor
      *
-     * @param {xs.transport.xhr.Response} response request response wrapper
+     * @param {xs.transport.http.Response} response request response wrapper
      */
     Class.constructor = function (response) {
         var me = this;

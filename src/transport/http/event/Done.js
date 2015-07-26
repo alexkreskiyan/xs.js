@@ -3,7 +3,7 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.event.Done
+ * @class xs.transport.http.event.Done
  *
  * @extends xs.class.Base
  */
@@ -13,7 +13,7 @@ xs.define(xs.Class, 'ns.event.Done', function () {
 
     var Class = this;
 
-    Class.namespace = 'xs.transport.xhr';
+    Class.namespace = 'xs.transport.http';
 
     Class.implements = [
         'xs.event.IEvent'

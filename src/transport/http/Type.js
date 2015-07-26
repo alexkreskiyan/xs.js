@@ -7,9 +7,9 @@
  *
  * @private
  *
- * @class xs.transport.xhr.Type
+ * @class xs.transport.http.Type
  */
-xs.define(xs.Enum, 'xs.transport.xhr.Type', {
+xs.define(xs.Enum, 'xs.transport.http.Type', {
     Text: '',
     ArrayBuffer: 'arraybuffer',
     Blob: 'blob',
