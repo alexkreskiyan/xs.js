@@ -8,60 +8,321 @@
  * @extends xs.enum.Base
  */
 xs.define(xs.Enum, 'xs.transport.http.Header', {
-    Accept: 'Accept', //request header; list of allowed resource formats; example: Accept: text/plain
-    AcceptCharset: 'Accept-Charset', //request header; list of supported resource encodings; example: Accept-Charset: utf-8
-    AcceptEncoding: 'Accept-Encoding', //request header; list of supported entity encoding variants; example: Accept-Encoding: <compress | gzip | deflate | sdch | identity>
-    AcceptLanguage: 'Accept-Language', //request header; list of supported languages; example: Accept-Language: ru
-    AcceptRanges: 'Accept-Ranges', //response header; list of supported range uints; example: Accept-Ranges: bytes
-    Age: 'Age', //response header; //response header; resource last modification timeout in seconds
-    Allow: 'Allow',//response entity header; list of supported methods; example: Allow: OPTIONS, GET, HEAD
-    Alternates: 'Alternates', //response header; direction to other resource presentation abilities
-    Authorization: 'Authorization', //request header; authorization data; example: Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
-    CacheControl: 'Cache-Control', //general header; main cache manipulation directives; examples: Cache-Control: no-cache, Cache-Control: no-store, Cache-Control: max-age=3600, Cache-Control: max-stale=0, Cache-Control: min-fresh=0, Cache-Control: no-transform, Cache-Control: only-if-cached, Cache-Control: cache-extension
-    Connection: 'Connection', //general header; connection management data; example: Connection: close
-    ContentDisposition: 'Content-Disposition', //request and response header; defines entities' placement in message; exemple: Content-Disposition: form-data; name="MessageTitle", Content-Disposition: form-data; name="AttachedFile1"; filename="photo-1.jpg"
-    ContentEncoding: 'Content-Encoding' //request and response entity header: defines entity encoding method
-//ContentLanguage:'Content-Language	Нет	Нет	Да	Нет	Да	HTTP/1.0	Один или несколько естественных языков содержимого сущности.	Content-Language: en, ase, ru
-//Content-Length	Нет	Нет	Да	Нет	Да	HTTP/1.0	Размер содержимого сущности в октетах.	Content-Length: 1348
-//Content-Location	Нет	Нет	Да	Нет	Да	HTTP/1.1	Альтернативное расположение содержимого сущности.
-//    Content-MD5	Нет	Нет	Да	Нет	Да	MD5H	Base64 MD5-хэша сущности для проверки целостности.	Content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==
-//Content-Range	Нет	Нет	Да	Нет	Да	HTTP/1.1	Байтовые диапазоны передаваемой сущности если возвращается фрагмент. Подробности: Частичные GET.	Content-Range: bytes 88080384-160993791/160993792
-//Content-Type	Нет	Нет	Да	Нет	Да	HTTP/1.0	Формат и способ представления сущности.	Content-Type: text/html;charset=utf-8
-//Content-Version	Нет	Нет	Да	Нет	Да	HTTP/1.1	Информация о текущей версии сущности.
-//    Date	Да	Нет	Нет	Нет	Нет	HTTP/1.0	Дата генерации отклика.	Date: Tue, 15 Nov 1994 08:12:31 GMT
-//Derived-From	Нет	Нет	Да	Нет	Да	HTTP/1.1	Информация о текущей версии сущности. [?]
-//ETag	Нет	Нет	Нет	Да	Да	HTTP/1.1	Тег (уникальный идентификатор) версии сущности, используемый при кэшировании.	ETag: "56d-9989200-1132c580"
-//Expect	Нет	Да	Нет	Нет	Нет	HTTP/1.1v2	Указывает серверу что клиент ожидает от него дополнительного действия.	Expect: 100-continue
-//Expires	Нет	Нет	Да	Нет	Да	HTTP/1.0	Дата предполагаемого истечения срока актуальности сущности.	Expires: Tue, 31 Jan 2012 15:02:53 GMT
-//From	Нет	Да	Нет	Нет	Нет	HTTP/1.1	Адрес электронной почты ответственного лица со стороны клиента.	From: user@example.com
-//Host	Нет	Да	Нет	Нет	Нет	HTTP/1.1	Доменное имя и порт хоста запрашиваемого ресурса. Необходимо для поддержки виртуального хостинга на серверах.	Host: ru.wikipedia.org
-//If-Match	Нет	Да	Нет	Нет	Нет	HTTP/1.1	Список тегов версий сущности. Выполнять метод, если они существуют.	If-Match: "737060cd8c284d8af7ad3082f209582d"
-//If-Modified-Since	Нет	Да	Нет	Нет	Нет	HTTP/1.0	Дата. Выполнять метод если сущность изменилась с указанного момента.	If-Modified-Since: Sat, 29 Oct 1994 19:43:31 GMT
-//If-None-Match	Нет	Да	Нет	Нет	Нет	HTTP/1.1	Список тегов версий сущности. Выполнять метод если ни одного из них не существует.	If-None-Match: "737060cd8c284d8af7ad3082f209582d"
-//If-Range	Нет	Да	Нет	Нет	Нет	HTTP/1.1	Список тегов версий сущности или дата для определённого фрагмента сущности.	If-Range: "737060cd8c284d8af7ad3082f209582d"
-//If-Unmodified-Since	Нет	Да	Нет	Нет	Нет	HTTP/1.1	Дата. Выполнять метод если сущность не изменилась с указанной даты.	If-Unmodified-Since: Sat, 29 Oct 1994 19:43:31 GMT
-//Last-Modified	Нет	Нет	Да	Нет	Да	HTTP/1.0	Дата последней модификации сущности.
-//    Link	Нет	Нет	Да	Нет	Да	HTTP/1.0	Указывает на логически связный с сущностью ресурс аналогично тегу <LINK> в HTML.
-//    Location	Нет	Нет	Нет	Да	Нет	HTTP/1.0	URI по которому клиенту следует перейти или URI созданного ресурса.	Location: http://example.com/about.html#contacts
-//    Max-Forwards	Нет	Да	Нет	Нет	Нет	HTTP/1.1	Максимально допустимое количество переходов через прокси.	Max-Forwards: 10
-//MIME-Version	Да	Нет	Нет	Нет	Нет	MIME	Версия протокола MIME, по которому было сформировано сообщение.
-//    Pragma	Да	Нет	Нет	Нет	Нет	HTTP/1.0	Особенные опции выполнения операции.	Pragma: no-cache
-//Proxy-Authenticate	Нет	Нет	Нет	Да	Нет	HTTP-Auth	Параметры аутентификации на прокси-сервере.
-//    Proxy-Authorization	Нет	Да	Нет	Нет	Нет	HTTP-Auth	Информация для авторизации на прокси-сервере.	Proxy-Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
-//Public	Нет	Нет	Нет	Да	Нет	HTTP/1.1	Список доступных методов аналогично Allow, но для всего сервера.
-//    Range	Нет	Да	Нет	Нет	Нет	HTTP/1.1	Байтовые диапазоны для запроса фрагментов ресурса. Подробности: Частичные GET.	Range: bytes=50000-99999,250000-399999,500000-
-//Referer	Нет	Да	Нет	Нет	Нет	HTTP/1.0	URI ресурса, после которого клиент сделал текущий запрос.	Referer: http://en.wikipedia.org/wiki/Main_Page
-//    Retry-After	Нет	Нет	Нет	Да	Нет	HTTP/1.0	Дата или время в секундах после которого можно повторить запрос.
-//    Server	Нет	Нет	Нет	Да	Нет	HTTP/1.0	Список названий и версий веб-сервера и его компонентов с комментариями. Для прокси-серверов поле Via.	Server: Apache/2.2.17 (Win32) PHP/5.3.5
-//Title	Нет	Нет	Да	Нет	Да	HTTP/1.0	Заголовок сущности.
-//    TE	Нет	Да	Нет	Нет	Нет	HTTP/1.1v2	Список расширенных способов кодирования при передаче.	TE: trailers, deflate
-//Trailer	Да	Нет	Нет	Нет	Нет	HTTP/1.1v2	Список полей, имеющих отношение к кодированию сообщения при передаче.
-//    Transfer-Encoding	Да	Нет	Нет	Нет	Нет	HTTP/1.1	Список способов кодирования, которые были применены к сообщению для передачи.	Transfer-Encoding: chunked
-//Upgrade	Да	Нет	Нет	Нет	Нет	HTTP/1.1	Список предлагаемых клиентом протоколов. Сервер указывает один протокол.	Upgrade: HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11
-//URI	Нет	Нет	Да	Нет	Да	HTTP/1.0	Список URI. В HTTP/1.1 заменено на Location, Content-Location, Vary и Link.
-//    User-Agent	Нет	Да	Нет	Нет	Нет	HTTP/1.0	Список названий и версий клиента и его компонентов с комментариями.	User-Agent: Mozilla/5.0 (X11; Linux i686; rv:2.0.1) Gecko/20100101 Firefox/4.0.1
-//Vary	Нет	Нет	Нет	Да	Нет	HTTP/1.1	Список описывающих ресурс полей из запроса, которые были приняты во внимание.
-//    Via	Да	Нет	Нет	Нет	Нет	HTTP/1.1	Список версий протокола, названий и версий прокси-серверов, через которых прошло сообщение.	Via: 1.0 fred, 1.1 nowhere.com (Apache/1.1)
-//Warning	Да	Нет	Нет	Да	Нет	HTTP/1.1	Код, агент, сообщение и дата, если возникла критическая ситуация.	Warning: 199 Miscellaneous warning
-//WWW-Authenticate
+    /**
+     * request header
+     * list of allowed resource formats
+     * Accept: text/plain
+     */
+    Accept: 'Accept',
+    /**
+     * request header
+     * list of supported resource encodings
+     * Accept-Charset: utf-8
+     */
+    AcceptCharset: 'Accept-Charset',
+    /**
+     * request header
+     * list of supported entity encoding variants
+     * Accept-Encoding: <compress | gzip | deflate | sdch | identity>
+     */
+    AcceptEncoding: 'Accept-Encoding',
+    /**
+     * request header
+     * list of supported languages
+     * Accept-Language: ru
+     */
+    AcceptLanguage: 'Accept-Language',
+    /**
+     * response header
+     * list of supported range uints
+     * Accept-Ranges: bytes
+     */
+    AcceptRanges: 'Accept-Ranges',
+    /**
+     * response header
+     * resource last modification timeout in seconds
+     */
+    Age: 'Age',
+    /**
+     * response entity header
+     * list of supported methods
+     * Allow: OPTIONS, GET, HEAD
+     */
+    Allow: 'Allow',
+    /**
+     * response header
+     * direction to other resource presentation abilities
+     */
+    Alternates: 'Alternates',
+    /**
+     * request header
+     * authorization data
+     * Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+     */
+    Authorization: 'Authorization',
+    /**
+     * general header
+     * main cache manipulation directives
+     * Cache-Control: no-cache,
+     * Cache-Control: no-store,
+     * Cache-Control: max-age=3600,
+     * Cache-Control: max-stale=0,
+     * Cache-Control: min-fresh=0,
+     * Cache-Control: no-transform,
+     * Cache-Control: only-if-cached,
+     * Cache-Control: cache-extension
+     */
+    CacheControl: 'Cache-Control',
+    /**
+     * general header
+     * connection management data
+     * example: Connection: close
+     */
+    Connection: 'Connection',
+    /**
+     * request and response header
+     * defines entities' placement in message
+     * Content-Disposition: form-data; name="MessageTitle",
+     * Content-Disposition: form-data; name="AttachedFile1"; filename="photo-1.jpg"
+     */
+    ContentDisposition: 'Content-Disposition',
+    /**
+     * request and response entity header
+     * defines entity encoding method
+     */
+    ContentEncoding: 'Content-Encoding',
+    /**
+     * request entity header
+     * list of entity native language
+     * Content-Language: en, ase, ru
+     */
+    ContentLanguage: 'Content-Language',
+    /**
+     * request entity header
+     * entity size in octets
+     * Content-Length: 1348
+     */
+    ContentLength: 'Content-Length',
+    /**
+     * request entity and response entity header
+     * alternate entity content location
+     */
+    ContentLocation: 'Content-Location',
+    /**
+     * request entity and response entity header
+     * md5-hash for entity content
+     * Content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==
+     */
+    ContentMD5: 'Content-MD5',
+    /**
+     * request entity and response entity header
+     * byte ranges of passed entity for given fragment
+     * Content-Range: bytes 88080384-160993791/160993792
+     */
+    ContentRange: 'Content-Range',
+    /**
+     * request entity and response entity header
+     * format and entity presentation type
+     * Content-Type: text/html;charset=utf-8
+     */
+    ContentType: 'Content-Type',
+    /**
+     * request entity and response entity header
+     * entity current version information
+     */
+    ContentVersion: 'Content-Version',
+    /**
+     * general header
+     * response generation time
+     * Date: Tue, 15 Nov 1994 08:12:31 GMT
+     */
+    Date: 'Date',
+    /**
+     * response and response entity header
+     * unique tag of entity, used in caching
+     * ETag: "56d-9989200-1132c580"
+     */
+    ETag: 'ETag',
+    /**
+     * request header
+     * tells server, that client awaits additional action
+     * Expect: 100-continue
+     */
+    Expect: 'Expect',
+    /**
+     * request and response entity header
+     * date of expected entity expiration
+     * Expires: Tue, 31 Jan 2012 15:02:53 GMT
+     */
+    Expires: 'Expires',
+    /**
+     * request header
+     * email address of person in charge
+     * From: user@example.com
+     */
+    From: 'From',
+    /**
+     * request header
+     * domain name and port of requested resource; is required to verify virtual hosting
+     * Host: ru.wikipedia.org
+     */
+    Host: 'Host',
+    /**
+     * request header
+     * list of entity versions tags. method is executed if some of them exists
+     * If-Match: "737060cd8c284d8af7ad3082f209582d"
+     */
+    IfMatch: 'If-Match',
+    /**
+     * request header
+     * method is executed if entity was change since given date
+     * If-Modified-Since: Sat, 29 Oct 1994 19:43:31 GMT
+     */
+    IfModifiedSince: 'If-Modified-Since',
+    /**
+     * request header
+     * list of entity versions tags. method is executed if none of them exists
+     * If-None-Match: "737060cd8c284d8af7ad3082f209582d"
+     */
+    IfNoneMatch: 'If-None-Match',
+    /**
+     * request header
+     * list of entity versions tags or date for specified fragment
+     * If-Range: "737060cd8c284d8af7ad3082f209582d"
+     */
+    IfRange: 'If-Range',
+    /**
+     * request header
+     * method is executed if entity was not changed since given date
+     * If-Unmodified-Since: Sat, 29 Oct 1994 19:43:31 GMT
+     */
+    IfUnmodifiedSince: 'If-Unmodified-Since',
+    /**
+     * request entity and response entity
+     * entity last modification date
+     */
+    LastModified: 'Last-Modified',
+    /**
+     * request entity and response entity header
+     * targets logically linked resource
+     */
+    Link: 'Link',
+    /**
+     * response header
+     * uri, client must follow to or uri, that was created
+     * Location: http://example.com/about.html#contacts
+     */
+    Location: 'Location',
+    /**
+     * request header
+     * maximum allowed count of proxy forwards
+     * Max-Forwards: 10
+     */
+    MaxForwards: 'Max-Forwards',
+    /**
+     * general header
+     * mime version, that was used to form message
+     */
+    MimeVersion: 'MIME-Version',
+    /**
+     * general header
+     * special operation options
+     * Pragma: no-cache
+     */
+    Pragma: 'Pragma',
+    /**
+     * response header
+     * proxy authentication params
+     */
+    ProxyAuthenticate: 'Proxy-Authenticate',
+    /**
+     * request header
+     * proxy authorization params
+     * Proxy-Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+     */
+    ProxyAuthorization: 'Proxy-Authorization',
+    /**
+     * response header
+     * list of allowed methods for whole server
+     */
+    Public: 'Public',
+    /**
+     * request header
+     * byte range to request resource fragments
+     * Range: bytes=50000-99999,250000-399999,500000-
+     */
+    Range: 'Range',
+    /**
+     * request header
+     * resource uri, client came from to this resource
+     * Referer: http://en.wikipedia.org/wiki/Main_Page
+     */
+    Referer: 'Referer',
+    /**
+     * response header
+     * date or time interval to retry request after
+     */
+    RetryAfter: 'Retry-After',
+    /**
+     * response header
+     * web server and it's components' names
+     * Server: Apache/2.2.17 (Win32) PHP/5.3.5
+     */
+    Server: 'Server',
+    /**
+     * request entity and response entity header
+     * entity title
+     */
+    Title: 'Title',
+    /**
+     * request header
+     * list of extended coding methods
+     * TE: trailers, deflate
+     */
+    TE: 'TE',
+    /**
+     * general header
+     * list of fields, related to message encoding
+     */
+    Trailer: 'Trailer',
+    /**
+     * general header
+     * list of encoding methods, that were applied to message
+     * Transfer-Encoding: chunked
+     */
+    TransferEncoding: 'Transfer-Encoding',
+    /**
+     * general header
+     * list of protocols, suggested by client. server returns one protocol
+     * Upgrade: HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11
+     */
+    Upgrade: 'Upgrade',
+    /**
+     * request header
+     * list of names and versions of client
+     * User-Agent: Mozilla/5.0 (X11; Linux i686; rv:2.0.1) Gecko/20100101 Firefox/4.0.1
+     */
+    UserAgent: 'User-Agent',
+    /**
+     * response header
+     * list of request's resource describing fields, that were payed attention to
+     */
+    Vary: 'Vary',
+    /**
+     * general header
+     * list of protocol versions, proxy-servers' names and versions, that processed message
+     * Via: 1.0 fred, 1.1 nowhere.com (Apache/1.1)
+     */
+    Via: 'Via',
+    /**
+     * general header
+     * critical situation info: code, agent, message and date
+     * Warning: 199 Miscellaneous warning
+     */
+    Warning: 'Warning',
+    /**
+     * response header
+     * authentication params for method execution to specified resource
+     */
+    WwwAuthenticate: 'WWW-Authenticate'
 });
