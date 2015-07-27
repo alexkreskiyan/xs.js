@@ -7,7 +7,7 @@
  *
  * @private
  *
- * @class xs.transport.xhr.State
+ * @class xs.transport.websocket.BinaryType
  */
 xs.define(xs.Enum, 'xs.transport.websocket.BinaryType', {
     ArrayBuffer: 'arraybuffer',

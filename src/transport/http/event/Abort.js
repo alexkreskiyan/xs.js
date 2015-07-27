@@ -1,19 +1,19 @@
 /**
- * Event class for events, being thrown, when request execution failed due to some error
+ * Event class for events, being thrown, when executed request is aborted
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.event.Error
+ * @class xs.transport.http.event.Abort
  *
  * @extends xs.class.Base
  */
-xs.define(xs.Class, 'ns.event.Error', function () {
+xs.define(xs.Class, 'ns.event.Abort', function () {
 
     'use strict';
 
     var Class = this;
 
-    Class.namespace = 'xs.transport.xhr';
+    Class.namespace = 'xs.transport.http';
 
     Class.implements = [
         'xs.event.IEvent'
@@ -24,7 +24,7 @@ xs.define(xs.Class, 'ns.event.Error', function () {
      *
      * @constructor
      *
-     * @param {*} [reason] event error reason
+     * @param {*} [reason] event abort reason
      */
     Class.constructor = function (reason) {
         var me = this;
@@ -34,7 +34,7 @@ xs.define(xs.Class, 'ns.event.Error', function () {
     };
 
     /**
-     * Event `reason` property. Event reason is a reason, that describes, why request failed
+     * Event `reason` property. Event reason is a reason, that describes, why was request aborted
      *
      * @property reason
      *

@@ -5,11 +5,11 @@ xs.define(xs.Class, 'log.Reporter', function (self, imports) {
     var Class = this;
 
     Class.imports = {
-        Request: 'xs.transport.xhr.Request',
+        Request: 'xs.transport.http.Request',
         Url: 'xs.uri.Http',
         QueryString: 'xs.uri.query.QueryString',
         request: {
-            Method: 'xs.transport.xhr.Method'
+            Method: 'xs.transport.http.Method'
         }
     };
 

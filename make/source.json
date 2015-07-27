@@ -241,7 +241,7 @@
                 }
             },
             "transport": {
-                "xhr": {
+                "http": {
                     "event": {
                         "Abort": {
                             "test": false

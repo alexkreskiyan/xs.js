@@ -3,7 +3,7 @@
  *
  * @author Alex Kreskiyan <a.kreskiyan@gmail.com>
  *
- * @class xs.transport.xhr.event.Abort
+ * @class xs.transport.websocket.event.Abort
  *
  * @extends xs.class.Base
  */

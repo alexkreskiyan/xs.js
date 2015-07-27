@@ -7,8 +7,8 @@ xs.define(xs.Class, 'ns.data.proxy.Xhr', function (self, imports) {
     Class.namespace = 'stats';
 
     Class.imports = {
-        Request: 'xs.transport.xhr.Request',
-        Method: 'xs.transport.xhr.Method',
+        Request: 'xs.transport.http.Request',
+        Method: 'xs.transport.http.Method',
         Url: 'xs.uri.Http',
         QueryString: 'xs.uri.query.QueryString'
     };

@@ -7,9 +7,9 @@
  *
  * @private
  *
- * @class xs.transport.xhr.State
+ * @class xs.transport.http.State
  */
-xs.define(xs.Enum, 'xs.transport.xhr.State', {
+xs.define(xs.Enum, 'xs.transport.http.State', {
     Unsent: 0x1,
     UploadStarted: 0x2,
     Uploading: 0x4,

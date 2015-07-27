@@ -130,7 +130,7 @@ xs.define(xs.Class, 'ns.text.HTML', function (self) {
         });
 
         var promise = new xs.core.Promise();
-        //FIXME Use xs.transport.xhr.Request
+        //FIXME Use xs.transport.http.Request
         var xhr = new XMLHttpRequest();
 
         xhr.open('GET', url, true);

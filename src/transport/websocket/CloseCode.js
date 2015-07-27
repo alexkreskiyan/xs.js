@@ -7,7 +7,7 @@
  *
  * @private
  *
- * @class xs.transport.xhr.State
+ * @class xs.transport.websocket.CloseCode
  */
 xs.define(xs.Enum, 'xs.transport.websocket.CloseCode', {
     Normal: 1000,

@@ -5,18 +5,18 @@ XHR although must support uploads and downloads with progress events both sides
 XHR must support custom request headers and access to response headers
 
 Events:
-xs.transport.xhr.event.Headers - is fired, when response headers are received. The first event, that contains Response object
-xs.transport.xhr.event.Progress
-xs.transport.xhr.event.Load
-xs.transport.xhr.event.Error
-xs.transport.xhr.event.Timeout
-xs.transport.xhr.event.Abort
+xs.transport.http.event.Headers - is fired, when response headers are received. The first event, that contains Response object
+xs.transport.http.event.Progress
+xs.transport.http.event.Load
+xs.transport.http.event.Error
+xs.transport.http.event.Timeout
+xs.transport.http.event.Abort
 
 
-xs.transport.xhr.Request - Request class
+xs.transport.http.Request - Request class
 Request.constructor = xs.noop;
 Request.property.method = {
-    set: function(Enum xs.transport.xhr.Method)
+    set: function(Enum xs.transport.http.Method)
 }
 Request.property.url = {
     set: function(xs.uri.HTTP)
@@ -56,7 +56,7 @@ Request.method.send = function(){} //forms and sends XHR. Returns xs.core.Promis
 
 
 
-xs.transport.xhr.Response - Response class
+xs.transport.http.Response - Response class
 Response.constructor = function(request) {
 
 }

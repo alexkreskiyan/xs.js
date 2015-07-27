@@ -7,9 +7,9 @@
  *
  * @private
  *
- * @class xs.transport.xhr.Status
+ * @class xs.transport.http.Status
  */
-xs.define(xs.Enum, 'xs.transport.xhr.StatusGroup', {
+xs.define(xs.Enum, 'xs.transport.http.StatusGroup', {
     Information: 100,
     Ok: 200,
     Redirect: 300,
