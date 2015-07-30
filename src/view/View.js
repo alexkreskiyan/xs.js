@@ -241,10 +241,12 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         }
 
         //assert, that all declared positions are presented
-        declaredPositions.each(function (position) {
+        declaredPositions.each(function (type, name) {
 
             //assert, that position is presented
-            self.assert.ok(elementPositions.hasOwnProperty(position), 'verifyTemplate - declared position `$position` is not presented');
+            self.assert.ok(elementPositions.hasOwnProperty(name), 'verifyTemplate - declared position `$name` is not presented', {
+                $name: name
+            });
         });
 
         return true;
@@ -270,7 +272,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var positions = {};
 
         //fill positions
-        declaredPositions.each(function (name) {
+        declaredPositions.each(function (type, name) {
 
             //get position element
             var element = elementPositions[ name ];
@@ -278,7 +280,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
             positions[ name ] = xs.lazy(function () {
 
                 //position is a collection of elements
-                var position = new imports.Collection(imports.Element);
+                var position = new imports.Collection(type);
 
                 //save reference to parent
                 position.private.el = element;
@@ -309,7 +311,16 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
      *
      * @type {String}
      */
-    var positionSelector = '[xs-view-position]';
+    var positionAttribute = 'xs-view-position';
+
+    /**
+     * Position tag template
+     *
+     * @ignore
+     *
+     * @type {String}
+     */
+    var positionSelector = '[' + positionAttribute + ']';
 
     var getElementPositions = function (element) {
 
@@ -321,7 +332,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var positions = {};
 
         //try element itself
-        name = element.getAttribute('xs-view-position');
+        name = element.getAttribute(positionAttribute);
 
         if (name) {
             //element must not contain any children or contain single text node
@@ -343,7 +354,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
                 item = elements.item(i);
 
                 //get name
-                name = item.getAttribute('xs-view-position');
+                name = item.getAttribute(positionAttribute);
 
                 //element must not contain any children
                 self.assert.ok(!item.childNodes.length || (item.childNodes.length === 1 && item.firstChild instanceof Text), 'getElementPositions - position `$item` has some children, that is prohibited', {
@@ -740,8 +751,13 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
             return;
         }
 
-        //assert, that positions is an array
-        assert.array(descriptor.positions, 'processPositions - given positions `$positions` are not an array', {
+        //evaluate lazy value, if given
+        if (descriptor.positions instanceof xs.core.Lazy) {
+            descriptor.positions = descriptor.positions.get();
+        }
+
+        //assert, that positions is an object
+        assert.object(descriptor.positions, 'processPositions - given positions `$positions` are not an object', {
             $positions: descriptor.positions
         });
 
@@ -749,11 +765,16 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var positions = Class.descriptor.positions = new xs.core.Collection(descriptor.positions);
 
         //verify positions
-        assert.ok(positions.all(function (position) {
+        assert.ok(positions.all(function (type, name) {
 
-            //assert, that position is a short name
-            assert.shortName(position, 'processPositions - given position `$position` is not a valid short name', {
-                $position: position
+            //assert, that name is a short name
+            assert.shortName(name, 'processPositions - given position name `$position` is not a valid short name', {
+                $name: name
+            });
+
+            //assert, that type is a function
+            assert.fn(type, 'processPositions - given position type `$type` is not a function', {
+                $type: type
             });
 
             return true;
@@ -762,28 +783,28 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
         //save all positions as properties
         var properties = Class.descriptor.property;
-        positions.each(function (position) {
+        positions.each(function (type, name) {
 
             //prepare property descriptor
-            var value = xs.property.prepare(position, {
+            var value = xs.property.prepare(name, {
                 get: function () {
                     var positions = this.private.positions;
 
                     //lazy evaluate position
-                    if (positions[ position ] instanceof xs.core.Lazy) {
-                        positions[ position ] = positions[ position ].get();
+                    if (positions[ name ] instanceof xs.core.Lazy) {
+                        positions[ name ] = positions[ name ].get();
                     }
 
-                    return positions[ position ];
+                    return positions[ name ];
                 },
                 set: xs.noop
             });
 
             //add/set property in class descriptor
-            if (properties.hasKey(position)) {
-                properties.set(position, value);
+            if (properties.hasKey(name)) {
+                properties.set(name, value);
             } else {
-                properties.add(position, value);
+                properties.add(name, value);
             }
         });
     }
@@ -816,16 +837,34 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         }
 
         //assert, that all declared positions are presented
-        declaredPositions.each(function (position) {
+        declaredPositions.each(function (type, name) {
 
             //assert, that position is presented
-            assert.ok(elementPositions.hasOwnProperty(position), 'verifyTemplate - declared position `$position` is not presented');
+            assert.ok(elementPositions.hasOwnProperty(name), 'verifyTemplate - declared position `$name` is not presented', {
+                $name: name
+            });
         });
 
         return true;
     };
 
-    var positionSelector = '[xs-view-position]';
+    /**
+     * Position tag template
+     *
+     * @ignore
+     *
+     * @type {String}
+     */
+    var positionAttribute = 'xs-view-position';
+
+    /**
+     * Position tag template
+     *
+     * @ignore
+     *
+     * @type {String}
+     */
+    var positionSelector = '[' + positionAttribute + ']';
 
     var getElementPositions = function (element) {
 
@@ -837,7 +876,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         var positions = {};
 
         //try element itself
-        name = element.getAttribute('xs-view-position');
+        name = element.getAttribute(positionAttribute);
 
         if (name) {
             //element must not contain any children or contain single text node
@@ -859,7 +898,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
                 item = elements.item(i);
 
                 //get name
-                name = item.getAttribute('xs-view-position');
+                name = item.getAttribute(positionAttribute);
 
                 //element must not contain any children
                 assert.ok(!item.childNodes.length || (item.childNodes.length === 1 && item.firstChild instanceof Text), 'getElementPositions - position `$item` has some children, that is prohibited', {
