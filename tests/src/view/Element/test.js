@@ -52,10 +52,10 @@ module('xs.view.Element', function () {
                 data: '<div><div xs-view-position="title"></div><div xs-view-position="body"></div></div>'
             });
 
-            Class.positions = [
-                'title',
-                'body'
-            ];
+            Class.positions = {
+                title: xs.view.Element,
+                body: xs.view.Element
+            };
 
         }, me.done);
 

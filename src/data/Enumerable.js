@@ -67,7 +67,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
      *
      * @type {Number}
      */
-    Class.constant.Index = 0x4;
+    Class.constant.Index = 0x1;
 
     /**
      * Collection flag, meaning, that item is reordered to be the first one
@@ -2940,7 +2940,7 @@ xs.define(xs.Class, 'ns.Enumerable', function (self, imports) {
             });
 
             //lookup by index, if needed
-            if (flags & xs.core.Collection.Index) {
+            if (flags & self.Index) {
                 isKey = false;
             }
         }

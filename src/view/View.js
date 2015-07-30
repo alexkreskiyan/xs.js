@@ -30,7 +30,7 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
 
     Class.imports = {
         Element: 'xs.view.Element',
-        Collection: 'xs.data.Collection',
+        Collection: 'xs.view.Collection',
         resource: {
             text: {
                 HTML: 'xs.resource.text.HTML'
@@ -617,8 +617,8 @@ xs.define(xs.Class, 'ns.View', function (self, imports) {
         //remove container reference
         delete view.private.container;
 
-        //destroy view, if `isUsed` flag is not set
-        if (!view.private.isUsed) {
+        //destroy view, if `isUsed` flag is not set or if removed view is preserved from destroy
+        if (!view.private.isUsed && !me.private.preserveRemoved) {
             view.destroy();
         }
     };

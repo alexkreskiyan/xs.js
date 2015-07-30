@@ -52,6 +52,19 @@ xs.define(xs.Class, 'ns.Element', function (self, imports) {
     Class.constant.All = 0x2;
 
     /**
+     * View collection flag, meaning, that removed elements must be preserved, not destroyed
+     *
+     * @static
+     *
+     * @property Preserve
+     *
+     * @readonly
+     *
+     * @type {Number}
+     */
+    Class.constant.Preserve = 0x1;
+
+    /**
      * xs.view.Element constructor
      *
      * @param {Element} element wrapped element

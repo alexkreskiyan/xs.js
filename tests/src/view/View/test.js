@@ -64,10 +64,10 @@ module('xs.view.View', function () {
                 data: '<div><div xs-view-position="title"></div><div xs-view-position="body"></div></div>'
             });
 
-            Class.positions = [
-                'title',
-                'body'
-            ];
+            Class.positions = {
+                title: xs.view.Element,
+                body: xs.view.Element
+            };
 
         }, me.done);
 
@@ -79,8 +79,8 @@ module('xs.view.View', function () {
         //view has 2 positions. positions are xs.data.Collection instances
         view = new me.Class();
         strictEqual(JSON.stringify(Object.keys(view.private.positions)), '["title","body"]');
-        strictEqual(view.title instanceof xs.data.Collection, true);
-        strictEqual(view.body instanceof xs.data.Collection, true);
+        strictEqual(view.title instanceof xs.view.Collection, true);
+        strictEqual(view.body instanceof xs.view.Collection, true);
         view.destroy();
     });
 
@@ -96,10 +96,10 @@ module('xs.view.View', function () {
                 data: '<div><div xs-view-position="title"></div><div xs-view-position="body"></div></div>'
             });
 
-            Class.positions = [
-                'title',
-                'body'
-            ];
+            Class.positions = {
+                title: xs.view.Element,
+                body: xs.view.Element
+            };
 
         }, me.done);
 
@@ -176,10 +176,10 @@ module('xs.view.View', function () {
                 data: '<div><div xs-view-position="title"></div><div xs-view-position="body"></div></div>'
             });
 
-            Class.positions = [
-                'title',
-                'body'
-            ];
+            Class.positions = {
+                title: xs.view.Element,
+                body: xs.view.Element
+            };
 
         }, me.done);
 
@@ -267,10 +267,10 @@ module('xs.view.View', function () {
                 data: '<div><div xs-view-position="title"></div><div xs-view-position="body"></div></div>'
             });
 
-            Class.positions = [
-                'title',
-                'body'
-            ];
+            Class.positions = {
+                title: xs.view.Element,
+                body: xs.view.Element
+            };
 
         }, me.done);
 
@@ -367,10 +367,10 @@ module('xs.view.View', function () {
                 data: '<div><div xs-view-position="title"></div><div xs-view-position="body"></div></div>'
             });
 
-            Class.positions = [
-                'title',
-                'body'
-            ];
+            Class.positions = {
+                title: xs.view.Element,
+                body: xs.view.Element
+            };
 
         }, me.done);
 
