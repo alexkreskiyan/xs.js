@@ -50,11 +50,18 @@ xs.define(xs.Class, 'ns.Collection', function (self, imports) {
     Class.method.remove = function (value, flags) {
         var me = this;
 
-        if (flags & imports.Element.Preserve) {
-            me.private.preserveRemoved = true;
+        if (arguments.length > 1) {
+            if (flags & imports.Element.Preserve) {
+                me.private.preserveRemoved = true;
+            }
+            self.mixins.enumerable.prototype.remove.call(me, value);
+        } else {
+            if (value & imports.Element.Preserve) {
+                me.private.preserveRemoved = true;
+            }
+            self.mixins.enumerable.prototype.remove.call(me);
         }
 
-        self.mixins.enumerable.prototype.remove.apply(me, arguments);
 
         delete me.private.preserveRemoved;
 
