@@ -1,9 +1,0 @@
-xs.storage.Cookies - is implemented like xs.data.WebStorage.
-events:
-xs.storage.cookie.event.AddBefore
-xs.storage.cookie.event.Add
-xs.storage.cookie.event.SetBefore
-xs.storage.cookie.event.Set
-xs.storage.cookie.event.RemoveBefore
-xs.storage.cookie.event.Remove
-xs.storage.cookie.event.Clear

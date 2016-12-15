@@ -1,7 +1,0 @@
-Internationalization - NEEDED
-
-Review is needed to define, how is support implemented
-
-Internationalization is released via another resource type
-
-Specific interface and mixin will be defined for units that are going to be localized

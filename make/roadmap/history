@@ -1,5 +1,0 @@
-HistoryAPI - will be supported
-Global router as event stream, important question on about how is location string changed - access control and so on
-
-history
-xs.history.event.Change                 hashchange          https://developer.mozilla.org/en-US/docs/Web/Events/hashchange          The fragment identifier of the URL has changed (the part of the URL after the #).
