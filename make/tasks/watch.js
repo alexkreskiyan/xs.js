@@ -1,6 +1,6 @@
 'use strict';
 
 module.exports = options => [
-    ['clean', 'debug'],
-    () => { options.gulp.watch('src/**/*', ['clean', 'debug']) }
+    ['source'],
+    () => { options.gulp.watch('src/**/*', ['source']) }
 ];

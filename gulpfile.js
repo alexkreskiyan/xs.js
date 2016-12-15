@@ -11,7 +11,9 @@ const options = {
     concat: require('gulp-concat'),
     merge: require('gulp-merge'),
     uglify: require('gulp-uglify'),
-    sources: require('./make/sources'),
+    get sources() {
+        return require('./make/sources')()
+    },
     pure: require('./make/pureFunctions'),
     outputName: 'xs.js',
 };

@@ -1,14 +1,12 @@
 'use strict';
 
 module.exports = options => () => {
+    const {gulp, del, sources} = options;
     const buildPath = 'build/source';
 
     //remove old files
-    options.del(buildPath);
-
-    //get core stream
-    var core = options.sources().core;
+    del(buildPath);
 
     //save build
-    return core.pipe(options.gulp.dest(buildPath));
+    return sources.core.pipe(gulp.dest(buildPath));
 };

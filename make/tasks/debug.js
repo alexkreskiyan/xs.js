@@ -1,25 +1,18 @@
 'use strict';
 
 module.exports = options => () => {
+    const {gulp, del, concat, merge, sources, outputName} = options;
     const buildPath = 'build/debug';
 
     //remove old files
-    options.del(buildPath);
-
-
-    //get core stream
-    var core = options.sources().core;
-
-    //get modules stream
-    var modules = options.sources().modules;
-
+    del(buildPath);
 
     //get build stream
-    var build = options.merge(core, modules);
+    var build = merge(sources.core, sources.modules);
 
     //concat all files
-    build = build.pipe(options.concat({
-        path: options.outputName
+    build = build.pipe(concat({
+        path: outputName
     }, { newLine: '\n\n\n' }));
 
 
