@@ -41,7 +41,6 @@
         "disallowMultipleLineStrings": true,
         "disallowMultipleVarDecl": "exceptUndefined",
         "disallowNewlineBeforeBlockStatements": true,
-        "disallowNewlineBeforeBlockStatements": true,
         "disallowQuotedKeysInObjects": true,
         "disallowSpaceAfterLineComment": true,
         "disallowSpaceAfterObjectKeys": true,

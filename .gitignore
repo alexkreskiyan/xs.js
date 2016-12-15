@@ -1,9 +1,8 @@
-/.idea
-/build/**/*.js
+# Editors
+.vscode
+
+# Artifacts
+/build
 /coverage
 /docs
-/node_modules
-/tmp
-*.iml
-.sass-cache
-.DS*
+node_modules
