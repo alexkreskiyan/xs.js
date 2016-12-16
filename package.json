@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "devDependencies": {
         "del": "latest",
+        "express": "latest",
         "gulp": "latest",
         "gulp-compass": "latest",
         "gulp-concat": "latest",
