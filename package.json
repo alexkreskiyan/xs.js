@@ -20,7 +20,7 @@
         "jshint": "latest",
         "sqlite3": "latest",
         "promise": "latest",
-        "qunitjs": "latest",
+        "qunitjs": "1.23.0",
         "ws": "latest"
     },
     "jscsConfig": {
