@@ -278,7 +278,12 @@ xs.Attribute = (function () {
         }
 
         //if any descriptor fields specified - it is descriptor
-        return descriptor.hasOwnProperty('get') || descriptor.hasOwnProperty('set') || descriptor.hasOwnProperty('value') || descriptor.hasOwnProperty('writable') || descriptor.hasOwnProperty('configurable') || descriptor.hasOwnProperty('enumerable');
+        return descriptor.hasOwnProperty('get')
+            || descriptor.hasOwnProperty('set')
+            || descriptor.hasOwnProperty('value')
+            || descriptor.hasOwnProperty('writable')
+            || descriptor.hasOwnProperty('configurable')
+            || descriptor.hasOwnProperty('enumerable');
     };
 
     /**

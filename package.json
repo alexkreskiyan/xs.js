@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "devDependencies": {
         "del": "latest",
+        "express": "latest",
         "gulp": "latest",
         "gulp-compass": "latest",
         "gulp-concat": "latest",
@@ -19,7 +20,7 @@
         "jshint": "latest",
         "sqlite3": "latest",
         "promise": "latest",
-        "qunitjs": "latest",
+        "qunitjs": "1.23.0",
         "ws": "latest"
     },
     "jscsConfig": {
@@ -40,7 +41,6 @@
         "disallowMixedSpacesAndTabs": true,
         "disallowMultipleLineStrings": true,
         "disallowMultipleVarDecl": "exceptUndefined",
-        "disallowNewlineBeforeBlockStatements": true,
         "disallowNewlineBeforeBlockStatements": true,
         "disallowQuotedKeysInObjects": true,
         "disallowSpaceAfterLineComment": true,

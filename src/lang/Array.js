@@ -1,6 +1,6 @@
 'use strict';
 
-var log = new xs.log.Logger('xs.interface.Interface');
+var log = new xs.log.Logger('xs.lang.Array');
 
 var assert = new xs.core.Asserter(log, XsLangArrayError);
 

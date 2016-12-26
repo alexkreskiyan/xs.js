@@ -12,10 +12,10 @@ var merge = require('gulp-merge');
 var src = require('./source.json');
 
 //export scripts array
-module.exports = {
-    core: getCoreStream([ 'src/xs.js' ], src.core),
+module.exports = () => ({
+    core: getCoreStream(['src/xs.js'], src.core),
     modules: getModulesStream(src.modules)
-};
+});
 
 function getCoreStream(entry, core) {
 
@@ -31,8 +31,8 @@ function getCoreStream(entry, core) {
     build = build.pipe(concat({
         path: 'xs.js'
     }, {
-        newLine: '\n\n\n'
-    }));
+            newLine: '\n\n\n'
+        }));
 
     //wrap concatenated file in framework template
     build = build.pipe(wrap({
@@ -59,8 +59,8 @@ function assemblyCoreStreams(core) {
 
     for (var i = 0; i < names.length; i++) {
 
-        var name = names[ i ];
-        var module = core[ name ];
+        var name = names[i];
+        var module = core[name];
 
         if (isModule(module)) {
 
@@ -109,8 +109,8 @@ function assemblyCoreStreams(core) {
         stream = stream.pipe(concat({
             path: 'xs.js'
         }, {
-            newLine: '\n\n\n'
-        }));
+                newLine: '\n\n\n'
+            }));
 
         //indent
         stream = stream.pipe(indent({
@@ -160,7 +160,7 @@ function isModule(description) {
     }
 
     for (var i = 0; i < keys.length; i++) {
-        if (typeof description[ keys[ i ] ] === 'object') {
+        if (typeof description[keys[i]] === 'object') {
             return false;
         }
     }
@@ -190,14 +190,14 @@ function getModulesStream(src) {
 function assemblyModules(list, modules, name) {
     //modules is node, if given string contract
     if (isModule(modules)) {
-        list[ name ] = modules;
+        list[name] = modules;
 
         return;
     }
 
     //modules is category
     Object.keys(modules).forEach(function (key) {
-        assemblyModules(list, modules[ key ], name ? (name + '.' + key) : key);
+        assemblyModules(list, modules[key], name ? (name + '.' + key) : key);
     });
 }
 

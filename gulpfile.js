@@ -1,27 +1,36 @@
 'use strict';
 
-var gulp = require('gulp');
+const fs = require('fs');
+const path = require('path');
 
-//source task. concat core only
-gulp.task('source', require('./make/task/source'));
+const gulp = require('gulp');
 
-//debug task. concat only
-gulp.task('debug', require('./make/task/debug'));
+const options = {
+    gulp,
+    del: require('del'),
+    concat: require('gulp-concat'),
+    merge: require('gulp-merge'),
+    uglify: require('gulp-uglify'),
+    get sources() {
+        return require('./make/sources')()
+    },
+    pure: require('./make/pureFunctions'),
+    outputName: 'xs.js',
+};
 
-//preview task. concat, no asserts, no logs
-gulp.task('preview', require('./make/task/preview'));
+const tasksDir = path.resolve(__dirname, 'make', 'tasks');
 
-//candidate task. concat, uglify, no logs. Is needed for performance tests
-gulp.task('candidate', require('./make/task/candidate'));
+const registerTask = name => {
+    const taskPath = path.resolve(tasksDir, name);
+    const taskName = path.basename(taskPath, '.js');
 
-//release task. concat, uglify, no logs, no asserts
-gulp.task('release', require('./make/task/release'));
+    const task = require(taskPath)(options);
+    if (Array.isArray(task) && task[task.length - 1] instanceof Function)
+        gulp.task.apply(gulp, [taskName].concat(task));
+    else
+        gulp.task(taskName, task);
+}
 
-//The default task (called when you run `gulp` from cli)
-gulp.task('default', [
-    'source',
-    'debug',
-    'preview',
-    'candidate',
-    'release'
-]);
+fs.readdirSync(tasksDir).forEach(registerTask);
+
+gulp.task('default', ['all']);
